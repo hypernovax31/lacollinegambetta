@@ -2133,6 +2133,22 @@ body {
     box-shadow: 0 14px 28px rgba(0,0,0,0.18), 0 0 0 1px rgba(255,255,255,0.24) inset;
 }
 
+
+/* ===== Better tablet flow: avoid empty card areas ===== */
+@media (max-width: 1024px) {
+    .grand-grid--2 {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 720px) {
+    .grand-feature-grid,
+    .grand-cheese-grid,
+    .grand-bottle-grid,
+    .grand-bottle-grid--compact {
+        grid-template-columns: 1fr;
+    }
+}
+
 </style>
 </head>
 <body>
