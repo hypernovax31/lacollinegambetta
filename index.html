@@ -2638,6 +2638,60 @@ body {
     }
 }
 
+
+/* ===== Unified architecture across menu tabs ===== */
+#entrees .grand-stack,
+#plats .grand-stack,
+#menus .grand-stack,
+#cocktails .grand-stack,
+#vins .grand-stack,
+#boissons .grand-stack,
+#desserts .grand-stack {
+    gap: 20px;
+}
+#menus .grand-grid,
+#cocktails .grand-grid,
+#boissons .grand-grid,
+#desserts .grand-grid {
+    gap: 20px;
+}
+#menus .grand-price-panel,
+#menus .grand-choice-box,
+#menus .grand-special-card,
+#menus .grand-breakfast,
+#cocktails .grand-panel,
+#vins .grand-panel,
+#boissons .grand-panel,
+#desserts .grand-panel {
+    border-radius: 22px;
+    border: 1px solid rgba(216,178,87,0.38);
+    box-shadow: 0 14px 32px rgba(44, 19, 57, 0.08);
+}
+#menus .grand-price-panel,
+#menus .grand-choice-box,
+#menus .grand-special-card,
+#menus .grand-breakfast {
+    background: #fff;
+}
+#cocktails .grand-panel-head,
+#vins .grand-panel-head,
+#boissons .grand-panel-head,
+#desserts .grand-panel-head,
+#menus .grand-panel-head {
+    margin-bottom: 14px;
+}
+@media (max-width: 640px) {
+    #entrees .grand-stack,
+    #plats .grand-stack,
+    #menus .grand-stack,
+    #cocktails .grand-stack,
+    #vins .grand-stack,
+    #boissons .grand-stack,
+    #desserts .grand-stack {
+        gap: 16px;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -2892,7 +2946,7 @@ body {
             <strong>13,70</strong>
         </div>
         <p class="grand-dish-card__note">Frites et salade</p>
-    </article></div></article><article class="grand-panel"><div class="grand-panel-head"><h4 class="grand-panel-title">Omelettes</h4><p class="grand-panel-subtitle">Servies avec leur salade</p></div><div class="grand-feature-grid grand-feature-grid--menu"><article class="grand-feature-card grand-dish-card">
+    </article></div></article><article class="grand-panel"><div class="grand-panel-head"><h4 class="grand-panel-title">Omelettes</h4></div><div class="grand-feature-grid grand-feature-grid--menu"><article class="grand-feature-card grand-dish-card">
         <div class="grand-feature-head grand-dish-card__head">
             <h5>Œufs au plat</h5>
             <strong>9,90</strong>
