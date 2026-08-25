@@ -2776,6 +2776,48 @@ body {
     display: none !important;
 }
 
+
+/* ===== Entrées / Plats flow: 1 column by default, 2 only on very wide screens ===== */
+#entrees .grand-feature-grid--menu,
+#plats .grand-feature-grid--menu {
+    grid-template-columns: 1fr !important;
+    grid-auto-rows: auto !important;
+    align-items: start !important;
+    gap: 12px !important;
+}
+#entrees .grand-dish-card,
+#plats .grand-dish-card {
+    min-height: auto !important;
+    height: auto !important;
+    justify-content: flex-start !important;
+}
+#entrees .grand-dish-card__head,
+#plats .grand-dish-card__head,
+#entrees .grand-feature-head,
+#plats .grand-feature-head {
+    min-height: auto !important;
+}
+#entrees .grand-dish-card__head h5,
+#plats .grand-dish-card__head h5,
+#entrees .grand-feature-head h5,
+#plats .grand-feature-head h5 {
+    min-height: auto !important;
+}
+#entrees .grand-dish-card__note,
+#plats .grand-dish-card__note,
+#entrees .grand-feature-card > p,
+#plats .grand-feature-card > p {
+    margin-top: 8px !important;
+    padding-top: 0 !important;
+}
+@media (min-width: 1480px) {
+    #entrees .grand-feature-grid--menu,
+    #plats .grand-feature-grid--menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 14px !important;
+    }
+}
+
 </style>
 </head>
 <body>
