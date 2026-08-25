@@ -1,0 +1,1392 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Colline Gambetta — Paris 20ᵉ | Bar • Restaurant</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap');
+
+        :root {
+            --violet-deep: #432155;
+            --violet-mid: #592e6f;
+            --violet-dark: #180a20;
+            --gold-light: #fef9db;
+            --gold-main: #d8b257;
+            --gold-dark: #9c7a2d;
+            --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #d8b257 50%, #b38728 75%, #fef9db 100%);
+            --bg-page: #fcfbf7;
+            --text-main: #180a20;
+            --text-en: #7a6685;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #24102e;
+            color: var(--text-main);
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.45;
+            min-height: 100vh;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* Barre de contrôle supérieure (masquée au scroll pour dégager la vue) */
+        .top-controls {
+            background: #592e6f;
+            border-bottom: 1px solid rgba(216, 178, 87, 0.45);
+            padding: 10px 15px;
+            text-align: center;
+            position: relative !important;
+            z-index: 1000 !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .control-btn {
+            background: transparent;
+            border: 1px solid var(--gold-main);
+            color: var(--gold-light);
+            padding: 7px 18px;
+            border-radius: 25px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .control-btn:hover, .control-btn.active {
+            background: var(--gold-gradient);
+            color: var(--violet-dark);
+            font-weight: 800;
+            border-color: #fcf6ba;
+            box-shadow: 0 0 15px rgba(216, 178, 87, 0.5);
+        }
+
+        /* ========================================================
+           VUE 1 : PAGE DE GARDE (MINIMALISTE, ÉPURÉE & HAUTE LISIBILITÉ)
+           ======================================================== */
+        #cover-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            animation: fadeIn 0.4s ease;
+            height: calc(100vh - 52px);
+            height: calc(100dvh - 52px);
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .cover-page {
+            width: 100%;
+            height: 100%;
+            max-width: 680px;
+            background: radial-gradient(circle at 50% 35%, var(--violet-mid) 0%, var(--violet-deep) 65%, var(--violet-dark) 100%);
+            position: relative;
+            padding: 10px 18px 14px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+            border-left: 2px solid rgba(216, 178, 87, 0.7);
+            border-right: 2px solid rgba(216, 178, 87, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+        }
+
+        .cover-page::after {
+            content: "";
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px solid rgba(216, 178, 87, 0.35);
+            pointer-events: none;
+            border-radius: 4px;
+        }
+
+        .medallion-container {
+            position: relative;
+            width: auto;
+            height: auto;
+            max-width: 86%;
+            max-height: 56%;
+            aspect-ratio: 1 / 1;
+            margin: auto 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 1;
+        }
+
+        .medallion-svg {
+            position: absolute;
+            top: -5%; left: -5%;
+            width: 110%; height: 110%;
+            filter: drop-shadow(0 10px 24px rgba(0,0,0,0.9));
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .relief-inner-svg {
+            width: 68%;
+            height: 68%;
+            border-radius: 50%;
+            z-index: 5;
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 0, 0.2),
+                inset 0 2px 6px rgba(255, 255, 255, 0.95),
+                0 12px 30px rgba(0, 0, 0, 0.85);
+            background: #ffffff;
+            overflow: hidden;
+            border: 3.5px solid var(--gold-main);
+        }
+
+        .cover-hero-pill {
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: #180a20;
+            text-transform: uppercase;
+            background: var(--gold-gradient);
+            padding: 12px 34px;
+            border-radius: 30px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.85);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin: 10px 0 16px;
+            z-index: 10;
+        }
+
+        .cover-hero-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(216, 178, 87, 0.65);
+            border-color: #fcf6ba;
+        }
+
+        .cover-footer { text-align: center; z-index: 10; margin-bottom: 0px; width: 100%; }
+        .cover-footer-address { font-family: 'Cinzel', serif; font-size: 0.74rem; font-weight: 800; letter-spacing: 2px; line-height: 1.45; color: #ffffff; margin-bottom: 7px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        
+        .social-pills-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0 auto;
+        }
+
+        .social-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid var(--gold-main);
+            color: #ffffff;
+            padding: 3px 10px;
+            border-radius: 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .social-pill:hover {
+            background: var(--gold-gradient);
+            color: var(--violet-dark);
+            border-color: #fcf6ba;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px), (max-height: 680px) {
+            #cover-section { height: calc(100vh - 52px); height: calc(100dvh - 52px); }
+            .cover-page { padding: 8px 12px 10px; }
+            .medallion-container { max-height: 52%; max-width: 82%; }
+            .cover-hero-pill { padding: 10px 24px; font-size: 0.85rem; margin: 4px 0 6px; }
+            .cover-footer-address { font-size: 0.65rem; letter-spacing: 1.2px; margin-bottom: 4px; }
+            .social-pills-container { gap: 6px; }
+            .social-pill { padding: 2px 8px; font-size: 0.58rem; }
+        }
+
+        /* ========================================================
+           VUE 2 : CARTE INTÉRIEURE (BAR • RESTAURANT)
+           ======================================================== */
+        #interior-menu {
+            display: none;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            padding-bottom: 40px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* En-tête Intérieur Moderne, Minimaliste & Ultra-Classique */
+        .interior-header {
+            background: #592e6f;
+            color: #ffffff;
+            padding: 38px 20px 32px;
+            text-align: center;
+            border-bottom: 1px solid rgba(216, 178, 87, 0.45);
+            position: relative;
+        }
+
+        .welcome-badge-header {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.68rem, 2.5vw, 0.78rem);
+            font-weight: 700;
+            color: #fef9db;
+            letter-spacing: 3.5px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+            display: block;
+        }
+
+        .header-minimal-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .brand-la {
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--gold-main);
+            letter-spacing: 6px;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+        }
+
+        .brand-colline {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.2rem, 8vw, 3.6rem);
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: clamp(4px, 2vw, 10px);
+            line-height: 1.05;
+            text-transform: uppercase;
+            text-shadow: 0 4px 18px rgba(0,0,0,0.85);
+        }
+
+        .brand-gambetta {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.25rem, 4.2vw, 1.95rem);
+            font-weight: 900;
+            color: var(--gold-main);
+            background: none;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+            display: block;
+            letter-spacing: clamp(5px, 2vw, 11px);
+            line-height: 1.15;
+            text-transform: uppercase;
+            margin-top: 4px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        }
+
+        .header-gold-separator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            max-width: 320px;
+            margin: 14px auto 16px;
+        }
+
+        .sep-line {
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-main), transparent);
+            opacity: 0.8;
+        }
+
+        .sep-diamond {
+            color: var(--gold-main);
+            font-size: 0.75rem;
+        }
+
+        .interior-tagline {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.78rem, 3.2vw, 1.22rem);
+            font-weight: 800;
+            letter-spacing: clamp(1.5px, 1.2vw, 6px);
+            color: #ffffff;
+            text-transform: uppercase;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+            white-space: nowrap !important;
+        }
+
+        .header-sub-info {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(0.68rem, 2.2vw, 0.8rem);
+            color: #fef9db;
+            letter-spacing: clamp(1px, 0.8vw, 2.2px);
+            font-weight: 600;
+            margin-top: 8px;
+            text-transform: uppercase;
+            padding: 0 5px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+        }
+
+        /* Bannière d'Accueil Minimaliste & Raffinée */
+        .welcome-banner {
+            background: #fdfbf7;
+            color: #180a20;
+            text-align: center;
+            padding: 12px 18px 14px;
+            border-bottom: 1px solid rgba(216, 178, 87, 0.45);
+        }
+
+        .welcome-text-fr {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #180a20;
+            line-height: 1.4;
+            max-width: 760px;
+            margin: 0 auto 3px;
+            letter-spacing: 0.2px;
+        }
+
+        .welcome-text-en {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-style: italic;
+            color: #7a6685;
+            line-height: 1.35;
+            max-width: 760px;
+            margin: 0 auto;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        /* Navigation Onglets (Épinglée en permanence au scroll exactement à top: 0 sur 2 lignes) */
+        .menu-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 6px;
+            background: #592e6f;
+            padding: 8px 10px;
+            position: -webkit-sticky !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 99999 !important;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.65);
+            max-width: 100%;
+        }
+
+        @media (max-width: 600px) {
+            .interior-header { padding: 30px 10px 24px; }
+            .menu-nav {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 5px;
+                padding: 6px 8px;
+            }
+            .compact-list { gap: 18px; }
+            .compact-item { padding: 4px 6px 18px; }
+            .item-title-compact { font-size: 1.12rem; }
+        }
+
+        @media (max-width: 400px) {
+            .nav-btn {
+                padding: 6px 4px !important;
+                font-size: 0.68rem !important;
+                letter-spacing: 0.4px !important;
+            }
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid rgba(216, 178, 87, 0.45);
+            color: #ffffff;
+            padding: 7px 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.76rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            width: 100%;
+        }
+
+        .nav-btn:hover, .nav-btn.active { background: var(--gold-gradient); color: var(--violet-dark); border-color: #fcf6ba; font-weight: 700; }
+
+        .container { max-width: 900px; margin: 25px auto; padding: 0 18px; }
+        .menu-section { display: none; animation: fadeIn 0.3s ease; }
+        .menu-section.active { display: block; }
+
+        /* Grille en Vis-à-Vis (2 Colonnes pour le menu interactif sur tablette/desktop) */
+        .vis-a-vis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 0;
+            row-gap: 16px;
+            margin-top: 15px;
+        }
+
+        .vis-a-vis-grid .vis-col:nth-child(1) {
+            padding-right: 18px;
+        }
+
+        .vis-a-vis-grid .vis-col:nth-child(2) {
+            border-left: 1px solid rgba(216, 178, 87, 0.45);
+            padding-left: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .vis-a-vis-grid { grid-template-columns: 1fr; column-gap: 0; row-gap: 24px; }
+            .vis-a-vis-grid .vis-col:nth-child(1) { padding-right: 0; }
+            .vis-a-vis-grid .vis-col:nth-child(2) {
+                border-left: none;
+                padding-left: 0;
+                border-top: 1px solid rgba(216, 178, 87, 0.45);
+                padding-top: 20px;
+            }
+        }
+
+        .vis-col { display: flex; flex-direction: column; gap: 16px; }
+
+        .section-header { text-align: center; margin: 25px 0 20px; width: 100%; }
+        .section-header h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.65rem;
+            color: #180a20;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+            border-bottom: 2px solid var(--gold-main);
+            padding-bottom: 4px;
+            display: inline-block;
+        }
+        .section-desc { font-family: 'Montserrat', sans-serif; font-style: italic; font-size: 0.94rem; color: #592e6f; max-width: 680px; margin: 0 auto; font-weight: 600; }
+
+        .compact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 6px;
+        }
+
+        .compact-item {
+            text-align: left;
+            width: 100%;
+            margin: 0 auto;
+            padding: 14px 4px;
+            border-bottom: 1px solid rgba(216, 178, 87, 0.4);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .compact-item:last-child {
+            border-bottom: none;
+            padding-bottom: 6px;
+        }
+
+        .item-header-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            width: 100%;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+
+        .item-title-compact { font-family: 'Cinzel', serif; font-size: 1.14rem; font-weight: 800; color: var(--violet-dark); letter-spacing: 0.3px; text-align: left; flex: 1 1 auto; line-height: 1.3; }
+        .item-price-compact { font-family: 'Montserrat', sans-serif; font-size: 1.12rem; font-weight: 800; color: var(--violet-mid); text-align: right; white-space: nowrap; flex: 0 0 auto; margin-left: 8px; }
+
+        .badge {
+            font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 700; padding: 2px 7px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; vertical-align: middle; margin-left: 6px;
+        }
+        .badge-sig { background: var(--gold-gradient); color: var(--violet-dark); box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+        .badge-veg { background-color: #2e7d32; color: #ffffff; }
+        .badge-gf { background-color: #5d4037; color: #ffffff; }
+
+        .hh-notification {
+            background: #fdfbf7;
+            color: #180a20;
+            border: 1.5px solid var(--gold-main);
+            padding: 5px 20px;
+            border-radius: 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-align: center;
+            margin: 4px auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: fit-content;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+        .hh-notif-yellow { color: #d8b257; font-weight: 800; letter-spacing: 0.3px; }
+        .hh-notif-sub { color: #7a6685; font-weight: 500; font-size: 0.78rem; }
+
+        .desc-fr-compact { font-size: 0.94rem; color: var(--text-main); line-height: 1.45; width: 100%; text-align: left; font-weight: 500; }
+        .desc-en-compact { font-size: 0.85rem; font-style: italic; color: var(--text-en); line-height: 1.4; width: 100%; text-align: left; margin-top: 4px; font-weight: 400; }
+
+        .formules-compact-grid {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            flex-grow: 1;
+            gap: 16px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .formule-box-compact {
+            background: linear-gradient(135deg, var(--violet-dark) 0%, var(--violet-deep) 100%);
+            color: #ffffff;
+            padding: 18px 16px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid var(--gold-main);
+            box-shadow: 0 4px 15px rgba(67, 33, 85, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .formule-box-compact h4 { font-family: 'Cinzel', serif; font-size: 1.2rem; font-weight: 800; color: var(--gold-light); margin-bottom: 3px; }
+        .formule-box-compact .f-price { font-size: 1.38rem; font-weight: 800; color: var(--gold-main); margin: 3px 0 5px; }
+        .formule-box-compact p { font-size: 0.88rem; color: #f3ebf7; line-height: 1.38; margin-bottom: 3px; font-weight: 500; }
+        .formule-box-compact .f-en { font-style: italic; color: #d4c2df; font-size: 0.8rem; }
+
+        .sub-header-compact {
+            text-align: center; margin: 24px auto 14px; font-family: 'Cinzel', serif; font-size: 1.2rem; font-weight: 800; color: #ffffff; background: #592e6f; padding: 5px 22px; border-radius: 25px; border: 1.5px solid var(--gold-main); box-shadow: 0 4px 12px rgba(89, 46, 111, 0.3); display: inline-block; letter-spacing: 1px; text-transform: uppercase;
+        }
+
+        /* TABLEAUX & LISTES DE BOISSONS ALIGNÉES */
+        .drinks-grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 30px;
+            row-gap: 8px;
+            width: 100%;
+            margin: 10px auto 16px;
+        }
+
+        @media (max-width: 600px) {
+            .drinks-grid-2col { grid-template-columns: 1fr; }
+        }
+
+        .drink-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px dotted rgba(216, 178, 87, 0.45);
+        }
+
+        .drink-name {
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #180a20;
+            letter-spacing: 0.2px;
+            text-align: left;
+        }
+
+        .drink-dots {
+            flex-grow: 1;
+            border-bottom: 1.2px dotted rgba(89, 46, 111, 0.35);
+            margin: 0 10px 3px;
+        }
+
+        .drink-price {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: #592e6f;
+            white-space: nowrap;
+        }
+
+        .drink-desc {
+            font-size: 0.8rem;
+            font-style: italic;
+            color: #592e6f;
+            text-align: left;
+            padding-bottom: 6px;
+            border-bottom: 1px dotted rgba(216, 178, 87, 0.45);
+        }
+
+        footer {
+            background: #592e6f;
+            color: #ffffff;
+            padding: 16px 12px 14px;
+            text-align: center;
+            border-top: 2px solid var(--gold-main);
+            margin-top: 20px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.12);
+        }
+
+        .footer-logo { font-family: 'Cinzel', serif; font-size: 1.15rem; font-weight: 900; color: #ffffff; margin-bottom: 4px; letter-spacing: 2px; text-shadow: 0 1px 3px rgba(0,0,0,0.5); display: inline-block; }
+        .footer-details { font-size: 0.74rem; color: #fef9db; line-height: 1.4; margin-bottom: 8px; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+        
+        .footer-social-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .footer-social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid var(--gold-main);
+            padding: 3px 11px;
+            border-radius: 16px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .footer-social-link:hover {
+            background: var(--gold-gradient);
+            color: var(--violet-dark);
+            border-color: #fcf6ba;
+        }
+
+        .footer-legal { font-size: 0.66rem; color: #ffffff; font-weight: 500; opacity: 0.92; border-top: 1px solid rgba(255,255,255,0.25); padding-top: 6px; line-height: 1.35; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+/* ════════════════════════════════════════════════════════════════
+   CARTE INTERACTIVE — COMPOSANTS & RAFFINEMENTS (bloc unifié)
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Navigation par catégories : boutons uniformes ─────────────── */
+.menu-nav {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 6px;
+    padding: 8px 10px;
+}
+.nav-btn {
+    width: 100%;
+    min-height: 42px;
+    height: 100%;
+    padding: 5px 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    font-size: clamp(0.56rem, 1.15vw, 0.74rem);
+    letter-spacing: 0.4px;
+    border-radius: 10px;
+}
+@media (max-width: 1080px) { .menu-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 720px)  { .menu-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nav-btn { font-size: clamp(0.55rem, 2.4vw, 0.7rem); } }
+
+/* ── 2. En-têtes de sections & sous-titres (rythme vertical) ──────── */
+.section-header { margin: 38px 0 6px; }
+.section-desc { margin: 4px auto 0; }
+.sub-header-wrap { margin-top: 42px; }
+.sub-header-wrap:first-child, .vis-a-vis-grid .vis-col > .sub-header-wrap:first-child { margin-top: 0; }
+.sub-header-compact { margin: 0 auto 16px; letter-spacing: 1.4px; max-width: 100%; white-space: nowrap; }
+.sub-note { font-family: 'Montserrat', sans-serif; font-style: italic; font-size: 0.86rem; color: #592e6f; margin: 6px 0 0; font-weight: 600; }
+
+/* ── 3. Lignes d'articles : pointillés alignés, colonne prix unique ── */
+.compact-list { gap: 0 !important; margin-top: 0; }
+.compact-item { padding: 11px 2px; }
+.compact-item:last-child { padding-bottom: 8px; }
+.item-header-line, .menu-card-head, .ck-head {
+    display: flex !important; flex-wrap: nowrap;
+    align-items: flex-end !important; gap: 0 !important; width: 100%;
+}
+.item-header-line { margin-bottom: 5px; }
+.item-title-compact, .menu-card-name, .ck-name { flex: 0 1 auto !important; min-width: 0; max-width: 82%; }
+.item-price-compact, .menu-card-price, .ck-price { flex: 0 0 auto !important; margin-left: 0 !important; text-align: right; }
+.item-dots {
+    flex: 1 1 auto; min-width: 22px;
+    border-bottom: 2px dotted rgba(89, 46, 111, 0.5);
+    margin: 0 10px 0.38em; align-self: flex-end; pointer-events: none;
+}
+.desc-fr-compact { margin-top: 2px; }
+
+/* ── 4. Contenances (cl / L) : graisse normale ─────────────────────── */
+.cl-size { font-weight: 400 !important; }
+
+/* ── 5. Cartes (burgers, salades, glaces) ──────────────────────────── */
+.menu-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-top: 0; }
+@media (max-width: 640px) { .menu-cards { grid-template-columns: 1fr; } }
+.menu-card { background: #ffffff; border: 1px solid rgba(216, 178, 87, 0.55); border-left: 3px solid var(--gold-main); border-radius: 6px; padding: 13px 15px; box-shadow: 0 2px 8px rgba(89, 46, 111, 0.08); }
+.menu-card-head { margin-bottom: 6px; }
+.menu-card-name { font-family: 'Cinzel', serif; font-weight: 800; font-size: 1rem; color: var(--violet-dark); letter-spacing: 0.3px; }
+.menu-card-price { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem; color: var(--violet-mid); white-space: nowrap; }
+.menu-card-desc { font-family: 'Montserrat', sans-serif; font-size: 0.84rem; color: var(--text-main); line-height: 1.45; font-weight: 500; }
+
+/* ── 6. Encadrés (frites, formules, menus, petit déjeuner) ─────────── */
+.frites-box { background: linear-gradient(135deg, var(--violet-dark) 0%, var(--violet-deep) 100%); color: #fff; border: 1px solid var(--gold-main); border-radius: 6px; padding: 12px 16px; text-align: center; margin-top: 30px; box-shadow: 0 3px 10px rgba(67, 33, 85, 0.25); }
+.frites-box.slim { background: #ffffff; color: #180a20; }
+.frites-box .fr-t { font-family: 'Cinzel', serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.5px; }
+.frites-box .fr-t b { color: var(--gold-main); }
+.frites-box.slim .fr-t b { color: var(--violet-mid); }
+.frites-box .fr-n { font-size: 0.82rem; margin-top: 4px; opacity: 0.92; font-weight: 500; }
+
+.formule-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
+@media (max-width: 640px) { .formule-duo { grid-template-columns: 1fr; } }
+.formule-box { background: #ffffff; border: 1.5px solid var(--gold-main); border-radius: 8px; text-align: center; padding: 18px 14px; box-shadow: 0 3px 12px rgba(89, 46, 111, 0.10); }
+.formule-box.main { background: linear-gradient(135deg, var(--violet-dark) 0%, var(--violet-deep) 100%); color: #fff; }
+.formule-title { font-family: 'Cinzel', serif; font-weight: 800; font-size: 1.06rem; letter-spacing: 1px; color: var(--violet-dark); line-height: 1.35; }
+.formule-box.main .formule-title, .formule-box.main .formule-sub { color: var(--gold-light); }
+.formule-sub { font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.92rem; color: var(--violet-mid); margin-top: 4px; }
+.formule-price { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.9rem; color: var(--violet-mid); margin: 8px 0 2px; }
+.formule-box.main .formule-price { color: var(--gold-main); }
+.formule-price span, .kid-price span, .pdj-p span { font-size: 1.1rem; }
+.formule-foot { font-family: 'Montserrat', sans-serif; font-style: italic; font-size: 0.85rem; font-weight: 600; color: #7a6685; }
+.formule-box.main .formule-foot { color: #d4c2df; }
+
+.choix-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 32px 0 10px; }
+@media (max-width: 760px) { .choix-steps { grid-template-columns: 1fr; } }
+.step { background: #ffffff; border: 1px solid rgba(216, 178, 87, 0.55); border-radius: 8px; padding: 14px; text-align: center; }
+.step-title { font-family: 'Cinzel', serif; font-weight: 800; font-size: 1.02rem; color: var(--violet-dark); letter-spacing: 0.5px; margin-bottom: 10px; }
+.step-n { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--gold-gradient); color: var(--violet-dark); font-weight: 900; font-size: 0.9rem; margin-right: 8px; border: 1px solid #fcf6ba; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.chip { font-family: 'Montserrat', sans-serif; font-size: 0.74rem; font-weight: 600; color: var(--violet-mid); background: #f6f1fa; border: 1px solid rgba(89, 46, 111, 0.25); border-radius: 20px; padding: 3px 10px; }
+
+.kid-day { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 32px 0 10px; }
+@media (max-width: 640px) { .kid-day { grid-template-columns: 1fr; } }
+.menu-enfant, .menu-jour { background: #ffffff; border: 1.5px solid var(--gold-main); border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 3px 12px rgba(89, 46, 111, 0.10); }
+.kid-badge { display: inline-block; font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; background: var(--violet-mid); color: #fff; border-radius: 20px; padding: 3px 12px; margin-bottom: 8px; }
+.kid-badge.gold { background: var(--gold-gradient); color: var(--violet-dark); }
+.kid-title { font-family: 'Cinzel', serif; font-weight: 900; font-size: 1.3rem; color: var(--violet-dark); letter-spacing: 1px; }
+.kid-desc { font-family: 'Montserrat', sans-serif; font-size: 0.86rem; color: var(--text-main); margin: 8px 0 10px; line-height: 1.45; font-weight: 500; }
+.kid-price { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.7rem; color: var(--violet-mid); }
+.jour-grid { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+.jour-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; border-bottom: 1px dotted rgba(216, 178, 87, 0.7); padding-bottom: 6px; font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 600; color: var(--text-main); }
+.jour-row b { color: var(--violet-mid); white-space: nowrap; }
+.jour-note { font-family: 'Montserrat', sans-serif; font-style: italic; font-size: 0.82rem; color: #7a6685; font-weight: 600; }
+
+.petit-dej { background: linear-gradient(135deg, var(--violet-dark) 0%, var(--violet-deep) 100%); border: 1px solid var(--gold-main); border-radius: 8px; color: #fff; text-align: center; padding: 16px; margin-top: 32px; box-shadow: 0 3px 12px rgba(67, 33, 85, 0.25); }
+.pdj-t { font-family: 'Cinzel', serif; font-weight: 800; font-size: 1.1rem; color: var(--gold-light); letter-spacing: 1px; }
+.pdj-d { font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 500; margin: 7px 0; line-height: 1.45; }
+.pdj-p { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.55rem; color: var(--gold-main); }
+
+/* ── 7. Fromages ──────────────────────────────────────────────────── */
+.frow { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 4px; }
+.fb { background: #ffffff; border: 1px solid rgba(216, 178, 87, 0.55); border-radius: 20px; padding: 7px 16px; text-align: center; box-shadow: 0 2px 6px rgba(89, 46, 111, 0.08); }
+.fbn { font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.9rem; color: var(--violet-dark); }
+.fbp { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--violet-mid); margin-top: 2px; }
+
+/* ── 8. Happy Hour : bandeau-bouton, badges, flash doré ───────────── */
+.hh-banner {
+    appearance: none; -webkit-appearance: none;
+    background: var(--gold-gradient); color: var(--violet-dark);
+    border: 1.5px solid #fcf6ba; border-radius: 30px;
+    padding: 8px 24px; margin: 12px auto 28px;
+    display: flex; justify-content: center; align-items: center; gap: 12px;
+    font-family: 'Cinzel', serif; font-weight: 900; letter-spacing: 1px;
+    font-size: 1rem; box-shadow: 0 3px 14px rgba(156, 122, 45, 0.35);
+    width: fit-content; cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.hh-banner:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(156, 122, 45, 0.5); }
+.hh-icon { font-size: 1.05rem; }
+
+/* Cocktails : catégories bien aérées entre elles */
+.ck-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+@media (max-width: 980px) { .ck-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; } }
+@media (max-width: 640px) { .ck-grid { grid-template-columns: 1fr; gap: 18px; } }
+.ck-group { background: #ffffff; border: 1px solid rgba(216, 178, 87, 0.55); border-radius: 10px; padding: 20px 22px; box-shadow: 0 3px 12px rgba(89, 46, 111, 0.08); }
+.ck-group .gp-title { margin: 0 0 6px; }
+.gp-title { font-family: 'Cinzel', serif; font-weight: 900; font-size: 0.95rem; letter-spacing: 1.6px; color: var(--gold-dark); text-transform: uppercase; text-align: center; margin: 30px 0 14px; padding-bottom: 7px; border-bottom: 2px solid var(--gold-main); }
+.ck-item { padding: 11px 0; }
+.ck-item { padding: 10px 0; border-bottom: 1px dotted rgba(216, 178, 87, 0.5); }
+.ck-item:last-child { border-bottom: none; }
+.ck-name { font-family: 'Cinzel', serif; font-weight: 800; font-size: 0.98rem; color: var(--violet-dark); }
+.ck-price { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--violet-mid); white-space: nowrap; }
+.ck-hh { display: inline-block; font-size: 0.78rem; color: var(--gold-dark); background: rgba(216, 178, 87, 0.16); border: 1px solid rgba(216, 178, 87, 0.55); border-radius: 12px; padding: 1px 9px; margin-left: 8px; font-weight: 800; letter-spacing: 0.4px; }
+.ck-desc { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; color: var(--text-main); line-height: 1.4; margin-top: 4px; font-weight: 500; }
+
+/* Sur-saut brillant des prix Happy Hour */
+@keyframes hhFlash {
+    0%, 100% { transform: scale(1); color: var(--gold-dark); text-shadow: none; box-shadow: 0 0 0 rgba(216, 178, 87, 0); }
+    35% { transform: scale(1.22); color: #ffffff; text-shadow: 0 0 8px #fcf6ba, 0 0 20px #d8b257; box-shadow: 0 0 16px rgba(216, 178, 87, 0.9); }
+}
+.hh-flash { animation: hhFlash 0.9s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+
+/* ── 9. Cave : vins, bulles respirés, digestifs ───────────────────── */
+/* Espacement harmonisé : titre de catégorie à 38 px des contenus */
+#vins .sub-header-wrap { margin-top: 38px; }
+#vins .wine-scroll { margin-bottom: 4px; }
+#vins .bulles-table { margin: 2px 0 4px; }
+#vins .alc-warn { margin-top: 30px; }
+.wine-scroll { overflow-x: auto; margin-top: 2px; }
+.wine-table { width: 100%; border-collapse: collapse; font-family: 'Montserrat', sans-serif; }
+.wine-table th { font-family: 'Cinzel', serif; font-weight: 800; font-size: 0.78rem; letter-spacing: 1px; color: #fff; background: var(--violet-mid); padding: 7px 8px; border: 1px solid rgba(216, 178, 87, 0.4); }
+.wine-table th.n { width: 44px; }
+.wine-table th.w { text-align: left; }
+.wine-table td { padding: 7px 8px; font-size: 0.86rem; font-weight: 600; color: var(--text-main); border-bottom: 1px solid rgba(216, 178, 87, 0.35); text-align: center; }
+.wine-table td.n { color: var(--gold-dark); font-weight: 800; font-family: 'Cinzel', serif; }
+.wine-table td.w { text-align: left; }
+.wine-table .w-prod { font-size: 0.8rem; font-style: italic; color: var(--violet-mid); font-weight: 600; }
+.wine-table td.na { color: #c9bccf; }
+.wine-table tbody tr:nth-child(even) td { background: rgba(216, 178, 87, 0.06); }
+
+/* Bulles : présentées comme les vins (tableau) */
+.bulles-table { margin-top: 2px; }
+.bulles-table th:first-child { width: 58%; }
+.bulles-table th:not(:first-child) { width: 21%; }
+/* Digestifs : 2 colonnes */
+.digestifs-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 34px; row-gap: 0; margin-top: 2px; }
+@media (max-width: 640px) { .digestifs-grid { grid-template-columns: 1fr; column-gap: 0; } }
+.dig-col { display: flex; flex-direction: column; }
+/* Espacement page cave : tables et titres qui respirent */
+.wine-scroll { margin: 2px 0 6px; }
+.wine-table td { padding: 8px 9px; }
+.wine-table th { padding: 8px 9px; }
+.wine-table { border: 1px solid rgba(216, 178, 87, 0.4); border-radius: 8px; overflow: hidden; }
+.wine-table thead th { background: var(--violet-mid); }
+.wine-table tbody tr:last-child td { border-bottom: none; }
+
+/* ── 10. Boissons : lignes pointillées, eaux/sirops compacts ──────── */
+.drink-row { display: flex; align-items: baseline; justify-content: space-between; padding: 6px 0; border-bottom: 1px dotted rgba(216, 178, 87, 0.45); }
+.drink-name { font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 800; color: #180a20; letter-spacing: 0.2px; text-align: left; }
+.drink-dots { flex-grow: 1; border-bottom: 2px dotted rgba(89, 46, 111, 0.5); margin: 0 10px 4px; }
+.drink-price { font-family: 'Montserrat', sans-serif; font-size: 0.98rem; font-weight: 800; color: #592e6f; white-space: nowrap; }
+.drink-desc { font-size: 0.8rem; font-style: italic; color: #592e6f; text-align: left; padding-bottom: 6px; border-bottom: 1px dotted rgba(216, 178, 87, 0.45); }
+.sir { background: #ffffff; border: 1px solid rgba(216, 178, 87, 0.55); border-radius: 8px; padding: 10px 14px; margin-top: 14px; }
+.syr { font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-style: italic; color: #7a6685; text-align: left; margin: 8px 4px 22px; line-height: 1.5; font-weight: 600; border-bottom: 1px solid rgba(216, 178, 87, 0.4); padding-bottom: 10px; }
+.eaux-sirops .compact-list { margin-top: 0; }
+.eaux-sirops .compact-item { padding: 7px 2px; }
+.eaux-sirops .gp-title { margin: 14px 0 6px; }
+.eaux-sirops .sir { padding: 6px 10px; margin-top: 0; }
+.eaux-sirops .sir .drink-row { padding: 3px 0; }
+.eaux-sirops .syr { margin-top: 4px; }
+
+/* ── 11. Bières : pression en 2×2, prix HH sur la ligne du haut ───── */
+.bieres-block { margin-top: 44px; }
+/* Bières pression : 2 lignes × 2 colonnes (50 % chacune), format ligne compact */
+.beer-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 30px; row-gap: 4px; margin: 10px 0 6px; }
+@media (max-width: 640px) { .beer-grid { column-gap: 18px; } }
+.beer-line { border-bottom: 1px dotted rgba(216, 178, 87, 0.5); padding: 9px 0 8px; }
+.beer-top { display: flex; flex-wrap: nowrap; align-items: baseline; gap: 0 !important; width: 100%; }
+.beer-name { flex: 0 1 auto; min-width: 0; max-width: 60%; font-family: 'Cinzel', serif; font-weight: 800; font-size: 0.97rem; color: var(--violet-dark); letter-spacing: 0.3px; line-height: 1.3; }
+.beer-top .item-dots { flex: 1 1 auto; min-width: 14px; border-bottom: 2px dotted rgba(89, 46, 111, 0.5); margin: 0 9px 0.38em; }
+.beer-vols { flex: 0 0 auto; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text-main); white-space: nowrap; letter-spacing: 0.2px; }
+.beer-vols b { font-weight: 800; color: var(--violet-mid); }
+.beer-vols .bl-dot { margin: 0 7px; }
+.beer-hh { flex: 0 0 auto; display: inline-block; font-size: 0.76rem; color: var(--gold-dark); background: rgba(216, 178, 87, 0.16); border: 1px solid rgba(216, 178, 87, 0.55); border-radius: 12px; padding: 1px 9px; margin-left: 8px; font-weight: 800; white-space: nowrap; letter-spacing: 0.4px; }
+.bouteille-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 22px; }
+@media (max-width: 760px) { .bouteille-grid { grid-template-columns: 1fr; } }
+
+/* ── 12. Mention prix & pied de page pleine largeur ───────────────── */
+.footer-price-note { font-family: 'Cinzel', serif; font-size: 0.76rem; font-weight: 700; letter-spacing: 2.4px; color: var(--gold-main); text-transform: uppercase; margin: 10px 0 2px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); }
+footer { width: 100%; }
+.footer-details { white-space: nowrap; font-size: clamp(0.44rem, 1.7vw, 0.74rem); letter-spacing: 0.2px; }
+.footer-details .footer-addr { white-space: nowrap; }
+@media (max-width: 640px) { .footer-details { display: flex; flex-direction: column; align-items: center; gap: 3px; } .footer-details .footer-sep { display: none; } }
+.footer-price-note { white-space: nowrap; font-size: clamp(0.5rem, 1.9vw, 0.76rem); letter-spacing: clamp(0.4px, 0.22vw, 2.4px); }
+.footer-legal { white-space: nowrap; font-size: clamp(0.46rem, 1.7vw, 0.66rem); }
+.footer-social-link { white-space: nowrap; }
+@media (max-width: 480px) { footer { padding: 12px 8px 10px; } }
+
+/* ── 13. Icônes : alignement vertical avec le texte ───────────────── */
+.footer-ico { width: 13px; height: 13px; flex: 0 0 auto; display: inline-block; vertical-align: middle; transform: translateY(-1px); }
+.social-pill .footer-ico { width: 12px; height: 12px; }
+.footer-social-link > span, .social-pill { display: inline-flex; align-items: center; gap: 4px; line-height: 1; }
+.footer-social-link:hover .footer-ico { stroke: var(--violet-dark); }
+.footer-social-link:hover .footer-ico .ig-dot { fill: var(--violet-dark); }
+.social-pill:hover .footer-ico { stroke: var(--violet-dark); }
+.social-pill:hover .footer-ico .ig-dot { fill: var(--violet-dark); }
+
+/* ── 14. Encart témoins ───────────────────────────────────────────── */
+.alc-warn { text-align: center; font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-style: italic; color: #7a6685; margin: 38px auto 10px; border-top: 1px solid rgba(216, 178, 87, 0.45); padding-top: 12px; max-width: 560px; font-weight: 600; }
+</style>
+</head>
+<body>
+
+    <!-- MENU DE SÉLECTION ÉPINGLÉ EN PERMANENCE AU SOMMET -->
+    <div class="top-controls">
+        <button class="control-btn active" id="btn-show-cover" onclick="showView('cover')">✦ Page de Garde</button>
+        <button class="control-btn" id="btn-show-menu" onclick="showView('menu')">📖 Menu & Carte</button>
+    </div>
+
+    <!-- =========================================================================
+         VUE 1 : LA PAGE DE GARDE
+         ========================================================================= -->
+    <section id="cover-section">
+        <div class="cover-page">
+            <div class="cover-inner-border"></div>
+            <div style="height: 6px;"></div>
+
+            <!-- MÉDAILLON CENTRAL AVEC LA TERRASSE HAUSSMANNIENNE SANS FENÊTRES -->
+            <div class="medallion-container">
+                <svg class="medallion-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="goldGradCover" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#bf953f" /><stop offset="20%" stop-color="#fcf6ba" /><stop offset="45%" stop-color="#d8b257" /><stop offset="75%" stop-color="#b38728" /><stop offset="100%" stop-color="#fef9db" />
+                        </linearGradient>
+                        <filter id="goldGlowCover" x="-10%" y="-10%" width="120%" height="120%">
+                            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.6"/>
+                        </filter>
+                    </defs>
+                    
+                    <g filter="url(#goldGlowCover)">
+                        <circle cx="200" cy="200" r="192" stroke="url(#goldGradCover)" stroke-width="5" />
+                        <circle cx="200" cy="200" r="184" stroke="url(#goldGradCover)" stroke-width="1.8" stroke-dasharray="8 4" />
+                        <circle cx="200" cy="200" r="133" stroke="url(#goldGradCover)" stroke-width="4.5" />
+                        <circle cx="200" cy="200" r="127" stroke="url(#goldGradCover)" stroke-width="1" opacity="0.8" />
+
+                        <path d="M 200 12 C 185 12, 178 28, 178 42 C 178 56, 185 70, 200 70 C 215 70, 222 56, 222 42 C 222 28, 215 12, 200 12 Z" fill="url(#goldGradCover)" />
+                        <path d="M 200 16 C 196 28, 204 42, 200 66" stroke="#23102e" stroke-width="2.5" stroke-linecap="round" fill="none" />
+
+                        <path d="M 178 40 C 150 42, 120 58, 100 80 C 82 100, 72 125, 68 150 C 78 135, 95 120, 115 115 C 130 112, 148 118, 160 130 C 145 132, 130 145, 125 160 C 120 172, 128 188, 140 192" stroke="url(#goldGradCover)" stroke-width="3" stroke-linecap="round" fill="none" />
+                        <path d="M 222 40 C 250 42, 280 58, 300 80 C 318 100, 328 125, 332 150 C 322 135, 305 120, 285 115 C 270 112, 252 118, 240 130 C 255 132, 270 145, 275 160 C 280 172, 272 188, 260 192" stroke="url(#goldGradCover)" stroke-width="3" stroke-linecap="round" fill="none" />
+
+                        <path d="M 200 388 C 170 388, 145 375, 130 355 C 145 340, 168 335, 185 345 C 200 355, 195 375, 180 378 C 168 380, 155 370, 158 358" stroke="url(#goldGradCover)" stroke-width="3.2" stroke-linecap="round" fill="none" />
+                        <path d="M 200 388 C 230 388, 255 375, 270 355 C 255 340, 232 335, 215 345 C 200 355, 205 375, 220 378 C 232 380, 245 370, 242 358" stroke="url(#goldGradCover)" stroke-width="3.2" stroke-linecap="round" fill="none" />
+                        <path d="M 200 330 C 190 345, 190 365, 200 378 C 210 365, 210 345, 200 330 Z" fill="url(#goldGradCover)" />
+
+                        <!-- Treillis & Losanges Kabyles géométriques subtils -->
+                        <path d="M 68 150 L 52 165 L 68 180 L 52 195 L 68 210 L 52 225 L 68 240" stroke="url(#goldGradCover)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.85" />
+                        <path d="M 52 195 L 28 175 M 52 195 L 28 215 M 20 195 L 60 195" stroke="url(#goldGradCover)" stroke-width="2" stroke-linecap="round" opacity="0.9" />
+                        <circle cx="52" cy="195" r="3.5" fill="url(#goldGradCover)" />
+                        <path d="M 332 150 L 348 165 L 332 180 L 348 195 L 332 210 L 348 225 L 332 240" stroke="url(#goldGradCover)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.85" />
+                        <path d="M 348 195 L 372 175 M 348 195 L 372 215 M 340 195 L 380 195" stroke="url(#goldGradCover)" stroke-width="2" stroke-linecap="round" opacity="0.9" />
+                        <circle cx="348" cy="195" r="3.5" fill="url(#goldGradCover)" />
+                    </g>
+                </svg>
+
+                <svg class="relief-inner-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="innerEmbossCover" x="-10%" y="-10%" width="120%" height="120%">
+                            <feDropShadow dx="0" dy="1.5" stdDeviation="1" flood-color="#180a20" flood-opacity="0.35"/>
+                        </filter>
+                        <filter id="barShadowCover" x="-10%" y="-20%" width="120%" height="160%">
+                            <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.45"/>
+                        </filter>
+                        <linearGradient id="minimalGoldCover" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#bf953f" /><stop offset="30%" stop-color="#fcf6ba" /><stop offset="50%" stop-color="#d8b257" /><stop offset="80%" stop-color="#9c7a2d" /><stop offset="100%" stop-color="#fef9db" />
+                        </linearGradient>
+                        <path id="bottomArcCover" d="M 32 238 A 114 114 0 0 0 248 238" fill="none" />
+                        <clipPath id="topHalfClipCover"><rect x="0" y="0" width="280" height="136" /></clipPath>
+                    </defs>
+
+                    <rect width="280" height="280" fill="#ffffff" />
+
+                    <g clip-path="url(#topHalfClipCover)">
+                        <rect x="0" y="0" width="280" height="136" fill="#e8f1f5" />
+                        <rect x="15" y="15" width="250" height="121" fill="#ede7df" />
+                        <line x1="15" y1="36" x2="265" y2="36" stroke="#d5cdc2" stroke-width="1.8" />
+                        <line x1="15" y1="64" x2="265" y2="64" stroke="#d5cdc2" stroke-width="2.2" />
+
+                        <path d="M 16 67 L 264 67 L 270 96 L 10 96 Z" fill="#f4c430" stroke="#d8a614" stroke-width="1.5" />
+                        <path d="M 10 96 Q 23 102, 36 96 Q 49 102, 62 96 Q 75 102, 88 96 Q 101 102, 114 96 Q 127 102, 140 96 Q 153 102, 166 96 Q 179 102, 192 96 Q 205 102, 218 96 Q 231 102, 244 96 Q 257 102, 270 96 L 270 93 L 10 93 Z" fill="#e3b11e" />
+
+                        <rect x="25" y="96" width="230" height="40" fill="#2d2623" />
+                        <circle cx="65" cy="120" r="7" fill="none" stroke="#d8b257" stroke-width="1.5" />
+                        <line x1="65" y1="127" x2="63" y2="136" stroke="#d8b257" stroke-width="1.5" />
+                        <line x1="65" y1="127" x2="67" y2="136" stroke="#d8b257" stroke-width="1.5" />
+                        <rect x="90" y="116" width="14" height="6" fill="#8d6e3f" rx="1" />
+                        <line x1="97" y1="122" x2="97" y2="136" stroke="#231815" stroke-width="2" />
+                        <circle cx="185" cy="120" r="7" fill="none" stroke="#d8b257" stroke-width="1.5" />
+                        <line x1="185" y1="127" x2="183" y2="136" stroke="#d8b257" stroke-width="1.5" />
+                        <line x1="185" y1="127" x2="187" y2="136" stroke="#d8b257" stroke-width="1.5" />
+                        <rect x="210" y="116" width="14" height="6" fill="#8d6e3f" rx="1" />
+                        <line x1="217" y1="122" x2="217" y2="136" stroke="#231815" stroke-width="2" />
+
+                        <path d="M 140 136 L 140 67" stroke="#4a3525" stroke-width="4.5" stroke-linecap="round" />
+                        <circle cx="140" cy="42" r="23" fill="#2d5a27" opacity="0.95" />
+                        <circle cx="122" cy="45" r="16" fill="#3a7333" opacity="0.9" />
+                        <circle cx="158" cy="45" r="16" fill="#24481f" opacity="0.9" />
+                        <circle cx="140" cy="25" r="14" fill="#468a3e" opacity="0.9" />
+
+                        <text x="140" y="83.5" text-anchor="middle" font-family="'Cinzel', serif" font-weight="900" font-size="12px" fill="#180a20" letter-spacing="2.8px">LA COLLINE <tspan fill="#592e6f">GAMBETTA</tspan></text>
+                        <text x="140" y="92" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="700" font-size="5.2px" fill="#180a20" letter-spacing="1.2px">- BAR • RESTAURANT • TERRASSE -</text>
+                    </g>
+
+                    <line x1="0" y1="136" x2="280" y2="136" stroke="url(#minimalGoldCover)" stroke-width="4" filter="url(#barShadowCover)" />
+                    <line x1="0" y1="136" x2="280" y2="136" stroke="#ffffff" stroke-width="0.8" opacity="0.6" />
+
+                    <g filter="url(#innerEmbossCover)">
+                        <text x="140" y="162" text-anchor="middle" font-family="'Cinzel', serif" font-weight="800" font-size="12.5" fill="#180a20" letter-spacing="4.5">◇ — LA — ◇</text>
+                        <text x="140" y="196" text-anchor="middle" font-family="'Cinzel', serif" font-weight="900" font-size="36" fill="#180a20" letter-spacing="6.5">COLLINE</text>
+                        <text x="140" y="222" text-anchor="middle" font-family="'Cinzel', serif" font-weight="900" font-size="18.5" fill="#592e6f" letter-spacing="7.5">GAMBETTA</text>
+                        <text x="140" y="235" text-anchor="middle" font-family="'Cinzel', serif" font-weight="700" font-size="8.8" fill="url(#minimalGoldCover)" letter-spacing="3.5">◇ ⵣ • ✦ • ⵣ ◇</text>
+                        <text font-family="'Cinzel', serif" font-weight="900" font-size="8.8px" fill="#180a20" letter-spacing="2.8px">
+                            <textPath href="#bottomArcCover" startOffset="50%" text-anchor="middle">✦ BAR • RESTAURANT • PARIS 20ᵉ ✦</textPath>
+                        </text>
+                    </g>
+
+                    <circle cx="140" cy="140" r="136" fill="none" stroke="url(#minimalGoldCover)" stroke-width="2.5" opacity="0.95" pointer-events="none" />
+                    <circle cx="140" cy="140" r="130" fill="none" stroke="#592e6f" stroke-width="0.8" opacity="0.35" stroke-dasharray="4 4" pointer-events="none" />
+                </svg>
+            </div>
+
+            <button class="cover-hero-pill" onclick="showView('menu')">✦ MENU & CARTE ✦</button>
+
+            <div class="cover-footer">
+                <div class="cover-footer-address">
+                    4 RUE BELGRAND • 75020 PARIS •
+
+                    PLACE GAMBETTA •
+                </div>
+                <div class="social-pills-container">
+                    <a href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener" class="social-pill" title="Suivre La Colline Gambetta sur Instagram"><svg class="footer-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ffffff" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle class="ig-dot" cx="17.4" cy="6.6" r="1.25" fill="#ffffff" stroke="none"/></svg> <span class="pill-label">lacolline.gambetta</span></a>
+                    <a href="tel:+33143490593" class="social-pill" title="Appeler La Colline Gambetta"><svg class="footer-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg> <span class="pill-label">01 43 49 05 93</span></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================================
+         VUE 2 : LA CARTE INTÉRIEURE (INTERACTIVE)
+         ========================================================================= -->
+    <section id="interior-menu">
+        <header class="interior-header">
+            <div class="welcome-badge-header">✦ BIENVENUE • WELCOME ✦</div>
+            <div class="header-minimal-brand">
+                <span class="brand-la">— LA —</span>
+                <span class="brand-colline">COLLINE</span>
+                <span class="brand-gambetta">GAMBETTA</span>
+            </div>
+            <div class="header-gold-separator">
+                <span class="sep-line"></span>
+                <span class="sep-diamond">✦</span>
+                <span class="sep-line"></span>
+            </div>
+            <div class="interior-tagline">BAR • RESTAURANT • PARIS 20ᵉ</div>
+            <div class="header-sub-info">✦ Fait Maison • Service Continu • Terrasse ✦</div>
+        </header>
+
+        <div class="welcome-banner">
+            <div class="welcome-text-fr">« Proche du Père Lachaise et de la Place Gambetta, notre terrasse vous accueille en continu pour partager un verre, un cocktail signature ou savourer une cuisine 100 % faite maison. »</div>
+            
+        </div>
+
+        <div id="menu-nav-anchor" aria-hidden="true"></div>
+        <nav class="menu-nav">
+            <button class="nav-btn active" onclick="showMenuSection('entrees', this)">✦ Entrées &amp; Planches</button>
+            <button class="nav-btn" onclick="showMenuSection('plats', this)">🥩 Plats &amp; Salades</button>
+            <button class="nav-btn" onclick="showMenuSection('menus', this)">🥐 Menus &amp; Formules</button>
+            <button class="nav-btn" onclick="showMenuSection('desserts', this)">🍰 Douceurs &amp; Glaces</button>
+            <button class="nav-btn" onclick="showMenuSection('cocktails', this)">🍸 Cocktails &amp; Mocktails</button>
+            <button class="nav-btn" onclick="showMenuSection('vins', this)">🍷 Cave &amp; Vins</button>
+            <button class="nav-btn" onclick="showMenuSection('boissons', this)">☕ Boissons &amp; Bières</button>
+        </nav>
+
+        <div class="container">
+
+<div id="entrees" class="menu-section active"><div class="section-header"><h3>Les Entrées, Planches &amp; Omelettes</h3><div class="section-desc">Foie gras du Sud-Ouest, escargots, planches à partager et omelettes servies avec leur salade</div></div><div class="vis-a-vis-grid"><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Entrées ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Assiette de foie gras du Sud-Ouest</span><span class="item-dots"></span><span class="item-price-compact">17,90</span></div><div class="desc-fr-compact">· Pain toasté, confiture d’abricots</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Œuf cocotte du moment</span><span class="item-dots"></span><span class="item-price-compact">7,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Pâté de campagne et cornichons</span><span class="item-dots"></span><span class="item-price-compact">6,50</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Œuf dur mayonnaise</span><span class="item-dots"></span><span class="item-price-compact">6,20</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">6 Escargots de Bourgogne</span><span class="item-dots"></span><span class="item-price-compact">7,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">6 Escargots au Roquefort</span><span class="item-dots"></span><span class="item-price-compact">7,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Assiette de saumon fumé</span><span class="item-dots"></span><span class="item-price-compact">7,50</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Tartare d’avocat et crevettes</span><span class="item-dots"></span><span class="item-price-compact">8,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Salade au poulet</span><span class="item-dots"></span><span class="item-price-compact">8,90</span></div></div></div></div><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Planches &amp; Croques ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">La Cochonnaille</span><span class="item-dots"></span><span class="item-price-compact">17,50</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">La Fromagère</span><span class="item-dots"></span><span class="item-price-compact">15,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">La Paysanne</span><span class="item-dots"></span><span class="item-price-compact">21,90</span></div><div class="desc-fr-compact">· Charcuterie et fromages</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Croque-Monsieur</span><span class="item-dots"></span><span class="item-price-compact">12,70</span></div><div class="desc-fr-compact">· Frites et salade</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Croque-Madame</span><span class="item-dots"></span><span class="item-price-compact">13,70</span></div><div class="desc-fr-compact">· Frites et salade</div></div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Omelettes ✦</div><div class="sub-note">Servies avec leur salade</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Œufs au plat</span><span class="item-dots"></span><span class="item-price-compact">9,90</span></div><div class="desc-fr-compact">· Salade</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Omelette nature</span><span class="item-dots"></span><span class="item-price-compact">9,90</span></div><div class="desc-fr-compact">· Salade</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Omelette au fromage</span><span class="item-dots"></span><span class="item-price-compact">10,90</span></div><div class="desc-fr-compact">· Salade</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Omelette au jambon</span><span class="item-dots"></span><span class="item-price-compact">10,90</span></div><div class="desc-fr-compact">· Salade</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Omelette mixte</span><span class="item-dots"></span><span class="item-price-compact">14,90</span></div><div class="desc-fr-compact">· Salade</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Omelette aux champignons</span><span class="item-dots"></span><span class="item-price-compact">13,90</span></div><div class="desc-fr-compact">· Salade</div></div></div></div></div></div>
+
+<div id="plats" class="menu-section"><div class="section-header"><h3>Les Plats, Burgers &amp; Salades Gourmet</h3><div class="section-desc">Entrecôtes, confits, tartares, burgers maison et salades complètes</div></div><div class="vis-a-vis-grid"><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Plats ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Entrecôte 300 g</span><span class="item-dots"></span><span class="item-price-compact">25,90</span></div><div class="desc-fr-compact">· Fleur de sel, sauce au poivre</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Bavette d’aloyau</span><span class="item-dots"></span><span class="item-price-compact">17,50</span></div><div class="desc-fr-compact">· Sauce au choix</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Escalope de veau</span><span class="item-dots"></span><span class="item-price-compact">19,90</span></div><div class="desc-fr-compact">· Sauce champignons, pâtes</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Cuisse de canard confite</span><span class="item-dots"></span><span class="item-price-compact">19,70</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Poisson</span><span class="item-dots"></span><span class="item-price-compact">17,90</span></div><div class="desc-fr-compact">· Selon l’arrivée</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Tartare de bœuf</span><span class="item-dots"></span><span class="item-price-compact">17,80</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Cuisse de poulet rôtie</span><span class="item-dots"></span><span class="item-price-compact">16,20</span></div><div class="desc-fr-compact">· Riz basmati</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Carpaccio de bœuf</span><span class="item-dots"></span><span class="item-price-compact">17,50</span></div></div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Salades ✦</div></div><div class="menu-cards">
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">La Colline</span><span class="item-dots"></span><span class="menu-card-price">17,10</span></div><div class="menu-card-desc">Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûtons toastés, chèvre.</div></div>
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Chèvre Chaud</span><span class="item-dots"></span><span class="menu-card-price">16,90</span></div><div class="menu-card-desc">Salade verte, tomate, jambon sec, toast de cabécou, miel.</div></div>
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Végétarienne</span><span class="item-dots"></span><span class="menu-card-price">13,60</span></div><div class="menu-card-desc">Salade verte, tomate, concombre, carottes râpées, légumes, avocat.</div></div>
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Nordique</span><span class="item-dots"></span><span class="menu-card-price">17,90</span></div><div class="menu-card-desc">Salade verte, saumon fumé, crevettes, avocat, concombre, tomate, feta, croûtons.</div></div>
+</div></div><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Burgers ✦</div></div><div class="menu-cards">
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Burger La Colline</span><span class="item-dots"></span><span class="menu-card-price">18,20</span></div><div class="menu-card-desc">Pain brioché, cheddar, steak haché, bacon, oignons caramélisés, salade, tomate, sauce burger.</div></div>
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Le Royal Fishburger</span><span class="item-dots"></span><span class="menu-card-price">17,90</span></div><div class="menu-card-desc">Pain brioché, cheddar, poisson pané, légumes grillés, salade, tomate, sauce burger.</div></div>
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Burger Chicken Croustillant</span><span class="item-dots"></span><span class="menu-card-price">17,90</span></div><div class="menu-card-desc">Pain brioché, cheddar, escalope de poulet pané croustillant, oignons caramélisés, salade, tomate, sauce burger.</div></div>
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Burger Végétarien</span><span class="item-dots"></span><span class="menu-card-price">17,70</span></div><div class="menu-card-desc">Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger.</div></div>
+</div><div class="frites-box"><div class="fr-t">Assiette de frites <b>5,20</b></div><div class="fr-n">Sauce au choix : poivre • Champignons • Roquefort — Supplément sauce 2,00</div></div></div></div></div>
+
+<div id="menus" class="menu-section"><div class="section-header"><h3>Les Formules &amp; Menus du Bistrot</h3><div class="section-desc">Entrée + Plat ou Plat + Dessert — Au choix • Menu du jour selon l’ardoise • Menu enfant et petit déjeuner</div></div><div class="formule-duo"><div class="formule-box"><div class="formule-title">Entrée + Plat
+Ou Plat + Dessert</div><div class="formule-price">24,90</div><div class="formule-foot">Au choix</div></div><div class="formule-box main"><div class="formule-title">La Formule Complète</div><div class="formule-sub">Entrée + Plat + Dessert</div><div class="formule-price">29,90</div><div class="formule-foot">Au choix</div></div></div><div class="choix-steps"><div class="step"><div class="step-title"><span class="step-n">1</span>Entrée au choix</div><div class="chips"><span class="chip">Salade au poulet</span><span class="chip">Escargots de Bourgogne</span><span class="chip">Pâté de campagne</span><span class="chip">Œuf cocotte</span><span class="chip">Assiette de charcuterie</span></div></div><div class="step"><div class="step-title"><span class="step-n">2</span>Plat au choix</div><div class="chips"><span class="chip">Escalope de veau</span><span class="chip">Bavette d’aloyau — Sauce au choix</span><span class="chip">Cuisse de canard confite</span></div></div><div class="step"><div class="step-title"><span class="step-n">3</span>Dessert au choix</div><div class="chips"><span class="chip">Panna cotta</span><span class="chip">Crème brûlée</span><span class="chip">Mousse au chocolat</span><span class="chip">Tiramisu</span><span class="chip">2 boules de glace</span></div></div></div><div class="kid-day"><div class="menu-enfant"><div class="kid-badge">Moins de 12 ans</div><div class="kid-title">Le Menu Enfant</div><div class="kid-desc">Eau ou soda • Burger enfant ou cordon bleu • Frites maison • 1 boule de glace au choix</div><div class="kid-price">11,90</div></div><div class="menu-jour"><div class="kid-badge gold">✦ Selon l’Ardoise ✦</div><div class="kid-title italic">Le Menu du Jour</div><div class="jour-grid"><div class="jour-row"><span>Entrée + Plat
+Ou Plat + Dessert</span><b>17,90</b></div><div class="jour-row"><span>Entrée + Plat
++ Dessert</span><b>21,90</b></div></div><div class="jour-note">Uniquement les midis — Sauf weekends et jours fériés</div></div></div><div class="petit-dej"><div class="pdj-t">✦ Petit Déjeuner ✦</div><div class="pdj-d">Boisson chaude au choix • Croissant ou tartine au beurre • Verre de jus de fruits au choix</div><div class="pdj-p">7,00</div></div></div>
+
+<div id="desserts" class="menu-section"><div class="section-header"><h3>Les Douceurs Maison, Glaces &amp; Fromages</h3><div class="section-desc">Desserts faits maison, coupes glacées et fromages affinés</div></div><div class="vis-a-vis-grid"><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Desserts ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Crème brûlée</span><span class="item-dots"></span><span class="item-price-compact">6,80</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Mousse au chocolat</span><span class="item-dots"></span><span class="item-price-compact">7,10</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Panna cotta</span><span class="item-dots"></span><span class="item-price-compact">7,50</span></div><div class="desc-fr-compact">· Coulis de fruits rouges</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Tiramisu</span><span class="item-dots"></span><span class="item-price-compact">7,50</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Tarte aux pommes</span><span class="item-dots"></span><span class="item-price-compact">8,50</span></div><div class="desc-fr-compact">· Glace vanille</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Pain perdu de la Colline</span><span class="item-dots"></span><span class="item-price-compact">8,50</span></div><div class="desc-fr-compact">· Glace vanille ou caramel beurre salé</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Moelleux au chocolat</span><span class="item-dots"></span><span class="item-price-compact">7,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Café gourmand</span><span class="item-dots"></span><span class="item-price-compact">8,90</span></div><div class="desc-fr-compact">· Thé + 1 — Mignardises</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Profiteroles</span><span class="item-dots"></span><span class="item-price-compact">7,90</span></div></div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Fromages ✦</div></div><div class="frow"><div class="fb"><div class="fbn">Pont-l’Évêque</div><div class="fbp">5,90</div></div><div class="fb"><div class="fbn">Fourme d’Ambert</div><div class="fbp">6,90</div></div><div class="fb"><div class="fbn">Cantal</div><div class="fbp">6,90</div></div><div class="fb"><div class="fbn">Chèvre</div><div class="fbp">5,90</div></div><div class="fb"><div class="fbn">Assiette mixte</div><div class="fbp">8,50</div></div></div></div><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Glaces ✦</div></div><div class="menu-cards">
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Crème glacée (3 boules)</span><span class="item-dots"></span><span class="menu-card-price">8,50</span></div><div class="menu-card-desc">Vanille, caramel beurre salé, chocolat, café, pistache, noisette</div></div>
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Sorbet (3 boules)</span><span class="item-dots"></span><span class="menu-card-price">8,50</span></div><div class="menu-card-desc">Citron vert, fraise, framboise</div></div>
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Dame blanche</span><span class="item-dots"></span><span class="menu-card-price">8,90</span></div><div class="menu-card-desc">Éclats de chocolat chaud, 2 boules vanille, chantilly</div></div>
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Chocolat liégeois</span><span class="item-dots"></span><span class="menu-card-price">8,90</span></div><div class="menu-card-desc">2 boules chocolat, sauce chocolat, chantilly</div></div>
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Café liégeois</span><span class="item-dots"></span><span class="menu-card-price">8,90</span></div><div class="menu-card-desc">2 boules café, expresso, chantilly</div></div>
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Caramello</span><span class="item-dots"></span><span class="menu-card-price">8,90</span></div><div class="menu-card-desc">2 boules caramel beurre salé, sauce caramel, chantilly</div></div>
+<div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Le Colonel de la Colline</span><span class="item-dots"></span><span class="menu-card-price">8,90</span></div><div class="menu-card-desc">2 boules citron vert arrosées de vodka (<span class="cl-size">2 cl</span>)</div></div>
+</div><div class="frites-box slim"><div class="fr-t">Supplément boule glace / sorbet <b>3,00</b></div></div></div></div></div>
+
+<div id="cocktails" class="menu-section"><div class="section-header"><h3>Les Cocktails &amp; Mocktails Signatures</h3><div class="section-desc">Classiques, mules, spritz et créations signées — Sans alcool en mocktail</div></div><button type="button" class="hh-banner" onclick="flashHappyHour()" title="Faire briller les prix Happy Hour"><span class="hh-icon">🔔</span><span class="hh-text">HAPPY HOUR 17H ➔ 23H</span><span class="hh-icon">🍸</span></button><div class="ck-grid"><div class="ck-group"><div class="gp-title">Cocktails Classiques</div><div class="ck-item"><div class="ck-head"><span class="ck-name">Mojito</span><span class="item-dots"></span><span class="ck-price">7,90<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Rhum, menthe fraîche, citron vert, sucre de canne, eau gazeuse</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Caïpirinha</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Cachaça, citron vert, sucre de canne</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Caïpiroska</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Vodka, citron vert, sucre de canne</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Ti-Punch</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Rhum, citron vert, sucre de canne</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Mai Tai</span><span class="item-dots"></span><span class="ck-price">8,90<span class="ck-hh hh-price" title="Happy Hour">7</span></span></div><div class="ck-desc">Rhum blanc, rhum ambré, citron vert, Cointreau, sirop d’orgeat</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Piña Colada</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Rhum, jus d’ananas, crème de coco</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Strawberry Colada</span><span class="item-dots"></span><span class="ck-price">7,90<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Rhum, jus d’ananas, sirop de fraise, crème de coco</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Cuba Libre</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Rhum, Coca-Cola, jus de citron</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Tequila Sunrise</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Tequila, jus d’orange, sirop de grenadine</div></div></div><div class="ck-group"><div class="gp-title">Mules &amp; Fizz</div><div class="ck-item"><div class="ck-head"><span class="ck-name">Moscow Mule</span><span class="item-dots"></span><span class="ck-price">7,90<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Vodka, citron vert, ginger beer</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Jamaïcan Mule</span><span class="item-dots"></span><span class="ck-price">7,90<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Rhum, citron vert, ginger beer</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">London Mule</span><span class="item-dots"></span><span class="ck-price">7,90<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Gin, citron vert, ginger beer</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Gin Fizz</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Gin, citron vert, sucre de canne, limonade</div></div></div><div class="ck-group"><div class="gp-title">Spritz &amp; Fraîcheur</div><div class="ck-item"><div class="ck-head"><span class="ck-name">Spritz</span><span class="item-dots"></span><span class="ck-price">8,90<span class="ck-hh hh-price" title="Happy Hour">7</span></span></div><div class="ck-desc">Apérol, Prosecco, orange, eau gazeuse</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">St-Germain Spritz</span><span class="item-dots"></span><span class="ck-price">9,90<span class="ck-hh hh-price" title="Happy Hour">8,50</span></span></div><div class="ck-desc">Liqueur de fleurs de sureau, Prosecco, orange, eau gazeuse</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Suze Tonic</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Suze, Schweppes Tonic, citron</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">La Colline</span><span class="item-dots"></span><span class="ck-price">7,90<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Tequila, citron vert, sirop de cassis, Schweppes Tonic</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Gin Tonic</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Gin, Schweppes Tonic, citron</div></div></div><div class="ck-group"><div class="gp-title">Élégance &amp; Saveurs</div><div class="ck-item"><div class="ck-head"><span class="ck-name">Havane Passion</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Rhum, sirop de fruit de la passion, citron</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Passion Royal</span><span class="item-dots"></span><span class="ck-price">7,90<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Prosecco, vodka, sirop de passion, citron vert</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Margarita</span><span class="item-dots"></span><span class="ck-price">7,90<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Tequila, Cointreau, citron vert</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Black Russian</span><span class="item-dots"></span><span class="ck-price">8,50<span class="ck-hh hh-price" title="Happy Hour">7,50</span></span></div><div class="ck-desc">Vodka, liqueur de café, cerise</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Madeleine</span><span class="item-dots"></span><span class="ck-price">8,90<span class="ck-hh hh-price" title="Happy Hour">7,50</span></span></div><div class="ck-desc">Cointreau, amaretto, jus d’ananas</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Cosmopolitan</span><span class="item-dots"></span><span class="ck-price">8,90<span class="ck-hh hh-price" title="Happy Hour">7,50</span></span></div><div class="ck-desc">Vodka, Cointreau, cranberry, citron vert</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Sex on the Beach</span><span class="item-dots"></span><span class="ck-price">8,90<span class="ck-hh hh-price" title="Happy Hour">7,50</span></span></div><div class="ck-desc">Vodka, Cointreau, crème de pêche, orange, cranberry</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Bloody Mary</span><span class="item-dots"></span><span class="ck-price">8,90<span class="ck-hh hh-price" title="Happy Hour">7,50</span></span></div><div class="ck-desc">Vodka, tomate, citron et épices</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Expresso Martini</span><span class="item-dots"></span><span class="ck-price">8,90<span class="ck-hh hh-price" title="Happy Hour">7,50</span></span></div><div class="ck-desc">Vodka, liqueur de café, expresso, sucre de canne</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Violette Royale</span><span class="item-dots"></span><span class="ck-price">12,90</span></div><div class="ck-desc">Crème de violette, champagne, cerise</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Spritz Violette</span><span class="item-dots"></span><span class="ck-price">10,90<span class="ck-hh hh-price" title="Happy Hour">9</span></span></div><div class="ck-desc">Prosecco, crème de violette, eau gazeuse, myrtilles</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Aviation</span><span class="item-dots"></span><span class="ck-price">10,50<span class="ck-hh hh-price" title="Happy Hour">9</span></span></div><div class="ck-desc">Gin, crème de violette, citron jaune</div></div></div><div class="ck-group"><div class="gp-title">Mocktails · <span class="cl-size">25cl</span> · Sans Alcool</div><div class="ck-item"><div class="ck-head"><span class="ck-name">St Valentin</span><span class="item-dots"></span><span class="ck-price">5,90<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Sirop de violette, citron vert, Schweppes Tonic</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Bora Bora</span><span class="item-dots"></span><span class="ck-price">5,90<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Jus d’ananas, jus d’orange, sirop de grenadine</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Virgin Colline</span><span class="item-dots"></span><span class="ck-price">5,90<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Jus d’orange, jus d’ananas, citron, sirop de cassis</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Virgin Mojito</span><span class="item-dots"></span><span class="ck-price">5,90<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Citron vert, menthe, sucre de canne, eau gazeuse</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Virgin Colada</span><span class="item-dots"></span><span class="ck-price">5,90<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Jus d’ananas, crème de coco</div></div>
+<div class="ck-item"><div class="ck-head"><span class="ck-name">Virgin Bloody Mary</span><span class="item-dots"></span><span class="ck-price">5,90<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Jus de tomate, citron, épices</div></div></div></div><div class="alc-warn">L’abus d’alcool est dangereux pour la santé — À consommer avec modération</div></div>
+
+<div id="vins" class="menu-section"><div class="section-header"><h3>La Cave : Vins, Bulles &amp; Digestifs</h3><div class="section-desc">Sélection de vins au verre (<span class="cl-size">12,5cl</span> / <span class="cl-size">25cl</span> / <span class="cl-size">50cl</span>) ou en bouteille, champagnes et digestifs</div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Vin Rouge ✦</div></div><div class="wine-scroll"><table class="wine-table">
+<thead><tr><th class="n">N°</th><th class="w">Appellation</th><th>12,5cl</th><th>25cl</th><th>50cl</th><th>75cl</th></tr></thead><tbody>
+<tr><td class="n">1</td><td class="w">Côtes du Rhône AOP Bio <span class="w-prod">— Les 3 Garçons</span></td><td>4,90</td><td>9,50</td><td>17,90</td><td>21,90</td></tr>
+<tr><td class="n">2</td><td class="w">Bordeaux AOP <span class="w-prod">— L’Attrape Rêve</span></td><td>5,20</td><td>9,90</td><td>18,90</td><td>22,90</td></tr>
+<tr><td class="n">3</td><td class="w">Bourgueil AOP <span class="w-prod">— Prestige &amp; Tradition</span></td><td>5,40</td><td>10,40</td><td>19,50</td><td>23,90</td></tr>
+<tr><td class="n">4</td><td class="w">Côtes de Bourg AOP <span class="w-prod">— Hipster de Barbe</span></td><td>5,60</td><td>10,50</td><td>19,80</td><td>24,90</td></tr>
+<tr><td class="n">5</td><td class="w">Lussac-Saint-Émilion AOP <span class="w-prod">— Grand Ricombre</span></td><td>6,60</td><td>12,80</td><td>23,90</td><td>29,90</td></tr>
+<tr><td class="n">6</td><td class="w">Brouilly AOP <span class="w-prod">— Réserve de Beauvoisie</span></td><td>6,90</td><td>13,60</td><td>26,50</td><td>32,90</td></tr>
+<tr><td class="n">7</td><td class="w">IGP Pays d’Oc Bio <span class="w-prod">— Laroche La Chevrière Pinot Noir</span></td><td>5,90</td><td>10,90</td><td>19,90</td><td>26,90</td></tr>
+<tr><td class="n">8</td><td class="w">Bourgogne Côte Chalonnaise AOP <span class="w-prod">— Millebuis Pinot Noir</span></td><td>8,30</td><td>15,90</td><td>29,90</td><td>37,60</td></tr>
+<tr><td class="n">9</td><td class="w">Pic Saint-Loup AOP <span class="w-prod">— Puech de Fourques</span></td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>38,70</td></tr>
+<tr><td class="n">10</td><td class="w">Crozes-Hermitage AOP <span class="w-prod">— Chante Passo</span></td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>45,90</td></tr>
+<tr><td class="n">11</td><td class="w">Gigondas AOP Bio <span class="w-prod">— Pierre Amadieu Romane Machotte</span></td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>58,00</td></tr>
+</tbody></table></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Vin Blanc ✦</div></div><div class="wine-scroll"><table class="wine-table">
+<thead><tr><th class="n">N°</th><th class="w">Appellation</th><th>12,5cl</th><th>25cl</th><th>50cl</th><th>75cl</th></tr></thead><tbody>
+<tr><td class="n">1</td><td class="w">Bourgogne Côte Chalonnaise AOP <span class="w-prod">— Millebuis Chardonnay</span></td><td>7,80</td><td>15,50</td><td>29,90</td><td>36,90</td></tr>
+<tr><td class="n">2</td><td class="w">Petit Chablis AOP <span class="w-prod">— La Revrie</span></td><td>8,30</td><td>16,20</td><td>30,50</td><td>42,10</td></tr>
+<tr><td class="n">3</td><td class="w">IGP Pays d’Oc <span class="w-prod">— Le Sudiste Chardonnay</span></td><td>4,60</td><td>8,90</td><td>15,90</td><td>22,50</td></tr>
+<tr><td class="n">4</td><td class="w">IGP Pays de l’Hérault Bio <span class="w-prod">— Dom. De Petit Roubié Sauvignon</span></td><td>5,60</td><td>10,80</td><td>19,80</td><td>27,90</td></tr>
+<tr><td class="n">5</td><td class="w">IGT Terre Siciliane Bio <span class="w-prod">— Vinisella Pinot Grigio La Passione</span></td><td>4,50</td><td>8,60</td><td>15,50</td><td>21,90</td></tr>
+<tr><td class="n">6</td><td class="w">IGP Côtes de Thau Moelleux <span class="w-prod">— L’Or de l’Ange</span></td><td>6,90</td><td>13,50</td><td>25,90</td><td>35,80</td></tr>
+</tbody></table></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Vin Rosé ✦</div></div><div class="wine-scroll"><table class="wine-table">
+<thead><tr><th class="n">N°</th><th class="w">Appellation</th><th>12,5cl</th><th>25cl</th><th>50cl</th><th>75cl</th></tr></thead><tbody>
+<tr><td class="n">1</td><td class="w">Côtes de Provence AOP Bio <span class="w-prod">— MV Presqu’île de St-Tropez</span></td><td>7,60</td><td>14,50</td><td>26,90</td><td>33,90</td></tr>
+<tr><td class="n">2</td><td class="w">IGP Méditerranée Bio <span class="w-prod">— La Demoiselle sans Gêne</span></td><td>5,60</td><td>10,50</td><td>19,90</td><td>29,90</td></tr>
+<tr><td class="n">3</td><td class="w">IGP Méditerranée <span class="w-prod">— Le Roi Soleil</span></td><td>5,30</td><td>9,40</td><td>18,40</td><td>26,10</td></tr>
+</tbody></table></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Bulles ✦</div></div>
+<div class="wine-scroll"><table class="wine-table bulles-table">
+<thead><tr><th class="w">Champagnes &amp; Prosecco</th><th>Coupe <span class="cl-size">12 cl</span></th><th><span class="cl-size">75 cl</span></th></tr></thead><tbody>
+<tr><td class="w">Champagne H. Richard <span class="w-prod">— Cuvée Henri</span></td><td>10,50</td><td>62,00</td></tr>
+<tr><td class="w">Champagne Nicolas Feuillatte <span class="w-prod">— Brut Réserve Exclusive</span></td><td class="na">—</td><td>81,00</td></tr>
+<tr><td class="w">Prosecco Il Poggio <span class="w-prod">— Blanc de Noirs Extra Dry</span></td><td>4,90</td><td>28,90</td></tr>
+</tbody></table></div>
+
+<div class="alc-warn">L’abus d’alcool est dangereux pour la santé — À consommer avec modération</div></div>
+
+<div id="boissons" class="menu-section"><div class="section-header"><h3>Le Comptoir du Cafetier : Boissons &amp; Bières</h3><div class="section-desc">Boissons fraîches et chaudes, apéritifs, eaux minérales, sirops et bières pression ou bouteille</div></div><div class="vis-a-vis-grid"><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Eaux ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Vittel</span><span class="item-dots"></span><span class="item-price-compact">3,90 / 4,90 / 5,90</span></div><div class="desc-fr-compact">· <span class="cl-size">25 / 50cl</span> / <span class="cl-size">1L</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">San Pellegrino</span><span class="item-dots"></span><span class="item-price-compact">4,90 / 6,20</span></div><div class="desc-fr-compact">· <span class="cl-size">50cl</span> / <span class="cl-size">1L</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Badoit</span><span class="item-dots"></span><span class="item-price-compact">4,90 / 6,20</span></div><div class="desc-fr-compact">· <span class="cl-size">33cl</span> / <span class="cl-size">1L</span></div></div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Sirops ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Sirop à l’eau</span><span class="item-dots"></span><span class="item-price-compact">3,00</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Supplément sirop · <span class="cl-size">2 cl</span></span><span class="item-dots"></span><span class="item-price-compact">0,50</span></div></div></div><div class="syr">grenadine • fraise • citron • menthe • pêche • violette • passion • vanille • coco • orgeat • cassis</div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Boissons Fraîches ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Coca / Zéro / Cherry</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div><div class="desc-fr-compact">· <span class="cl-size">33cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Fanta / Sprite / Fuze Tea</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div><div class="desc-fr-compact">· <span class="cl-size">25cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Orangina / Citronnade / Ginger Beer</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div><div class="desc-fr-compact">· <span class="cl-size">25cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Perrier</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div><div class="desc-fr-compact">· <span class="cl-size">33cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Diabolo / Limonade</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div><div class="desc-fr-compact">· <span class="cl-size">25cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Schweppes Tonic / Agrumes</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div><div class="desc-fr-compact">· <span class="cl-size">25cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Jus / Nectar de fruits</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div><div class="desc-fr-compact">· <span class="cl-size">25cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Orange pressée / Citron pressé</span><span class="item-dots"></span><span class="item-price-compact">5,50</span></div><div class="desc-fr-compact">· <span class="cl-size">25cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Milkshake</span><span class="item-dots"></span><span class="item-price-compact">5,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Café frappé</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Latte frappé</span><span class="item-dots"></span><span class="item-price-compact">5,50</span></div></div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Boissons Chaudes ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Café</span><span class="item-dots"></span><span class="item-price-compact">2,40</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Décaféiné</span><span class="item-dots"></span><span class="item-price-compact">2,50</span></div><div class="desc-fr-compact">· <span class="cl-size">25cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Café noisette / allongé</span><span class="item-dots"></span><span class="item-price-compact">2,60</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Double café / décaféiné</span><span class="item-dots"></span><span class="item-price-compact">4,80</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Café crème / chocolat chaud</span><span class="item-dots"></span><span class="item-price-compact">4,50</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Cappuccino</span><span class="item-dots"></span><span class="item-price-compact">5,10</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Crème / chocolat viennois</span><span class="item-dots"></span><span class="item-price-compact">5,10</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Café viennois</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Infusion / thé parfumé</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Grog</span><span class="item-dots"></span><span class="item-price-compact">5,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Vin chaud aux épices</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Irish coffee</span><span class="item-dots"></span><span class="item-price-compact">9,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Café allongé</span><span class="item-dots"></span><span class="item-price-compact">2,90</span></div><div class="desc-fr-compact">· Caramel ou vanille</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Lait chaud</span><span class="item-dots"></span><span class="item-price-compact">3,20</span></div></div></div></div><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Apéritifs ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Martini</span><span class="item-dots"></span><span class="item-price-compact">4,50</span></div><div class="desc-fr-compact">· <span class="cl-size">5cl</span> — Blanc, rouge</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Ricard / Pastis</span><span class="item-dots"></span><span class="item-price-compact">3,90</span></div><div class="desc-fr-compact">· <span class="cl-size">2cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Kir</span><span class="item-dots"></span><span class="item-price-compact">4,50</span></div><div class="desc-fr-compact">· <span class="cl-size">12cl</span> — Cassis, framboise, mûre, pêche</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Kir Royal</span><span class="item-dots"></span><span class="item-price-compact">10,90</span></div><div class="desc-fr-compact">· <span class="cl-size">12cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Americano</span><span class="item-dots"></span><span class="item-price-compact">8,60</span></div><div class="desc-fr-compact">· <span class="cl-size">8cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Negroni</span><span class="item-dots"></span><span class="item-price-compact">8,90</span></div><div class="desc-fr-compact">· <span class="cl-size">8cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Porto</span><span class="item-dots"></span><span class="item-price-compact">4,50</span></div><div class="desc-fr-compact">· <span class="cl-size">5cl</span> — Blanc, rouge</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Suze / Campari</span><span class="item-dots"></span><span class="item-price-compact">4,50</span></div><div class="desc-fr-compact">· <span class="cl-size">5 cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Muscat / Salers</span><span class="item-dots"></span><span class="item-price-compact">4,50</span></div><div class="desc-fr-compact">· <span class="cl-size">6cl</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Cidre brut</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div><div class="desc-fr-compact">· <span class="cl-size">25cl</span></div></div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Whiskies · <span class="cl-size">4cl</span> ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Clan Campbell</span><span class="item-dots"></span><span class="item-price-compact">7,60</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Jameson</span><span class="item-dots"></span><span class="item-price-compact">7,80</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Jack Daniels</span><span class="item-dots"></span><span class="item-price-compact">8,60</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Johnny Walker</span><span class="item-dots"></span><span class="item-price-compact">8,80</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Chivas Regal</span><span class="item-dots"></span><span class="item-price-compact">8,80</span></div></div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Digestifs · <span class="cl-size">4cl</span> ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Bas Armagnac VSOP</span><span class="item-dots"></span><span class="item-price-compact">7,20</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Rhum des Îles, Calvados</span><span class="item-dots"></span><span class="item-price-compact">6,20</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Vodka</span><span class="item-dots"></span><span class="item-price-compact">6,90</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Get 27 / 31, Bailey’s, Malibu</span><span class="item-dots"></span><span class="item-price-compact">7,10</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Cognac VSOP</span><span class="item-dots"></span><span class="item-price-compact">7,20</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Manzana Verde</span><span class="item-dots"></span><span class="item-price-compact">6,10</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Vieille Prune de Souillac</span><span class="item-dots"></span><span class="item-price-compact">7,20</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Poire, Mirabelle, Framboise</span><span class="item-dots"></span><span class="item-price-compact">7,20</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Amaretto, Fernet Branca</span><span class="item-dots"></span><span class="item-price-compact">7,20</span></div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Grand Marnier, Cointreau</span><span class="item-dots"></span><span class="item-price-compact">7,20</span></div></div></div></div></div><div class="bieres-block"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Bières ✦</div></div><div class="sub-note">En doré : prix Happy Hour — 17h à 23h</div><div class="beer-grid"><div class="beer-line"><div class="beer-top"><span class="beer-name">La Semeuse</span><span class="item-dots"></span><span class="beer-vols"><span class="cl-size">25cl</span> <b>3,40</b><span class="bl-dot">·</span><span class="cl-size">Pinte</span> <b>6,20</b></span><span class="beer-hh hh-price" title="Happy Hour">3,90</span></div></div><div class="beer-line"><div class="beer-top"><span class="beer-name">Valmy Blanche bio</span><span class="item-dots"></span><span class="beer-vols"><span class="cl-size">25cl</span> <b>4,30</b><span class="bl-dot">·</span><span class="cl-size">Pinte</span> <b>7,90</b></span><span class="beer-hh hh-price" title="Happy Hour">6,00</span></div></div><div class="beer-line"><div class="beer-top"><span class="beer-name">Triple d’Orgemont bio</span><span class="item-dots"></span><span class="beer-vols"><span class="cl-size">25cl</span> <b>4,80</b><span class="bl-dot">·</span><span class="cl-size">Pinte</span> <b>9,50</b></span><span class="beer-hh hh-price" title="Happy Hour">8,50</span></div></div><div class="beer-line"><div class="beer-top"><span class="beer-name">Légionnaire IPA</span><span class="item-dots"></span><span class="beer-vols"><span class="cl-size">25cl</span> <b>4,50</b><span class="bl-dot">·</span><span class="cl-size">Pinte</span> <b>8,80</b></span><span class="beer-hh hh-price" title="Happy Hour">7,00</span></div></div></div><div class="gp-title">Bouteille</div><div class="bouteille-grid"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Heineken</span><span class="item-dots"></span><span class="item-price-compact"><span class="cl-size">25cl</span> 4,90</span></div></div><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">1664 Blanc</span><span class="item-dots"></span><span class="item-price-compact"><span class="cl-size">25cl</span> 4,90</span></div></div><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Desperados</span><span class="item-dots"></span><span class="item-price-compact"><span class="cl-size">33cl</span> 5,90</span></div></div><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Corona</span><span class="item-dots"></span><span class="item-price-compact"><span class="cl-size">33cl</span> 6,20</span></div></div><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Bière sans alcool</span><span class="item-dots"></span><span class="item-price-compact"><span class="cl-size">25cl</span> 4,90</span></div></div></div></div></div>
+
+        </div>
+
+        <footer>
+            <div class="footer-details">
+                <span class="footer-logo">LA COLLINE GAMBETTA</span><span class="footer-sep">•</span><span class="footer-addr">4 RUE BELGRAND, 75020 PARIS • MÉTRO GAMBETTA</span>
+            </div>
+            
+            <div class="footer-social-bar">
+                <a href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener" class="footer-social-link">
+                    <span><svg class="footer-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ffffff" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle class="ig-dot" cx="17.4" cy="6.6" r="1.25" fill="#ffffff" stroke="none"/></svg> Instagram : lacolline.gambetta</span>
+                </a>
+                <a href="tel:+33143490593" class="footer-social-link"><span><svg class="footer-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg> 01 43 49 05 93</span></a>
+            </div>
+
+            <div class="footer-price-note">✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
+
+            <div class="footer-legal">
+                Allergènes : informations sur demande • L'abus d'alcool est dangereux pour la santé
+            </div>
+        </footer>
+    </section>
+
+    <script>
+        function showView(view) {
+            const coverSec = document.getElementById('cover-section');
+            const menuSec = document.getElementById('interior-menu');
+            const btnCover = document.getElementById('btn-show-cover');
+            const btnMenu = document.getElementById('btn-show-menu');
+
+            if (view === 'cover') {
+                coverSec.style.display = 'flex';
+                menuSec.style.display = 'none';
+                btnCover.classList.add('active');
+                btnMenu.classList.remove('active');
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            } else {
+                coverSec.style.display = 'none';
+                menuSec.style.display = 'block';
+                btnCover.classList.remove('active');
+                btnMenu.classList.add('active');
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }
+
+        function showMenuSection(sectionId, btnElement) {
+            const sections = document.querySelectorAll('.menu-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            const targetSection = document.getElementById(sectionId);
+            targetSection.classList.add('active');
+            btnElement.classList.add('active');
+
+            // Début de la carte = position de l'ancre placée juste avant le bandeau.
+            // L'ancre n'est PAS sticky : sa position est toujours fiable,
+            // contrairement au bandeau dont offsetTop reflète l'état "collé".
+            const anchor = document.getElementById('menu-nav-anchor');
+            let target = anchor
+                ? anchor.getBoundingClientRect().top + window.scrollY
+                : 0;
+            if (!anchor) {
+                // Repli : somme des offsetTop du conteneur et du bandeau
+                let el = document.querySelector('.menu-nav');
+                target = 0;
+                while (el && el !== document.body && el !== document.documentElement) {
+                    target += el.offsetTop;
+                    el = el.offsetParent;
+                }
+            }
+            target = Math.max(0, target);
+
+            // Glissement fluide garanti (animation JS — fiable sur tous les
+            // navigateurs, même quand le scroll "smooth" natif est désactivé).
+            animateScrollTo(target, 550);
+        }
+
+        function animateScrollTo(targetY, duration) {
+            const startY = window.pageYOffset || document.documentElement.scrollTop;
+            const delta = targetY - startY;
+            if (Math.abs(delta) < 2) { window.scrollTo(0, targetY); return; }
+            if (window.__collineScrollAnim) cancelAnimationFrame(window.__collineScrollAnim);
+            const t0 = performance.now();
+            const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; // easeInOutCubic
+            function step(now) {
+                const p = Math.min(1, (now - t0) / duration);
+                window.scrollTo(0, Math.round(startY + delta * ease(p)));
+                if (p < 1) {
+                    window.__collineScrollAnim = requestAnimationFrame(step);
+                } else {
+                    window.__collineScrollAnim = null;
+                    window.scrollTo(0, targetY);
+                }
+            }
+            window.__collineScrollAnim = requestAnimationFrame(step);
+        }
+
+        function flashHappyHour() {
+            const els = document.querySelectorAll('.hh-price');
+            els.forEach(el => { el.classList.remove('hh-flash'); void el.offsetWidth; el.classList.add('hh-flash'); });
+            setTimeout(() => els.forEach(el => el.classList.remove('hh-flash')), 1050);
+        }
+    </script>
+</body>
+</html>
