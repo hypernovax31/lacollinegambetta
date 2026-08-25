@@ -928,6 +928,395 @@ footer { width: 100%; }
 
 /* ── 14. Encart témoins ───────────────────────────────────────────── */
 .alc-warn { text-align: center; font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-style: italic; color: #7a6685; margin: 38px auto 10px; border-top: 1px solid rgba(216, 178, 87, 0.45); padding-top: 12px; max-width: 560px; font-weight: 600; }
+
+/* ===== Arena responsive refresh based on supplied JPGs ===== */
+html { scroll-behavior: smooth; }
+body {
+    background: linear-gradient(180deg, #24102e 0, #24102e 100vh, #fcfbf7 100vh, #fcfbf7 100%);
+    scroll-padding-top: 88px;
+}
+#interior-menu {
+    background: #fcfbf7;
+    padding-bottom: 56px;
+}
+.interior-header {
+    padding: 24px 16px 20px;
+    border-bottom: 2px solid rgba(216, 178, 87, 0.55);
+}
+.welcome-badge-header {
+    margin-bottom: 12px;
+    letter-spacing: 3px;
+}
+.header-minimal-brand {
+    margin-bottom: 10px;
+}
+.brand-colline {
+    letter-spacing: clamp(3px, 1.3vw, 10px);
+}
+.brand-gambetta {
+    letter-spacing: clamp(4px, 1.1vw, 9px);
+}
+.header-sub-info {
+    margin-top: 10px;
+}
+.top-controls {
+    padding: 10px 12px;
+    gap: 10px;
+}
+.control-btn {
+    min-height: 44px;
+    padding: 10px 16px;
+    letter-spacing: 1.1px;
+}
+#cover-section {
+    min-height: calc(100vh - 64px);
+    min-height: calc(100dvh - 64px);
+    height: auto;
+}
+.cover-page {
+    max-width: 820px;
+    min-height: calc(100vh - 64px);
+    min-height: calc(100dvh - 64px);
+    padding: 18px 20px 20px;
+}
+.medallion-container {
+    width: min(100%, 540px);
+    max-width: 100%;
+    max-height: 58vh;
+}
+.cover-hero-pill {
+    min-height: 52px;
+    padding: 14px 26px;
+    letter-spacing: 2.8px;
+}
+.cover-footer-address {
+    max-width: 28ch;
+    margin-inline: auto;
+}
+.menu-nav {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+.menu-nav::-webkit-scrollbar {
+    height: 6px;
+}
+.menu-nav::-webkit-scrollbar-thumb {
+    background: rgba(216, 178, 87, 0.45);
+    border-radius: 999px;
+}
+.nav-btn {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: max-content;
+    min-height: 44px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 0.5px !important;
+}
+.container {
+    max-width: 1160px;
+    margin: 22px auto;
+    padding: 0 16px;
+}
+.section-header {
+    margin: 18px 0 18px;
+}
+.section-header h3 {
+    border: none;
+    margin-bottom: 0;
+    padding: 10px 24px;
+    border-radius: 999px;
+    background: #592e6f;
+    color: #ffffff;
+    border: 1.5px solid var(--gold-main);
+    box-shadow: 0 8px 20px rgba(89, 46, 111, 0.18);
+    font-size: clamp(1.12rem, 2.2vw, 1.7rem);
+}
+.section-desc {
+    margin-top: 10px;
+    font-size: 0.88rem;
+}
+.vis-a-vis-grid {
+    gap: 22px;
+}
+.vis-a-vis-grid .vis-col {
+    gap: 18px;
+}
+.compact-item,
+.ck-item {
+    padding: 12px 0;
+}
+.item-header-line,
+.menu-card-head,
+.ck-head,
+.beer-top {
+    align-items: flex-start !important;
+}
+.item-title-compact,
+.menu-card-name,
+.ck-name,
+.beer-name {
+    max-width: none !important;
+}
+.item-dots {
+    min-width: 16px;
+}
+.desc-fr-compact,
+.desc-en-compact,
+.menu-card-desc,
+.ck-desc {
+    font-size: 0.92rem;
+}
+.menu-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+.menu-card,
+.ck-group,
+.formule-box,
+.menu-enfant,
+.menu-jour,
+.fb,
+.sir,
+.wine-table,
+.bouteille-grid .compact-item {
+    box-shadow: 0 6px 18px rgba(89, 46, 111, 0.08);
+}
+.formule-duo {
+    gap: 18px;
+    margin-top: 20px;
+}
+.formule-box {
+    position: relative;
+    padding: 22px 18px 18px;
+}
+.formule-title {
+    font-size: 1.12rem;
+}
+.formule-price {
+    font-size: clamp(2.6rem, 7vw, 4rem);
+}
+.choix-steps {
+    margin: 30px 0 14px;
+    gap: 14px;
+}
+.step {
+    padding: 18px 16px;
+}
+.kid-day {
+    gap: 18px;
+    margin: 28px 0 12px;
+}
+.petit-dej {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+    margin-top: 26px;
+}
+.pdj-d {
+    margin: 0;
+}
+.pdj-p {
+    white-space: nowrap;
+}
+.hh-banner {
+    width: fit-content;
+    max-width: 100%;
+    min-height: 48px;
+    padding: 10px 22px;
+    margin: 8px auto 24px;
+}
+.ck-grid {
+    gap: 20px;
+}
+.ck-group {
+    padding: 18px 18px 16px;
+}
+.wine-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.wine-table {
+    min-width: 680px;
+}
+.drinks-grid-2col,
+.digestifs-grid,
+.beer-grid,
+.bouteille-grid,
+.frow {
+    gap: 16px;
+}
+.beer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 10px;
+}
+.bouteille-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px 16px;
+}
+.bouteille-grid .compact-item {
+    padding: 14px 10px;
+    border: 1px solid rgba(216, 178, 87, 0.45);
+    border-radius: 10px;
+    background: #fff;
+}
+.frow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+.footer-details,
+.footer-legal {
+    white-space: normal;
+}
+.footer-social-link {
+    min-height: 38px;
+    padding: 6px 12px;
+}
+@media (min-width: 980px) {
+    .menu-nav {
+        display: grid !important;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        overflow: visible;
+        justify-content: stretch;
+    }
+    .nav-btn {
+        min-width: 0;
+        width: 100% !important;
+        white-space: normal !important;
+        text-wrap: balance !important;
+    }
+}
+@media (max-width: 900px) {
+    .container {
+        padding: 0 14px;
+    }
+    .menu-cards,
+    .ck-grid {
+        grid-template-columns: 1fr;
+    }
+    .vis-a-vis-grid {
+        grid-template-columns: 1fr;
+    }
+    .vis-a-vis-grid .vis-col:nth-child(2) {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px solid rgba(216, 178, 87, 0.4);
+        padding-top: 20px;
+    }
+    .petit-dej {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+}
+@media (max-width: 640px) {
+    body {
+        scroll-padding-top: 76px;
+    }
+    .top-controls {
+        gap: 8px;
+    }
+    .control-btn {
+        flex: 1 1 180px;
+    }
+    .cover-page {
+        padding: 12px 12px 16px;
+    }
+    .cover-hero-pill {
+        width: 100%;
+        max-width: 320px;
+        letter-spacing: 1.8px;
+    }
+    .menu-nav {
+        padding: 8px 10px;
+    }
+    .nav-btn {
+        min-height: 42px;
+        font-size: 0.74rem !important;
+    }
+    .section-header h3,
+    .sub-header-compact {
+        width: 100%;
+        white-space: normal;
+        line-height: 1.25;
+    }
+    .item-header-line,
+    .menu-card-head,
+    .ck-head,
+    .beer-top,
+    .jour-row {
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+    .item-dots,
+    .drink-dots {
+        display: none;
+    }
+    .item-price-compact,
+    .menu-card-price,
+    .ck-price,
+    .beer-vols,
+    .beer-hh {
+        margin-left: 0 !important;
+    }
+    .sub-note,
+    .desc-fr-compact,
+    .menu-card-desc,
+    .ck-desc,
+    .wine-table td,
+    .wine-table th {
+        font-size: 0.84rem;
+    }
+    .beer-grid,
+    .bouteille-grid,
+    .frow {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 420px) {
+    .control-btn,
+    .nav-btn,
+    .social-pill,
+    .footer-social-link {
+        width: 100%;
+        justify-content: center;
+    }
+    .social-pills-container,
+    .footer-social-bar {
+        width: 100%;
+        gap: 8px;
+    }
+    .cover-footer-address {
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+    }
+    .item-title-compact,
+    .menu-card-name,
+    .ck-name,
+    .beer-name {
+        font-size: 1rem;
+    }
+    .item-price-compact,
+    .menu-card-price,
+    .ck-price {
+        font-size: 1rem;
+    }
+    .wine-table {
+        min-width: 620px;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -1071,7 +1460,7 @@ footer { width: 100%; }
          ========================================================================= -->
     <section id="interior-menu">
         <header class="interior-header">
-            <div class="welcome-badge-header">✦ BIENVENUE • WELCOME ✦</div>
+            <div class="welcome-badge-header">✦ LA CARTE ✦</div>
             <div class="header-minimal-brand">
                 <span class="brand-la">— LA —</span>
                 <span class="brand-colline">COLLINE</span>
@@ -1086,25 +1475,20 @@ footer { width: 100%; }
             <div class="header-sub-info">✦ Fait Maison • Service Continu • Terrasse ✦</div>
         </header>
 
-        <div class="welcome-banner">
-            <div class="welcome-text-fr">« Proche du Père Lachaise et de la Place Gambetta, notre terrasse vous accueille en continu pour partager un verre, un cocktail signature ou savourer une cuisine 100 % faite maison. »</div>
-            
-        </div>
-
-        <div id="menu-nav-anchor" aria-hidden="true"></div>
+                <div id="menu-nav-anchor" aria-hidden="true"></div>
         <nav class="menu-nav">
-            <button class="nav-btn active" onclick="showMenuSection('entrees', this)">✦ Entrées &amp; Planches</button>
-            <button class="nav-btn" onclick="showMenuSection('plats', this)">🥩 Plats &amp; Salades</button>
-            <button class="nav-btn" onclick="showMenuSection('menus', this)">🥐 Menus &amp; Formules</button>
-            <button class="nav-btn" onclick="showMenuSection('desserts', this)">🍰 Douceurs &amp; Glaces</button>
-            <button class="nav-btn" onclick="showMenuSection('cocktails', this)">🍸 Cocktails &amp; Mocktails</button>
-            <button class="nav-btn" onclick="showMenuSection('vins', this)">🍷 Cave &amp; Vins</button>
-            <button class="nav-btn" onclick="showMenuSection('boissons', this)">☕ Boissons &amp; Bières</button>
+            <button class="nav-btn active" onclick="showMenuSection('entrees', this)">Nos entrées</button>
+            <button class="nav-btn" onclick="showMenuSection('plats', this)">Nos plats</button>
+            <button class="nav-btn" onclick="showMenuSection('menus', this)">Nos menus</button>
+            <button class="nav-btn" onclick="showMenuSection('cocktails', this)">Nos cocktails</button>
+            <button class="nav-btn" onclick="showMenuSection('boissons', this)">Nos boissons</button>
+            <button class="nav-btn" onclick="showMenuSection('vins', this)">Cave &amp; vins</button>
+            <button class="nav-btn" onclick="showMenuSection('desserts', this)">Desserts</button>
         </nav>
 
         <div class="container">
 
-<div id="entrees" class="menu-section active"><div class="section-header"><h3>Les Entrées, Planches &amp; Omelettes</h3><div class="section-desc">Foie gras du Sud-Ouest, escargots, planches à partager et omelettes servies avec leur salade</div></div><div class="vis-a-vis-grid"><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Entrées ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Assiette de foie gras du Sud-Ouest</span><span class="item-dots"></span><span class="item-price-compact">17,90</span></div><div class="desc-fr-compact">· Pain toasté, confiture d’abricots</div></div>
+<div id="entrees" class="menu-section active"><div class="section-header"><h3>Entrées, planches &amp; omelettes</h3><div class="section-desc">Contenus et tarifs repris d’après le visuel fourni.</div></div><div class="vis-a-vis-grid"><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Entrées ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Assiette de foie gras du Sud-Ouest</span><span class="item-dots"></span><span class="item-price-compact">17,90</span></div><div class="desc-fr-compact">· Pain toasté, confiture d’abricots</div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Œuf cocotte du moment</span><span class="item-dots"></span><span class="item-price-compact">7,90</span></div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Pâté de campagne et cornichons</span><span class="item-dots"></span><span class="item-price-compact">6,50</span></div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Œuf dur mayonnaise</span><span class="item-dots"></span><span class="item-price-compact">6,20</span></div></div>
@@ -1123,7 +1507,7 @@ footer { width: 100%; }
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Omelette mixte</span><span class="item-dots"></span><span class="item-price-compact">14,90</span></div><div class="desc-fr-compact">· Salade</div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Omelette aux champignons</span><span class="item-dots"></span><span class="item-price-compact">13,90</span></div><div class="desc-fr-compact">· Salade</div></div></div></div></div></div>
 
-<div id="plats" class="menu-section"><div class="section-header"><h3>Les Plats, Burgers &amp; Salades Gourmet</h3><div class="section-desc">Entrecôtes, confits, tartares, burgers maison et salades complètes</div></div><div class="vis-a-vis-grid"><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Plats ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Entrecôte 300 g</span><span class="item-dots"></span><span class="item-price-compact">25,90</span></div><div class="desc-fr-compact">· Fleur de sel, sauce au poivre</div></div>
+<div id="plats" class="menu-section"><div class="section-header"><h3>Nos plats, burgers &amp; salades</h3><div class="section-desc">Contenus et tarifs repris d’après le visuel fourni.</div></div><div class="vis-a-vis-grid"><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Plats ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Entrecôte 300 g</span><span class="item-dots"></span><span class="item-price-compact">25,90</span></div><div class="desc-fr-compact">· Fleur de sel, sauce au poivre</div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Bavette d’aloyau</span><span class="item-dots"></span><span class="item-price-compact">17,50</span></div><div class="desc-fr-compact">· Sauce au choix</div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Escalope de veau</span><span class="item-dots"></span><span class="item-price-compact">19,90</span></div><div class="desc-fr-compact">· Sauce champignons, pâtes</div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Cuisse de canard confite</span><span class="item-dots"></span><span class="item-price-compact">19,70</span></div></div>
@@ -1142,20 +1526,19 @@ footer { width: 100%; }
 <div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Burger Végétarien</span><span class="item-dots"></span><span class="menu-card-price">17,70</span></div><div class="menu-card-desc">Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger.</div></div>
 </div><div class="frites-box"><div class="fr-t">Assiette de frites <b>5,20</b></div><div class="fr-n">Sauce au choix : poivre • Champignons • Roquefort — Supplément sauce 2,00</div></div></div></div></div>
 
-<div id="menus" class="menu-section"><div class="section-header"><h3>Les Formules &amp; Menus du Bistrot</h3><div class="section-desc">Entrée + Plat ou Plat + Dessert — Au choix • Menu du jour selon l’ardoise • Menu enfant et petit déjeuner</div></div><div class="formule-duo"><div class="formule-box"><div class="formule-title">Entrée + Plat
+<div id="menus" class="menu-section"><div class="section-header"><h3>Nos menus</h3><div class="section-desc">Formules, menu enfant, menu du jour et petit déjeuner.</div></div><div class="formule-duo"><div class="formule-box"><div class="formule-title">Entrée + Plat
 Ou Plat + Dessert</div><div class="formule-price">24,90</div><div class="formule-foot">Au choix</div></div><div class="formule-box main"><div class="formule-title">La Formule Complète</div><div class="formule-sub">Entrée + Plat + Dessert</div><div class="formule-price">29,90</div><div class="formule-foot">Au choix</div></div></div><div class="choix-steps"><div class="step"><div class="step-title"><span class="step-n">1</span>Entrée au choix</div><div class="chips"><span class="chip">Salade au poulet</span><span class="chip">Escargots de Bourgogne</span><span class="chip">Pâté de campagne</span><span class="chip">Œuf cocotte</span><span class="chip">Assiette de charcuterie</span></div></div><div class="step"><div class="step-title"><span class="step-n">2</span>Plat au choix</div><div class="chips"><span class="chip">Escalope de veau</span><span class="chip">Bavette d’aloyau — Sauce au choix</span><span class="chip">Cuisse de canard confite</span></div></div><div class="step"><div class="step-title"><span class="step-n">3</span>Dessert au choix</div><div class="chips"><span class="chip">Panna cotta</span><span class="chip">Crème brûlée</span><span class="chip">Mousse au chocolat</span><span class="chip">Tiramisu</span><span class="chip">2 boules de glace</span></div></div></div><div class="kid-day"><div class="menu-enfant"><div class="kid-badge">Moins de 12 ans</div><div class="kid-title">Le Menu Enfant</div><div class="kid-desc">Eau ou soda • Burger enfant ou cordon bleu • Frites maison • 1 boule de glace au choix</div><div class="kid-price">11,90</div></div><div class="menu-jour"><div class="kid-badge gold">✦ Selon l’Ardoise ✦</div><div class="kid-title italic">Le Menu du Jour</div><div class="jour-grid"><div class="jour-row"><span>Entrée + Plat
 Ou Plat + Dessert</span><b>17,90</b></div><div class="jour-row"><span>Entrée + Plat
 + Dessert</span><b>21,90</b></div></div><div class="jour-note">Uniquement les midis — Sauf weekends et jours fériés</div></div></div><div class="petit-dej"><div class="pdj-t">✦ Petit Déjeuner ✦</div><div class="pdj-d">Boisson chaude au choix • Croissant ou tartine au beurre • Verre de jus de fruits au choix</div><div class="pdj-p">7,00</div></div></div>
 
-<div id="desserts" class="menu-section"><div class="section-header"><h3>Les Douceurs Maison, Glaces &amp; Fromages</h3><div class="section-desc">Desserts faits maison, coupes glacées et fromages affinés</div></div><div class="vis-a-vis-grid"><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Desserts ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Crème brûlée</span><span class="item-dots"></span><span class="item-price-compact">6,80</span></div></div>
+<div id="desserts" class="menu-section"><div class="section-header"><h3>Desserts, glaces &amp; fromages</h3><div class="section-desc">Contenus et tarifs repris d’après le visuel fourni.</div></div><div class="vis-a-vis-grid"><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Desserts ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Crème brûlée</span><span class="item-dots"></span><span class="item-price-compact">6,80</span></div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Mousse au chocolat</span><span class="item-dots"></span><span class="item-price-compact">7,10</span></div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Panna cotta</span><span class="item-dots"></span><span class="item-price-compact">7,50</span></div><div class="desc-fr-compact">· Coulis de fruits rouges</div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Tiramisu</span><span class="item-dots"></span><span class="item-price-compact">7,50</span></div></div>
-<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Tarte aux pommes</span><span class="item-dots"></span><span class="item-price-compact">8,50</span></div><div class="desc-fr-compact">· Glace vanille</div></div>
-<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Pain perdu de la Colline</span><span class="item-dots"></span><span class="item-price-compact">8,50</span></div><div class="desc-fr-compact">· Glace vanille ou caramel beurre salé</div></div>
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Tarte aux pommes</span><span class="item-dots"></span><span class="item-price-compact">8,50</span></div><div class="desc-fr-compact">· Glace vanille</div></div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Fromages ✦</div></div><div class="frow"><div class="fb"><div class="fbn">Pont-l’Évêque</div><div class="fbp">5,90</div></div><div class="fb"><div class="fbn">Fourme d’Ambert</div><div class="fbp">6,90</div></div><div class="fb"><div class="fbn">Cantal</div><div class="fbp">6,90</div></div><div class="fb"><div class="fbn">Chèvre</div><div class="fbp">5,90</div></div><div class="fb"><div class="fbn">Assiette mixte</div><div class="fbp">8,50</div></div></div></div><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Suite des Desserts ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Pain perdu de la Colline</span><span class="item-dots"></span><span class="item-price-compact">8,50</span></div><div class="desc-fr-compact">· Glace vanille ou caramel beurre salé</div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Moelleux au chocolat</span><span class="item-dots"></span><span class="item-price-compact">7,90</span></div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Café gourmand</span><span class="item-dots"></span><span class="item-price-compact">8,90</span></div><div class="desc-fr-compact">· Thé + 1 — Mignardises</div></div>
-<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Profiteroles</span><span class="item-dots"></span><span class="item-price-compact">7,90</span></div></div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Fromages ✦</div></div><div class="frow"><div class="fb"><div class="fbn">Pont-l’Évêque</div><div class="fbp">5,90</div></div><div class="fb"><div class="fbn">Fourme d’Ambert</div><div class="fbp">6,90</div></div><div class="fb"><div class="fbn">Cantal</div><div class="fbp">6,90</div></div><div class="fb"><div class="fbn">Chèvre</div><div class="fbp">5,90</div></div><div class="fb"><div class="fbn">Assiette mixte</div><div class="fbp">8,50</div></div></div></div><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Glaces ✦</div></div><div class="menu-cards">
+<div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Profiteroles</span><span class="item-dots"></span><span class="item-price-compact">7,90</span></div></div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Glaces ✦</div></div><div class="menu-cards">
 <div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Crème glacée (3 boules)</span><span class="item-dots"></span><span class="menu-card-price">8,50</span></div><div class="menu-card-desc">Vanille, caramel beurre salé, chocolat, café, pistache, noisette</div></div>
 <div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Sorbet (3 boules)</span><span class="item-dots"></span><span class="menu-card-price">8,50</span></div><div class="menu-card-desc">Citron vert, fraise, framboise</div></div>
 <div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Dame blanche</span><span class="item-dots"></span><span class="menu-card-price">8,90</span></div><div class="menu-card-desc">Éclats de chocolat chaud, 2 boules vanille, chantilly</div></div>
@@ -1165,7 +1548,7 @@ Ou Plat + Dessert</span><b>17,90</b></div><div class="jour-row"><span>Entrée + 
 <div class="menu-card"><div class="menu-card-head"><span class="menu-card-name">Le Colonel de la Colline</span><span class="item-dots"></span><span class="menu-card-price">8,90</span></div><div class="menu-card-desc">2 boules citron vert arrosées de vodka (<span class="cl-size">2 cl</span>)</div></div>
 </div><div class="frites-box slim"><div class="fr-t">Supplément boule glace / sorbet <b>3,00</b></div></div></div></div></div>
 
-<div id="cocktails" class="menu-section"><div class="section-header"><h3>Les Cocktails &amp; Mocktails Signatures</h3><div class="section-desc">Classiques, mules, spritz et créations signées — Sans alcool en mocktail</div></div><button type="button" class="hh-banner" onclick="flashHappyHour()" title="Faire briller les prix Happy Hour"><span class="hh-icon">🔔</span><span class="hh-text">HAPPY HOUR 17H ➔ 23H</span><span class="hh-icon">🍸</span></button><div class="ck-grid"><div class="ck-group"><div class="gp-title">Cocktails Classiques</div><div class="ck-item"><div class="ck-head"><span class="ck-name">Mojito</span><span class="item-dots"></span><span class="ck-price">7,90<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Rhum, menthe fraîche, citron vert, sucre de canne, eau gazeuse</div></div>
+<div id="cocktails" class="menu-section"><div class="section-header"><h3>Nos cocktails</h3><div class="section-desc">Happy Hour de 17h à 23h.</div></div><button type="button" class="hh-banner" onclick="flashHappyHour()" title="Faire briller les prix Happy Hour"><span class="hh-text">Happy Hour : 17h - 23h</span></button><div class="ck-grid"><div class="ck-group"><div class="gp-title">Cocktails Classiques</div><div class="ck-item"><div class="ck-head"><span class="ck-name">Mojito</span><span class="item-dots"></span><span class="ck-price">7,90<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Rhum, menthe fraîche, citron vert, sucre de canne, eau gazeuse</div></div>
 <div class="ck-item"><div class="ck-head"><span class="ck-name">Caïpirinha</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Cachaça, citron vert, sucre de canne</div></div>
 <div class="ck-item"><div class="ck-head"><span class="ck-name">Caïpiroska</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">6</span></span></div><div class="ck-desc">Vodka, citron vert, sucre de canne</div></div>
 <div class="ck-item"><div class="ck-head"><span class="ck-name">Ti-Punch</span><span class="item-dots"></span><span class="ck-price">7,50<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Rhum, citron vert, sucre de canne</div></div>
@@ -1198,7 +1581,7 @@ Ou Plat + Dessert</span><b>17,90</b></div><div class="jour-row"><span>Entrée + 
 <div class="ck-item"><div class="ck-head"><span class="ck-name">Virgin Colada</span><span class="item-dots"></span><span class="ck-price">5,90<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Jus d’ananas, crème de coco</div></div>
 <div class="ck-item"><div class="ck-head"><span class="ck-name">Virgin Bloody Mary</span><span class="item-dots"></span><span class="ck-price">5,90<span class="ck-hh hh-price" title="Happy Hour">5</span></span></div><div class="ck-desc">Jus de tomate, citron, épices</div></div></div></div><div class="alc-warn">L’abus d’alcool est dangereux pour la santé — À consommer avec modération</div></div>
 
-<div id="vins" class="menu-section"><div class="section-header"><h3>La Cave : Vins, Bulles &amp; Digestifs</h3><div class="section-desc">Sélection de vins au verre (<span class="cl-size">12,5cl</span> / <span class="cl-size">25cl</span> / <span class="cl-size">50cl</span>) ou en bouteille, champagnes et digestifs</div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Vin Rouge ✦</div></div><div class="wine-scroll"><table class="wine-table">
+<div id="vins" class="menu-section"><div class="section-header"><h3>Cave &amp; vins</h3><div class="section-desc">Rouges, blancs, rosés et bulles.</div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Vin Rouge ✦</div></div><div class="wine-scroll"><table class="wine-table">
 <thead><tr><th class="n">N°</th><th class="w">Appellation</th><th>12,5cl</th><th>25cl</th><th>50cl</th><th>75cl</th></tr></thead><tbody>
 <tr><td class="n">1</td><td class="w">Côtes du Rhône AOP Bio <span class="w-prod">— Les 3 Garçons</span></td><td>4,90</td><td>9,50</td><td>17,90</td><td>21,90</td></tr>
 <tr><td class="n">2</td><td class="w">Bordeaux AOP <span class="w-prod">— L’Attrape Rêve</span></td><td>5,20</td><td>9,90</td><td>18,90</td><td>22,90</td></tr>
@@ -1234,7 +1617,7 @@ Ou Plat + Dessert</span><b>17,90</b></div><div class="jour-row"><span>Entrée + 
 
 <div class="alc-warn">L’abus d’alcool est dangereux pour la santé — À consommer avec modération</div></div>
 
-<div id="boissons" class="menu-section"><div class="section-header"><h3>Le Comptoir du Cafetier : Boissons &amp; Bières</h3><div class="section-desc">Boissons fraîches et chaudes, apéritifs, eaux minérales, sirops et bières pression ou bouteille</div></div><div class="vis-a-vis-grid"><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Eaux ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Vittel</span><span class="item-dots"></span><span class="item-price-compact">3,90 / 4,90 / 5,90</span></div><div class="desc-fr-compact">· <span class="cl-size">25 / 50cl</span> / <span class="cl-size">1L</span></div></div>
+<div id="boissons" class="menu-section"><div class="section-header"><h3>Nos boissons</h3><div class="section-desc">Boissons fraîches, boissons chaudes, apéritifs, digestifs et bières.</div></div><div class="vis-a-vis-grid"><div class="vis-col"><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Eaux ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Vittel</span><span class="item-dots"></span><span class="item-price-compact">3,90 / 4,90 / 5,90</span></div><div class="desc-fr-compact">· <span class="cl-size">25 / 50cl</span> / <span class="cl-size">1L</span></div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">San Pellegrino</span><span class="item-dots"></span><span class="item-price-compact">4,90 / 6,20</span></div><div class="desc-fr-compact">· <span class="cl-size">50cl</span> / <span class="cl-size">1L</span></div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Badoit</span><span class="item-dots"></span><span class="item-price-compact">4,90 / 6,20</span></div><div class="desc-fr-compact">· <span class="cl-size">33cl</span> / <span class="cl-size">1L</span></div></div></div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Nos Sirops ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Sirop à l’eau</span><span class="item-dots"></span><span class="item-price-compact">3,00</span></div></div>
 <div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Supplément sirop · <span class="cl-size">2 cl</span></span><span class="item-dots"></span><span class="item-price-compact">0,50</span></div></div></div><div class="syr">grenadine • fraise • citron • menthe • pêche • violette • passion • vanille • coco • orgeat • cassis</div><div class="sub-header-wrap"><div class="sub-header-compact">✦ Boissons Fraîches ✦</div></div><div class="compact-list"><div class="compact-item"><div class="item-header-line"><span class="item-title-compact">Coca / Zéro / Cherry</span><span class="item-dots"></span><span class="item-price-compact">4,90</span></div><div class="desc-fr-compact">· <span class="cl-size">33cl</span></div></div>
@@ -1298,10 +1681,10 @@ Ou Plat + Dessert</span><b>17,90</b></div><div class="jour-row"><span>Entrée + 
                 <a href="tel:+33143490593" class="footer-social-link"><span><svg class="footer-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg> 01 43 49 05 93</span></a>
             </div>
 
-            <div class="footer-price-note">✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
+            <div class="footer-price-note">✦ PRIX NETS EN EUROS • SERVICE COMPRIS 15 % ✦</div>
 
             <div class="footer-legal">
-                Allergènes : informations sur demande • L'abus d'alcool est dangereux pour la santé
+                Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé
             </div>
         </footer>
     </section>
