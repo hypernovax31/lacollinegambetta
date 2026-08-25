@@ -2542,6 +2542,27 @@ body {
     }
 }
 
+
+/* ===== Tighter adaptive padding for food cards ===== */
+.grand-dish-card,
+.grand-feature-grid--menu .grand-feature-card,
+#plats .grand-feature-grid .grand-feature-card,
+#desserts .grand-feature-grid .grand-feature-card {
+    padding: clamp(12px, 1.8vw, 16px) !important;
+}
+.grand-dish-card__note,
+.grand-feature-card > p {
+    padding-top: clamp(6px, 1vw, 10px) !important;
+}
+@media (max-width: 640px) {
+    .grand-dish-card,
+    .grand-feature-grid--menu .grand-feature-card,
+    #plats .grand-feature-grid .grand-feature-card,
+    #desserts .grand-feature-grid .grand-feature-card {
+        padding: 12px !important;
+    }
+}
+
 </style>
 </head>
 <body>
