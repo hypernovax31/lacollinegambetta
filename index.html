@@ -1858,6 +1858,39 @@ body {
     }
 }
 
+
+/* ===== Footer breathing space ===== */
+.footer-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: 16px;
+    row-gap: 6px;
+    line-height: 1.55;
+}
+.footer-addr,
+.footer-metro {
+    letter-spacing: .08em;
+}
+.footer-sep {
+    opacity: .85;
+}
+@media (min-width: 900px) {
+    .footer-details {
+        column-gap: 24px;
+    }
+}
+@media (max-width: 640px) {
+    .footer-details {
+        gap: 4px;
+    }
+    .footer-metro,
+    .footer-addr {
+        letter-spacing: .04em;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -2039,7 +2072,7 @@ body {
 
         <footer>
             <div class="footer-details">
-                <span class="footer-logo">LA COLLINE GAMBETTA</span><span class="footer-sep">•</span><span class="footer-addr">4 RUE BELGRAND, 75020 PARIS • MÉTRO GAMBETTA</span>
+                <span class="footer-logo">LA COLLINE GAMBETTA</span><span class="footer-sep">•</span><span class="footer-addr">4 RUE BELGRAND, 75020 PARIS</span><span class="footer-sep">•</span><span class="footer-metro">MÉTRO GAMBETTA</span>
             </div>
             
             <div class="footer-social-bar">
