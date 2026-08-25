@@ -1976,6 +1976,61 @@ body {
     }
 }
 
+
+/* ===== Cover footer harmony and stronger contact pills ===== */
+.cover-footer {
+    display: grid;
+    gap: 12px;
+    justify-items: center;
+}
+.cover-footer-address {
+    max-width: 30ch;
+    margin-inline: auto;
+    font-size: clamp(0.82rem, 1.4vw, 0.98rem);
+    line-height: 1.55;
+    letter-spacing: 0.14em;
+    margin-bottom: 0;
+}
+.social-pills-container {
+    gap: 12px;
+}
+.cover-footer .social-pill {
+    min-height: 46px;
+    padding: 8px 16px;
+    border-width: 1.5px;
+    font-size: clamp(0.8rem, 1.25vw, 0.92rem);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.16);
+}
+.cover-footer .social-pill .footer-ico {
+    width: 15px;
+    height: 15px;
+}
+@media (max-width: 640px) {
+    .cover-footer {
+        gap: 10px;
+    }
+    .cover-footer .social-pill {
+        min-height: 42px;
+        padding: 7px 14px;
+        font-size: 0.78rem;
+    }
+}
+@media (max-width: 420px) {
+    .cover-footer-address {
+        max-width: 26ch;
+        font-size: 0.76rem;
+        line-height: 1.5;
+        letter-spacing: 0.08em;
+    }
+    .cover-footer .social-pill {
+        width: 100%;
+        max-width: 320px;
+    }
+}
+
 </style>
 </head>
 <body>
