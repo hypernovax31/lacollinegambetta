@@ -3176,12 +3176,12 @@ body {
             targetSection.classList.add('active');
             btnElement.classList.add('active');
 
-            // Tous les onglets doivent s'ancrer de la même manière :
-            // le début du contenu actif vient se placer juste sous le bandeau sticky.
-            const nav = document.querySelector('.menu-nav');
-            const navHeight = nav ? nav.getBoundingClientRect().height : 0;
-            const sectionTop = targetSection.getBoundingClientRect().top + window.scrollY;
-            const target = Math.max(0, Math.round(sectionTop - navHeight - 10));
+            // Tous les onglets doivent s'ancrer exactement comme les pages
+            // Entrées / Plats : on remonte au niveau de la barre de sélection.
+            const anchor = document.getElementById('menu-nav-anchor');
+            const target = anchor
+                ? Math.max(0, Math.round(anchor.getBoundingClientRect().top + window.scrollY))
+                : 0;
 
             // Glissement fluide garanti (animation JS — fiable sur tous les
             // navigateurs, même quand le scroll "smooth" natif est désactivé).
