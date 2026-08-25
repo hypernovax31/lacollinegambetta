@@ -1604,9 +1604,11 @@ body {
 .grand-feature-head h5,
 .grand-bottle-card h5,
 .grand-cheese-card h5,
-.grand-panel-title {
-    overflow-wrap: anywhere;
+.grand-panel-title,
+.grand-beer-row__name {
+    overflow-wrap: normal;
     word-break: normal;
+    hyphens: none;
 }
 .grand-feature-head {
     display: grid;
@@ -1815,6 +1817,44 @@ body {
 @media (max-width: 860px) {
     .grand-columns--beer-bottles .grand-column + .grand-column {
         margin-top: 0;
+    }
+}
+
+
+/* ===== No broken words in cards ===== */
+.grand-cheese-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+}
+.grand-bottle-grid,
+.grand-bottle-grid--compact {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+.grand-feature-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+.grand-cheese-card h5,
+.grand-bottle-card h5,
+.grand-feature-head h5 {
+    white-space: nowrap;
+    font-size: clamp(.92rem, 1.1vw, 1rem);
+}
+.grand-panel-title {
+    white-space: nowrap;
+    letter-spacing: clamp(.05em, .3vw, .14em);
+}
+@media (max-width: 980px) {
+    .grand-panel-title {
+        white-space: normal;
+        text-wrap: balance;
+    }
+}
+@media (max-width: 640px) {
+    .grand-cheese-card h5,
+    .grand-bottle-card h5,
+    .grand-feature-head h5 {
+        white-space: normal;
+        text-wrap: balance;
     }
 }
 
