@@ -2292,6 +2292,63 @@ body {
     fill: var(--gold-light) !important;
 }
 
+
+/* ===== Alternate emphasis for the complete formula ===== */
+.grand-price-panel {
+    background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(252,248,240,0.98) 100%);
+}
+.grand-price-panel--accent {
+    position: relative;
+    isolation: isolate;
+    transform: translateY(-4px);
+    border: 1px solid rgba(191,149,63,0.62);
+    background: linear-gradient(180deg, rgba(255,255,255,0.99) 0%, rgba(255,250,236,0.99) 100%);
+    box-shadow:
+        0 22px 42px rgba(156,122,45,0.14),
+        0 0 0 1px rgba(255,245,210,0.75) inset;
+}
+.grand-price-panel--accent::before {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border-radius: 18px;
+    border: 1px solid rgba(191,149,63,0.38);
+    pointer-events: none;
+}
+.grand-price-panel--accent::after {
+    content: '✦';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #b98728 0%, #f8e8a2 45%, #d8b257 100%);
+    color: #432155;
+    border: 1px solid rgba(255,255,255,0.72);
+    box-shadow: 0 10px 20px rgba(156,122,45,0.22);
+    font-size: .9rem;
+    pointer-events: none;
+}
+.grand-price-panel--accent .grand-price-label {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(156,122,45,0.20), inset 0 1px 0 rgba(255,255,255,0.55);
+}
+.grand-price-panel--accent .grand-price-value {
+    font-size: clamp(3.3rem, 5.6vw, 4.8rem);
+}
+.grand-price-panel--accent .grand-price-foot {
+    letter-spacing: 0.2em;
+}
+@media (max-width: 860px) {
+    .grand-price-panel--accent {
+        transform: none;
+    }
+}
+
 </style>
 </head>
 <body>
