@@ -2149,6 +2149,61 @@ body {
     }
 }
 
+
+/* ===== Stronger responsive card system: no empty zones ===== */
+.grand-grid,
+.grand-stack,
+.grand-feature-grid,
+.grand-cheese-grid,
+.grand-bottle-grid,
+.grand-bottle-grid--compact,
+.grand-fresh-grid,
+.grand-beer-grid {
+    align-items: start;
+    align-content: start;
+}
+.grand-feature-card,
+.grand-cheese-card,
+.grand-bottle-card,
+.grand-beer-card,
+.grand-panel,
+.grand-price-panel,
+.grand-choice-box,
+.grand-special-card,
+.grand-breakfast {
+    height: auto !important;
+}
+@media (max-width: 1280px) {
+    .grand-grid--2,
+    .grand-grid--3,
+    .grand-grid--cocktails-top,
+    .grand-grid--cocktails-bottom,
+    .grand-grid--boissons-main,
+    .grand-grid--boissons-bottom {
+        grid-template-columns: 1fr !important;
+    }
+}
+@media (max-width: 1100px) {
+    .grand-feature-grid,
+    .grand-cheese-grid,
+    .grand-bottle-grid,
+    .grand-bottle-grid--compact,
+    .grand-beer-grid,
+    .grand-fresh-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+@media (min-width: 1281px) {
+    .grand-feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .grand-cheese-grid,
+    .grand-bottle-grid,
+    .grand-bottle-grid--compact {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+}
+
 </style>
 </head>
 <body>
