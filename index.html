@@ -2204,6 +2204,58 @@ body {
     }
 }
 
+
+/* ===== Premium gold badges and highlighted offer panel ===== */
+.grand-price-label,
+.grand-special-badge,
+.grand-special-badge--gold {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #a87516 0%, #d6ad46 18%, #fff2b6 38%, #d8b257 58%, #b98728 78%, #f4dda0 100%) !important;
+    color: #24102e;
+    border: 1px solid rgba(255,255,255,0.55);
+    box-shadow: 0 10px 24px rgba(156,122,45,0.22), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.grand-price-label::after,
+.grand-special-badge::after,
+.grand-special-badge--gold::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.38) 48%, rgba(255,255,255,0.08) 60%, transparent 100%);
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+.grand-price-panel--accent {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(165deg, rgba(255,249,226,0.98) 0%, rgba(246,229,173,0.95) 12%, rgba(255,244,210,0.98) 28%, rgba(216,178,87,0.30) 52%, rgba(255,252,240,0.98) 100%);
+    border: 1px solid rgba(191,149,63,0.55);
+    box-shadow: 0 16px 36px rgba(156,122,45,0.16), inset 0 1px 0 rgba(255,255,255,0.58);
+}
+.grand-price-panel--accent::before {
+    content: '';
+    position: absolute;
+    left: -12%;
+    right: -12%;
+    top: 8%;
+    height: 42%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.06));
+    transform: skewY(-5deg);
+    pointer-events: none;
+}
+.grand-price-panel--accent .grand-price-sub {
+    color: #432155;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.28);
+}
+.grand-price-panel--accent .grand-price-value {
+    color: #432155;
+    text-shadow: 0 2px 10px rgba(255,255,255,0.35);
+}
+.grand-price-panel--accent .grand-price-foot {
+    color: #8f6b1e;
+}
+
 </style>
 </head>
 <body>
