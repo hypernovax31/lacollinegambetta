@@ -1942,6 +1942,40 @@ body {
     }
 }
 
+
+/* ===== Clean-up of unnecessary separator lines ===== */
+.grand-column + .grand-column {
+    border-left: 0 !important;
+    padding-left: 0 !important;
+}
+.grand-item {
+    border-bottom: 0 !important;
+    padding: 8px 0;
+}
+.grand-item + .grand-item {
+    margin-top: 2px;
+}
+.grand-price-head,
+.grand-beer-table__head {
+    border-bottom: 0 !important;
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+}
+.grand-beer-row {
+    border-bottom: 0 !important;
+    padding: 9px 0;
+}
+.grand-beer-row + .grand-beer-row {
+    margin-top: 2px;
+}
+@media (max-width: 860px) {
+    .grand-column + .grand-column {
+        border-top: 0 !important;
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+}
+
 </style>
 </head>
 <body>
