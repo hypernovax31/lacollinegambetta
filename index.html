@@ -2692,6 +2692,62 @@ body {
     }
 }
 
+
+/* ===== Same vertical architecture as Entrées / Plats for other tabs ===== */
+#menus .grand-grid,
+#cocktails .grand-grid,
+#boissons .grand-grid,
+#desserts .grand-grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px;
+}
+#cocktails .grand-columns,
+#boissons .grand-columns,
+#desserts .grand-columns {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+}
+#cocktails .grand-column + .grand-column,
+#boissons .grand-column + .grand-column,
+#desserts .grand-column + .grand-column {
+    border-left: 0 !important;
+    padding-left: 0 !important;
+    border-top: 0 !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+#menus .grand-stack,
+#cocktails .grand-stack,
+#vins .grand-stack,
+#boissons .grand-stack,
+#desserts .grand-stack {
+    gap: 18px;
+}
+#menus .grand-panel-head,
+#cocktails .grand-panel-head,
+#vins .grand-panel-head,
+#boissons .grand-panel-head,
+#desserts .grand-panel-head {
+    margin-bottom: 12px;
+}
+#cocktails .grand-toolbar {
+    justify-content: flex-start;
+    margin-bottom: -4px;
+}
+@media (max-width: 640px) {
+    #menus .grand-grid,
+    #cocktails .grand-grid,
+    #boissons .grand-grid,
+    #desserts .grand-grid,
+    #menus .grand-stack,
+    #cocktails .grand-stack,
+    #vins .grand-stack,
+    #boissons .grand-stack,
+    #desserts .grand-stack {
+        gap: 14px;
+    }
+}
+
 </style>
 </head>
 <body>
