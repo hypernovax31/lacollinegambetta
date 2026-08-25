@@ -2449,6 +2449,99 @@ body {
     }
 }
 
+
+/* ===== Premium card homogenization across the menu ===== */
+.grand-feature-grid,
+.grand-feature-grid--menu,
+.grand-cheese-grid,
+.grand-bottle-grid,
+.grand-bottle-grid--compact {
+    grid-auto-rows: 1fr;
+    align-items: stretch;
+}
+.grand-feature-card,
+.grand-dish-card,
+.grand-bottle-card,
+.grand-cheese-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 18px 18px 16px;
+    border-radius: 18px;
+}
+.grand-feature-head,
+.grand-dish-card__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 4px;
+    margin-bottom: 0;
+    min-height: 3.6rem;
+}
+.grand-feature-head h5,
+.grand-dish-card__head h5 {
+    display: flex;
+    align-items: center;
+    min-height: 2.6em;
+    line-height: 1.28;
+}
+.grand-feature-head strong,
+.grand-dish-card__head strong {
+    display: flex;
+    align-items: center;
+    align-self: center;
+    line-height: 1;
+}
+.grand-feature-card > p,
+.grand-dish-card__note {
+    margin-top: auto !important;
+    padding-top: 10px;
+    line-height: 1.45;
+}
+.grand-cheese-card,
+.grand-bottle-card {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 128px;
+}
+.grand-cheese-card h5,
+.grand-bottle-card h5 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.7em;
+    margin-bottom: 8px;
+    line-height: 1.25;
+}
+.grand-bottle-card p {
+    margin-top: auto;
+    margin-bottom: 6px;
+}
+.grand-cheese-card strong,
+.grand-bottle-card strong {
+    margin-top: auto;
+}
+@media (max-width: 640px) {
+    .grand-feature-card,
+    .grand-dish-card,
+    .grand-bottle-card,
+    .grand-cheese-card {
+        min-height: auto;
+        padding: 16px 16px 14px;
+    }
+    .grand-feature-head,
+    .grand-dish-card__head {
+        min-height: auto;
+    }
+    .grand-feature-card > p,
+    .grand-dish-card__note {
+        padding-top: 8px;
+    }
+}
+
 </style>
 </head>
 <body>
