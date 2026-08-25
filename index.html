@@ -3176,23 +3176,12 @@ body {
             targetSection.classList.add('active');
             btnElement.classList.add('active');
 
-            // Début de la carte = position de l'ancre placée juste avant le bandeau.
-            // L'ancre n'est PAS sticky : sa position est toujours fiable,
-            // contrairement au bandeau dont offsetTop reflète l'état "collé".
-            const anchor = document.getElementById('menu-nav-anchor');
-            let target = anchor
-                ? anchor.getBoundingClientRect().top + window.scrollY
-                : 0;
-            if (!anchor) {
-                // Repli : somme des offsetTop du conteneur et du bandeau
-                let el = document.querySelector('.menu-nav');
-                target = 0;
-                while (el && el !== document.body && el !== document.documentElement) {
-                    target += el.offsetTop;
-                    el = el.offsetParent;
-                }
-            }
-            target = Math.max(0, target);
+            // Tous les onglets doivent s'ancrer de la même manière :
+            // le début du contenu actif vient se placer juste sous le bandeau sticky.
+            const nav = document.querySelector('.menu-nav');
+            const navHeight = nav ? nav.getBoundingClientRect().height : 0;
+            const sectionTop = targetSection.getBoundingClientRect().top + window.scrollY;
+            const target = Math.max(0, Math.round(sectionTop - navHeight - 10));
 
             // Glissement fluide garanti (animation JS — fiable sur tous les
             // navigateurs, même quand le scroll "smooth" natif est désactivé).
