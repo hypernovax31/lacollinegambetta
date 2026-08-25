@@ -2031,6 +2031,42 @@ body {
     }
 }
 
+
+/* ===== Softer reading: remove intrusive separator lines ===== */
+.grand-dots,
+.item-dots,
+.drink-dots {
+    display: none !important;
+}
+.grand-price-head,
+.grand-beer-table__head {
+    border-bottom: 0 !important;
+    padding-bottom: 0;
+    margin-bottom: 10px;
+}
+.grand-beer-kind::before,
+.grand-beer-kind::after {
+    display: none;
+}
+.grand-divider {
+    display: none !important;
+}
+.grand-item,
+.grand-beer-row {
+    padding-top: 9px;
+    padding-bottom: 9px;
+}
+.grand-item + .grand-item,
+.grand-beer-row + .grand-beer-row {
+    margin-top: 2px;
+}
+.grand-panel-head {
+    margin-bottom: 16px;
+}
+.grand-note {
+    margin-top: 5px;
+}
+
 </style>
 </head>
 <body>
