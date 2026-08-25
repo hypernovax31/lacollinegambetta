@@ -67,7 +67,15 @@
             transition: all 0.2s ease;
         }
 
-        .control-btn:hover, .control-btn.active {
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--gold-light);
+            border-color: #fcf6ba;
+            box-shadow: 0 0 0 1px rgba(216, 178, 87, 0.25), 0 8px 18px rgba(0,0,0,0.18);
+            transform: translateY(-1px);
+        }
+
+        .control-btn.active {
             background: var(--gold-gradient);
             color: var(--violet-dark);
             font-weight: 800;
@@ -208,10 +216,11 @@
         }
 
         .social-pill:hover {
-            background: var(--gold-gradient);
-            color: var(--violet-dark);
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
             border-color: #fcf6ba;
             transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.18);
         }
 
         @media (max-width: 600px), (max-height: 680px) {
@@ -431,7 +440,13 @@
             width: 100%;
         }
 
-        .nav-btn:hover, .nav-btn.active { background: var(--gold-gradient); color: var(--violet-dark); border-color: #fcf6ba; font-weight: 700; }
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--gold-light);
+            border-color: #fcf6ba;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.14);
+        }
+        .nav-btn.active { background: var(--gold-gradient); color: var(--violet-dark); border-color: #fcf6ba; font-weight: 700; }
 
         .container { max-width: 900px; margin: 25px auto; padding: 0 18px; }
         .menu-section { display: none; animation: fadeIn 0.3s ease; }
@@ -674,9 +689,10 @@
         }
 
         .footer-social-link:hover {
-            background: var(--gold-gradient);
-            color: var(--violet-dark);
+            background: rgba(255, 255, 255, 0.22);
+            color: #ffffff;
             border-color: #fcf6ba;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.18);
         }
 
         .footer-legal { font-size: 0.66rem; color: #ffffff; font-weight: 500; opacity: 0.92; border-top: 1px solid rgba(255,255,255,0.25); padding-top: 6px; line-height: 1.35; }
@@ -919,10 +935,10 @@ footer { width: 100%; }
 .footer-ico { width: 13px; height: 13px; flex: 0 0 auto; display: inline-block; vertical-align: middle; transform: translateY(-1px); }
 .social-pill .footer-ico { width: 12px; height: 12px; }
 .footer-social-link > span, .social-pill { display: inline-flex; align-items: center; gap: 4px; line-height: 1; }
-.footer-social-link:hover .footer-ico { stroke: var(--violet-dark); }
-.footer-social-link:hover .footer-ico .ig-dot { fill: var(--violet-dark); }
-.social-pill:hover .footer-ico { stroke: var(--violet-dark); }
-.social-pill:hover .footer-ico .ig-dot { fill: var(--violet-dark); }
+.footer-social-link:hover .footer-ico { stroke: #ffffff; }
+.footer-social-link:hover .footer-ico .ig-dot { fill: #ffffff; }
+.social-pill:hover .footer-ico { stroke: #ffffff; }
+.social-pill:hover .footer-ico .ig-dot { fill: #ffffff; }
 
 /* ===== Arena responsive refresh based on supplied JPGs ===== */
 
