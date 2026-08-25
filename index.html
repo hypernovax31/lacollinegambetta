@@ -2083,6 +2083,31 @@ body {
     margin-top: 5px;
 }
 
+
+/* ===== Dotted leaders between item name and price ===== */
+.grand-line,
+.grand-line--hh {
+    align-items: center;
+}
+.grand-name-wrap {
+    align-items: center;
+}
+.grand-dots {
+    display: block !important;
+    flex: 1 1 auto;
+    min-width: 28px;
+    border-bottom: 1px dotted rgba(156, 122, 45, 0.58);
+    transform: translateY(-0.08rem);
+}
+.grand-item--hh .grand-dots {
+    display: block !important;
+}
+@media (max-width: 640px) {
+    .grand-dots {
+        display: none !important;
+    }
+}
+
 </style>
 </head>
 <body>
