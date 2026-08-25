@@ -2414,6 +2414,41 @@ body {
     }
 }
 
+
+/* ===== Better vertical centering for starter and main cards ===== */
+.grand-feature-grid--menu {
+    grid-auto-rows: 1fr;
+}
+.grand-dish-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 150px;
+}
+.grand-dish-card__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 4px;
+}
+.grand-dish-card__head h5 {
+    align-self: center;
+    line-height: 1.28;
+}
+.grand-dish-card__head strong {
+    align-self: center;
+    line-height: 1;
+}
+.grand-dish-card__note {
+    margin-top: 8px;
+}
+@media (max-width: 640px) {
+    .grand-dish-card {
+        min-height: auto;
+    }
+}
+
 </style>
 </head>
 <body>
