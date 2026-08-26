@@ -517,6 +517,39 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Cover leader titles simplified ===== */
+.cover-brand--compact {
+  gap: 10px;
+  max-width: 48rem;
+  margin-inline: auto;
+}
+.cover-brand--compact h1 {
+  display: none;
+}
+.cover-leader-line {
+  margin: 0;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  text-transform: uppercase;
+  color: var(--gold-100);
+  font-size: clamp(0.96rem, 1.8vw, 1.1rem);
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+}
+.cover-leader-line--sub {
+  color: var(--gold-300);
+}
+@media (max-width: 640px) {
+  .cover-brand--compact {
+    gap: 8px;
+  }
+  .cover-leader-line {
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -527,11 +560,10 @@ button,a { font:inherit; }
 
   <section id="cover-section">
     <div class="cover-page">
-      <div class="cover-brand">
+      <div class="cover-brand cover-brand--compact">
         <div class="eyebrow leader-title">✦ LA CARTE ✦</div>
-        <h1>COLLINE <span>GAMBETTA</span></h1>
-        <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
-        <p class="cover-subline leader-meta leader-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+        <p class="cover-leader-line">BAR • RESTAURANT • PARIS 20ᵉ</p>
+        <p class="cover-leader-line cover-leader-line--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
       </div>
       <div class="medallion-container"><svg class="medallion-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
