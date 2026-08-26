@@ -160,7 +160,7 @@ def interior_header(page):
     page.text(W/2, y+202, "BAR • RESTAURANT • PARIS 20ᵉ", 18, GOLD_LIGHT, SERIF, False, center=True)
 
 
-def food_panel(page, y, title, items, columns=2, card_min=120):
+def food_panel(page, y, title, items, columns=2, card_min=140):
     x, w, gap = M, W-2*M, 24
     col_w = (w-gap) / columns
     rows = [items[i:i+columns] for i in range(0, len(items), columns)]
@@ -169,22 +169,23 @@ def food_panel(page, y, title, items, columns=2, card_min=120):
         max_h = card_min
         for name, price, note in row:
             note_lines = page.wrap(note, max(12, int((col_w-90)/(24*.55)))) if note else []
-            max_h = max(max_h, 78 + len(note_lines)*30)
+            max_h = max(max_h, 94 + len(note_lines)*32)
         row_heights.append(max_h)
-    h = 108 + sum(row_heights) + max(0, len(rows)-1)*18
-    page.panel(x, y, w, h, title)
-    cy = y + 107
+    h = 122 + sum(row_heights) + max(0, len(rows)-1)*24
+    panel_fill = "#fbf7ff" if title in {"Planches & croques", "Burgers", "Glaces"} else WHITE
+    page.panel(x, y, w, h, title, panel_fill)
+    cy = y + 121
     for r, row in enumerate(rows):
         for c, (name, price, note) in enumerate(row):
             cx = x + c*(col_w+gap)
             ch = row_heights[r]
             page.rect(cx, cy, col_w, ch, "#fffefd", "#e4d09a", 2, 13)
-            page.block(cx+22, cy+17, name, col_w-175, 24, INK, SERIF, True, 29, 2)
-            page.text(cx+col_w-22, cy+17, price, 25, INK, SERIF, True, align="right")
+            page.block(cx+22, cy+20, name, col_w-175, 28, INK, SERIF, True, 34, 2)
+            page.text(cx+col_w-22, cy+20, price, 29, INK, SERIF, True, align="right")
             if note:
-                page.block(cx+22, cy+53, note, col_w-44, 19, MUTED, SANS, False, 25, 2)
-        cy += row_heights[r] + (16 if r < len(rows)-1 else 0)
-    return y + h + 22
+                page.block(cx+22, cy+64, note, col_w-44, 22, MUTED, SANS, False, 29, 2)
+        cy += row_heights[r] + (24 if r < len(rows)-1 else 0)
+    return y + h + 32
 
 
 def list_panel(page, y, title, items, columns=2, subtitle=None, compact=False):
@@ -209,7 +210,8 @@ def list_panel(page, y, title, items, columns=2, subtitle=None, compact=False):
     # Keep a deliberate air pocket under the last line: the border must never
     # touch a description or a price, even for the longest two-column list.
     h = top_offset + max(sizes or [0]) + 68
-    page.panel(x, y, w, h, title)
+    panel_fill = "#fbf7ff" if title in {"Boissons chaudes", "Whiskies", "Élégance & saveurs"} else WHITE
+    page.panel(x, y, w, h, title, panel_fill)
     if subtitle:
         page.text(W/2, y+86, subtitle, 18, GOLD if not page.dark else GOLD_LIGHT, SERIF, False, center=True)
     top = y + top_offset
@@ -225,7 +227,7 @@ def list_panel(page, y, title, items, columns=2, subtitle=None, compact=False):
                 cy += max(78, 44 + note_h + 10)
             else:
                 cy += 78
-    return y + h + 22
+    return y + h + 32
 
 
 def simple_feature(page, x, y, w, h, title, body, price, dark=False):
@@ -242,17 +244,17 @@ def simple_feature(page, x, y, w, h, title, body, price, dark=False):
 def cover_page(n):
     p = Page(dark=True)
     border(p, True)
-    p.text(W/2, 190, "✦  LA CARTE  ✦", 52, GOLD_LIGHT, SERIF, True, center=True)
-    p.text(W/2, 285, "BAR • RESTAURANT • PARIS 20ᵉ", 24, GOLD_LIGHT, SERIF, False, center=True)
-    p.text(W/2, 335, "✦  FAIT MAISON • SERVICE CONTINU • TERRASSE  ✦", 20, GOLD_LIGHT, SERIF, False, center=True)
+    p.text(W/2, 180, "✦  LA CARTE  ✦", 68, GOLD_LIGHT, SERIF, True, center=True)
+    p.text(W/2, 300, "BAR • RESTAURANT • PARIS 20ᵉ", 30, GOLD_LIGHT, SERIF, False, center=True)
+    p.text(W/2, 360, "✦  FAIT MAISON • SERVICE CONTINU • TERRASSE  ✦", 25, GOLD_LIGHT, SERIF, False, center=True)
     # The source illustration is masked to a soft circle before it is placed.
     p.circle(W/2, 1570, 690, GOLD, 7)
     p.circle(W/2, 1570, 625, "#e7c873", 2)
     p.raw("gravity northwest")
     p.raw(f"image over 640,970 1200,1200 {q(str(TMP/'cover-art.png'))}")
-    p.text(W/2, 2835, "LA COLLINE GAMBETTA", 33, GOLD_LIGHT, SERIF, True, center=True)
-    p.text(W/2, 2902, "4 RUE BELGRAND • 75020 PARIS • PLACE GAMBETTA", 20, WHITE, SERIF, False, center=True)
-    p.text(W/2, 2960, "lacolline.gambetta   •   01 43 49 05 93", 20, GOLD_LIGHT, SANS, False, center=True)
+    p.text(W/2, 2825, "LA COLLINE GAMBETTA", 45, GOLD_LIGHT, SERIF, True, center=True)
+    p.text(W/2, 2910, "4 RUE BELGRAND • 75020 PARIS • PLACE GAMBETTA", 27, WHITE, SERIF, False, center=True)
+    p.text(W/2, 2980, "lacolline.gambetta   •   01 43 49 05 93", 25, GOLD_LIGHT, SANS, False, center=True)
     footer(p, n, True)
     return p
 
@@ -363,7 +365,8 @@ def wine_panel(page, y, title, rows, short=False):
     for name, vals in rows:
         rowh.append(69 if len(page.wrap(name,max(12,int(name_w/(19*.55)))) )==1 else 92)
     h=105+sum(rowh)+18*len(rows)
-    page.panel(x,y,w,h,title)
+    panel_fill = "#fbf7ff" if title in {"Vin blanc", "Bulles"} else WHITE
+    page.panel(x,y,w,h,title,panel_fill)
     labels=["COUPE 12 CL","75 CL"] if short else ["12,5 CL","25 CL","50 CL","75 CL"]
     cols=len(labels); price_w=175 if not short else 260
     page.text(x+24,y+78,"APPELLATION",17,MUTED,SERIF,True)
@@ -409,9 +412,11 @@ def cocktails_page(n):
 def make_cover_art():
     TMP.mkdir(exist_ok=True)
     base=TMP/'cover-base.png'; mask=TMP/'cover-mask.png'; out=TMP/'cover-art.png'
-    subprocess.run(['convert',str(ROOT/'logo-gambetta.png'),'-resize','1500x1500','-background',V950,'-gravity','center','-extent','1500x1500',str(base)],check=True)
-    subprocess.run(['convert','-size','1500x1500','radial-gradient:white-black',str(mask)],check=True)
-    subprocess.run(['convert',str(base),str(mask),'-compose','CopyOpacity','-composite',str(out)],check=True)
+    subprocess.run(['convert',str(ROOT/'cover-gambetta.png'),'-resize','1500x1500','-background',V950,'-gravity','center','-extent','1500x1500',str(base)],check=True)
+    # A hard white circle with a very short blur keeps the illustration crisp;
+    # the previous full-size radial gradient made most of the PNG translucent.
+    subprocess.run(['convert','-size','1500x1500','xc:black','-fill','white','-draw','circle 750,750 750,55','-blur','0x28',str(mask)],check=True)
+    subprocess.run(['convert',str(base),'(','-alpha','off',str(mask),')','-compose','CopyOpacity','-composite',str(out)],check=True)
 
 
 def render_page(page, name):

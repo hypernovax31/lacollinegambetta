@@ -11,6 +11,8 @@ Le dossier [`print-assets/`](./print-assets/) contient :
 
 L’ordre est : couverture, entrées, plats, desserts, menus, boissons fraîches et chaudes, apéritifs / whiskies / digestifs / bières, vins, cocktails.
 
+`cover-gambetta.png` est la version détourée de l’image de couverture : elle peut être remplacée directement par la prochaine image fournie, sans modifier la mise en page.
+
 Le script `tools/build_print_assets.py` permet de régénérer les exports après une modification de prix ou de contenu :
 
 ```bash

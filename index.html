@@ -2165,7 +2165,7 @@ button,a { font:inherit; }
   justify-content:center;
   isolation:isolate;
 }
-.cover-art {
+  .cover-art {
   position:relative;
   z-index:2;
   display:block;
@@ -2173,10 +2173,11 @@ button,a { font:inherit; }
   height:88%;
   object-fit:contain;
   border-radius:50%;
-  /* fondu radial : l’image s’efface délicatement dans le fond violet */
-  -webkit-mask-image:radial-gradient(circle, #000 0 72%, rgba(0,0,0,.92) 79%, rgba(0,0,0,.52) 88%, transparent 100%);
-  mask-image:radial-gradient(circle, #000 0 72%, rgba(0,0,0,.92) 79%, rgba(0,0,0,.52) 88%, transparent 100%);
-  filter:drop-shadow(0 14px 25px rgba(0,0,0,.36));
+  /* Le fondu reste uniquement sur les derniers millimètres du cercle :
+     l’illustration reste nette et lumineuse au centre. */
+  -webkit-mask-image:radial-gradient(circle at center, #000 0 84%, rgba(0,0,0,.98) 90%, rgba(0,0,0,.62) 96%, transparent 100%);
+  mask-image:radial-gradient(circle at center, #000 0 84%, rgba(0,0,0,.98) 90%, rgba(0,0,0,.62) 96%, transparent 100%);
+  filter:drop-shadow(0 14px 25px rgba(0,0,0,.32));
 }
 .cover-art-ring {
   position:absolute;
@@ -2438,6 +2439,45 @@ button,a { font:inherit; }
   .print-page--cover .print-page__number { color:#d8b257; }
 }
 
+
+/* ===== Equilibre de la couverture et centrage strict des en-têtes imprimés ===== */
+#cover-section .cover-brand,
+#cover-section .cover-footer,
+#cover-section .cover-footer-address,
+#cover-section .cover-links {
+  text-align:center;
+  justify-items:center;
+}
+@media print {
+  .print-page__header {
+    display:grid;
+    grid-template-rows:auto auto auto;
+    align-content:center;
+    justify-items:center;
+    text-align:center;
+  }
+  .print-page__header > * {
+    width:100%;
+    text-align:center;
+  }
+  .print-page--cover .cover-brand--menu-leader-lite .eyebrow {
+    font-size:23pt !important;
+    letter-spacing:.15em !important;
+  }
+  .print-page--cover .cover-brand .leader-meta,
+  .print-page--cover .cover-brand .menu-leader-subline {
+    font-size:9.5pt !important;
+    letter-spacing:.11em !important;
+  }
+  .print-page--cover .cover-footer-address {
+    font-size:9.5pt !important;
+    letter-spacing:.11em !important;
+  }
+  .print-page--cover .cover-links .contact-link {
+    font-size:7.5pt !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2457,7 +2497,7 @@ button,a { font:inherit; }
         <div class="cover-art-frame">
           <span class="cover-art-ring cover-art-ring--outer" aria-hidden="true"></span>
           <span class="cover-art-ring cover-art-ring--inner" aria-hidden="true"></span>
-          <img class="cover-art" src="logo-gambetta.png" alt="Illustration de La Colline Gambetta" />
+          <img class="cover-art" src="cover-gambetta.png" alt="Illustration de La Colline Gambetta" />
         </div>
       </div>
       <a href="#menu-nav-anchor" class="contact-link cover-action" onclick="showView('menu')"><span class="star-gold">✦</span> Menu & Carte <span class="star-gold">✦</span></a>
