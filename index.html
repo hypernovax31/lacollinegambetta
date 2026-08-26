@@ -1513,6 +1513,39 @@ button,a { font:inherit; }
   color: var(--gold-bright) !important;
 }
 
+
+/* ===== Cover leader exactly matches menu header leader style ===== */
+.cover-brand--menu-leader-lite .leader-title {
+  font-family: 'Cinzel', serif !important;
+  font-size: .72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .24em !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase !important;
+  color: var(--gold-100) !important;
+  text-shadow: none !important;
+}
+.cover-brand--menu-leader-lite .leader-meta {
+  font-family: 'Cinzel', serif !important;
+  font-size: clamp(.66rem, 1.6vw, .86rem) !important;
+  font-weight: 400 !important;
+  letter-spacing: .09em !important;
+  line-height: 1.35 !important;
+  text-transform: uppercase !important;
+  color: var(--gold-100) !important;
+  text-shadow: none !important;
+}
+@media (max-width: 640px) {
+  .cover-brand--menu-leader-lite .leader-title {
+    font-size: .72rem !important;
+    letter-spacing: .18em !important;
+  }
+  .cover-brand--menu-leader-lite .leader-meta {
+    font-size: .72rem !important;
+    letter-spacing: .07em !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1524,9 +1557,9 @@ button,a { font:inherit; }
   <section id="cover-section">
     <div class="cover-page">
       <div class="cover-brand cover-brand--menu-leader cover-brand--menu-leader-lite">
-        <div class="eyebrow"><span class="star-gold">✦</span> LA CARTE <span class="star-gold">✦</span></div>
-        <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
-        <p class="menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
+        <div class="eyebrow leader-title"><span class="star-gold">✦</span> LA CARTE <span class="star-gold">✦</span></div>
+        <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+        <p class="leader-meta leader-meta--sub menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
       </div>
       <div class="medallion-container"><svg class="medallion-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
