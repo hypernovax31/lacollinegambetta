@@ -1730,7 +1730,7 @@ button,a { font:inherit; }
 }
 #cover-section .cover-brand {
   margin-top: 0 !important;
-  gap: clamp(8px, 1.4vh, 14px) !important;
+  gap: clamp(3px, 0.7vh, 7px) !important;
 }
 #cover-section .cover-footer {
   align-self: end !important;
@@ -1750,14 +1750,14 @@ button,a { font:inherit; }
 }
 /* T3 — BAR • RESTAURANT • PARIS 20ᵉ (rééquilibrage léger) */
 #cover-section .leader-meta {
-  font-size: clamp(.9rem, 1.6vw, 1.05rem) !important;
-  letter-spacing: .18em !important;
+  font-size: clamp(.74rem, 1.2vw, .85rem) !important;
+  letter-spacing: .12em !important;
 }
 /* T2 — ✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦ : même style que BAR • RESTAURANT • PARIS 20ᵉ */
 #cover-section .menu-leader-subline {
-  font-size: clamp(.9rem, 1.6vw, 1.05rem) !important;
+  font-size: clamp(.74rem, 1.2vw, .85rem) !important;
   font-weight: 400 !important;
-  letter-spacing: .18em !important;
+  letter-spacing: .12em !important;
   line-height: 1.35 !important;
 }
 #cover-section .menu-leader-subline .star-gold {
@@ -1768,10 +1768,10 @@ button,a { font:inherit; }
     font-size: clamp(1.6rem, 7vw, 2.2rem) !important;
   }
   #cover-section .leader-meta {
-    font-size: clamp(.85rem, 3.4vw, 1rem) !important;
+    font-size: clamp(.72rem, 2.6vw, .85rem) !important;
   }
   #cover-section .menu-leader-subline {
-    font-size: clamp(.85rem, 3.4vw, 1rem) !important;
+    font-size: clamp(.72rem, 2.6vw, .85rem) !important;
   }
 }
 
@@ -1964,6 +1964,19 @@ button,a { font:inherit; }
   .day-option__desc { grid-row:2; }
   .day-option strong { grid-row:2; }
 }
+/* ===== CTA « Menu & Carte » en fond or (comme un bouton sélectionné) ===== */
+#cover-section .cover-action {
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%) !important;
+  border-color: #fcf6ba !important;
+  color: var(--violet-950) !important;
+  box-shadow: 0 8px 22px rgba(156, 122, 45, .35);
+}
+#cover-section .cover-action .star-gold { color: var(--violet-950) !important; text-shadow: none !important; }
+#cover-section .cover-action:hover {
+  background: linear-gradient(135deg, #d8b257 0%, #fef9db 45%, #fcf6ba 100%) !important;
+  color: var(--violet-950) !important;
+}
+#cover-section .cover-action:hover .star-gold { color: var(--violet-950) !important; }
 </style>
 </head>
 <body>
@@ -2032,18 +2045,18 @@ button,a { font:inherit; }
 
                     <rect width="280" height="280" fill="#ffffff" />
 
-                    <text x="140" y="27" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="700" font-size="5.2px" fill="#180a20" letter-spacing="1.2px">- BAR • RESTAURANT • TERRASSE -</text>
+                    <text x="140" y="21" text-anchor="middle" font-family="'Cinzel', serif" font-weight="800" font-size="9" fill="#180a20" letter-spacing="3">LA</text>
                         <!-- Logo La Colline Gambetta : agrandi, recentré, inscrit dans le cercle doré -->
-                        <image href="logo-gambetta.png" x="57" y="38" width="166" height="124" preserveAspectRatio="xMidYMid meet" />
+                        <image href="logo-gambetta.png" x="55" y="36" width="170" height="127" preserveAspectRatio="xMidYMid meet" />
 
-                    <line x1="0" y1="34" x2="280" y2="34" stroke="url(#minimalGoldCover)" stroke-width="4" filter="url(#barShadowCover)" />
-                    <line x1="0" y1="34" x2="280" y2="34" stroke="#ffffff" stroke-width="0.8" opacity="0.6" />
+                    <line x1="0" y1="27" x2="280" y2="27" stroke="url(#minimalGoldCover)" stroke-width="4" filter="url(#barShadowCover)" />
+                    <line x1="0" y1="27" x2="280" y2="27" stroke="#ffffff" stroke-width="0.8" opacity="0.6" />
 
                     <g filter="url(#innerEmbossCover)">
                         
-                        <text x="140" y="196" text-anchor="middle" font-family="'Cinzel', serif" font-weight="900" font-size="36" fill="#180a20" letter-spacing="6.5">COLLINE</text>
-                        <text x="140" y="222" text-anchor="middle" font-family="'Cinzel', serif" font-weight="900" font-size="18.5" fill="#592e6f" letter-spacing="7.5">GAMBETTA</text>
-                        <text x="140" y="235" text-anchor="middle" font-family="'Cinzel', serif" font-weight="700" font-size="8.8" fill="url(#minimalGoldCover)" letter-spacing="3.5">◇ ⵣ • ✦ • ⵣ ◇</text>
+                        <text x="140" y="186" text-anchor="middle" font-family="'Cinzel', serif" font-weight="900" font-size="21" fill="#180a20" letter-spacing="4.5">COLLINE</text>
+                        <text x="140" y="204" text-anchor="middle" font-family="'Cinzel', serif" font-weight="900" font-size="13.5" fill="#592e6f" letter-spacing="5">GAMBETTA</text>
+                        <text x="140" y="216" text-anchor="middle" font-family="'Cinzel', serif" font-weight="700" font-size="8" fill="url(#minimalGoldCover)" letter-spacing="3.5">◇ ⵣ • ✦ • ⵣ ◇</text>
                         <text font-family="'Cinzel', serif" font-weight="900" font-size="8.8px" fill="#180a20" letter-spacing="2.8px">
                             <textPath href="#bottomArcCover" startOffset="50%" text-anchor="middle">✦ BAR • RESTAURANT • PARIS 20ᵉ ✦</textPath>
                         </text>
