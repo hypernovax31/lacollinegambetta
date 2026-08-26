@@ -910,6 +910,42 @@ button,a { font:inherit; }
   color: var(--royal-violet-ink);
 }
 
+
+/* ===== Match cover leader typography exactly to menu header ===== */
+.cover-brand--compact .leader-title {
+  font-size: clamp(.92rem, 1.8vw, 1.08rem) !important;
+  letter-spacing: .22em !important;
+  line-height: 1.2 !important;
+  font-family: 'Cinzel', serif !important;
+  text-transform: uppercase !important;
+  color: var(--gold-100) !important;
+}
+.cover-brand--compact .leader-meta,
+.cover-brand--compact .cover-leader-line {
+  font-size: clamp(.9rem, 1.65vw, 1.02rem) !important;
+  letter-spacing: .11em !important;
+  line-height: 1.35 !important;
+  font-family: 'Cinzel', serif !important;
+  text-transform: uppercase !important;
+  color: var(--gold-100) !important;
+}
+.cover-brand--compact .leader-meta--sub,
+.cover-brand--compact .cover-leader-line--sub {
+  opacity: .96 !important;
+  color: var(--gold-100) !important;
+}
+@media (max-width: 640px) {
+  .cover-brand--compact .leader-title {
+    font-size: .86rem !important;
+    letter-spacing: .16em !important;
+  }
+  .cover-brand--compact .leader-meta,
+  .cover-brand--compact .cover-leader-line {
+    font-size: .84rem !important;
+    letter-spacing: .08em !important;
+  }
+}
+
 </style>
 </head>
 <body>
