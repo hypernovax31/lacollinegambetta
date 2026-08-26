@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Colline Gambetta — Bistrot &amp; Brasserie · Paris 20ᵉ</title>
+  <meta name="description" content="La Colline Gambetta, bistrot et brasserie de quartier à Paris 20ᵉ. Le menu du jour selon l'ardoise, le menu enfant, produits de saison et vins choisis.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ===== EN-TÊTE ===== -->
+  <header class="site-header" id="siteHeader">
+    <a class="brand" href="#accueil">
+      <span class="brand-line1">La Colline</span>
+      <span class="brand-line2">Gambetta</span>
+    </a>
+    <nav class="main-nav" id="mainNav" aria-label="Navigation principale">
+      <a href="#maison">La maison</a>
+      <a href="#menus">Menus</a>
+      <a href="#carte">La carte</a>
+      <a href="#infos" class="nav-cta">Nous trouver</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="accueil">
+    <div class="hero-bg" role="img" aria-label="Salle du bistrot à la lumière du soir"></div>
+    <div class="hero-inner">
+      <p class="eyebrow">Bistrot &amp; brasserie · Paris 20ᵉ</p>
+      <h1>La Colline Gambetta</h1>
+      <p class="hero-sub">Une table de quartier au pied de l'avenue Gambetta&nbsp;: produits de saison, vins choisis et bonne humeur en prime.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#menus">Voir les menus</a>
+        <a class="btn btn-ghost" href="#infos">Nous trouver</a>
+      </div>
+    </div>
+    <a class="hero-scroll" href="#maison" aria-label="Défiler vers la suite">
+      <span></span>
+    </a>
+  </section>
+
+  <!-- ===== LA MAISON ===== -->
+  <section class="maison" id="maison">
+    <div class="maison-media reveal">
+      <img src="images/maison.jpg" alt="La façade de La Colline Gambetta, au pied de l'avenue Gambetta" loading="lazy">
+    </div>
+    <div class="maison-text">
+      <p class="eyebrow reveal">La maison</p>
+      <h2 class="reveal">Un bistrot de quartier,<br>au sens le plus juste du terme</h2>
+      <p class="reveal">
+        Derrière sa façade discrète, La Colline Gambetta cultive la douceur de vivre d'un
+        bistrot d'autrefois&nbsp;: cuisine de saison, carte courte, vins qui n'ont pas peur
+        d'avoir du caractère et une salle où l'on prend le temps.
+      </p>
+      <p class="reveal">
+        On y vient le midi pour le menu du jour, en famille pour le menu enfant,
+        et le soir pour flâner entre un plat généreux et une bouteille bien choisie.
+      </p>
+      <ul class="maison-points reveal">
+        <li>Produits de saison &amp; producteurs de confiance</li>
+        <li>Une cave courte, dense et vivante</li>
+        <li>Terrasse au soleil dès le printemps</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== MENUS ===== -->
+  <section class="menus" id="menus">
+    <p class="section-eyebrow reveal">Nos menus</p>
+    <div class="menu-grid">
+
+      <!-- Bloc : Menu enfant -->
+      <article class="menu-card reveal">
+        <div class="menu-card-media">
+          <img src="images/menu-enfant.jpg" alt="Le menu enfant, servi à la maison" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <h3 class="menu-title">Le menu enfant</h3>
+          <p class="menu-desc">Moins de 12 ans</p>
+          <div class="menu-rule" aria-hidden="true"></div>
+          <p class="menu-intro">
+            Le menu suit l'ardoise du jour, en version petites faims&nbsp;:
+            entrée, plat, dessert et boisson.
+          </p>
+          <ul class="menu-items">
+            <li><span class="menu-item-name">Croque-monsieur gratiné</span><span class="menu-item-dot" aria-hidden="true"></span><span class="menu-item-price">12&nbsp;€</span></li>
+            <li><span class="menu-item-name">Spaghetti bolognaise</span><span class="menu-item-dot" aria-hidden="true"></span><span class="menu-item-price">12&nbsp;€</span></li>
+            <li><span class="menu-item-name">Crêpe aux pommes de terre</span><span class="menu-item-dot" aria-hidden="true"></span><span class="menu-item-price">12&nbsp;€</span></li>
+            <li><span class="menu-item-name">Le dessert du jour</span><span class="menu-item-dot" aria-hidden="true"></span><span class="menu-item-price">12&nbsp;€</span></li>
+          </ul>
+          <p class="menu-note">Tout compris, boisson incluse.</p>
+        </div>
+      </article>
+
+      <!-- Bloc : Menu du jour -->
+      <article class="menu-card reveal">
+        <div class="menu-card-media">
+          <img src="images/menu-du-jour.jpg" alt="Un plat du menu du jour" loading="lazy">
+        </div>
+        <div class="menu-card-body">
+          <h3 class="menu-title">Menu du jour</h3>
+          <p class="menu-desc">Selon l'ardoise</p>
+          <div class="menu-rule" aria-hidden="true"></div>
+          <p class="menu-intro">
+            Du lundi au vendredi, de 12h à 14h30. L'ardoise change au gré
+            du marché et de nos envies.
+          </p>
+          <ul class="menu-items">
+            <li><span class="menu-item-name">Entrée + plat</span><span class="menu-item-dot" aria-hidden="true"></span><span class="menu-item-price">17,50&nbsp;€</span></li>
+            <li><span class="menu-item-name">Entrée + plat + dessert</span><span class="menu-item-dot" aria-hidden="true"></span><span class="menu-item-price">19,50&nbsp;€</span></li>
+            <li><span class="menu-item-name">Formule complète + café</span><span class="menu-item-dot" aria-hidden="true"></span><span class="menu-item-price">22&nbsp;€</span></li>
+          </ul>
+          <p class="menu-note">Le plat seul est également à la carte.</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ===== LA CARTE ===== -->
+  <section class="carte" id="carte">
+    <div class="carte-head">
+      <p class="eyebrow reveal">La carte</p>
+      <h2 class="reveal">Quelques plats qui nous ressemblent</h2>
+      <p class="reveal">Une carte courte, qui suit les saisons. La complète vous attend sur place.</p>
+    </div>
+    <div class="carte-grid">
+      <div class="carte-col reveal">
+        <h3>Entrées</h3>
+        <ul>
+          <li><span>Tartare de daurade, agrumes</span><span>14&nbsp;€</span></li>
+          <li><span>Œuf parfait, écume de cèpes</span><span>12&nbsp;€</span></li>
+          <li><span>Soupe à l'oignon gratinée</span><span>9,50&nbsp;€</span></li>
+          <li><span>Chèvre chaud, salade, miel</span><span>11&nbsp;€</span></li>
+        </ul>
+      </div>
+      <div class="carte-col reveal">
+        <h3>Plats</h3>
+        <ul>
+          <li><span>Filet de bar, beurre blanc</span><span>27&nbsp;€</span></li>
+          <li><span>Risotto aux cèpes</span><span>24&nbsp;€</span></li>
+          <li><span>Magret de canard, sauce à l'ancienne</span><span>28&nbsp;€</span></li>
+          <li><span>Côte de bœuf grillée (pour deux)</span><span>72&nbsp;€</span></li>
+        </ul>
+      </div>
+      <div class="carte-col reveal">
+        <h3>Desserts</h3>
+        <ul>
+          <li><span>Tarte fine aux pommes</span><span>8,50&nbsp;€</span></li>
+          <li><span>Fondant au chocolat</span><span>9&nbsp;€</span></li>
+          <li><span>Crème brûlée à la vanille</span><span>8,50&nbsp;€</span></li>
+          <li><span>Fromages affinés</span><span>12&nbsp;€</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== INFOS PRATIQUES ===== -->
+  <section class="infos" id="infos">
+    <p class="eyebrow reveal">Infos pratiques</p>
+    <h2 class="reveal">Nous trouver</h2>
+    <div class="infos-grid">
+      <div class="infos-col reveal">
+        <h3>Adresse</h3>
+        <p>93 avenue Gambetta<br>75020 Paris</p>
+        <p class="infos-sub">Métro Gambetta (2 &amp; 3)<br>Bus 56 &amp; 96</p>
+      </div>
+      <div class="infos-col reveal">
+        <h3>Horaires</h3>
+        <p>Midi — 12h à 14h30<br>Soir — 19h à 22h30</p>
+        <p class="infos-sub">Fermé le dimanche</p>
+      </div>
+      <div class="infos-col reveal">
+        <h3>Contact</h3>
+        <p>Tél. 01 42 00 00 00<br>bonjour@lacollinegambetta.fr</p>
+        <a class="btn" href="tel:0142000000">Réserver une table</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PIED DE PAGE ===== -->
+  <footer class="site-footer">
+    <div class="footer-brand">La Colline Gambetta</div>
+    <p>93 avenue Gambetta, 75020 Paris · Tél. 01 42 00 00 00</p>
+    <p class="footer-copy">© <span id="year">2026</span> La Colline Gambetta — Tous droits réservés</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
