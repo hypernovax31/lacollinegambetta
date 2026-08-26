@@ -947,31 +947,6 @@ button,a { font:inherit; }
 }
 
 
-/* ===== Compact menu header matching cover titles ===== */
-.interior-header--compact {
-  display: grid;
-  justify-items: center;
-  gap: 10px;
-}
-.interior-header--compact h2 {
-  display: none;
-}
-.interior-header--compact .leader-title {
-  margin: 0;
-}
-.interior-header--compact .leader-meta {
-  max-width: 42ch;
-  margin: 0;
-}
-@media (max-width: 640px) {
-  .interior-header--compact {
-    gap: 8px;
-  }
-  .interior-header--compact .leader-meta {
-    max-width: 30ch;
-  }
-}
-
 </style>
 </head>
 <body>
@@ -1099,10 +1074,11 @@ button,a { font:inherit; }
   </section>
 
   <section id="interior-menu">
-    <header class="interior-header interior-header--compact">
-      <div class="eyebrow leader-title">✦ LA CARTE ✦</div>
-      <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
-      <p class="leader-meta leader-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+    <header class="interior-header">
+      <div class="eyebrow">✦ LA CARTE ✦</div>
+      <h2>COLLINE <span>GAMBETTA</span></h2>
+      <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
+      <p style="margin-top:8px;color:var(--gold-100);">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
     </header>
     <div id="menu-nav-anchor" aria-hidden="true"></div>
     <nav class="menu-nav">
