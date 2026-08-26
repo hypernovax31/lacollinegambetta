@@ -1750,15 +1750,17 @@ button,a { font:inherit; }
 }
 /* T3 — BAR • RESTAURANT • PARIS 20ᵉ (rééquilibrage léger) */
 #cover-section .leader-meta {
-  font-size: clamp(.74rem, 1.2vw, .85rem) !important;
-  letter-spacing: .12em !important;
+  font-size: clamp(.58rem, 1.9vw, .85rem) !important;
+  letter-spacing: .1em !important;
+  white-space: nowrap !important;
 }
 /* T2 — ✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦ : même style que BAR • RESTAURANT • PARIS 20ᵉ */
 #cover-section .menu-leader-subline {
-  font-size: clamp(.74rem, 1.2vw, .85rem) !important;
+  font-size: clamp(.58rem, 1.9vw, .85rem) !important;
   font-weight: 400 !important;
-  letter-spacing: .12em !important;
+  letter-spacing: .1em !important;
   line-height: 1.35 !important;
+  white-space: nowrap !important;
 }
 #cover-section .menu-leader-subline .star-gold {
   font-size: .7em !important;
@@ -1767,11 +1769,10 @@ button,a { font:inherit; }
   #cover-section .cover-brand--menu-leader-lite .eyebrow {
     font-size: clamp(1.6rem, 7vw, 2.2rem) !important;
   }
-  #cover-section .leader-meta {
-    font-size: clamp(.72rem, 2.6vw, .85rem) !important;
-  }
+  #cover-section .leader-meta,
   #cover-section .menu-leader-subline {
-    font-size: clamp(.72rem, 2.6vw, .85rem) !important;
+    font-size: clamp(.55rem, 2.1vw, .85rem) !important;
+    letter-spacing: .06em !important;
   }
 }
 
@@ -1977,6 +1978,22 @@ button,a { font:inherit; }
   color: var(--violet-950) !important;
 }
 #cover-section .cover-action:hover .star-gold { color: var(--violet-950) !important; }
+/* ===== Médaillon maximisé et centré au milieu de la page ===== */
+#cover-section .cover-page {
+  grid-template-rows: auto minmax(0, 1fr) auto auto !important;
+}
+#cover-section .cover-brand {
+  width: 100%;
+  max-width: none;
+}
+#cover-section .medallion-container {
+  align-self: center !important;
+  width: min(100%, 60vh, 560px) !important;
+  margin: 2px auto !important;
+}
+#cover-section .medallion-container + .cover-action {
+  margin-top: 6px !important;
+}
 </style>
 </head>
 <body>
