@@ -1720,9 +1720,13 @@ button,a { font:inherit; }
 }
 /* ===== Page de garde : bloc titre remonté + hiérarchie T1/T2 ===== */
 #cover-section .cover-page {
-  grid-template-rows: auto auto auto minmax(0, 1fr) !important;
+  grid-template-rows: auto auto minmax(0, 1fr) auto !important;
   align-content: start !important;
   padding-top: clamp(10px, 2.2vh, 26px) !important;
+}
+#cover-section .cover-action {
+  align-self: end !important;
+  margin-bottom: clamp(16px, 4vh, 44px) !important;
 }
 #cover-section .cover-brand {
   margin-top: 0 !important;
@@ -1731,12 +1735,15 @@ button,a { font:inherit; }
 #cover-section .cover-footer {
   align-self: end !important;
 }
-/* T1 — ✦ LA CARTE ✦ */
+/* T1 — ✦ LA CARTE ✦ (style identique au mot COLLINE de l'en-tête menu) */
 #cover-section .cover-brand--menu-leader-lite .eyebrow {
-  font-size: clamp(2.6rem, 6vw, 3.8rem) !important;
-  font-weight: 900 !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: clamp(1.8rem, 4.8vw, 2.8rem) !important;
+  font-weight: 700 !important;
   letter-spacing: .14em !important;
-  line-height: 1.05 !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
+  color: #ffffff !important;
 }
 #cover-section .cover-brand--menu-leader-lite .eyebrow .star-gold {
   font-size: .55em !important;
@@ -1746,27 +1753,61 @@ button,a { font:inherit; }
   font-size: clamp(.9rem, 1.6vw, 1.05rem) !important;
   letter-spacing: .18em !important;
 }
-/* T2 — ✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦ */
+/* T2 — ✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦ : même style que BAR • RESTAURANT • PARIS 20ᵉ */
 #cover-section .menu-leader-subline {
-  font-size: clamp(1.3rem, 2.8vw, 1.9rem) !important;
-  font-weight: 700 !important;
-  letter-spacing: .12em !important;
-  line-height: 1.2 !important;
+  font-size: clamp(.9rem, 1.6vw, 1.05rem) !important;
+  font-weight: 400 !important;
+  letter-spacing: .18em !important;
+  line-height: 1.35 !important;
 }
 #cover-section .menu-leader-subline .star-gold {
   font-size: .7em !important;
 }
 @media (max-width: 640px) {
   #cover-section .cover-brand--menu-leader-lite .eyebrow {
-    font-size: clamp(1.9rem, 8.5vw, 2.7rem) !important;
-    letter-spacing: .1em !important;
+    font-size: clamp(1.6rem, 7vw, 2.2rem) !important;
   }
   #cover-section .leader-meta {
     font-size: clamp(.85rem, 3.4vw, 1rem) !important;
   }
   #cover-section .menu-leader-subline {
-    font-size: clamp(1.05rem, 4.6vw, 1.4rem) !important;
-    letter-spacing: .08em !important;
+    font-size: clamp(.85rem, 3.4vw, 1rem) !important;
+  }
+}
+
+/* ===== Plats & boissons : intitulé à gauche, prix à droite ; le prix passe à la ligne (à gauche) seulement en cas de chevauchement ===== */
+.food-card__head {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  column-gap: 12px !important;
+  row-gap: 4px !important;
+}
+.food-card__head h5 { min-width: 0; }
+.food-card__head strong { white-space: nowrap; }
+.price-line__row {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  row-gap: 2px;
+}
+.price-line__price { white-space: nowrap; width: auto !important; }
+
+/* ===== Boutons de sélection (Nos entrées, Nos plats…) : texte maximisé sur très petits écrans ===== */
+@media (max-width: 480px) {
+  .menu-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  .menu-nav .nav-btn:last-child {
+    grid-column: span 2;
+  }
+  .nav-btn {
+    font-size: 1rem !important;
+    line-height: 1.25 !important;
+    padding: 10px 12px !important;
+    min-height: 46px !important;
   }
 }
 </style>
@@ -1974,6 +2015,13 @@ function animateScrollTo(targetY, duration) {
       window.__collineScrollAnim = null;
       window.scrollTo(0, targetY);
     }
+  }
+  window.__collineScrollAnim = requestAnimationFrame(step);
+}
+</script>
+</body>
+</html>
+ }
   }
   window.__collineScrollAnim = requestAnimationFrame(step);
 }
