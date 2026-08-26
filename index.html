@@ -1450,6 +1450,69 @@ button,a { font:inherit; }
   color: var(--violet-950) !important;
 }
 
+
+/* ===== Global fix: dark text on violet backgrounds becomes white ===== */
+.cover-page,
+.cover-page .eyebrow,
+.cover-page .leader-title,
+.cover-page .leader-meta,
+.cover-page .cover-leader-line,
+.cover-page .menu-leader-subline,
+.cover-page .cover-footer,
+.cover-page .cover-footer-address,
+.cover-page .contact-link,
+.interior-header,
+.interior-header .eyebrow,
+.interior-header h2,
+.interior-header p,
+.top-controls,
+.top-controls .control-btn,
+.menu-nav,
+.menu-nav .nav-btn,
+.panel__title,
+.panel__title *,
+.offer-card--accent,
+.offer-card--accent .offer-card__sub,
+.offer-card--accent .offer-card__price,
+.offer-card--accent .offer-card__foot,
+.special-card--dark,
+.special-card--dark h5,
+.special-card--dark p,
+.special-card--dark span,
+.special-card--dark strong,
+.accent-band,
+.accent-band strong,
+.accent-band p,
+.footer,
+.footer-details,
+.footer-note,
+.footer-legal,
+.footer-link {
+  color: #ffffff !important;
+}
+
+/* Keep intentional non-white accents */
+.cover-action,
+.top-controls .control-btn.active,
+.menu-nav .nav-btn.active,
+.offer-card__badge,
+.special-card__badge {
+  color: var(--violet-950) !important;
+}
+.interior-header h2 span,
+.cover-brand--menu-leader h2 span,
+.cover-brand--menu-leader-lite h2 span,
+.star-gold,
+.panel__title::before,
+.panel__title::after,
+.choice-card li::before,
+.offer-card--accent .offer-card__foot,
+.special-card--dark .day-lines strong,
+.accent-band span,
+.footer-note .star-gold {
+  color: var(--gold-bright) !important;
+}
+
 </style>
 </head>
 <body>
