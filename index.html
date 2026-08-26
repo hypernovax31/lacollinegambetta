@@ -48,7 +48,7 @@ button,a { font:inherit; }
 .cover-footer-address { max-width:30ch; font-family:'Cinzel',serif; font-size:clamp(.82rem,1.4vw,.98rem); letter-spacing:.12em; line-height:1.5; text-transform:uppercase; }
 .cover-links, .footer-links { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
 .contact-link svg, .footer-link svg { width:15px; height:15px; flex:0 0 auto; stroke:#fff; }
-#interior-menu { display:none; background:var(--cream); padding-bottom:56px; }
+#interior-menu { display:none; background:var(--cream); padding-bottom:0; }
 .interior-header { background:#592e6f; color:#fff; padding:24px 16px 20px; text-align:center; border-bottom:2px solid rgba(216,178,87,.42); }
 .interior-header .eyebrow { font-family:'Cinzel',serif; letter-spacing:.3em; color:var(--gold-100); text-transform:uppercase; font-size:.78rem; }
 .interior-header h2 { margin:8px 0 10px; font-family:'Cinzel',serif; font-size:clamp(2.2rem,6vw,3.4rem); letter-spacing:.18em; text-transform:uppercase; line-height:1; }
@@ -136,7 +136,7 @@ button,a { font:inherit; }
 .beer-row__name { min-width:0; font-weight:700; line-height:1.35; }
 .beer-row__price, .beer-row__hh { font-family:'Cinzel',serif; font-size:1.1rem; font-weight:800; }
 .beer-row__price { color:var(--violet-900); }
-.footer { background:#592e6f; border-top:2px solid var(--gold-500); color:#fff; padding:16px 12px 14px; text-align:center; margin-top:24px; }
+.footer { background:#592e6f; border-top:2px solid var(--gold-500); color:#fff; padding:16px 12px calc(18px + env(safe-area-inset-bottom)); text-align:center; margin-top:24px; }
 .footer-details { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px 20px; color:var(--gold-100); font-family:'Cinzel',serif; font-size:clamp(.62rem,1.2vw,.84rem); letter-spacing:.08em; text-transform:uppercase; }
 .footer-links { margin:10px 0; }
 .footer-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:42px; padding:8px 14px; text-decoration:none; display:inline-flex; gap:8px; align-items:center; justify-content:center; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
