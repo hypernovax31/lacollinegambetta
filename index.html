@@ -270,7 +270,7 @@ button,a { font:inherit; }
 }
 
 
-/* ===== Remove dark/white panels from cover and footer ===== */
+/* ===== Cover / footer visual correction ===== */
 .cover-page {
   box-shadow: none !important;
 }
@@ -278,13 +278,19 @@ button,a { font:inherit; }
   border-color: rgba(216,178,87,.18) !important;
 }
 .footer {
-  background: transparent !important;
-  border-top: 0 !important;
+  background: linear-gradient(180deg, #6b3c87 0%, #592e6f 55%, #432155 100%) !important;
+  border-top: 1px solid rgba(216,178,87,.45) !important;
   color: #fff;
-  box-shadow: none !important;
+  box-shadow: 0 -10px 26px rgba(36,16,46,.12) inset !important;
+}
+.footer-details {
+  color: var(--gold-100);
 }
 .footer-note {
   color: var(--gold-300);
+}
+.footer-legal {
+  color: rgba(255,255,255,.88);
 }
 
 
