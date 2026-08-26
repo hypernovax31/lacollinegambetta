@@ -354,7 +354,9 @@ function showMenuSection(sectionId, btnElement) {
   targetSection.classList.add('active');
   btnElement.classList.add('active');
   const anchor = document.getElementById('menu-nav-anchor');
+  const nav = document.querySelector('.menu-nav');
   const target = anchor ? Math.max(0, Math.round(anchor.getBoundingClientRect().top + window.scrollY)) : 0;
+  if (nav) nav.scrollLeft = 0;
   animateScrollTo(target, 550);
 }
 function animateScrollTo(targetY, duration) {
