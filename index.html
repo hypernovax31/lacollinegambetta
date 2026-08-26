@@ -1126,6 +1126,43 @@ button,a { font:inherit; }
   max-width: 42ch;
 }
 
+
+/* ===== Much larger cover leader text ===== */
+.cover-brand--menu-leader-lite {
+  gap: 14px !important;
+}
+.cover-brand--menu-leader-lite .eyebrow {
+  font-size: clamp(2rem, 4.6vw, 3rem) !important;
+  letter-spacing: 0.12em !important;
+  line-height: 1.05 !important;
+}
+.cover-brand--menu-leader-lite p {
+  font-size: clamp(1.4rem, 3vw, 2.1rem) !important;
+  letter-spacing: 0.08em !important;
+  line-height: 1.15 !important;
+  max-width: 26ch !important;
+}
+.cover-brand--menu-leader-lite .menu-leader-subline {
+  font-size: clamp(1.15rem, 2.5vw, 1.7rem) !important;
+}
+@media (max-width: 640px) {
+  .cover-brand--menu-leader-lite {
+    gap: 10px !important;
+  }
+  .cover-brand--menu-leader-lite .eyebrow {
+    font-size: clamp(1.2rem, 6.2vw, 1.7rem) !important;
+    letter-spacing: 0.08em !important;
+  }
+  .cover-brand--menu-leader-lite p {
+    font-size: clamp(0.92rem, 4.5vw, 1.15rem) !important;
+    letter-spacing: 0.05em !important;
+    max-width: 22ch !important;
+  }
+  .cover-brand--menu-leader-lite .menu-leader-subline {
+    font-size: clamp(0.86rem, 4.1vw, 1.02rem) !important;
+  }
+}
+
 </style>
 </head>
 <body>
