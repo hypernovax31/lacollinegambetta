@@ -2478,6 +2478,147 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Impression inspirée de l’ancienne carte A3 ===== */
+@media print {
+  .print-page__header {
+    top:0;
+    left:0;
+    width:210mm;
+    height:39mm;
+    padding:2.4mm 5mm 2mm;
+    border:0;
+    border-radius:0;
+    border-bottom:1px solid rgba(216,178,87,.88);
+    background:linear-gradient(145deg,#6b3c87 0%,#592e6f 62%,#432155 100%);
+    display:grid;
+    grid-template-rows:auto auto auto auto auto;
+    align-content:center;
+    justify-items:center;
+    row-gap:.55mm;
+  }
+  .print-page__kicker { font-size:6pt; letter-spacing:.3em; line-height:1; }
+  .print-page__brand { margin:0; font-size:22pt; line-height:.9; letter-spacing:.18em; }
+  .print-page__brand--sub { font-size:10pt; line-height:1; letter-spacing:.28em; color:var(--gold-bright); }
+  .print-page__meta { margin:0; font-size:6.5pt; line-height:1.1; letter-spacing:.13em; }
+  .print-page__meta--sub { font-size:5.8pt; letter-spacing:.1em; color:var(--gold-100); }
+  .print-page__content {
+    top:47mm;
+    left:11mm;
+    width:188mm;
+    bottom:24mm;
+    overflow:hidden;
+    gap:7mm;
+  }
+  .print-page__content > .panel { break-inside:avoid; }
+  .print-page--entrees .panel,
+  .print-page--plats .panel,
+  .print-page--desserts .panel,
+  .print-page--drinks .panel,
+  .print-page--drinks-secondary .panel,
+  .print-page--vins .panel,
+  .print-page--cocktails .panel {
+    padding:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    background:transparent !important;
+  }
+  .print-page--entrees .panel__head,
+  .print-page--plats .panel__head,
+  .print-page--desserts .panel__head,
+  .print-page--drinks .panel__head,
+  .print-page--drinks-secondary .panel__head,
+  .print-page--vins .panel__head,
+  .print-page--cocktails .panel__head { margin-bottom:4mm; }
+  .print-page--entrees .panel__title,
+  .print-page--plats .panel__title,
+  .print-page--desserts .panel__title,
+  .print-page--drinks .panel__title,
+  .print-page--drinks-secondary .panel__title,
+  .print-page--vins .panel__title,
+  .print-page--cocktails .panel__title {
+    min-height:0;
+    padding:2mm 7mm;
+    font-size:10pt !important;
+    line-height:1;
+    letter-spacing:.16em;
+    box-shadow:0 1mm 2mm rgba(36,16,46,.15);
+  }
+  .print-page--entrees .food-card,
+  .print-page--plats .food-card,
+  .print-page--desserts .food-card {
+    border:0;
+    border-bottom:.2mm dotted rgba(122,105,136,.55);
+    border-radius:0;
+    background:transparent;
+    padding:2mm 0 2.5mm;
+  }
+  .print-page--entrees .food-card-grid,
+  .print-page--plats .food-card-grid,
+  .print-page--desserts .food-card-grid { gap:2mm 8mm; }
+  .print-page--entrees .food-card__head h5,
+  .print-page--plats .food-card__head h5,
+  .print-page--desserts .food-card__head h5 { font-size:9pt !important; }
+  .print-page--entrees .food-card__head strong,
+  .print-page--plats .food-card__head strong,
+  .print-page--desserts .food-card__head strong { font-size:9pt !important; color:var(--gold-700) !important; }
+  .print-page--entrees .food-card__note,
+  .print-page--plats .food-card__note,
+  .print-page--desserts .food-card__note { font-size:7.3pt !important; }
+  .print-page--drinks .price-list,
+  .print-page--drinks-secondary .price-list,
+  .print-page--cocktails .hh-list { gap:0; }
+  .print-page--drinks .price-line,
+  .print-page--drinks-secondary .price-line,
+  .print-page--cocktails .hh-line { border-bottom:.2mm dotted rgba(122,105,136,.55); padding:2mm 0; }
+  .print-page--drinks .price-line__name,
+  .print-page--drinks-secondary .price-line__name,
+  .print-page--cocktails .hh-line__name { font-size:8.5pt !important; }
+  .print-page--drinks .price-line__price,
+  .print-page--drinks-secondary .price-line__price,
+  .print-page--cocktails .hh-line__price,
+  .print-page--cocktails .hh-line__hh { font-size:8.5pt !important; }
+  .print-page--drinks .price-list__note,
+  .print-page--drinks-secondary .price-list__note,
+  .print-page--cocktails .price-list__note { font-size:6.9pt !important; }
+  .print-page--vins .wine-table th,
+  .print-page--vins .wine-table td { border-bottom:.2mm dotted rgba(122,105,136,.5); padding:2mm 0; }
+  .print-page--vins .wine-table td { font-size:8pt !important; }
+  .print-page--vins .wine-table td:not(.wine-name) { font-size:8.3pt !important; color:var(--gold-700) !important; }
+  .print-page--cocktails .duo-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:5mm; }
+  .print-page__footer {
+    position:absolute;
+    z-index:3;
+    left:0;
+    right:0;
+    bottom:0;
+    height:18mm;
+    padding:2.2mm 18mm 1mm;
+    background:linear-gradient(180deg,#6b3c87 0%,#592e6f 60%,#432155 100%);
+    border-top:1px solid rgba(216,178,87,.9);
+    text-align:center;
+    color:var(--gold-100);
+    font-family:'Cinzel',serif;
+    font-size:5.8pt;
+    letter-spacing:.14em;
+    line-height:1.22;
+  }
+  .print-page__footer strong { display:block; margin:.7mm 0; font-size:7.2pt; letter-spacing:.26em; color:#fff; }
+  .print-page__footer small { display:block; font-family:'Montserrat',sans-serif; font-size:4.8pt; letter-spacing:.01em; color:rgba(255,255,255,.82); }
+  .print-page__legal { display:none !important; }
+  .print-page__number {
+    left:auto;
+    right:10mm;
+    bottom:6mm;
+    width:auto;
+    font-size:11pt;
+    font-weight:700;
+    letter-spacing:.08em;
+    color:var(--gold-bright);
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2610,7 +2751,7 @@ function buildPrintDocument() {
     } else {
       const header = document.createElement('header');
       header.className = 'print-page__header';
-      header.innerHTML = '<div class="print-page__kicker">✦ LA CARTE ✦</div><div class="print-page__brand">COLLINE <span>GAMBETTA</span></div><div class="print-page__meta">BAR • RESTAURANT • PARIS 20ᵉ</div>';
+      header.innerHTML = '<div class="print-page__kicker">LA</div><div class="print-page__brand">COLLINE</div><div class="print-page__brand print-page__brand--sub">GAMBETTA</div><div class="print-page__meta">BAR • RESTAURANT • PARIS 20ᵉ</div><div class="print-page__meta print-page__meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</div>';
       page.appendChild(header);
       const content = document.createElement('div');
       content.className = 'print-page__content tab-flow';
@@ -2618,10 +2759,10 @@ function buildPrintDocument() {
       page.appendChild(content);
     }
     if (kind !== 'cover') {
-      const legal = document.createElement('div');
-      legal.className = 'print-page__legal';
-      legal.textContent = 'Prix nets en euros • service compris 15 %  ·  Allergènes : informations sur demande  ·  L’abus d’alcool est dangereux pour la santé';
-      page.appendChild(legal);
+      const printFooter = document.createElement('footer');
+      printFooter.className = 'print-page__footer';
+      printFooter.innerHTML = '<div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div><strong>LA COLLINE GAMBETTA</strong><div>BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta</div><small>L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>';
+      page.appendChild(printFooter);
     }
     const pageNumber = document.createElement('div');
     pageNumber.className = 'print-page__number';

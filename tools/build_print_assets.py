@@ -124,8 +124,10 @@ class Page:
         return len(lines) * leading
 
     def title_pill(self, x, y, w, title, dark=True):
-        self.rect(x, y, w, 58, V800 if dark else V950, GOLD, 2, 28)
-        self.text(x + w/2, y + 12, f"✦  {title.upper()}  ✦", 25, WHITE, SERIF, True, center=True)
+        # The old printed card uses a generous floating purple heading rather
+        # than a boxed panel title.
+        self.rect(x, y, w, 82, V900 if dark else V950, GOLD, 3, 41)
+        self.text(x + w/2, y + 21, f"✦  {title.upper()}  ✦", 29, WHITE, SERIF, True, center=True)
 
     def panel(self, x, y, w, h, title=None, fill=WHITE):
         self.rect(x, y, w, h, fill, "#c9a554", 2, 20)
@@ -138,97 +140,125 @@ class Page:
 
 
 def border(page, dark=False):
-    page.rect(105, 105, W-210, H-210, "none", GOLD, 7, 4)
-    page.rect(132, 132, W-264, H-264, "none", "#efd99b", 2, 3)
-
+    # Fine side rule borrowed from the former printed card. The old card's
+    # strong visual frame remains the full-width purple header and footer.
+    page.rect(12, 12, W-24, H-24, "none", GOLD, 2, 2)
+    page.line(0, 392, W, 392, GOLD, 6)
+    page.line(0, H-205, W, H-205, GOLD, 6)
 
 def footer(page, n, dark=False):
     y = H - 205
-    if not dark:
-        page.text(W/2, y - 94, "✦  PRIX NETS EN EUROS • SERVICE COMPRIS 15 %  ✦", 16, GOLD, SERIF, False, center=True)
-        page.text(W/2, y - 64, "Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé", 14, MUTED, SANS, False, center=True)
-    page.line(250, y - 34, W-250, y - 34, GOLD, 2)
-    page.text(W/2, y, str(n), 24, GOLD, SERIF, False, center=True)
-
+    page.rect(0, y, W, H-y, V800 if not dark else V950, None, 0)
+    page.line(0, y, W, y, GOLD, 6)
+    page.text(W/2, y+24, "✦  PRIX NETS EN EUROS • SERVICE COMPRIS  ✦", 18, GOLD_LIGHT, SERIF, False, center=True)
+    page.text(W/2, y+61, "LA COLLINE GAMBETTA", 25, GOLD_LIGHT, SERIF, True, center=True)
+    page.text(W/2, y+99, "BAR • RESTAURANT  •  01 43 49 05 93  •  ◎ lacolline.gambetta", 17, WHITE, SANS, True, center=True)
+    page.text(W/2, y+132, "L’abus d’alcool est dangereux pour la santé — À consommer avec modération", 14, "#dbcfe0", SANS, False, center=True)
+    page.text(W-115, y+54, str(n), 34, GOLD_LIGHT, SERIF, True, align="right")
 
 def interior_header(page):
-    x, y, w, h = M, 152, W - 2*M, 250
-    page.rect(x, y, w, h, V800, GOLD, 2, 12)
-    page.text(W/2, y+26, "✦  LA CARTE  ✦", 25, GOLD_LIGHT, SERIF, True, center=True)
-    page.text(W/2, y+75, "COLLINE", 57, WHITE, SERIF, True, center=True)
-    page.text(W/2, y+139, "GAMBETTA", 29, GOLD_BRIGHT, SERIF, True, center=True)
-    page.text(W/2, y+202, "BAR • RESTAURANT • PARIS 20ᵉ", 18, GOLD_LIGHT, SERIF, False, center=True)
-
+    # Reprise du bandeau de l'ancienne carte : logo typographique centré,
+    # filets décoratifs et informations d'ouverture lisibles.
+    page.rect(0, 0, W, 390, V800, None, 0)
+    page.text(W/2, 25, "LA", 26, GOLD_LIGHT, SERIF, True, center=True)
+    page.text(W/2, 58, "COLLINE", 70, WHITE, SERIF, True, center=True)
+    page.text(W/2, 138, "GAMBETTA", 36, GOLD_BRIGHT, SERIF, True, center=True)
+    page.line(760, 204, 1720, 204, "#b89042", 2)
+    page.text(W/2, 221, "BAR • RESTAURANT • PARIS 20ᵉ", 24, GOLD_LIGHT, SERIF, True, center=True)
+    page.text(W/2, 270, "✦  FAIT MAISON • SERVICE CONTINU • TERRASSE  ✦", 20, GOLD_LIGHT, SERIF, False, center=True)
+    page.line(0, 388, W, 388, GOLD, 6)
 
 def food_panel(page, y, title, items, columns=2, card_min=140):
-    x, w, gap = M, W-2*M, 24
-    col_w = (w-gap) / columns
-    rows = [items[i:i+columns] for i in range(0, len(items), columns)]
-    row_heights = []
-    for row in rows:
-        max_h = card_min
-        for name, price, note in row:
-            note_lines = page.wrap(note, max(12, int((col_w-90)/(24*.55)))) if note else []
-            max_h = max(max_h, 94 + len(note_lines)*32)
-        row_heights.append(max_h)
-    h = 122 + sum(row_heights) + max(0, len(rows)-1)*24
-    panel_fill = "#fbf7ff" if title in {"Planches & croques", "Burgers", "Glaces"} else WHITE
-    page.panel(x, y, w, h, title, panel_fill)
-    cy = y + 121
-    for r, row in enumerate(rows):
-        for c, (name, price, note) in enumerate(row):
-            cx = x + c*(col_w+gap)
-            ch = row_heights[r]
-            page.rect(cx, cy, col_w, ch, "#fffefd", "#e4d09a", 2, 13)
-            page.block(cx+22, cy+20, name, col_w-175, 28, INK, SERIF, True, 34, 2)
-            page.text(cx+col_w-22, cy+20, price, 29, INK, SERIF, True, align="right")
+    """Airy, unboxed two-column list inspired by the former A3 card."""
+    x, w, gap = M, W-2*M, 32
+    col_w=(w-gap)/columns
+    # The former card used true framed cards for ice creams and a single row
+    # of cheese tiles. Keep those two visual signatures instead of flattening
+    # every category into the same list.
+    if title == "Glaces":
+        page.title_pill(W/2-390,y,780,"NOS GLACES")
+        card_gap=28; card_w=(w-card_gap)/2; top=y+140
+        rows=[items[i:i+2] for i in range(0,len(items),2)]
+        cy=top
+        for row in rows:
+            rh=150
+            for c,(name,price,note) in enumerate(row):
+                cx=x+c*(card_w+card_gap)
+                page.rect(cx,cy,card_w,rh,"#fffdf8",GOLD,3,18)
+                page.text(cx+28,cy+25,name.upper(),23,INK,SERIF_BOLD,False)
+                page.text(cx+card_w-28,cy+25,price,26,"#9c7a2d",SERIF_BOLD,False,align="right")
+                if note: page.block(cx+28,cy+72,note,card_w-56,19,"#817888",SANS,False,25,3)
+            cy+=rh+20
+        return cy+42
+    if title == "Fromages":
+        page.title_pill(W/2-390,y,780,"NOS FROMAGES")
+        tile_gap=24; tile_w=(w-4*tile_gap)/5; top=y+137
+        for i,(name,price,note) in enumerate(items):
+            cx=x+i*(tile_w+tile_gap)
+            page.rect(cx,top,tile_w,150,"#fffdf8",GOLD,3,18)
+            page.text(cx+tile_w/2,top+34,name.upper(),17,INK,SANS_BOLD,False,center=True)
+            page.text(cx+tile_w/2,top+91,price,30,"#9c7a2d",SERIF_BOLD,False,center=True)
+        return top+190
+    half=(len(items)+columns-1)//columns
+    cols=[items[:half], items[half:]] if columns==2 else [items]
+    page.title_pill(W/2-390, y, 780, f"NOS {title}")
+    top=y+142
+    heights=[]
+    for col in cols:
+        total=0
+        for name,price,note in col:
+            note_lines=page.wrap(note,max(14,int((col_w-200)/(21*.55)))) if note else []
+            total += max(82, 62+len(note_lines)*30)
+        heights.append(total)
+    content_h=max(heights or [80])
+    if columns==2:
+        page.line(x+col_w+gap/2, top-15, x+col_w+gap/2, top+content_h-12, "#e2c97f", 3)
+    for c,col in enumerate(cols):
+        cx=x+c*(col_w+gap); cy=top
+        for name,price,note in col:
+            page.text(cx,cy,name,28,INK,SANS_BOLD,False)
+            page.text(cx+col_w-18,cy,price,29,V900,SERIF_BOLD,False,align="right")
+            # Dotted leader leaves the price and description visually separate.
+            name_est=min(col_w-260, len(name)*15+18)
+            line_start=cx+name_est
+            page.line(line_start,cy+27,cx+col_w-40,cy+27,"#b9b2bd",2,"2,8")
             if note:
-                page.block(cx+22, cy+64, note, col_w-44, 22, MUTED, SANS, False, 29, 2)
-        cy += row_heights[r] + (24 if r < len(rows)-1 else 0)
-    return y + h + 32
-
+                page.block(cx+name_est,cy+32,note,col_w-name_est-90,21,"#897e8d",SANS,False,28,2)
+                cy+=max(82,62+len(page.wrap(note,max(14,int((col_w-200)/(21*.55)))))*30)
+            else:
+                cy+=82
+    return y+142+content_h+58
 
 def list_panel(page, y, title, items, columns=2, subtitle=None, compact=False):
-    x, w, gap = M, W-2*M, 24
-    col_w = (w-gap)/columns
-    cols = [[] for _ in range(columns)]
-    for i, item in enumerate(items):
-        cols[min(columns-1, i*columns//len(items) if len(items) else 0)].append(item)
-    # split evenly in source order, which matches the two-column website lists
-    if columns == 2:
-        half = (len(items)+1)//2
-        cols = [items[:half], items[half:]]
-    sizes = []
+    """Unboxed price list used for drinks and cocktails, with old-card rhythm."""
+    x,w,gap=M,W-2*M,32; col_w=(w-gap)/columns
+    half=(len(items)+columns-1)//columns
+    cols=[items[i*half:min((i+1)*half,len(items))] for i in range(columns)]
+    page.title_pill(W/2-340,y,680,title)
+    top=y+125 if not subtitle else y+153
+    if subtitle: page.text(W/2,y+98,subtitle,19,GOLD,SERIF,True,center=True)
+    sizes=[]
     for col in cols:
-        total = 0
-        for name, price, note in col:
-            note_lines = page.wrap(note, max(10, int((col_w-210)/(20*.55)))) if note else []
-            name_lines = page.wrap(name, max(12, int((col_w-210)/(20*.55))))
-            total += max(76, len(name_lines)*28 + len(note_lines)*26 + (12 if note else 0))
+        total=0
+        for name,price,note in col:
+            lines=page.wrap(note,max(12,int((col_w-230)/(20*.55)))) if note else []
+            total+=max(72,60+len(lines)*27)
         sizes.append(total)
-    top_offset = 93 if not subtitle else 116
-    # Keep a deliberate air pocket under the last line: the border must never
-    # touch a description or a price, even for the longest two-column list.
-    h = top_offset + max(sizes or [0]) + 68
-    panel_fill = "#fbf7ff" if title in {"Boissons chaudes", "Whiskies", "Élégance & saveurs"} else WHITE
-    page.panel(x, y, w, h, title, panel_fill)
-    if subtitle:
-        page.text(W/2, y+86, subtitle, 18, GOLD if not page.dark else GOLD_LIGHT, SERIF, False, center=True)
-    top = y + top_offset
-    for c, col in enumerate(cols):
-        cx = x + c*(col_w+gap)
-        cy = top
-        for name, price, note in col:
-            page.text(cx+20, cy, name, 25 if compact else 27, INK, SERIF, True)
-            page.text(cx+col_w-20, cy, price, 26, INK, SERIF, True, align="right")
-            page.line(cx+20, cy+33, cx+col_w-20, cy+33, "#c9a554", 1, "2,7")
+    maxh=max(sizes or [0])
+    if columns==2: page.line(x+col_w+gap/2,top-12,x+col_w+gap/2,top+maxh-10,"#e2c97f",2)
+    for c,col in enumerate(cols):
+        cx=x+c*(col_w+gap); cy=top
+        for name,price,note in col:
+            size=25 if compact else 27
+            page.text(cx,cy,name,size,INK,SANS,False)
+            page.text(cx+col_w-18,cy,price,26,V900,SERIF_BOLD,False,align="right")
+            start=cx+min(col_w-250,max(170,len(name)*14+20))
+            page.line(start,cy+26,cx+col_w-38,cy+26,"#c7c1ca",2,"2,8")
             if note:
-                note_h = page.block(cx+20, cy+44, note, col_w-40, 20 if compact else 21, MUTED, SANS, False, 26, 2)
-                cy += max(78, 44 + note_h + 10)
-            else:
-                cy += 78
-    return y + h + 32
-
+                nh=page.block(cx+20,cy+34,note,col_w-90,19,"#918694",SANS,False,25,2)
+                cy+=max(72,60+nh+8)
+            else: cy+=72
+    return y+top-y+maxh+58
 
 def simple_feature(page, x, y, w, h, title, body, price, dark=False):
     fill = V900 if dark else WHITE
@@ -242,22 +272,20 @@ def simple_feature(page, x, y, w, h, title, body, price, dark=False):
 
 
 def cover_page(n):
-    p = Page(dark=True)
-    border(p, True)
-    p.text(W/2, 180, "✦  LA CARTE  ✦", 68, GOLD_LIGHT, SERIF, True, center=True)
-    p.text(W/2, 300, "BAR • RESTAURANT • PARIS 20ᵉ", 30, GOLD_LIGHT, SERIF, False, center=True)
-    p.text(W/2, 360, "✦  FAIT MAISON • SERVICE CONTINU • TERRASSE  ✦", 25, GOLD_LIGHT, SERIF, False, center=True)
-    # The source illustration is masked to a soft circle before it is placed.
-    p.circle(W/2, 1570, 690, GOLD, 7)
-    p.circle(W/2, 1570, 625, "#e7c873", 2)
+    p=Page(dark=True); border(p)
+    p.text(W/2, 140, "LA CARTE", 64, GOLD_LIGHT, SERIF_BOLD, False, center=True)
+    p.text(W/2, 255, "BAR • RESTAURANT • PARIS 20ᵉ", 29, GOLD_LIGHT, SERIF, False, center=True)
+    p.text(W/2, 315, "✦  FAIT MAISON • SERVICE CONTINU • TERRASSE  ✦", 24, GOLD_LIGHT, SERIF, False, center=True)
+    # A more generous circular presentation keeps the supplied illustration
+    # crisp, with the former card's fine-gold ornamental frame around it.
+    p.circle(W/2, 1590, 705, GOLD, 8)
+    p.circle(W/2, 1590, 650, "#e7c873", 2)
     p.raw("gravity northwest")
-    p.raw(f"image over 640,970 1200,1200 {q(str(TMP/'cover-art.png'))}")
-    p.text(W/2, 2825, "LA COLLINE GAMBETTA", 45, GOLD_LIGHT, SERIF, True, center=True)
-    p.text(W/2, 2910, "4 RUE BELGRAND • 75020 PARIS • PLACE GAMBETTA", 27, WHITE, SERIF, False, center=True)
-    p.text(W/2, 2980, "lacolline.gambetta   •   01 43 49 05 93", 25, GOLD_LIGHT, SANS, False, center=True)
-    footer(p, n, True)
-    return p
-
+    p.raw(f"image over 560,910 1360,1360 {q(str(TMP/'cover-art.png'))}")
+    p.text(W/2, 2825, "LA COLLINE GAMBETTA", 48, GOLD_LIGHT, SERIF_BOLD, False, center=True)
+    p.text(W/2, 2920, "4 RUE BELGRAND • 75020 PARIS • PLACE GAMBETTA", 29, WHITE, SERIF, False, center=True)
+    p.text(W/2, 2990, "lacolline.gambetta   •   01 43 49 05 93", 26, GOLD_LIGHT, SANS, False, center=True)
+    footer(p,n,True); return p
 
 ENTREES = [
 ("Assiette de foie gras du Sud-Ouest", "17,90", "Pain toasté, confiture d’abricots"),
@@ -285,58 +313,58 @@ def food_page(n, groups):
 
 
 def menus_page(n):
-    p = Page(); border(p); interior_header(p); x, w = M, W-2*M; y = 450
-    form_h = 730
-    p.panel(x, y, w, form_h, "Formules")
-    gap=24; card_w=(w-gap)/2
-    p.rect(x+24, y+100, card_w, 176, WHITE, "#e4d09a", 2, 16)
-    p.rect(x+24+card_w+gap, y+100, card_w, 176, V700, GOLD, 2, 16)
-    p.text(x+24+card_w/2, y+128, "ENTRÉE + PLAT", 22, INK, SERIF, True, center=True)
-    p.text(x+24+card_w/2, y+162, "OU PLAT + DESSERT", 20, INK, SERIF, False, center=True)
-    p.text(x+24+card_w/2, y+207, "24,90", 42, V800, SERIF, True, center=True)
-    p.text(x+24+card_w+gap+card_w/2, y+137, "LA FORMULE COMPLÈTE", 20, GOLD_LIGHT, SERIF, True, center=True)
-    p.text(x+24+card_w+gap+card_w/2, y+170, "Entrée + plat + dessert", 18, WHITE, SERIF, False, center=True)
-    p.text(x+24+card_w+gap+card_w/2, y+215, "29,90", 42, WHITE, SERIF, True, center=True)
-    choices=[("1", "Entrée au choix", ["Salade au poulet", "Escargots de Bourgogne", "Pâté de campagne", "Œuf cocotte", "Assiette de charcuterie"]), ("2", "Plat au choix", ["Escalope de veau", "Bavette d’aloyau — Sauce au choix", "Cuisse de canard confite"]), ("3", "Dessert au choix", ["Panna cotta", "Crème brûlée", "Mousse au chocolat", "Tiramisu", "2 boules de glace"])]
-    cw=(w-2*gap)/3
+    p=Page(); border(p); interior_header(p)
+    x,w,gap=M,W-2*M,42
+    p.title_pill(W/2-340,450,680,"NOS MENUS")
+    # Formules : large, calm cards with the former menu's gold badges.
+    y=610; card_w=(w-gap)/2; card_h=310
+    p.rect(x,y,card_w,card_h,WHITE,GOLD,3,22)
+    p.rect(x+card_w+gap,y,card_w,card_h,"#fffdf2",GOLD,4,22)
+    for cx,label,sub,price in [(x,"ENTRÉE + PLAT","OU PLAT + DESSERT","24,90"),(x+card_w+gap,"LA FORMULE COMPLÈTE","ENTRÉE + PLAT + DESSERT","29,90")]:
+        bw=min(card_w-40,430)
+        p.rect(cx+card_w/2-bw/2,y-30,bw,76,"#efd076",GOLD,2,38)
+        p.text(cx+card_w/2,y-8,label,20,V950,SERIF_BOLD,False,center=True)
+        p.text(cx+card_w/2,y+19,sub,18,V950,SERIF,False,center=True)
+        p.text(cx+card_w/2,y+112,price,62,V900,SERIF_BOLD,False,center=True)
+        p.text(cx+card_w/2,y+224,"AU CHOIX",18,"#9c7a2d",SERIF_BOLD,False,center=True)
+    # Choice columns.
+    y=1065; choice_h=500; cw=(w-2*gap)/3
+    choices=[("1","ENTRÉE AU CHOIX",["Salade au poulet","Escargots de Bourgogne","Pâté de campagne","Œuf cocotte","Assiette de charcuterie"]),("2","PLAT AU CHOIX",["Escalope de veau","Bavette d’aloyau — Sauce au choix","Cuisse de canard confite"]),("3","DESSERT AU CHOIX",["Panna cotta","Crème brûlée","Mousse au chocolat","Tiramisu","2 boules de glace"])]
     for i,(num,title,lines) in enumerate(choices):
-        cx=x+i*(cw+gap); cy=y+310
-        p.rect(cx, cy, cw, 365, WHITE, "#e4d09a", 2, 16)
-        p.filled_circle(cx+54, cy+39, 22, V800)
-        p.text(cx+54, cy+28, num, 20, WHITE, SERIF, True, center=True)
-        p.block(cx+84, cy+24, title, cw-105, 20, INK, SERIF, True, 25, 2)
-        ly=cy+105
+        cx=x+i*(cw+gap)
+        p.rect(cx,y,cw,choice_h,WHITE,"#ded8df",2,18)
+        p.line(cx+22,y+86,cx+cw-22,y+86,GOLD,3)
+        p.filled_circle(cx+45,y+45,24,V900)
+        p.text(cx+45,y+29,num,20,WHITE,SERIF_BOLD,False,center=True)
+        p.text(cx+83,y+30,title,19,INK,SERIF_BOLD,False)
+        ly=y+126
         for line in lines:
-            p.text(cx+24, ly, "✦", 15, GOLD, SERIF, True); p.block(cx+50, ly, line, cw-72, 18, MUTED, SANS, False, 23, 2); ly+=47
-    y += form_h + 24
-    duo_w=(w-gap)/2
-    # Left column follows the printed reading order: child menu, then breakfast.
-    child_h, breakfast_h = 330, 173
-    p.panel(x, y, duo_w, child_h, "Menu enfant")
-    p.rect(x+25, y+96, duo_w-50, 188, WHITE, "#e4d09a", 2, 15)
-    p.rect(x+duo_w/2-120, y+113, 240, 42, "#efd38a", GOLD, 1, 21)
-    p.text(x+duo_w/2, y+124, "MOINS DE 12 ANS", 17, V950, SERIF, True, center=True)
-    p.block(x+45, y+174, "Eau ou soda • Burger enfant ou cordon bleu • Frites maison • 1 boule de glace au choix", duo_w-90, 17, MUTED, SANS, False, 23, 3)
-    p.text(x+duo_w/2, y+253, "11,90", 29, V800, SERIF, True, center=True)
-    by = y + child_h + 22
-    p.panel(x, by, duo_w, breakfast_h, "Petit déjeuner")
-    p.block(x+32, by+87, "Boisson chaude au choix • Croissant ou tartine au beurre • Verre de jus de fruits au choix", duo_w-64, 16, MUTED, SANS, False, 22, 3)
-    p.text(x+duo_w/2, by+137, "7,00", 28, V800, SERIF, True, center=True)
-    # Right column: menu du jour, full-height and vertically balanced.
-    p.panel(x+duo_w+gap, y, duo_w, child_h+22+breakfast_h, "Menu du jour")
-    rx=x+duo_w+gap
-    p.text(rx+duo_w/2, y+105, "SELON L’ARDOISE", 20, GOLD, SERIF, False, center=True)
-    p.rect(rx+28, y+145, duo_w-56, 132, V900, GOLD, 2, 14)
-    p.text(rx+duo_w/2, y+163, "2 SERVICES", 18, GOLD_LIGHT, SERIF, True, center=True)
-    p.text(rx+duo_w/2, y+199, "Entrée + plat ou plat + dessert", 18, WHITE, SANS, False, center=True)
-    p.text(rx+duo_w/2, y+235, "17,90", 32, GOLD_LIGHT, SERIF, True, center=True)
-    p.rect(rx+28, y+300, duo_w-56, 132, V900, GOLD, 2, 14)
-    p.text(rx+duo_w/2, y+318, "3 SERVICES", 18, GOLD_LIGHT, SERIF, True, center=True)
-    p.text(rx+duo_w/2, y+354, "Entrée + plat + dessert", 18, WHITE, SANS, False, center=True)
-    p.text(rx+duo_w/2, y+390, "21,90", 32, GOLD_LIGHT, SERIF, True, center=True)
-    p.text(rx+duo_w/2, y+475, "Uniquement les midis — sauf weekends et jours fériés", 15, MUTED, SANS, False, center=True)
-    footer(p, n); return p
-
+            p.text(cx+28,ly,"✦",15,GOLD,SERIF_BOLD,False)
+            p.block(cx+55,ly,line,cw-88,19,MUTED,SANS,False,26,2); ly+=55
+    # Menu enfant and menu du jour: two feature cards.
+    y=1725; bottom_h=610; bw=(w-gap)/2; rx=x+bw+gap
+    p.rect(x,y,bw,bottom_h,WHITE,GOLD,4,22)
+    p.rect(rx,y,bw,bottom_h,V950,GOLD,4,22)
+    for cx,label,color in [(x,"MOINS DE 12 ANS",V950),(rx,"SELON L’ARDOISE",V950)]:
+        badge_w=340 if cx==x else 360
+        p.rect(cx+bw/2-badge_w/2,y-30,badge_w,72,"#efd076",GOLD,2,36)
+        p.text(cx+bw/2,y-8,label,19,color,SERIF_BOLD,False,center=True)
+    p.text(x+bw/2,y+135,"LE MENU ENFANT",32,INK,SERIF_BOLD,False,center=True)
+    p.block(x+52,y+225,"Eau ou soda • Burger enfant ou cordon bleu • Frites maison • 1 boule de glace au choix",bw-104,21,MUTED,SANS,False,30,4)
+    p.text(x+bw/2,y+475,"11,90",54,V900,SERIF_BOLD,False,center=True)
+    p.text(rx+bw/2,y+145,"LE MENU DU JOUR",31,WHITE,SERIF_BOLD,False,center=True)
+    for iy,(label,desc,price) in enumerate([("2 SERVICES","ENTRÉE + PLAT OU PLAT + DESSERT","17,90"),("3 SERVICES","ENTRÉE + PLAT + DESSERT","21,90")]):
+        cy=y+215+iy*145
+        p.text(rx+65,cy,label,18,GOLD_LIGHT,SERIF_BOLD,False)
+        p.block(rx+65,cy+34,desc,bw-270,18,WHITE,SANS_BOLD,False,24,2)
+        p.text(rx+bw-55,cy+23,price,29,GOLD_LIGHT,SERIF_BOLD,False,align="right")
+    p.text(rx+bw/2,y+545,"Uniquement les midis — sauf weekends et jours fériés",15,"#d6c9d9",SANS,False,center=True)
+    # Breakfast bar kept separate, as on the old card.
+    y=2465; p.rect(x,y,w,180,"#fff8df",GOLD,3,20)
+    p.text(x+55,y+64,"✦  PETIT DÉJEUNER  ✦",24,INK,SERIF_BOLD,False)
+    p.block(x+600,y+42,"Boisson chaude au choix • Croissant ou tartine au beurre • Verre de jus de fruits au choix",w-920,18,MUTED,SANS,False,25,3)
+    p.text(x+w-80,y+62,"7,00",38,V900,SERIF_BOLD,False,align="right")
+    footer(p,n); return p
 
 FRESH = [("Vittel", "3,90 / 4,90 / 5,90", "25 cl / 50 cl / 1 L"), ("San Pellegrino", "4,90 / 6,20", "50 cl / 1 L"), ("Badoit", "4,90 / 6,20", "33 cl / 1 L"), ("Perrier", "4,90", "33 cl"), ("Coca / Zéro / Cherry", "4,90", "33 cl"), ("Fanta / Sprite / Fuze Tea", "4,90", "25 cl"), ("Orangina / Citronnade / Ginger Beer", "4,90", "25 cl"), ("Diabolo / Limonade", "4,90", "25 cl"), ("Schweppes Tonic / Agrumes", "4,90", "25 cl"), ("Jus / Nectar de fruits", "4,90", "25 cl"), ("Sirop à l’eau", "3,00", ""), ("Supplément sirop · 2 cl", "0,50", "grenadine • fraise • citron • menthe • pêche • violette • passion • vanille • coco • orgeat • cassis"), ("Orange pressée / Citron pressé", "5,50", "25 cl"), ("Milkshake", "5,90", ""), ("Café frappé", "4,90", ""), ("Latte frappé", "5,50", "")]
 HOT = [("Café", "2,40", ""), ("Décaféiné", "2,50", ""), ("Café noisette / allongé", "2,60", ""), ("Double café / décaféiné", "4,80", ""), ("Café crème / chocolat chaud", "4,50", ""), ("Cappuccino", "5,10", ""), ("Crème / chocolat viennois", "5,10", ""), ("Café viennois", "4,90", ""), ("Infusion / thé parfumé", "4,90", ""), ("Grog", "5,90", ""), ("Vin chaud aux épices", "4,90", ""), ("Irish coffee", "9,90", ""), ("Café allongé", "2,90", "Caramel ou vanille"), ("Lait chaud", "3,20", "")]
@@ -348,6 +376,9 @@ BEERS = [("La Semeuse", "3,40 / 6,20 / 3,90", "25 cl • Pinte • HH"), ("Valmy
 
 def drinks_page(n, groups):
     p=Page(); border(p); interior_header(p); y=450
+    if n == 6:
+        p.title_pill(W/2-350,y,700,"NOS BOISSONS")
+        y += 142
     for title, items, subtitle in groups:
         y=list_panel(p,y,title,items,2,subtitle,compact=True)
     footer(p,n); return p
@@ -360,25 +391,23 @@ WINES = [
 ("Bulles", [("Champagne H. Richard — Cuvée Henri", ["10,50","62,00"]),("Champagne Nicolas Feuillatte — Brut Réserve Exclusive", ["—","81,00"]),("Prosecco Il Poggio — Blanc de Noirs Extra Dry", ["4,90","28,90"])])]
 
 
-def wine_panel(page, y, title, rows, short=False):
-    x,w=M,W-2*M; rowh=[]; name_w=w-(2 if short else 4)*180-80
-    for name, vals in rows:
-        rowh.append(69 if len(page.wrap(name,max(12,int(name_w/(19*.55)))) )==1 else 92)
-    h=105+sum(rowh)+18*len(rows)
-    panel_fill = "#fbf7ff" if title in {"Vin blanc", "Bulles"} else WHITE
-    page.panel(x,y,w,h,title,panel_fill)
+def wine_panel(page,y,title,rows,short=False):
+    x,w=M,W-2*M; price_w=205 if not short else 300
     labels=["COUPE 12 CL","75 CL"] if short else ["12,5 CL","25 CL","50 CL","75 CL"]
-    cols=len(labels); price_w=175 if not short else 260
-    page.text(x+24,y+78,"APPELLATION",17,MUTED,SERIF,True)
-    for i,label in enumerate(labels): page.text(x+w-(cols-i)*price_w,y+78,label,15,MUTED,SERIF,True)
-    cy=y+116
-    for (name,vals),rh in zip(rows,rowh):
-        page.block(x+24,cy,name,name_w,19,INK,SERIF,True,24,2)
-        for i,val in enumerate(vals): page.text(x+w-(cols-i)*price_w,cy,val,20,INK,SERIF,True)
-        page.line(x+24,cy+rh-9,x+w-24,cy+rh-9,"#e6d8b1",1)
-        cy += rh+18
-    return y+h+22
-
+    cols=len(labels); name_w=w-cols*price_w-70
+    heading="NOS BULLES" if short else title.upper()
+    page.title_pill(W/2-(350 if short else 330),y,(700 if short else 660),heading)
+    top=y+130
+    page.text(x+12,top,"CHAMPAGNES & PROSECCO" if short else "",16,MUTED,SERIF_BOLD,False)
+    for i,label in enumerate(labels): page.text(x+w-(cols-i)*price_w,top,label,16,MUTED,SERIF_BOLD,False)
+    cy=top+40
+    row_h=66 if not short else 64
+    for name,vals in rows:
+        page.text(x+12,cy,name,22,INK,SANS,False)
+        for i,val in enumerate(vals): page.text(x+w-(cols-i)*price_w,cy,val,22,V900,SERIF_BOLD,False,align="right")
+        page.line(x+12,cy+32,x+w-12,cy+32,"#c7c0ca",2,"2,8")
+        cy+=row_h
+    return cy+34
 
 def wines_page(n):
     p=Page(); border(p); interior_header(p); y=450
@@ -394,20 +423,46 @@ MOCKTAILS=[("St Valentin","5,90","Sirop de violette, citron vert, Schweppes Toni
 
 
 def cocktails_page(n):
-    p=Page(); border(p); interior_header(p); y=450
-    y=list_panel(p,y,"Cocktails classiques",COCKTAILS_CLASSIC,2,"PRIX / HAPPY HOUR (HH) · 17H → 23H",True)
-    duo_gap=24; duo_w=(W-2*M-duo_gap)/2; h=535
-    p.panel(M,y,duo_w,h,"Spritz & fraîcheur"); p.panel(M+duo_w+duo_gap,y,duo_w,h,"Mules & fizz")
-    for bx,items in [(M,COCKTAILS_SPRITZ),(M+duo_w+duo_gap,COCKTAILS_MULES)]:
-        cy=y+98
-        for name,price,note in items:
-            p.text(bx+22,cy,name,20,INK,SERIF,True); p.text(bx+duo_w-22,cy,price,19,INK,SERIF,True,align="right")
-            p.block(bx+22,cy+31,note,duo_w-44,16,MUTED,SANS,False,21,2); cy+=88
-    y+=h+22
-    y=list_panel(p,y,"Élégance & saveurs",COCKTAILS_ELEGANCE,2,"PRIX / HAPPY HOUR (HH) · 17H → 23H",True)
-    y=list_panel(p,y,"Mocktails",MOCKTAILS,2,"✦ SANS ALCOOL ✦",True)
+    p=Page(); border(p); interior_header(p)
+    x,w,gap=M,W-2*M,42
+    p.title_pill(W/2-360,450,720,"NOS COCKTAILS")
+    p.rect(W/2-430,570,860,68,"#efd076",GOLD,2,34)
+    p.text(W/2,588,"✦  HAPPY HOUR : 17H – 23H  ✦",24,V950,SERIF_BOLD,False,center=True)
+    col_w=(w-2*gap)/3; top=775
+    def col_heading(cx,y,title):
+        p.line(cx,y+22,cx+col_w/2-130,y+22,GOLD,2)
+        p.line(cx+col_w/2+130,y+22,cx+col_w,y+22,GOLD,2)
+        p.text(cx+col_w/2,y,title,23,INK,SERIF_BOLD,False,center=True)
+        p.text(cx+col_w/2,y+28,"✦",13,GOLD,SERIF_BOLD,False,center=True)
+    def draw_items(cx,y,items,hh=True):
+        cy=y
+        for name,prices,note in items:
+            if "/" in prices:
+                normal, happy=[v.strip() for v in prices.split("/",1)]
+            else: normal,happy=prices,""
+            p.text(cx,cy,name.upper(),21,INK,SANS_BOLD,False)
+            if normal: p.text(cx+col_w-145,cy,normal,24,V900,SERIF_BOLD,False,align="right")
+            if hh and happy:
+                short=happy.replace(",00","")
+                p.rect(cx+col_w-86,cy-8,72,42,"#efd076",GOLD,2,21)
+                p.text(cx+col_w-50,cy+1,short,17,V950,SERIF_BOLD,False,center=True)
+            p.line(cx,cy+34,cx+col_w-100,cy+34,"#c7c0ca",2,"2,8")
+            note_h=p.block(cx,cy+42,note,col_w-30,17,"#918694",SANS,False,23,3) if note else 0
+            cy+=max(91,52+note_h)
+        return cy
+    # Three columns reproduce the breathing, editorial rhythm of the former card.
+    cx1=x; cx2=x+col_w+gap; cx3=x+2*(col_w+gap)
+    col_heading(cx1,top,"COCKTAILS CLASSIQUES")
+    y1=draw_items(cx1,top+58,COCKTAILS_CLASSIC)
+    col_heading(cx1,y1+26,"MULES & FIZZ")
+    draw_items(cx1,y1+84,COCKTAILS_MULES)
+    col_heading(cx2,top,"SPRITZ & FRAÎCHEUR")
+    y2=draw_items(cx2,top+58,COCKTAILS_SPRITZ)
+    col_heading(cx2,y2+26,"MOCKTAILS • 25 CL • SANS ALCOOL")
+    draw_items(cx2,y2+84,MOCKTAILS,False)
+    col_heading(cx3,top,"ÉLÉGANCE & SAVEURS")
+    draw_items(cx3,top+58,COCKTAILS_ELEGANCE)
     footer(p,n); return p
-
 
 def make_cover_art():
     TMP.mkdir(exist_ok=True)
