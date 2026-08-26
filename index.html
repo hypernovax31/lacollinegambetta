@@ -287,6 +287,80 @@ button,a { font:inherit; }
   color: var(--gold-300);
 }
 
+
+/* ===== Cover fit-to-height refinement ===== */
+.cover-page {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  justify-items: center;
+}
+.cover-brand {
+  gap: 8px;
+  margin-top: 0;
+}
+.cover-brand h1 {
+  font-size: clamp(1.9rem, 4.7vw, 3.1rem);
+}
+.cover-brand p {
+  font-size: clamp(.68rem, 1.5vw, .92rem);
+}
+.medallion-container {
+  width: min(100%, 430px);
+  max-height: 42vh;
+  margin: 4px auto;
+}
+.relief-inner-svg {
+  width: 64%;
+  height: 64%;
+}
+.cover-action {
+  min-height: 48px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.cover-footer {
+  gap: 10px;
+  padding-top: 0;
+}
+@media (max-height: 900px) {
+  .cover-page {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    gap: 16px;
+  }
+  .medallion-container {
+    width: min(100%, 390px);
+    max-height: 38vh;
+  }
+  .cover-brand h1 {
+    font-size: clamp(1.7rem, 4.2vw, 2.8rem);
+  }
+}
+@media (max-height: 760px) {
+  .cover-page {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    gap: 12px;
+  }
+  .medallion-container {
+    width: min(100%, 330px);
+    max-height: 32vh;
+  }
+  .cover-footer-address {
+    font-size: .74rem;
+    line-height: 1.45;
+  }
+  .contact-link {
+    min-height: 40px;
+    padding: 8px 12px;
+  }
+}
+@media (max-width: 640px) {
+  .medallion-container {
+    width: min(100%, 320px);
+    max-height: 34vh;
+  }
+}
+
 </style>
 </head>
 <body>
