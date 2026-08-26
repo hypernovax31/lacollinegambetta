@@ -1183,6 +1183,27 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Make cover leader lines span wide enough for a single line ===== */
+.cover-brand--menu-leader-lite {
+  width: min(100%, 1320px) !important;
+  max-width: 1320px !important;
+}
+.cover-brand--menu-leader-lite .eyebrow,
+.cover-brand--menu-leader-lite p {
+  white-space: nowrap;
+  max-width: none !important;
+}
+@media (max-width: 900px) {
+  .cover-brand--menu-leader-lite {
+    width: min(100%, 980px) !important;
+  }
+  .cover-brand--menu-leader-lite .eyebrow,
+  .cover-brand--menu-leader-lite p {
+    white-space: normal;
+  }
+}
+
 </style>
 </head>
 <body>
