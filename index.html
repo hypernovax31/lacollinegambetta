@@ -483,6 +483,40 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Leader titles and meta lines ===== */
+.leader-title {
+  font-family: 'Cinzel', serif;
+  text-transform: uppercase;
+  letter-spacing: .22em;
+  font-size: clamp(.92rem, 1.8vw, 1.08rem);
+  color: var(--gold-100);
+  text-align: center;
+}
+.leader-meta {
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  text-transform: uppercase;
+  letter-spacing: .11em;
+  font-size: clamp(.9rem, 1.65vw, 1.02rem);
+  color: var(--gold-100);
+  line-height: 1.35;
+  text-align: center;
+}
+.leader-meta--sub {
+  opacity: .96;
+}
+@media (max-width: 640px) {
+  .leader-title {
+    font-size: .86rem;
+    letter-spacing: .16em;
+  }
+  .leader-meta {
+    font-size: .84rem;
+    letter-spacing: .08em;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -494,10 +528,10 @@ button,a { font:inherit; }
   <section id="cover-section">
     <div class="cover-page">
       <div class="cover-brand">
-        <div class="eyebrow">✦ LA CARTE ✦</div>
+        <div class="eyebrow leader-title">✦ LA CARTE ✦</div>
         <h1>COLLINE <span>GAMBETTA</span></h1>
-        <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
-        <p class="cover-subline">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+        <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+        <p class="cover-subline leader-meta leader-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
       </div>
       <div class="medallion-container"><svg class="medallion-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -612,10 +646,10 @@ button,a { font:inherit; }
 
   <section id="interior-menu">
     <header class="interior-header">
-      <div class="eyebrow">✦ La carte ✦</div>
+      <div class="eyebrow leader-title">✦ LA CARTE ✦</div>
       <h2>COLLINE <span>GAMBETTA</span></h2>
-      <p>Bar • Restaurant • Paris 20ᵉ</p>
-      <p style="margin-top:8px;color:var(--gold-100);">✦ Fait Maison • Service Continu • Terrasse ✦</p>
+      <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+      <p class="leader-meta leader-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
     </header>
     <div id="menu-nav-anchor" aria-hidden="true"></div>
     <nav class="menu-nav">
