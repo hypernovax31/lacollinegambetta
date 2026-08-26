@@ -27,8 +27,8 @@
 html { scroll-behavior:smooth; }
 body { margin:0; font-family:'Montserrat',sans-serif; background:linear-gradient(180deg,#24102e 0,#24102e 100vh,#fcfbf7 100vh,#fcfbf7 100%); color:var(--ink); overflow-x:hidden; }
 button,a { font:inherit; }
-.top-controls { background:#592e6f; border-bottom:1px solid rgba(216,178,87,.45); padding:10px 12px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; box-shadow:0 4px 15px rgba(0,0,0,.4); }
-.control-btn, .nav-btn, .contact-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:44px; padding:10px 16px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; transition:.2s ease; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; }
+.top-controls { background:#592e6f; border-bottom:1px solid rgba(216,178,87,.45); padding:10px 12px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; align-items:stretch; box-shadow:0 4px 15px rgba(0,0,0,.4); }
+.control-btn, .nav-btn, .contact-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:44px; width:100%; padding:10px 16px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; transition:.2s ease; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-align:center; }
 .control-btn:hover, .nav-btn:hover, .contact-link:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
 .control-btn.active, .nav-btn.active { background:linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%); color:var(--violet-950); border-color:#fcf6ba; }
 #cover-section { min-height:calc(100vh - 64px); width:100%; display:flex; justify-content:center; align-items:center; padding:0; }
@@ -364,6 +364,36 @@ button,a { font:inherit; }
   .medallion-container {
     width: min(100%, 320px);
     max-height: 34vh;
+  }
+}
+
+
+/* ===== Keep top action buttons on one symmetric row ===== */
+.top-controls .control-btn {
+  white-space: nowrap;
+  line-height: 1.15;
+}
+@media (max-width: 640px) {
+  .top-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .top-controls .control-btn {
+    flex: none !important;
+    min-width: 0;
+    padding: 9px 8px;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+  }
+}
+@media (max-width: 420px) {
+  .top-controls {
+    padding: 8px;
+    gap: 6px;
+  }
+  .top-controls .control-btn {
+    font-size: 0.66rem;
+    padding: 8px 6px;
   }
 }
 
