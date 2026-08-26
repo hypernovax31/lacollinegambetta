@@ -1039,6 +1039,20 @@ button,a { font:inherit; }
   text-shadow: 0 1px 2px rgba(0,0,0,.14);
 }
 
+
+/* ===== Larger typography for bottom cover CTA ===== */
+.cover-action {
+  font-size: clamp(1rem, 2vw, 1.28rem) !important;
+  letter-spacing: 0.14em !important;
+  font-weight: 800 !important;
+}
+@media (max-width: 640px) {
+  .cover-action {
+    font-size: 0.96rem !important;
+    letter-spacing: 0.1em !important;
+  }
+}
+
 </style>
 </head>
 <body>
