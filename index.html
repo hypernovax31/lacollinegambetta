@@ -1053,6 +1053,67 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Cover now reuses menu leader ===== */
+.menu-leader-subline {
+  margin-top: 8px;
+  color: var(--gold-100) !important;
+}
+.interior-header h2 span,
+.cover-brand--menu-leader h2 span {
+  color: var(--gold-700) !important;
+}
+.cover-brand--menu-leader {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+  color: #fff;
+}
+.cover-brand--menu-leader .eyebrow {
+  font-family: 'Cinzel', serif;
+  letter-spacing: .24em;
+  color: var(--gold-100);
+  text-transform: uppercase;
+  font-size: .72rem;
+}
+.cover-brand--menu-leader h2 {
+  margin: 6px 0 8px;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.8rem, 4.8vw, 2.8rem);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.cover-brand--menu-leader h2 span {
+  display: block;
+  font-size: .46em;
+  letter-spacing: .22em;
+  margin-top: .18rem;
+}
+.cover-brand--menu-leader p {
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  font-size: clamp(.66rem, 1.6vw, .86rem);
+  color: var(--gold-100);
+  line-height: 1.35;
+}
+@media (max-width: 640px) {
+  .cover-brand--menu-leader .eyebrow {
+    font-size: .72rem;
+    letter-spacing: .18em;
+  }
+  .cover-brand--menu-leader h2 {
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+  }
+  .cover-brand--menu-leader p {
+    font-size: .72rem;
+    letter-spacing: .07em;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1063,10 +1124,11 @@ button,a { font:inherit; }
 
   <section id="cover-section">
     <div class="cover-page">
-      <div class="cover-brand cover-brand--compact">
-        <div class="eyebrow leader-title">✦ LA CARTE ✦</div>
-        <p class="cover-leader-line">BAR • RESTAURANT • PARIS 20ᵉ</p>
-        <p class="cover-leader-line cover-leader-line--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+      <div class="cover-brand cover-brand--menu-leader">
+        <div class="eyebrow">✦ LA CARTE ✦</div>
+        <h2>COLLINE <span>GAMBETTA</span></h2>
+        <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
+        <p class="menu-leader-subline">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
       </div>
       <div class="medallion-container"><svg class="medallion-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -1184,7 +1246,7 @@ button,a { font:inherit; }
       <div class="eyebrow">✦ LA CARTE ✦</div>
       <h2>COLLINE <span>GAMBETTA</span></h2>
       <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
-      <p style="margin-top:8px;color:var(--gold-100);">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+      <p class="menu-leader-subline">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
     </header>
     <div id="menu-nav-anchor" aria-hidden="true"></div>
     <nav class="menu-nav">
