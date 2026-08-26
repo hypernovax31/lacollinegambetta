@@ -1288,6 +1288,55 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Safety override: no dark text on violet backgrounds ===== */
+.top-controls,
+.interior-header,
+.panel__title,
+.offer-card--accent,
+.special-card--dark,
+.accent-band,
+.footer {
+  color: #ffffff !important;
+}
+.top-controls *,
+.interior-header *,
+.panel__title *,
+.offer-card--accent *,
+.special-card--dark *,
+.accent-band *,
+.footer * {
+  color: inherit;
+}
+.interior-header h2,
+.interior-header p,
+.interior-header .eyebrow,
+.panel__title,
+.offer-card--accent .offer-card__sub,
+.offer-card--accent .offer-card__price,
+.offer-card--accent .offer-card__foot,
+.special-card--dark h5,
+.special-card--dark p,
+.special-card--dark strong,
+.accent-band strong,
+.accent-band span,
+.accent-band p,
+.footer-details,
+.footer-note,
+.footer-legal,
+.footer-link,
+.top-controls .control-btn,
+.menu-nav .nav-btn {
+  color: #ffffff !important;
+}
+.top-controls .control-btn.active,
+.menu-nav .nav-btn.active,
+.cover-action,
+.offer-card__badge,
+.special-card__badge {
+  color: var(--violet-950) !important;
+}
+
 </style>
 </head>
 <body>
