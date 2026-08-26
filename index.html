@@ -1386,6 +1386,54 @@ button,a { font:inherit; }
   color: rgba(255,255,255,0.82) !important;
 }
 
+
+/* ===== Cover leader block aligned to menu header typography/height ===== */
+.cover-brand--menu-leader-lite {
+  display: grid;
+  justify-items: center;
+  gap: 8px !important;
+  align-content: start;
+  width: 100%;
+  max-width: 44rem;
+  margin: 0 auto 2px;
+}
+.cover-brand--menu-leader-lite .eyebrow {
+  font-family: 'Cinzel', serif !important;
+  font-size: .72rem !important;
+  letter-spacing: .24em !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase !important;
+  color: var(--gold-100) !important;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+}
+.cover-brand--menu-leader-lite p,
+.cover-brand--menu-leader-lite .menu-leader-subline {
+  margin: 0 !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: clamp(.66rem, 1.6vw, .86rem) !important;
+  letter-spacing: .09em !important;
+  line-height: 1.35 !important;
+  text-transform: uppercase !important;
+  color: var(--gold-100) !important;
+  max-width: 42ch;
+}
+@media (max-width: 640px) {
+  .cover-brand--menu-leader-lite {
+    gap: 8px !important;
+  }
+  .cover-brand--menu-leader-lite .eyebrow {
+    font-size: .72rem !important;
+    letter-spacing: .18em !important;
+  }
+  .cover-brand--menu-leader-lite p,
+  .cover-brand--menu-leader-lite .menu-leader-subline {
+    font-size: .72rem !important;
+    letter-spacing: .07em !important;
+    max-width: 30ch;
+  }
+}
+
 </style>
 </head>
 <body>
