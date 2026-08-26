@@ -726,6 +726,43 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Place bottom CTA exactly between medallion and address ===== */
+.cover-page {
+  grid-template-rows: auto auto auto auto !important;
+  align-content: center !important;
+  justify-items: center !important;
+}
+.cover-brand {
+  margin-bottom: 2px;
+}
+.medallion-container {
+  margin: 0 auto !important;
+}
+.cover-action {
+  align-self: center;
+  margin: 0 !important;
+}
+.cover-footer {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+/* gaps tuned so the button sits visually between logo and address */
+.cover-brand + .medallion-container {
+  margin-top: 2px !important;
+}
+.medallion-container + .cover-action {
+  margin-top: 2px !important;
+}
+.cover-action + .cover-footer {
+  margin-top: 2px !important;
+}
+@media (max-width: 640px) {
+  .cover-page {
+    grid-template-rows: auto auto auto auto !important;
+  }
+}
+
 </style>
 </head>
 <body>
