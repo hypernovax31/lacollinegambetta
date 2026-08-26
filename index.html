@@ -1546,6 +1546,81 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Final text color system cleanup ===== */
+/* 1) White text on every violet background area */
+.top-controls,
+.top-controls .control-btn,
+.menu-nav,
+.menu-nav .nav-btn,
+.cover-page,
+.cover-page .eyebrow,
+.cover-page .leader-title,
+.cover-page .leader-meta,
+.cover-page .cover-leader-line,
+.cover-page .menu-leader-subline,
+.interior-header,
+.interior-header .eyebrow,
+.interior-header h2,
+.interior-header p,
+.panel__title,
+.offer-card--accent,
+.offer-card--accent .offer-card__sub,
+.offer-card--accent .offer-card__price,
+.offer-card--accent .offer-card__foot,
+.special-card--dark,
+.special-card--dark h5,
+.special-card--dark p,
+.special-card--dark span,
+.special-card--dark strong,
+.accent-band,
+.accent-band strong,
+.accent-band p,
+.footer,
+.footer-details,
+.footer-note,
+.footer-legal,
+.footer-link {
+  color: #ffffff !important;
+}
+
+/* 2) Dark text only on gold backgrounds */
+.cover-action,
+.top-controls .control-btn.active,
+.menu-nav .nav-btn.active,
+.offer-card__badge,
+.special-card__badge {
+  color: var(--violet-950) !important;
+}
+
+/* 3) Dark text also for icons inside gold areas */
+.cover-action svg,
+.top-controls .control-btn.active svg,
+.menu-nav .nav-btn.active svg {
+  stroke: var(--violet-950) !important;
+}
+.cover-action .star-gold,
+.top-controls .control-btn.active .star-gold,
+.menu-nav .nav-btn.active .star-gold {
+  color: var(--violet-950) !important;
+  text-shadow: none !important;
+}
+
+/* 4) Keep bright gold accents everywhere else */
+.interior-header h2 span,
+.cover-brand--menu-leader h2 span,
+.cover-brand--menu-leader-lite h2 span,
+.star-gold,
+.panel__title::before,
+.panel__title::after,
+.choice-card li::before,
+.offer-card--accent .offer-card__foot,
+.special-card--dark .day-lines strong,
+.accent-band span,
+.footer-note .star-gold {
+  color: var(--gold-bright) !important;
+}
+
 </style>
 </head>
 <body>
