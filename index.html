@@ -2096,6 +2096,40 @@ button,a { font:inherit; }
 #vins .wine-table td { font-family: 'Cinzel', serif; }
 .hh-head--ghost { visibility: hidden; }
 #cocktails .hh-list { margin-top: 14px; }
+/* ===== Menus du jour: encarts en pile centrée (textes ET prix sur l'axe central) ===== */
+.menus-duo .day-option, #menus .day-option {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  justify-content: center !important;
+  justify-items: center !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-align: center !important;
+}
+#menus .day-option__desc { grid-column: auto !important; }
+#menus .day-option__label, #menus .day-option strong { justify-self: center !important; text-align: center !important; }
+.menus-duo .special-card__badge { align-self: center; }
+
+/* ===== Hauteurs harmonisées: contenus centrés verticalement ===== */
+.menus-duo__left .breakfast-card { align-content: center; }
+.menus-duo__left .panel > article { grid-row: 2; }
+.menus-duo__left .special-card--compact { display: flex; flex-direction: column; justify-content: center; }
+
+/* ===== Mobile: MENU DU JOUR juste sous les formules, puis petit déj, puis enfant ===== */
+@media (max-width: 720px) {
+  .menus-duo { display: flex; flex-direction: column; }
+  .menus-duo__left { display: contents; }
+  .menus-duo > .panel { order: -1; }
+}
+
+/* ===== Cocktails: fantômes visibles seulement quand les colonnes sont côte à côte (>=1480px) ===== */
+.hh-head--ghost { display: none; }
+@media (min-width: 1480px) { .hh-head--ghost { display: grid; visibility: hidden; } }
+
+/* ===== Cocktails PC: colonnes Prix/HH légèrement resserrées ===== */
+@media (min-width: 861px) {
+  #cocktails .hh-head, #cocktails .hh-line__row { grid-template-columns: minmax(0, 1fr) 66px 66px; }
+}
 </style>
 </head>
 <body>
