@@ -269,6 +269,24 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Remove dark/white panels from cover and footer ===== */
+.cover-page {
+  box-shadow: none !important;
+}
+.cover-page::after {
+  border-color: rgba(216,178,87,.18) !important;
+}
+.footer {
+  background: transparent !important;
+  border-top: 0 !important;
+  color: #fff;
+  box-shadow: none !important;
+}
+.footer-note {
+  color: var(--gold-300);
+}
+
 </style>
 </head>
 <body>
