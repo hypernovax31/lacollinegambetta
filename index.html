@@ -947,6 +947,48 @@ button,a { font:inherit; }
 }
 
 
+
+/* ===== Cover title stack matches menu header (without COLLINE GAMBETTA) ===== */
+.cover-brand--compact {
+  gap: 8px !important;
+}
+.cover-brand--compact .eyebrow {
+  font-family: 'Cinzel', serif !important;
+  font-size: .72rem !important;
+  letter-spacing: .24em !important;
+  color: var(--gold-100) !important;
+  text-transform: uppercase !important;
+  line-height: 1.2 !important;
+}
+.cover-brand--compact .cover-leader-line,
+.cover-brand--compact .leader-meta {
+  margin: 0 !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: clamp(.66rem, 1.6vw, .86rem) !important;
+  letter-spacing: .09em !important;
+  text-transform: uppercase !important;
+  line-height: 1.35 !important;
+  color: var(--gold-100) !important;
+  text-align: center !important;
+  max-width: 42ch;
+}
+.cover-brand--compact .cover-leader-line--sub,
+.cover-brand--compact .leader-meta--sub {
+  margin-top: 0 !important;
+}
+@media (max-width: 640px) {
+  .cover-brand--compact .eyebrow {
+    font-size: .72rem !important;
+    letter-spacing: .18em !important;
+  }
+  .cover-brand--compact .cover-leader-line,
+  .cover-brand--compact .leader-meta {
+    font-size: .72rem !important;
+    letter-spacing: .07em !important;
+    max-width: 30ch;
+  }
+}
+
 </style>
 </head>
 <body>
