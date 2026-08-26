@@ -397,6 +397,53 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Symmetric top and cover action/link buttons ===== */
+.top-controls {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.top-controls .control-btn {
+  min-width: 0;
+}
+.cover-links {
+  width: min(100%, 760px);
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.cover-links .contact-link {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .top-controls {
+    max-width: none;
+  }
+  .cover-links {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .cover-links .contact-link,
+  .top-controls .control-btn {
+    font-size: 0.68rem;
+    padding: 8px 6px;
+    letter-spacing: 0.01em;
+  }
+}
+@media (max-width: 420px) {
+  .cover-links .contact-link,
+  .top-controls .control-btn {
+    font-size: 0.62rem;
+    padding: 8px 4px;
+  }
+}
+
 </style>
 </head>
 <body>
