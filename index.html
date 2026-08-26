@@ -645,6 +645,34 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Preserve perfect round medallion when viewport height shrinks ===== */
+.medallion-container {
+  width: min(100%, 36vh, 380px) !important;
+  aspect-ratio: 1 / 1 !important;
+  max-height: none !important;
+  height: auto !important;
+}
+.medallion-svg,
+.relief-inner-svg {
+  aspect-ratio: 1 / 1;
+}
+@media (max-height: 900px) {
+  .medallion-container {
+    width: min(100%, 34vh, 350px) !important;
+  }
+}
+@media (max-height: 760px) {
+  .medallion-container {
+    width: min(100%, 30vh, 300px) !important;
+  }
+}
+@media (max-width: 640px) {
+  .medallion-container {
+    width: min(100%, 32vh, 300px) !important;
+  }
+}
+
 </style>
 </head>
 <body>
