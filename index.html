@@ -52,10 +52,8 @@ button,a { font:inherit; }
 .interior-header h2 span { display:block; color:var(--gold-500); font-size:.48em; letter-spacing:.28em; margin-top:.28rem; }
 .interior-header p { margin:0; font-family:'Cinzel',serif; letter-spacing:.12em; text-transform:uppercase; font-size:clamp(.74rem,2vw,.98rem); }
 #menu-nav-anchor { height:0; }
-.menu-nav { position:sticky; top:0; z-index:1000; display:flex; gap:8px; overflow:auto; padding:10px 12px; background:rgba(89,46,111,.96); backdrop-filter:blur(8px); box-shadow:0 4px 18px rgba(0,0,0,.2); scrollbar-width:thin; }
-.menu-nav::-webkit-scrollbar { height:6px; }
-.menu-nav::-webkit-scrollbar-thumb { background:rgba(216,178,87,.45); border-radius:999px; }
-.nav-btn { flex:0 0 auto; min-width:max-content; }
+.menu-nav { position:sticky; top:0; z-index:1000; width:100vw; margin-left:calc(50% - 50vw); display:grid; grid-template-columns:repeat(7, minmax(0, 1fr)); gap:8px; padding:10px 12px; background:rgba(89,46,111,.96); backdrop-filter:blur(8px); box-shadow:0 4px 18px rgba(0,0,0,.2); }
+.nav-btn { width:100%; min-width:0; white-space:normal; text-align:center; line-height:1.2; }
 .container { width:min(100% - 24px, 1120px); margin:20px auto 0; }
 .menu-section { display:none; }
 .menu-section.active { display:block; }
@@ -151,7 +149,7 @@ button,a { font:inherit; }
 }
 @media (max-width: 860px) {
   .cover-page { width:min(100% - 12px, 820px); padding:14px 12px 16px; }
-  .menu-nav { padding:8px 10px; }
+  .menu-nav { grid-template-columns:repeat(4, minmax(0, 1fr)); padding:8px 10px; }
   .container { width:min(100% - 16px, 1120px); }
   .price-list--cols, .hh-list--cols { grid-template-columns:1fr; }
   .hh-head { grid-template-columns:minmax(0,1fr) 64px 64px; gap:8px; }
@@ -170,6 +168,34 @@ button,a { font:inherit; }
   .price-line__price { width:100%; }
   .footer-details { gap:4px 12px; }
 }
+
+/* ===== Full-width responsive selection bar ===== */
+@media (max-width: 900px) {
+  .menu-nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .menu-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .nav-btn {
+    min-height: 42px;
+    font-size: .72rem;
+    padding: 9px 10px;
+  }
+}
+@media (max-width: 420px) {
+  .menu-nav {
+    grid-template-columns: 1fr 1fr;
+    padding: 8px;
+  }
+  .nav-btn {
+    width: 100%;
+  }
+}
+
 </style>
 </head>
 <body>
