@@ -673,6 +673,59 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Final cover rhythm and stronger LA CARTE title ===== */
+.cover-page {
+  gap: clamp(12px, 1.8vh, 20px) !important;
+  padding: clamp(16px, 2.2vh, 26px) clamp(16px, 2.4vw, 28px) clamp(18px, 2.6vh, 28px) !important;
+}
+.cover-brand--compact {
+  gap: clamp(10px, 1.4vh, 16px) !important;
+}
+.cover-brand--compact .eyebrow {
+  font-size: clamp(1.12rem, 2.1vw, 1.32rem) !important;
+  letter-spacing: 0.18em !important;
+  line-height: 1.2 !important;
+}
+.cover-leader-line {
+  max-width: 42ch !important;
+  font-size: clamp(0.88rem, 1.5vw, 1rem) !important;
+  letter-spacing: 0.1em !important;
+  line-height: 1.38 !important;
+}
+.medallion-container {
+  margin: 2px auto 0 !important;
+}
+.cover-action {
+  margin-top: -2px !important;
+}
+.cover-footer {
+  gap: 12px !important;
+}
+.cover-footer-address {
+  margin-top: 2px;
+}
+@media (max-width: 640px) {
+  .cover-page {
+    gap: 12px !important;
+    padding: 16px 12px 18px !important;
+  }
+  .cover-brand--compact {
+    gap: 8px !important;
+  }
+  .cover-brand--compact .eyebrow {
+    font-size: 0.98rem !important;
+    letter-spacing: 0.12em !important;
+  }
+  .cover-leader-line {
+    font-size: 0.84rem !important;
+    line-height: 1.34 !important;
+  }
+  .cover-footer {
+    gap: 10px !important;
+  }
+}
+
 </style>
 </head>
 <body>
