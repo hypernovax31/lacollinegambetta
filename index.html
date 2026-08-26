@@ -1888,52 +1888,61 @@ button,a { font:inherit; }
   #boissons .price-line__dots,
   #cocktails .price-line__dots { display: block !important; }
 }
-/* ===== Tableaux des vins : cartes empilées sur petit écran (pas de chevauchement) ===== */
+/* ===== Tableaux des vins sur mobile : carte par vin + pastilles par contenance ===== */
 @media (max-width: 768px) {
   .wine-table { min-width: 0 !important; border-collapse: collapse; }
   .wine-table thead { display: none; }
   .wine-table tbody { display: block; }
   .wine-table tbody tr {
-    display: block;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
     margin: 10px 0;
-    padding: 6px 0;
-    border: 1px solid rgba(216,178,87,.3);
-    border-radius: 14px;
-    background: rgba(216,178,87,.04);
+    padding: 12px 12px 14px;
+    border: 1px solid rgba(216,178,87,.32);
+    border-radius: 16px;
+    background: rgba(216,178,87,.05);
   }
   .wine-table tbody tr:nth-child(even) td { background: transparent; }
-  .wine-table td {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 14px;
-    width: 100%;
+  /* Appellation = titre de la carte */
+  .wine-table td.wine-name {
+    grid-column: 1 / -1;
+    display: block;
     min-width: 0 !important;
-    padding: 4px 14px;
-    text-align: right;
-    border-bottom: none;
+    padding: 0 0 9px;
+    text-align: left !important;
+    font-weight: 700;
+    font-size: clamp(.85rem, .3vw + .78rem, 1rem);
+    border-bottom: 1px dotted rgba(156,122,45,.45);
+    border-radius: 0;
+    background: transparent;
+  }
+  .wine-table td.wine-name::before { content: none; }
+  /* Pastille : contenance au-dessus, prix au-dessous */
+  .wine-table td {
+    display: block;
+    min-width: 0 !important;
+    padding: 8px 6px 7px;
+    text-align: center;
+    border: 1px solid rgba(216,178,87,.38);
+    border-radius: 12px;
+    background: #fff;
   }
   .wine-table td::before {
     content: attr(data-label);
-    flex: 1 1 auto;
-    text-align: left;
+    display: block;
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
-    font-size: .78rem;
-    letter-spacing: .04em;
-    color: var(--violet-900);
-    opacity: .85;
+    font-size: .72rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--gold-700);
+    margin-bottom: 3px;
   }
-  .wine-table td.wine-name {
-    display: block;
-    text-align: left !important;
-    padding-top: 6px;
-    font-weight: 700;
-  }
-  .wine-table td.wine-name::before { content: none; }
+  /* Numéro masqué sur mobile (bruit visuel, conservé sur PC) */
+  .wine-table td.wine-no { display: none; }
   .table-wrap { overflow: visible; }
-}
-</style>
+}</style>
 </head>
 <body>
   <div class="top-controls">
