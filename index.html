@@ -451,6 +451,38 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Tighter menu header scale ===== */
+.interior-header {
+  padding: 18px 14px 16px;
+}
+.interior-header .eyebrow {
+  font-size: .72rem;
+  letter-spacing: .24em;
+}
+.interior-header h2 {
+  margin: 6px 0 8px;
+  font-size: clamp(1.8rem, 4.8vw, 2.8rem);
+  letter-spacing: .14em;
+}
+.interior-header h2 span {
+  font-size: .46em;
+  letter-spacing: .22em;
+  margin-top: .18rem;
+}
+.interior-header p {
+  font-size: clamp(.66rem, 1.6vw, .86rem);
+  letter-spacing: .09em;
+}
+@media (max-width: 640px) {
+  .interior-header {
+    padding: 16px 12px 14px;
+  }
+  .interior-header h2 {
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+  }
+}
+
 </style>
 </head>
 <body>
