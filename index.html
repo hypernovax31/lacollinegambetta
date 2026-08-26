@@ -1683,11 +1683,11 @@ button,a { font:inherit; }
 .wine-table td:not(.wine-name) {
   font-family: 'Cinzel', serif !important;
   font-weight: 800 !important;
-  font-size: 1.08rem !important;
+  font-size: clamp(0.85rem, 0.4vw + 0.72rem, 1.08rem) !important;
   line-height: 1.2 !important;
 }
 .day-lines strong {
-  font-size: 1.45rem !important;
+  font-size: clamp(1.15rem, 0.55vw + 1.05rem, 1.45rem) !important;
 }
 .offer-card__price,
 .special-card strong,
@@ -1707,10 +1707,10 @@ button,a { font:inherit; }
   .beer-row__hh,
   .accent-band span,
   .wine-table td:not(.wine-name) {
-    font-size: 1.04rem !important;
+    font-size: clamp(0.85rem, 0.4vw + 0.72rem, 1.08rem) !important;
   }
   .day-lines strong {
-    font-size: 1.3rem !important;
+    font-size: clamp(1.05rem, 0.55vw + 1rem, 1.3rem) !important;
   }
   .offer-card__price,
   .special-card strong,
@@ -1809,6 +1809,61 @@ button,a { font:inherit; }
     padding: 10px 12px !important;
     min-height: 46px !important;
   }
+}
+
+/* ===== Typographie 100% fluide : les tailles suivent la largeur de la fenêtre pour limiter les retours à la ligne ===== */
+/* Intitulés des plats & boissons */
+.food-card__head h5,
+.price-line__name,
+.hh-line__name,
+.beer-row__name,
+.choice-card h5,
+.wine-table .wine-name {
+  font-size: clamp(0.8rem, 0.35vw + 0.72rem, 1.02rem) !important;
+  line-height: 1.3 !important;
+}
+/* Notes & descriptions */
+.food-card__note,
+.price-list__note,
+.beer-note,
+.choice-card li,
+.day-lines span {
+  font-size: clamp(0.74rem, 0.25vw + 0.68rem, 0.86rem) !important;
+  line-height: 1.45 !important;
+}
+/* Sous-titres, badges, mentions */
+.panel__subtitle,
+.offer-card__badge,
+.offer-card__sub,
+.offer-card__foot,
+.special-card__sub,
+.accent-band p {
+  font-size: clamp(0.76rem, 0.28vw + 0.68rem, 0.92rem) !important;
+  line-height: 1.35 !important;
+}
+/* Textes des cartes menus (menu enfant, petit déjeuner…) */
+.special-card p,
+.breakfast-card p {
+  font-size: clamp(0.78rem, 0.3vw + 0.7rem, 0.95rem) !important;
+  line-height: 1.45 !important;
+}
+/* En-têtes de tableaux (bières, vins, HH) */
+.beer-table__head,
+.wine-table th,
+.hh-head {
+  font-size: clamp(0.7rem, 0.22vw + 0.64rem, 0.8rem) !important;
+}
+/* Bandeau frites */
+.accent-band strong {
+  font-size: clamp(0.95rem, 0.35vw + 0.82rem, 1.2rem) !important;
+}
+/* Titres de panneaux */
+.panel__title {
+  font-size: clamp(0.88rem, 1.6vw, 1.24rem) !important;
+}
+/* Boutons de contrôle du haut (Page de garde / Menu & Carte) */
+.control-btn {
+  font-size: clamp(0.72rem, 0.22vw + 0.64rem, 0.85rem) !important;
 }
 </style>
 </head>
