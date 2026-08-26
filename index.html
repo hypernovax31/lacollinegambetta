@@ -550,6 +550,101 @@ button,a { font:inherit; }
   }
 }
 
+
+/* ===== Final cover symmetry refinement ===== */
+#cover-section {
+  align-items: stretch;
+}
+.cover-page {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-items: center;
+  justify-items: center;
+  gap: clamp(14px, 2vh, 24px);
+  padding: clamp(18px, 2.8vh, 30px) clamp(16px, 2.6vw, 32px) clamp(20px, 3vh, 32px);
+}
+.cover-brand--compact {
+  gap: clamp(8px, 1.2vh, 14px);
+  max-width: 48rem;
+  width: 100%;
+}
+.cover-brand--compact .eyebrow {
+  font-size: clamp(1rem, 1.9vw, 1.18rem);
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+}
+.cover-leader-line {
+  max-width: 40ch;
+  font-size: clamp(0.86rem, 1.45vw, 1rem);
+  letter-spacing: 0.1em;
+  line-height: 1.35;
+}
+.medallion-container {
+  width: min(100%, 380px);
+  max-height: 36vh;
+  margin: 0 auto;
+}
+.cover-action {
+  width: min(100%, 360px);
+  min-height: 46px;
+  margin: 0;
+}
+.cover-footer {
+  width: 100%;
+  gap: clamp(10px, 1.4vh, 16px);
+  padding-top: 0;
+}
+.cover-footer-address {
+  max-width: 34ch;
+  font-size: clamp(0.78rem, 1.25vw, 0.94rem);
+  letter-spacing: 0.1em;
+  line-height: 1.55;
+}
+.cover-links {
+  width: min(100%, 760px);
+  gap: 10px;
+}
+@media (max-height: 820px) {
+  .cover-page {
+    gap: 12px;
+    padding-top: 16px;
+    padding-bottom: 18px;
+  }
+  .medallion-container {
+    width: min(100%, 330px);
+    max-height: 30vh;
+  }
+  .cover-brand--compact .eyebrow {
+    font-size: clamp(0.92rem, 1.7vw, 1.08rem);
+  }
+  .cover-leader-line {
+    font-size: clamp(0.8rem, 1.3vw, 0.92rem);
+  }
+}
+@media (max-width: 640px) {
+  .cover-page {
+    justify-items: stretch;
+    text-align: center;
+    gap: 14px;
+  }
+  .cover-brand--compact {
+    justify-items: center;
+  }
+  .medallion-container {
+    width: min(100%, 300px);
+    max-height: 32vh;
+  }
+  .cover-brand--compact .eyebrow {
+    font-size: 0.9rem;
+  }
+  .cover-leader-line {
+    max-width: 30ch;
+    font-size: 0.82rem;
+  }
+  .cover-footer-address {
+    font-size: 0.74rem;
+  }
+}
+
 </style>
 </head>
 <body>
