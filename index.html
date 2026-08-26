@@ -43,7 +43,7 @@ button,a { font:inherit; }
 .medallion-container { width:min(100%,540px); margin:0 auto; aspect-ratio:1/1; position:relative; display:flex; align-items:center; justify-content:center; }
 .medallion-svg { position:absolute; inset:-5%; width:110%; height:110%; filter:drop-shadow(0 14px 28px rgba(0,0,0,.55)); pointer-events:none; z-index:1; }
 .relief-inner-svg { width:68%; height:68%; border-radius:50%; z-index:2; overflow:hidden; background:#fff; border:4px solid var(--gold-500); box-shadow: inset 0 0 20px rgba(0,0,0,.12), 0 14px 36px rgba(0,0,0,.34); }
-.cover-action { justify-self:center; min-width:min(100%,340px); background:linear-gradient(135deg, #bf953f 0%, #fcf6ba 32%, #d8b257 68%, #fef9db 100%); color:var(--violet-950); border:2px solid #fff; font-family:'Cinzel',serif; letter-spacing:.16em; }
+.cover-action { justify-self:center; min-width:min(100%,340px); background:transparent; color:#fff; border:1px solid rgba(216,178,87,.45); font-family:'Cinzel',serif; letter-spacing:.16em; }
 .cover-footer { display:grid; justify-items:center; gap:12px; text-align:center; color:#fff; }
 .cover-footer-address { max-width:30ch; font-family:'Cinzel',serif; font-size:clamp(.82rem,1.4vw,.98rem); letter-spacing:.12em; line-height:1.5; text-transform:uppercase; }
 .cover-links, .footer-links { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
@@ -1492,7 +1492,6 @@ button,a { font:inherit; }
 }
 
 /* Keep intentional non-white accents */
-.cover-action,
 .top-controls .control-btn.active,
 .menu-nav .nav-btn.active,
 .offer-card__badge,
@@ -1585,7 +1584,6 @@ button,a { font:inherit; }
 }
 
 /* 2) Dark text only on gold backgrounds */
-.cover-action,
 .top-controls .control-btn.active,
 .menu-nav .nav-btn.active,
 .offer-card__badge,
@@ -1594,12 +1592,10 @@ button,a { font:inherit; }
 }
 
 /* 3) Dark text also for icons inside gold areas */
-.cover-action svg,
 .top-controls .control-btn.active svg,
 .menu-nav .nav-btn.active svg {
   stroke: var(--violet-950) !important;
 }
-.cover-action .star-gold,
 .top-controls .control-btn.active .star-gold,
 .menu-nav .nav-btn.active .star-gold {
   color: var(--violet-950) !important;
@@ -1645,6 +1641,31 @@ button,a { font:inherit; }
 }
 .breakfast-card--simple p {
   margin: 0;
+}
+
+
+/* ===== Bottom cover CTA matches top Menu & Carte button ===== */
+.cover-action,
+.cover-action * {
+  color: #ffffff !important;
+}
+.cover-action svg {
+  stroke: #ffffff !important;
+}
+.cover-action:hover {
+  background: rgba(255,255,255,.08) !important;
+  color: var(--gold-100) !important;
+  border-color: #fcf6ba !important;
+}
+.cover-action:hover svg {
+  stroke: var(--gold-100) !important;
+}
+.cover-action .star-gold {
+  color: var(--gold-bright) !important;
+}
+.cover-action:hover .star-gold {
+  color: var(--gold-100) !important;
+  text-shadow: none !important;
 }
 
 </style>
