@@ -3090,6 +3090,311 @@ button,a { font:inherit; }
 }
 
 
+/* ===== Web : notes = titres, menus SE, couverture sans chevauchement ===== */
+html:not(.carte-doc) {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+html:not(.carte-doc) .food-card__head h5,
+html:not(.carte-doc) #entrees .food-card__head h5,
+html:not(.carte-doc) #plats .food-card__head h5,
+html:not(.carte-doc) #desserts .food-card__head h5,
+html:not(.carte-doc) .price-line__name,
+html:not(.carte-doc) .hh-line__name,
+html:not(.carte-doc) .beer-row__name,
+html:not(.carte-doc) .choice-card h5,
+html:not(.carte-doc) .wine-table .wine-name {
+  font-size: 0.84rem !important;
+  line-height: 1.28 !important;
+}
+html:not(.carte-doc) .food-card__head strong,
+html:not(.carte-doc) #plats .food-card__head strong,
+html:not(.carte-doc) #desserts .food-card__head strong,
+html:not(.carte-doc) .price-line__price,
+html:not(.carte-doc) .hh-line__price,
+html:not(.carte-doc) .hh-line__hh,
+html:not(.carte-doc) .hh-line__row .grand-price,
+html:not(.carte-doc) .beer-row__price,
+html:not(.carte-doc) .beer-row__hh {
+  font-size: 0.84rem !important;
+  line-height: 1.2 !important;
+}
+html:not(.carte-doc) .food-card__note,
+html:not(.carte-doc) p.food-card__note,
+html:not(.carte-doc) #entrees .food-card__note,
+html:not(.carte-doc) #plats .food-card__note,
+html:not(.carte-doc) #desserts .food-card__note,
+html:not(.carte-doc) .price-list__note,
+html:not(.carte-doc) #desserts .price-list__note,
+html:not(.carte-doc) .beer-note,
+html:not(.carte-doc) .choice-card li,
+html:not(.carte-doc) #menus .choice-card li,
+html:not(.carte-doc) .menu-points li,
+html:not(.carte-doc) #menus .menu-points li,
+html:not(.carte-doc) .offer-card__sub,
+html:not(.carte-doc) .special-card__sub,
+html:not(.carte-doc) .special-card p,
+html:not(.carte-doc) #menus .special-card p,
+html:not(.carte-doc) .day-option__desc,
+html:not(.carte-doc) .hh-line .price-list__note,
+html:not(.carte-doc) #cocktails .price-list__note {
+  font-size: 0.84rem !important;
+  line-height: 1.3 !important;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+@media (min-width: 1100px) {
+  html:not(.carte-doc) .food-card__head h5,
+  html:not(.carte-doc) #entrees .food-card__head h5,
+  html:not(.carte-doc) #plats .food-card__head h5,
+  html:not(.carte-doc) #desserts .food-card__head h5,
+  html:not(.carte-doc) .price-line__name,
+  html:not(.carte-doc) .hh-line__name,
+  html:not(.carte-doc) .beer-row__name,
+  html:not(.carte-doc) .choice-card h5,
+  html:not(.carte-doc) .wine-table .wine-name,
+  html:not(.carte-doc) .food-card__head strong,
+  html:not(.carte-doc) #plats .food-card__head strong,
+  html:not(.carte-doc) .price-line__price,
+  html:not(.carte-doc) .hh-line__price,
+  html:not(.carte-doc) .hh-line__hh,
+  html:not(.carte-doc) .hh-line__row .grand-price {
+    font-size: 0.95rem !important;
+  }
+  html:not(.carte-doc) .food-card__note,
+  html:not(.carte-doc) p.food-card__note,
+  html:not(.carte-doc) #plats .food-card__note,
+  html:not(.carte-doc) #entrees .food-card__note,
+  html:not(.carte-doc) #desserts .food-card__note,
+  html:not(.carte-doc) .price-list__note,
+  html:not(.carte-doc) .beer-note,
+  html:not(.carte-doc) .choice-card li,
+  html:not(.carte-doc) .menu-points li,
+  html:not(.carte-doc) .hh-line .price-list__note {
+    font-size: 0.84rem !important;
+  }
+}
+
+/* Boutons IG / tél / mail : lisibles et tactiles */
+html:not(.carte-doc) .cover-links,
+html:not(.carte-doc) .footer-links {
+  display: grid !important;
+  width: min(100%, 960px);
+  margin-inline: auto;
+  gap: 10px !important;
+  justify-items: stretch;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+html:not(.carte-doc) .cover-links .contact-link,
+html:not(.carte-doc) .footer-links .footer-link {
+  min-height: 44px !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
+  font-style: normal !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  line-height: 1.3 !important;
+  padding: 10px 12px !important;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 1100px) {
+  html:not(.carte-doc) .cover-links,
+  html:not(.carte-doc) .footer-links {
+    grid-template-columns: 1fr !important;
+    width: min(100%, 440px);
+  }
+  html:not(.carte-doc) .cover-links .contact-link,
+  html:not(.carte-doc) .footer-links .footer-link {
+    font-size: 0.8rem !important;
+    min-height: 46px !important;
+    padding: 12px 14px !important;
+  }
+}
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 640px) {
+  html:not(.carte-doc) .cover-links,
+  html:not(.carte-doc) .footer-links {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    width: min(100%, 920px);
+  }
+  html:not(.carte-doc) .cover-links .contact-link,
+  html:not(.carte-doc) .footer-links .footer-link {
+    font-size: 0.72rem !important;
+    min-height: 42px !important;
+    padding: 8px 8px !important;
+  }
+}
+
+/* Nos menus : 2 / 3 colonnes dès l’iPhone SE, hauteurs égales */
+html:not(.carte-doc) #menus .offer-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  gap: 10px !important;
+}
+html:not(.carte-doc) #menus .choice-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  gap: 8px !important;
+}
+html:not(.carte-doc) #menus .menus-duo {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  gap: 10px !important;
+}
+html:not(.carte-doc) #menus .offer-card,
+html:not(.carte-doc) #menus .choice-card,
+html:not(.carte-doc) #menus .menus-duo > .special-card,
+html:not(.carte-doc) #menus .menus-duo__left {
+  height: 100%;
+  min-height: 0 !important;
+}
+html:not(.carte-doc) #menus .offer-card {
+  min-height: 0 !important;
+  padding: 16px 12px !important;
+}
+@media (max-width: 430px) {
+  html:not(.carte-doc) #menus .offer-card {
+    padding: 12px 8px !important;
+  }
+  html:not(.carte-doc) #menus .offer-card__badge,
+  html:not(.carte-doc) #menus .special-card__badge {
+    font-size: 0.72rem !important;
+    padding: 6px 8px !important;
+    min-height: 0 !important;
+    letter-spacing: .04em !important;
+  }
+  html:not(.carte-doc) #menus .choice-card {
+    padding: 10px 8px !important;
+  }
+  html:not(.carte-doc) #menus .choice-card h5 {
+    font-size: 0.68rem !important;
+    letter-spacing: .02em !important;
+  }
+  html:not(.carte-doc) #menus .choice-card li,
+  html:not(.carte-doc) #menus .menu-points li {
+    font-size: 0.68rem !important;
+  }
+  html:not(.carte-doc) #menus .special-card,
+  html:not(.carte-doc) #menus .breakfast-card {
+    padding: 10px 8px !important;
+  }
+  html:not(.carte-doc) #menus .panel__title {
+    font-size: 0.78rem !important;
+    padding: 8px 12px !important;
+  }
+}
+@media (min-width: 720px) {
+  html:not(.carte-doc) .food-card-grid--wide,
+  html:not(.carte-doc) .food-card-grid,
+  html:not(.carte-doc) .offer-grid,
+  html:not(.carte-doc) .special-grid,
+  html:not(.carte-doc) .price-list--cols,
+  html:not(.carte-doc) .hh-list--cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Couverture : pas de chevauchement titre / cadre / bouton / médaillon */
+#cover-section .cover-page {
+  grid-template-rows: auto minmax(0, 1fr) auto auto !important;
+  align-content: stretch !important;
+  align-items: center !important;
+  padding: clamp(12px, 2.4vh, 28px) clamp(12px, 3vw, 28px) clamp(14px, 2.2vh, 24px) !important;
+  gap: clamp(8px, 1.4vh, 16px) !important;
+  overflow: hidden;
+}
+#cover-section .cover-brand {
+  align-content: center !important;
+  justify-items: center !important;
+  min-height: 0;
+  max-width: 100%;
+  padding: 4px 8px 6px;
+  z-index: 3;
+}
+#cover-section .cover-brand--menu-leader-lite .eyebrow,
+#cover-section .leader-meta,
+#cover-section .menu-leader-subline {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+#cover-section .leader-meta,
+#cover-section .menu-leader-subline {
+  white-space: normal !important;
+  padding: 0 6px;
+}
+#cover-section .cover-brand + .medallion-container,
+#cover-section .medallion-container {
+  align-self: center !important;
+  width: min(70%, 46vh, 420px) !important;
+  max-height: min(46vh, 70vw) !important;
+  margin: 0 auto !important;
+  z-index: 2;
+}
+#cover-section .cover-action {
+  position: relative;
+  z-index: 3;
+  margin: 4px 12px 8px !important;
+  max-width: min(340px, calc(100% - 24px));
+  justify-self: center;
+}
+#cover-section .cover-footer {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 4px;
+}
+@media (max-width: 430px) {
+  #cover-section .cover-brand--menu-leader-lite .eyebrow {
+    font-size: clamp(1.05rem, 5.6vw, 1.45rem) !important;
+    letter-spacing: .08em !important;
+    white-space: nowrap;
+  }
+  #cover-section .leader-meta,
+  #cover-section .menu-leader-subline {
+    font-size: clamp(.52rem, 3vw, .68rem) !important;
+    letter-spacing: .05em !important;
+    line-height: 1.3 !important;
+  }
+  #cover-section .medallion-container {
+    width: min(78%, 48vw, 280px) !important;
+    max-height: 42vh !important;
+  }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  #cover-section .cover-page {
+    grid-template-rows: auto minmax(0, 1fr) auto auto !important;
+    padding: 8px 16px 10px !important;
+    gap: 6px !important;
+  }
+  #cover-section .cover-brand {
+    padding: 2px 8px 4px !important;
+  }
+  #cover-section .cover-brand--menu-leader-lite .eyebrow {
+    font-size: clamp(1rem, 3.2vh, 1.35rem) !important;
+  }
+  #cover-section .leader-meta,
+  #cover-section .menu-leader-subline {
+    font-size: clamp(.5rem, 2.4vh, .68rem) !important;
+  }
+  #cover-section .medallion-container {
+    width: min(32vh, 26vw, 200px) !important;
+    max-height: 32vh !important;
+  }
+  #cover-section .cover-action {
+    margin: 2px 8px 4px !important;
+    min-height: 36px !important;
+  }
+}
+
+
+
 
 /* ===== Styles d’impression du site, appliqués aussi à l’aperçu A4 ===== */
 
@@ -3799,8 +4104,8 @@ html.carte-doc .print-page {
 html.carte-doc .print-page__content {
   display: flex !important;
   flex-direction: column !important;
-  justify-content: flex-start !important;
-  gap: 4mm !important;
+  justify-content: stretch !important;
+  gap: 3.6mm !important;
   overflow: hidden !important;
 }
 html.carte-doc .print-page__content > .panel,
@@ -3813,8 +4118,13 @@ html.carte-doc .print-page__content > .duo-grid {
   flex-direction: column !important;
   overflow: hidden;
 }
+html.carte-doc .print-page__content > .panel:last-child,
+html.carte-doc .print-page__content > .menus-duo:last-child,
+html.carte-doc .print-page__content > .duo-grid:last-child {
+  flex: 1 1 auto;
+}
 html.carte-doc .print-page .panel__head {
-  margin-bottom: 2.2mm !important;
+  margin-bottom: 2mm !important;
 }
 html.carte-doc .print-page .food-card-grid,
 html.carte-doc .print-page .food-card-grid--wide,
@@ -3984,47 +4294,53 @@ html.carte-doc .print-page--menus .day-options {
   gap: 2.4mm !important;
 }
 
-/* Boissons 6 : même rythme titre / section / titre, colonnes alignées en haut. */
+/* Boissons 6 : remplir la page, interlignes réguliers. */
 html.carte-doc .print-page--drinks .print-page__content {
-  gap: 4mm !important;
-  justify-content: flex-start !important;
+  gap: 3.6mm !important;
+  justify-content: stretch !important;
 }
-html.carte-doc .print-page--drinks .print-page__content > .panel:first-child,
+html.carte-doc .print-page--drinks .print-page__content > .panel:first-child {
+  flex: 1.45 1 0 !important;
+}
 html.carte-doc .print-page--drinks .print-page__content > .panel:last-child {
-  flex: 0 1 auto !important;
+  flex: 1 1 0 !important;
 }
 html.carte-doc .print-page--drinks .price-list--cols {
-  align-items: start !important;
+  flex: 1 1 auto;
+  align-items: stretch !important;
 }
 html.carte-doc .print-page--drinks .panel__head,
 html.carte-doc .print-page--drinks-secondary .panel__head {
-  margin-bottom: 2.2mm !important;
+  margin-bottom: 2mm !important;
 }
 html.carte-doc .print-page--drinks .price-line {
-  padding: 0.7mm 0 !important;
+  padding: 0.5mm 0 !important;
 }
 html.carte-doc .print-page--drinks .price-list__note {
   font-size: 5.8pt !important;
   line-height: 1.2 !important;
 }
 html.carte-doc .print-page--drinks .price-list__col {
-  justify-content: flex-start;
+  justify-content: space-between;
+  height: 100%;
 }
 
-/* Boissons 7 : hauteurs proportionnelles, bières entières. */
+/* Boissons 7 : ne pas compresser (ça coupe Cidre / Légionnaire). */
 html.carte-doc .print-page--drinks-secondary .print-page__content {
-  gap: 3.2mm !important;
+  gap: 2.4mm !important;
+  justify-content: flex-start !important;
 }
 html.carte-doc .print-page--drinks-secondary .print-page__content > .panel {
-  flex: 0 1 auto;
-  overflow: hidden;
+  flex: 0 0 auto !important;
+  overflow: visible !important;
+  min-height: auto !important;
 }
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(1) { flex: 1.25 1 0; }
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(2) { flex: 0.72 1 0; }
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(3) { flex: 1.15 1 0; }
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(4) { flex: 1.55 1 0; }
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:last-child {
+  flex: 1 0 auto !important;
+  overflow: visible !important;
+}
 html.carte-doc .print-page--drinks-secondary .price-line {
-  padding: 0.4mm 0 !important;
+  padding: 0.28mm 0 !important;
 }
 html.carte-doc .print-page--drinks-secondary .price-list__note {
   font-size: 5.5pt !important;
@@ -4032,21 +4348,52 @@ html.carte-doc .print-page--drinks-secondary .price-list__note {
 }
 html.carte-doc .print-page--drinks-secondary .price-list__col {
   justify-content: flex-start;
+  height: auto;
 }
 html.carte-doc .print-page .beer-table__head,
 html.carte-doc .print-page .beer-row {
   grid-template-columns: minmax(0, 1fr) 16mm 16mm 16mm !important;
 }
 html.carte-doc .print-page--drinks-secondary .beer-note {
-  margin: 0.8mm 0 0.4mm !important;
+  margin: 0.6mm 0 0.3mm !important;
 }
 html.carte-doc .print-page--drinks-secondary .beer-row {
-  padding: 0.45mm 0 !important;
+  padding: 0.28mm 0 !important;
+}
+html.carte-doc .print-page--drinks-secondary .beer-table {
+  margin-top: 0.8mm !important;
+  flex: 0 0 auto !important;
+}
+html.carte-doc .print-page--drinks-secondary .price-list {
+  flex: 0 0 auto !important;
+}
+html.carte-doc .print-page--drinks-secondary .panel {
+  justify-content: flex-start !important;
 }
 
-/* Cocktails : 1 colonne sur 2 A4. */
-html.carte-doc .print-page--cocktails .print-page__content > .panel:first-child {
-  flex: 1.32 1 0;
+/* Cocktails : 1 colonne, tout le contenu visible, sans trou au milieu. */
+html.carte-doc .print-page--cocktails .print-page__content {
+  justify-content: flex-start !important;
+  gap: 3.6mm !important;
+}
+html.carte-doc .print-page--cocktails .print-page__content > .panel,
+html.carte-doc .print-page--cocktails .print-page__content > .panel:first-child,
+html.carte-doc .print-page--cocktails .print-page__content > .panel:last-child,
+html.carte-doc .print-page--cocktails .print-page__content > .duo-grid {
+  flex: 0 0 auto !important;
+  overflow: visible !important;
+  min-height: auto !important;
+}
+html.carte-doc .print-page--cocktails .duo-grid {
+  grid-template-rows: auto auto !important;
+  gap: 3.6mm !important;
+}
+html.carte-doc .print-page--cocktails .hh-list--cols {
+  justify-content: flex-start !important;
+}
+html.carte-doc .print-page--cocktails .price-list,
+html.carte-doc .print-page--cocktails .price-list:not(.price-list--cols) {
+  align-content: start !important;
 }
 html.carte-doc .print-page--cocktails .hh-list--cols {
   display: flex !important;
@@ -4263,6 +4610,73 @@ html.carte-doc .print-page--cover a.contact-link.cover-action {
 html.carte-doc .print-page--cover .print-page__number {
   display: none !important;
 }
+
+/* Polices A4 = web : Cinzel intitulés/prix, Montserrat contenances. */
+html.carte-doc .print-page .price-line__name,
+html.carte-doc .print-page .hh-line__name,
+html.carte-doc .print-page .beer-row__name,
+html.carte-doc .print-page .food-card__head h5,
+html.carte-doc .print-page .wine-name,
+html.carte-doc .print-page .choice-card h5,
+html.carte-doc .print-page .wine-table td.wine-name {
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+}
+html.carte-doc .print-page .price-line__price,
+html.carte-doc .print-page .hh-line__price,
+html.carte-doc .print-page .hh-line__hh,
+html.carte-doc .print-page .hh-line__row .grand-price,
+html.carte-doc .print-page .food-card__head strong,
+html.carte-doc .print-page .beer-row__price,
+html.carte-doc .print-page .beer-row__hh,
+html.carte-doc .print-page .wine-table td:not(.wine-name):not(.wine-no) {
+  font-family: 'Cinzel', serif !important;
+  font-weight: 800 !important;
+  font-style: normal !important;
+}
+html.carte-doc .print-page .qty,
+html.carte-doc .print-page .note-cl,
+html.carte-doc .print-page .price-list__note.note-cl,
+html.carte-doc .print-page .panel__subtitle.qty,
+html.carte-doc .print-page .beer-table__head,
+html.carte-doc .print-page .beer-table__head .qty,
+html.carte-doc .print-page .wine-table th.qty {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  text-transform: none !important;
+  letter-spacing: .02em !important;
+}
+html.carte-doc .print-page .food-card__note,
+html.carte-doc .print-page .price-list__note:not(.note-cl),
+html.carte-doc .print-page .hh-line .price-list__note:not(.note-cl) {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-style: italic !important;
+}
+html.carte-doc .print-page .beer-note {
+  font-family: 'Cinzel', serif !important;
+  font-weight: 600 !important;
+  font-style: normal !important;
+}
+
+/* Interlignes réguliers */
+html.carte-doc .print-page .price-line,
+html.carte-doc .print-page .hh-line,
+html.carte-doc .print-page .beer-row {
+  padding-top: 0.55mm !important;
+  padding-bottom: 0.55mm !important;
+}
+html.carte-doc .print-page .price-list__note,
+html.carte-doc .print-page .note-cl {
+  margin-top: 0.35mm !important;
+  line-height: 1.25 !important;
+}
+html.carte-doc .print-page .price-list--cols {
+  column-gap: 8mm !important;
+}
+
 /* Écran : pages A4 mises à l’échelle dans la fenêtre, sans déformer le format. */
 @media screen {
   html.carte-doc {

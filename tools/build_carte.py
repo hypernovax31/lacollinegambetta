@@ -282,8 +282,8 @@ html.carte-doc .print-page {
 html.carte-doc .print-page__content {
   display: flex !important;
   flex-direction: column !important;
-  justify-content: flex-start !important;
-  gap: 4mm !important;
+  justify-content: stretch !important;
+  gap: 3.6mm !important;
   overflow: hidden !important;
 }
 html.carte-doc .print-page__content > .panel,
@@ -296,8 +296,13 @@ html.carte-doc .print-page__content > .duo-grid {
   flex-direction: column !important;
   overflow: hidden;
 }
+html.carte-doc .print-page__content > .panel:last-child,
+html.carte-doc .print-page__content > .menus-duo:last-child,
+html.carte-doc .print-page__content > .duo-grid:last-child {
+  flex: 1 1 auto;
+}
 html.carte-doc .print-page .panel__head {
-  margin-bottom: 2.2mm !important;
+  margin-bottom: 2mm !important;
 }
 html.carte-doc .print-page .food-card-grid,
 html.carte-doc .print-page .food-card-grid--wide,
@@ -467,47 +472,53 @@ html.carte-doc .print-page--menus .day-options {
   gap: 2.4mm !important;
 }
 
-/* Boissons 6 : même rythme titre / section / titre, colonnes alignées en haut. */
+/* Boissons 6 : remplir la page, interlignes réguliers. */
 html.carte-doc .print-page--drinks .print-page__content {
-  gap: 4mm !important;
-  justify-content: flex-start !important;
+  gap: 3.6mm !important;
+  justify-content: stretch !important;
 }
-html.carte-doc .print-page--drinks .print-page__content > .panel:first-child,
+html.carte-doc .print-page--drinks .print-page__content > .panel:first-child {
+  flex: 1.45 1 0 !important;
+}
 html.carte-doc .print-page--drinks .print-page__content > .panel:last-child {
-  flex: 0 1 auto !important;
+  flex: 1 1 0 !important;
 }
 html.carte-doc .print-page--drinks .price-list--cols {
-  align-items: start !important;
+  flex: 1 1 auto;
+  align-items: stretch !important;
 }
 html.carte-doc .print-page--drinks .panel__head,
 html.carte-doc .print-page--drinks-secondary .panel__head {
-  margin-bottom: 2.2mm !important;
+  margin-bottom: 2mm !important;
 }
 html.carte-doc .print-page--drinks .price-line {
-  padding: 0.7mm 0 !important;
+  padding: 0.5mm 0 !important;
 }
 html.carte-doc .print-page--drinks .price-list__note {
   font-size: 5.8pt !important;
   line-height: 1.2 !important;
 }
 html.carte-doc .print-page--drinks .price-list__col {
-  justify-content: flex-start;
+  justify-content: space-between;
+  height: 100%;
 }
 
-/* Boissons 7 : hauteurs proportionnelles, bières entières. */
+/* Boissons 7 : ne pas compresser (ça coupe Cidre / Légionnaire). */
 html.carte-doc .print-page--drinks-secondary .print-page__content {
-  gap: 3.2mm !important;
+  gap: 2.4mm !important;
+  justify-content: flex-start !important;
 }
 html.carte-doc .print-page--drinks-secondary .print-page__content > .panel {
-  flex: 0 1 auto;
-  overflow: hidden;
+  flex: 0 0 auto !important;
+  overflow: visible !important;
+  min-height: auto !important;
 }
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(1) { flex: 1.25 1 0; }
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(2) { flex: 0.72 1 0; }
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(3) { flex: 1.15 1 0; }
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(4) { flex: 1.55 1 0; }
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:last-child {
+  flex: 1 0 auto !important;
+  overflow: visible !important;
+}
 html.carte-doc .print-page--drinks-secondary .price-line {
-  padding: 0.4mm 0 !important;
+  padding: 0.28mm 0 !important;
 }
 html.carte-doc .print-page--drinks-secondary .price-list__note {
   font-size: 5.5pt !important;
@@ -515,21 +526,52 @@ html.carte-doc .print-page--drinks-secondary .price-list__note {
 }
 html.carte-doc .print-page--drinks-secondary .price-list__col {
   justify-content: flex-start;
+  height: auto;
 }
 html.carte-doc .print-page .beer-table__head,
 html.carte-doc .print-page .beer-row {
   grid-template-columns: minmax(0, 1fr) 16mm 16mm 16mm !important;
 }
 html.carte-doc .print-page--drinks-secondary .beer-note {
-  margin: 0.8mm 0 0.4mm !important;
+  margin: 0.6mm 0 0.3mm !important;
 }
 html.carte-doc .print-page--drinks-secondary .beer-row {
-  padding: 0.45mm 0 !important;
+  padding: 0.28mm 0 !important;
+}
+html.carte-doc .print-page--drinks-secondary .beer-table {
+  margin-top: 0.8mm !important;
+  flex: 0 0 auto !important;
+}
+html.carte-doc .print-page--drinks-secondary .price-list {
+  flex: 0 0 auto !important;
+}
+html.carte-doc .print-page--drinks-secondary .panel {
+  justify-content: flex-start !important;
 }
 
-/* Cocktails : 1 colonne sur 2 A4. */
-html.carte-doc .print-page--cocktails .print-page__content > .panel:first-child {
-  flex: 1.32 1 0;
+/* Cocktails : 1 colonne, tout le contenu visible, sans trou au milieu. */
+html.carte-doc .print-page--cocktails .print-page__content {
+  justify-content: flex-start !important;
+  gap: 3.6mm !important;
+}
+html.carte-doc .print-page--cocktails .print-page__content > .panel,
+html.carte-doc .print-page--cocktails .print-page__content > .panel:first-child,
+html.carte-doc .print-page--cocktails .print-page__content > .panel:last-child,
+html.carte-doc .print-page--cocktails .print-page__content > .duo-grid {
+  flex: 0 0 auto !important;
+  overflow: visible !important;
+  min-height: auto !important;
+}
+html.carte-doc .print-page--cocktails .duo-grid {
+  grid-template-rows: auto auto !important;
+  gap: 3.6mm !important;
+}
+html.carte-doc .print-page--cocktails .hh-list--cols {
+  justify-content: flex-start !important;
+}
+html.carte-doc .print-page--cocktails .price-list,
+html.carte-doc .print-page--cocktails .price-list:not(.price-list--cols) {
+  align-content: start !important;
 }
 html.carte-doc .print-page--cocktails .hh-list--cols {
   display: flex !important;
@@ -746,6 +788,73 @@ html.carte-doc .print-page--cover a.contact-link.cover-action {
 html.carte-doc .print-page--cover .print-page__number {
   display: none !important;
 }
+
+/* Polices A4 = web : Cinzel intitulés/prix, Montserrat contenances. */
+html.carte-doc .print-page .price-line__name,
+html.carte-doc .print-page .hh-line__name,
+html.carte-doc .print-page .beer-row__name,
+html.carte-doc .print-page .food-card__head h5,
+html.carte-doc .print-page .wine-name,
+html.carte-doc .print-page .choice-card h5,
+html.carte-doc .print-page .wine-table td.wine-name {
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+}
+html.carte-doc .print-page .price-line__price,
+html.carte-doc .print-page .hh-line__price,
+html.carte-doc .print-page .hh-line__hh,
+html.carte-doc .print-page .hh-line__row .grand-price,
+html.carte-doc .print-page .food-card__head strong,
+html.carte-doc .print-page .beer-row__price,
+html.carte-doc .print-page .beer-row__hh,
+html.carte-doc .print-page .wine-table td:not(.wine-name):not(.wine-no) {
+  font-family: 'Cinzel', serif !important;
+  font-weight: 800 !important;
+  font-style: normal !important;
+}
+html.carte-doc .print-page .qty,
+html.carte-doc .print-page .note-cl,
+html.carte-doc .print-page .price-list__note.note-cl,
+html.carte-doc .print-page .panel__subtitle.qty,
+html.carte-doc .print-page .beer-table__head,
+html.carte-doc .print-page .beer-table__head .qty,
+html.carte-doc .print-page .wine-table th.qty {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  text-transform: none !important;
+  letter-spacing: .02em !important;
+}
+html.carte-doc .print-page .food-card__note,
+html.carte-doc .print-page .price-list__note:not(.note-cl),
+html.carte-doc .print-page .hh-line .price-list__note:not(.note-cl) {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-style: italic !important;
+}
+html.carte-doc .print-page .beer-note {
+  font-family: 'Cinzel', serif !important;
+  font-weight: 600 !important;
+  font-style: normal !important;
+}
+
+/* Interlignes réguliers */
+html.carte-doc .print-page .price-line,
+html.carte-doc .print-page .hh-line,
+html.carte-doc .print-page .beer-row {
+  padding-top: 0.55mm !important;
+  padding-bottom: 0.55mm !important;
+}
+html.carte-doc .print-page .price-list__note,
+html.carte-doc .print-page .note-cl {
+  margin-top: 0.35mm !important;
+  line-height: 1.25 !important;
+}
+html.carte-doc .print-page .price-list--cols {
+  column-gap: 8mm !important;
+}
+
 /* Écran : pages A4 mises à l’échelle dans la fenêtre, sans déformer le format. */
 @media screen {
   html.carte-doc {
