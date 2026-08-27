@@ -96,7 +96,7 @@ def extract_cover() -> str:
     start = INDEX.find('<div class="cover-page">')
     node, _ = take_element(INDEX[start:], "div")
     node = node.replace(' onclick="showView(\'menu\')"', "")
-    node = node.replace('href="#menu-nav-anchor"', 'href="#carte-p2"')
+    node = node.replace('href="#menu-nav-anchor"', 'href="index.html#menu-nav-anchor"')
     while '<a class="download-card"' in node:
         a = node.find('<a class="download-card"')
         frag, rest = take_element(node[a:], "a")
@@ -121,12 +121,11 @@ def page_shell(number: int, kind: str, content: str, cover_html: str | None = No
 <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
 <strong>LA COLLINE GAMBETTA</strong>
 <div class="print-page__footer-contact">
-<svg class="print-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>
-<span>lacolline.gambetta</span>
+<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>lacolline.gambetta</span>
 <span aria-hidden="true">·</span>
-<span>01 43 49 05 93</span>
+<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</span>
 <span aria-hidden="true">·</span>
-<span class="print-mail">lacollinegambetta@mailo.com</span>
+<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>lacollinegambetta@mailo.com</span>
 </div>
 <small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>'''
@@ -201,25 +200,32 @@ html.carte-doc .print-page__footer-contact {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.7mm;
+  gap: 1.6mm;
   flex-wrap: nowrap;
   margin: .35mm 0;
-  font-size: 5.6pt;
-  letter-spacing: .08em;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 5.6pt !important;
+  letter-spacing: .02em !important;
+  text-transform: none !important;
+  font-style: normal !important;
 }
-html.carte-doc .print-page__footer-contact .print-ig {
-  width: 3.4mm;
-  height: 3.4mm;
+html.carte-doc .print-page__footer-contact .print-foot-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 1mm;
+  font-family: inherit;
+  font-weight: 400;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: none;
+}
+html.carte-doc .print-page__footer-contact svg {
+  width: 3.3mm;
+  height: 3.3mm;
   flex: 0 0 auto;
   stroke: #fff;
   color: #fff;
-}
-html.carte-doc .print-page__footer-contact .print-mail {
-  text-transform: none;
-  letter-spacing: .02em;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 5.8pt;
 }
 html.carte-doc .print-page__number { bottom: 6.2mm !important; }
 
@@ -276,8 +282,8 @@ html.carte-doc .print-page {
 html.carte-doc .print-page__content {
   display: flex !important;
   flex-direction: column !important;
-  justify-content: stretch !important;
-  gap: 3mm !important;
+  justify-content: flex-start !important;
+  gap: 4mm !important;
   overflow: hidden !important;
 }
 html.carte-doc .print-page__content > .panel,
@@ -285,10 +291,13 @@ html.carte-doc .print-page__content > .menus-duo,
 html.carte-doc .print-page__content > .duo-grid {
   min-width: 0;
   min-height: 0;
-  flex: 1 1 0;
+  flex: 0 1 auto;
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden;
+}
+html.carte-doc .print-page .panel__head {
+  margin-bottom: 2.2mm !important;
 }
 html.carte-doc .print-page .food-card-grid,
 html.carte-doc .print-page .food-card-grid--wide,
@@ -352,6 +361,12 @@ html.carte-doc .print-page .food-card__head strong {
 }
 
 /* Page menus : Duo / Complète aussi hautes que l’enfant ; bas plus compact. */
+html.carte-doc .print-page--menus .print-page__content > .panel {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
 html.carte-doc .print-page--menus .print-page__content {
   gap: 4.4mm !important;
 }
@@ -452,19 +467,24 @@ html.carte-doc .print-page--menus .day-options {
   gap: 2.4mm !important;
 }
 
-/* Boissons 6 : fraîches un peu plus hautes, lignes compactes, rien n’est coupé. */
-html.carte-doc .print-page--drinks .print-page__content > .panel:first-child {
-  flex: 1.55 1 0;
+/* Boissons 6 : même rythme titre / section / titre, colonnes alignées en haut. */
+html.carte-doc .print-page--drinks .print-page__content {
+  gap: 4mm !important;
+  justify-content: flex-start !important;
 }
+html.carte-doc .print-page--drinks .print-page__content > .panel:first-child,
 html.carte-doc .print-page--drinks .print-page__content > .panel:last-child {
-  flex: 1 1 0;
+  flex: 0 1 auto !important;
+}
+html.carte-doc .print-page--drinks .price-list--cols {
+  align-items: start !important;
 }
 html.carte-doc .print-page--drinks .panel__head,
 html.carte-doc .print-page--drinks-secondary .panel__head {
-  margin-bottom: 1.6mm !important;
+  margin-bottom: 2.2mm !important;
 }
 html.carte-doc .print-page--drinks .price-line {
-  padding: 0.45mm 0 !important;
+  padding: 0.7mm 0 !important;
 }
 html.carte-doc .print-page--drinks .price-list__note {
   font-size: 5.8pt !important;
@@ -476,7 +496,7 @@ html.carte-doc .print-page--drinks .price-list__col {
 
 /* Boissons 7 : hauteurs proportionnelles, bières entières. */
 html.carte-doc .print-page--drinks-secondary .print-page__content {
-  gap: 2mm !important;
+  gap: 3.2mm !important;
 }
 html.carte-doc .print-page--drinks-secondary .print-page__content > .panel {
   flex: 0 1 auto;
@@ -631,10 +651,23 @@ html.carte-doc .print-page--cover .cover-brand {
   margin: 0 auto !important;
   gap: 3mm !important;
 }
-html.carte-doc .print-page--cover .cover-brand--menu-leader-lite .eyebrow {
-  font-size: 20pt !important;
-  letter-spacing: .12em !important;
+html.carte-doc .print-page--cover .cover-brand--menu-leader-lite .eyebrow,
+html.carte-doc .print-page--cover .leader-title {
+  font-size: 26pt !important;
+  letter-spacing: .14em !important;
   overflow: visible !important;
+  line-height: 1.15 !important;
+}
+html.carte-doc .print-page--cover .leader-meta {
+  font-size: 11.5pt !important;
+  letter-spacing: .14em !important;
+  line-height: 1.25 !important;
+}
+html.carte-doc .print-page--cover .menu-leader-subline,
+html.carte-doc .print-page--cover .leader-meta--sub {
+  font-size: 10.5pt !important;
+  letter-spacing: .12em !important;
+  line-height: 1.3 !important;
 }
 html.carte-doc .print-page--cover .cover-brand .star-gold {
   display: inline-block !important;
@@ -686,21 +719,23 @@ html.carte-doc .print-page--cover .cover-links {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+html.carte-doc .print-page--cover .cover-links {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
 html.carte-doc .print-page--cover .cover-links .contact-link {
   min-height: 9mm !important;
-  font-size: 7pt !important;
-  padding: 0 3.2mm !important;
+  padding: 0 2.6mm !important;
   box-sizing: border-box;
-}
-html.carte-doc .print-page--cover .cover-links {
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, .9fr) minmax(0, 1.4fr);
-}
-html.carte-doc .print-page--cover .cover-links .contact-link--mail {
-  text-transform: none !important;
-  letter-spacing: .015em !important;
-  font-size: 6.1pt !important;
-  font-weight: 600 !important;
   font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 6.2pt !important;
+  letter-spacing: .02em !important;
+  text-transform: none !important;
+  font-style: normal !important;
+}
+html.carte-doc .print-page--cover .cover-links .contact-link svg {
+  width: 3.4mm !important;
+  height: 3.4mm !important;
 }
 html.carte-doc .print-page--cover a.contact-link.cover-action {
   position: relative;
@@ -840,6 +875,8 @@ def main() -> None:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>La Colline Gambetta — Carte des menus</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
