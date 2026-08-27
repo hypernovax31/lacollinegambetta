@@ -2,15 +2,33 @@
 
 Carte web interactive et carte imprimable A4 portrait.
 
-## Carte PDF (modifiable)
+## Carte imprimable (`carte.html`)
 
-Le fichier `carte.html` est la **carte des menus** haute-fidélité, à l’identité du site (violet royal, or, Cinzel / Montserrat). Elle est conçue pour qu’un agent IA puisse modifier textes, prix et mise en page.
+`carte.html` reprend **les mêmes contenus, polices, couleurs et styles** que le site (`index.html`). La page de garde est la couverture du site. L’ordre des pages suit les boutons de navigation :
 
-- Aperçu écran : ouvrir `carte.html`
-- Enregistrer en PDF : bouton **Enregistrer en PDF** (ou Imprimer → Enregistrer au format PDF)
-- 10 pages A4 portrait : couverture, entrées, plats, desserts, formules, boissons, alcools & bières, vins, cocktails, élégance & mocktails
+1. Couverture
+2. Entrées
+3. Plats
+4. Desserts
+5. Menus
+6. Boissons fraîches & chaudes
+7. Apéritifs & whiskies
+8. Digestifs & bières
+9. Vins
+10. Cocktails classiques, spritz & mules
+11. Élégance & mocktails
 
-Les blocs HTML sont commentés page par page (`PAGE 1 : Couverture`, etc.).
+Les pages intérieures portent l’en-tête **COLLINE GAMBETTA** (pas de titre « NOS … »).
+
+- Aperçu : ouvrir `carte.html`
+- Enregistrer en PDF : lien **Télécharger carte** (ou Imprimer → Enregistrer au format PDF)
+- `carte.html?print=1` lance l’impression automatiquement
+
+Régénérer après une modification du site :
+
+```bash
+python3 tools/build_carte.py
+```
 
 ## Générer les livrables imprimables (pipeline Chromium)
 
