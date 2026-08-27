@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Colline Gambetta — Carte des menus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --violet-950:#24102e; --violet-900:#432155; --violet-800:#592e6f; --violet-700:#6b3c87;
+  --gold-100:#fef9db; --gold-300:#f0d78f; --gold-500:#d8b257; --gold-700:#9c7a2d;
+  --cream:#fcfbf7; --ink:#2f1740; --muted:#5d4a6c;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:'Montserrat',sans-serif;
+  background:#1a0b22;
+  color:var(--ink);
+}
+.toolbar{
+  position:sticky; top:0; z-index:50;
+  display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
+  padding:12px;
+  background:#592e6f;
+  border-bottom:1px solid rgba(216,178,87,.45);
+}
+.toolbar a, .toolbar button{
+  font:700 .78rem/1 'Cinzel',serif;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:#fff; background:transparent;
+  border:1px solid rgba(216,178,87,.45);
+  border-radius:999px; min-height:42px; padding:8px 18px;
+  text-decoration:none; cursor:pointer;
+}
+.toolbar .primary{
+  background:linear-gradient(135deg,#bf953f,#fcf6ba 35%,#d8b257 70%,#fef9db);
+  color:var(--violet-950); border-color:#fcf6ba;
+}
+.sheet{padding:28px 12px 48px}
+.page{
+  position:relative;
+  width:210mm; height:297mm;
+  margin:0 auto 22px;
+  background:var(--cream);
+  color:var(--ink);
+  overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.35);
+}
+.page::before,.page::after{
+  content:''; position:absolute; pointer-events:none; z-index:8;
+}
+.page::before{inset:5mm; border:.38mm solid #d8b257}
+.page::after{inset:7mm; border:.16mm solid rgba(216,178,87,.58)}
+.page-num{
+  position:absolute; right:11mm; bottom:6.2mm; z-index:9;
+  font-family:'Cinzel',serif; font-weight:700; font-size:11pt; color:var(--gold-500);
+}
+.page-top{
+  position:absolute; top:0; left:0; right:0; height:32mm; z-index:2;
+  padding:4.2mm 18mm 0;
+  text-align:center; color:#fff;
+  background:linear-gradient(180deg,#6b3c87 0%,#592e6f 55%,#432155 100%);
+  border-bottom:1px solid rgba(216,178,87,.9);
+}
+.brand-kicker{font-family:'Cinzel',serif; font-size:7.2pt; letter-spacing:.42em}
+.brand-name{font-family:'Cinzel',serif; font-size:16.5pt; letter-spacing:.28em; font-weight:800; line-height:1}
+.brand-sub{font-family:'Cinzel',serif; font-size:8.4pt; letter-spacing:.34em; color:var(--gold-500); font-weight:800}
+.brand-meta{margin:1mm 0 0; font-family:'Cinzel',serif; font-size:5.6pt; letter-spacing:.16em}
+.brand-meta--sub{opacity:.92}
+.page-body{
+  position:absolute; top:36mm; left:14mm; right:14mm; bottom:22mm;
+  overflow:hidden;
+}
+.page-foot{
+  position:absolute; left:0; right:0; bottom:0; height:18mm; z-index:3;
+  padding:2.2mm 18mm 1mm;
+  background:linear-gradient(180deg,#6b3c87 0%,#592e6f 60%,#432155 100%);
+  border-top:1px solid rgba(216,178,87,.9);
+  text-align:center; color:var(--gold-100);
+  font-family:'Cinzel',serif; font-size:5.8pt; letter-spacing:.14em; line-height:1.22;
+}
+.page-foot strong{display:block; margin:.5mm 0; font-size:7.2pt; letter-spacing:.26em; color:#fff}
+.page-foot small{display:block; font-family:'Montserrat',sans-serif; font-size:4.8pt; letter-spacing:.01em; color:rgba(255,255,255,.82)}
+.sec-head{text-align:center; margin:1.6mm 0 2.4mm}
+.sec-head h2{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  margin:0; min-height:8.2mm; padding:1.6mm 7mm;
+  border-radius:999px; background:#592e6f; color:#fff;
+  border:1px solid var(--gold-500);
+  font-family:'Cinzel',serif; font-size:10pt; letter-spacing:.16em; text-transform:uppercase;
+}
+.sec-head h2::before,.sec-head h2::after{content:'✦'; color:var(--gold-500); font-size:.72em}
+.sec-sub{margin:.8mm 0 0; font-family:'Cinzel',serif; font-size:7pt; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-700)}
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:1.2mm 8mm}
+.dish{padding:1.7mm 0 2mm; border-bottom:.2mm dotted rgba(122,105,136,.55)}
+.dish__row{display:flex; justify-content:space-between; gap:4mm; align-items:baseline}
+.dish h3{margin:0; font-family:'Cinzel',serif; font-size:8.6pt; font-weight:700; text-transform:uppercase; letter-spacing:.03em; line-height:1.25}
+.dish strong,.drink strong,.ck__price{font-family:'Cinzel',serif; font-size:9pt; font-weight:800; color:var(--gold-700); white-space:nowrap}
+.note{margin:.4mm 0 0; font-size:7.1pt; font-style:italic; color:var(--muted); line-height:1.3}
+.frites{
+  margin-top:4mm; padding:3.2mm 4mm; border-radius:3mm; text-align:center; color:#fff;
+  background:linear-gradient(135deg,#432155,#592e6f); border:1px solid rgba(216,178,87,.5);
+}
+.frites h3{margin:0; font-family:'Cinzel',serif; font-size:10pt; text-transform:uppercase}
+.frites strong{display:block; margin:.6mm 0; font-family:'Cinzel',serif; font-size:14pt}
+.frites p{margin:0; font-size:7pt}
+.offers{display:grid; grid-template-columns:1fr 1fr; gap:3mm; margin-bottom:3mm}
+.offer,.choice,.mini-card{
+  background:#fff; border:1px solid rgba(216,178,87,.34); border-radius:3mm; padding:3.2mm; text-align:center;
+}
+.offer--accent{background:linear-gradient(160deg,#6b3c87,#5a3173 45%,#432155); color:#fff}
+.gold-pill,.violet-pill{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:7mm; padding:1.4mm 4mm; border-radius:999px;
+  font-family:'Cinzel',serif; font-weight:800; letter-spacing:.06em; text-transform:uppercase; font-size:7.4pt;
+}
+.gold-pill{
+  background:linear-gradient(135deg,#a87516,#d6ad46 18%,#fff2b6 38%,#d8b257 58%,#b98728 78%,#f4dda0);
+  color:#24102e;
+}
+.violet-pill{background:#592e6f; color:#fff; border:1px solid var(--gold-500)}
+.offer-sub{margin:1.6mm 0 0; font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.06em; font-size:7.2pt}
+.offer-sub em{font-style:normal; font-weight:400; text-transform:none}
+.offer-price,.mini-price{font-family:'Cinzel',serif; font-size:18pt; font-weight:900; color:var(--violet-800); margin:1mm 0}
+.offer--accent .offer-price{color:#fff}
+.offer-foot{margin:0; font-family:'Cinzel',serif; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-700); font-size:7pt}
+.offer--accent .offer-foot{color:var(--gold-300)}
+.choices{display:grid; grid-template-columns:repeat(3,1fr); gap:2.4mm; margin-bottom:3mm}
+.choice{text-align:left}
+.choice h3{margin:0 0 2mm; display:flex; gap:2mm; align-items:center; font-family:'Cinzel',serif; text-transform:uppercase; font-size:8pt; letter-spacing:.05em}
+.choice h3 span{
+  width:6.2mm; height:6.2mm; border-radius:50%; background:#592e6f; color:#fff;
+  display:inline-flex; align-items:center; justify-content:center; font-size:7.4pt; flex:0 0 auto;
+}
+.choice ul,.bullets{list-style:none; margin:0; padding:0}
+.choice li{position:relative; padding-left:3.2mm; font-size:7.3pt; line-height:1.45; margin:.6mm 0}
+.choice li::before{content:'✦'; position:absolute; left:0; color:var(--gold-500); font-size:5.5pt}
+.menus-row{display:grid; grid-template-columns:1fr 1fr; gap:3mm; align-items:stretch}
+.menus-left{display:grid; gap:3mm}
+.mini-sub{margin:1mm 0 2mm; font-size:6.6pt; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-700); font-weight:700}
+.bullets{text-align:left; width:fit-content; margin:0 auto 1mm}
+.bullets li{position:relative; padding-left:3.4mm; font-size:7.6pt; line-height:1.45; margin:.5mm 0}
+.bullets li::before{content:'•'; position:absolute; left:0; color:var(--gold-700); font-weight:700}
+.day-card{
+  background:linear-gradient(135deg,#2c1339,#432155); color:#fff; border-radius:3mm;
+  padding:3.5mm 4mm; text-align:center; border:1px solid rgba(216,178,87,.34);
+}
+.day-sub{margin:1.5mm 0 2.5mm; font-family:'Cinzel',serif; letter-spacing:.14em; text-transform:uppercase; font-size:7pt}
+.day-box{border:1px solid rgba(216,178,87,.45); border-radius:2.4mm; padding:2.4mm; margin:2mm 0; background:rgba(255,255,255,.07)}
+.day-desc{margin:0 0 1mm; font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.06em; font-size:7.4pt; font-weight:700}
+.day-desc em{font-style:normal; font-weight:400; text-transform:none}
+.day-box strong{font-family:'Cinzel',serif; font-size:14pt; color:#fef9db}
+.day-note{margin:2mm 0 0; font-size:7pt; color:rgba(255,255,255,.88)}
+.drink{padding:1.5mm 0; border-bottom:.2mm dotted rgba(122,105,136,.55)}
+.drink__row{display:flex; align-items:baseline; gap:2mm}
+.drink__name{font-family:'Cinzel',serif; font-size:8.2pt; font-weight:700}
+.dots{flex:1; border-bottom:.18mm dotted rgba(156,122,45,.7); transform:translateY(-2px)}
+.beer-label{text-align:center; font-family:'Cinzel',serif; color:var(--ink); letter-spacing:.16em; text-transform:uppercase; font-size:8pt; margin:0 0 2mm}
+.beer-table{display:grid; gap:0}
+.beer-head,.beer-row{display:grid; grid-template-columns:minmax(0,1fr) 14mm 14mm 14mm; gap:2mm; align-items:baseline; padding:1.3mm 0; border-bottom:.2mm dotted rgba(122,105,136,.55)}
+.beer-head{font-family:'Cinzel',serif; font-size:6pt; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); border:0}
+.beer-row span{font-family:'Cinzel',serif; font-size:8pt; font-weight:700}
+.beer-row strong,.beer-row b{font-family:'Cinzel',serif; font-size:8.6pt; font-weight:800; text-align:right}
+.beer-row b{color:var(--gold-700)}
+.hh-banner{text-align:center; font-family:'Cinzel',serif; color:var(--gold-700); letter-spacing:.12em; text-transform:uppercase; font-size:7.4pt; margin:3mm 0 0}
+.wines{width:100%; border-collapse:collapse; margin:0 0 3mm; font-size:7.6pt}
+.wines th{font-family:'Cinzel',serif; font-size:6pt; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); text-align:right; padding:0 0 1.4mm; font-weight:700}
+.wines td{padding:1.5mm 0; border-bottom:.2mm dotted rgba(122,105,136,.5); text-align:right; font-family:'Cinzel',serif; font-weight:800; color:var(--gold-700)}
+.wines td.n{width:7mm; text-align:left; color:var(--ink)}
+.wines td.app,.wines th.app{text-align:left; color:var(--ink); font-weight:700}
+.wines--short td,.wines--short th{text-align:right}
+.wines--short td.app,.wines--short th.app{text-align:left}
+.ck-head{display:grid; grid-template-columns:minmax(0,1fr) 14mm 14mm minmax(0,1fr) 14mm 14mm; gap:2mm; font-family:'Cinzel',serif; font-size:6pt; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:1mm}
+.ck-head--3{grid-template-columns:minmax(0,1fr) 14mm 14mm}
+.ck-grid{display:grid; grid-template-columns:1fr 1fr; column-gap:6mm}
+.ck{padding:1.5mm 0; border-bottom:.2mm dotted rgba(122,105,136,.55)}
+.ck__row{display:grid; grid-template-columns:minmax(0,1fr) 14mm 14mm; gap:2mm; align-items:baseline}
+.ck__name{font-family:'Cinzel',serif; font-size:8.2pt; font-weight:700}
+.ck__hh{font-family:'Cinzel',serif; font-size:9pt; font-weight:800; color:var(--gold-700); text-align:right}
+.ck__price{text-align:right; color:var(--ink)}
+.duo{display:grid; grid-template-columns:1fr 1fr; gap:6mm; margin-top:2mm}
+.page--cover{
+  background:radial-gradient(circle at 50% 25%, #5f3477 0%, #432155 55%, #24102e 100%);
+  color:#fff;
+}
+.page--cover .page-num{color:#d8b257}
+.cover-inner{position:absolute; inset:12mm; display:grid; grid-template-rows:auto 1fr auto; text-align:center}
+.cover-lead{font-family:'Cinzel',serif}
+.cover-eyebrow{letter-spacing:.32em; font-size:11pt; font-weight:700}
+.cover-lead p{margin:2mm 0 0; letter-spacing:.16em; font-size:8pt}
+.cover-lead-sub{opacity:.92}
+.cover-medal{display:flex; align-items:center; justify-content:center}
+.cover-medal__ring{
+  width:78mm; height:78mm; border-radius:50%; background:#fff;
+  border:1.2mm solid var(--gold-500);
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+}
+.cover-medal img{width:86%; height:auto}
+.cover-cta{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:62mm; min-height:11mm; padding:2mm 8mm; margin:0 auto 4mm;
+  border:1px solid rgba(216,178,87,.55); border-radius:999px;
+  font-family:'Cinzel',serif; letter-spacing:.18em; font-size:10pt;
+}
+.cover-addr{font-family:'Cinzel',serif; letter-spacing:.14em; font-size:8pt; line-height:1.5; text-transform:uppercase}
+.cover-links{display:flex; justify-content:center; gap:3mm; margin-top:4mm}
+.cover-links span{
+  flex:1; max-width:72mm; min-height:10mm; display:flex; align-items:center; justify-content:center;
+  border:1px solid rgba(216,178,87,.45); border-radius:999px;
+  font-family:'Cinzel',serif; letter-spacing:.1em; font-size:7.4pt;
+}
+@media print{
+  @page{size:A4 portrait; margin:0}
+  html,body{width:210mm; background:#fff}
+  .toolbar,.sheet{padding:0}
+  .toolbar{display:none !important}
+  .page{margin:0; box-shadow:none; page-break-after:always; break-after:page}
+  .page:last-child{page-break-after:auto; break-after:auto}
+  *{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+}
+
+</style>
+</head>
+<body>
+  <nav class="toolbar">
+    <a href="index.html">↩ Site</a>
+    <button class="primary" type="button" onclick="window.print()">Enregistrer en PDF</button>
+  </nav>
+  <main class="sheet">
+<!-- PAGE 1 : Couverture -->
+<section class="page page--cover" data-page="1">
+
+  <div class="cover-inner">
+    <div class="cover-lead">
+      <div class="cover-eyebrow">✦ LA CARTE ✦</div>
+      <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
+      <p class="cover-lead-sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+    </div>
+    <div class="cover-medal">
+      <div class="cover-medal__ring">
+        <img src="logo-gambetta.png" alt="La Colline Gambetta">
+      </div>
+    </div>
+    <div class="cover-bottom">
+      <div class="cover-cta">MENU &amp; CARTE</div>
+      <p class="cover-addr">4 RUE BELGRAND • 75020 PARIS<br>PLACE GAMBETTA</p>
+      <div class="cover-links">
+        <span>◎ LACOLLINE.GAMBETTA</span>
+        <span>☎ 01 43 49 05 93</span>
+      </div>
+    </div>
+  </div>
+
+<div class="page-num">1</div>
+</section>
+<!-- PAGE 2 : Entrées -->
+<section class="page" data-page="2">
+  <header class="page-top">
+    <div class="brand-kicker">LA</div>
+    <div class="brand-name">COLLINE</div>
+    <div class="brand-sub">GAMBETTA</div>
+    <p class="brand-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+    <p class="brand-meta brand-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+  </header>
+  <div class="page-body">
+
+    <div class="sec-head"><h2>Entrées</h2></div>
+    <div class="grid-2">
+      <article class="dish">
+  <div class="dish__row"><h3>Assiette de foie gras du Sud-Ouest</h3><strong>17,90</strong></div>
+  <p class="note">Pain toasté, confiture d’abricots</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Œufs au plat</h3><strong>9,90</strong></div>
+  <p class="note">Salade</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Pâté de campagne et cornichons</h3><strong>6,50</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Œuf dur mayonnaise</h3><strong>6,20</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>6 Escargots de Bourgogne</h3><strong>7,90</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>6 Escargots au Roquefort</h3><strong>7,90</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Assiette de saumon fumé</h3><strong>7,50</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Tartare d’avocat et crevettes</h3><strong>8,90</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Salade au poulet</h3><strong>8,90</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Œuf cocotte du moment</h3><strong>7,90</strong></div>
+  
+</article>
+    </div>
+    <div class="sec-head"><h2>Planches &amp; croques</h2></div>
+    <div class="grid-2">
+      <article class="dish">
+  <div class="dish__row"><h3>La Cochonnaille</h3><strong>17,50</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>La Fromagère</h3><strong>15,90</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>La Paysanne</h3><strong>21,90</strong></div>
+  <p class="note">Charcuterie et fromages</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Croque-Monsieur</h3><strong>12,70</strong></div>
+  <p class="note">Frites et salade</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Croque-Madame</h3><strong>13,70</strong></div>
+  <p class="note">Frites et salade</p>
+</article>
+    </div>
+    <div class="sec-head"><h2>Omelettes</h2></div>
+    <div class="grid-2">
+      <article class="dish">
+  <div class="dish__row"><h3>Omelette nature</h3><strong>9,90</strong></div>
+  <p class="note">Salade</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Omelette au fromage</h3><strong>10,90</strong></div>
+  <p class="note">Salade</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Omelette au jambon</h3><strong>10,90</strong></div>
+  <p class="note">Salade</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Omelette mixte</h3><strong>14,90</strong></div>
+  <p class="note">Salade</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Omelette aux champignons</h3><strong>13,90</strong></div>
+  <p class="note">Salade</p>
+</article>
+    </div>
+
+  </div>
+  <footer class="page-foot">
+    <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
+    <strong>LA COLLINE GAMBETTA</strong>
+    <div>BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta</div>
+    <small>L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
+  </footer>
+  <div class="page-num">2</div>
+</section>
+<!-- PAGE 3 : Plats -->
+<section class="page" data-page="3">
+  <header class="page-top">
+    <div class="brand-kicker">LA</div>
+    <div class="brand-name">COLLINE</div>
+    <div class="brand-sub">GAMBETTA</div>
+    <p class="brand-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+    <p class="brand-meta brand-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+  </header>
+  <div class="page-body">
+
+    <div class="sec-head"><h2>Plats</h2></div>
+    <div class="grid-2">
+      <article class="dish">
+  <div class="dish__row"><h3>Entrecôte 300 g</h3><strong>25,90</strong></div>
+  <p class="note">Fleur de sel, sauce au choix</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Bavette d’aloyau</h3><strong>17,50</strong></div>
+  <p class="note">Sauce au choix</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Escalope de veau</h3><strong>19,90</strong></div>
+  <p class="note">Sauce champignons, pâtes</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Cuisse de canard confite</h3><strong>19,70</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Poisson</h3><strong>17,90</strong></div>
+  <p class="note">Selon arrivage</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Tartare de bœuf</h3><strong>17,80</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Cuisse de poulet rôtie</h3><strong>16,20</strong></div>
+  <p class="note">Riz basmati</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Carpaccio de bœuf</h3><strong>17,50</strong></div>
+  
+</article>
+    </div>
+    <div class="sec-head"><h2>Burgers</h2></div>
+    <div class="grid-2">
+      <article class="dish">
+  <div class="dish__row"><h3>Burger La Colline</h3><strong>18,20</strong></div>
+  <p class="note">Pain brioché, cheddar, steak haché, bacon, oignons caramélisés, salade, tomate, sauce burger.</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Le Royal Fishburger</h3><strong>17,90</strong></div>
+  <p class="note">Pain brioché, cheddar, poisson pané, légumes grillés, salade, tomate, sauce burger.</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Burger Chicken Croustillant</h3><strong>17,90</strong></div>
+  <p class="note">Pain brioché, cheddar, escalope de poulet pané croustillant, oignons caramélisés, salade, tomate, sauce burger.</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Burger Végétarien</h3><strong>17,70</strong></div>
+  <p class="note">Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger.</p>
+</article>
+    </div>
+    <div class="sec-head"><h2>Salades</h2></div>
+    <div class="grid-2">
+      <article class="dish">
+  <div class="dish__row"><h3>La Colline</h3><strong>17,10</strong></div>
+  <p class="note">Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Chèvre Chaud</h3><strong>16,90</strong></div>
+  <p class="note">Salade verte, tomate, jambon sec, toast de cabécou, noix, miel.</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Végétarienne</h3><strong>13,60</strong></div>
+  <p class="note">Salade verte, tomate, concombre, carottes râpées, légumes grillés, avocat.</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Nordique</h3><strong>17,90</strong></div>
+  <p class="note">Salade verte, saumon fumé, crevettes, avocat, concombre, tomate, feta, croûtons.</p>
+</article>
+    </div>
+    <div class="frites">
+      <h3>Assiette de frites</h3>
+      <strong>5,20</strong>
+      <p>Sauce au choix : poivre • champignons • roquefort — supplément sauce 2,00</p>
+    </div>
+
+  </div>
+  <footer class="page-foot">
+    <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
+    <strong>LA COLLINE GAMBETTA</strong>
+    <div>BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta</div>
+    <small>L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
+  </footer>
+  <div class="page-num">3</div>
+</section>
+<!-- PAGE 4 : Desserts -->
+<section class="page" data-page="4">
+  <header class="page-top">
+    <div class="brand-kicker">LA</div>
+    <div class="brand-name">COLLINE</div>
+    <div class="brand-sub">GAMBETTA</div>
+    <p class="brand-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+    <p class="brand-meta brand-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+  </header>
+  <div class="page-body">
+
+    <div class="sec-head"><h2>Desserts</h2></div>
+    <div class="grid-2">
+      <article class="dish">
+  <div class="dish__row"><h3>Crème brûlée</h3><strong>6,80</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Mousse au chocolat</h3><strong>7,10</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Panna cotta</h3><strong>7,50</strong></div>
+  <p class="note">Coulis de fruits rouges</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Tiramisu</h3><strong>7,50</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Tarte aux pommes</h3><strong>8,50</strong></div>
+  <p class="note">Glace vanille</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Pain perdu de la Colline</h3><strong>8,50</strong></div>
+  <p class="note">Glace vanille ou caramel beurre salé</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Moelleux au chocolat</h3><strong>7,90</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Café gourmand</h3><strong>8,90</strong></div>
+  <p class="note">Thé gourmand : +1 € · Assortiment de mignardises</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Profiteroles</h3><strong>7,90</strong></div>
+  
+</article>
+    </div>
+    <div class="sec-head"><h2>Glaces</h2></div>
+    <div class="grid-2">
+      <article class="dish">
+  <div class="dish__row"><h3>Crème glacée (3 boules)</h3><strong>8,50</strong></div>
+  <p class="note">Vanille, caramel beurre salé, chocolat, café, pistache, noisette</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Sorbet (3 boules)</h3><strong>8,50</strong></div>
+  <p class="note">Citron vert, fraise, framboise</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Dame blanche aux éclats de chocolat</h3><strong>8,90</strong></div>
+  <p class="note">2 boules vanille, sauce chocolat, chantilly</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Chocolat liégeois</h3><strong>8,90</strong></div>
+  <p class="note">2 boules chocolat, sauce chocolat, chantilly</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Café liégeois</h3><strong>8,90</strong></div>
+  <p class="note">2 boules café, expresso, chantilly</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Caramello</h3><strong>8,90</strong></div>
+  <p class="note">2 boules caramel beurre salé, sauce caramel, chantilly</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Le Colonel de la Colline</h3><strong>8,90</strong></div>
+  <p class="note">2 boules citron vert arrosées de vodka (2 cl)</p>
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Supplément boule de glace ou sorbet</h3><strong>3,00</strong></div>
+  
+</article>
+    </div>
+    <div class="sec-head"><h2>Fromages</h2></div>
+    <div class="grid-2">
+      <article class="dish">
+  <div class="dish__row"><h3>Pont-l’Évêque</h3><strong>5,90</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Fourme d’Ambert</h3><strong>6,90</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Cantal</h3><strong>6,90</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Chèvre</h3><strong>5,90</strong></div>
+  
+</article>
+      <article class="dish">
+  <div class="dish__row"><h3>Assiette mixte</h3><strong>8,50</strong></div>
+  
+</article>
+    </div>
+
+  </div>
+  <footer class="page-foot">
+    <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
+    <strong>LA COLLINE GAMBETTA</strong>
+    <div>BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta</div>
+    <small>L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
+  </footer>
+  <div class="page-num">4</div>
+</section>
+<!-- PAGE 5 : Formules & menus -->
+<section class="page" data-page="5">
+  <header class="page-top">
+    <div class="brand-kicker">LA</div>
+    <div class="brand-name">COLLINE</div>
+    <div class="brand-sub">GAMBETTA</div>
+    <p class="brand-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+    <p class="brand-meta brand-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+  </header>
+  <div class="page-body">
+
+    <div class="sec-head"><h2>Formules</h2></div>
+    <div class="offers">
+      <article class="offer">
+        <div class="gold-pill">Formule Duo</div>
+        <p class="offer-sub"><strong>Entrée + plat</strong> <em>ou</em> <strong>plat + dessert</strong></p>
+        <div class="offer-price">24,90</div>
+        <p class="offer-foot">Choix ci-dessous</p>
+      </article>
+      <article class="offer offer--accent">
+        <div class="gold-pill">La formule complète</div>
+        <p class="offer-sub">Entrée + plat + dessert</p>
+        <div class="offer-price">29,90</div>
+        <p class="offer-foot">Choix ci-dessous</p>
+      </article>
+    </div>
+    <div class="choices">
+      <article class="choice">
+        <h3><span>1</span> Entrée au choix</h3>
+        <ul>
+          <li>Salade au poulet</li>
+          <li>Escargots de Bourgogne</li>
+          <li>Pâté de campagne</li>
+          <li>Œuf cocotte</li>
+          <li>Assiette de charcuterie</li>
+        </ul>
+      </article>
+      <article class="choice">
+        <h3><span>2</span> Plat au choix</h3>
+        <ul>
+          <li>Escalope de veau</li>
+          <li>Bavette d’aloyau — Sauce au choix</li>
+          <li>Cuisse de canard confite</li>
+        </ul>
+      </article>
+      <article class="choice">
+        <h3><span>3</span> Dessert au choix</h3>
+        <ul>
+          <li>Panna cotta</li>
+          <li>Crème brûlée</li>
+          <li>Mousse au chocolat</li>
+          <li>Tiramisu</li>
+          <li>2 boules de glace — Parfum au choix</li>
+        </ul>
+      </article>
+    </div>
+    <div class="menus-row">
+      <div class="menus-left">
+        <article class="mini-card">
+          <div class="gold-pill">Menu enfant</div>
+          <p class="mini-sub">Moins de 12 ans</p>
+          <ul class="bullets">
+            <li>Eau ou soda</li>
+            <li>Burger enfant ou Cordon bleu</li>
+            <li>Frites maison</li>
+            <li>1 boule de glace (parfum au choix)</li>
+          </ul>
+          <div class="mini-price">11,90</div>
+        </article>
+        <article class="mini-card">
+          <div class="violet-pill">Petit déjeuner</div>
+          <ul class="bullets">
+            <li>Boisson chaude au choix</li>
+            <li>Croissant ou Tartine au beurre</li>
+            <li>Verre de jus de fruits au choix</li>
+          </ul>
+          <div class="mini-price">7,00</div>
+        </article>
+      </div>
+      <article class="day-card">
+        <div class="gold-pill">Menu du jour</div>
+        <p class="day-sub">Choix selon l’ardoise</p>
+        <div class="day-box">
+          <p class="day-desc">Entrée + plat <em>ou</em> plat + dessert</p>
+          <strong>17,90</strong>
+        </div>
+        <div class="day-box">
+          <p class="day-desc">Entrée + plat + dessert</p>
+          <strong>21,90</strong>
+        </div>
+        <p class="day-note">Uniquement le midi — sauf weekends et jours fériés</p>
+      </article>
+    </div>
+
+  </div>
+  <footer class="page-foot">
+    <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
+    <strong>LA COLLINE GAMBETTA</strong>
+    <div>BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta</div>
+    <small>L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
+  </footer>
+  <div class="page-num">5</div>
+</section>
+<!-- PAGE 6 : Boissons -->
+<section class="page" data-page="6">
+  <header class="page-top">
+    <div class="brand-kicker">LA</div>
+    <div class="brand-name">COLLINE</div>
+    <div class="brand-sub">GAMBETTA</div>
+    <p class="brand-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+    <p class="brand-meta brand-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+  </header>
+  <div class="page-body">
+
+    <div class="sec-head"><h2>Boissons fraîches</h2></div>
+    <div class="grid-2 drinks">
+      <div>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Vittel</span><span class="dots"></span><strong>3,90 / 4,90 / 5,90</strong></div>
+  <p class="note">25 cl / 50 cl / 1 L</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">San Pellegrino</span><span class="dots"></span><strong>4,90 / 6,20</strong></div>
+  <p class="note">50 cl / 1 L</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Badoit</span><span class="dots"></span><strong>4,90 / 6,20</strong></div>
+  <p class="note">33 cl / 1 L</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Perrier</span><span class="dots"></span><strong>4,90</strong></div>
+  <p class="note">33 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Coca / Zéro / Cherry</span><span class="dots"></span><strong>4,90</strong></div>
+  <p class="note">33 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Fanta / Sprite / Fuze Tea</span><span class="dots"></span><strong>4,90</strong></div>
+  <p class="note">25 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Orangina / Citronnade / Ginger Beer</span><span class="dots"></span><strong>4,90</strong></div>
+  <p class="note">25 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Diabolo / Limonade</span><span class="dots"></span><strong>4,90</strong></div>
+  <p class="note">25 cl</p>
+</article>
+      </div>
+      <div>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Schweppes Tonic / Agrumes</span><span class="dots"></span><strong>4,90</strong></div>
+  <p class="note">25 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Jus / Nectar de fruits</span><span class="dots"></span><strong>4,90</strong></div>
+  <p class="note">25 cl · orange, pomme, ananas, abricot, fraise, tomate</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Sirop à l’eau</span><span class="dots"></span><strong>3,00</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Supplément sirop · 2 cl</span><span class="dots"></span><strong>0,50</strong></div>
+  <p class="note">grenadine • fraise • citron • menthe • pêche • violette • passion • vanille • coco • orgeat • cassis</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Orange pressée / Citron pressé</span><span class="dots"></span><strong>5,50</strong></div>
+  <p class="note">25 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Milkshake</span><span class="dots"></span><strong>5,90</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Café frappé</span><span class="dots"></span><strong>4,90</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Latte frappé</span><span class="dots"></span><strong>5,50</strong></div>
+  
+</article>
+      </div>
+    </div>
+    <div class="sec-head"><h2>Boissons chaudes</h2></div>
+    <div class="grid-2 drinks">
+      <div>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Café</span><span class="dots"></span><strong>2,40</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Décaféiné</span><span class="dots"></span><strong>2,50</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Café noisette / allongé</span><span class="dots"></span><strong>2,60</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Double café / décaféiné</span><span class="dots"></span><strong>4,80</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Café crème / chocolat chaud</span><span class="dots"></span><strong>4,50</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Cappuccino</span><span class="dots"></span><strong>5,10</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Crème / chocolat viennois</span><span class="dots"></span><strong>5,10</strong></div>
+  
+</article>
+      </div>
+      <div>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Café viennois</span><span class="dots"></span><strong>4,90</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Infusion / thé parfumé</span><span class="dots"></span><strong>4,90</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Grog</span><span class="dots"></span><strong>5,90</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Vin chaud aux épices</span><span class="dots"></span><strong>4,90</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Irish coffee</span><span class="dots"></span><strong>9,90</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Café allongé</span><span class="dots"></span><strong>2,90</strong></div>
+  <p class="note">Caramel ou vanille</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Lait chaud</span><span class="dots"></span><strong>3,20</strong></div>
+  
+</article>
+      </div>
+    </div>
+
+  </div>
+  <footer class="page-foot">
+    <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
+    <strong>LA COLLINE GAMBETTA</strong>
+    <div>BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta</div>
+    <small>L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
+  </footer>
+  <div class="page-num">6</div>
+</section>
+<!-- PAGE 7 : Apéritifs, whiskies, digestifs, bières -->
+<section class="page" data-page="7">
+  <header class="page-top">
+    <div class="brand-kicker">LA</div>
+    <div class="brand-name">COLLINE</div>
+    <div class="brand-sub">GAMBETTA</div>
+    <p class="brand-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+    <p class="brand-meta brand-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+  </header>
+  <div class="page-body">
+
+    <div class="sec-head"><h2>Apéritifs</h2></div>
+    <div class="grid-2 drinks">
+      <div>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Martini</span><span class="dots"></span><strong>4,50</strong></div>
+  <p class="note">5 cl — Blanc, rouge</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Ricard / Pastis</span><span class="dots"></span><strong>3,90</strong></div>
+  <p class="note">2 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Kir</span><span class="dots"></span><strong>4,50</strong></div>
+  <p class="note">12 cl — Cassis, framboise, mûre, pêche</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Kir Royal</span><span class="dots"></span><strong>10,90</strong></div>
+  <p class="note">12 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Americano</span><span class="dots"></span><strong>8,60</strong></div>
+  <p class="note">8 cl</p>
+</article>
+      </div>
+      <div>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Negroni</span><span class="dots"></span><strong>8,90</strong></div>
+  <p class="note">8 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Porto</span><span class="dots"></span><strong>4,50</strong></div>
+  <p class="note">5 cl — Blanc, rouge</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Suze / Campari</span><span class="dots"></span><strong>4,50</strong></div>
+  <p class="note">5 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Muscat / Salers</span><span class="dots"></span><strong>4,50</strong></div>
+  <p class="note">5 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Cidre brut</span><span class="dots"></span><strong>4,90</strong></div>
+  <p class="note">25 cl</p>
+</article>
+      </div>
+    </div>
+    <div class="sec-head"><h2>Whiskies</h2><p class="sec-sub">4 cl</p></div>
+    <div class="drinks drinks--single">
+      <article class="drink">
+  <div class="drink__row"><span class="drink__name">Clan Campbell</span><span class="dots"></span><strong>7,60</strong></div>
+  
+</article>
+      <article class="drink">
+  <div class="drink__row"><span class="drink__name">Jameson</span><span class="dots"></span><strong>7,80</strong></div>
+  
+</article>
+      <article class="drink">
+  <div class="drink__row"><span class="drink__name">Jack Daniels</span><span class="dots"></span><strong>8,60</strong></div>
+  
+</article>
+      <article class="drink">
+  <div class="drink__row"><span class="drink__name">Johnny Walker</span><span class="dots"></span><strong>8,80</strong></div>
+  
+</article>
+      <article class="drink">
+  <div class="drink__row"><span class="drink__name">Chivas Regal</span><span class="dots"></span><strong>8,80</strong></div>
+  
+</article>
+    </div>
+    <div class="sec-head"><h2>Digestifs</h2><p class="sec-sub">4 cl</p></div>
+    <div class="grid-2 drinks">
+      <div>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Bas Armagnac VSOP</span><span class="dots"></span><strong>7,20</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Rhum des Îles, Calvados</span><span class="dots"></span><strong>6,20</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Vodka</span><span class="dots"></span><strong>6,90</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Get 27 / 31, Bailey’s, Malibu</span><span class="dots"></span><strong>7,10</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Cognac VSOP</span><span class="dots"></span><strong>7,20</strong></div>
+  
+</article>
+      </div>
+      <div>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Manzana Verde</span><span class="dots"></span><strong>6,10</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Vieille Prune de Souillac</span><span class="dots"></span><strong>7,20</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Poire, Mirabelle, Framboise</span><span class="dots"></span><strong>7,20</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Amaretto, Fernet Branca</span><span class="dots"></span><strong>7,20</strong></div>
+  
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Grand Marnier, Cointreau</span><span class="dots"></span><strong>7,20</strong></div>
+  
+</article>
+      </div>
+    </div>
+    <div class="sec-head"><h2>Bières</h2></div>
+    <div class="grid-2 beers">
+      <div>
+        <p class="beer-label">Bouteille</p>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Heineken</span><span class="dots"></span><strong>4,90</strong></div>
+  <p class="note">25 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">1664 Blanc</span><span class="dots"></span><strong>4,90</strong></div>
+  <p class="note">25 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Desperados</span><span class="dots"></span><strong>5,90</strong></div>
+  <p class="note">33 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Corona</span><span class="dots"></span><strong>6,20</strong></div>
+  <p class="note">33 cl</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Bière sans alcool</span><span class="dots"></span><strong>4,90</strong></div>
+  <p class="note">25 cl</p>
+</article>
+      </div>
+      <div>
+        <p class="beer-label">Pression</p>
+        <div class="beer-table">
+          <div class="beer-head"><span></span><span>25 cl</span><span>Pinte</span><span>HH</span></div>
+          <div class="beer-row"><span>La Semeuse</span><strong>3,40</strong><strong>6,20</strong><b>3,90</b></div>
+          <div class="beer-row"><span>Valmy Blanche bio</span><strong>4,30</strong><strong>7,90</strong><b>6,00</b></div>
+          <div class="beer-row"><span>Triple d’Orgemont bio</span><strong>4,80</strong><strong>9,50</strong><b>8,50</b></div>
+          <div class="beer-row"><span>Légionnaire IPA</span><strong>4,50</strong><strong>8,80</strong><b>7,00</b></div>
+        </div>
+      </div>
+    </div>
+    <p class="hh-banner">✦ Happy Hour (HH) · 17h → 23h ✦</p>
+
+  </div>
+  <footer class="page-foot">
+    <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
+    <strong>LA COLLINE GAMBETTA</strong>
+    <div>BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta</div>
+    <small>L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
+  </footer>
+  <div class="page-num">7</div>
+</section>
+<!-- PAGE 8 : Vins -->
+<section class="page" data-page="8">
+  <header class="page-top">
+    <div class="brand-kicker">LA</div>
+    <div class="brand-name">COLLINE</div>
+    <div class="brand-sub">GAMBETTA</div>
+    <p class="brand-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+    <p class="brand-meta brand-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+  </header>
+  <div class="page-body">
+
+    <div class="sec-head"><h2>Vin rouge</h2></div>
+    <table class="wines">
+      <thead><tr><th>N°</th><th class="app">Appellation</th><th>12,5 cl</th><th>25 cl</th><th>50 cl</th><th>75 cl</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td class="app">Côtes du Rhône AOP Bio — Les 3 Garçons</td><td>4,90</td><td>9,50</td><td>17,90</td><td>21,90</td></tr>
+        <tr><td class="n">2</td><td class="app">Bordeaux AOP — L’Attrape Rêve</td><td>5,20</td><td>9,90</td><td>18,90</td><td>22,90</td></tr>
+        <tr><td class="n">3</td><td class="app">Bourgueil AOP — Prestige &amp; Tradition</td><td>5,40</td><td>10,40</td><td>19,50</td><td>23,90</td></tr>
+        <tr><td class="n">4</td><td class="app">Côtes de Bourg AOP — Hipster de Barbe</td><td>5,60</td><td>10,50</td><td>19,80</td><td>24,90</td></tr>
+        <tr><td class="n">5</td><td class="app">Lussac-Saint-Émilion AOP — Grand Ricombre</td><td>6,60</td><td>12,80</td><td>23,90</td><td>29,90</td></tr>
+        <tr><td class="n">6</td><td class="app">Brouilly AOP — Réserve de Beauvoisie</td><td>6,90</td><td>13,60</td><td>26,50</td><td>32,90</td></tr>
+        <tr><td class="n">7</td><td class="app">IGP Pays d’Oc Bio — Laroche La Chevrière Pinot Noir</td><td>5,90</td><td>10,90</td><td>19,90</td><td>26,90</td></tr>
+        <tr><td class="n">8</td><td class="app">Bourgogne Côte Chalonnaise AOP — Millebuis Pinot Noir</td><td>8,30</td><td>15,90</td><td>29,90</td><td>37,60</td></tr>
+        <tr><td class="n">9</td><td class="app">Pic Saint-Loup AOP — Puech de Fourques</td><td>—</td><td>—</td><td>—</td><td>38,70</td></tr>
+        <tr><td class="n">10</td><td class="app">Crozes-Hermitage AOP — Chante Passo</td><td>—</td><td>—</td><td>—</td><td>45,90</td></tr>
+        <tr><td class="n">11</td><td class="app">Gigondas AOP Bio — Pierre Amadieu Romane Machotte</td><td>—</td><td>—</td><td>—</td><td>58,00</td></tr>
+      </tbody>
+    </table>
+    <div class="sec-head"><h2>Vin blanc</h2></div>
+    <table class="wines">
+      <thead><tr><th>N°</th><th class="app">Appellation</th><th>12,5 cl</th><th>25 cl</th><th>50 cl</th><th>75 cl</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td class="app">Bourgogne Côte Chalonnaise AOP — Millebuis Chardonnay</td><td>7,80</td><td>15,50</td><td>29,90</td><td>36,90</td></tr>
+        <tr><td class="n">2</td><td class="app">Petit Chablis AOP — La Revrie</td><td>8,30</td><td>16,20</td><td>30,50</td><td>42,10</td></tr>
+        <tr><td class="n">3</td><td class="app">IGP Pays d’Oc — Le Sudiste Chardonnay</td><td>4,60</td><td>8,90</td><td>15,90</td><td>22,50</td></tr>
+        <tr><td class="n">4</td><td class="app">IGP Pays de l’Hérault Bio — Domaine de Petit Roubié Sauvignon</td><td>5,60</td><td>10,80</td><td>19,80</td><td>27,90</td></tr>
+        <tr><td class="n">5</td><td class="app">IGT Terre Siciliane Bio — Vinisella Pinot Grigio La Passione</td><td>4,50</td><td>8,60</td><td>15,50</td><td>21,90</td></tr>
+        <tr><td class="n">6</td><td class="app">IGP Côtes de Thau Moelleux — L’Or de l’Ange</td><td>6,90</td><td>13,50</td><td>25,90</td><td>35,80</td></tr>
+      </tbody>
+    </table>
+    <div class="sec-head"><h2>Vin rosé</h2></div>
+    <table class="wines">
+      <thead><tr><th>N°</th><th class="app">Appellation</th><th>12,5 cl</th><th>25 cl</th><th>50 cl</th><th>75 cl</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td class="app">Côtes de Provence AOP Bio — MV Presqu’île de St-Tropez — Romain Desbastides</td><td>7,60</td><td>14,50</td><td>26,90</td><td>33,90</td></tr>
+        <tr><td class="n">2</td><td class="app">IGP Méditerranée Bio — La Demoiselle sans Gêne</td><td>5,60</td><td>10,50</td><td>19,90</td><td>29,90</td></tr>
+        <tr><td class="n">3</td><td class="app">IGP Méditerranée — Le Roi Soleil</td><td>5,30</td><td>9,40</td><td>18,40</td><td>26,10</td></tr>
+      </tbody>
+    </table>
+    <div class="sec-head"><h2>Bulles</h2></div>
+    <table class="wines wines--short">
+      <thead><tr><th class="app">Appellation</th><th>Coupe 12 cl</th><th>75 cl</th></tr></thead>
+      <tbody>
+        <tr><td class="app">Champagne H. Richard — Cuvée Henri</td><td>10,50</td><td>62,00</td></tr>
+        <tr><td class="app">Champagne Nicolas Feuillatte — Brut Réserve Exclusive</td><td>—</td><td>81,00</td></tr>
+        <tr><td class="app">Prosecco Spumante Il Poggio — Blanc de Noirs Extra Dry</td><td>4,90</td><td>28,90</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+  <footer class="page-foot">
+    <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
+    <strong>LA COLLINE GAMBETTA</strong>
+    <div>BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta</div>
+    <small>L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
+  </footer>
+  <div class="page-num">8</div>
+</section>
+<!-- PAGE 9 : Cocktails -->
+<section class="page" data-page="9">
+  <header class="page-top">
+    <div class="brand-kicker">LA</div>
+    <div class="brand-name">COLLINE</div>
+    <div class="brand-sub">GAMBETTA</div>
+    <p class="brand-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+    <p class="brand-meta brand-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+  </header>
+  <div class="page-body">
+
+    <div class="sec-head"><h2>Cocktails classiques</h2><p class="sec-sub">✦ Happy Hour (HH) · 17h → 23h ✦</p></div>
+    <div class="ck-head"><span></span><span>Prix</span><span>HH</span><span></span><span>Prix</span><span>HH</span></div>
+    <div class="ck-grid">
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Mojito</span><strong class="ck__price">7,90</strong><strong class="ck__hh">6,00</strong></div>
+  <p class="note">Rhum, menthe fraîche, citron vert, sucre de canne, eau gazeuse</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Piña Colada</span><strong class="ck__price">7,50</strong><strong class="ck__hh">5,00</strong></div>
+  <p class="note">Rhum, jus d’ananas, crème de coco</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Caïpirinha</span><strong class="ck__price">7,50</strong><strong class="ck__hh">5,00</strong></div>
+  <p class="note">Cachaça, jus de citron vert, sucre de canne</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Strawberry Colada</span><strong class="ck__price">7,90</strong><strong class="ck__hh">6,00</strong></div>
+  <p class="note">Rhum, jus d’ananas, sirop de fraise, crème de coco</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Caïpiroska</span><strong class="ck__price">7,50</strong><strong class="ck__hh">6,00</strong></div>
+  <p class="note">Vodka, jus de citron vert, sucre de canne</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Cuba Libre</span><strong class="ck__price">7,50</strong><strong class="ck__hh">5,00</strong></div>
+  <p class="note">Rhum, Coca-Cola, jus de citron</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Ti-Punch</span><strong class="ck__price">7,50</strong><strong class="ck__hh">5,00</strong></div>
+  <p class="note">Rhum, jus de citron vert, sucre de canne</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Tequila Sunrise</span><strong class="ck__price">7,50</strong><strong class="ck__hh">6,00</strong></div>
+  <p class="note">Tequila, jus d’orange, sirop de grenadine</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Mai Tai</span><strong class="ck__price">8,90</strong><strong class="ck__hh">7,00</strong></div>
+  <p class="note">Rhum blanc, rhum ambré, jus de citron vert, Cointreau, sirop d’orgeat</p>
+</article>
+    </div>
+    <div class="duo">
+      <div>
+        <div class="sec-head"><h2>Spritz &amp; fraîcheur</h2></div>
+        <div class="ck-head ck-head--3"><span></span><span>Prix</span><span>HH</span></div>
+        <article class="ck">
+  <div class="ck__row"><span class="ck__name">Spritz</span><strong class="ck__price">8,90</strong><strong class="ck__hh">7,00</strong></div>
+  <p class="note">Apérol, Prosecco, orange, eau gazeuse</p>
+</article>
+        <article class="ck">
+  <div class="ck__row"><span class="ck__name">St-Germain Spritz</span><strong class="ck__price">9,90</strong><strong class="ck__hh">8,50</strong></div>
+  <p class="note">Liqueur de fleurs de sureau, Prosecco, orange, eau gazeuse</p>
+</article>
+        <article class="ck">
+  <div class="ck__row"><span class="ck__name">Suze Tonic</span><strong class="ck__price">7,50</strong><strong class="ck__hh">5,00</strong></div>
+  <p class="note">Suze, Schweppes Tonic, jus de citron</p>
+</article>
+        <article class="ck">
+  <div class="ck__row"><span class="ck__name">La Colline</span><strong class="ck__price">7,90</strong><strong class="ck__hh">6,00</strong></div>
+  <p class="note">Tequila, jus de citron vert, sirop de cassis, Schweppes Tonic</p>
+</article>
+        <article class="ck">
+  <div class="ck__row"><span class="ck__name">Gin Tonic</span><strong class="ck__price">7,50</strong><strong class="ck__hh">6,00</strong></div>
+  <p class="note">Gin, Schweppes Tonic, jus de citron</p>
+</article>
+      </div>
+      <div>
+        <div class="sec-head"><h2>Mules &amp; fizz</h2></div>
+        <div class="ck-head ck-head--3"><span></span><span>Prix</span><span>HH</span></div>
+        <article class="ck">
+  <div class="ck__row"><span class="ck__name">Moscow Mule</span><strong class="ck__price">7,90</strong><strong class="ck__hh">6,00</strong></div>
+  <p class="note">Vodka, jus de citron vert, ginger beer</p>
+</article>
+        <article class="ck">
+  <div class="ck__row"><span class="ck__name">Jamaïcan Mule</span><strong class="ck__price">7,90</strong><strong class="ck__hh">6,00</strong></div>
+  <p class="note">Rhum, jus de citron vert, ginger beer</p>
+</article>
+        <article class="ck">
+  <div class="ck__row"><span class="ck__name">London Mule</span><strong class="ck__price">7,90</strong><strong class="ck__hh">6,00</strong></div>
+  <p class="note">Gin, jus de citron vert, ginger beer</p>
+</article>
+        <article class="ck">
+  <div class="ck__row"><span class="ck__name">Gin Fizz</span><strong class="ck__price">7,50</strong><strong class="ck__hh">6,00</strong></div>
+  <p class="note">Gin, jus de citron vert, sucre de canne, limonade</p>
+</article>
+      </div>
+    </div>
+
+  </div>
+  <footer class="page-foot">
+    <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
+    <strong>LA COLLINE GAMBETTA</strong>
+    <div>BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta</div>
+    <small>L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
+  </footer>
+  <div class="page-num">9</div>
+</section>
+<!-- PAGE 10 : Élégance & mocktails -->
+<section class="page" data-page="10">
+  <header class="page-top">
+    <div class="brand-kicker">LA</div>
+    <div class="brand-name">COLLINE</div>
+    <div class="brand-sub">GAMBETTA</div>
+    <p class="brand-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+    <p class="brand-meta brand-meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</p>
+  </header>
+  <div class="page-body">
+
+    <div class="sec-head"><h2>Élégance &amp; saveurs</h2><p class="sec-sub">✦ Happy Hour (HH) · 17h → 23h ✦</p></div>
+    <div class="ck-head"><span></span><span>Prix</span><span>HH</span><span></span><span>Prix</span><span>HH</span></div>
+    <div class="ck-grid">
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Havane Passion</span><strong class="ck__price">7,50</strong><strong class="ck__hh">5,00</strong></div>
+  <p class="note">Rhum, sirop de fruit de la passion, jus de citron</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Sex on the Beach</span><strong class="ck__price">8,90</strong><strong class="ck__hh">7,50</strong></div>
+  <p class="note">Vodka, Cointreau, crème de pêche, jus d’orange, jus de cranberry</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Passion Royal</span><strong class="ck__price">7,90</strong><strong class="ck__hh">6,00</strong></div>
+  <p class="note">Prosecco, vodka, sirop de fruit de la passion, citron vert</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Bloody Mary</span><strong class="ck__price">8,90</strong><strong class="ck__hh">7,50</strong></div>
+  <p class="note">Vodka, jus de tomate, jus de citron et épices</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Margarita</span><strong class="ck__price">7,90</strong><strong class="ck__hh">6,00</strong></div>
+  <p class="note">Tequila, Cointreau, jus de citron vert</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Expresso Martini</span><strong class="ck__price">8,90</strong><strong class="ck__hh">7,50</strong></div>
+  <p class="note">Vodka, liqueur de café, expresso, sucre de canne</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Black Russian</span><strong class="ck__price">8,50</strong><strong class="ck__hh">7,50</strong></div>
+  <p class="note">Vodka, liqueur de café, cerise</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Violette Royale</span><strong class="ck__price">12,90</strong><strong class="ck__hh">—</strong></div>
+  <p class="note">Crème de violette, champagne, cerise</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Madeleine</span><strong class="ck__price">8,90</strong><strong class="ck__hh">7,50</strong></div>
+  <p class="note">Cointreau, amaretto, jus d’ananas</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Spritz Violette</span><strong class="ck__price">10,90</strong><strong class="ck__hh">9,00</strong></div>
+  <p class="note">Prosecco, crème de violette, eau gazeuse, myrtilles</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Cosmopolitan</span><strong class="ck__price">8,90</strong><strong class="ck__hh">7,50</strong></div>
+  <p class="note">Vodka, Cointreau, jus de cranberry, jus de citron vert</p>
+</article>
+      <article class="ck">
+  <div class="ck__row"><span class="ck__name">Aviation</span><strong class="ck__price">10,50</strong><strong class="ck__hh">9,00</strong></div>
+  <p class="note">Gin, crème de violette, jus de citron</p>
+</article>
+    </div>
+    <div class="sec-head"><h2>Mocktails</h2><p class="sec-sub">✦ Sans alcool — 25 CL ✦</p></div>
+    <div class="grid-2 drinks">
+      <div>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">St Valentin</span><span class="dots"></span><strong>5,90</strong></div>
+  <p class="note">Sirop de violette, jus de citron vert, Schweppes Tonic</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Bora Bora</span><span class="dots"></span><strong>5,90</strong></div>
+  <p class="note">Jus d’ananas, jus d’orange, sirop de grenadine</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Virgin Colline</span><span class="dots"></span><strong>5,90</strong></div>
+  <p class="note">Jus d’orange, jus d’ananas, jus de citron, sirop de cassis</p>
+</article>
+      </div>
+      <div>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Virgin Mojito</span><span class="dots"></span><strong>5,90</strong></div>
+  <p class="note">Citron vert, menthe, sucre de canne, eau gazeuse</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Virgin Colada</span><span class="dots"></span><strong>5,90</strong></div>
+  <p class="note">Jus d’ananas, crème de coco</p>
+</article>
+        <article class="drink">
+  <div class="drink__row"><span class="drink__name">Virgin Bloody Mary</span><span class="dots"></span><strong>5,90</strong></div>
+  <p class="note">Jus de tomate, jus de citron, épices</p>
+</article>
+      </div>
+    </div>
+
+  </div>
+  <footer class="page-foot">
+    <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
+    <strong>LA COLLINE GAMBETTA</strong>
+    <div>BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta</div>
+    <small>L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
+  </footer>
+  <div class="page-num">10</div>
+</section>
+  </main>
+<script>
+(function () {
+  const params = new URLSearchParams(location.search);
+  if (params.get('print') === '1') {
+    const start = function () {
+      document.fonts.ready.then(function () { setTimeout(function () { window.print(); }, 250); });
+    };
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start);
+  }
+})();
+</script>
+</body>
+</html>
