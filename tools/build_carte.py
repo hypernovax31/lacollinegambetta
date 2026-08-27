@@ -101,7 +101,21 @@ def extract_cover() -> str:
         a = node.find('<a class="download-card"')
         frag, rest = take_element(node[a:], "a")
         node = node[:a] + rest
-    return node
+    inner_start = node.find('<svg class="relief-inner-svg"')
+    if inner_start < 0:
+        raise SystemExit("cover inner medallion missing")
+    inner_end = node.find("</svg>", inner_start)
+    if inner_end < 0:
+        raise SystemExit("cover inner medallion unclosed")
+    inner_end += len("</svg>")
+    facade = (
+        '<svg class="relief-inner-svg" viewBox="0 0 280 280" '
+        'xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+        '<image href="medallion-facade.png" width="280" height="280" '
+        'preserveAspectRatio="xMidYMid slice"/>'
+        "</svg>"
+    )
+    return node[:inner_start] + facade + node[inner_end:]
 
 
 def page_shell(number: int, kind: str, content: str, cover_html: str | None = None) -> str:
@@ -747,6 +761,15 @@ html.carte-doc .print-page--cover .medallion-container {
   max-width: 108mm !important;
   max-height: 108mm !important;
   margin: 0 auto !important;
+}
+html.carte-doc .print-page--cover .relief-inner-svg {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  width: 66% !important;
+  height: 66% !important;
+  border-radius: 50%;
 }
 html.carte-doc .print-page--cover .cover-footer {
   width: 100%;
