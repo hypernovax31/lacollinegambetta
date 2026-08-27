@@ -96,7 +96,7 @@ def extract_cover() -> str:
     start = INDEX.find('<div class="cover-page">')
     node, _ = take_element(INDEX[start:], "div")
     node = node.replace(' onclick="showView(\'menu\')"', "")
-    node = node.replace('href="#menu-nav-anchor"', 'href="#"')
+    node = node.replace('href="#menu-nav-anchor"', 'href="#carte-p2"')
     while '<a class="download-card"' in node:
         a = node.find('<a class="download-card"')
         frag, rest = take_element(node[a:], "a")
@@ -106,10 +106,10 @@ def extract_cover() -> str:
 
 def page_shell(number: int, kind: str, content: str, cover_html: str | None = None) -> str:
     if kind == "cover":
-        return f'''<section class="print-page print-page--cover" data-page="{number}">
+        return f'''<div class="print-page-frame"><section class="print-page print-page--cover" id="carte-p{number}" data-page="{number}">
 {cover_html}
 <div class="print-page__number">{number}</div>
-</section>'''
+</section></div>'''
     header = '''<header class="print-page__header">
 <div class="print-page__kicker">LA</div>
 <div class="print-page__brand">COLLINE</div>
@@ -120,18 +120,25 @@ def page_shell(number: int, kind: str, content: str, cover_html: str | None = No
     footer = '''<footer class="print-page__footer">
 <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
 <strong>LA COLLINE GAMBETTA</strong>
-<div>BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta</div>
-<small>L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
+<div class="print-page__footer-contact">
+<svg class="print-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>
+<span>lacolline.gambetta</span>
+<span aria-hidden="true">·</span>
+<span>01 43 49 05 93</span>
+<span aria-hidden="true">·</span>
+<span class="print-mail">lacollinegambetta@mailo.com</span>
+</div>
+<small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>'''
     kinds = " ".join(f"print-page--{k}" for k in kind.split())
-    return f'''<section class="print-page {kinds}" data-page="{number}">
+    return f'''<div class="print-page-frame"><section class="print-page {kinds}" id="carte-p{number}" data-page="{number}">
 {header}
 <div class="print-page__content tab-flow">
 {content}
 </div>
 {footer}
 <div class="print-page__number">{number}</div>
-</section>'''
+</section></div>'''
 
 
 EXTRA_CSS = r"""
@@ -143,6 +150,9 @@ html.carte-doc, html.carte-doc body {
   width: auto !important;
   min-width: 0 !important;
 }
+html.carte-doc {
+  --carte-scale: 1;
+}
 html.carte-doc #print-document {
   display: block !important;
   width: 210mm;
@@ -150,7 +160,104 @@ html.carte-doc #print-document {
   padding: 22px 0 40px;
 }
 html.carte-doc .carte-toolbar { display: none !important; }
-html.carte-doc .download-card { display: none !important; }
+html.carte-doc .download-card,
+html.carte-doc .download-btn { display: none !important; }
+
+/* En-tête : titres plus grands, bande violette mieux remplie. */
+html.carte-doc .print-page:not(.print-page--cover) .print-page__header {
+  height: 39mm !important;
+  padding: 2.1mm 7mm 1.8mm !important;
+  row-gap: 0.7mm !important;
+  align-content: space-evenly !important;
+}
+html.carte-doc .print-page__kicker {
+  font-size: 9pt !important;
+  letter-spacing: .38em !important;
+}
+html.carte-doc .print-page__brand {
+  font-size: 29pt !important;
+  letter-spacing: .22em !important;
+  line-height: .88 !important;
+}
+html.carte-doc .print-page__brand--sub {
+  font-size: 14.8pt !important;
+  letter-spacing: .34em !important;
+}
+html.carte-doc .print-page__meta {
+  font-size: 9.4pt !important;
+  letter-spacing: .2em !important;
+}
+html.carte-doc .print-page__meta--sub {
+  font-size: 8.2pt !important;
+  letter-spacing: .18em !important;
+}
+
+/* Pied : logo IG, e-mail en toutes lettres, allergènes avant l’alcool. */
+html.carte-doc .print-page__footer {
+  height: 21mm !important;
+  padding: 1.6mm 9mm 1.2mm !important;
+}
+html.carte-doc .print-page__footer-contact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.7mm;
+  flex-wrap: nowrap;
+  margin: .35mm 0;
+  font-size: 5.6pt;
+  letter-spacing: .08em;
+}
+html.carte-doc .print-page__footer-contact .print-ig {
+  width: 3.4mm;
+  height: 3.4mm;
+  flex: 0 0 auto;
+  stroke: #fff;
+  color: #fff;
+}
+html.carte-doc .print-page__footer-contact .print-mail {
+  text-transform: none;
+  letter-spacing: .02em;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 5.8pt;
+}
+html.carte-doc .print-page__number { bottom: 6.2mm !important; }
+
+/* Cadres / zone utile : pied un peu plus haut. */
+html.carte-doc .print-page:not(.print-page--cover)::before {
+  inset: 41mm 6mm 23.5mm !important;
+  border-color: #592e6f !important;
+  z-index: 4;
+}
+html.carte-doc .print-page:not(.print-page--cover)::after {
+  inset: 43mm 8mm 25.5mm !important;
+  border-color: rgba(89,46,111,.4) !important;
+  z-index: 4;
+}
+html.carte-doc .print-page__content {
+  top: 47mm !important;
+  bottom: 27mm !important;
+}
+
+/* Titres pastilles violettes : une seule taille partout. */
+html.carte-doc .print-page .panel__title {
+  font-size: 9.2pt !important;
+  letter-spacing: .12em !important;
+  padding: 1.7mm 6mm !important;
+}
+
+/* Rythme régulier lignes / colonnes. */
+html.carte-doc .print-page .food-card-grid,
+html.carte-doc .print-page .food-card-grid--wide {
+  gap: 2.6mm 8mm !important;
+}
+html.carte-doc .print-page .price-list:not(.price-list--cols) {
+  column-gap: 8mm !important;
+}
+html.carte-doc .print-page .price-list--cols,
+html.carte-doc .print-page .hh-list--cols {
+  column-gap: 8mm !important;
+}
 
 html.carte-doc .print-page {
   display: block !important;
@@ -164,17 +271,6 @@ html.carte-doc .print-page {
   box-shadow: 0 16px 40px rgba(0,0,0,.35);
 }
 
-/* Cadres intérieurs : entre en-tête et pied, jamais sur le texte. */
-html.carte-doc .print-page:not(.print-page--cover)::before {
-  inset: 41mm 6mm 20.5mm !important;
-  border-color: #592e6f !important;
-  z-index: 4;
-}
-html.carte-doc .print-page:not(.print-page--cover)::after {
-  inset: 43mm 8mm 22.5mm !important;
-  border-color: rgba(89,46,111,.4) !important;
-  z-index: 4;
-}
 
 /* Les blocs grandissent : plus de trou entre les rubriques. */
 html.carte-doc .print-page__content {
@@ -198,14 +294,15 @@ html.carte-doc .print-page .food-card-grid,
 html.carte-doc .print-page .food-card-grid--wide,
 html.carte-doc .print-page .wine-table {
   flex: 1 1 auto;
-  align-content: space-evenly;
+  align-content: start;
+  row-gap: 2.4mm;
 }
 html.carte-doc .print-page .price-list:not(.price-list--cols) {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 9mm;
+  column-gap: 8mm;
   flex: 1 1 auto;
-  align-content: space-evenly;
+  align-content: start;
 }
 
 /* Grilles PC forcées sous 1480px / 860px. */
@@ -222,9 +319,9 @@ html.carte-doc .print-page .price-list__col,
 html.carte-doc .print-page .hh-list__col {
   display: flex !important;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   min-height: 0;
-  height: 100%;
+  height: auto;
 }
 html.carte-doc .print-page .offer-grid,
 html.carte-doc .print-page .duo-grid,
@@ -254,11 +351,19 @@ html.carte-doc .print-page .food-card__head strong {
   white-space: nowrap !important;
 }
 
-/* Page menus : encarts étirés, pastilles non déformées. */
-html.carte-doc .print-page--menus .offer-grid,
+/* Page menus : Duo / Complète aussi hautes que l’enfant ; bas plus compact. */
+html.carte-doc .print-page--menus .print-page__content {
+  gap: 4.4mm !important;
+}
+html.carte-doc .print-page--menus .offer-grid {
+  align-items: stretch;
+  flex: 1.22 1 0;
+  gap: 4.4mm !important;
+}
 html.carte-doc .print-page--menus .choice-grid {
   align-items: stretch;
-  flex: 1 1 auto;
+  flex: 0.92 1 0;
+  gap: 3.6mm !important;
 }
 html.carte-doc .print-page--menus .offer-card,
 html.carte-doc .print-page--menus .choice-card {
@@ -268,10 +373,20 @@ html.carte-doc .print-page--menus .choice-card {
   justify-content: space-evenly;
   align-items: stretch;
 }
+html.carte-doc .print-page--menus .offer-card {
+  padding: 6mm 5mm 5.2mm !important;
+}
 html.carte-doc .print-page--menus .offer-card__badge {
   align-self: center;
   width: auto !important;
   max-width: 92%;
+  font-size: 11.4pt !important;
+  letter-spacing: .1em !important;
+  padding: 2.5mm 7mm !important;
+}
+html.carte-doc .print-page--menus .offer-card__foot {
+  font-size: 8.2pt !important;
+  letter-spacing: .16em !important;
 }
 html.carte-doc .print-page--menus .choice-card ul {
   flex: 1 1 auto;
@@ -283,18 +398,20 @@ html.carte-doc .print-page--menus .choice-card li {
   font-size: 7.6pt !important;
 }
 html.carte-doc .print-page--menus .menus-duo {
-  flex: 1.2 1 0 !important;
+  flex: 0.88 1 0 !important;
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   align-items: stretch !important;
-  gap: 3.2mm !important;
+  gap: 4mm !important;
 }
 html.carte-doc .print-page--menus .menus-duo__left {
   display: grid !important;
-  grid-template-rows: 1fr 1fr !important;
+  grid-template-rows: auto auto !important;
   gap: 3.2mm !important;
+  min-height: 0;
 }
-html.carte-doc .print-page--menus .menus-duo > .panel {
+html.carte-doc .print-page--menus .menus-duo > .panel,
+html.carte-doc .print-page--menus .menus-duo > .special-card {
   display: flex !important;
   flex-direction: column !important;
   min-height: 0;
@@ -303,28 +420,36 @@ html.carte-doc .print-page--menus .menus-duo > .panel {
 html.carte-doc .print-page--menus .special-card,
 html.carte-doc .print-page--menus .breakfast-card,
 html.carte-doc .print-page--menus .special-card--dark {
-  height: 100%;
-  flex: 1 1 auto;
+  height: auto;
+  flex: 0 1 auto;
   display: flex !important;
   flex-direction: column;
+  justify-content: flex-start;
+  gap: 1.4mm;
+  padding: 3mm 4.2mm 3.2mm !important;
+}
+html.carte-doc .print-page--menus .menus-duo > .special-card--dark {
+  height: 100%;
   justify-content: space-evenly;
-  padding: 4.5mm 5mm !important;
+  padding: 3.4mm 4.4mm !important;
 }
 html.carte-doc .print-page--menus .menu-points {
-  gap: 2.6mm !important;
-  font-size: 8.2pt !important;
+  gap: 1.5mm !important;
+  font-size: 7.4pt !important;
 }
 html.carte-doc .print-page--menus .special-card strong,
 html.carte-doc .print-page--menus .breakfast-card strong {
-  font-size: 18pt !important;
+  font-size: 14.5pt !important;
 }
 html.carte-doc .print-page--menus .special-card__badge {
   align-self: center;
   width: auto !important;
+  font-size: 9pt !important;
+  padding: 1.5mm 5mm !important;
 }
 html.carte-doc .print-page--menus .day-options {
   display: grid !important;
-  gap: 4mm !important;
+  gap: 2.4mm !important;
 }
 
 /* Boissons 6 : fraîches un peu plus hautes, lignes compactes, rien n’est coupé. */
@@ -346,7 +471,7 @@ html.carte-doc .print-page--drinks .price-list__note {
   line-height: 1.2 !important;
 }
 html.carte-doc .print-page--drinks .price-list__col {
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 /* Boissons 7 : hauteurs proportionnelles, bières entières. */
@@ -361,10 +486,6 @@ html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-c
 html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(2) { flex: 0.72 1 0; }
 html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(3) { flex: 1.15 1 0; }
 html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(4) { flex: 1.55 1 0; }
-html.carte-doc .print-page--drinks-secondary .panel__title {
-  font-size: 8.4pt !important;
-  padding: 1.3mm 5mm !important;
-}
 html.carte-doc .print-page--drinks-secondary .price-line {
   padding: 0.4mm 0 !important;
 }
@@ -373,7 +494,7 @@ html.carte-doc .print-page--drinks-secondary .price-list__note {
   line-height: 1.15 !important;
 }
 html.carte-doc .print-page--drinks-secondary .price-list__col {
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 html.carte-doc .print-page .beer-table__head,
 html.carte-doc .print-page .beer-row {
@@ -448,10 +569,6 @@ html.carte-doc .print-page--cocktails .hh-head {
 html.carte-doc .print-page--cocktails .panel__head {
   margin-bottom: 1.2mm !important;
 }
-html.carte-doc .print-page--cocktails .panel__title {
-  font-size: 8.2pt !important;
-  padding: 1.3mm 5mm !important;
-}
 html.carte-doc .print-page--cocktails .price-line {
   padding: 0.7mm 0 !important;
 }
@@ -462,8 +579,8 @@ html.carte-doc .print-page--cocktails .hh-line__hh {
 }
 
 html.carte-doc .print-page--menus .breakfast-card .menu-points {
-  font-size: 9.2pt !important;
-  gap: 4mm !important;
+  font-size: 7.6pt !important;
+  gap: 1.6mm !important;
 }
 html.carte-doc .print-page--menus .breakfast-card--simple {
   border: none !important;
@@ -572,13 +689,76 @@ html.carte-doc .print-page--cover .cover-links {
 html.carte-doc .print-page--cover .cover-links .contact-link {
   min-height: 9mm !important;
   font-size: 7pt !important;
-  padding: 0 4mm !important;
+  padding: 0 3.2mm !important;
   box-sizing: border-box;
+}
+html.carte-doc .print-page--cover .cover-links {
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .9fr) minmax(0, 1.4fr);
+}
+html.carte-doc .print-page--cover .cover-links .contact-link--mail {
+  text-transform: none !important;
+  letter-spacing: .015em !important;
+  font-size: 6.1pt !important;
+  font-weight: 600 !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+html.carte-doc .print-page--cover a.contact-link.cover-action {
+  position: relative;
+  z-index: 6;
+  pointer-events: auto;
+  cursor: pointer;
 }
 html.carte-doc .print-page--cover .print-page__number {
   display: none !important;
 }
+/* Écran : pages A4 mises à l’échelle dans la fenêtre, sans déformer le format. */
+@media screen {
+  html.carte-doc {
+    --carte-scale: min(1, calc((100vw - 20px) / 210mm));
+  }
+  html.carte-doc,
+  html.carte-doc body {
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  html.carte-doc #print-document {
+    width: 100% !important;
+    max-width: 100%;
+    padding: 12px 0 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  html.carte-doc .print-page-frame {
+    width: calc(210mm * var(--carte-scale));
+    height: calc(297mm * var(--carte-scale));
+    margin: 0 auto 14px;
+    position: relative;
+    overflow: hidden;
+    flex: 0 0 auto;
+    box-shadow: 0 16px 40px rgba(0,0,0,.35);
+  }
+  html.carte-doc .print-page {
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    transform: scale(var(--carte-scale));
+    transform-origin: top left;
+    box-shadow: none !important;
+  }
+}
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
 @media print {
+  html.carte-doc { --carte-scale: 1 !important; }
   html.carte-doc, html.carte-doc body {
     background: #fff !important;
     width: 210mm !important;
@@ -586,14 +766,31 @@ html.carte-doc .print-page--cover .print-page__number {
     overflow: visible !important;
   }
   html.carte-doc .carte-toolbar { display: none !important; }
-  html.carte-doc #print-document { padding: 0; width: 210mm; }
+  html.carte-doc #print-document {
+    padding: 0 !important;
+    width: 210mm !important;
+    display: block !important;
+  }
+  html.carte-doc .print-page-frame {
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+  }
   html.carte-doc .print-page {
-    margin: 0;
-    box-shadow: none;
+    margin: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 210mm !important;
+    height: 297mm !important;
     page-break-after: always;
     break-after: page;
   }
-  html.carte-doc .print-page:last-child {
+  html.carte-doc .print-page-frame:last-child .print-page {
     page-break-after: auto;
     break-after: auto;
   }
@@ -661,14 +858,31 @@ def main() -> None:
 </main>
 <script>
 (function () {{
-  const params = new URLSearchParams(location.search);
-  if (params.get("print") === "1") {{
-    const start = function () {{
-      document.fonts.ready.then(function () {{ setTimeout(function () {{ window.print(); }}, 280); }});
-    }};
-    if (document.readyState === "complete") start();
-    else window.addEventListener("load", start);
-  }}
+  const root = document.documentElement;
+  const fit = function () {{
+    const sample = document.querySelector(".print-page");
+    if (!sample) return;
+    const pageW = sample.offsetWidth;
+    if (!pageW) return;
+    const viewW = (window.visualViewport && visualViewport.width) || root.clientWidth;
+    const scale = Math.min(1, Math.max(0.2, (viewW - 20) / pageW));
+    root.style.setProperty("--carte-scale", String(Math.round(scale * 10000) / 10000));
+  }};
+  const scrollHash = function () {{
+    if (!location.hash) return;
+    const el = document.getElementById(location.hash.slice(1));
+    if (el) el.scrollIntoView({{ block: "start" }});
+  }};
+  fit();
+  window.addEventListener("resize", fit);
+  if (window.visualViewport) visualViewport.addEventListener("resize", fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () {{ fit(); scrollHash(); }});
+  else window.addEventListener("load", function () {{ fit(); scrollHash(); }});
+  window.addEventListener("beforeprint", function () {{
+    root.style.setProperty("--carte-scale", "1");
+  }});
+  window.addEventListener("afterprint", fit);
+  scrollHash();
 }})();
 </script>
 </body>
