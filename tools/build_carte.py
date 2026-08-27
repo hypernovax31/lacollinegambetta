@@ -563,11 +563,11 @@ html.carte-doc .print-page--cover .cover-footer {
   margin: 0 !important;
 }
 html.carte-doc .print-page--cover .cover-links {
-  width: 148mm !important;
+  width: 168mm !important;
   max-width: 100%;
-  gap: 3mm !important;
+  gap: 2.4mm !important;
   display: grid !important;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 html.carte-doc .print-page--cover .cover-links .contact-link {
   min-height: 9mm !important;

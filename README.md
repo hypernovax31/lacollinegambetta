@@ -20,7 +20,7 @@ Carte web interactive et carte imprimable A4 portrait.
 Les pages intérieures portent l’en-tête **COLLINE GAMBETTA** (pas de titre « NOS … »).
 
 - Aperçu : ouvrir `carte.html`
-- Enregistrer en PDF : bouton **TELECHARGER CARTE** sur le site (ou Imprimer → Enregistrer au format PDF)
+- Enregistrer en PDF : icône de téléchargement en haut à droite (ou Imprimer → Enregistrer au format PDF)
 - `carte.html?print=1` lance l’impression automatiquement
 
 Régénérer après une modification du site :
