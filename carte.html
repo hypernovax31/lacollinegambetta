@@ -44,6 +44,7 @@ button,a { font:inherit; }
 .cover-brand p { margin:0; font-family:'Cinzel',serif; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-100); font-size:clamp(.74rem,2vw,.98rem); }
 .cover-brand .cover-subline { margin-top:2px; }
 .medallion-container { width:min(100%,540px); margin:0 auto; aspect-ratio:1/1; position:relative; display:flex; align-items:center; justify-content:center; }
+.medallion-frame { position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
 .medallion-svg { position:absolute; inset:-5%; width:110%; height:110%; filter:drop-shadow(0 14px 28px rgba(0,0,0,.55)); pointer-events:none; z-index:1; }
 .relief-inner-svg { width:68%; height:68%; border-radius:50%; z-index:2; overflow:hidden; background:#fff; border:4px solid var(--gold-500); box-shadow: inset 0 0 20px rgba(0,0,0,.12), 0 14px 36px rgba(0,0,0,.34); }
 .cover-action { justify-self:center; min-width:min(100%,340px); background:transparent; color:#fff; border:1px solid rgba(216,178,87,.45); font-family:'Cinzel',serif; letter-spacing:.16em; }
@@ -3300,95 +3301,123 @@ html:not(.carte-doc) #menus .offer-card {
   }
 }
 
-/* Couverture : pas de chevauchement titre / cadre / bouton / médaillon */
-#cover-section .cover-page {
+/* Couverture web : titres + CTA autour du médaillon, médaillon au max sans chevauchement */
+html:not(.carte-doc) #cover-section {
+  height: calc(100svh - 64px);
+  max-height: calc(100svh - 64px);
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+}
+html:not(.carte-doc) #cover-section .cover-page {
   grid-template-rows: auto minmax(0, 1fr) auto auto !important;
   align-content: stretch !important;
   align-items: center !important;
-  padding: clamp(12px, 2.4vh, 28px) clamp(12px, 3vw, 28px) clamp(14px, 2.2vh, 24px) !important;
-  gap: clamp(8px, 1.4vh, 16px) !important;
+  justify-items: center !important;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100%;
+  padding: clamp(8px, 1.4vh, 18px) clamp(16px, 3.6vw, 40px) clamp(10px, 1.5vh, 18px) !important;
+  gap: clamp(6px, 1vh, 12px) !important;
   overflow: hidden;
 }
-#cover-section .cover-brand {
+html:not(.carte-doc) #cover-section .cover-brand {
   align-content: center !important;
   justify-items: center !important;
   min-height: 0;
   max-width: 100%;
-  padding: 4px 8px 6px;
+  padding: 2px 4px 0 !important;
+  margin: 0 !important;
+  gap: clamp(4px, 0.7vh, 8px) !important;
   z-index: 3;
 }
-#cover-section .cover-brand--menu-leader-lite .eyebrow,
-#cover-section .leader-meta,
-#cover-section .menu-leader-subline {
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader-lite .eyebrow,
+html:not(.carte-doc) #cover-section .leader-meta,
+html:not(.carte-doc) #cover-section .menu-leader-subline {
   max-width: 100%;
   overflow-wrap: anywhere;
 }
-#cover-section .leader-meta,
-#cover-section .menu-leader-subline {
+html:not(.carte-doc) #cover-section .leader-meta,
+html:not(.carte-doc) #cover-section .menu-leader-subline {
   white-space: normal !important;
   padding: 0 6px;
 }
-#cover-section .cover-brand + .medallion-container,
-#cover-section .medallion-container {
-  align-self: center !important;
-  width: min(70%, 46vh, 420px) !important;
-  max-height: min(46vh, 70vw) !important;
-  margin: 0 auto !important;
+html:not(.carte-doc) #cover-section .cover-brand + .medallion-container,
+html:not(.carte-doc) #cover-section .medallion-container {
+  align-self: stretch !important;
+  justify-self: stretch !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  margin: 0 !important;
   z-index: 2;
+  container-type: size;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
-#cover-section .cover-action {
+html:not(.carte-doc) #cover-section .medallion-frame {
+  position: relative;
+  width: min(100cqmin, 560px);
+  height: min(100cqmin, 560px);
+  flex: 0 0 auto;
+}
+html.carte-doc .medallion-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+html:not(.carte-doc) #cover-section .cover-action {
   position: relative;
   z-index: 3;
-  margin: 4px 12px 8px !important;
-  max-width: min(340px, calc(100% - 24px));
+  margin: 2px 8px !important;
+  max-width: min(320px, calc(100% - 24px));
   justify-self: center;
 }
-#cover-section .cover-footer {
+html:not(.carte-doc) #cover-section .cover-footer {
   position: relative;
   z-index: 3;
   width: 100%;
   max-width: 100%;
   padding: 0 4px;
+  gap: clamp(6px, 1vh, 10px) !important;
 }
 @media (max-width: 430px) {
-  #cover-section .cover-brand--menu-leader-lite .eyebrow {
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader-lite .eyebrow {
     font-size: clamp(1.05rem, 5.6vw, 1.45rem) !important;
     letter-spacing: .08em !important;
     white-space: nowrap;
   }
-  #cover-section .leader-meta,
-  #cover-section .menu-leader-subline {
+  html:not(.carte-doc) #cover-section .leader-meta,
+  html:not(.carte-doc) #cover-section .menu-leader-subline {
     font-size: clamp(.52rem, 3vw, .68rem) !important;
     letter-spacing: .05em !important;
     line-height: 1.3 !important;
   }
-  #cover-section .medallion-container {
-    width: min(78%, 48vw, 280px) !important;
-    max-height: 42vh !important;
-  }
 }
 @media (orientation: landscape) and (max-height: 500px) {
-  #cover-section .cover-page {
-    grid-template-rows: auto minmax(0, 1fr) auto auto !important;
-    padding: 8px 16px 10px !important;
-    gap: 6px !important;
+  html:not(.carte-doc) #cover-section .cover-page {
+    padding: 6px 18px 8px !important;
+    gap: 5px !important;
   }
-  #cover-section .cover-brand {
-    padding: 2px 8px 4px !important;
+  html:not(.carte-doc) #cover-section .cover-brand {
+    padding: 0 8px !important;
   }
-  #cover-section .cover-brand--menu-leader-lite .eyebrow {
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader-lite .eyebrow {
     font-size: clamp(1rem, 3.2vh, 1.35rem) !important;
   }
-  #cover-section .leader-meta,
-  #cover-section .menu-leader-subline {
+  html:not(.carte-doc) #cover-section .leader-meta,
+  html:not(.carte-doc) #cover-section .menu-leader-subline {
     font-size: clamp(.5rem, 2.4vh, .68rem) !important;
   }
-  #cover-section .medallion-container {
-    width: min(32vh, 26vw, 200px) !important;
-    max-height: 32vh !important;
-  }
-  #cover-section .cover-action {
-    margin: 2px 8px 4px !important;
+  html:not(.carte-doc) #cover-section .cover-action {
+    margin: 0 8px !important;
     min-height: 36px !important;
   }
 }
@@ -3404,9 +3433,29 @@ html:not(.carte-doc) .control-btn {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
+html:not(.carte-doc) .menu-nav-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  isolation: isolate;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  background: rgba(89,46,111,.96);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 18px rgba(0,0,0,.2);
+}
 html:not(.carte-doc) .menu-nav {
+  position: relative !important;
+  width: 100%;
+  margin-left: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
   padding: 6px 8px !important;
   gap: 6px !important;
+}
+html:not(.carte-doc) .menu-nav-hint {
+  display: none;
 }
 html:not(.carte-doc) .menu-nav .nav-btn {
   min-height: 44px !important;
@@ -3414,7 +3463,83 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   line-height: 1.2 !important;
   padding: 8px 12px !important;
 }
+@media (max-width: 900px) {
+  html:not(.carte-doc) .interior-header {
+    padding: 10px 12px 8px !important;
+  }
+  html:not(.carte-doc) .interior-header h2 {
+    margin: 4px 0 6px !important;
+    font-size: clamp(1.35rem, 5.4vw, 1.9rem) !important;
+  }
+  html:not(.carte-doc) .interior-header h2 span {
+    margin-top: .12rem !important;
+  }
+  html:not(.carte-doc) .interior-header .eyebrow,
+  html:not(.carte-doc) .interior-header p {
+    font-size: 0.68rem !important;
+    letter-spacing: .1em !important;
+  }
+}
 @media (max-width: 1100px) {
+  html:not(.carte-doc) .menu-nav-wrap {
+    isolation: isolate;
+  }
+  html:not(.carte-doc) .menu-nav-wrap::before,
+  html:not(.carte-doc) .menu-nav-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 44px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .2s ease;
+  }
+  html:not(.carte-doc) .menu-nav-wrap::before {
+    left: 0;
+    background: linear-gradient(90deg, rgba(89,46,111,.98) 0%, rgba(89,46,111,0) 100%);
+  }
+  html:not(.carte-doc) .menu-nav-wrap::after {
+    right: 0;
+    background: linear-gradient(270deg, rgba(89,46,111,.98) 0%, rgba(89,46,111,0) 100%);
+  }
+  html:not(.carte-doc) .menu-nav-wrap.has-start::before,
+  html:not(.carte-doc) .menu-nav-wrap.has-end::after {
+    opacity: 1;
+  }
+  html:not(.carte-doc) .menu-nav-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid rgba(252,246,186,.75);
+    border-radius: 50%;
+    background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 42%, #d8b257 100%);
+    color: #24102e;
+    box-shadow: 0 4px 12px rgba(0,0,0,.28);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+    cursor: pointer;
+  }
+  html:not(.carte-doc) .menu-nav-hint svg {
+    width: 16px;
+    height: 16px;
+  }
+  html:not(.carte-doc) .menu-nav-hint--start { left: 6px; }
+  html:not(.carte-doc) .menu-nav-hint--end { right: 6px; }
+  html:not(.carte-doc) .menu-nav-wrap.has-start .menu-nav-hint--start,
+  html:not(.carte-doc) .menu-nav-wrap.has-end .menu-nav-hint--end {
+    opacity: 1;
+    pointer-events: auto;
+  }
   html:not(.carte-doc) .menu-nav {
     display: flex !important;
     flex-wrap: nowrap !important;
@@ -3423,6 +3548,8 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     grid-template-columns: none !important;
+    padding: 6px 40px !important;
+    gap: 8px !important;
   }
   html:not(.carte-doc) .menu-nav::-webkit-scrollbar {
     display: none;
@@ -3432,10 +3559,10 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     flex: 0 0 auto !important;
     grid-column: auto !important;
     width: auto !important;
-    min-width: 8.4rem;
+    min-width: 0;
     min-height: 44px !important;
     padding: 8px 14px !important;
-    font-size: 0.8rem !important;
+    font-size: 0.78rem !important;
     letter-spacing: .04em !important;
     white-space: nowrap !important;
   }
@@ -3471,14 +3598,14 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     display: flex !important;
     flex-wrap: nowrap !important;
     overflow-x: auto;
-    padding: 5px 8px !important;
+    padding: 5px 40px !important;
     gap: 6px !important;
     grid-template-columns: none !important;
   }
   html:not(.carte-doc) .menu-nav .nav-btn,
   html:not(.carte-doc) .menu-nav .nav-btn:last-child {
     min-height: 44px !important;
-    min-width: 8.2rem;
+    min-width: 0;
     font-size: 0.78rem !important;
     padding: 8px 12px !important;
     white-space: nowrap !important;
@@ -4892,7 +5019,7 @@ html.carte-doc .print-page .price-list--cols {
         <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
         <p class="leader-meta leader-meta--sub menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
       </div>
-      <div class="medallion-container"><svg class="medallion-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div class="medallion-container"><div class="medallion-frame"><svg class="medallion-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="goldGradCover" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#bf953f" /><stop offset="20%" stop-color="#fcf6ba" /><stop offset="45%" stop-color="#d8b257" /><stop offset="75%" stop-color="#b38728" /><stop offset="100%" stop-color="#fef9db" />
@@ -4928,7 +5055,7 @@ html.carte-doc .print-page .price-list--cols {
                     </g>
                 </svg>
 
-                <svg class="relief-inner-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><image href="medallion-facade.png" width="280" height="280" preserveAspectRatio="xMidYMid slice"/></svg></div>
+                <svg class="relief-inner-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><image href="medallion-facade.png" width="280" height="280" preserveAspectRatio="xMidYMid slice"/></svg></div></div>
       <a href="index.html#menu-nav-anchor" class="contact-link cover-action"><span class="star-gold">✦</span> Menu & Carte <span class="star-gold">✦</span></a>
       <div class="cover-footer">
         <div class="cover-footer-address">4 rue Belgrand • 75020 Paris • Place Gambetta</div>
