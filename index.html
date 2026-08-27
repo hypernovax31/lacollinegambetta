@@ -2585,6 +2585,121 @@ button,a { font:inherit; }
   }
 }
 
+/* ===== Corrections finales du PDF Chromium ===== */
+@media print {
+  /* Marge double violette sur toutes les pages intérieures, sans toucher à la couverture. */
+  .print-page:not(.print-page--cover)::before {
+    inset:5.5mm 5.5mm 19.5mm;
+    border-color:#592e6f;
+    border-width:.42mm;
+  }
+  .print-page:not(.print-page--cover)::after {
+    inset:7.5mm 7.5mm 20.5mm;
+    border-color:rgba(89,46,111,.46);
+    border-width:.16mm;
+  }
+
+  /* La gouttière évite que les prix de la colonne gauche touchent les intitulés de droite. */
+  .print-page--drinks .price-list--cols,
+  .print-page--drinks-secondary .price-list--cols {
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    column-gap:9mm;
+  }
+  .print-page--drinks .price-line__row,
+  .print-page--drinks-secondary .price-line__row {
+    column-gap:2.2mm;
+  }
+
+  /* Les prix des vins reprennent exactement l’encre violette des intitulés. */
+  .print-page--vins .wine-table td,
+  .print-page--vins .wine-table td:not(.wine-name),
+  .print-page--vins .wine-table td.wine-no {
+    color:var(--royal-violet-ink) !important;
+  }
+  /* Les quatre rubriques de vins tiennent dans la page sans être masquées
+     par le pied de page, tout en gardant les lignes bien lisibles. */
+  .print-page--vins .panel__head { margin-bottom:2mm !important; }
+  .print-page--vins .wine-table th,
+  .print-page--vins .wine-table td { padding:.65mm 0 !important; }
+
+  /* La couverture imprimée reprend le même HTML, le même médaillon et la
+     même hiérarchie que la couverture interactive, avec seulement une boîte
+     A4 pour occuper toute la première page. */
+  .print-page--cover > .cover-page {
+    position:absolute;
+    inset:0;
+    width:210mm;
+    height:297mm;
+    min-height:297mm;
+    padding:16px 28px 38px !important;
+    display:grid;
+    grid-template-rows:auto auto minmax(0,1fr) auto !important;
+    align-content:start !important;
+    justify-items:center;
+    gap:0;
+    background:radial-gradient(circle at 50% 25%, #5f3477 0%, #432155 55%, #24102e 100%) !important;
+    border:1px solid rgba(216,178,87,.32);
+    border-radius:0;
+    box-shadow:none;
+  }
+  .print-page--cover .cover-brand {
+    width:100%;
+    max-width:none;
+    margin:0 auto 2px;
+    gap:6px !important;
+  }
+  .print-page--cover .cover-brand--menu-leader-lite .eyebrow {
+    font-size:2.8rem !important;
+    letter-spacing:.14em !important;
+    line-height:1 !important;
+    color:#fff !important;
+  }
+  .print-page--cover .cover-brand--menu-leader-lite .leader-meta,
+  .print-page--cover .cover-brand--menu-leader-lite .menu-leader-subline {
+    font-size:.85rem !important;
+    letter-spacing:.1em !important;
+    line-height:1.35 !important;
+    color:var(--gold-100) !important;
+    white-space:nowrap;
+  }
+  .print-page--cover .medallion-container {
+    align-self:center !important;
+    width:520px !important;
+    height:520px;
+    max-width:88%;
+    margin:10px auto !important;
+  }
+  .print-page--cover .cover-action {
+    display:inline-flex !important;
+    align-self:end !important;
+    width:360px;
+    min-width:340px;
+    margin:6px 0 12px !important;
+    font-size:1.28rem !important;
+    letter-spacing:.14em !important;
+  }
+  .print-page--cover .cover-footer {
+    align-self:end !important;
+    width:100%;
+    gap:8px !important;
+    margin:8px 0 0 !important;
+  }
+  .print-page--cover .cover-footer-address {
+    font-size:.94rem !important;
+    line-height:1.5 !important;
+    letter-spacing:.11em !important;
+  }
+  .print-page--cover .cover-links {
+    width:min(100%,760px);
+    gap:10px !important;
+  }
+  .print-page--cover .cover-links .contact-link {
+    min-height:44px;
+    font-size:1rem !important;
+  }
+  .print-page--cover .print-page__number { color:#d8b257; }
+}
+
 </style>
 </head>
 <body>
