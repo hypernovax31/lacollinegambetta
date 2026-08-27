@@ -2820,25 +2820,28 @@ button,a { font:inherit; }
 }
 
 
-/* ===== Lien discret Télécharger carte (headers) ===== */
+/* ===== Lien discret TELECHARGER CARTE (headers) ===== */
 .download-card {
   display: inline-block;
-  margin-top: 10px;
+  margin-top: 8px;
   font-family: 'Cinzel', serif;
-  font-size: .62rem;
-  font-weight: 600;
-  letter-spacing: .22em;
+  font-size: .52rem;
+  font-weight: 500;
+  letter-spacing: .28em;
   text-transform: uppercase;
-  color: rgba(216, 178, 87, .78);
+  color: rgba(216, 178, 87, .55);
   text-decoration: none;
   background: none;
   border: 0;
   padding: 0;
-  opacity: .9;
+  opacity: .75;
 }
 .download-card:hover {
-  color: #fef9db;
+  color: rgba(254, 249, 219, .9);
   opacity: 1;
+}
+@media print {
+  .download-card { display: none !important; }
 }
 
 /* ===== Bières : titres Bouteille / Pression en violet royal ===== */
@@ -2893,7 +2896,7 @@ button,a { font:inherit; }
         <div class="eyebrow leader-title"><span class="star-gold">✦</span> LA CARTE <span class="star-gold">✦</span></div>
         <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
         <p class="leader-meta leader-meta--sub menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
-        <a class="download-card" href="carte.html?print=1">Télécharger carte</a>
+        <a class="download-card" href="carte.html?print=1">TELECHARGER CARTE</a>
       </div>
       <div class="medallion-container"><svg class="medallion-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -2985,7 +2988,7 @@ button,a { font:inherit; }
       <h2>COLLINE <span>GAMBETTA</span></h2>
       <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
       <p class="menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
-      <a class="download-card" href="carte.html?print=1">Télécharger carte</a>
+      <a class="download-card" href="carte.html?print=1">TELECHARGER CARTE</a>
     </header>
     <div id="menu-nav-anchor" aria-hidden="true"></div>
     <nav class="menu-nav"><button class="nav-btn active" onclick="showMenuSection('entrees', this)">Nos entrées</button>

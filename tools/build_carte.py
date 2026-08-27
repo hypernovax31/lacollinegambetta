@@ -123,7 +123,8 @@ def page_shell(number: int, kind: str, content: str, cover_html: str | None = No
 <div>BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta</div>
 <small>L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>'''
-    return f'''<section class="print-page print-page--{kind}" data-page="{number}">
+    kinds = " ".join(f"print-page--{k}" for k in kind.split())
+    return f'''<section class="print-page {kinds}" data-page="{number}">
 {header}
 <div class="print-page__content tab-flow">
 {content}
@@ -134,7 +135,7 @@ def page_shell(number: int, kind: str, content: str, cover_html: str | None = No
 
 
 EXTRA_CSS = r"""
-/* ===== Carte A4 : mêmes styles PC, pages remplies, sans chevauchement ===== */
+/* ===== Carte A4 : équilibre, cadres hors textes, mêmes styles PC ===== */
 html.carte-doc, html.carte-doc body {
   background: #1a0b22 !important;
   margin: 0;
@@ -148,33 +149,7 @@ html.carte-doc #print-document {
   margin: 0 auto;
   padding: 22px 0 40px;
 }
-html.carte-doc .carte-toolbar {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  padding: 10px 12px;
-  background: #592e6f;
-  border-bottom: 1px solid rgba(216,178,87,.35);
-}
-html.carte-doc .carte-toolbar a,
-html.carte-doc .carte-toolbar button {
-  font-family: 'Cinzel', serif;
-  font-size: .62rem;
-  font-weight: 600;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: rgba(216,178,87,.82);
-  background: none;
-  border: 0;
-  text-decoration: none;
-  cursor: pointer;
-  padding: 4px 0;
-}
-html.carte-doc .carte-toolbar a:hover,
-html.carte-doc .carte-toolbar button:hover { color: #fef9db; }
+html.carte-doc .carte-toolbar { display: none !important; }
 html.carte-doc .download-card { display: none !important; }
 
 html.carte-doc .print-page {
@@ -189,40 +164,41 @@ html.carte-doc .print-page {
   box-shadow: 0 16px 40px rgba(0,0,0,.35);
 }
 
-/* L’espace libre étire les blocs ; overflow hidden évite tout chevauchement. */
+/* Cadres intérieurs : entre en-tête et pied, jamais sur le texte. */
+html.carte-doc .print-page:not(.print-page--cover)::before {
+  inset: 41mm 6mm 20.5mm !important;
+  border-color: #592e6f !important;
+  z-index: 4;
+}
+html.carte-doc .print-page:not(.print-page--cover)::after {
+  inset: 43mm 8mm 22.5mm !important;
+  border-color: rgba(89,46,111,.4) !important;
+  z-index: 4;
+}
+
+/* Blocs : l’air va ENTRE les rubriques, pas entre chaque ligne. */
 html.carte-doc .print-page__content {
   display: flex !important;
   flex-direction: column !important;
-  justify-content: flex-start !important;
-  gap: 5mm !important;
+  justify-content: space-between !important;
+  gap: 4.2mm !important;
   overflow: hidden !important;
 }
 html.carte-doc .print-page__content > .panel,
 html.carte-doc .print-page__content > .menus-duo,
 html.carte-doc .print-page__content > .duo-grid {
   min-width: 0;
-  min-height: 0;
-  flex: 1 1 auto;
-  display: flex !important;
-  flex-direction: column !important;
-  overflow: hidden;
+  flex: 0 1 auto;
+  overflow: visible;
 }
-html.carte-doc .print-page .food-card-grid,
-html.carte-doc .print-page .price-list,
-html.carte-doc .print-page .hh-list,
-html.carte-doc .print-page .wine-table {
+html.carte-doc .print-page--menus .menus-duo {
   flex: 1 1 auto;
-  align-content: space-between;
+  align-items: stretch !important;
 }
 html.carte-doc .print-page .price-list:not(.price-list--cols) {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-html.carte-doc .print-page .duo-grid > .panel,
-html.carte-doc .print-page .menus-duo > * {
-  min-height: 0;
-  height: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 9mm;
 }
 
 /* Grilles PC forcées sous 1480px / 860px. */
@@ -280,10 +256,53 @@ html.carte-doc .print-page .beer-table__head,
 html.carte-doc .print-page .beer-row {
   grid-template-columns: minmax(0, 1fr) 18mm 18mm 18mm !important;
 }
+html.carte-doc .print-page--drinks-secondary .panel__head {
+  margin-bottom: 2.4mm !important;
+}
+html.carte-doc .print-page--drinks-secondary .price-line {
+  padding: 1.35mm 0 !important;
+}
+html.carte-doc .print-page--drinks .panel__head {
+  margin-bottom: 2.8mm !important;
+}
 
-/* Couverture = page 1 du site. */
+/* Couverture : un seul double cadre, rien ne le touche. */
+html.carte-doc .print-page--cover {
+  background: #24102e !important;
+}
+html.carte-doc .print-page--cover::before,
+html.carte-doc .print-page--cover::after {
+  display: none !important;
+}
+html.carte-doc .print-page--cover > .cover-page {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 210mm !important;
+  height: 297mm !important;
+  min-height: 297mm !important;
+  padding: 18mm 16mm 20mm !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) auto auto !important;
+  justify-items: center !important;
+  align-content: stretch !important;
+  gap: 5mm !important;
+  overflow: hidden !important;
+  box-sizing: border-box;
+}
+html.carte-doc .print-page--cover .cover-page::after {
+  inset: 8mm !important;
+  border: 0.45mm solid rgba(216,178,87,.5) !important;
+  border-radius: 0 !important;
+  pointer-events: none;
+}
+html.carte-doc .print-page--cover .cover-brand {
+  width: 100%;
+  max-width: 170mm;
+  margin: 0 auto !important;
+  gap: 3mm !important;
+}
 html.carte-doc .print-page--cover .cover-brand--menu-leader-lite .eyebrow {
-  font-size: 22pt !important;
+  font-size: 20pt !important;
   letter-spacing: .12em !important;
   overflow: visible !important;
 }
@@ -317,7 +336,41 @@ html.carte-doc .print-page--cover a.contact-link.cover-action * {
   color: #24102e !important;
 }
 html.carte-doc .print-page--cover .medallion-container {
-  max-height: none !important;
+  align-self: center !important;
+  width: 108mm !important;
+  height: 108mm !important;
+  max-width: 108mm !important;
+  max-height: 108mm !important;
+  margin: 0 auto !important;
+}
+html.carte-doc .print-page--cover .cover-footer {
+  width: 100%;
+  max-width: 168mm;
+  gap: 3.5mm !important;
+  margin: 0 !important;
+}
+html.carte-doc .print-page--cover .cover-links {
+  width: 148mm !important;
+  max-width: 100%;
+  gap: 3mm !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+}
+html.carte-doc .print-page--cover .cover-links .contact-link {
+  min-height: 9mm !important;
+  font-size: 7pt !important;
+  padding: 0 4mm !important;
+  box-sizing: border-box;
+}
+html.carte-doc .print-page--cover .print-page__number {
+  display: none !important;
+}
+html.carte-doc .print-page--beers .print-page__content {
+  justify-content: center !important;
+}
+html.carte-doc .print-page--beers .panel {
+  flex: 0 1 auto !important;
+  width: 100%;
 }
 
 @media print {
@@ -373,8 +426,8 @@ def main() -> None:
     add("menus", "\n".join(flows["menus"]), "menus")
     boissons = flows["boissons"]
     add("drinks", "\n".join(boissons[:2]), "boissons-fraiches-chaudes")
-    add("drinks-secondary", "\n".join(boissons[2:4]), "aperitifs-whiskies")
-    add("drinks-secondary", "\n".join(boissons[4:6]), "digestifs-bieres")
+    add("drinks-secondary", "\n".join(boissons[2:5]), "aperitifs-whiskies-digestifs")
+    add("drinks-secondary beers", "\n".join(boissons[5:6]), "bieres")
     add("vins", "\n".join(flows["vins"]), "vins")
     ck = flows["cocktails"]
     add("cocktails", "\n".join(ck[:2]), "cocktails-classiques-duo")
@@ -399,10 +452,6 @@ def main() -> None:
 </style>
 </head>
 <body>
-<nav class="carte-toolbar">
-  <a href="index.html">Site</a>
-  <button type="button" onclick="window.print()">Télécharger carte</button>
-</nav>
 <main id="print-document" aria-label="Carte des menus et boissons à imprimer">
 {"".join(pages_html)}
 </main>
