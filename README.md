@@ -2,19 +2,25 @@
 
 Carte web interactive et carte imprimable A4 portrait.
 
-## Livrables imprimables
+## Générer les livrables imprimables
 
-Le dossier [`print-assets/`](./print-assets/) contient :
+Le PDF est composé directement par Chromium à partir du HTML et du CSS du website. Le générateur attend le chargement des polices `Cinzel` et `Montserrat`, construit les neuf pages d’impression du site, puis produit :
 
-- `carte-menus-boissons-a4.pdf` — carte complète en 9 pages A4 portrait ;
-- `page-01.jpg` à `page-09.jpg` — chaque page en 2480 × 3508 px, adaptée à une impression 300 dpi.
+- `print-assets/carte-menus-boissons-a4.pdf` — carte complète en 9 pages A4 portrait ;
+- `print-assets/page-01.jpg` à `page-09.jpg` — chaque page en 2480 × 3508 px.
 
-L’ordre est : couverture, entrées, plats, desserts, menus, boissons fraîches et chaudes, apéritifs / whiskies / digestifs / bières, vins, cocktails.
-
-`cover-gambetta.png` est la version détourée de l’image de couverture : elle peut être remplacée directement par la prochaine image fournie, sans modifier la mise en page.
-
-Le script `tools/build_print_assets.py` permet de régénérer les exports après une modification de prix ou de contenu :
+Installation initiale :
 
 ```bash
-python3 tools/build_print_assets.py
+npm install
 ```
+
+Le package `@sparticuz/chromium` fournit le navigateur Chromium utilisé par le générateur, sans installation système supplémentaire.
+
+Génération :
+
+```bash
+npm run build:print
+```
+
+Le PDF et les JPG reprennent le rendu d’impression du site : polices, couleurs, gradients, composants et règles `@media print`. La carte A3 de référence est conservée dans `print-assets/Carte-La-Colline-Gambetta-A3_compressed.pdf`.

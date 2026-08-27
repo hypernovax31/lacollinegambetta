@@ -1,1 +1,3 @@
 .print-build/
+.browser-print/
+node_modules/

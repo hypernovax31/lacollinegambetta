@@ -1,0 +1,11 @@
+{
+  "name": "lacollinegambetta",
+  "private": true,
+  "scripts": {
+    "build:print": "node tools/build_browser_print.mjs"
+  },
+  "devDependencies": {
+    "@sparticuz/chromium": "149.0.0",
+    "playwright": "1.62.1"
+  }
+}
