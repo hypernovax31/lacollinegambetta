@@ -12,16 +12,15 @@ Carte web interactive et carte imprimable A4 portrait.
 4. Desserts
 5. Menus
 6. Boissons fraîches & chaudes
-7. Apéritifs, whiskies & digestifs
-8. Bières
-9. Vins
-10. Cocktails classiques, spritz & mules
-11. Élégance & mocktails
+7. Apéritifs, whiskies, digestifs & bières
+8. Vins
+9. Cocktails classiques, spritz & mules
+10. Élégance & mocktails
 
 Les pages intérieures portent l’en-tête **COLLINE GAMBETTA** (pas de titre « NOS … »).
 
 - Aperçu : ouvrir `carte.html`
-- Enregistrer en PDF : lien **Télécharger carte** (ou Imprimer → Enregistrer au format PDF)
+- Enregistrer en PDF : bouton **TELECHARGER CARTE** sur le site (ou Imprimer → Enregistrer au format PDF)
 - `carte.html?print=1` lance l’impression automatiquement
 
 Régénérer après une modification du site :

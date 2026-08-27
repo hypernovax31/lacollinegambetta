@@ -176,29 +176,36 @@ html.carte-doc .print-page:not(.print-page--cover)::after {
   z-index: 4;
 }
 
-/* Blocs : l’air va ENTRE les rubriques, pas entre chaque ligne. */
+/* Les blocs grandissent : plus de trou entre les rubriques. */
 html.carte-doc .print-page__content {
   display: flex !important;
   flex-direction: column !important;
-  justify-content: space-between !important;
-  gap: 4.2mm !important;
+  justify-content: stretch !important;
+  gap: 3mm !important;
   overflow: hidden !important;
 }
 html.carte-doc .print-page__content > .panel,
 html.carte-doc .print-page__content > .menus-duo,
 html.carte-doc .print-page__content > .duo-grid {
   min-width: 0;
-  flex: 0 1 auto;
-  overflow: visible;
+  min-height: 0;
+  flex: 1 1 0;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden;
 }
-html.carte-doc .print-page--menus .menus-duo {
+html.carte-doc .print-page .food-card-grid,
+html.carte-doc .print-page .food-card-grid--wide,
+html.carte-doc .print-page .wine-table {
   flex: 1 1 auto;
-  align-items: stretch !important;
+  align-content: space-evenly;
 }
 html.carte-doc .print-page .price-list:not(.price-list--cols) {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 9mm;
+  flex: 1 1 auto;
+  align-content: space-evenly;
 }
 
 /* Grilles PC forcées sous 1480px / 860px. */
@@ -208,6 +215,16 @@ html.carte-doc .print-page .price-list--cols,
 html.carte-doc .print-page .hh-list--cols {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  flex: 1 1 auto;
+}
+html.carte-doc .print-page .price-list__col,
+html.carte-doc .print-page .hh-list__col {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-evenly;
+  min-height: 0;
+  height: 100%;
 }
 html.carte-doc .print-page .offer-grid,
 html.carte-doc .print-page .duo-grid,
@@ -237,14 +254,206 @@ html.carte-doc .print-page .food-card__head strong {
   white-space: nowrap !important;
 }
 
-/* Gouttière cocktails : le HH de gauche ne touche pas le nom de droite. */
+/* Page menus : encarts étirés, pastilles non déformées. */
+html.carte-doc .print-page--menus .offer-grid,
+html.carte-doc .print-page--menus .choice-grid {
+  align-items: stretch;
+  flex: 1 1 auto;
+}
+html.carte-doc .print-page--menus .offer-card,
+html.carte-doc .print-page--menus .choice-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: stretch;
+}
+html.carte-doc .print-page--menus .offer-card__badge {
+  align-self: center;
+  width: auto !important;
+  max-width: 92%;
+}
+html.carte-doc .print-page--menus .choice-card ul {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+html.carte-doc .print-page--menus .choice-card li {
+  font-size: 7.6pt !important;
+}
+html.carte-doc .print-page--menus .menus-duo {
+  flex: 1.2 1 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  gap: 3.2mm !important;
+}
+html.carte-doc .print-page--menus .menus-duo__left {
+  display: grid !important;
+  grid-template-rows: 1fr 1fr !important;
+  gap: 3.2mm !important;
+}
+html.carte-doc .print-page--menus .menus-duo > .panel {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0;
+  height: 100%;
+}
+html.carte-doc .print-page--menus .special-card,
+html.carte-doc .print-page--menus .breakfast-card,
+html.carte-doc .print-page--menus .special-card--dark {
+  height: 100%;
+  flex: 1 1 auto;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 4.5mm 5mm !important;
+}
+html.carte-doc .print-page--menus .menu-points {
+  gap: 2.6mm !important;
+  font-size: 8.2pt !important;
+}
+html.carte-doc .print-page--menus .special-card strong,
+html.carte-doc .print-page--menus .breakfast-card strong {
+  font-size: 18pt !important;
+}
+html.carte-doc .print-page--menus .special-card__badge {
+  align-self: center;
+  width: auto !important;
+}
+html.carte-doc .print-page--menus .day-options {
+  display: grid !important;
+  gap: 4mm !important;
+}
+
+/* Boissons 6 : fraîches un peu plus hautes, lignes compactes, rien n’est coupé. */
+html.carte-doc .print-page--drinks .print-page__content > .panel:first-child {
+  flex: 1.55 1 0;
+}
+html.carte-doc .print-page--drinks .print-page__content > .panel:last-child {
+  flex: 1 1 0;
+}
+html.carte-doc .print-page--drinks .panel__head,
+html.carte-doc .print-page--drinks-secondary .panel__head {
+  margin-bottom: 1.6mm !important;
+}
+html.carte-doc .print-page--drinks .price-line {
+  padding: 0.45mm 0 !important;
+}
+html.carte-doc .print-page--drinks .price-list__note {
+  font-size: 5.8pt !important;
+  line-height: 1.2 !important;
+}
+html.carte-doc .print-page--drinks .price-list__col {
+  justify-content: space-between;
+}
+
+/* Boissons 7 : hauteurs proportionnelles, bières entières. */
+html.carte-doc .print-page--drinks-secondary .print-page__content {
+  gap: 2mm !important;
+}
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel {
+  flex: 0 1 auto;
+  overflow: hidden;
+}
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(1) { flex: 1.25 1 0; }
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(2) { flex: 0.72 1 0; }
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(3) { flex: 1.15 1 0; }
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(4) { flex: 1.55 1 0; }
+html.carte-doc .print-page--drinks-secondary .panel__title {
+  font-size: 8.4pt !important;
+  padding: 1.3mm 5mm !important;
+}
+html.carte-doc .print-page--drinks-secondary .price-line {
+  padding: 0.4mm 0 !important;
+}
+html.carte-doc .print-page--drinks-secondary .price-list__note {
+  font-size: 5.5pt !important;
+  line-height: 1.15 !important;
+}
+html.carte-doc .print-page--drinks-secondary .price-list__col {
+  justify-content: space-between;
+}
+html.carte-doc .print-page .beer-table__head,
+html.carte-doc .print-page .beer-row {
+  grid-template-columns: minmax(0, 1fr) 16mm 16mm 16mm !important;
+}
+html.carte-doc .print-page--drinks-secondary .beer-note {
+  margin: 0.8mm 0 0.4mm !important;
+}
+html.carte-doc .print-page--drinks-secondary .beer-row {
+  padding: 0.45mm 0 !important;
+}
+
+/* Cocktails : 1 colonne sur 2 A4. */
+html.carte-doc .print-page--cocktails .print-page__content > .panel:first-child {
+  flex: 1.32 1 0;
+}
 html.carte-doc .print-page--cocktails .hh-list--cols {
-  column-gap: 11mm !important;
+  display: flex !important;
+  flex-direction: column !important;
+  grid-template-columns: none !important;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+html.carte-doc .print-page--cocktails .hh-list__col {
+  display: contents !important;
+}
+html.carte-doc .print-page--cocktails .hh-list__col:not(:first-child) .hh-head {
+  display: none !important;
+}
+html.carte-doc .print-page--cocktails .hh-list--cols {
+  justify-content: space-evenly;
+}
+html.carte-doc .print-page--cocktails .price-list,
+html.carte-doc .print-page--cocktails .price-list:not(.price-list--cols) {
+  grid-template-columns: 1fr !important;
+  column-gap: 0 !important;
+  align-content: space-evenly;
+}
+html.carte-doc .print-page--cocktails .duo-grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: 1.2fr 1fr;
+  gap: 2mm !important;
+  flex: 1.15 1 0;
+}
+html.carte-doc .print-page--cocktails .duo-grid > .panel {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0;
+  overflow: hidden;
 }
 html.carte-doc .print-page--cocktails .hh-line__row,
 html.carte-doc .print-page--cocktails .hh-head {
-  grid-template-columns: minmax(0, 1fr) 14mm 14mm !important;
-  column-gap: 1.6mm !important;
+  grid-template-columns: minmax(0, 1fr) 15mm 15mm !important;
+  column-gap: 2mm !important;
+}
+html.carte-doc .print-page--cocktails .hh-line {
+  padding: 0.45mm 0 !important;
+}
+html.carte-doc .print-page--cocktails .hh-line__name {
+  font-size: 8pt !important;
+}
+html.carte-doc .print-page--cocktails .hh-line .price-list__note,
+html.carte-doc .print-page--cocktails .price-list__note {
+  font-size: 5.6pt !important;
+  line-height: 1.18 !important;
+}
+html.carte-doc .print-page--cocktails .hh-head {
+  padding-bottom: 0.5mm !important;
+  font-size: 5.6pt !important;
+}
+html.carte-doc .print-page--cocktails .panel__head {
+  margin-bottom: 1.2mm !important;
+}
+html.carte-doc .print-page--cocktails .panel__title {
+  font-size: 8.2pt !important;
+  padding: 1.3mm 5mm !important;
+}
+html.carte-doc .print-page--cocktails .price-line {
+  padding: 0.7mm 0 !important;
 }
 html.carte-doc .print-page--cocktails .hh-line__price,
 html.carte-doc .print-page--cocktails .hh-line__hh {
@@ -252,19 +461,23 @@ html.carte-doc .print-page--cocktails .hh-line__hh {
   text-align: right !important;
 }
 
-html.carte-doc .print-page .beer-table__head,
-html.carte-doc .print-page .beer-row {
-  grid-template-columns: minmax(0, 1fr) 18mm 18mm 18mm !important;
+html.carte-doc .print-page--menus .breakfast-card .menu-points {
+  font-size: 9.2pt !important;
+  gap: 4mm !important;
 }
-html.carte-doc .print-page--drinks-secondary .panel__head {
-  margin-bottom: 2.4mm !important;
+html.carte-doc .print-page--menus .breakfast-card--simple {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 2mm 4mm 3mm !important;
 }
-html.carte-doc .print-page--drinks-secondary .price-line {
-  padding: 1.35mm 0 !important;
-}
-html.carte-doc .print-page--drinks .panel__head {
-  margin-bottom: 2.8mm !important;
-}
+html.carte-doc .print-page--desserts .print-page__content > .panel:nth-child(1) { flex: 1.35 1 0; }
+html.carte-doc .print-page--desserts .print-page__content > .panel:nth-child(2) { flex: 1.22 1 0; }
+html.carte-doc .print-page--desserts .print-page__content > .panel:nth-child(3) { flex: 0.82 1 0; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(1) { flex: 1.4 1 0; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(2) { flex: 1.2 1 0; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(3) { flex: 0.78 1 0; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(4) { flex: 0.72 1 0; }
 
 /* Couverture : un seul double cadre, rien ne le touche. */
 html.carte-doc .print-page--cover {
@@ -365,14 +578,6 @@ html.carte-doc .print-page--cover .cover-links .contact-link {
 html.carte-doc .print-page--cover .print-page__number {
   display: none !important;
 }
-html.carte-doc .print-page--beers .print-page__content {
-  justify-content: center !important;
-}
-html.carte-doc .print-page--beers .panel {
-  flex: 0 1 auto !important;
-  width: 100%;
-}
-
 @media print {
   html.carte-doc, html.carte-doc body {
     background: #fff !important;
@@ -426,8 +631,7 @@ def main() -> None:
     add("menus", "\n".join(flows["menus"]), "menus")
     boissons = flows["boissons"]
     add("drinks", "\n".join(boissons[:2]), "boissons-fraiches-chaudes")
-    add("drinks-secondary", "\n".join(boissons[2:5]), "aperitifs-whiskies-digestifs")
-    add("drinks-secondary beers", "\n".join(boissons[5:6]), "bieres")
+    add("drinks-secondary", "\n".join(boissons[2:]), "aperitifs-whiskies-digestifs-bieres")
     add("vins", "\n".join(flows["vins"]), "vins")
     ck = flows["cocktails"]
     add("cocktails", "\n".join(ck[:2]), "cocktails-classiques-duo")
