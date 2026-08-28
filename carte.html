@@ -3450,22 +3450,12 @@ html.carte-doc .medallion-frame {
   width: 100%;
   height: 100%;
 }
-html:not(.carte-doc) #cover-section .cover-action,
-#btn-show-menu {
-  white-space: nowrap !important;
-  flex-wrap: nowrap !important;
-}
 html:not(.carte-doc) #cover-section .cover-action {
   position: relative;
   z-index: 3;
   margin: 2px 8px !important;
-  width: auto !important;
-  min-width: 0;
-  max-width: calc(100% - 16px) !important;
+  max-width: min(320px, calc(100% - 24px));
   justify-self: center;
-  overflow: hidden;
-  letter-spacing: 0.08em !important;
-  padding-inline: 18px !important;
 }
 html:not(.carte-doc) #cover-section .cover-footer {
   position: relative;
@@ -4913,93 +4903,6 @@ html.carte-doc .print-page--cocktails .hh-line__hh {
   text-align: right !important;
 }
 
-/* Page 10 — Élégance & mocktails : architecture de la page 5 (hauteur pleine, colonnes, vides comblés). */
-html.carte-doc .print-page--cocktails-elegance .print-page__content {
-  gap: 4.4mm !important;
-  justify-content: stretch !important;
-}
-html.carte-doc .print-page--cocktails-elegance .print-page__content > .panel,
-html.carte-doc .print-page--cocktails-elegance .print-page__content > .panel:first-child,
-html.carte-doc .print-page--cocktails-elegance .print-page__content > .panel:last-child {
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: stretch !important;
-}
-html.carte-doc .print-page--cocktails-elegance .print-page__content > .panel:first-child {
-  flex: 1.55 1 0 !important;
-}
-html.carte-doc .print-page--cocktails-elegance .print-page__content > .panel:last-child {
-  flex: 0.92 1 0 !important;
-}
-html.carte-doc .print-page--cocktails-elegance .panel__head {
-  margin-bottom: 2.4mm !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-list--cols {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  flex-direction: unset !important;
-  column-gap: 8mm !important;
-  row-gap: 0 !important;
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  align-items: stretch !important;
-  justify-content: stretch !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-list__col {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-evenly !important;
-  height: 100% !important;
-  min-height: 0 !important;
-  gap: 0.4mm !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-list__col:not(:first-child) .hh-head {
-  display: grid !important;
-  visibility: hidden !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-line {
-  flex: 1 1 0 !important;
-  justify-content: center !important;
-  padding: 0.55mm 0 !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-line__name {
-  font-size: 8.2pt !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-line .price-list__note,
-html.carte-doc .print-page--cocktails-elegance .price-list__note {
-  font-size: 6pt !important;
-  line-height: 1.25 !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-list {
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-html.carte-doc .print-page--cocktails-elegance .price-list,
-html.carte-doc .print-page--cocktails-elegance .price-list:not(.price-list--cols) {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  grid-auto-rows: 1fr !important;
-  column-gap: 8mm !important;
-  row-gap: 1.2mm !important;
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  align-content: stretch !important;
-  align-items: stretch !important;
-}
-html.carte-doc .print-page--cocktails-elegance .price-line {
-  flex: 1 1 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  padding: 0.7mm 0 !important;
-  min-height: 0 !important;
-}
-
 html.carte-doc .print-page--menus .breakfast-card .menu-points {
   font-size: 7.6pt !important;
   gap: 1.6mm !important;
@@ -5589,7 +5492,7 @@ html.carte-doc .print-page .price-list--cols {
 <small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>
 <div class="print-page__number">9</div>
-</section></div><div class="print-page-frame"><section class="print-page print-page--cocktails print-page--cocktails-elegance" id="carte-p10" data-page="10">
+</section></div><div class="print-page-frame"><section class="print-page print-page--cocktails" id="carte-p10" data-page="10">
 <header class="print-page__header">
 <div class="print-page__kicker">LA</div>
 <div class="print-page__brand">COLLINE</div>

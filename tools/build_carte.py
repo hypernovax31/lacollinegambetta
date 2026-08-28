@@ -737,93 +737,6 @@ html.carte-doc .print-page--cocktails .hh-line__hh {
   text-align: right !important;
 }
 
-/* Page 10 — Élégance & mocktails : architecture de la page 5 (hauteur pleine, colonnes, vides comblés). */
-html.carte-doc .print-page--cocktails-elegance .print-page__content {
-  gap: 4.4mm !important;
-  justify-content: stretch !important;
-}
-html.carte-doc .print-page--cocktails-elegance .print-page__content > .panel,
-html.carte-doc .print-page--cocktails-elegance .print-page__content > .panel:first-child,
-html.carte-doc .print-page--cocktails-elegance .print-page__content > .panel:last-child {
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: stretch !important;
-}
-html.carte-doc .print-page--cocktails-elegance .print-page__content > .panel:first-child {
-  flex: 1.55 1 0 !important;
-}
-html.carte-doc .print-page--cocktails-elegance .print-page__content > .panel:last-child {
-  flex: 0.92 1 0 !important;
-}
-html.carte-doc .print-page--cocktails-elegance .panel__head {
-  margin-bottom: 2.4mm !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-list--cols {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  flex-direction: unset !important;
-  column-gap: 8mm !important;
-  row-gap: 0 !important;
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  align-items: stretch !important;
-  justify-content: stretch !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-list__col {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-evenly !important;
-  height: 100% !important;
-  min-height: 0 !important;
-  gap: 0.4mm !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-list__col:not(:first-child) .hh-head {
-  display: grid !important;
-  visibility: hidden !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-line {
-  flex: 1 1 0 !important;
-  justify-content: center !important;
-  padding: 0.55mm 0 !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-line__name {
-  font-size: 8.2pt !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-line .price-list__note,
-html.carte-doc .print-page--cocktails-elegance .price-list__note {
-  font-size: 6pt !important;
-  line-height: 1.25 !important;
-}
-html.carte-doc .print-page--cocktails-elegance .hh-list {
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-html.carte-doc .print-page--cocktails-elegance .price-list,
-html.carte-doc .print-page--cocktails-elegance .price-list:not(.price-list--cols) {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  grid-auto-rows: 1fr !important;
-  column-gap: 8mm !important;
-  row-gap: 1.2mm !important;
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  align-content: stretch !important;
-  align-items: stretch !important;
-}
-html.carte-doc .print-page--cocktails-elegance .price-line {
-  flex: 1 1 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  padding: 0.7mm 0 !important;
-  min-height: 0 !important;
-}
-
 html.carte-doc .print-page--menus .breakfast-card .menu-points {
   font-size: 7.6pt !important;
   gap: 1.6mm !important;
@@ -1182,7 +1095,7 @@ def main() -> None:
     add("vins", "\n".join(flows["vins"]), "vins")
     ck = flows["cocktails"]
     add("cocktails", "\n".join(ck[:2]), "cocktails-classiques-duo")
-    add("cocktails cocktails-elegance", "\n".join(ck[2:]), "cocktails-elegance-mocktails")
+    add("cocktails", "\n".join(ck[2:]), "cocktails-elegance-mocktails")
 
     html = f'''<!DOCTYPE html>
 <html lang="fr" class="carte-doc">
