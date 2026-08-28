@@ -535,50 +535,76 @@ html.carte-doc .print-page--drinks .price-line {
   min-height: 0 !important;
 }
 
-/* Boissons 7 : ne pas compresser (ça coupe Cidre / Légionnaire). */
+/* Boissons 7 : mêmes écarts de rubriques que la page 6, sans trou ni coupe. */
 html.carte-doc .print-page--drinks-secondary .print-page__content {
-  gap: 2.4mm !important;
+  gap: 4.2mm !important;
   justify-content: flex-start !important;
 }
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel {
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel,
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:first-child {
   flex: 0 0 auto !important;
   overflow: visible !important;
   min-height: auto !important;
+  justify-content: flex-start !important;
 }
 html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:last-child {
-  flex: 1 0 auto !important;
+  flex: 0 0 auto !important;
   overflow: visible !important;
+  min-height: auto !important;
+  justify-content: flex-start !important;
 }
-html.carte-doc .print-page--drinks-secondary .price-line {
-  padding: 0.28mm 0 !important;
+html.carte-doc .print-page--drinks-secondary .price-list--cols {
+  flex: 0 0 auto !important;
+  align-items: start !important;
+}
+html.carte-doc .print-page--drinks-secondary .price-list:not(.price-list--cols) {
+  flex: 0 0 auto !important;
+  align-content: start !important;
 }
 html.carte-doc .print-page--drinks-secondary .price-list__note {
-  font-size: 5.5pt !important;
-  line-height: 1.15 !important;
+  font-size: 5.6pt !important;
+  line-height: 1.2 !important;
 }
 html.carte-doc .print-page--drinks-secondary .price-list__col {
-  justify-content: flex-start;
-  height: auto;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  height: auto !important;
+  gap: 0.5mm !important;
+}
+html.carte-doc .print-page--drinks-secondary .price-line {
+  flex: 0 0 auto !important;
+  padding: 0.48mm 0 !important;
 }
 html.carte-doc .print-page .beer-table__head,
 html.carte-doc .print-page .beer-row {
   grid-template-columns: minmax(0, 1fr) 16mm 16mm 16mm !important;
 }
-html.carte-doc .print-page--drinks-secondary .beer-note {
-  margin: 0.6mm 0 0.3mm !important;
+html.carte-doc .print-page--drinks-secondary .panel__head {
+  margin-bottom: 2mm !important;
 }
-html.carte-doc .print-page--drinks-secondary .beer-row {
-  padding: 0.28mm 0 !important;
+html.carte-doc .print-page--drinks-secondary .beer-note {
+  margin: 0.9mm 0 0.4mm !important;
+  flex: 0 0 auto !important;
+}
+html.carte-doc .print-page--drinks-secondary .beer-note--second {
+  margin-top: 1.8mm !important;
 }
 html.carte-doc .print-page--drinks-secondary .beer-table {
-  margin-top: 0.8mm !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin-top: 0.6mm !important;
+  flex: 0 0 auto !important;
+  gap: 0 !important;
+}
+html.carte-doc .print-page--drinks-secondary .beer-table__head {
   flex: 0 0 auto !important;
 }
-html.carte-doc .print-page--drinks-secondary .price-list {
+html.carte-doc .print-page--drinks-secondary .beer-row {
   flex: 0 0 auto !important;
-}
-html.carte-doc .print-page--drinks-secondary .panel {
-  justify-content: flex-start !important;
+  display: grid !important;
+  align-items: center !important;
+  padding: 0.45mm 0 !important;
 }
 
 /* Cocktails : 1 colonne, tout le contenu visible, sans trou au milieu. */

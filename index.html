@@ -3583,7 +3583,7 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     align-items: center;
-    column-gap: 6px;
+    column-gap: 10px;
     padding: 6px 8px;
   }
   html:not(.carte-doc) .menu-nav-wrap.is-overflow {
@@ -3640,12 +3640,8 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     scrollbar-width: none;
     grid-template-columns: none !important;
     min-width: 0;
-    padding: 0 2px !important;
+    padding: 0 !important;
     gap: 8px !important;
-  }
-  html:not(.carte-doc) .menu-nav-wrap.is-overflow .menu-nav {
-    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
-    mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
   }
   html:not(.carte-doc) .menu-nav::-webkit-scrollbar {
     display: none;
