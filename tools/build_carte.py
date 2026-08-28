@@ -486,9 +486,9 @@ html.carte-doc .print-page--menus .day-options {
   gap: 2.4mm !important;
 }
 
-/* Boissons 6 : plus d’air dans les deux blocs, plus d’écart avant Boissons chaudes. */
+/* Boissons 6 : rythme de la page 5 — écarts nets, lignes aérées et alignées. */
 html.carte-doc .print-page--drinks .print-page__content {
-  gap: 9mm !important;
+  gap: 4.4mm !important;
   justify-content: stretch !important;
 }
 html.carte-doc .print-page--drinks .print-page__content > .panel,
@@ -498,21 +498,13 @@ html.carte-doc .print-page--drinks .print-page__content > .panel:last-child {
   overflow: visible !important;
   min-height: 0 !important;
 }
-html.carte-doc .print-page--drinks .print-page__content > .panel:first-child {
-  flex: 1.08 1 0 !important;
-}
 html.carte-doc .print-page--drinks .price-list--cols {
-  flex: 1 1 auto !important;
+  flex: 1 1 0 !important;
   min-height: 0 !important;
   align-items: stretch !important;
 }
-html.carte-doc .print-page--drinks .panel__head,
-html.carte-doc .print-page--drinks-secondary .panel__head {
-  margin-bottom: 2.8mm !important;
-}
-html.carte-doc .print-page--drinks .print-page__content > .panel:last-child .panel__head {
-  margin-top: 0.6mm !important;
-  margin-bottom: 3mm !important;
+html.carte-doc .print-page--drinks .panel__head {
+  margin-bottom: 2.4mm !important;
 }
 html.carte-doc .print-page--drinks .price-list__note {
   font-size: 5.8pt !important;
@@ -521,23 +513,23 @@ html.carte-doc .print-page--drinks .price-list__note {
 html.carte-doc .print-page--drinks .price-list__col {
   display: flex !important;
   flex-direction: column !important;
-  justify-content: flex-start !important;
+  justify-content: space-evenly !important;
   height: 100% !important;
   min-height: 0 !important;
-  gap: 0.6mm !important;
+  gap: 0.5mm !important;
 }
 html.carte-doc .print-page--drinks .price-line {
   flex: 1 1 0 !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
-  padding: 0.9mm 0 !important;
+  padding: 0.7mm 0 !important;
   min-height: 0 !important;
 }
 
 /* Boissons 7 : mêmes écarts de rubriques que la page 6, sans trou ni coupe. */
 html.carte-doc .print-page--drinks-secondary .print-page__content {
-  gap: 4.2mm !important;
+  gap: 2.4mm !important;
   justify-content: flex-start !important;
 }
 html.carte-doc .print-page--drinks-secondary .print-page__content > .panel,
@@ -574,21 +566,21 @@ html.carte-doc .print-page--drinks-secondary .price-list__col {
 }
 html.carte-doc .print-page--drinks-secondary .price-line {
   flex: 0 0 auto !important;
-  padding: 0.48mm 0 !important;
+  padding: 0.32mm 0 !important;
 }
 html.carte-doc .print-page .beer-table__head,
 html.carte-doc .print-page .beer-row {
   grid-template-columns: minmax(0, 1fr) 16mm 16mm 16mm !important;
 }
 html.carte-doc .print-page--drinks-secondary .panel__head {
-  margin-bottom: 2mm !important;
+  margin-bottom: 1.5mm !important;
 }
 html.carte-doc .print-page--drinks-secondary .beer-note {
   margin: 0.9mm 0 0.4mm !important;
   flex: 0 0 auto !important;
 }
 html.carte-doc .print-page--drinks-secondary .beer-note--second {
-  margin-top: 1.8mm !important;
+  margin-top: 0.7mm !important;
 }
 html.carte-doc .print-page--drinks-secondary .beer-table {
   display: flex !important;
@@ -604,7 +596,31 @@ html.carte-doc .print-page--drinks-secondary .beer-row {
   flex: 0 0 auto !important;
   display: grid !important;
   align-items: center !important;
-  padding: 0.45mm 0 !important;
+  padding: 0.25mm 0 !important;
+}
+html.carte-doc .print-page--drinks-secondary .hh-banner {
+  flex: 0 0 auto !important;
+  margin-top: auto !important;
+  margin-bottom: 0 !important;
+  padding: 0.6mm 0 0 !important;
+  text-align: center;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
+  font-size: 8pt !important;
+  letter-spacing: .1em !important;
+  color: var(--gold-700) !important;
+}
+html.carte-doc .print-page--drinks-secondary .hh-banner .hh-ico {
+  display: inline-block;
+  width: 8.5pt;
+  height: 8.5pt;
+  margin: 0 0.32em -1pt;
+  vertical-align: middle;
+}
+html.carte-doc .print-page--drinks-secondary .hh-banner .hh-ico-arrow {
+  width: 12pt;
+  height: 7pt;
+  margin: 0 0.2em -0.6pt;
 }
 
 /* Cocktails : 1 colonne, tout le contenu visible, sans trou au milieu. */
@@ -933,6 +949,7 @@ html.carte-doc .print-page .price-list--cols {
     max-width: 100% !important;
     width: 100% !important;
     min-width: 0 !important;
+    touch-action: pan-y pinch-zoom;
   }
   html.carte-doc #print-document {
     width: 100% !important;
@@ -1039,7 +1056,8 @@ def main() -> None:
     add("menus", "\n".join(flows["menus"]), "menus")
     boissons = flows["boissons"]
     add("drinks", "\n".join(boissons[:2]), "boissons-fraiches-chaudes")
-    add("drinks-secondary", "\n".join(boissons[2:]), "aperitifs-whiskies-digestifs-bieres")
+    hh = '<p class="hh-banner"><svg class="hh-ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0.4 10.2 5.8 15.6 8 10.2 10.2 8 15.6 5.8 10.2 0.4 8 5.8 5.8Z"/></svg> Happy Hour (HH) · 17h <svg class="hh-ico hh-ico-arrow" viewBox="0 0 20 10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M1 5h16M13.2 2.1 18 5l-4.8 2.9"/></svg> 23h <svg class="hh-ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0.4 10.2 5.8 15.6 8 10.2 10.2 8 15.6 5.8 10.2 0.4 8 5.8 5.8Z"/></svg></p>'
+    add("drinks-secondary", "\n".join(boissons[2:]) + "\n" + hh, "aperitifs-whiskies-digestifs-bieres")
     add("vins", "\n".join(flows["vins"]), "vins")
     ck = flows["cocktails"]
     add("cocktails", "\n".join(ck[:2]), "cocktails-classiques-duo")
@@ -1072,29 +1090,18 @@ def main() -> None:
 <script>
 (function () {{
   const root = document.documentElement;
-  const fit = function () {{
-    const sample = document.querySelector(".print-page");
-    if (!sample) return;
-    const pageW = sample.offsetWidth;
-    if (!pageW) return;
-    const viewW = (window.visualViewport && visualViewport.width) || root.clientWidth;
-    const scale = Math.min(1, Math.max(0.2, (viewW - 20) / pageW));
-    root.style.setProperty("--carte-scale", String(Math.round(scale * 10000) / 10000));
-  }};
   const scrollHash = function () {{
     if (!location.hash) return;
     const el = document.getElementById(location.hash.slice(1));
     if (el) el.scrollIntoView({{ block: "start" }});
   }};
-  fit();
-  window.addEventListener("resize", fit);
-  if (window.visualViewport) visualViewport.addEventListener("resize", fit);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () {{ fit(); scrollHash(); }});
-  else window.addEventListener("load", function () {{ fit(); scrollHash(); }});
   window.addEventListener("beforeprint", function () {{
     root.style.setProperty("--carte-scale", "1");
   }});
-  window.addEventListener("afterprint", fit);
+  window.addEventListener("afterprint", function () {{
+    root.style.removeProperty("--carte-scale");
+  }});
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(scrollHash);
   scrollHash();
 }})();
 </script>

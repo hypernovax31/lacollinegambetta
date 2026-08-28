@@ -3380,8 +3380,8 @@ html:not(.carte-doc) #cover-section .cover-page {
   min-height: 0 !important;
   height: 100% !important;
   max-height: 100%;
-  padding: clamp(8px, 1.4vh, 18px) clamp(16px, 3.6vw, 40px) clamp(10px, 1.5vh, 18px) !important;
-  gap: clamp(6px, 1vh, 12px) !important;
+  padding: clamp(10px, 1.6vh, 20px) clamp(16px, 3.6vw, 40px) clamp(12px, 1.6vh, 20px) !important;
+  gap: clamp(10px, 1.4vh, 16px) !important;
   overflow: hidden;
 }
 html:not(.carte-doc) #cover-section .cover-brand {
@@ -3417,17 +3417,25 @@ html:not(.carte-doc) #cover-section .medallion-container {
   max-height: none !important;
   aspect-ratio: auto !important;
   margin: 0 !important;
+  padding: clamp(4px, 0.8vh, 12px) 4px !important;
+  box-sizing: border-box;
   z-index: 2;
   container-type: size;
   display: flex !important;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 html:not(.carte-doc) #cover-section .medallion-frame {
   position: relative;
-  width: min(100cqmin, 560px);
-  height: min(100cqmin, 560px);
+  width: min(calc(100cqmin * 0.96), 560px);
+  height: min(calc(100cqmin * 0.96), 560px);
   flex: 0 0 auto;
+}
+html:not(.carte-doc) #cover-section .medallion-svg {
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 html.carte-doc .medallion-frame {
   position: relative;
@@ -3451,12 +3459,19 @@ html:not(.carte-doc) #cover-section .cover-footer {
 }
 @media (max-width: 480px) {
   html:not(.carte-doc) #cover-section .cover-page {
-    padding: 6px 12px 8px !important;
-    gap: 6px !important;
+    padding: 8px 12px 10px !important;
+    gap: 10px !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-container {
+    padding: 6px 4px !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-frame {
+    width: min(calc(100cqmin * 0.94), 420px);
+    height: min(calc(100cqmin * 0.94), 420px);
   }
   html:not(.carte-doc) #cover-section .cover-brand {
     padding: 0 !important;
-    gap: 3px !important;
+    gap: 4px !important;
   }
   html:not(.carte-doc) #cover-section .cover-brand--menu-leader-lite .eyebrow {
     font-size: clamp(1.05rem, 5.6vw, 1.45rem) !important;
@@ -3470,7 +3485,7 @@ html:not(.carte-doc) #cover-section .cover-footer {
     line-height: 1.25 !important;
   }
   html:not(.carte-doc) #cover-section .cover-action {
-    margin: 0 !important;
+    margin: 4px 0 2px !important;
     min-height: 42px !important;
   }
   html:not(.carte-doc) #cover-section .cover-footer {
@@ -3623,11 +3638,11 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     display: flex;
     pointer-events: auto;
     opacity: 1;
+    touch-action: manipulation;
   }
   html:not(.carte-doc) .menu-nav-wrap.is-overflow:not(.has-start) .menu-nav-hint--start,
   html:not(.carte-doc) .menu-nav-wrap.is-overflow:not(.has-end) .menu-nav-hint--end {
-    opacity: 0.35;
-    pointer-events: none;
+    opacity: 0.45;
   }
   html:not(.carte-doc) .menu-nav-hint--start { justify-self: center; }
   html:not(.carte-doc) .menu-nav-hint--end { justify-self: center; }
@@ -3892,7 +3907,10 @@ function showView(view) {
     btnCover.classList.remove('active');
     btnMenu.classList.add('active');
     animateScrollTo(0, 220);
-    requestAnimationFrame(syncMenuNavHints);
+    requestAnimationFrame(() => {
+      syncMenuNavHints();
+      requestAnimationFrame(syncMenuNavHints);
+    });
   }
 }
 function showMenuSection(sectionId, btnElement) {
@@ -4008,11 +4026,21 @@ function initMenuNavHints() {
   const start = document.getElementById('menu-nav-hint-start');
   const end = document.getElementById('menu-nav-hint-end');
   if (!nav) return;
-  const jump = dir => nav.scrollBy({ left: dir * Math.max(160, nav.clientWidth * 0.62), behavior: 'smooth' });
-  if (start) start.addEventListener('click', () => jump(-1));
-  if (end) end.addEventListener('click', () => jump(1));
+  const jump = dir => {
+    const max = Math.max(0, nav.scrollWidth - nav.clientWidth);
+    const step = Math.max(140, Math.round(nav.clientWidth * 0.7));
+    const left = Math.max(0, Math.min(max, nav.scrollLeft + dir * step));
+    nav.scrollTo({ left, behavior: 'auto' });
+  };
+  const bind = (el, dir) => {
+    if (!el) return;
+    el.addEventListener('click', ev => { ev.preventDefault(); jump(dir); });
+  };
+  bind(start, -1);
+  bind(end, 1);
   nav.addEventListener('scroll', syncMenuNavHints, { passive: true });
   window.addEventListener('resize', syncMenuNavHints);
+  if (window.ResizeObserver) new ResizeObserver(syncMenuNavHints).observe(nav);
   syncMenuNavHints();
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initMenuNavHints);

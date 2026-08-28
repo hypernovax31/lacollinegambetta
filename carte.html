@@ -3381,8 +3381,8 @@ html:not(.carte-doc) #cover-section .cover-page {
   min-height: 0 !important;
   height: 100% !important;
   max-height: 100%;
-  padding: clamp(8px, 1.4vh, 18px) clamp(16px, 3.6vw, 40px) clamp(10px, 1.5vh, 18px) !important;
-  gap: clamp(6px, 1vh, 12px) !important;
+  padding: clamp(10px, 1.6vh, 20px) clamp(16px, 3.6vw, 40px) clamp(12px, 1.6vh, 20px) !important;
+  gap: clamp(10px, 1.4vh, 16px) !important;
   overflow: hidden;
 }
 html:not(.carte-doc) #cover-section .cover-brand {
@@ -3418,17 +3418,25 @@ html:not(.carte-doc) #cover-section .medallion-container {
   max-height: none !important;
   aspect-ratio: auto !important;
   margin: 0 !important;
+  padding: clamp(4px, 0.8vh, 12px) 4px !important;
+  box-sizing: border-box;
   z-index: 2;
   container-type: size;
   display: flex !important;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 html:not(.carte-doc) #cover-section .medallion-frame {
   position: relative;
-  width: min(100cqmin, 560px);
-  height: min(100cqmin, 560px);
+  width: min(calc(100cqmin * 0.96), 560px);
+  height: min(calc(100cqmin * 0.96), 560px);
   flex: 0 0 auto;
+}
+html:not(.carte-doc) #cover-section .medallion-svg {
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 html.carte-doc .medallion-frame {
   position: relative;
@@ -3452,12 +3460,19 @@ html:not(.carte-doc) #cover-section .cover-footer {
 }
 @media (max-width: 480px) {
   html:not(.carte-doc) #cover-section .cover-page {
-    padding: 6px 12px 8px !important;
-    gap: 6px !important;
+    padding: 8px 12px 10px !important;
+    gap: 10px !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-container {
+    padding: 6px 4px !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-frame {
+    width: min(calc(100cqmin * 0.94), 420px);
+    height: min(calc(100cqmin * 0.94), 420px);
   }
   html:not(.carte-doc) #cover-section .cover-brand {
     padding: 0 !important;
-    gap: 3px !important;
+    gap: 4px !important;
   }
   html:not(.carte-doc) #cover-section .cover-brand--menu-leader-lite .eyebrow {
     font-size: clamp(1.05rem, 5.6vw, 1.45rem) !important;
@@ -3471,7 +3486,7 @@ html:not(.carte-doc) #cover-section .cover-footer {
     line-height: 1.25 !important;
   }
   html:not(.carte-doc) #cover-section .cover-action {
-    margin: 0 !important;
+    margin: 4px 0 2px !important;
     min-height: 42px !important;
   }
   html:not(.carte-doc) #cover-section .cover-footer {
@@ -3624,11 +3639,11 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     display: flex;
     pointer-events: auto;
     opacity: 1;
+    touch-action: manipulation;
   }
   html:not(.carte-doc) .menu-nav-wrap.is-overflow:not(.has-start) .menu-nav-hint--start,
   html:not(.carte-doc) .menu-nav-wrap.is-overflow:not(.has-end) .menu-nav-hint--end {
-    opacity: 0.35;
-    pointer-events: none;
+    opacity: 0.45;
   }
   html:not(.carte-doc) .menu-nav-hint--start { justify-self: center; }
   html:not(.carte-doc) .menu-nav-hint--end { justify-self: center; }
@@ -4624,9 +4639,9 @@ html.carte-doc .print-page--menus .day-options {
   gap: 2.4mm !important;
 }
 
-/* Boissons 6 : plus d’air dans les deux blocs, plus d’écart avant Boissons chaudes. */
+/* Boissons 6 : rythme de la page 5 — écarts nets, lignes aérées et alignées. */
 html.carte-doc .print-page--drinks .print-page__content {
-  gap: 9mm !important;
+  gap: 4.4mm !important;
   justify-content: stretch !important;
 }
 html.carte-doc .print-page--drinks .print-page__content > .panel,
@@ -4636,21 +4651,13 @@ html.carte-doc .print-page--drinks .print-page__content > .panel:last-child {
   overflow: visible !important;
   min-height: 0 !important;
 }
-html.carte-doc .print-page--drinks .print-page__content > .panel:first-child {
-  flex: 1.08 1 0 !important;
-}
 html.carte-doc .print-page--drinks .price-list--cols {
-  flex: 1 1 auto !important;
+  flex: 1 1 0 !important;
   min-height: 0 !important;
   align-items: stretch !important;
 }
-html.carte-doc .print-page--drinks .panel__head,
-html.carte-doc .print-page--drinks-secondary .panel__head {
-  margin-bottom: 2.8mm !important;
-}
-html.carte-doc .print-page--drinks .print-page__content > .panel:last-child .panel__head {
-  margin-top: 0.6mm !important;
-  margin-bottom: 3mm !important;
+html.carte-doc .print-page--drinks .panel__head {
+  margin-bottom: 2.4mm !important;
 }
 html.carte-doc .print-page--drinks .price-list__note {
   font-size: 5.8pt !important;
@@ -4659,23 +4666,23 @@ html.carte-doc .print-page--drinks .price-list__note {
 html.carte-doc .print-page--drinks .price-list__col {
   display: flex !important;
   flex-direction: column !important;
-  justify-content: flex-start !important;
+  justify-content: space-evenly !important;
   height: 100% !important;
   min-height: 0 !important;
-  gap: 0.6mm !important;
+  gap: 0.5mm !important;
 }
 html.carte-doc .print-page--drinks .price-line {
   flex: 1 1 0 !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
-  padding: 0.9mm 0 !important;
+  padding: 0.7mm 0 !important;
   min-height: 0 !important;
 }
 
 /* Boissons 7 : mêmes écarts de rubriques que la page 6, sans trou ni coupe. */
 html.carte-doc .print-page--drinks-secondary .print-page__content {
-  gap: 4.2mm !important;
+  gap: 2.4mm !important;
   justify-content: flex-start !important;
 }
 html.carte-doc .print-page--drinks-secondary .print-page__content > .panel,
@@ -4712,21 +4719,21 @@ html.carte-doc .print-page--drinks-secondary .price-list__col {
 }
 html.carte-doc .print-page--drinks-secondary .price-line {
   flex: 0 0 auto !important;
-  padding: 0.48mm 0 !important;
+  padding: 0.32mm 0 !important;
 }
 html.carte-doc .print-page .beer-table__head,
 html.carte-doc .print-page .beer-row {
   grid-template-columns: minmax(0, 1fr) 16mm 16mm 16mm !important;
 }
 html.carte-doc .print-page--drinks-secondary .panel__head {
-  margin-bottom: 2mm !important;
+  margin-bottom: 1.5mm !important;
 }
 html.carte-doc .print-page--drinks-secondary .beer-note {
   margin: 0.9mm 0 0.4mm !important;
   flex: 0 0 auto !important;
 }
 html.carte-doc .print-page--drinks-secondary .beer-note--second {
-  margin-top: 1.8mm !important;
+  margin-top: 0.7mm !important;
 }
 html.carte-doc .print-page--drinks-secondary .beer-table {
   display: flex !important;
@@ -4742,7 +4749,31 @@ html.carte-doc .print-page--drinks-secondary .beer-row {
   flex: 0 0 auto !important;
   display: grid !important;
   align-items: center !important;
-  padding: 0.45mm 0 !important;
+  padding: 0.25mm 0 !important;
+}
+html.carte-doc .print-page--drinks-secondary .hh-banner {
+  flex: 0 0 auto !important;
+  margin-top: auto !important;
+  margin-bottom: 0 !important;
+  padding: 0.6mm 0 0 !important;
+  text-align: center;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
+  font-size: 8pt !important;
+  letter-spacing: .1em !important;
+  color: var(--gold-700) !important;
+}
+html.carte-doc .print-page--drinks-secondary .hh-banner .hh-ico {
+  display: inline-block;
+  width: 8.5pt;
+  height: 8.5pt;
+  margin: 0 0.32em -1pt;
+  vertical-align: middle;
+}
+html.carte-doc .print-page--drinks-secondary .hh-banner .hh-ico-arrow {
+  width: 12pt;
+  height: 7pt;
+  margin: 0 0.2em -0.6pt;
 }
 
 /* Cocktails : 1 colonne, tout le contenu visible, sans trou au milieu. */
@@ -5071,6 +5102,7 @@ html.carte-doc .print-page .price-list--cols {
     max-width: 100% !important;
     width: 100% !important;
     min-width: 0 !important;
+    touch-action: pan-y pinch-zoom;
   }
   html.carte-doc #print-document {
     width: 100% !important;
@@ -5346,6 +5378,7 @@ html.carte-doc .print-page .price-list--cols {
 <article class="panel"><div class="panel__head"><h4 class="panel__title">Whiskies</h4><p class="panel__subtitle qty">4 cl</p></div><div class="price-list"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Clan Campbell</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,60</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Jameson</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,80</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Jack Daniels</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">8,60</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Johnny Walker</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">8,80</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Chivas Regal</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">8,80</div></div></article></div></article>
 <article class="panel"><div class="panel__head"><h4 class="panel__title">Digestifs</h4><p class="panel__subtitle qty">4 cl</p></div><div class="price-list price-list--cols"><div class="price-list__col"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Bas Armagnac VSOP</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,20</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Rhum des Îles, Calvados</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">6,20</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Vodka</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">6,90</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Get 27 / 31, Bailey’s, Malibu</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,10</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Cognac VSOP</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,20</div></div></article></div><div class="price-list__col"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Manzana Verde</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">6,10</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Vieille Prune de Souillac</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,20</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Poire, Mirabelle, Framboise</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,20</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Amaretto, Fernet Branca</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,20</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Grand Marnier, Cointreau</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,20</div></div></article></div></div></article>
 <article class="panel"><div class="panel__head"><h4 class="panel__title">Bières</h4></div><div class="beer-note">Bouteille</div><div class="price-list"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Heineken</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,90</div></div><p class="price-list__note note-cl">25 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">1664 Blanc</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,90</div></div><p class="price-list__note note-cl">25 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Desperados</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">5,90</div></div><p class="price-list__note note-cl">33 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Corona</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">6,20</div></div><p class="price-list__note note-cl">33 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Bière sans alcool</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,90</div></div><p class="price-list__note note-cl">25 cl</p></article></div><div class="beer-note beer-note--second">Pression</div><div class="beer-table"><div class="beer-table__head"><span></span><span class="qty">25 cl</span><span>Pinte</span><span>HH</span></div><article class="beer-row"><div class="beer-row__name">La Semeuse</div><div class="beer-row__price">3,40</div><div class="beer-row__price">6,20</div><div class="beer-row__hh">3,90</div></article><article class="beer-row"><div class="beer-row__name">Valmy Blanche bio</div><div class="beer-row__price">4,30</div><div class="beer-row__price">7,90</div><div class="beer-row__hh">6,00</div></article><article class="beer-row"><div class="beer-row__name">Triple d’Orgemont bio</div><div class="beer-row__price">4,80</div><div class="beer-row__price">9,50</div><div class="beer-row__hh">8,50</div></article><article class="beer-row"><div class="beer-row__name">Légionnaire IPA</div><div class="beer-row__price">4,50</div><div class="beer-row__price">8,80</div><div class="beer-row__hh">7,00</div></article></div></article>
+<p class="hh-banner"><svg class="hh-ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0.4 10.2 5.8 15.6 8 10.2 10.2 8 15.6 5.8 10.2 0.4 8 5.8 5.8Z"/></svg> Happy Hour (HH) · 17h <svg class="hh-ico hh-ico-arrow" viewBox="0 0 20 10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M1 5h16M13.2 2.1 18 5l-4.8 2.9"/></svg> 23h <svg class="hh-ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0.4 10.2 5.8 15.6 8 10.2 10.2 8 15.6 5.8 10.2 0.4 8 5.8 5.8Z"/></svg></p>
 </div>
 <footer class="print-page__footer">
 <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
@@ -5442,29 +5475,18 @@ html.carte-doc .print-page .price-list--cols {
 <script>
 (function () {
   const root = document.documentElement;
-  const fit = function () {
-    const sample = document.querySelector(".print-page");
-    if (!sample) return;
-    const pageW = sample.offsetWidth;
-    if (!pageW) return;
-    const viewW = (window.visualViewport && visualViewport.width) || root.clientWidth;
-    const scale = Math.min(1, Math.max(0.2, (viewW - 20) / pageW));
-    root.style.setProperty("--carte-scale", String(Math.round(scale * 10000) / 10000));
-  };
   const scrollHash = function () {
     if (!location.hash) return;
     const el = document.getElementById(location.hash.slice(1));
     if (el) el.scrollIntoView({ block: "start" });
   };
-  fit();
-  window.addEventListener("resize", fit);
-  if (window.visualViewport) visualViewport.addEventListener("resize", fit);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fit(); scrollHash(); });
-  else window.addEventListener("load", function () { fit(); scrollHash(); });
   window.addEventListener("beforeprint", function () {
     root.style.setProperty("--carte-scale", "1");
   });
-  window.addEventListener("afterprint", fit);
+  window.addEventListener("afterprint", function () {
+    root.style.removeProperty("--carte-scale");
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(scrollHash);
   scrollHash();
 })();
 </script>
