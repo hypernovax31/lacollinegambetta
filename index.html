@@ -3508,8 +3508,7 @@ html:not(.carte-doc) .menu-nav-wrap {
   isolation: isolate;
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  background: rgba(89,46,111,.96);
-  backdrop-filter: blur(8px);
+  background: #592e6f;
   box-shadow: 0 4px 18px rgba(0,0,0,.2);
 }
 html:not(.carte-doc) .menu-nav {
@@ -3552,61 +3551,60 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   html:not(.carte-doc) .menu-nav-wrap {
     isolation: isolate;
   }
-  html:not(.carte-doc) .menu-nav-wrap::before,
-  html:not(.carte-doc) .menu-nav-wrap::after {
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow::before,
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow::after {
     content: '';
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 44px;
+    width: 68px;
     z-index: 2;
     pointer-events: none;
-    opacity: 0;
-    transition: opacity .2s ease;
-  }
-  html:not(.carte-doc) .menu-nav-wrap::before {
-    left: 0;
-    background: linear-gradient(90deg, rgba(89,46,111,.98) 0%, rgba(89,46,111,0) 100%);
-  }
-  html:not(.carte-doc) .menu-nav-wrap::after {
-    right: 0;
-    background: linear-gradient(270deg, rgba(89,46,111,.98) 0%, rgba(89,46,111,0) 100%);
-  }
-  html:not(.carte-doc) .menu-nav-wrap.has-start::before,
-  html:not(.carte-doc) .menu-nav-wrap.has-end::after {
     opacity: 1;
   }
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow::before {
+    left: 0;
+    background: linear-gradient(90deg, #592e6f 0%, #592e6f 42%, rgba(89,46,111,.45) 72%, rgba(89,46,111,0) 100%);
+  }
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow::after {
+    right: 0;
+    background: linear-gradient(270deg, #592e6f 0%, #592e6f 42%, rgba(89,46,111,.45) 72%, rgba(89,46,111,0) 100%);
+  }
   html:not(.carte-doc) .menu-nav-hint {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 3;
-    width: 40px;
-    height: 40px;
+    z-index: 4;
+    width: 36px;
+    height: 36px;
     padding: 0;
-    border: 1px solid rgba(252,246,186,.75);
+    border: 1.5px solid #8a6a1a;
     border-radius: 50%;
-    background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 42%, #d8b257 100%);
-    color: #24102e;
-    box-shadow: 0 4px 12px rgba(0,0,0,.28);
-    opacity: 0;
+    background-color: #e8c547;
+    background-image: linear-gradient(180deg, #f6e7a8 0%, #e0b84a 48%, #c4922c 100%);
+    color: #111;
+    box-shadow: 0 0 0 3px #592e6f, 0 3px 8px rgba(0,0,0,.35);
     pointer-events: none;
-    transition: opacity .2s ease;
     cursor: pointer;
+    opacity: 1;
   }
   html:not(.carte-doc) .menu-nav-hint svg {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
+    display: block;
+    fill: #111;
+    stroke: none;
   }
-  html:not(.carte-doc) .menu-nav-hint--start { left: 6px; }
-  html:not(.carte-doc) .menu-nav-hint--end { right: 6px; }
+  html:not(.carte-doc) .menu-nav-hint--start { left: 8px; }
+  html:not(.carte-doc) .menu-nav-hint--end { right: 8px; }
   html:not(.carte-doc) .menu-nav-wrap.has-start .menu-nav-hint--start,
   html:not(.carte-doc) .menu-nav-wrap.has-end .menu-nav-hint--end {
-    opacity: 1;
+    display: flex;
     pointer-events: auto;
+    opacity: 1;
   }
   html:not(.carte-doc) .menu-nav {
     display: flex !important;
@@ -3616,7 +3614,7 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     grid-template-columns: none !important;
-    padding: 6px 40px !important;
+    padding: 6px 48px !important;
     gap: 8px !important;
   }
   html:not(.carte-doc) .menu-nav::-webkit-scrollbar {
@@ -3666,7 +3664,7 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     display: flex !important;
     flex-wrap: nowrap !important;
     overflow-x: auto;
-    padding: 5px 40px !important;
+    padding: 5px 48px !important;
     gap: 6px !important;
     grid-template-columns: none !important;
   }
@@ -3818,7 +3816,7 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     <div id="menu-nav-anchor" aria-hidden="true"></div>
     <div class="menu-nav-wrap" id="menu-nav-wrap">
       <button type="button" class="menu-nav-hint menu-nav-hint--start" id="menu-nav-hint-start" aria-label="Sections précédentes">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.2 3.6 6.8 12l8.4 8.4 2.1-2.1L11 12l6.3-6.3z"/></svg>
       </button>
       <nav class="menu-nav" id="menu-nav"><button class="nav-btn active" onclick="showMenuSection('entrees', this)">Nos entrées</button>
       <button class="nav-btn" onclick="showMenuSection('plats', this)">Nos plats</button>
@@ -3829,7 +3827,7 @@ html:not(.carte-doc) .menu-nav .nav-btn {
       <button class="nav-btn" onclick="showMenuSection('cocktails', this)">Nos cocktails</button>
     </nav>
       <button type="button" class="menu-nav-hint menu-nav-hint--end" id="menu-nav-hint-end" aria-label="Autres sections">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.8 3.6 16.2 12l-8.4 8.4-2.1-2.1L13 12 6.7 5.7z"/></svg>
       </button>
     </div>
     <div class="container">
@@ -3975,6 +3973,7 @@ function syncMenuNavHints() {
   if (!wrap || !nav) return;
   const max = nav.scrollWidth - nav.clientWidth;
   const overflow = max > 6;
+  wrap.classList.toggle('is-overflow', overflow);
   wrap.classList.toggle('has-start', overflow && nav.scrollLeft > 6);
   wrap.classList.toggle('has-end', overflow && nav.scrollLeft < max - 6);
 }

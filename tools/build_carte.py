@@ -486,35 +486,49 @@ html.carte-doc .print-page--menus .day-options {
   gap: 2.4mm !important;
 }
 
-/* Boissons 6 : remplir la page, interlignes réguliers. */
+/* Boissons 6 : même rythme de lignes, écart net avant Boissons chaudes, page remplie. */
 html.carte-doc .print-page--drinks .print-page__content {
-  gap: 3.6mm !important;
+  gap: 4.4mm !important;
   justify-content: stretch !important;
 }
-html.carte-doc .print-page--drinks .print-page__content > .panel:first-child {
-  flex: 1.45 1 0 !important;
-}
+html.carte-doc .print-page--drinks .print-page__content > .panel,
+html.carte-doc .print-page--drinks .print-page__content > .panel:first-child,
 html.carte-doc .print-page--drinks .print-page__content > .panel:last-child {
   flex: 1 1 0 !important;
+  overflow: visible !important;
+  min-height: 0 !important;
+}
+html.carte-doc .print-page--drinks .print-page__content > .panel:first-child {
+  flex: 1.18 1 0 !important;
 }
 html.carte-doc .print-page--drinks .price-list--cols {
-  flex: 1 1 auto;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
   align-items: stretch !important;
 }
 html.carte-doc .print-page--drinks .panel__head,
 html.carte-doc .print-page--drinks-secondary .panel__head {
-  margin-bottom: 2mm !important;
-}
-html.carte-doc .print-page--drinks .price-line {
-  padding: 0.5mm 0 !important;
+  margin-bottom: 1.8mm !important;
 }
 html.carte-doc .print-page--drinks .price-list__note {
   font-size: 5.8pt !important;
   line-height: 1.2 !important;
 }
 html.carte-doc .print-page--drinks .price-list__col {
-  justify-content: space-between;
-  height: 100%;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  gap: 0 !important;
+}
+html.carte-doc .print-page--drinks .price-line {
+  flex: 1 1 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: 0.45mm 0 !important;
+  min-height: 0 !important;
 }
 
 /* Boissons 7 : ne pas compresser (ça coupe Cidre / Légionnaire). */
