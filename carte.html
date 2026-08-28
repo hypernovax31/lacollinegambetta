@@ -2639,8 +2639,8 @@ button,a { font:inherit; }
     min-height:297mm;
     padding:16px 28px 38px !important;
     display:grid;
-    grid-template-rows:auto auto minmax(0,1fr) auto !important;
-    align-content:start !important;
+    grid-template-rows:auto auto auto !important;
+    align-content:center !important;
     justify-items:center;
     gap:0;
     background:radial-gradient(circle at 50% 25%, #5f3477 0%, #432155 55%, #24102e 100%) !important;
@@ -2670,10 +2670,11 @@ button,a { font:inherit; }
   }
   .print-page--cover .medallion-container {
     align-self:center !important;
-    width:520px !important;
-    height:520px;
+    justify-self:center !important;
+    width:min(100%, 560px) !important;
+    height:auto;
     max-width:88%;
-    margin:50px auto 10px !important;
+    margin:100px auto 0 !important; /* 100px entre le titre et le médaillon */
     display:flex !important;
     flex-flow:column nowrap !important;
     align-items:center;
@@ -2682,11 +2683,12 @@ button,a { font:inherit; }
   }
   .print-page--cover .medallion-container .medallion-frame {
     width:520px;
-    height:466px; /* 520px - bouton (48px) - espacement (6px) pour garder la marge de 50px */
-    margin-bottom:6px;
+    height:520px;
+    margin-bottom:100px; /* 100px entre le médaillon et le bouton */
   }
   .print-page--cover .cover-action {
     display:inline-flex !important;
+    align-self:center !important;
     width:360px;
     min-width:340px;
     margin:0 !important;
@@ -2694,10 +2696,10 @@ button,a { font:inherit; }
     letter-spacing:.14em !important;
   }
   .print-page--cover .cover-footer {
-    align-self:end !important;
+    align-self:center !important;
     width:100%;
     gap:8px !important;
-    margin:8px 0 0 !important;
+    margin:14px 0 0 !important; /* pied collé sous le bouton */
   }
   .print-page--cover .cover-footer-address {
     font-size:.94rem !important;
@@ -3388,8 +3390,8 @@ html:not(.carte-doc) #cover-section {
   display: flex;
 }
 html:not(.carte-doc) #cover-section .cover-page {
-  grid-template-rows: auto minmax(0, 1fr) auto auto !important;
-  align-content: stretch !important;
+  grid-template-rows: auto auto auto !important;
+  align-content: safe center !important;
   align-items: center !important;
   justify-items: center !important;
   flex: 1 1 auto;
@@ -3398,7 +3400,7 @@ html:not(.carte-doc) #cover-section .cover-page {
   height: 100% !important;
   max-height: 100%;
   padding: clamp(10px, 1.6vh, 20px) clamp(16px, 3.6vw, 40px) clamp(12px, 1.6vh, 20px) !important;
-  gap: clamp(10px, 1.4vh, 16px) !important;
+  gap: 0 !important;
   overflow: hidden;
 }
 html:not(.carte-doc) #cover-section .cover-brand {
@@ -3424,33 +3426,32 @@ html:not(.carte-doc) #cover-section .menu-leader-subline {
 }
 html:not(.carte-doc) #cover-section .cover-brand + .medallion-container,
 html:not(.carte-doc) #cover-section .medallion-container {
-  align-self: stretch !important;
-  justify-self: stretch !important;
+  align-self: center !important;
+  justify-self: center !important;
   min-width: 0 !important;
   min-height: 0 !important;
   width: 100% !important;
-  height: 100% !important;
+  height: auto !important;
   max-width: none !important;
   max-height: none !important;
   aspect-ratio: auto !important;
-  margin: 0 !important;
-  padding: clamp(4px, 0.8vh, 12px) 4px !important;
+  margin: 100px 0 0 !important;
+  padding: 0 !important;
   box-sizing: border-box;
   z-index: 2;
-  container-type: size;
+  container-type: normal !important;
   display: flex !important;
   flex-flow: column nowrap !important;
   align-items: center;
   justify-content: flex-start;
-  padding-bottom: 0 !important;
   overflow: visible;
 }
 html:not(.carte-doc) #cover-section .medallion-frame {
   position: relative;
-  width: min(calc(100cqmin * 0.96), 560px);
-  height: min(calc(100cqmin * 0.96), 560px);
+  width: max(120px, min(calc(100% - 8px), calc(100svh - 64px - 420px), 506px));
+  height: max(120px, min(calc(100% - 8px), calc(100svh - 64px - 420px), 506px));
   flex: 0 0 auto;
-  margin-bottom: 6px;
+  margin-bottom: 100px;
 }
 html:not(.carte-doc) #cover-section .medallion-svg {
   inset: 0;
@@ -3485,6 +3486,7 @@ html:not(.carte-doc) #cover-section .cover-footer {
   width: 100%;
   max-width: 100%;
   padding: 0 4px;
+  margin: 14px 0 0 !important;
   gap: clamp(6px, 1vh, 10px) !important;
 }
 @media (max-width: 480px) {
@@ -3566,28 +3568,53 @@ html:not(.carte-doc) #cover-section .cover-footer {
   }
 }
 
-/* ===== Bouton CTA collé sous le médaillon, 50px entre le titre et le médaillon ===== */
+/* ===== Composition centrée : titre, médaillon, bouton équidistants (100px),
+   pied de page collé sous le bouton, médaillon au centre de la page ===== */
+html:not(.carte-doc) #cover-section .cover-page {
+  grid-template-rows: auto auto auto !important;
+  align-content: safe center !important;
+  gap: 0 !important;
+}
+/* 100px entre le titre et le médaillon */
+html:not(.carte-doc) #cover-section .medallion-container {
+  margin-top: 100px !important;
+}
+/* Bouton recentré sous le médaillon */
 html:not(.carte-doc) #cover-section .medallion-container .cover-action {
+  align-self: center !important;
   margin: 0 !important;
 }
-/* 50px titre -> médaillon : le conteneur compense l'entre-ligne de la grille. */
-html:not(.carte-doc) #cover-section .medallion-container {
-  margin-top: calc(50px - clamp(10px, 1.4vh, 16px)) !important;
-  padding-top: 0 !important;
-}
-/* Le cadre est réduit de la hauteur du bouton (48px) + son espacement (6px)
-   pour que l'ensemble médaillon + bouton tienne dans la rangée flexible. */
+/* 100px entre le médaillon et le bouton */
 html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
-  width: min(calc(100cqmin * 0.96 - 54px), calc(560px - 54px));
-  height: min(calc(100cqmin * 0.96 - 54px), calc(560px - 54px));
+  margin-bottom: 100px !important;
 }
-@media (max-width: 480px) {
+/* Pied de page collé sous le bouton : plus de bande vide */
+html:not(.carte-doc) #cover-section .cover-footer {
+  margin-top: 14px !important;
+}
+@media (max-width: 640px) {
+  html:not(.carte-doc) #cover-section .cover-page {
+    overflow-y: auto !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+    width: max(80px, min(calc(100% - 8px), calc(100svh - 64px - 510px), 372px));
+    height: max(80px, min(calc(100% - 8px), calc(100svh - 64px - 510px), 372px));
+  }
+}
+@media (orientation: landscape) and (max-height: 560px) {
+  html:not(.carte-doc) #cover-section .cover-page {
+    overflow-y: auto !important;
+  }
   html:not(.carte-doc) #cover-section .medallion-container {
     margin-top: 40px !important;
   }
   html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
-    width: min(calc(100cqmin * 0.94 - 48px), calc(420px - 48px));
-    height: min(calc(100cqmin * 0.94 - 48px), calc(420px - 48px));
+    width: max(80px, min(calc(100% - 8px), calc(100svh - 64px - 190px), 372px));
+    height: max(80px, min(calc(100% - 8px), calc(100svh - 64px - 190px), 372px));
+    margin-bottom: 40px !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-footer {
+    margin-top: 10px !important;
   }
 }
 
@@ -4265,8 +4292,8 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     min-height:297mm;
     padding:16px 28px 38px !important;
     display:grid;
-    grid-template-rows:auto auto minmax(0,1fr) auto !important;
-    align-content:start !important;
+    grid-template-rows:auto auto auto !important;
+    align-content:center !important;
     justify-items:center;
     gap:0;
     background:radial-gradient(circle at 50% 25%, #5f3477 0%, #432155 55%, #24102e 100%) !important;
@@ -4296,10 +4323,11 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   }
   .print-page--cover .medallion-container {
     align-self:center !important;
-    width:520px !important;
-    height:520px;
+    justify-self:center !important;
+    width:min(100%, 560px) !important;
+    height:auto;
     max-width:88%;
-    margin:50px auto 10px !important;
+    margin:100px auto 0 !important; /* 100px entre le titre et le médaillon */
     display:flex !important;
     flex-flow:column nowrap !important;
     align-items:center;
@@ -4308,11 +4336,12 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   }
   .print-page--cover .medallion-container .medallion-frame {
     width:520px;
-    height:466px; /* 520px - bouton (48px) - espacement (6px) pour garder la marge de 50px */
-    margin-bottom:6px;
+    height:520px;
+    margin-bottom:100px; /* 100px entre le médaillon et le bouton */
   }
   .print-page--cover .cover-action {
     display:inline-flex !important;
+    align-self:center !important;
     width:360px;
     min-width:340px;
     margin:0 !important;
@@ -4320,10 +4349,10 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     letter-spacing:.14em !important;
   }
   .print-page--cover .cover-footer {
-    align-self:end !important;
+    align-self:center !important;
     width:100%;
     gap:8px !important;
-    margin:8px 0 0 !important;
+    margin:14px 0 0 !important; /* pied collé sous le bouton */
   }
   .print-page--cover .cover-footer-address {
     font-size:.94rem !important;
