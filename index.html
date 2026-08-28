@@ -3449,12 +3449,22 @@ html.carte-doc .medallion-frame {
   width: 100%;
   height: 100%;
 }
+html:not(.carte-doc) #cover-section .cover-action,
+#btn-show-menu {
+  white-space: nowrap !important;
+  flex-wrap: nowrap !important;
+}
 html:not(.carte-doc) #cover-section .cover-action {
   position: relative;
   z-index: 3;
   margin: 2px 8px !important;
-  max-width: min(320px, calc(100% - 24px));
+  width: auto !important;
+  min-width: 0;
+  max-width: calc(100% - 16px) !important;
   justify-self: center;
+  overflow: hidden;
+  letter-spacing: 0.08em !important;
+  padding-inline: 18px !important;
 }
 html:not(.carte-doc) #cover-section .cover-footer {
   position: relative;
