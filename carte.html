@@ -3893,6 +3893,125 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   }
 }
 
+/* ===== Couverture : moins d'espace autour du médaillon, tout tient sans défilement ===== */
+html:not(.carte-doc) #cover-section .cover-brand {
+  margin-bottom: clamp(24px, 5vh, 48px) !important;
+}
+html:not(.carte-doc) #cover-section .medallion-container {
+  margin-top: 0 !important;
+}
+html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+  width: max(170px, min(calc(100% - 8px), calc(100svh - 64px - 380px), 488px));
+  max-width: calc(100% - 8px);
+  height: auto;
+  aspect-ratio: 1 / 1;
+  margin-bottom: clamp(24px, 5vh, 48px) !important;
+}
+@media (max-width: 780px) {
+  /* Pied de page empilé : on réserve plus de hauteur */
+  html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+    width: max(170px, min(calc(100% - 8px), calc(100svh - 64px - 455px), 488px));
+  }
+}
+@media (max-width: 640px) {
+  html:not(.carte-doc) #cover-section .cover-brand {
+    margin-bottom: clamp(20px, 4vh, 36px) !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+    width: max(140px, min(calc(100% - 8px), calc(100svh - 64px - 410px), 372px));
+    margin-bottom: clamp(20px, 4vh, 36px) !important;
+  }
+}
+@media (orientation: landscape) and (max-height: 560px) {
+  html:not(.carte-doc) #cover-section .cover-brand {
+    margin-bottom: 24px !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+    width: max(80px, min(calc(100% - 8px), calc(100svh - 64px - 210px), 372px));
+    margin-bottom: 24px !important;
+  }
+}
+
+/* ===== Header : les trois boutons ne se chevauchent jamais ===== */
+html:not(.carte-doc) .top-controls__nav {
+  flex: 1 1 0;
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  html:not(.carte-doc) .top-controls {
+    padding-left: 8px !important;
+    padding-right: 52px !important;
+    gap: 8px !important;
+  }
+  html:not(.carte-doc) .top-controls__nav {
+    gap: 8px !important;
+  }
+  html:not(.carte-doc) .top-controls__nav .control-btn {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0;
+    padding: 10px 6px !important;
+    font-size: clamp(0.6rem, 3vw, 0.72rem) !important;
+    letter-spacing: 0.01em !important;
+    white-space: nowrap !important;
+  }
+  html:not(.carte-doc) .download-btn {
+    right: 8px !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+  html:not(.carte-doc) .download-btn svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+/* ===== Très petits écrans : intitulés + prix sur la même ligne, lisibles, titres centrés ===== */
+@media (max-width: 640px) {
+  html:not(.carte-doc) .food-card__head h5 {
+    font-size: clamp(0.68rem, 2.9vw, 0.9rem) !important;
+    line-height: 1.25 !important;
+  }
+  html:not(.carte-doc) .food-card__head strong {
+    font-size: clamp(0.85rem, 3.8vw, 1rem) !important;
+    flex: 0 0 auto;
+  }
+  html:not(.carte-doc) .price-line__name {
+    font-size: clamp(0.68rem, 2.9vw, 0.9rem) !important;
+  }
+  html:not(.carte-doc) .price-line__price,
+  html:not(.carte-doc) .hh-line__price,
+  html:not(.carte-doc) .hh-line__hh,
+  html:not(.carte-doc) .beer-row__price,
+  html:not(.carte-doc) .beer-row__hh {
+    font-size: clamp(0.85rem, 3.8vw, 1rem) !important;
+  }
+  html:not(.carte-doc) .hh-line__name,
+  html:not(.carte-doc) .beer-row__name,
+  html:not(.carte-doc) .wine-table td.wine-name {
+    font-size: clamp(0.66rem, 2.9vw, 0.86rem) !important;
+  }
+  html:not(.carte-doc) .wine-table td:not(.wine-name),
+  html:not(.carte-doc) .wine-table th {
+    font-size: clamp(0.72rem, 3.2vw, 0.9rem) !important;
+  }
+  html:not(.carte-doc) .panel__head {
+    justify-items: center !important;
+    text-align: center !important;
+  }
+  html:not(.carte-doc) .interior-header {
+    text-align: center !important;
+    justify-items: center !important;
+  }
+}
+@media (max-width: 360px) {
+  /* Garde-fou ultime : titre tronqué proprement plutôt que prix repoussé hors champ */
+  html:not(.carte-doc) .food-card__head h5 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 
 
 /* ===== Styles d’impression du site, appliqués aussi à l’aperçu A4 ===== */
@@ -5522,6 +5641,55 @@ html.carte-doc .print-page--drinks-secondary .price-list__col {
 html.carte-doc #carte-p10 .print-page__content > .panel:first-child { flex: 1.6 1 0 !important; }
 html.carte-doc #carte-p10 .print-page__content > .panel:last-child { flex: 1 1 0 !important; }
 html.carte-doc .print-page--cocktails .duo-grid { grid-template-rows: 1.25fr 1fr !important; }
+
+/* ===== Pointillés or sur toutes les lignes (plats, boissons, bières pression, cocktails) ===== */
+html.carte-doc .print-page .price-line__dots {
+  display: block !important;
+  border-bottom-width: .3mm !important;
+  border-bottom-style: dotted !important;
+  border-bottom-color: rgba(156, 122, 45, .68) !important;
+}
+html.carte-doc .print-page .food-card__head h5::after {
+  content: '' !important;
+  flex: 1 1 auto;
+  min-width: 5mm;
+  border-bottom: .3mm dotted rgba(156, 122, 45, .68);
+  margin: 0 1.6mm;
+  transform: translateY(-.8mm);
+}
+/* Pointillés or entre l'intitulé et les prix des bières pression et des cocktails HH */
+html.carte-doc .print-page .beer-row__name,
+html.carte-doc .print-page .hh-line__name {
+  display: flex !important;
+  align-items: center !important;
+  min-width: 0;
+}
+html.carte-doc .print-page .beer-row__name::after,
+html.carte-doc .print-page .hh-line__name::after {
+  content: '' !important;
+  flex: 1 1 auto;
+  min-width: 3mm;
+  margin-left: 1.6mm;
+  border-bottom: .3mm dotted rgba(156, 122, 45, .68);
+  transform: translateY(-.6mm);
+}
+/* Air sur les interlignes des vins (page 8) : hauteur = contenu, jamais rogné */
+html.carte-doc .print-page--vins .print-page__content > .panel {
+  flex-basis: auto !important;
+  overflow: visible !important;
+}
+html.carte-doc .print-page--vins .wine-table th,
+html.carte-doc .print-page--vins .wine-table td {
+  padding: 1.1mm 0 !important;
+}
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(1) { flex: 1.84 1 auto !important; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(2) { flex: 1.45 1 auto !important; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(3) { flex: 1 1 auto !important; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(4) { flex: 0.85 1 auto !important; }
+/* Air entre les lignes des bières pression */
+html.carte-doc .print-page--drinks-secondary .beer-row {
+  padding: 1mm 0 !important;
+}
 
 </style>
 </head>

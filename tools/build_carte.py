@@ -1204,6 +1204,55 @@ html.carte-doc .print-page--drinks-secondary .price-list__col {
 html.carte-doc #carte-p10 .print-page__content > .panel:first-child { flex: 1.6 1 0 !important; }
 html.carte-doc #carte-p10 .print-page__content > .panel:last-child { flex: 1 1 0 !important; }
 html.carte-doc .print-page--cocktails .duo-grid { grid-template-rows: 1.25fr 1fr !important; }
+
+/* ===== Pointillés or sur toutes les lignes (plats, boissons, bières pression, cocktails) ===== */
+html.carte-doc .print-page .price-line__dots {
+  display: block !important;
+  border-bottom-width: .3mm !important;
+  border-bottom-style: dotted !important;
+  border-bottom-color: rgba(156, 122, 45, .68) !important;
+}
+html.carte-doc .print-page .food-card__head h5::after {
+  content: '' !important;
+  flex: 1 1 auto;
+  min-width: 5mm;
+  border-bottom: .3mm dotted rgba(156, 122, 45, .68);
+  margin: 0 1.6mm;
+  transform: translateY(-.8mm);
+}
+/* Pointillés or entre l'intitulé et les prix des bières pression et des cocktails HH */
+html.carte-doc .print-page .beer-row__name,
+html.carte-doc .print-page .hh-line__name {
+  display: flex !important;
+  align-items: center !important;
+  min-width: 0;
+}
+html.carte-doc .print-page .beer-row__name::after,
+html.carte-doc .print-page .hh-line__name::after {
+  content: '' !important;
+  flex: 1 1 auto;
+  min-width: 3mm;
+  margin-left: 1.6mm;
+  border-bottom: .3mm dotted rgba(156, 122, 45, .68);
+  transform: translateY(-.6mm);
+}
+/* Air sur les interlignes des vins (page 8) : hauteur = contenu, jamais rogné */
+html.carte-doc .print-page--vins .print-page__content > .panel {
+  flex-basis: auto !important;
+  overflow: visible !important;
+}
+html.carte-doc .print-page--vins .wine-table th,
+html.carte-doc .print-page--vins .wine-table td {
+  padding: 1.1mm 0 !important;
+}
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(1) { flex: 1.84 1 auto !important; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(2) { flex: 1.45 1 auto !important; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(3) { flex: 1 1 auto !important; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(4) { flex: 0.85 1 auto !important; }
+/* Air entre les lignes des bières pression */
+html.carte-doc .print-page--drinks-secondary .beer-row {
+  padding: 1mm 0 !important;
+}
 """
 
 
