@@ -3228,31 +3228,62 @@ html:not(.carte-doc) .footer-links .footer-link {
   }
 }
 
-/* Nos menus : 2 / 3 colonnes dès l’iPhone SE, hauteurs égales */
-html:not(.carte-doc) #menus .offer-grid {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  align-items: stretch !important;
-  gap: 10px !important;
+/* Nos menus : une colonne sur téléphone, 2/3 col dès la tablette */
+@media (max-width: 719px) {
+  html:not(.carte-doc) #menus .offer-grid,
+  html:not(.carte-doc) #menus .choice-grid,
+  html:not(.carte-doc) #menus .menus-duo {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  html:not(.carte-doc) #menus .menus-duo {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  html:not(.carte-doc) #menus .menus-duo__left {
+    display: contents !important;
+    height: auto !important;
+  }
+  html:not(.carte-doc) #menus .menus-duo > .panel {
+    order: -1;
+    height: auto !important;
+  }
+  html:not(.carte-doc) #menus .offer-card,
+  html:not(.carte-doc) #menus .choice-card,
+  html:not(.carte-doc) #menus .special-card,
+  html:not(.carte-doc) #menus .breakfast-card {
+    height: auto !important;
+    min-height: 0 !important;
+  }
 }
-html:not(.carte-doc) #menus .choice-grid {
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  align-items: stretch !important;
-  gap: 8px !important;
-}
-html:not(.carte-doc) #menus .menus-duo {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  align-items: stretch !important;
-  gap: 10px !important;
-}
-html:not(.carte-doc) #menus .offer-card,
-html:not(.carte-doc) #menus .choice-card,
-html:not(.carte-doc) #menus .menus-duo > .special-card,
-html:not(.carte-doc) #menus .menus-duo__left {
-  height: 100%;
-  min-height: 0 !important;
+@media (min-width: 720px) {
+  html:not(.carte-doc) #menus .offer-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  html:not(.carte-doc) #menus .choice-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+  html:not(.carte-doc) #menus .menus-duo {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  html:not(.carte-doc) #menus .offer-card,
+  html:not(.carte-doc) #menus .choice-card,
+  html:not(.carte-doc) #menus .menus-duo > .special-card,
+  html:not(.carte-doc) #menus .menus-duo__left {
+    height: 100%;
+    min-height: 0 !important;
+  }
 }
 html:not(.carte-doc) #menus .offer-card {
   min-height: 0 !important;
@@ -3260,33 +3291,33 @@ html:not(.carte-doc) #menus .offer-card {
 }
 @media (max-width: 430px) {
   html:not(.carte-doc) #menus .offer-card {
-    padding: 12px 8px !important;
+    padding: 14px 12px !important;
   }
   html:not(.carte-doc) #menus .offer-card__badge,
   html:not(.carte-doc) #menus .special-card__badge {
-    font-size: 0.72rem !important;
-    padding: 6px 8px !important;
+    font-size: 0.82rem !important;
+    padding: 8px 12px !important;
     min-height: 0 !important;
-    letter-spacing: .04em !important;
+    letter-spacing: .06em !important;
   }
   html:not(.carte-doc) #menus .choice-card {
-    padding: 10px 8px !important;
+    padding: 12px 12px !important;
   }
   html:not(.carte-doc) #menus .choice-card h5 {
-    font-size: 0.68rem !important;
-    letter-spacing: .02em !important;
+    font-size: 0.82rem !important;
+    letter-spacing: .04em !important;
   }
   html:not(.carte-doc) #menus .choice-card li,
   html:not(.carte-doc) #menus .menu-points li {
-    font-size: 0.68rem !important;
+    font-size: 0.78rem !important;
   }
   html:not(.carte-doc) #menus .special-card,
   html:not(.carte-doc) #menus .breakfast-card {
-    padding: 10px 8px !important;
+    padding: 12px 12px !important;
   }
   html:not(.carte-doc) #menus .panel__title {
-    font-size: 0.78rem !important;
-    padding: 8px 12px !important;
+    font-size: 0.88rem !important;
+    padding: 8px 14px !important;
   }
 }
 @media (min-width: 720px) {
@@ -3387,7 +3418,15 @@ html:not(.carte-doc) #cover-section .cover-footer {
   padding: 0 4px;
   gap: clamp(6px, 1vh, 10px) !important;
 }
-@media (max-width: 430px) {
+@media (max-width: 480px) {
+  html:not(.carte-doc) #cover-section .cover-page {
+    padding: 6px 12px 8px !important;
+    gap: 6px !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-brand {
+    padding: 0 !important;
+    gap: 3px !important;
+  }
   html:not(.carte-doc) #cover-section .cover-brand--menu-leader-lite .eyebrow {
     font-size: clamp(1.05rem, 5.6vw, 1.45rem) !important;
     letter-spacing: .08em !important;
@@ -3397,7 +3436,22 @@ html:not(.carte-doc) #cover-section .cover-footer {
   html:not(.carte-doc) #cover-section .menu-leader-subline {
     font-size: clamp(.52rem, 3vw, .68rem) !important;
     letter-spacing: .05em !important;
+    line-height: 1.25 !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-action {
+    margin: 0 !important;
+    min-height: 42px !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-footer {
+    gap: 6px !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-footer-address {
+    font-size: 0.68rem !important;
     line-height: 1.3 !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-links .contact-link {
+    min-height: 40px !important;
+    padding: 8px 10px !important;
   }
 }
 @media (orientation: landscape) and (max-height: 500px) {
