@@ -758,15 +758,15 @@ html.carte-doc .print-page--plats .print-page__content > .panel--accent {
   flex: 0 0 auto !important;
 }
 html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(1) { flex: 1.72 1 0 !important; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(2) { flex: 1.02 1 0 !important; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(3) { flex: 0.82 1 0 !important; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(4) { flex: 0.62 1 0 !important; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(2) { flex: 1.43 1 0 !important; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(3) { flex: 1 1 0 !important; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(4) { flex: 0.86 1 0 !important; }
 html.carte-doc .print-page--vins .wine-table td {
   padding-top: 0.7mm !important;
   padding-bottom: 0.7mm !important;
 }
 
-/* Couverture : un seul double cadre, rien ne le touche. */
+/* Couverture : cadre or strictement sur les bords de la page, composition centrée sans chevauchement. */
 html.carte-doc .print-page--cover {
   background: #24102e !important;
 }
@@ -780,25 +780,27 @@ html.carte-doc .print-page--cover > .cover-page {
   width: 210mm !important;
   height: 297mm !important;
   min-height: 297mm !important;
-  padding: 18mm 16mm 20mm !important;
-  display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) auto auto !important;
-  justify-items: center !important;
-  align-content: stretch !important;
-  gap: 5mm !important;
+  padding: 16mm 16mm 16mm !important;
+  display: flex !important;
+  flex-flow: column nowrap !important;
+  justify-content: safe center !important;
+  align-items: center !important;
+  gap: 0 !important;
   overflow: hidden !important;
   box-sizing: border-box;
+  border: 0 !important;
 }
 html.carte-doc .print-page--cover .cover-page::after {
-  inset: 8mm !important;
-  border: 0.45mm solid rgba(216,178,87,.5) !important;
+  inset: 0 !important;
+  border: 0.45mm solid rgba(216,178,87,.55) !important;
   border-radius: 0 !important;
   pointer-events: none;
 }
 html.carte-doc .print-page--cover .cover-brand {
+  flex: 0 0 auto;
   width: 100%;
   max-width: 170mm;
-  margin: 0 auto !important;
+  margin: 0 0 100px !important; /* 100px entre le titre et le médaillon */
   gap: 3mm !important;
 }
 html.carte-doc .print-page--cover .cover-brand--menu-leader-lite .eyebrow,
@@ -849,12 +851,22 @@ html.carte-doc .print-page--cover a.contact-link.cover-action * {
   color: #24102e !important;
 }
 html.carte-doc .print-page--cover .medallion-container {
+  flex: 0 0 auto;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: none !important;
+  margin: 0 !important;
+  aspect-ratio: auto !important;
+}
+html.carte-doc .print-page--cover .medallion-container .medallion-frame {
+  width: 520px !important;
+  height: 520px !important;
+  margin-bottom: 100px !important; /* 100px entre le médaillon et le bouton */
+}
+html.carte-doc .print-page--cover .medallion-container .cover-action {
+  margin: 0 !important;
   align-self: center !important;
-  width: 108mm !important;
-  height: 108mm !important;
-  max-width: 108mm !important;
-  max-height: 108mm !important;
-  margin: 0 auto !important;
 }
 html.carte-doc .print-page--cover .relief-inner-svg {
   background: transparent !important;
@@ -866,10 +878,11 @@ html.carte-doc .print-page--cover .relief-inner-svg {
   border-radius: 50%;
 }
 html.carte-doc .print-page--cover .cover-footer {
+  flex: 0 0 auto;
   width: 100%;
   max-width: 168mm;
   gap: 3.5mm !important;
-  margin: 0 !important;
+  margin: 14px 0 0 !important; /* pied collé sous le bouton */
 }
 html.carte-doc .print-page--cover .cover-links {
   width: 168mm !important;
@@ -1057,6 +1070,140 @@ html.carte-doc .print-page .price-list--cols {
     break-after: auto;
   }
 }
+
+/* ===== Rythme page 6 dupliqué sur toutes les pages (sauf menus) : polices page 3,
+       couleurs page 6, pointillés vers le prix, aucun trait de séparation ===== */
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .print-page__content {
+  gap: 4.4mm !important;
+}
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .panel__head {
+  margin-bottom: 2.4mm !important;
+}
+/* Intitulés et prix au format de la page 3 (9 pt), notes 7,3 pt */
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .food-card__head h5,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-line__name,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line__name,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .beer-row__name,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .wine-table td.wine-name {
+  font-size: 9pt !important;
+  line-height: 1.25 !important;
+}
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .food-card__head strong,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-line__price,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line__price,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line__hh,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .beer-row__price,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .beer-row__hh,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .wine-table td:not(.wine-name):not(.wine-no) {
+  font-size: 9pt !important;
+}
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .food-card__note,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-list__note {
+  font-size: 7.3pt !important;
+  line-height: 1.3 !important;
+}
+/* Couleurs de la page 6 : encre violette partout, prix en violet foncé */
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .food-card__head h5,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-line__name,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line__name,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .beer-row__name,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .wine-table td.wine-name {
+  color: #2f1740 !important;
+}
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .food-card__head strong,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-line__price,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line__price,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line__hh,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .beer-row__price,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .beer-row__hh,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .wine-table td:not(.wine-name):not(.wine-no) {
+  color: #432155 !important;
+}
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .food-card__note,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-list__note {
+  color: #5d4a6c !important;
+}
+/* Interligne régulier, comme sur la page 6 */
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-line,
+html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line {
+  padding: 0.7mm 0 !important;
+}
+/* Plus aucun trait de séparation autour des textes et des prix */
+html.carte-doc .print-page .food-card,
+html.carte-doc .print-page .price-line,
+html.carte-doc .print-page .hh-line,
+html.carte-doc .print-page .wine-table th,
+html.carte-doc .print-page .wine-table td,
+html.carte-doc .print-page .beer-row,
+html.carte-doc .print-page .beer-table__head {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+html.carte-doc .print-page .food-card {
+  padding: 1.2mm 0 !important;
+  border-radius: 0 !important;
+}
+html.carte-doc .print-page .food-card-grid,
+html.carte-doc .print-page .food-card-grid--wide {
+  row-gap: 1.6mm !important;
+  column-gap: 8mm !important;
+}
+/* Trait en pointillés qui mène au prix sur les plats */
+html.carte-doc .print-page .food-card__head {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+}
+html.carte-doc .print-page .food-card__head h5 {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+html.carte-doc .print-page .food-card__head h5::after {
+  content: '' !important;
+  flex: 1 1 auto;
+  min-width: 4mm;
+  border-bottom: .22mm dotted rgba(156, 122, 45, .6);
+  margin: 0 1.6mm;
+  transform: translateY(-.8mm);
+}
+html.carte-doc .print-page .food-card__head strong {
+  flex: 0 0 auto;
+}
+/* Pointillés vers le prix bien visibles sur les boissons */
+html.carte-doc .print-page .price-line__dots {
+  display: block !important;
+  border-bottom-width: .22mm !important;
+}
+/* Page boissons 6 : trois panneaux étirés, répartis selon leur contenu */
+html.carte-doc .print-page--drinks .print-page__content > .panel:nth-child(1) { flex: 1.55 1 0 !important; }
+html.carte-doc .print-page--drinks .print-page__content > .panel:nth-child(2) { flex: 1 1 0 !important; }
+html.carte-doc .print-page--drinks .print-page__content > .panel:nth-child(3) { flex: 1.1 1 0 !important; }
+/* Page boissons 7 (whiskies / digestifs / bières) : mêmes écarts et étirement que la page 6 */
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel,
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:first-child,
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:last-child {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  justify-content: flex-start !important;
+}
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(1) { flex: 0.9 1 0 !important; }
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(2) { flex: 0.85 1 0 !important; }
+html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(3) { flex: 1.8 1 0 !important; }
+html.carte-doc .print-page--drinks-secondary .price-list,
+html.carte-doc .print-page--drinks-secondary .price-list--cols {
+  flex: 1 1 0 !important;
+  align-content: space-evenly !important;
+}
+html.carte-doc .print-page--drinks-secondary .price-list__col {
+  justify-content: space-evenly !important;
+  height: 100% !important;
+}
+/* Page cocktails 10 (élégance + mocktails) : plus de hauteur pour les 12 cocktails */
+html.carte-doc #carte-p10 .print-page__content > .panel:first-child { flex: 1.6 1 0 !important; }
+html.carte-doc #carte-p10 .print-page__content > .panel:last-child { flex: 1 1 0 !important; }
+html.carte-doc .print-page--cocktails .duo-grid { grid-template-rows: 1.25fr 1fr !important; }
 """
 
 
@@ -1089,9 +1236,9 @@ def main() -> None:
     add("desserts", "\n".join(flows["desserts"]), "desserts")
     add("menus", "\n".join(flows["menus"]), "menus")
     boissons = flows["boissons"]
-    add("drinks", "\n".join(boissons[:2]), "boissons-fraiches-chaudes")
+    add("drinks", "\n".join(boissons[:3]), "boissons-fraiches-chaudes-aperitifs")
     hh = '<p class="hh-banner"><svg class="hh-ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0.4 10.2 5.8 15.6 8 10.2 10.2 8 15.6 5.8 10.2 0.4 8 5.8 5.8Z"/></svg> Happy Hour (HH) · 17h <svg class="hh-ico hh-ico-arrow" viewBox="0 0 20 10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M1 5h16M13.2 2.1 18 5l-4.8 2.9"/></svg> 23h <svg class="hh-ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0.4 10.2 5.8 15.6 8 10.2 10.2 8 15.6 5.8 10.2 0.4 8 5.8 5.8Z"/></svg></p>'
-    add("drinks-secondary", "\n".join(boissons[2:]) + "\n" + hh, "aperitifs-whiskies-digestifs-bieres")
+    add("drinks-secondary", "\n".join(boissons[3:]) + "\n" + hh, "whiskies-digestifs-bieres")
     add("vins", "\n".join(flows["vins"]), "vins")
     ck = flows["cocktails"]
     add("cocktails", "\n".join(ck[:2]), "cocktails-classiques-duo")
