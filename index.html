@@ -3389,10 +3389,11 @@ html:not(.carte-doc) #cover-section {
   display: flex;
 }
 html:not(.carte-doc) #cover-section .cover-page {
-  grid-template-rows: auto auto auto !important;
-  align-content: safe center !important;
+  display: flex !important;
+  flex-flow: column nowrap !important;
+  justify-content: safe center !important;
   align-items: center !important;
-  justify-items: center !important;
+  gap: 0 !important;
   flex: 1 1 auto;
   width: 100%;
   min-height: 0 !important;
@@ -3400,7 +3401,8 @@ html:not(.carte-doc) #cover-section .cover-page {
   max-height: 100%;
   padding: clamp(10px, 1.6vh, 20px) clamp(16px, 3.6vw, 40px) clamp(12px, 1.6vh, 20px) !important;
   gap: 0 !important;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto; /* défilement de secours si la fenêtre est trop basse pour 100px + grand médaillon */
 }
 html:not(.carte-doc) #cover-section .cover-brand {
   align-content: center !important;
@@ -3408,9 +3410,10 @@ html:not(.carte-doc) #cover-section .cover-brand {
   min-height: 0;
   max-width: 100%;
   padding: 2px 4px 0 !important;
-  margin: 0 !important;
+  margin: 0 0 100px !important; /* 100px entre le titre et le médaillon */
   gap: clamp(4px, 0.7vh, 8px) !important;
   z-index: 3;
+  flex: 0 0 auto;
 }
 html:not(.carte-doc) #cover-section .cover-brand--menu-leader-lite .eyebrow,
 html:not(.carte-doc) #cover-section .leader-meta,
@@ -3429,12 +3432,13 @@ html:not(.carte-doc) #cover-section .medallion-container {
   justify-self: center !important;
   min-width: 0 !important;
   min-height: 0 !important;
+  flex: 0 0 auto;
   width: 100% !important;
   height: auto !important;
   max-width: none !important;
   max-height: none !important;
   aspect-ratio: auto !important;
-  margin: 100px 0 0 !important;
+  margin: 0 !important;
   padding: 0 !important;
   box-sizing: border-box;
   z-index: 2;
@@ -3447,8 +3451,10 @@ html:not(.carte-doc) #cover-section .medallion-container {
 }
 html:not(.carte-doc) #cover-section .medallion-frame {
   position: relative;
-  width: max(120px, min(calc(100% - 8px), calc(100svh - 64px - 420px), 506px));
-  height: max(120px, min(calc(100% - 8px), calc(100svh - 64px - 420px), 506px));
+  width: max(380px, min(calc(100svh - 64px - 420px), 488px));
+  max-width: calc(100% - 8px);
+  height: auto;
+  aspect-ratio: 1 / 1;
   flex: 0 0 auto;
   margin-bottom: 100px;
 }
@@ -3482,6 +3488,8 @@ html:not(.carte-doc) #cover-section .cover-action {
 html:not(.carte-doc) #cover-section .cover-footer {
   position: relative;
   z-index: 3;
+  flex: 0 0 auto;
+  align-self: stretch !important;
   width: 100%;
   max-width: 100%;
   padding: 0 4px;
@@ -3491,7 +3499,7 @@ html:not(.carte-doc) #cover-section .cover-footer {
 @media (max-width: 480px) {
   html:not(.carte-doc) #cover-section .cover-page {
     padding: 8px 12px 10px !important;
-    gap: 10px !important;
+    gap: 0 !important;
   }
   html:not(.carte-doc) #cover-section .medallion-container {
     padding: 6px 4px !important;
@@ -3516,7 +3524,7 @@ html:not(.carte-doc) #cover-section .cover-footer {
     line-height: 1.25 !important;
   }
   html:not(.carte-doc) #cover-section .cover-action {
-    margin: 4px 0 2px !important;
+    margin: 0 !important;
     min-height: 42px !important;
   }
   html:not(.carte-doc) #cover-section .cover-footer {
@@ -3534,7 +3542,7 @@ html:not(.carte-doc) #cover-section .cover-footer {
 @media (orientation: landscape) and (max-height: 500px) {
   html:not(.carte-doc) #cover-section .cover-page {
     padding: 4px 18px 6px !important;
-    gap: 4px !important;
+    gap: 0 !important;
   }
   html:not(.carte-doc) #cover-section .cover-brand {
     padding: 0 8px !important;
@@ -3596,24 +3604,84 @@ html:not(.carte-doc) #cover-section .cover-footer {
     overflow-y: auto !important;
   }
   html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
-    width: max(80px, min(calc(100% - 8px), calc(100svh - 64px - 510px), 372px));
-    height: max(80px, min(calc(100% - 8px), calc(100svh - 64px - 510px), 372px));
+    width: max(300px, min(calc(100svh - 64px - 470px), 372px));
+    max-width: calc(100% - 8px);
+    height: auto;
+    aspect-ratio: 1 / 1;
   }
 }
 @media (orientation: landscape) and (max-height: 560px) {
   html:not(.carte-doc) #cover-section .cover-page {
     overflow-y: auto !important;
   }
-  html:not(.carte-doc) #cover-section .medallion-container {
-    margin-top: 40px !important;
+  html:not(.carte-doc) #cover-section .cover-brand {
+    margin-bottom: 40px !important;
   }
   html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
-    width: max(80px, min(calc(100% - 8px), calc(100svh - 64px - 190px), 372px));
-    height: max(80px, min(calc(100% - 8px), calc(100svh - 64px - 190px), 372px));
+    width: max(80px, min(calc(100svh - 64px - 190px), 372px));
+    max-width: calc(100% - 8px);
+    height: auto;
+    aspect-ratio: 1 / 1;
     margin-bottom: 40px !important;
   }
   html:not(.carte-doc) #cover-section .cover-footer {
     margin-top: 10px !important;
+  }
+}
+
+
+/* ===== Chaque intitulé et chaque prix sur une seule ligne, espace souple ===== */
+html:not(.carte-doc) .food-card__head,
+html:not(.carte-doc) .price-line__row,
+html:not(.carte-doc) .day-lines div {
+  flex-wrap: nowrap !important;
+  column-gap: clamp(10px, 2.5vw, 24px) !important;
+}
+html:not(.carte-doc) .food-card__head h5,
+html:not(.carte-doc) .price-line__name,
+html:not(.carte-doc) .hh-line__name,
+html:not(.carte-doc) .beer-row__name,
+html:not(.carte-doc) .choice-card li,
+html:not(.carte-doc) .hh-head span,
+html:not(.carte-doc) .beer-table__head span,
+html:not(.carte-doc) .wine-table th,
+html:not(.carte-doc) .wine-table td,
+html:not(.carte-doc) #cover-section .leader-meta,
+html:not(.carte-doc) #cover-section .menu-leader-subline,
+html:not(.carte-doc) .cover-links .contact-link,
+html:not(.carte-doc) .footer-links .footer-link {
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
+}
+html:not(.carte-doc) .price-line__dots {
+  flex: 1 1 auto !important;
+  min-width: 10px;
+}
+html:not(.carte-doc) .price-line__price { width: auto !important; }
+@media (max-width: 640px) {
+  /* Vins : lignes sur une seule ligne, défilement horizontal léger */
+  html:not(.carte-doc) #vins .table-wrap {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  html:not(.carte-doc) .wine-table { min-width: 700px !important; }
+  html:not(.carte-doc) .wine-table.wine-table--short { min-width: 560px !important; }
+  html:not(.carte-doc) #menus .day-option__desc {
+    font-size: clamp(0.62rem, 3.2vw, 0.8rem) !important;
+    letter-spacing: .04em !important;
+  }
+}
+@media (max-width: 480px) {
+  html:not(.carte-doc) .food-card__head h5 {
+    font-size: clamp(0.68rem, 3.8vw, 0.92rem) !important;
+  }
+  html:not(.carte-doc) .beer-row__name {
+    font-size: clamp(0.6rem, 3.2vw, 0.8rem) !important;
+  }
+  html:not(.carte-doc) .beer-table__head,
+  html:not(.carte-doc) .beer-row {
+    grid-template-columns: minmax(0, 1fr) repeat(3, 48px) !important;
+    gap: 6px !important;
   }
 }
 
