@@ -2673,14 +2673,23 @@ button,a { font:inherit; }
     width:520px !important;
     height:520px;
     max-width:88%;
-    margin:10px auto !important;
+    margin:50px auto 10px !important;
+    display:flex !important;
+    flex-flow:column nowrap !important;
+    align-items:center;
+    justify-content:flex-start;
+    overflow:visible;
+  }
+  .print-page--cover .medallion-container .medallion-frame {
+    width:520px;
+    height:466px; /* 520px - bouton (48px) - espacement (6px) pour garder la marge de 50px */
+    margin-bottom:6px;
   }
   .print-page--cover .cover-action {
     display:inline-flex !important;
-    align-self:end !important;
     width:360px;
     min-width:340px;
-    margin:6px 0 12px !important;
+    margin:0 !important;
     font-size:1.28rem !important;
     letter-spacing:.14em !important;
   }
@@ -3430,15 +3439,18 @@ html:not(.carte-doc) #cover-section .medallion-container {
   z-index: 2;
   container-type: size;
   display: flex !important;
+  flex-flow: column nowrap !important;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  justify-content: flex-start;
+  padding-bottom: 0 !important;
+  overflow: visible;
 }
 html:not(.carte-doc) #cover-section .medallion-frame {
   position: relative;
   width: min(calc(100cqmin * 0.96), 560px);
   height: min(calc(100cqmin * 0.96), 560px);
   flex: 0 0 auto;
+  margin-bottom: 6px;
 }
 html:not(.carte-doc) #cover-section .medallion-svg {
   inset: 0;
@@ -3450,12 +3462,22 @@ html.carte-doc .medallion-frame {
   width: 100%;
   height: 100%;
 }
+html:not(.carte-doc) #cover-section .cover-action,
+#btn-show-menu {
+  white-space: nowrap !important;
+  flex-wrap: nowrap !important;
+}
 html:not(.carte-doc) #cover-section .cover-action {
   position: relative;
   z-index: 3;
   margin: 2px 8px !important;
-  max-width: min(320px, calc(100% - 24px));
+  width: auto !important;
+  min-width: 0;
+  max-width: calc(100% - 16px) !important;
   justify-self: center;
+  overflow: hidden;
+  letter-spacing: 0.08em !important;
+  padding-inline: 18px !important;
 }
 html:not(.carte-doc) #cover-section .cover-footer {
   position: relative;
@@ -3544,6 +3566,30 @@ html:not(.carte-doc) #cover-section .cover-footer {
   }
 }
 
+/* ===== Bouton CTA collé sous le médaillon, 50px entre le titre et le médaillon ===== */
+html:not(.carte-doc) #cover-section .medallion-container .cover-action {
+  margin: 0 !important;
+}
+/* 50px titre -> médaillon : le conteneur compense l'entre-ligne de la grille. */
+html:not(.carte-doc) #cover-section .medallion-container {
+  margin-top: calc(50px - clamp(10px, 1.4vh, 16px)) !important;
+  padding-top: 0 !important;
+}
+/* Le cadre est réduit de la hauteur du bouton (48px) + son espacement (6px)
+   pour que l'ensemble médaillon + bouton tienne dans la rangée flexible. */
+html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+  width: min(calc(100cqmin * 0.96 - 54px), calc(560px - 54px));
+  height: min(calc(100cqmin * 0.96 - 54px), calc(560px - 54px));
+}
+@media (max-width: 480px) {
+  html:not(.carte-doc) #cover-section .medallion-container {
+    margin-top: 40px !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+    width: min(calc(100cqmin * 0.94 - 48px), calc(420px - 48px));
+    height: min(calc(100cqmin * 0.94 - 48px), calc(420px - 48px));
+  }
+}
 
 
 /* ===== Menu interactif : barre plus basse, boutons tactiles, paysage empilé ===== */
@@ -4253,14 +4299,23 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     width:520px !important;
     height:520px;
     max-width:88%;
-    margin:10px auto !important;
+    margin:50px auto 10px !important;
+    display:flex !important;
+    flex-flow:column nowrap !important;
+    align-items:center;
+    justify-content:flex-start;
+    overflow:visible;
+  }
+  .print-page--cover .medallion-container .medallion-frame {
+    width:520px;
+    height:466px; /* 520px - bouton (48px) - espacement (6px) pour garder la marge de 50px */
+    margin-bottom:6px;
   }
   .print-page--cover .cover-action {
     display:inline-flex !important;
-    align-self:end !important;
     width:360px;
     min-width:340px;
-    margin:6px 0 12px !important;
+    margin:0 !important;
     font-size:1.28rem !important;
     letter-spacing:.14em !important;
   }
@@ -5271,8 +5326,9 @@ html.carte-doc .print-page .price-list--cols {
                     </g>
                 </svg>
 
-                <svg class="relief-inner-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><image href="medallion-facade.png" width="280" height="280" preserveAspectRatio="xMidYMid slice"/></svg></div></div>
+                <svg class="relief-inner-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><image href="medallion-facade.png" width="280" height="280" preserveAspectRatio="xMidYMid slice"/></svg></div>
       <a href="index.html#menu-nav-anchor" class="contact-link cover-action"><span class="star-gold">✦</span> Menu & Carte <span class="star-gold">✦</span></a>
+      </div>
       <div class="cover-footer">
         <div class="cover-footer-address">4 rue Belgrand • 75020 Paris • Place Gambetta</div>
         <div class="cover-links">
