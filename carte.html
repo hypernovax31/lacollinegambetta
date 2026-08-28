@@ -3145,6 +3145,9 @@ html:not(.carte-doc) #cocktails .price-list__note {
   text-size-adjust: 100%;
 }
 @media (min-width: 1100px) {
+  html:not(.carte-doc) .container {
+    width: min(100% - 40px, 1360px) !important;
+  }
   html:not(.carte-doc) .food-card__head h5,
   html:not(.carte-doc) #entrees .food-card__head h5,
   html:not(.carte-doc) #plats .food-card__head h5,
@@ -3153,14 +3156,18 @@ html:not(.carte-doc) #cocktails .price-list__note {
   html:not(.carte-doc) .hh-line__name,
   html:not(.carte-doc) .beer-row__name,
   html:not(.carte-doc) .choice-card h5,
-  html:not(.carte-doc) .wine-table .wine-name,
+  html:not(.carte-doc) .wine-table .wine-name {
+    font-size: 1.12rem !important;
+  }
   html:not(.carte-doc) .food-card__head strong,
   html:not(.carte-doc) #plats .food-card__head strong,
   html:not(.carte-doc) .price-line__price,
   html:not(.carte-doc) .hh-line__price,
   html:not(.carte-doc) .hh-line__hh,
-  html:not(.carte-doc) .hh-line__row .grand-price {
-    font-size: 0.95rem !important;
+  html:not(.carte-doc) .hh-line__row .grand-price,
+  html:not(.carte-doc) .beer-row__price,
+  html:not(.carte-doc) .beer-row__hh {
+    font-size: 1.28rem !important;
   }
   html:not(.carte-doc) .food-card__note,
   html:not(.carte-doc) p.food-card__note,
@@ -3172,7 +3179,31 @@ html:not(.carte-doc) #cocktails .price-list__note {
   html:not(.carte-doc) .choice-card li,
   html:not(.carte-doc) .menu-points li,
   html:not(.carte-doc) .hh-line .price-list__note {
-    font-size: 0.84rem !important;
+    font-size: 0.98rem !important;
+  }
+  html:not(.carte-doc) .panel__title {
+    font-size: 1.02rem !important;
+  }
+  html:not(.carte-doc) .menu-nav .nav-btn {
+    font-size: 0.92rem !important;
+  }
+}
+@media (min-width: 1440px) {
+  html:not(.carte-doc) { font-size: 17.5px; }
+  html:not(.carte-doc) .container {
+    width: min(100% - 56px, 1580px) !important;
+  }
+}
+@media (min-width: 1760px) {
+  html:not(.carte-doc) { font-size: 19px; }
+  html:not(.carte-doc) .container {
+    width: min(100% - 72px, 1760px) !important;
+  }
+}
+@media (min-width: 2000px) {
+  html:not(.carte-doc) { font-size: 20.5px; }
+  html:not(.carte-doc) .container {
+    width: min(100% - 88px, 1920px) !important;
   }
 }
 
@@ -3550,63 +3581,57 @@ html:not(.carte-doc) .menu-nav .nav-btn {
 }
 @media (max-width: 1100px) {
   html:not(.carte-doc) .menu-nav-wrap {
-    isolation: isolate;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    column-gap: 6px;
+    padding: 6px 8px;
   }
-  html:not(.carte-doc) .menu-nav-wrap.is-overflow::before,
-  html:not(.carte-doc) .menu-nav-wrap.is-overflow::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 68px;
-    z-index: 2;
-    pointer-events: none;
-    opacity: 1;
-  }
-  html:not(.carte-doc) .menu-nav-wrap.is-overflow::before {
-    left: 0;
-    background: linear-gradient(90deg, #592e6f 0%, #592e6f 42%, rgba(89,46,111,.45) 72%, rgba(89,46,111,0) 100%);
-  }
-  html:not(.carte-doc) .menu-nav-wrap.is-overflow::after {
-    right: 0;
-    background: linear-gradient(270deg, #592e6f 0%, #592e6f 42%, rgba(89,46,111,.45) 72%, rgba(89,46,111,0) 100%);
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow {
+    grid-template-columns: 42px minmax(0, 1fr) 42px;
   }
   html:not(.carte-doc) .menu-nav-hint {
     display: none;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    transform: none;
     z-index: 4;
-    width: 36px;
-    height: 36px;
+    width: 42px;
+    height: 42px;
     padding: 0;
-    border: 1.5px solid #8a6a1a;
+    border: 0;
     border-radius: 50%;
-    background-color: #e8c547;
-    background-image: linear-gradient(180deg, #f6e7a8 0%, #e0b84a 48%, #c4922c 100%);
-    color: #111;
-    box-shadow: 0 0 0 3px #592e6f, 0 3px 8px rgba(0,0,0,.35);
+    background: #f3d56a;
+    color: #1a0b22;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 2px 6px rgba(0,0,0,.28);
     pointer-events: none;
     cursor: pointer;
     opacity: 1;
+    flex: 0 0 42px;
   }
   html:not(.carte-doc) .menu-nav-hint svg {
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
     display: block;
-    fill: #111;
+    fill: #1a0b22;
     stroke: none;
   }
-  html:not(.carte-doc) .menu-nav-hint--start { left: 8px; }
-  html:not(.carte-doc) .menu-nav-hint--end { right: 8px; }
-  html:not(.carte-doc) .menu-nav-wrap.has-start .menu-nav-hint--start,
-  html:not(.carte-doc) .menu-nav-wrap.has-end .menu-nav-hint--end {
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow .menu-nav-hint {
     display: flex;
     pointer-events: auto;
     opacity: 1;
   }
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow:not(.has-start) .menu-nav-hint--start,
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow:not(.has-end) .menu-nav-hint--end {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  html:not(.carte-doc) .menu-nav-hint--start { justify-self: center; }
+  html:not(.carte-doc) .menu-nav-hint--end { justify-self: center; }
   html:not(.carte-doc) .menu-nav {
     display: flex !important;
     flex-wrap: nowrap !important;
@@ -3615,8 +3640,13 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     grid-template-columns: none !important;
-    padding: 6px 48px !important;
+    min-width: 0;
+    padding: 0 2px !important;
     gap: 8px !important;
+  }
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow .menu-nav {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
   }
   html:not(.carte-doc) .menu-nav::-webkit-scrollbar {
     display: none;
@@ -3665,7 +3695,7 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     display: flex !important;
     flex-wrap: nowrap !important;
     overflow-x: auto;
-    padding: 5px 48px !important;
+    padding: 5px 4px !important;
     gap: 6px !important;
     grid-template-columns: none !important;
   }
@@ -4598,9 +4628,9 @@ html.carte-doc .print-page--menus .day-options {
   gap: 2.4mm !important;
 }
 
-/* Boissons 6 : même rythme de lignes, écart net avant Boissons chaudes, page remplie. */
+/* Boissons 6 : plus d’air dans les deux blocs, plus d’écart avant Boissons chaudes. */
 html.carte-doc .print-page--drinks .print-page__content {
-  gap: 4.4mm !important;
+  gap: 9mm !important;
   justify-content: stretch !important;
 }
 html.carte-doc .print-page--drinks .print-page__content > .panel,
@@ -4611,7 +4641,7 @@ html.carte-doc .print-page--drinks .print-page__content > .panel:last-child {
   min-height: 0 !important;
 }
 html.carte-doc .print-page--drinks .print-page__content > .panel:first-child {
-  flex: 1.18 1 0 !important;
+  flex: 1.08 1 0 !important;
 }
 html.carte-doc .print-page--drinks .price-list--cols {
   flex: 1 1 auto !important;
@@ -4620,11 +4650,15 @@ html.carte-doc .print-page--drinks .price-list--cols {
 }
 html.carte-doc .print-page--drinks .panel__head,
 html.carte-doc .print-page--drinks-secondary .panel__head {
-  margin-bottom: 1.8mm !important;
+  margin-bottom: 2.8mm !important;
+}
+html.carte-doc .print-page--drinks .print-page__content > .panel:last-child .panel__head {
+  margin-top: 0.6mm !important;
+  margin-bottom: 3mm !important;
 }
 html.carte-doc .print-page--drinks .price-list__note {
   font-size: 5.8pt !important;
-  line-height: 1.2 !important;
+  line-height: 1.25 !important;
 }
 html.carte-doc .print-page--drinks .price-list__col {
   display: flex !important;
@@ -4632,14 +4666,14 @@ html.carte-doc .print-page--drinks .price-list__col {
   justify-content: flex-start !important;
   height: 100% !important;
   min-height: 0 !important;
-  gap: 0 !important;
+  gap: 0.6mm !important;
 }
 html.carte-doc .print-page--drinks .price-line {
   flex: 1 1 0 !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
-  padding: 0.45mm 0 !important;
+  padding: 0.9mm 0 !important;
   min-height: 0 !important;
 }
 

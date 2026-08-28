@@ -486,9 +486,9 @@ html.carte-doc .print-page--menus .day-options {
   gap: 2.4mm !important;
 }
 
-/* Boissons 6 : même rythme de lignes, écart net avant Boissons chaudes, page remplie. */
+/* Boissons 6 : plus d’air dans les deux blocs, plus d’écart avant Boissons chaudes. */
 html.carte-doc .print-page--drinks .print-page__content {
-  gap: 4.4mm !important;
+  gap: 9mm !important;
   justify-content: stretch !important;
 }
 html.carte-doc .print-page--drinks .print-page__content > .panel,
@@ -499,7 +499,7 @@ html.carte-doc .print-page--drinks .print-page__content > .panel:last-child {
   min-height: 0 !important;
 }
 html.carte-doc .print-page--drinks .print-page__content > .panel:first-child {
-  flex: 1.18 1 0 !important;
+  flex: 1.08 1 0 !important;
 }
 html.carte-doc .print-page--drinks .price-list--cols {
   flex: 1 1 auto !important;
@@ -508,11 +508,15 @@ html.carte-doc .print-page--drinks .price-list--cols {
 }
 html.carte-doc .print-page--drinks .panel__head,
 html.carte-doc .print-page--drinks-secondary .panel__head {
-  margin-bottom: 1.8mm !important;
+  margin-bottom: 2.8mm !important;
+}
+html.carte-doc .print-page--drinks .print-page__content > .panel:last-child .panel__head {
+  margin-top: 0.6mm !important;
+  margin-bottom: 3mm !important;
 }
 html.carte-doc .print-page--drinks .price-list__note {
   font-size: 5.8pt !important;
-  line-height: 1.2 !important;
+  line-height: 1.25 !important;
 }
 html.carte-doc .print-page--drinks .price-list__col {
   display: flex !important;
@@ -520,14 +524,14 @@ html.carte-doc .print-page--drinks .price-list__col {
   justify-content: flex-start !important;
   height: 100% !important;
   min-height: 0 !important;
-  gap: 0 !important;
+  gap: 0.6mm !important;
 }
 html.carte-doc .print-page--drinks .price-line {
   flex: 1 1 0 !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
-  padding: 0.45mm 0 !important;
+  padding: 0.9mm 0 !important;
   min-height: 0 !important;
 }
 
