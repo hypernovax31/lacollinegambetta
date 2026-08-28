@@ -297,7 +297,7 @@ html.carte-doc .print-page__content {
   display: flex !important;
   flex-direction: column !important;
   justify-content: stretch !important;
-  gap: 3.6mm !important;
+  gap: 4.4mm !important;
   overflow: hidden !important;
 }
 html.carte-doc .print-page__content > .panel,
@@ -305,32 +305,41 @@ html.carte-doc .print-page__content > .menus-duo,
 html.carte-doc .print-page__content > .duo-grid {
   min-width: 0;
   min-height: 0;
-  flex: 0 1 auto;
+  flex: 1 1 0;
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden;
-}
-html.carte-doc .print-page__content > .panel:last-child,
-html.carte-doc .print-page__content > .menus-duo:last-child,
-html.carte-doc .print-page__content > .duo-grid:last-child {
-  flex: 1 1 auto;
 }
 html.carte-doc .print-page .panel__head {
   margin-bottom: 2mm !important;
 }
 html.carte-doc .print-page .food-card-grid,
-html.carte-doc .print-page .food-card-grid--wide,
+html.carte-doc .print-page .food-card-grid--wide {
+  flex: 1 1 0;
+  align-content: stretch;
+  align-items: stretch !important;
+  grid-auto-rows: 1fr;
+  row-gap: 1.6mm;
+  min-height: 0;
+}
+html.carte-doc .print-page .food-card {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-height: 0;
+  overflow: hidden;
+}
 html.carte-doc .print-page .wine-table {
-  flex: 1 1 auto;
-  align-content: start;
-  row-gap: 2.4mm;
+  flex: 1 1 0;
+  height: 100%;
+  min-height: 0;
 }
 html.carte-doc .print-page .price-list:not(.price-list--cols) {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 8mm;
-  flex: 1 1 auto;
-  align-content: start;
+  flex: 1 1 0;
+  align-content: space-evenly;
 }
 
 /* Grilles PC forcées sous 1480px / 860px. */
@@ -625,16 +634,16 @@ html.carte-doc .print-page--drinks-secondary .hh-banner .hh-ico-arrow {
 
 /* Cocktails : 1 colonne, tout le contenu visible, sans trou au milieu. */
 html.carte-doc .print-page--cocktails .print-page__content {
-  justify-content: flex-start !important;
-  gap: 3.6mm !important;
+  justify-content: stretch !important;
+  gap: 4.4mm !important;
 }
 html.carte-doc .print-page--cocktails .print-page__content > .panel,
 html.carte-doc .print-page--cocktails .print-page__content > .panel:first-child,
 html.carte-doc .print-page--cocktails .print-page__content > .panel:last-child,
 html.carte-doc .print-page--cocktails .print-page__content > .duo-grid {
-  flex: 0 0 auto !important;
-  overflow: visible !important;
-  min-height: auto !important;
+  flex: 1 1 0 !important;
+  overflow: hidden !important;
+  min-height: 0 !important;
 }
 html.carte-doc .print-page--cocktails .duo-grid {
   grid-template-rows: auto auto !important;
@@ -645,7 +654,7 @@ html.carte-doc .print-page--cocktails .hh-list--cols {
 }
 html.carte-doc .print-page--cocktails .price-list,
 html.carte-doc .print-page--cocktails .price-list:not(.price-list--cols) {
-  align-content: start !important;
+  align-content: space-evenly !important;
 }
 html.carte-doc .print-page--cocktails .hh-list--cols {
   display: flex !important;
@@ -661,7 +670,7 @@ html.carte-doc .print-page--cocktails .hh-list__col:not(:first-child) .hh-head {
   display: none !important;
 }
 html.carte-doc .print-page--cocktails .hh-list--cols {
-  justify-content: space-evenly;
+  justify-content: flex-start;
 }
 html.carte-doc .print-page--cocktails .price-list,
 html.carte-doc .print-page--cocktails .price-list:not(.price-list--cols) {
@@ -680,7 +689,8 @@ html.carte-doc .print-page--cocktails .duo-grid > .panel {
   display: flex !important;
   flex-direction: column !important;
   min-height: 0;
-  overflow: hidden;
+  overflow: hidden !important;
+  flex: 1 1 0 !important;
 }
 html.carte-doc .print-page--cocktails .hh-line__row,
 html.carte-doc .print-page--cocktails .hh-head {
@@ -688,7 +698,20 @@ html.carte-doc .print-page--cocktails .hh-head {
   column-gap: 2mm !important;
 }
 html.carte-doc .print-page--cocktails .hh-line {
-  padding: 0.45mm 0 !important;
+  flex: 1 1 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: 0.35mm 0 !important;
+  min-height: 0 !important;
+  overflow: hidden;
+}
+html.carte-doc .print-page--cocktails .price-line {
+  flex: 1 1 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-height: 0 !important;
 }
 html.carte-doc .print-page--cocktails .hh-line__name {
   font-size: 8pt !important;
@@ -724,13 +747,24 @@ html.carte-doc .print-page--menus .breakfast-card--simple {
   background: transparent !important;
   padding: 2mm 4mm 3mm !important;
 }
-html.carte-doc .print-page--desserts .print-page__content > .panel:nth-child(1) { flex: 1.35 1 0; }
-html.carte-doc .print-page--desserts .print-page__content > .panel:nth-child(2) { flex: 1.22 1 0; }
-html.carte-doc .print-page--desserts .print-page__content > .panel:nth-child(3) { flex: 0.82 1 0; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(1) { flex: 1.4 1 0; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(2) { flex: 1.2 1 0; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(3) { flex: 0.78 1 0; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(4) { flex: 0.72 1 0; }
+html.carte-doc .print-page--entrees .print-page__content > .panel,
+html.carte-doc .print-page--plats .print-page__content > .panel,
+html.carte-doc .print-page--desserts .print-page__content > .panel,
+html.carte-doc .print-page--vins .print-page__content > .panel {
+  flex: 1 1 0 !important;
+  overflow: hidden !important;
+}
+html.carte-doc .print-page--plats .print-page__content > .panel--accent {
+  flex: 0 0 auto !important;
+}
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(1) { flex: 1.72 1 0 !important; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(2) { flex: 1.02 1 0 !important; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(3) { flex: 0.82 1 0 !important; }
+html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(4) { flex: 0.62 1 0 !important; }
+html.carte-doc .print-page--vins .wine-table td {
+  padding-top: 0.7mm !important;
+  padding-bottom: 0.7mm !important;
+}
 
 /* Couverture : un seul double cadre, rien ne le touche. */
 html.carte-doc .print-page--cover {
