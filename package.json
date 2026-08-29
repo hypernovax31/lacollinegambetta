@@ -2,7 +2,8 @@
   "name": "lacollinegambetta",
   "private": true,
   "scripts": {
-    "build:print": "node tools/build_browser_print.mjs"
+    "build:print": "node tools/build_browser_print.mjs",
+    "build:carte-pdf": "node tools/build_carte_pdf.mjs"
   },
   "devDependencies": {
     "@sparticuz/chromium": "149.0.0",

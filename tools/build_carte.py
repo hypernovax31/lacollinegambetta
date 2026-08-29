@@ -1253,11 +1253,80 @@ html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(4) { fl
 html.carte-doc .print-page--drinks-secondary .beer-row {
   padding: 1mm 0 !important;
 }
+
+/* Page plats : section Pâtes ajoutée — 5 blocs au même rythme (la
+   répartition suit le nombre de lignes de chaque rubrique, la typo
+   est légèrement resserrée pour que rien ne soit coupé). */
+html.carte-doc .print-page--plats .print-page__content {
+  gap: 2.7mm !important;
+}
+html.carte-doc .print-page--plats .print-page__content > .panel {
+  flex: 1 1 0 !important;
+}
+html.carte-doc .print-page--plats .print-page__content > .panel:nth-child(1) { flex: 4 1 0 !important; }
+html.carte-doc .print-page--plats .print-page__content > .panel:nth-child(2) { flex: 2.9 1 0 !important; }
+html.carte-doc .print-page--plats .print-page__content > .panel:nth-child(3) { flex: 2.9 1 0 !important; }
+html.carte-doc .print-page--plats .print-page__content > .panel:nth-child(4) { flex: 2.2 1 0 !important; }
+html.carte-doc .print-page--plats .panel__head {
+  margin-bottom: 1.6mm !important;
+}
+html.carte-doc .print-page--plats .panel__title {
+  min-height: 7.2mm !important;
+  padding: 1.1mm 6mm !important;
+  font-size: 8.6pt !important;
+}
+html.carte-doc .print-page--plats .food-card-grid,
+html.carte-doc .print-page--plats .food-card-grid--wide {
+  row-gap: 1.3mm !important;
+}
+html.carte-doc .print-page--plats .food-card {
+  padding: 1.1mm 2.4mm !important;
+  gap: 0.5mm !important;
+}
+html.carte-doc .print-page--plats .food-card__head h5,
+html.carte-doc .print-page--plats .food-card__head strong {
+  font-size: 8.2pt !important;
+}
+html.carte-doc .print-page--plats .food-card__note {
+  font-size: 6.3pt !important;
+  line-height: 1.22 !important;
+}
+html.carte-doc .print-page--plats .accent-band {
+  padding: 1.5mm 4mm 2mm !important;
+}
+html.carte-doc .print-page--plats .accent-band strong {
+  font-size: 9.6pt !important;
+}
+html.carte-doc .print-page--plats .accent-band span {
+  margin-top: 0.6mm !important;
+  font-size: 11pt !important;
+}
+html.carte-doc .print-page--plats .accent-band p {
+  margin-top: 0.8mm !important;
+  font-size: 6.6pt !important;
+}
 """
 
 
 def main() -> None:
     style = INDEX.split("<style>", 1)[1].split("</style>", 1)[0]
+    # Réglage manuel de l’aperçu A4 (repris ici pour que la régénération
+    # soit fidèle à la carte validée) : le pied de page empilé de la couverture
+    # réserve un peu moins de hauteur sur la carte.
+    style = style.replace(
+        """@media (max-width: 1100px) {
+  /* Pied de page empilé : on réserve plus de hauteur */
+  html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+    width: max(170px, min(calc(100% - 8px), calc(100svh - 64px - 470px), 488px));
+  }
+}""",
+        """@media (max-width: 780px) {
+  /* Pied de page empilé : on réserve plus de hauteur */
+  html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+    width: max(170px, min(calc(100% - 8px), calc(100svh - 64px - 455px), 488px));
+  }
+}""",
+    )
     print_css = media_print_bodies(style)
     cover = extract_cover()
 

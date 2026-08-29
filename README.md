@@ -26,7 +26,21 @@ Régénérer après une modification du site :
 
 ```bash
 python3 tools/build_carte.py
+npm run build:carte-pdf
 ```
+
+## PDF A4 téléchargeable (`carte-a4.pdf`)
+
+L’icône de téléchargement du header de `index.html` ouvre **`carte-a4.pdf`** : la carte A4 (10 pages, même contenu que `carte.html`) au format PDF, avec les polices du site intégrées. Le navigateur l’affiche et propose le téléchargement.
+
+Généré par `tools/build_carte_pdf.mjs` (Chromium headless à partir de `carte.html`) :
+
+```bash
+npm install
+npm run build:carte-pdf
+```
+
+À régénérer après chaque modification du site (avec `build_carte.py`).
 
 ## Générer les livrables imprimables (pipeline Chromium)
 

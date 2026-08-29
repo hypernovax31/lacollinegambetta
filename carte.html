@@ -2937,7 +2937,8 @@ button,a { font:inherit; }
   }
 }
 
-@media (max-width: 520px) {
+/* Boutons empilés dès que la largeur ne permet plus des textes lisibles. */
+@media (max-width: 640px) {
   .cover-links,
   .footer-links {
     grid-template-columns: 1fr;
@@ -3763,7 +3764,8 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     left: auto;
     right: auto;
     transform: translateY(-50%);
-    z-index: 5;
+    /* Au-dessus de .menu-nav (z-index 1000) : les flèches doivent être cliquables. */
+    z-index: 1001;
     width: 42px;
     height: 42px;
     padding: 0;
@@ -3793,6 +3795,7 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   html:not(.carte-doc) .menu-nav-wrap.is-overflow:not(.has-start) .menu-nav-hint--start,
   html:not(.carte-doc) .menu-nav-wrap.is-overflow:not(.has-end) .menu-nav-hint--end {
     opacity: 0.45;
+    pointer-events: none;
   }
   html:not(.carte-doc) .menu-nav-hint--start { left: 8px; justify-self: auto; }
   html:not(.carte-doc) .menu-nav-hint--end { right: 8px; justify-self: auto; }
@@ -4010,6 +4013,107 @@ html:not(.carte-doc) .top-controls__nav {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+/* ===== Page de garde : tenue d’affichage à TOUTE taille d’écran —
+   le cadre doré occupe tout l’espace disponible (proche des bords) et
+   aucun texte ne chevauche un autre, quelle que soit la hauteur. ===== */
+html:not(.carte-doc) #cover-section {
+  display: flex !important;
+  align-items: stretch !important;
+  min-height: calc(100svh - 64px);
+}
+html:not(.carte-doc) #cover-section .cover-page {
+  display: flex !important;
+  flex-flow: column nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  min-height: calc(100svh - 64px);
+  overflow: hidden !important;
+  gap: clamp(10px, 1.5vh, 18px) !important;
+  padding: clamp(14px, 2vh, 26px) clamp(14px, 2.6vw, 40px) clamp(16px, 2.2vh, 28px) !important;
+  box-sizing: border-box;
+}
+/* Bloc titre : hauteur naturelle, jamais chevauché */
+html:not(.carte-doc) #cover-section .cover-brand {
+  flex: 0 0 auto;
+  width: 100%;
+  margin: 0 !important;
+  display: grid !important;
+  justify-items: center !important;
+  text-align: center;
+  gap: clamp(6px, 1vh, 12px);
+}
+/* Médaillon : capte tout l’espace restant, le cadre se cale sur le minimum
+   (largeur disponible, hauteur disponible moins le bouton MENU & CARTE). */
+html:not(.carte-doc) #cover-section .medallion-container {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  width: min(100%, 640px) !important;
+  max-width: 100%;
+  max-height: none !important;
+  margin: 0 !important;
+  aspect-ratio: auto !important;
+  display: flex !important;
+  flex-flow: column nowrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: clamp(10px, 1.4vh, 18px) !important;
+  overflow: hidden;
+}
+/* Le carré du cadre est calculé par JS (sizeCoverMedallion) :
+   minimum(largeur disponible, hauteur disponible − bouton) — jamais de chevauchement. */
+html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+  flex: 0 1 auto;
+  width: min(100%, calc(100svh - 64px - 320px));
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  margin: 0 !important;
+}
+/* Paysage très étroit : les 3 boutons ne tiennent pas sur une ligne → on les empile. */
+@media (orientation: landscape) and (max-height: 500px) and (max-width: 560px) {
+  html:not(.carte-doc) #cover-section .cover-links,
+  html:not(.carte-doc) .footer-links {
+    grid-template-columns: 1fr !important;
+    width: min(100%, 420px) !important;
+  }
+}
+html:not(.carte-doc) #cover-section .medallion-container .cover-action {
+  flex: 0 0 auto;
+  width: min(100%, 340px);
+  min-width: 0;
+  margin: 0 !important;
+  align-self: center;
+}
+/* Pied de page : hauteur naturelle, boutons empilés si la largeur ne suffit plus */
+html:not(.carte-doc) #cover-section .cover-footer {
+  flex: 0 0 auto;
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  justify-items: center;
+  gap: clamp(8px, 1.2vh, 14px);
+}
+html:not(.carte-doc) #cover-section .cover-footer .cover-links {
+  width: min(100%, 920px);
+}
+/* Écrans très bas : la typographie se réduit proportionnellement
+   (le cadre doré est le premier à se réduire, jamais les textes). */
+@media (max-height: 520px) {
+  html:not(.carte-doc) #cover-section .cover-page {
+    gap: clamp(6px, 1.2vh, 12px) !important;
+    padding: clamp(10px, 1.6vh, 18px) clamp(12px, 2.4vw, 32px) !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-brand { gap: clamp(4px, 0.8vh, 8px); }
+  html:not(.carte-doc) #cover-section .leader-title { font-size: clamp(0.95rem, 3vh, 1.3rem) !important; }
+  html:not(.carte-doc) #cover-section .leader-meta { font-size: clamp(0.6rem, 1.7vh, 0.92rem) !important; }
+  html:not(.carte-doc) #cover-section .cover-footer { gap: clamp(5px, 1vh, 10px); }
+  html:not(.carte-doc) #cover-section .cover-footer-address { font-size: clamp(0.6rem, 1.7vh, 0.86rem) !important; line-height: 1.4 !important; }
+  html:not(.carte-doc) #cover-section .cover-links .contact-link { min-height: clamp(32px, 6vh, 44px) !important; font-size: clamp(0.55rem, 1.7vh, 0.74rem) !important; padding-top: 4px !important; padding-bottom: 4px !important; }
+  html:not(.carte-doc) #cover-section .medallion-container .cover-action { min-height: clamp(32px, 5.6vh, 46px) !important; }
+  html:not(.carte-doc) #cover-section .medallion-container { gap: clamp(6px, 1vh, 12px) !important; }
 }
 
 
@@ -5691,6 +5795,58 @@ html.carte-doc .print-page--drinks-secondary .beer-row {
   padding: 1mm 0 !important;
 }
 
+/* Page plats : section Pâtes ajoutée — 5 blocs au même rythme (la
+   répartition suit le nombre de lignes de chaque rubrique, la typo
+   est légèrement resserrée pour que rien ne soit coupé). */
+html.carte-doc .print-page--plats .print-page__content {
+  gap: 2.7mm !important;
+}
+html.carte-doc .print-page--plats .print-page__content > .panel {
+  flex: 1 1 0 !important;
+}
+html.carte-doc .print-page--plats .print-page__content > .panel:nth-child(1) { flex: 4 1 0 !important; }
+html.carte-doc .print-page--plats .print-page__content > .panel:nth-child(2) { flex: 2.9 1 0 !important; }
+html.carte-doc .print-page--plats .print-page__content > .panel:nth-child(3) { flex: 2.9 1 0 !important; }
+html.carte-doc .print-page--plats .print-page__content > .panel:nth-child(4) { flex: 2.2 1 0 !important; }
+html.carte-doc .print-page--plats .panel__head {
+  margin-bottom: 1.6mm !important;
+}
+html.carte-doc .print-page--plats .panel__title {
+  min-height: 7.2mm !important;
+  padding: 1.1mm 6mm !important;
+  font-size: 8.6pt !important;
+}
+html.carte-doc .print-page--plats .food-card-grid,
+html.carte-doc .print-page--plats .food-card-grid--wide {
+  row-gap: 1.3mm !important;
+}
+html.carte-doc .print-page--plats .food-card {
+  padding: 1.1mm 2.4mm !important;
+  gap: 0.5mm !important;
+}
+html.carte-doc .print-page--plats .food-card__head h5,
+html.carte-doc .print-page--plats .food-card__head strong {
+  font-size: 8.2pt !important;
+}
+html.carte-doc .print-page--plats .food-card__note {
+  font-size: 6.3pt !important;
+  line-height: 1.22 !important;
+}
+html.carte-doc .print-page--plats .accent-band {
+  padding: 1.5mm 4mm 2mm !important;
+}
+html.carte-doc .print-page--plats .accent-band strong {
+  font-size: 9.6pt !important;
+}
+html.carte-doc .print-page--plats .accent-band span {
+  margin-top: 0.6mm !important;
+  font-size: 11pt !important;
+}
+html.carte-doc .print-page--plats .accent-band p {
+  margin-top: 0.8mm !important;
+  font-size: 6.6pt !important;
+}
+
 </style>
 </head>
 <body>
@@ -5760,9 +5916,9 @@ html.carte-doc .print-page--drinks-secondary .beer-row {
 <div class="print-page__meta print-page__meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</div>
 </header>
 <div class="print-page__content tab-flow">
-<article class="panel"><div class="panel__head"><h4 class="panel__title">Entrées</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Assiette de foie gras du Sud-Ouest</h5><strong>17,90</strong></div><p class="food-card__note">Pain toasté, confiture d’abricots</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Œufs au plat</h5><strong>9,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Pâté de campagne et cornichons</h5><strong>6,50</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Œuf dur mayonnaise</h5><strong>6,20</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>6 Escargots de Bourgogne</h5><strong>7,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>6 Escargots au Roquefort</h5><strong>7,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Assiette de saumon fumé</h5><strong>7,50</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Tartare d’avocat et crevettes</h5><strong>8,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Salade au poulet</h5><strong>8,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Œuf cocotte du moment</h5><strong>7,90</strong></div></article></div></article>
+<article class="panel"><div class="panel__head"><h4 class="panel__title">Entrées</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Assiette de foie gras du Sud-Ouest</h5><strong>17,90</strong></div><p class="food-card__note">Pain toasté, confiture d’abricots</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Pâté de campagne et cornichons</h5><strong>6,50</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Œuf dur mayonnaise</h5><strong>6,20</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>6 Escargots de Bourgogne</h5><strong>7,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>6 Escargots au Roquefort</h5><strong>7,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Assiette de saumon fumé</h5><strong>7,50</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Tartare d’avocat et crevettes</h5><strong>8,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Salade au poulet</h5><strong>8,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Œuf cocotte du moment</h5><strong>7,90</strong></div></article></div></article>
 <article class="panel"><div class="panel__head"><h4 class="panel__title">Planches &amp; croques</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>La Cochonnaille</h5><strong>17,50</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>La Fromagère</h5><strong>15,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>La Paysanne</h5><strong>21,90</strong></div><p class="food-card__note">Charcuterie et fromages</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Croque-Monsieur</h5><strong>12,70</strong></div><p class="food-card__note">Frites et salade</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Croque-Madame</h5><strong>13,70</strong></div><p class="food-card__note">Frites et salade</p></article></div></article>
-<article class="panel"><div class="panel__head"><h4 class="panel__title">Omelettes</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Omelette nature</h5><strong>9,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Omelette au fromage</h5><strong>10,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Omelette au jambon</h5><strong>10,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Omelette mixte</h5><strong>14,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Omelette aux champignons</h5><strong>13,90</strong></div><p class="food-card__note">Salade</p></article></div></article>
+<article class="panel"><div class="panel__head"><h4 class="panel__title">Omelettes</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Œufs au plat</h5><strong>9,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Omelette nature</h5><strong>9,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Omelette au fromage</h5><strong>10,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Omelette au jambon</h5><strong>10,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Omelette mixte</h5><strong>14,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Omelette aux champignons</h5><strong>13,90</strong></div><p class="food-card__note">Salade</p></article></div></article>
 </div>
 <footer class="print-page__footer">
 <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
@@ -5789,6 +5945,7 @@ html.carte-doc .print-page--drinks-secondary .beer-row {
 <article class="panel"><div class="panel__head"><h4 class="panel__title">Plats</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Entrecôte 300 g</h5><strong>25,90</strong></div><p class="food-card__note">Fleur de sel, sauce au choix</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Bavette d’aloyau</h5><strong>17,50</strong></div><p class="food-card__note">Sauce au choix</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Escalope de veau</h5><strong>19,90</strong></div><p class="food-card__note">Sauce champignons, pâtes</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Cuisse de canard confite</h5><strong>19,70</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Poisson</h5><strong>17,90</strong></div><p class="food-card__note">Selon arrivage</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Tartare de bœuf</h5><strong>17,80</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Cuisse de poulet rôtie</h5><strong>16,20</strong></div><p class="food-card__note">Riz basmati</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Carpaccio de bœuf</h5><strong>17,50</strong></div></article></div></article>
 <article class="panel"><div class="panel__head"><h4 class="panel__title">Burgers</h4></div><div class="food-card-grid"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Burger La Colline</h5><strong>18,20</strong></div><p class="food-card__note">Pain brioché, cheddar, steak haché, bacon, oignons caramélisés, salade, tomate, sauce burger.</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Le Royal Fishburger</h5><strong>17,90</strong></div><p class="food-card__note">Pain brioché, cheddar, poisson pané, légumes grillés, salade, tomate, sauce burger.</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Burger Chicken Croustillant</h5><strong>17,90</strong></div><p class="food-card__note">Pain brioché, cheddar, escalope de poulet pané croustillant, oignons caramélisés, salade, tomate, sauce burger.</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Burger Végétarien</h5><strong>17,70</strong></div><p class="food-card__note">Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger.</p></article></div></article>
 <article class="panel"><div class="panel__head"><h4 class="panel__title">Salades</h4></div><div class="food-card-grid"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>La Colline</h5><strong>17,10</strong></div><p class="food-card__note">Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Chèvre Chaud</h5><strong>16,90</strong></div><p class="food-card__note">Salade verte, tomate, jambon sec, toast de cabécou, noix, miel.</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Végétarienne</h5><strong>13,60</strong></div><p class="food-card__note">Salade verte, tomate, concombre, carottes râpées, légumes grillés, avocat.</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Nordique</h5><strong>17,90</strong></div><p class="food-card__note">Salade verte, saumon fumé, crevettes, avocat, concombre, tomate, feta, croûtons.</p></article></div></article>
+<article class="panel"><div class="panel__head"><h4 class="panel__title">Pâtes</h4></div><div class="food-card-grid"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Tagliatelles à la carbonara</h5><strong>15,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Tagliatelles au saumon</h5><strong>16,80</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Penne au poulet et champignons</h5><strong>16,90</strong></div></article></div></article>
 <article class="panel panel--accent"><div class="accent-band"><strong>Assiette de frites</strong><span>5,20</span><p>Sauce au choix : poivre • champignons • roquefort — supplément sauce 2,00</p></div></article>
 </div>
 <footer class="print-page__footer">
@@ -5970,7 +6127,7 @@ html.carte-doc .print-page--drinks-secondary .beer-row {
 </header>
 <div class="print-page__content tab-flow">
 <article class="panel"><div class="panel__head"><h4 class="panel__title">Élégance &amp; saveurs</h4></div><div class="hh-list hh-list--cols"><div class="hh-list__col"><div class="hh-head"><span></span><span>Prix</span><span>HH</span></div><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Havane Passion</div><div class="hh-line__prices"><span class="hh-line__price">7,50</span><span class="hh-line__hh">5,00</span></div></div><p class="price-list__note">Rhum, sirop de fruit de la passion, jus de citron</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Passion Royal</div><div class="hh-line__prices"><span class="hh-line__price">7,90</span><span class="hh-line__hh">6,00</span></div></div><p class="price-list__note">Prosecco, vodka, sirop de fruit de la passion, citron vert</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Margarita</div><div class="hh-line__prices"><span class="hh-line__price">7,90</span><span class="hh-line__hh">6,00</span></div></div><p class="price-list__note">Tequila, Cointreau, jus de citron vert</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Black Russian</div><div class="hh-line__prices"><span class="hh-line__price">8,50</span><span class="hh-line__hh">7,50</span></div></div><p class="price-list__note">Vodka, liqueur de café, cerise</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Madeleine</div><div class="hh-line__prices"><span class="hh-line__price">8,90</span><span class="hh-line__hh">7,50</span></div></div><p class="price-list__note">Cointreau, amaretto, jus d’ananas</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Cosmopolitan</div><div class="hh-line__prices"><span class="hh-line__price">8,90</span><span class="hh-line__hh">7,50</span></div></div><p class="price-list__note">Vodka, Cointreau, jus de cranberry, jus de citron vert</p></article></div><div class="hh-list__col"><div class="hh-head hh-head--ghost" aria-hidden="true"><span></span><span>Prix</span><span>HH</span></div><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Sex on the Beach</div><div class="hh-line__prices"><span class="hh-line__price">8,90</span><span class="hh-line__hh">7,50</span></div></div><p class="price-list__note">Vodka, Cointreau, crème de pêche, jus d’orange, jus de cranberry</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Bloody Mary</div><div class="hh-line__prices"><span class="hh-line__price">8,90</span><span class="hh-line__hh">7,50</span></div></div><p class="price-list__note">Vodka, jus de tomate, jus de citron et épices</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Expresso Martini</div><div class="hh-line__prices"><span class="hh-line__price">8,90</span><span class="hh-line__hh">7,50</span></div></div><p class="price-list__note">Vodka, liqueur de café, expresso, sucre de canne</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Violette Royale</div><div class="hh-line__prices"><span class="hh-line__price">12,90</span><span class="hh-line__hh hh-value--empty">—</span></div></div><p class="price-list__note">Crème de violette, champagne, cerise</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Spritz Violette</div><div class="hh-line__prices"><span class="hh-line__price">10,90</span><span class="hh-line__hh">9,00</span></div></div><p class="price-list__note">Prosecco, crème de violette, eau gazeuse, myrtilles</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Aviation</div><div class="hh-line__prices"><span class="hh-line__price">10,50</span><span class="hh-line__hh">9,00</span></div></div><p class="price-list__note">Gin, crème de violette, jus de citron</p></article></div></div></article>
-<article class="panel"><div class="panel__head"><h4 class="panel__title">Mocktails</h4><p class="panel__subtitle">✦ Sans alcool — <span class="qty">25 cl</span> ✦</p></div><div class="price-list"><article class="price-line"><div class="price-line__row"><div class="price-line__name">St Valentin</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">5,90</div></div><p class="price-list__note">Sirop de violette, jus de citron vert, Schweppes Tonic</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Bora Bora</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">5,90</div></div><p class="price-list__note">Jus d’ananas, jus d’orange, sirop de grenadine</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Virgin Colline</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">5,90</div></div><p class="price-list__note">Jus d’orange, jus d’ananas, jus de citron, sirop de cassis</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Virgin Mojito</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">5,90</div></div><p class="price-list__note">Citron vert, menthe, sucre de canne, eau gazeuse</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Virgin Colada</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">5,90</div></div><p class="price-list__note">Jus d’ananas, crème de coco</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Virgin Bloody Mary</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">5,90</div></div><p class="price-list__note">Jus de tomate, jus de citron, épices</p></article></div></article>
+<article class="panel"><div class="panel__head"><h4 class="panel__title">Mocktails</h4><p class="panel__subtitle">✦ Sans alcool — <span class="qty">25 cl</span> ✦</p></div><div class="hh-list"><div class="hh-head"><span></span><span>Prix</span><span>HH</span></div><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">St Valentin</div><div class="hh-line__prices"><span class="hh-line__price">5,90</span><span class="hh-line__hh">5,00</span></div></div><p class="price-list__note">Sirop de violette, jus de citron vert, Schweppes Tonic</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Bora Bora</div><div class="hh-line__prices"><span class="hh-line__price">5,90</span><span class="hh-line__hh">5,00</span></div></div><p class="price-list__note">Jus d’ananas, jus d’orange, sirop de grenadine</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Virgin Colline</div><div class="hh-line__prices"><span class="hh-line__price">5,90</span><span class="hh-line__hh">5,00</span></div></div><p class="price-list__note">Jus d’orange, jus d’ananas, jus de citron, sirop de cassis</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Virgin Mojito</div><div class="hh-line__prices"><span class="hh-line__price">5,90</span><span class="hh-line__hh">5,00</span></div></div><p class="price-list__note">Citron vert, menthe, sucre de canne, eau gazeuse</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Virgin Colada</div><div class="hh-line__prices"><span class="hh-line__price">5,90</span><span class="hh-line__hh">5,00</span></div></div><p class="price-list__note">Jus d’ananas, crème de coco</p></article><article class="hh-line"><div class="hh-line__row"><div class="hh-line__name">Virgin Bloody Mary</div><div class="hh-line__prices"><span class="hh-line__price">5,90</span><span class="hh-line__hh">5,00</span></div></div><p class="price-list__note">Jus de tomate, jus de citron, épices</p></article></div></article>
 </div>
 <footer class="print-page__footer">
 <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>

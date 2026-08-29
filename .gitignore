@@ -1,6 +1,7 @@
 .print-build/
 .browser-print/
 .carte-shots/
+.carte-pdf/
 node_modules/
 __pycache__/
 tools/__pycache__/
