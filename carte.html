@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="carte-doc" data-carte-viewport="1180"       data-carte-index-hash="a7a813da1bfb5dc3" data-carte-base-w="1140">
+<html lang="fr" class="carte-doc" data-carte-viewport="1180"       data-carte-index-hash="05d6f894a2a70dac" data-carte-base-w="1140">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -3991,8 +3991,13 @@ html :is(#interior-menu, #print-document) .hh-line__hh::before {
     grid-column: 2 / -1;
     grid-row: 1;
     text-align: left;
-    /* !important : le plancher de lisibilité du site impose line-height: 1,3 en
-       !important sous 640 px — sans lui, l'interligne ne bougerait pas d'un poil. */
+    /* !important partout : le plancher de lisibilité du site impose line-height: 1,3
+       et 0,85rem en !important sous 640 px — sans cela, ni l'interligne ni le corps
+       ne bougeraient d'un poil. L'appellation se lit au même corps que son prix
+       (convention du site : nom et prix au même corps), sinon le prix écrase le nom ;
+       0,95rem et pas 1rem, car au-dessus une appellation sur cinq saute à trois
+       lignes et le rythme uniforme se perd. */
+    font-size: 0.95rem !important;
     line-height: 1.55 !important;   /* les deux lignes d'une appellation respirent */
     min-height: 3.1em;              /* une seule ligne occupe la même place : le
                                        défilement reste régulier, vin après vin */
@@ -4022,7 +4027,7 @@ html :is(#interior-menu, #print-document) .hh-line__hh::before {
     margin-bottom: 3px;
   }
   html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td:not(.wine-name):not(.wine-no) {
-    font-size: 1rem !important;  /* le prix, lui, domine sa colonne */
+    font-size: 0.95rem !important;   /* prix et appellation, même corps */
     font-weight: 700;
   }
   /* coupes et bouteilles : deux prix, deux moitiés */

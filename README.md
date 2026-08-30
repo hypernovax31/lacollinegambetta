@@ -162,14 +162,16 @@ forme une grille à deux bandes — `2.4em` pour le numéro, puis quatre parts �
   est centré sur elle, `align-items: center`), et non rejetée au quart de la ligne comme
   quand le numéro formait une colonne `1fr` ;
 - sous elle, les quatre prix tombent **d'aplomb** dans leurs parts, chacun coiffé de son
-  format (`::before` reprenant `data-label`), en `1rem` gras pendant que l'étiquette reste
-  à `0,74rem` ;
+  format (`::before` reprenant `data-label`) ; appellation et prix au **même corps**,
+  `0,95rem` en gras — la convention du site partout ailleurs, nom et prix identiques —,
+  l'étiquette de contenance restant à `0,74rem` ;
 - interligne de l'appellation à `1,55` et **deux lignes réservées** (`min-height: 3,1em`),
   plus 10 px / 12 px autour de chaque vin : un vin qui tient sur une ligne occupe la même
   hauteur que les autres et le défilement reste équidistant — 108 px par vin à 390 px, au
-  lieu de 95 / 113 / 130 px en escalier. Le `!important` n'est pas une coquetterie : le
-  plancher de lisibilité du site impose `line-height: 1,3 !important` sous 640 px, et sans
-  lui l'interligne de la liste des vins ne bougeait pas d'un poil ;
+  lieu de 95 / 113 / 130 px en escalier (à 706 px, les vingt-trois lignes sont
+  strictement égales). Ces `!important` ne sont pas une coquetterie : le plancher de
+  lisibilité du site impose `0,85rem` et `line-height: 1,3` en `!important` sous 640 px —
+  sans règle équivalente, ni le corps ni l'interligne de la liste des vins ne bougeaient ;
 - un seul filet sépare deux vins (les bordures par cellule créaient trois tirets
   décalés sous chaque ligne) ;
 - `Bulles`, qui n'a ni numéro ni 12,5 cl, prend deux moitiés (`wine-table--short`) et
