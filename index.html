@@ -3016,17 +3016,16 @@ button,a { font:inherit; }
   .panel__title { font-size: 0.96rem !important; }
 }
 
-/* Menu enfant / Petit déjeuner / Menu du jour : un seul encadrement, une seule
-   largeur. Les deux sélecteurs visaient une structure qui n'existe plus (le
-   premier enfant de .menus-duo__left n'est pas un .panel) : le panneau « Petit
-   déjeuner » gardait donc son cartouche *autour* de sa carte, et ses lignes
-   avaient 32 px de moins que celles du bloc côte à côte. Le cadre est retiré du
-   conteneur, la carte garde le sien — la largeur utile redevient celle de la
-   colonne, donc celle du voisin. Le duo ne se met en deux colonnes qu'à partir de
-   720 px (voir @media plus bas) : en dessous chaque bloc prend déjà toute la
-   largeur, il n'y a rien à aligner. */
-#menus .menus-duo > .panel,
-#menus .menus-duo__left > .panel {
+/* Menu enfant / Petit déjeuner / Menu du jour : un carton chacun, même largeur,
+   même hauteur — et le titre DEDANS, comme partout ailleurs sur la carte.
+   Le « Petit déjeuner » doublait un encadrement (le .panel autour de sa carte) :
+   son carton à lui restait dehors, au-dessus d'une carte plus étroite de 32 px
+   que le bloc côte à côte. L'air est donc repris dans l'autre sens que la
+   première fois — c'est le panneau qui porte le cadre, donc le titre et l'or du
+   pourtour ; la carte interne ne garde que le contenu, pleine largeur, sans son
+   propre liseré. Le duo ne se met en deux colonnes qu'à partir de 720 px (voir
+   @media plus bas) : en dessous chaque bloc prend déjà toute la largeur. */
+#menus .menus-duo__left > .panel .breakfast-card {
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;

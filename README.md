@@ -210,19 +210,23 @@ deux colonnes de l'onglet Boissons ne serront jamais assez pour gêner un prix �
 `menus` est à `0px` pour la même raison : son duo « Menu enfant / Petit déjeuner »
 contre « Menu du jour » reste lisible jusqu'au plus étroit des écrans balayés.
 
-**Le duo « Nos menus » prend la largeur de son voisin.** Les trois cartons de bas de
-page (Menu enfant, Petit déjeuner, Menu du jour) sont assis sur une grille à deux
-colonnes égales ; le carton « Petit déjeuner » était en fait une carte *dans* un
-panneau, et son cartouche lui mangeait 32 px de largeur utile — ses lignes
-n'avaient donc pas la largeur du bloc côte à côte. La règle « un seul encadrement »
-visait une structure qui n'existe plus (`.menus-duo__left > .panel:first-child` : le
-premier enfant est le carton « Menu enfant », pas un panneau) et ne s'appliquait
-à rien. Elle cible maintenant le panneau réellement concerné, le `grid-template-rows`
-de la colonne laisse sa 2ᵉ ligne prendre le reste, et les deux cartons de gauche
-finissent à la hauteur du « Menu du jour ». Le seuil qui décide du côte à côte est
-celui du duo lui-même (720 px, règle existante) : en dessous chaque bloc occupe déjà
-toute la largeur, il n'y a plus rien à aligner — et `check-responsive` vérifie qu'aucun
-intitulé ne gêne aucun prix de 1300 à 320 px.
+**Le duo « Nos menus » : un carton par bloc, la largeur du voisin, et le titre
+dedans.** Les trois cartons de bas de page (Menu enfant, Petit déjeuner, Menu du
+jour) sont assis sur une grille à deux colonnes égales ; le « Petit déjeuner »
+était en fait une carte *dans* un panneau, soit deux liserés l'un dans l'autre ; son
+titre restait dehors et ses lignes avaient 32 px de moins que le bloc côte à côte.
+La règle « un seul encadrement » qui devait le prévenir visait une structure
+disparue (`.menus-duo__left > .panel:first-child` : le premier enfant est le carton
+« Menu enfant », pas un panneau) et ne s'appliquait à rien. Le doublon est repris
+dans le sens où tout le reste de la carte est déjà fait — **le panneau porte le
+cadre** (et donc le titre, comme chaque `.panel`), **la carte interne ne porte plus
+que le contenu**, pleine largeur, sans liseré ; et `grid-template-rows` laisse la
+2ᵉ ligne de la colonne prendre le reste, donc les deux cartons de gauche finissent
+au pied du « Menu du jour ». Un carton d'information et son titre ne sont pas deux
+objets à empiler : ce sont les deux faces du même. Le seuil qui décide du côte à
+côte est celui du duo lui-même (720 px, règle existante) : en dessous chaque bloc
+occupe déjà toute la largeur, il n'y a plus rien à aligner — et `check-responsive`
+vérifie qu'aucun intitulé ne gêne aucun prix de 1300 à 320 px.
 
 Sous 640 px la typographie ne rétrécit plus (plancher de lisibilité en `!important`) :
 quand ça manque de place, c'est la mise en page qui change de mode, jamais la taille de
