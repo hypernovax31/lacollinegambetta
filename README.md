@@ -285,3 +285,72 @@ La colonne jadis intitulée « Pinte » porte la contenance exacte, **50 cl**, c
 `25 cl` et `HH`. En mode petit écran chaque prix reprend l'étiquette de sa colonne grâce
 à `data-label` (`data-label="25 cl"`, `data-label="50 cl"`, `data-label="HH"`), posé dans
 le HTML de `index.html` — l'en-tête de colonnes devient alors inutile et disparaît.
+
+## Le pointillé meneur : sur toutes les lignes, y compris les grilles
+
+Un intitulé et son prix sont reliés par un pointillé. Les listes en flex le portent dans
+le HTML (`<span class="price-line__dots">`, frère élastique posé entre le nom et le prix),
+mais **les bières pression et les cocktails sont des grilles** : leurs colonnes de prix
+sont alignées entre elles (25 cl / 50 cl / HH, Prix / HH), il n'y a donc pas de case libre
+où glisser ce frère. Ces deux blocs étaient les seuls de la carte sans meneur — le regard
+traversait un blanc de plusieurs centimètres.
+
+Le meneur y est porté par l'intitulé lui-même : `.beer-row__name` et `.hh-line__name`
+deviennent des lignes en flex et reçoivent un `::after` — même trait, même
+`rgba(156,122,45,.58)`, même retrait de `-.06rem` que `.price-line__dots`. À l'œil, c'est
+le même objet ; dans le flux, il n'occupe que le blanc qui reste jusqu'à la première
+colonne de prix.
+
+**Ce meneur cède toujours devant le texte** (`flex: 1 1 0`, `min-width: 0`). Un
+`min-width: 12px`, comme en porte `.price-line__dots`, lui ferait prendre ces pixels à
+l'intitulé : dans un panneau étroit, « St-Germain Spritz » se cassait en deux lignes dès
+652 px et `check-responsive` le signalait en « serré ». Un pointillé est un guide, il
+s'efface plutôt que de bousculer le nom. Là où le prix passe **sous** l'intitulé (modes
+`@stack-rows` de Boissons et Cocktails), le `::after` est masqué : il n'y a plus de prix à
+rejoindre à droite.
+
+Les deux repères concernés ont suivi le contenu, comme après tout changement de mise en
+page (`node tools/check-responsive.mjs --breakpoints --write`) : boissons 402 → 412 px,
+cocktails 327 → 337 px. Les cinq autres onglets sont inchangés, et le contrôle repasse à
+zéro chevauchement sur les sept onglets, de 1300 à 320 px.
+
+## Les contenances : une seule définition pour toute la carte
+
+Une contenance (`4 cl`, `12 cl`, `25 cl`, `1 L`, `Coupe 12 cl`…) n'est pas un intitulé :
+c'est une précision de service. Elle se lisait pourtant de **huit façons différentes**
+selon l'endroit où elle tombait — jusqu'à deux dans la même ligne d'en-tête des bières
+pression, où « 25 cl » était en Montserrat bas de casse et « 50 CL » en Cinzel capitales,
+faute d'une classe `qty` sur le second `<span>`. Les tailles allaient de 11,2 à 19,6 px,
+les encres de `--muted` à l'encre d'intitulé.
+
+Tout passe désormais par un seul bloc, en fin de feuille (`CONTENANCES : UN SEUL FORMAT`),
+quel que soit le porteur du texte — `.qty`, la note `.note-cl`, un en-tête de colonne, ou
+l'étiquette `data-label` reprise sous chaque prix en mode téléphone :
+
+| | |
+|---|---|
+| police | **Montserrat**, jamais le Cinzel des noms |
+| graisse | **400** — l'information est secondaire, elle ne concurrence ni l'intitulé ni le prix |
+| casse | telle qu'écrite (`25 cl`, pas `25 CL`) |
+| taille | `--qty-size`, un cran sous le corps des notes, plancher à 11 px |
+| encre | `--qty-ink` `#6b5a78`, un violet **clair** unique — 6,0:1 sur le crème comme sur le blanc des panneaux |
+
+Deux points valent d'être notés. Le sélecteur commence par `html` : cela suffit à passer
+devant les règles de section (`#boissons …`, `#desserts …`) à spécificité de classe égale,
+sans semer des `!important` par endroit. Et une contenance prise dans une phrase
+(« 5 cl — Blanc, rouge », « arrosées de vodka (2 cl) ») garde **son** corps plutôt que
+celui de la note qui la porte : c'est ce qui fait qu'une mesure a la même taille partout,
+y compris à l'intérieur d'un texte.
+
+Le `HH` et le `N°`, qui ne sont pas des mesures, gardent le Cinzel de leur en-tête.
+
+Contrôle — l'inventaire relève, pour chaque nœud de texte contenant une mesure, la police,
+la graisse, la casse, la taille et la couleur **réellement calculées** :
+
+```bash
+node tools/audit-mesures.mjs --width 1440   # 47 libellés → 1 seul format
+node tools/audit-mesures.mjs --width 390    # 141 libellés (avec les data-label) → 1 seul format
+```
+
+`tools/shot.mjs --tab boissons --width 1440 [--selector .beer-table]` capture un onglet
+(ou un seul bloc) avec les vraies fontes, pour un contrôle à l'œil.

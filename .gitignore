@@ -8,3 +8,7 @@ tools/__pycache__/
 
 # intermédiaire de mesure des hauteurs (regénéré par tools/build_carte.py)
 carte-measure.html
+
+# document de composition des feuilles (regénéré par tools/build_carte.py) ;
+# les livrables versionnés sont carte-a4-pages/*.jpg et carte-a4.pdf
+carte.html
