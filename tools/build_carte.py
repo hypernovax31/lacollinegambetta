@@ -37,15 +37,24 @@ BASE_VIEWPORT = 1180        # largeur d'écran à laquelle le site est composé
 SECTIONS = ["entrees", "plats", "desserts", "menus", "boissons", "vins", "cocktails"]
 
 # Géométrie de la feuille, en accord avec les règles « contenant » plus bas.
-SHEET_H_MM = 297.0
-ZONE_LEFT_MM = 13.0
-ZONE_TOP_MM = 47.0
-ZONE_BOTTOM_MM = 27.0
-ZONE_W_MM = 184.0
+#
+# La zone utile n'est pas un chiffre au hasard : elle se déduit du cadre doré
+# posé par CHROME_CSS (un filet à 8 mm des bords, à 43 mm du haut et 25,5 mm du
+# bas) et de la respiration qu'on lui laisse. Le contenu prend donc tout le
+# papier disponible SANS JAMAIS toucher le cadre — agrandir la zone agrandit
+# d'office les caractères, la contrainte restant l'intérieur du filet.
+SHEET_W_MM, SHEET_H_MM = 210.0, 297.0
+CADRE_MM = {"cote": 8.0, "haut": 43.0, "bas": 25.5}   # le filet, pas le trait violet
+JEU_DANS_CADRE_MM = 2.6      # entre l'encre la plus proche et le filet doré
+ZONE_LEFT_MM = CADRE_MM["cote"] + JEU_DANS_CADRE_MM            # 10,6 mm
+ZONE_TOP_MM = CADRE_MM["haut"] + JEU_DANS_CADRE_MM             # 45,6 mm
+ZONE_BOTTOM_MM = CADRE_MM["bas"] + JEU_DANS_CADRE_MM          # 28,1 mm
+ZONE_W_MM = SHEET_W_MM - 2 * ZONE_LEFT_MM                      # 188,8 mm
 PX_PER_MM = 96 / 25.4
 ZONE_W_PX = ZONE_W_MM * PX_PER_MM                                    # 695,43 px
 ZONE_H_PX = (SHEET_H_MM - ZONE_TOP_MM - ZONE_BOTTOM_MM) * PX_PER_MM  # 842,86 px
 
+UNIFORME = "--uniforme" in sys.argv   # échelle unique pour tous les onglets
 SAFETY = 0.985     # les hauteurs sont mesurées, mais pas dans la feuille elle-même
 FIT_FLOOR = 0.90   # sous 10 % de l'échelle de composition, on préfère une feuille de plus
 BALANCE_MIN_FILL = 0.60   # une feuille sous ce remplissage est un déséquilibre à corriger
@@ -1025,28 +1034,21 @@ def balanced_sheets(hs: list[float], gap: float, cap: float) -> list[list[int]]:
     return pack_indices(hs, gap, hi)
 
 
-def layout(metrics: dict, fit: float, relax: bool = False):
-    """Découpage de chaque onglet au facteur `fit` ; `relax` autorise le resserrement local."""
+def count_at(metrics: dict, sid: str, fit: float) -> int:
+    """Nombre de feuilles qu'un onglet occuperait à ce facteur ( découpage glouton )."""
+    sec = metrics["sections"][sid]
+    hs = [b["h"] for b in sec["blocks"]]
+    return len(pack_indices(hs, sec["gap"], ZONE_H_PX / fit * SAFETY))
+
+
+def section_plan(metrics: dict, sid: str, fit: float):
+    sec = metrics["sections"][sid]
+    hs = [b["h"] for b in sec["blocks"]]
+    gap = sec["gap"]
     cap = ZONE_H_PX / fit * SAFETY
-    plan: dict[str, list[list[int]]] = {}
-    fits: dict[str, float] = {}
-    loads: list[float] = []
-    for sid in SECTIONS:
-        sec = metrics["sections"][sid]
-        hs = [b["h"] for b in sec["blocks"]]
-        gap = sec["gap"]
-        sheets = balanced_sheets(hs, gap, cap)
-        used = fit
-        sheet_cap = cap
-        if relax:
-            relaxed = relax_section(metrics, fit, sid, sheets, cap)
-            if relaxed:
-                used, sheets, sheet_cap = relaxed
-                fits[sid] = used
-        plan[sid] = sheets
-        for idx in sheets:
-            loads.append((sum(hs[i] for i in idx) + gap * (len(idx) - 1)) * (used / fit))
-    return plan, cap, loads, fits
+    sheets = balanced_sheets(hs, gap, cap)
+    loads = [sum(hs[i] for i in idx) + gap * (len(idx) - 1) for idx in sheets]
+    return sheets, cap, loads
 
 
 def relax_section(metrics: dict, fit: float, sid: str, sheets: list[list[int]],
@@ -1056,8 +1058,7 @@ def relax_section(metrics: dict, fit: float, sid: str, sheets: list[list[int]],
     Un onglet dont la dernière feuille reste à moitié vide gâche la lecture du
     carnet entier. Plutôt que de réduire toute la carte d'un cran pour gagner
     une feuille, on ne resserre que celui-là (au plus 13 %, et seulement s'il
-    récupère ainsi une feuille de moins) : les autres onglets gardent le facteur
-    global, donc la taille de texte du site.
+    récupère ainsi une feuille de moins) : les autres onglets gardent leur facteur.
     """
     if len(sheets) < 2:
         return None
@@ -1082,28 +1083,69 @@ def relax_section(metrics: dict, fit: float, sid: str, sheets: list[list[int]],
     return lo, pack_indices(hs, gap, ZONE_H_PX / lo * SAFETY), ZONE_H_PX / lo * SAFETY
 
 
+def layout(metrics: dict, fit: float, f_max: float, relax: bool = True):
+    """Découpage et facteur de chaque onglet.
+
+    Le facteur global est celui que la page la plus dense supporte ; le pousser
+    plus haut ajouterait une feuille. Mais les onglets qui n'en ont pas besoin
+    n'ont aucune raison de rester petits : chacun remonte jusqu'à remplir la
+    largeur utile — le plafond, c'est le cadre — puis se resserre si ses propres
+    feuilles sont déséquilibrées. Aucune page ajoutée, tout le monde prend la
+    place qui lui revient.
+    """
+    plan: dict[str, list[list[int]]] = {}
+    fits: dict[str, float] = {}
+    for sid in SECTIONS:
+        n0 = count_at(metrics, sid, fit)
+        used = fit
+        if f_max > used and count_at(metrics, sid, f_max) == n0:
+            used = f_max
+        else:
+            lo, hi = used, f_max
+            while hi - lo > 1e-4:
+                mid = (lo + hi) / 2
+                if count_at(metrics, sid, mid) == n0:
+                    lo = mid
+                else:
+                    hi = mid
+            used = lo
+        sheets, cap, loads = section_plan(metrics, sid, used)
+        if relax:
+            relaxed = relax_section(metrics, used, sid, sheets, cap)
+            if relaxed:
+                used, sheets, cap = relaxed
+        plan[sid] = sheets
+        if used != fit:
+            fits[sid] = used
+    return plan, fits
+
+
 def choose_fit(metrics: dict):
-    """Facteur unique : le plus grand qui tienne, au plus 10 % sous la largeur."""
+    """Facteur plancher : le plus grand qui tienne, au plus 10 % sous la largeur."""
     flow_w = min(v["flow_width"] for v in metrics["sections"].values())
     if flow_w < 300:
         raise SystemExit(f"largeur de composition mesurée à {flow_w} px : la mesure est fausse "
                          "(onglets non rendus ?) — relancer `node tools/measure_carte.mjs`.")
-    base_fit = ZONE_W_PX / flow_w
+    base_fit = ZONE_W_PX / flow_w          # le plafond : le contenu borde alors le cadre
     best = None
     fit = base_fit
     while fit >= base_fit * FIT_FLOOR:
-        plan, cap, loads, _ = layout(metrics, fit)
+        plan, _ = layout(metrics, fit, fit, relax=False)
         count = sum(len(v) for v in plan.values())
+        loads = []
+        for sid in SECTIONS:
+            _, _, l = section_plan(metrics, sid, fit)
+            loads += l
         worst = min(load / (ZONE_H_PX / fit) for load in loads)
         score = (count, -round(worst, 3))
         if best is None or score < best[0]:
-            best = (score, fit, plan, cap, loads)
+            best = (score, fit, count, worst)
         fit *= 0.995
-    _, fit, plan, cap, loads = best
+    _, fit, count, worst = best
     note = "" if abs(fit - base_fit) < 1e-9 else (
-        f" — l'échelle de composition {base_fit:.4f} ramenée à {fit:.4f} pour tenir "
-        f"en {sum(len(v) for v in plan.values())} feuilles équilibrées")
-    return base_fit, fit, plan, cap, flow_w, note
+        f" — plancher {fit:.4f} ( composition {base_fit:.4f} ) dicté par la page la plus dense, "
+        f"{count} feuilles, remplissage minimal {worst * 100:.0f} %")
+    return base_fit, fit, flow_w, note
 
 
 def main() -> None:
@@ -1116,12 +1158,15 @@ def main() -> None:
     allow_stale = "--no-measure" in sys.argv
     metrics = load_metrics(src, css, flows, allow_stale)
     check_blocks(metrics, flows)
-    # le découpage définitif : même facteur, puis resserrement local éventuel
-    base_fit, fit, _, cap, flow_w, note = choose_fit(metrics)
-    plan, cap, _, fits = layout(metrics, fit, relax=True)
+    base_fit, fit, flow_w, note = choose_fit(metrics)
+    if UNIFORME:      # --uniforme : un seul facteur pour tout le document
+        base_fit = fit
+    plan, fits = layout(metrics, fit, base_fit)
 
+    pts = 72.0 / 96.0     # 1 px CSS = 0,75 pt
     pages: list[str] = [page_shell(1, "cover", "", extract_cover(src))]
     labels = ["couverture (site, encadrée sur la feuille)"]
+    tailles = []
     for sid in SECTIONS:
         sec_fit = fits.get(sid, fit)
         sec_cap = ZONE_H_PX / sec_fit * SAFETY
@@ -1132,11 +1177,13 @@ def main() -> None:
             sheet_fit = sec_fit if load <= sec_cap else ZONE_H_PX * SAFETY / load
             pages.append(page_shell(n, sid, "\n".join(flows[sid][i] for i in idx),
                                     fit=None if sheet_fit == fit else sheet_fit))
-            extra = "" if sheet_fit == fit else f", facteur local {sheet_fit:.4f}"
+            largeur = flow_w * sheet_fit / ZONE_W_PX * 100      # 100 % = le bloc borde le cadre
+            tailles.append(17.9 * sheet_fit * pts)
+            extra = "" if sheet_fit == fit else f" · facteur {sheet_fit:.4f}"
             labels.append(f"{sid:9} blocs {'+'.join(str(i + 1) for i in idx):9} — "
-                          f"{load * sheet_fit / ZONE_H_PX * 100:4.0f} % de la hauteur utile{extra}")
+                          f"hauteur {load * sheet_fit / ZONE_H_PX * 100:3.0f} %, "
+                          f"largeur {largeur:3.0f} %, intitulés {17.9 * sheet_fit * pts:.1f} pt{extra}")
 
-    pts = 72.0 / 96.0     # 1 px CSS = 0,75 pt
     html = f"""<!DOCTYPE html>
 <html lang="fr" class="carte-doc" data-carte-viewport="{metrics['viewport']}" \
       data-carte-index-hash="{metrics['index_hash']}" data-carte-base-w="{flow_w:g}">
@@ -1168,9 +1215,11 @@ html.carte-doc {{
     html = remplacer_glyphes_a_risque(html)
     OUT.write_text(html, encoding="utf-8")
     print(f"\ncarte.html : {len(pages)} feuilles — composition {metrics['viewport']} px "
-          f"× {flow_w:g} px, réduite × {fit:.4f}{note}")
-    print(f"  zone utile {ZONE_W_PX:.0f} × {ZONE_H_PX:.0f} px ; titres site 16,3 px → "
-          f"{16.3 * fit * pts:.1f} pt, intitulés 17,9 px → {17.9 * fit * pts:.1f} pt")
+          f"× {flow_w:g} px{note}")
+    print(f"  zone utile {ZONE_W_MM:.1f} × {SHEET_H_MM - ZONE_TOP_MM - ZONE_BOTTOM_MM:.1f} mm, "
+          f"soit {JEU_DANS_CADRE_MM:.1f} mm dans le filet doré ; facteurs par onglet "
+          f"de × {min(fits.values(), default=fit):.4f} à × {max(list(fits.values()) + [fit, base_fit]):.4f}")
+    print(f"  intitulés (17,9 px site) de {min(tailles):.1f} pt à {max(tailles):.1f} pt sur le papier")
     for label in labels:
         print(f"  {label}")
 

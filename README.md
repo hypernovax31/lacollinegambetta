@@ -36,6 +36,15 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
   un libellé dont dépend la lecture d'un prix. `tools/build_carte.py` les passe à
   15,4 px et reprend la place gagnée sous la ligne d'en-tête (`padding-bottom`),
   ce qui laisse la feuille sur une page à 98 % et le facteur global intact.
+- **La zone utile se déduit du cadre doré, et chaque onglet la remplit.** Le filet
+  est posé à 8 mm des bords, 43 mm du haut, 25,5 mm du bas : la zone utile vaut donc
+  188,8 × 223,3 mm, à **2,6 mm** du filet — jamais dessus, parce que ces six nombres
+  ne sont pas libres (`CADRE_MM` + `JEU_DANS_CADRE_MM` dans `tools/build_carte.py` en
+  produisent quatre autres). Un facteur de réduction **par onglet** : le plancher
+  global (ici × 0,5691) est dicté par la page la plus dense, les pages plus courtes
+  remontent jusqu'à border le cadre (× 0,6259) — intitulés de 7,2 à 8,4 pt au lieu
+  d'un 7,6 pt uniforme, sans une page de plus. `--uniforme` fige tous les onglets sur
+  le facteur global si l'on préfère un document strictement homogène.
 - **Le bloc est centré dans la feuille, après réduction.** La composition fait
   1 140 px et la zone utile 184 mm : la marge se calcule donc en millimètres de
   papier, `margin-left: max(0px, calc((var(--carte-zone-w) - var(--carte-base-w) *
