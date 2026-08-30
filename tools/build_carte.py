@@ -31,6 +31,8 @@ INDEX = ROOT / "index.html"
 OUT = ROOT / "carte.html"
 METRICS = ROOT / "tools" / "carte-metrics.json"
 MEASURE = ROOT / "tools" / "measure_carte.mjs"
+MEASURE_DOC = ROOT / "carte-measure.html"
+BASE_VIEWPORT = 1180        # largeur d'écran à laquelle le site est composé
 
 SECTIONS = ["entrees", "plats", "desserts", "menus", "boissons", "vins", "cocktails"]
 
@@ -44,8 +46,10 @@ PX_PER_MM = 96 / 25.4
 ZONE_W_PX = ZONE_W_MM * PX_PER_MM                                    # 695,43 px
 ZONE_H_PX = (SHEET_H_MM - ZONE_TOP_MM - ZONE_BOTTOM_MM) * PX_PER_MM  # 842,86 px
 
-SAFETY = 0.985     # les hauteurs sont mesurées sur le site, pas dans la feuille
-FIT_FLOOR = 0.90   # on ne descend pas de plus de 10 % sous l'échelle de composition
+SAFETY = 0.985     # les hauteurs sont mesurées, mais pas dans la feuille elle-même
+FIT_FLOOR = 0.90   # sous 10 % de l'échelle de composition, on préfère une feuille de plus
+BALANCE_MIN_FILL = 0.60   # une feuille sous ce remplissage est un déséquilibre à corriger
+RELAX_FLOOR = 0.87        # mais un seul onglet se resserre, jamais toute la carte
 
 
 def index_text() -> str:
@@ -777,6 +781,44 @@ html.carte-doc .print-page i.carte-arrow {
   clip-path: polygon(0 0, 72% 0, 72% -70%, 100% 50%, 72% 170%, 72% 100%, 0 100%);
 }
 """
+# Règles propres au papier : elles n'existent pas sur le site, donc la mesure
+# doit se faire dans la carte elle-même (voir carte-measure.html), pas dans
+# index.html.
+CARD_OVERRIDES = """
+/* Cocktails : une seule colonne. À deux colonnes, l'onglet tout entier tenait
+   sur une feuille à 96 % et laissait la suivante à 35 % ; en une colonne, il
+   se répartit sur deux feuilles du même poids, et le pointillé meneur de prix
+   reste lisible sur toute la largeur, comme pour les whiskies et les bières. */
+html.carte-doc .carte-flow[data-sec="cocktails"] .hh-list--cols,
+html.carte-doc .carte-flow[data-sec="cocktails"] .duo-grid,
+html.carte-doc .carte-flow[data-sec="cocktails"] .hh-list,
+html.carte-doc .carte-flow[data-sec="cocktails"] .price-list--cols {
+  grid-template-columns: 1fr !important;
+}
+/* Le duo empilé ne doit pas étirer ses panneaux pour remplir la feuille. */
+html.carte-doc .carte-flow[data-sec="cocktails"] .duo-grid > .panel { flex: 0 1 auto !important; }
+"""
+
+
+MEASURE_CSS = """
+/* carte-measure.html : les blocs de la carte, à plat, sans feuille et sans
+   mise à l échelle — c est ici que les hauteurs sont relevées, avec les règles
+   propres au papier. */
+html.carte-measure, html.carte-measure body { background: #1a0b22; }
+html.carte-measure #print-document {
+  display: block !important;
+  width: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+html.carte-measure .carte-measure-sec { padding: 24px 0; }
+html.carte-measure .carte-flow {
+  width: var(--carte-base-w, 1140px);
+  margin: 0 !important;
+  transform: none !important;
+}
+"""
+
 
 def remplacer_glyphes_a_risque(html: str) -> str:
     """Aucun signe ne doit dépendre d'une police absente du poste qui imprime.
@@ -800,128 +842,288 @@ def remplacer_glyphes_a_risque(html: str) -> str:
 # ------------------------------------------------------------------ métriques
 
 
-def load_metrics(allow_stale: bool = False) -> dict:
-    digest = hashlib.sha256(index_text().encode("utf-8")).hexdigest()[:16]
+def compose_css(src: str) -> tuple[str, dict]:
+    """La feuille de style commune aux deux documents (carte et mesure).
+
+    Le site dicte le contenu : on copie sa CSS, on lui rend les règles que la
+    neutralisation écartait, on ne garde de @media print que le contenant — et
+    on rejoue ce contenant hors média, parce que la carte est rendue (et
+    photographiée) en média screen.
+    """
+    style = src.split("<style>", 1)[1].split("</style>", 1)[0]
+    css, stats = rescope_site_css(style)
+    css, kept, dropped = print_containing_only(css)
+    skin, kept2, _ = chrome_only(media_print_bodies(css))
+    stats.update(contenant=kept, ecartees=dropped, rejouees=kept2)
+    full = f"""{css}
+
+/* ===== Contenant de la feuille, rejoué hors média (l'aperçu et la capture
+   sont en média screen ; l'impression garde ses règles @media print) ===== */
+{skin}
+
+{CHROME_CSS}
+
+{FIT_CSS}
+
+{CARD_OVERRIDES}
+"""
+    return full, stats
+
+
+def flow_markup(sid: str, blocks: list[str], tag_blocks: bool) -> str:
+    """Le flux d'un onglet, tel que le site le rend (à l'heure du découpage près)."""
+    out = []
+    for i, b in enumerate(blocks):
+        if tag_blocks:
+            b = re.sub(r"^<(\w+)", rf'<\1 data-block="{i}"', b, count=1)
+        out.append(b)
+    return (f'<div class="carte-flow" data-sec="{sid}">\n<div class="tab-flow">\n'
+            + "\n".join(out) + "\n</div>\n</div>")
+
+
+def measure_doc(css: str, flows: dict[str, list[str]], viewport: int,
+                idx_hash: str, css_hash: str) -> str:
+    parts = []
+    for sid in SECTIONS:
+        parts.append(f'<div class="carte-measure-sec" data-sec="{sid}">\n'
+                     + flow_markup(sid, flows[sid], tag_blocks=True) + "\n</div>")
+    return f"""<!DOCTYPE html>
+<html lang="fr" class="carte-doc carte-measure" data-carte-viewport="{viewport}"
+      data-carte-index-hash="{idx_hash}" data-carte-css-hash="{css_hash}">
+<head>
+<meta charset="UTF-8">
+<title>Mesure — carte La Colline Gambetta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+{css}
+
+{MEASURE_CSS}
+</style>
+</head>
+<body>
+<main id="print-document">
+{"".join(parts)}
+</main>
+</body>
+</html>
+"""
+
+
+# ------------------------------------------------------------------ métriques
+
+
+def hashes(index_src: str, css: str) -> tuple[str, str]:
+    return (hashlib.sha256(index_src.encode("utf-8")).hexdigest()[:16],
+            hashlib.sha256(css.encode("utf-8")).hexdigest()[:16])
+
+
+def load_metrics(index_src: str, css: str, flows, allow_stale: bool = False) -> dict:
+    """Hauteurs de blocs, relevées dans la carte elle-même (voir carte-measure.html).
+
+    Mesurer index.html ne suffirait plus : la carte a ses propres règles (les
+    cocktails en une colonne, par exemple). Le document de mesure est donc écrit
+    avec la CSS exactement identique à celle des feuilles, sans découpage ni mise
+    à l'échelle, et l'empreinte (index.html + cette CSS) garde les chiffres
+    alignés sur le document réel.
+    """
+    idx, sheet = hashes(index_src, css)
     if METRICS.exists():
         try:
             data = json.loads(METRICS.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
             raise SystemExit(f"{METRICS.name} illisible : {exc}")
-        if data.get("index_hash") == digest:
+        fresh = data.get("index_hash") == idx and data.get("css_hash") == sheet
+        if fresh:
             return data
         if allow_stale:
-            print(f"avertissement : empreinte {data.get('index_hash')} ≠ {digest} — "
-                  "mesures périmées utilisées (--no-measure)")
+            print(f"avertissement : mesures périmées (index {data.get('index_hash')} / css "
+                  f"{data.get('css_hash')} vs {idx} / {sheet}) — --no-measure")
             return data
+        print("mesures périmées (index.html ou CSS de carte modifiés) : on re-mesure")
     if not MEASURE.exists():
         raise SystemExit(f"outil de mesure manquant : {MEASURE}")
-    print("mesure des hauteurs sur le site (Chromium, fontes réelles)…")
+    MEASURE_DOC.write_text(measure_doc(css, flows, BASE_VIEWPORT, idx, sheet), encoding="utf-8")
+    print(f"mesure : {MEASURE_DOC.name} écrit, rendu Chromium…")
     res = subprocess.run(["node", str(MEASURE)], cwd=ROOT)
     if res.returncode != 0:
         raise SystemExit("la mesure a échoué — `npm install`, puis node tools/measure_carte.mjs")
     data = json.loads(METRICS.read_text(encoding="utf-8"))
-    if data.get("index_hash") != digest:
-        raise SystemExit("l'empreinte enregistrée ne correspond toujours pas : "
-                         "index.html a changé pendant la mesure, relancer")
+    if data.get("index_hash") != idx or data.get("css_hash") != sheet:
+        raise SystemExit("l'empreinte enregistrée ne correspond pas : le document mesuré "
+                         "n'est pas celui qui vient d'être écrit — relancer")
     return data
 
 
 def check_blocks(metrics: dict, flows: dict[str, list[str]]) -> None:
     for sid, blocks in flows.items():
         seen = metrics["sections"][sid]["blocks"]
-        if len(blocks) != len(seen):
-            raise SystemExit(
-                f"{sid} : le générateur trouve {len(blocks)} blocs, le navigateur {len(seen)} — "
-                "la structure de .tab-flow a changé, la pagination serait fausse. "
-                "Relancer node tools/measure_carte.mjs."
-            )
-        for mine, m in zip((block_signature(b) for b in blocks), seen):
-            if mine[0] != m["tag"]:
-                raise SystemExit(f"{sid} : bloc {m['i']} <{mine[0]}> ici, <{m['tag']}> mesuré — "
-                                 "mesure à refaire.")
+        mine = [block_signature(b) for b in blocks]
+        if len(mine) != len(seen):
+            raise SystemExit(f"{sid} : {len(mine)} blocs côté générateur, {len(seen)} mesurés — "
+                             "structure de .tab-flow ou document de mesure désalignés.")
+        for (tag, _), m in zip(mine, seen):
+            if tag != m["tag"]:
+                raise SystemExit(f"{sid} : bloc {m['i']} <{tag}> ici, <{m['tag']}> mesuré.")
 
 
-def plan_sheets(metrics: dict, flows: dict[str, list[str]]):
-    """Choisit l'échelle de composition puis répartit les blocs sur les feuilles."""
+# ------------------------------------------------------------------ mise en page
+
+
+def pack_indices(hs: list[float], gap: float, cap: float) -> list[list[int]]:
+    sheets: list[list[int]] = []
+    cur: list[int] = []
+    load = 0.0
+    for i, h in enumerate(hs):
+        add = h + (gap if cur else 0.0)
+        if cur and load + add > cap:
+            sheets.append(cur)
+            cur, load = [], 0.0
+            add = h
+        cur.append(i)
+        load += add
+    if cur:
+        sheets.append(cur)
+    return sheets
+
+
+def balanced_sheets(hs: list[float], gap: float, cap: float) -> list[list[int]]:
+    """Même nombre de feuilles que le remplissage glouton, mais à poids égaux.
+
+    Le glouton bourre la première feuille et laisse la dernière à moitié vide ;
+    on remonte la charge maximale aussi bas que le permet ce nombre de feuilles,
+    ce qui donne le rythme de lecture voulu — et surtout pas une page orpheline.
+    """
+    sheets = pack_indices(hs, gap, cap)
+    if len(sheets) < 2:
+        return sheets
+    lo, hi = max(hs), cap
+    while hi - lo > 0.5:
+        mid = (lo + hi) / 2
+        if len(pack_indices(hs, gap, mid)) <= len(sheets):
+            hi = mid
+        else:
+            lo = mid
+    return pack_indices(hs, gap, hi)
+
+
+def layout(metrics: dict, fit: float, relax: bool = False):
+    """Découpage de chaque onglet au facteur `fit` ; `relax` autorise le resserrement local."""
+    cap = ZONE_H_PX / fit * SAFETY
+    plan: dict[str, list[list[int]]] = {}
+    fits: dict[str, float] = {}
+    loads: list[float] = []
+    for sid in SECTIONS:
+        sec = metrics["sections"][sid]
+        hs = [b["h"] for b in sec["blocks"]]
+        gap = sec["gap"]
+        sheets = balanced_sheets(hs, gap, cap)
+        used = fit
+        sheet_cap = cap
+        if relax:
+            relaxed = relax_section(metrics, fit, sid, sheets, cap)
+            if relaxed:
+                used, sheets, sheet_cap = relaxed
+                fits[sid] = used
+        plan[sid] = sheets
+        for idx in sheets:
+            loads.append((sum(hs[i] for i in idx) + gap * (len(idx) - 1)) * (used / fit))
+    return plan, cap, loads, fits
+
+
+def relax_section(metrics: dict, fit: float, sid: str, sheets: list[list[int]],
+                  cap: float) -> tuple[float, list[list[int]], float] | None:
+    """Resserre un seul onglet pour lui rendre un rythme de feuilles régulier.
+
+    Un onglet dont la dernière feuille reste à moitié vide gâche la lecture du
+    carnet entier. Plutôt que de réduire toute la carte d'un cran pour gagner
+    une feuille, on ne resserre que celui-là (au plus 13 %, et seulement s'il
+    récupère ainsi une feuille de moins) : les autres onglets gardent le facteur
+    global, donc la taille de texte du site.
+    """
+    if len(sheets) < 2:
+        return None
+    sec = metrics["sections"][sid]
+    hs = [b["h"] for b in sec["blocks"]]
+    gap = sec["gap"]
+
+    def count(f: float) -> int:
+        return len(pack_indices(hs, gap, ZONE_H_PX / f * SAFETY))
+
+    fills = [load / (ZONE_H_PX / fit)
+             for load in [sum(hs[i] for i in idx) + gap * (len(idx) - 1) for idx in sheets]]
+    if min(fills) >= BALANCE_MIN_FILL or count(fit * RELAX_FLOOR) > len(sheets) - 1:
+        return None
+    lo, hi = fit * RELAX_FLOOR, fit
+    while hi - lo > 1e-4:
+        mid = (lo + hi) / 2
+        if count(mid) <= len(sheets) - 1:
+            lo = mid
+        else:
+            hi = mid
+    return lo, pack_indices(hs, gap, ZONE_H_PX / lo * SAFETY), ZONE_H_PX / lo * SAFETY
+
+
+def choose_fit(metrics: dict):
+    """Facteur unique : le plus grand qui tienne, au plus 10 % sous la largeur."""
     flow_w = min(v["flow_width"] for v in metrics["sections"].values())
+    if flow_w < 300:
+        raise SystemExit(f"largeur de composition mesurée à {flow_w} px : la mesure est fausse "
+                         "(onglets non rendus ?) — relancer `node tools/measure_carte.mjs`.")
     base_fit = ZONE_W_PX / flow_w
-
-    def pack(fit: float):
-        cap = ZONE_H_PX / fit * SAFETY
-        plan: dict[str, list[tuple[list[int], float]]] = {}
-        for sid in SECTIONS:
-            sec = metrics["sections"][sid]
-            gap = sec["gap"]
-            sheets: list[list[int]] = []
-            cur: list[int] = []
-            load = 0.0
-            for i, block in enumerate(sec["blocks"]):
-                add = block["h"] + (gap if cur else 0.0)
-                if cur and load + add > cap:
-                    sheets.append(cur)
-                    cur, load = [], 0.0
-                    add = block["h"]
-                cur.append(i)
-                load += add
-            if cur:
-                sheets.append(cur)
-            plan[sid] = [(idx, sum(sec["blocks"][i]["h"] for i in idx) + gap * (len(idx) - 1))
-                         for idx in sheets]
-        return plan, cap
-
     best = None
     fit = base_fit
     while fit >= base_fit * FIT_FLOOR:
-        plan, cap = pack(fit)
+        plan, cap, loads, _ = layout(metrics, fit)
         count = sum(len(v) for v in plan.values())
-        worst_fill = min(load / (ZONE_H_PX / fit) for v in plan.values() for _, load in v)
-        score = (count, -round(worst_fill, 3))
+        worst = min(load / (ZONE_H_PX / fit) for load in loads)
+        score = (count, -round(worst, 3))
         if best is None or score < best[0]:
-            best = (score, fit, plan, cap)
+            best = (score, fit, plan, cap, loads)
         fit *= 0.995
-    _, fit, plan, cap = best
+    _, fit, plan, cap, loads = best
     note = "" if abs(fit - base_fit) < 1e-9 else (
-        f" (l'échelle de composition {base_fit:.4f} ramenée à {fit:.4f} pour éviter une feuille quasi vide)")
+        f" — l'échelle de composition {base_fit:.4f} ramenée à {fit:.4f} pour tenir "
+        f"en {sum(len(v) for v in plan.values())} feuilles équilibrées")
     return base_fit, fit, plan, cap, flow_w, note
 
 
 def main() -> None:
     src = index_text()
-    allow_stale = "--no-measure" in sys.argv
-    style = src.split("<style>", 1)[1].split("</style>", 1)[0]
     flows = {sid: split_flow(section_flow(src, sid)) for sid in SECTIONS}
 
-    metrics = load_metrics(allow_stale)
-    check_blocks(metrics, flows)
-    base_fit, fit, plan, cap, flow_w, note = plan_sheets(metrics, flows)
+    css, stats = compose_css(src)
+    print("CSS du site : neutralisation levée → " + ", ".join(f"{k} {v}" for k, v in stats.items()))
 
-    css, stats = rescope_site_css(style)
-    print("CSS du site : " + ", ".join(f"{k} → {v}" for k, v in stats.items()))
-    css, kept, dropped = print_containing_only(css)
-    # Le contenant doit aussi s'appliquer à l'écran : c'est là que la feuille est
-    # rendue, photographiée, et vue dans l'aperçu. On le re-déclare hors média.
-    skin, kept2, _ = chrome_only(media_print_bodies(css))
-    print(f"@media print du site : {kept} règles de contenant conservées sur place, "
-          f"{dropped} règles de contenu écartées (le site garde la main) ; "
-          f"{kept2} rejouées hors média pour l'écran")
-    cover = extract_cover(src)
+    allow_stale = "--no-measure" in sys.argv
+    metrics = load_metrics(src, css, flows, allow_stale)
+    check_blocks(metrics, flows)
+    # le découpage définitif : même facteur, puis resserrement local éventuel
+    base_fit, fit, _, cap, flow_w, note = choose_fit(metrics)
+    plan, cap, _, fits = layout(metrics, fit, relax=True)
 
     pad_x = max(0.0, (ZONE_W_PX / fit - flow_w) / 2)
-    pages: list[str] = [page_shell(1, "cover", "", cover)]
+    pages: list[str] = [page_shell(1, "cover", "", extract_cover(src))]
     labels = ["couverture (site, encadrée sur la feuille)"]
     for sid in SECTIONS:
-        for idx, load in plan[sid]:
+        sec_fit = fits.get(sid, fit)
+        sec_cap = ZONE_H_PX / sec_fit * SAFETY
+        for idx in plan[sid]:
             n = len(pages) + 1
-            sheet_fit = fit
-            if load > cap:            # un bloc plus haut qu'une feuille : on le serre, on le dit
-                sheet_fit = ZONE_H_PX * SAFETY / load
+            sec = metrics["sections"][sid]
+            load = sum(sec["blocks"][i]["h"] for i in idx) + sec["gap"] * (len(idx) - 1)
+            sheet_fit = sec_fit if load <= sec_cap else ZONE_H_PX * SAFETY / load
             pages.append(page_shell(n, sid, "\n".join(flows[sid][i] for i in idx),
-                                    fit=None if abs(sheet_fit - fit) < 1e-9 else sheet_fit))
-            pct = load * fit / ZONE_H_PX * 100
-            labels.append(f"{sid:9} blocs {'+'.join(str(i + 1) for i in idx):9} — {pct:4.0f} % de la hauteur utile")
+                                    fit=None if sheet_fit == fit else sheet_fit))
+            extra = "" if sheet_fit == fit else f", facteur local {sheet_fit:.4f}"
+            labels.append(f"{sid:9} blocs {'+'.join(str(i + 1) for i in idx):9} — "
+                          f"{load * sheet_fit / ZONE_H_PX * 100:4.0f} % de la hauteur utile{extra}")
 
+    pts = 72.0 / 96.0     # 1 px CSS = 0,75 pt
     html = f"""<!DOCTYPE html>
-<html lang="fr" class="carte-doc" data-carte-viewport="{metrics['viewport']}" data-carte-base-w="{flow_w:g}">
+<html lang="fr" class="carte-doc" data-carte-viewport="{metrics['viewport']}" \
+      data-carte-index-hash="{metrics['index_hash']}" data-carte-base-w="{flow_w:g}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -933,16 +1135,6 @@ def main() -> None:
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
 {css}
-
-/* ===== Contenant de la feuille, rejoué hors média (l'aperçu et la capture
-       sont en média screen ; l'impression garde ses règles @media print) ===== */
-{skin}
-
-{CHROME_CSS}
-
-{FIT_CSS}
-
-{GLYPH_CSS}
 
 html.carte-doc {{
   --carte-base-w: {flow_w:g}px;
@@ -960,8 +1152,6 @@ html.carte-doc {{
 """
     html = remplacer_glyphes_a_risque(html)
     OUT.write_text(html, encoding="utf-8")
-
-    pts = 72.0 / 96.0     # 1 px CSS = 0,75 pt
     print(f"\ncarte.html : {len(pages)} feuilles — composition {metrics['viewport']} px "
           f"× {flow_w:g} px, réduite × {fit:.4f}{note}")
     print(f"  zone utile {ZONE_W_PX:.0f} × {ZONE_H_PX:.0f} px ; titres site 16,3 px → "

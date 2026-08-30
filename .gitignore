@@ -5,3 +5,6 @@
 node_modules/
 __pycache__/
 tools/__pycache__/
+
+# intermédiaire de mesure des hauteurs (regénéré par tools/build_carte.py)
+carte-measure.html

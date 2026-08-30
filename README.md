@@ -18,6 +18,19 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
 - Une feuille par onglet ; les onglets denses (Boissons, Cocktails) en occupent
   deux. Le nombre de pages et la répartition viennent de `tools/measure_carte.mjs`,
   qui mesure le rendu réel (Chromium, fontes du site) — pas d'à-peu-près.
+- **Cocktails : une seule colonne, sur deux feuilles.** Le site présente cet
+  onglet en deux colonnes ; sur une feuille A4, il tenait alors tout entier sur
+  la première (96 %) et laissait la seconde à 35 %. `tools/build_carte.py` force
+  donc une colonne pour cet onglet (`html.carte-doc .carte-flow[data-sec="cocktails"] …
+  grid-template-columns: 1fr`) : les quatre panneaux se répartissent en deux
+  feuilles de poids égal (98 % et 90 %) et le pointillé meneur de prix court sur
+  toute la largeur, comme pour les whiskies et les bières.
+- **Le rythme passe avant la taille de texte.** Les hauteurs étant des blocs
+  entiers (jamais coupés), passer d'une colonne à l'autre demande un cran de
+  réduction de plus : la carte garde son facteur global (× 0,5687, intitulés à
+  7,6 pt) et **lui seul** — l'onglet cocktails se compose à × 0,5353. Une carte
+  entière à 7,2 pt pour éviter une feuille orpheline n'aurait pas été un bon
+  échange ; deux feuilles un peu plus serrées, si.
 - Les feuilles gardent le bandeau **COLLINE GAMBETTA** en tête, le pied légal et
   la pagination en bas à droite : un document imprimé isolé doit se suffire.
 - Aperçu : ouvrir `carte.html` — les pages gardent le ratio A4 et s'adaptent à la
@@ -25,8 +38,14 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
   Imprimer → Enregistrer au format PDF (A4 portrait réel).
 
 Après un libellé ou un prix modifié, relancer `python3 tools/build_carte.py` :
-l'empreinte SHA-256 d'`index.html` est comparée à celle des mesures, et une
-mesure périmée déclenche une nouvelle mesure (ou une erreur explicite).
+l'empreinte SHA-256 d'`index.html` **et** celle de la CSS de carte sont comparées
+à celles des mesures, et une mesure périmée déclenche une nouvelle mesure (ou une
+erreur explicite). La mesure ne se fait plus dans `index.html` : la carte a ses
+propres règles (la colonne unique des cocktails), le générateur écrit donc
+`carte-measure.html` — même CSS, mêmes imbriquations, sans feuille ni mise à
+l'échelle — et c'est là que les hauteurs sont relevées. `tools/carte-metrics.json`
+est committé avec les deux empreintes : sans Node ni Chromium, `build_carte.py`
+réutilise ces chiffres et annonce qu'ils sont périmés plutôt que d'inventer.
 
 ## PDF A4 téléchargeable (`carte-a4.pdf`)
 
