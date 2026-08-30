@@ -37,7 +37,10 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
   var(--carte-fit)) / 2))` — calculée dans le repère de composition, elle partait
   de 36 px à droite (9 mm sur papier). Le `max()` protège le cadre : le contenu
   reste à 11 mm du filet, jamais dessus. Chaque feuille suit son propre facteur,
-  y compris les deux qui se composent plus serré.
+  y compris les deux qui se composent plus serré. Ces deux promesses sont vérifiées
+  à chaque build par `build_carte_pdf.mjs` (`cadrage : symétrique à ± 0,01 mm et
+  11,2 mm avant le filet`) : un centrage faux ou un contenu qui toucherait le cadre
+  arrête la construction, au lieu de passer inaperçu sur dix pages d'images.
 - Les feuilles gardent le bandeau **COLLINE GAMBETTA** en tête, le pied légal et
   la pagination en bas à droite : un document imprimé isolé doit se suffire.
 - Aperçu : ouvrir `carte.html` — les pages gardent le ratio A4 et s'adaptent à la
@@ -161,9 +164,12 @@ forme une grille à deux bandes — `2.4em` pour le numéro, puis quatre parts �
 - sous elle, les quatre prix tombent **d'aplomb** dans leurs parts, chacun coiffé de son
   format (`::before` reprenant `data-label`), en `1rem` gras pendant que l'étiquette reste
   à `0,74rem` ;
-- l'appellation réserve deux lignes (`min-height: 3em` pour `line-height: 1.5`) : un vin qui
-  tient sur une ligne occupe la même hauteur que les autres, et le défilement reste
-  équidistant — 103 px par vin à 390 px, au lieu de 95 / 113 / 130 px en escalier ;
+- interligne de l'appellation à `1,55` et **deux lignes réservées** (`min-height: 3,1em`),
+  plus 10 px / 12 px autour de chaque vin : un vin qui tient sur une ligne occupe la même
+  hauteur que les autres et le défilement reste équidistant — 108 px par vin à 390 px, au
+  lieu de 95 / 113 / 130 px en escalier. Le `!important` n'est pas une coquetterie : le
+  plancher de lisibilité du site impose `line-height: 1,3 !important` sous 640 px, et sans
+  lui l'interligne de la liste des vins ne bougeait pas d'un poil ;
 - un seul filet sépare deux vins (les bordures par cellule créaient trois tirets
   décalés sous chaque ligne) ;
 - `Bulles`, qui n'a ni numéro ni 12,5 cl, prend deux moitiés (`wine-table--short`) et

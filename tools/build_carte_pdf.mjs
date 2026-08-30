@@ -45,6 +45,7 @@ const STAGE = join(ROOT, '.carte-pdf');
 const JPG_WIDTH = 2480;                  // 210 mm à 300 dpi
 const JPG_HEIGHT = 3508;                 // 297 mm à 300 dpi
 const JPG_SLACK = 6;                     // le liseré doré de la feuille (1 px par bord) s'ajoute au 210 × 297 mm
+const ECART_CENTRAGE_MM = 0.2, JEU_CADRE_MM = 1.5;   // centrage et non-chevauchement du cadre
 const SHEET_OVERFLOW_PX = 2;             // au-delà de ~0,7 mm hors feuille, la capture rognerait
 const MIN_JPG_BYTES = 120_000;  // une feuille vraiment imprimée pèse plus lourd : anti-page-blanche
 
@@ -209,21 +210,42 @@ async function main() {
     await page.waitForTimeout(200);   // laisse la mise en page se stabiliser
 
     const sheets = page.locator('#print-document .print-page');
+    let ecartMax = 0, jeuMini = Infinity;
     for (let i = 0; i < pages; i++) {
       // Rien ne doit dépasser la feuille : sous média print, .print-page est en
       // overflow:hidden — une page trop longue serait rognée à l'écran comme ici,
       // sans un bruit. On mesure, et on s'arrête.
-      const debord = await sheets.nth(i).evaluate((el) => {
+      const cadrage = await sheets.nth(i).evaluate((el) => {
         const zone = el.querySelector('.print-page__content');
-        if (!zone) return 0;
+        if (!zone) return null;
         const flow = zone.querySelector('.carte-flow');
+        const PX_PER_MM = 96 / 25.4;
         const z = zone.getBoundingClientRect();
+        const s = el.getBoundingClientRect();
         const f = (flow || el).getBoundingClientRect();   // déjà transformé
-        return +Math.max(0, f.bottom - z.bottom, f.right - z.right).toFixed(2);
+        const filet = parseFloat(getComputedStyle(el, '::after').left) / PX_PER_MM;
+        return {
+          debord: +Math.max(0, f.bottom - z.bottom, f.right - z.right).toFixed(2),
+          ecartMM: +((f.left - s.left) - (s.right - f.right)).toFixed(2) / PX_PER_MM,
+          jeuMM: +(Math.min(f.left - s.left, s.right - f.right) / PX_PER_MM - filet).toFixed(2),
+        };
       });
-      if (debord > SHEET_OVERFLOW_PX) {
-        throw new Error(`feuille ${i + 1} : le contenu dépasse le bas de la feuille de ${debord} px `
-          + `(≈ ${(debord * 0.264).toFixed(1)} mm) — il serait rogné. Alléger cette page dans tools/build_carte.py.`);
+      if (cadrage && cadrage.debord > SHEET_OVERFLOW_PX) {
+        throw new Error(`feuille ${i + 1} : le contenu dépasse le bas de la feuille de ${cadrage.debord} px `
+          + `(≈ ${(cadrage.debord * 0.264).toFixed(1)} mm) — il serait rogné. Alléger cette page dans tools/build_carte.py.`);
+      }
+      if (cadrage && Math.abs(cadrage.ecartMM) > ECART_CENTRAGE_MM) {
+        throw new Error(`feuille ${i + 1} : le bloc est décalé de ${cadrage.ecartMM.toFixed(2)} mm `
+          + `(gauche/droite inégaux) — le centrage se calcule dans la feuille, après réduction : `
+          + `voir --carte-zone-w dans tools/build_carte.py.`);
+      }
+      if (cadrage && cadrage.jeuMM < JEU_CADRE_MM) {
+        throw new Error(`feuille ${i + 1} : le contenu arrive à ${cadrage.jeuMM} mm du filet du cadre — `
+          + `il le chevaucherait à l'impression.`);
+      }
+      if (cadrage) {
+        ecartMax = Math.max(ecartMax, Math.abs(cadrage.ecartMM));
+        jeuMini = Math.min(jeuMini, cadrage.jeuMM);
       }
       // Capture de l'élément : Playwright l'amène dans le champ tout seul.
       await sheets.nth(i).screenshot({
@@ -237,6 +259,7 @@ async function main() {
     await context.close();
 
     const normalisees = normalizeJpgs(STAGE, pages);
+    console.log(`cadrage : symétrique à ± ${ecartMax.toFixed(2)} mm et ${jeuMini.toFixed(1)} mm avant le filet du cadre`);
     console.log(normalisees
       ? `  ImageMagick : les ${pages} feuilles ramenées à ${JPG_WIDTH}×${JPG_HEIGHT}`
       : `  ImageMagick absent : feuilles gardées telles que capturées (±${JPG_SLACK} px autour de ${JPG_WIDTH}×${JPG_HEIGHT})`);

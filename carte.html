@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="carte-doc" data-carte-viewport="1180"       data-carte-index-hash="ac6da04352b2b8d1" data-carte-base-w="1140">
+<html lang="fr" class="carte-doc" data-carte-viewport="1180"       data-carte-index-hash="a7a813da1bfb5dc3" data-carte-base-w="1140">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -3969,7 +3969,8 @@ html :is(#interior-menu, #print-document) .hh-line__hh::before {
     row-gap: 6px;
     align-items: center;
     border-bottom: 1px solid rgba(216, 178, 87, .22);
-    padding: 9px 0 10px;
+    padding: 10px 0 12px;          /* l'espace entre deux vins, pas seulement en
+                                      dedans : c'est lui qui rend la liste courable */
   }
   html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td {
     padding: 0;
@@ -3990,9 +3991,11 @@ html :is(#interior-menu, #print-document) .hh-line__hh::before {
     grid-column: 2 / -1;
     grid-row: 1;
     text-align: left;
-    line-height: 1.5;            /* les deux lignes d'une appellation respirent */
-    min-height: 3em;             /* une seule ligne occupe la même place : le
-                                    défilement reste régulier, vin après vin */
+    /* !important : le plancher de lisibilité du site impose line-height: 1,3 en
+       !important sous 640 px — sans lui, l'interligne ne bougerait pas d'un poil. */
+    line-height: 1.55 !important;   /* les deux lignes d'une appellation respirent */
+    min-height: 3.1em;              /* une seule ligne occupe la même place : le
+                                       défilement reste régulier, vin après vin */
   }
   /* pas de numéro dans les Bulles : l'appellation prend toute la ligne */
   html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table tr:not(:has(.wine-no)) td.wine-name {
