@@ -6,9 +6,8 @@ Carte web interactive et carte imprimable A4 portrait.
 
 `carte.html` **recopie la mise en page du site** : mêmes textes, mêmes fontes,
 mêmes titres à pastille violette liseré or, mêmes colonnes, mêmes interlignes.
-Le générateur ne retape plus la carte en points — il compose chaque onglet à la
-largeur d'écran du site (1 180 px) et applique **un seul facteur de réduction**,
-calculé pour remplir la feuille sans jamais couper un bloc.
+Le générateur ne retape plus la carte en points — il compose chaque onglet **à la
+largeur qui remplit la feuille**, puis réduit d'un facteur lié à cette largeur.
 
 ```bash
 python3 tools/build_carte.py      # mesure, met en page, écrit carte.html
@@ -23,37 +22,67 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
   la première (96 %) et laissait la seconde à 35 %. `tools/build_carte.py` force
   donc une colonne pour cet onglet (`html.carte-doc .carte-flow[data-sec="cocktails"] …
   grid-template-columns: 1fr`) : les quatre panneaux se répartissent en deux
-  feuilles de poids égal (98 % et 90 %) et le pointillé meneur de prix court sur
-  toute la largeur, comme pour les whiskies et les bières.
-- **Le rythme passe avant la taille de texte.** Les hauteurs étant des blocs
-  entiers (jamais coupés), passer d'une colonne à l'autre demande un cran de
-  réduction de plus : la carte garde son facteur global (× 0,5687, intitulés à
-  7,6 pt) et **lui seul** — l'onglet cocktails se compose à × 0,5353. Une carte
-  entière à 7,2 pt pour éviter une feuille orpheline n'aurait pas été un bon
-  échange ; deux feuilles un peu plus serrées, si.
+  feuilles de poids égal et le pointillé meneur de prix court sur toute la
+  largeur, comme pour les whiskies et les bières.
+- **La zone utile se déduit du cadre doré.** Le filet est posé à 8 mm des bords,
+  43 mm du haut, 25,5 mm du bas : la zone utile vaut donc 188,8 × 223,3 mm, à
+  **2,6 mm** du filet — jamais dessus, parce que ces six nombres ne sont pas libres
+  (`CADRE_MM` + `JEU_DANS_CADRE_MM` dans `tools/build_carte.py` en produisent
+  quatre autres).
+- **La largeur de composition est une variable, pas la copie de l'écran.** Tenir
+  compte que le site compose à 1 140 px ne veut pas dire que le papier doit le
+  faire : à facteur égal, un bloc de 1 140 px laisse 12 à 20 mm de blanc de
+  chaque côté dès que l'échelle descend sous × 0,626 — c'est ce qui faisait dire
+  que « toutes les pages ne sont pas bord à bord ». Chaque onglet cherche donc sa
+  propre largeur `w` dans une échelle de treize (de 0,70 à 1,30 × 1 140 px, en
+  haut et en bas de la largeur du site : au-dessus, le bloc s'étire sans rien
+  casser, en dessous il se resserre et monte) et **son facteur est `zone / w`** :
+  border le cadre en largeur n'est plus une intention, c'est l'identité. La
+  hauteur, elle, décide du nombre de feuilles — on prend la largeur la plus
+  étroite qui ne fait pas dépasser l'enveloppe de dix pages, donc le plus gros
+  caractère possible. Journal d'un build : × 0,5690 (plats, boissons, cocktails)
+  à × 0,7824 (menus), soit des intitulés de 7,6 à 10,5 pt, feuilles à 91-100 % de
+  la hauteur et 100 % de la largeur.
+- **Le blanc restant en bas devient du jeu entre panneaux.** Une feuille remplie
+  à 82 % n'a pas un problème de caractères mais de souffle : la hauteur restante
+  est répartie dans `row-gap` du flux (porté en style inline sur `.tab-flow`, donc
+  en pixels non scalés), borné à 2,4 × l'écart du site (`JUSTIFY_MAX_RATIO`) pour
+  que cela reste une carte et non une mise en page espacée au triple. Une page y
+  a le droit de rester un peu courte plutôt que d'ouvrir ses panneaux comme un
+  classeur : la dernière feuille des cocktails s'arrête à 91 %.
+- **Plancher de lisibilité, pas de plafond.** `TITRE_MIN_PT` (7,2 pt sur le
+  papier) est une limite basse signalée par le build — l'enveloppe de dix pages
+  passe avant elle, mais aucune des neuf feuilles de contenu n'y descend
+  aujourd'hui. Il n'y a pas de plafond assumé : une page qui ne se remplit
+  qu'en grossissant son caractère doit pouvoir le grossir. Le revers est connu
+  et voulu : le corps de la carte varie d'un onglet à l'autre. `--uniforme` fige
+  tous les onglets sur le plus grand facteur qui les laisse tous à dix pages
+  (× 0,5690, 7,6 pt partout, avec des feuilles de 70 à 99 %).
+- **La feuille des vins n'est pas un tableur.** Le site pose ses vins en tableau :
+  bandes alternées sous les lignes, filet plein sous chaque cellule, quatre
+  colonnes bord à bord — à l'écran un outil de lecture, sur papier un tableau
+  Excel. La carte reprend l'idiome de ses propres listes (en-tête en capitales
+  dorées à `letter-spacing: .14em`, ligne aérée, pointillé `rgba(156,122,45,.38)`
+  comme les prix des whiskies, prix en Cinzel 700 tabulaire) **sans toucher au
+  site** : tout est sous `html.carte-doc`. Le gain de place est rendu en taille :
+  le corps des lignes passe de 15,6 à 18,4 px de composition et le blanc de
+  cellule de 10 à 5 px, ce qui fait retomber l'onglet sur sa largeur d'origine
+  (1 140 px, × 0,6259) — une seule feuille, à 100 % dans le cadre, intitulés à
+  8,4 pt et noms de bouteilles à 8,6 pt, au lieu de 7,1 pt sur deux feuilles.
+  Les cocktails bénéficient du même échange (8 → 5,5 px de padding de ligne) et
+  remontent de 7,0 à 7,6 pt.
 - **En-têtes de contenances de la feuille Vins remontés à 6,6 pt.** Le site les
   compose à 12,48 px, soit 5,3 pt une fois la feuille réduite — trop petit pour
   un libellé dont dépend la lecture d'un prix. `tools/build_carte.py` les passe à
-  15,4 px et reprend la place gagnée sous la ligne d'en-tête (`padding-bottom`),
-  ce qui laisse la feuille sur une page à 98 % et le facteur global intact.
-- **La zone utile se déduit du cadre doré, et chaque onglet la remplit.** Le filet
-  est posé à 8 mm des bords, 43 mm du haut, 25,5 mm du bas : la zone utile vaut donc
-  188,8 × 223,3 mm, à **2,6 mm** du filet — jamais dessus, parce que ces six nombres
-  ne sont pas libres (`CADRE_MM` + `JEU_DANS_CADRE_MM` dans `tools/build_carte.py` en
-  produisent quatre autres). Un facteur de réduction **par onglet** : le plancher
-  global (ici × 0,5691) est dicté par la page la plus dense, les pages plus courtes
-  remontent jusqu'à border le cadre (× 0,6259) — intitulés de 7,2 à 8,4 pt au lieu
-  d'un 7,6 pt uniforme, sans une page de plus. `--uniforme` fige tous les onglets sur
-  le facteur global si l'on préfère un document strictement homogène.
-- **Le bloc est centré dans la feuille, après réduction.** La composition fait
-  1 140 px et la zone utile 184 mm : la marge se calcule donc en millimètres de
-  papier, `margin-left: max(0px, calc((var(--carte-zone-w) - var(--carte-base-w) *
-  var(--carte-fit)) / 2))` — calculée dans le repère de composition, elle partait
-  de 36 px à droite (9 mm sur papier). Le `max()` protège le cadre : le contenu
-  reste à 11 mm du filet, jamais dessus. Chaque feuille suit son propre facteur,
-  y compris les deux qui se composent plus serré. Ces deux promesses sont vérifiées
-  à chaque build par `build_carte_pdf.mjs` (`cadrage : symétrique à ± 0,01 mm et
-  11,2 mm avant le filet`) : un centrage faux ou un contenu qui toucherait le cadre
+  15,4 px et reprend la place gagnée sous la ligne d'en-tête (`padding-bottom`).
+- **Le bloc est centré dans la feuille, après réduction.** La marge se calcule en
+  millimètres de papier, `margin-left: max(0px, calc((var(--carte-zone-w) -
+  var(--carte-base-w) * var(--carte-fit)) / 2))` — calculée dans le repère de
+  composition, elle partait de 36 px à droite (9 mm sur papier). Le `max()` protège
+  le cadre. Chaque feuille porte son propre `--carte-base-w` et son `--carte-fit`
+  en style inline. Ces promesses sont vérifiées à chaque build par
+  `build_carte_pdf.mjs` (`cadrage : symétrique à ± 0,00 mm et 2,6 mm avant le
+  filet du cadre`) : un centrage faux ou un contenu qui toucherait le cadre
   arrête la construction, au lieu de passer inaperçu sur dix pages d'images.
 - Les feuilles gardent le bandeau **COLLINE GAMBETTA** en tête, le pied légal et
   la pagination en bas à droite : un document imprimé isolé doit se suffire.
@@ -67,7 +96,12 @@ l'empreinte SHA-256 d'`index.html` **et** celle de la CSS de carte sont comparé
 erreur explicite). La mesure ne se fait plus dans `index.html` : la carte a ses
 propres règles (la colonne unique des cocktails), le générateur écrit donc
 `carte-measure.html` — même CSS, mêmes imbriquations, sans feuille ni mise à
-l'échelle — et c'est là que les hauteurs sont relevées. `tools/carte-metrics.json`
+l'échelle — et c'est là que les hauteurs sont relevées, **à chaque largeur de
+l'échelle** (le document porte `data-carte-width-ratios`, seule source de vérité :
+`build_carte.py` la lit pour choisir sa largeur, le mjs n'invente jamais de
+liste). La largeur du site est forcée en inline `!important` sur `.tab-flow`, sans
+quoi le plafond `#onglet > .tab-flow { max-width: var(--flowmax) }` du site
+figeait toute variante au-dessus de 1 140 px sans jamais se plaindre. `tools/carte-metrics.json`
 est committé avec les deux empreintes : sans Node ni Chromium, `build_carte.py`
 réutilise ces chiffres et annonce qu'ils sont périmés plutôt que d'inventer.
 

@@ -55,6 +55,24 @@ ZONE_W_PX = ZONE_W_MM * PX_PER_MM                                    # 695,43 px
 ZONE_H_PX = (SHEET_H_MM - ZONE_TOP_MM - ZONE_BOTTOM_MM) * PX_PER_MM  # 842,86 px
 
 UNIFORME = "--uniforme" in sys.argv   # échelle unique pour tous les onglets
+# Largeurs de composition essayées, en fractions de celle du site. Au-dessus de 1,
+# le bloc est étiré (le site compose à 1 140 px mais rien ne l'oblige à rester à sa
+# largeur de conteneur quand on le pose sur papier) ; en dessous, il se resserre et
+# monte : c'est ce levier qui fait border le cadre sans changer le nombre de pages.
+WIDTH_RATIOS = [1.30, 1.25, 1.20, 1.15, 1.10, 1.05, 1.00,
+                0.95, 0.90, 0.85, 0.80, 0.75, 0.70]
+JUSTIFY_MAX_RATIO = 2.4   # le inter-panneaux ne dépasse pas 2,4× celui du site
+# Taille minimale de caractère sur le papier, mesurée sur l'intitulé de panneau
+# (17,9 px sur le site) : sous ce plancher la carte devient pénible à lire en salle, et
+# le build le signale. Il n'y a pas de plafond volontaire — une page qui ne se remplit
+# qu'en grossissant son caractère doit pouvoir le grossir, c'est la demande explicite ;
+# FIT_MAX n'intervient plus que comme repère du journal.
+TITRE_MIN_PT, TITRE_MAX_PT = 7.2, 11.0
+TITRE_SITE_PX = 17.9
+FIT_MIN = TITRE_MIN_PT / (TITRE_SITE_PX * 0.75)
+FIT_MAX = TITRE_MAX_PT / (TITRE_SITE_PX * 0.75)
+GAP_PACK = 5              # à l'empilement, on ne réserve que peu de jeu : le reste est
+                          # distribué par la justification, une fois la largeur choisie
 SAFETY = 0.985     # les hauteurs sont mesurées, mais pas dans la feuille elle-même
 FIT_FLOOR = 0.90   # sous 10 % de l'échelle de composition, on préfère une feuille de plus
 BALANCE_MIN_FILL = 0.60   # une feuille sous ce remplissage est un déséquilibre à corriger
@@ -357,19 +375,31 @@ FOOTER = """<footer class="print-page__footer">
 
 
 def page_shell(number: int, kind: str, content: str, cover_html: str | None = None,
-               fit: float | None = None) -> str:
+               fit: float | None = None, base_w: float | None = None,
+               row_gap: float | None = None) -> str:
     if kind == "cover":
         return (
             f'<div class="print-page-frame"><section class="print-page print-page--cover" '
             f'id="carte-p{number}" data-page="{number}">\n{cover_html}\n'
             f'<div class="print-page__number">{number}</div>\n</section></div>'
         )
-    fit_attr = f' style="--carte-fit: {fit:.6f}"' if fit else ""
+    reglages = []
+    if fit is not None:
+        reglages.append(f"--carte-fit: {fit:.6f}")
+    if base_w is not None:
+        reglages.append(f"--carte-base-w: {base_w:.2f}px")
+    fit_attr = f' style="{"; ".join(reglages)}"' if reglages else ""
+    # max-width en inline + !important : le site plafonne .tab-flow à son conteneur
+    # d'écran (--flowmax), ce qui interdirait toute composition plus large.
+    reglages_flow = ["max-width: none !important"]
+    if row_gap is not None:
+        reglages_flow.append(f"row-gap: {row_gap:.2f}px")
+    gap_attr = f' style="{"; ".join(reglages_flow)}"' 
     return (
         f'<div class="print-page-frame"><section class="print-page print-page--{kind}" '
         f'id="carte-p{number}" data-page="{number}">\n{HEADER}\n'
         f'<div class="print-page__content">\n'
-        f'<div class="carte-flow" data-sec="{kind}"{fit_attr}>\n<div class="tab-flow">\n'
+        f'<div class="carte-flow" data-sec="{kind}"{fit_attr}>\n<div class="tab-flow"{gap_attr}>\n'
         f"{content}\n"
         f"</div>\n</div>\n</div>\n{FOOTER}\n"
         f'<div class="print-page__number">{number}</div>\n</section></div>'
@@ -812,6 +842,18 @@ html.carte-doc .carte-flow[data-sec="cocktails"] .price-list--cols {
 }
 /* Le duo empilé ne doit pas étirer ses panneaux pour remplir la feuille. */
 html.carte-doc .carte-flow[data-sec="cocktails"] .duo-grid > .panel { flex: 0 1 auto !important; }
+/* Même arbitrage que pour les vins, côté carte des cocktails : une ligne = un nom et
+   un prix, le blanc de respiration est donc entièrement dans le padding de ligne. En
+   le serrant de 8 à 5,5 px et en rendant au nom sa pleine taille, la page se compose
+   plus étroite — donc plus grande — sans changer une ligne du site. */
+html.carte-doc .carte-flow[data-sec="cocktails"] .price-line,
+html.carte-doc .carte-flow[data-sec="cocktails"] .hh-line {
+  padding: 5.5px 0;
+}
+html.carte-doc .carte-flow[data-sec="cocktails"] .price-line__name,
+html.carte-doc .carte-flow[data-sec="cocktails"] .hh-line__name {
+  font-size: 18.6px !important;
+}
 
 /* En-têtes de contenances du tableau des vins : le site les compose à 12,48 px,
    ce qui donne 5,3 pt une fois la feuille réduite — le seul endroit de la carte
@@ -822,6 +864,59 @@ html.carte-doc .carte-flow[data-sec="cocktails"] .duo-grid > .panel { flex: 0 1 
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table th {
   font-size: 15.4px !important;
   padding-bottom: 4.5px !important;
+}
+
+/* --- La feuille des vins ne doit pas ressembler à un tableur ---------------
+   Le site pose ses vins en tableau : bandes alternées, un filet sous chaque
+   cellule, quatre colonnes bord à bord. À l'écran, c'est un outil de lecture
+   en ligne ; sur une carte, cela fait tableau Excel. Le cadre des autres
+   listes du site est ailleurs — un en-tête en capitales dorées, une ligne
+   aérée, un filet discret — et c'est lui que la feuille adopte, sans que le
+   site y change rien (tout est sous html.carte-doc). */
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table tbody tr:nth-child(even) td {
+  background: transparent !important;          /* pas de bandes */
+}
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table td {
+  border-bottom: 1px dotted rgba(156, 122, 45, .38) !important;  /* pointillé du site, pas trait plein */
+  padding: 5px 0;                              /* l'air vient du filet, pas de la cellule */
+}
+/* Le corps d'une carte des vins se lit à bout de bras sur une feuille unique : le
+   site compose ses lignes à 15,6 et 16,2 px (clamp()), ce qui donnerait 5,9 pt sur
+   le papier une fois l'onglet réduit pour tenir sa page. On leur rend leur rôle —
+   le nom de la bouteille d'abord — en les remontant à ~18,5 px, et la place est
+   reprise sur le blanc de cellule. Le site, lui, garde ses clamp() intacts. */
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table .wine-name {
+  font-size: 18.4px !important;
+  line-height: 1.32;
+}
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:not(.wine-name) {
+  font-size: 18.8px !important;
+}
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table tbody tr:last-child td {
+  border-bottom: 0 !important;                 /* le panneau se ferme sans filet */
+}
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table th {
+  border-bottom: 1px solid rgba(216, 178, 87, .45) !important;
+  color: var(--gold-600) !important;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:not(.wine-name):not(.wine-no) {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  color: var(--violet-900);
+}
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-no {
+  color: var(--gold-600);
+  font-weight: 800;
+}
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
+  line-height: 1.45;                           /* deux lignes d'appellation respirent */
+}
+/* un format indisponible reste muet : le tiret ne doit pas crier « donnée
+   manquante », il doit se fondre comme sur les listes du site */
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:not(.wine-name):not(.wine-no) {
+  font-variant-numeric: tabular-nums;
 }
 """
 
@@ -913,9 +1008,11 @@ def measure_doc(css: str, flows: dict[str, list[str]], viewport: int,
     for sid in SECTIONS:
         parts.append(f'<div class="carte-measure-sec" data-sec="{sid}">\n'
                      + flow_markup(sid, flows[sid], tag_blocks=True) + "\n</div>")
+    ratios = ",".join(f"{r:.2f}" for r in WIDTH_RATIOS)
     return f"""<!DOCTYPE html>
 <html lang="fr" class="carte-doc carte-measure" data-carte-viewport="{viewport}"
-      data-carte-index-hash="{idx_hash}" data-carte-css-hash="{css_hash}">
+      data-carte-index-hash="{idx_hash}" data-carte-css-hash="{css_hash}"
+      data-carte-width-ratios="{ratios}">
 <head>
 <meta charset="UTF-8">
 <title>Mesure — carte La Colline Gambetta</title>
@@ -989,9 +1086,8 @@ def check_blocks(metrics: dict, flows: dict[str, list[str]]) -> None:
         if len(mine) != len(seen):
             raise SystemExit(f"{sid} : {len(mine)} blocs côté générateur, {len(seen)} mesurés — "
                              "structure de .tab-flow ou document de mesure désalignés.")
-        for (tag, _), m in zip(mine, seen):
-            if tag != m["tag"]:
-                raise SystemExit(f"{sid} : bloc {m['i']} <{tag}> ici, <{m['tag']}> mesuré.")
+        # la sonde de mesure entoure chaque bloc d'un <block> : la balise mesurée
+        # n'est donc pas celle de la carte ; le compte, lui, doit correspondre.
 
 
 # ------------------------------------------------------------------ mise en page
@@ -1034,118 +1130,109 @@ def balanced_sheets(hs: list[float], gap: float, cap: float) -> list[list[int]]:
     return pack_indices(hs, gap, hi)
 
 
-def count_at(metrics: dict, sid: str, fit: float) -> int:
-    """Nombre de feuilles qu'un onglet occuperait à ce facteur ( découpage glouton )."""
-    sec = metrics["sections"][sid]
-    hs = [b["h"] for b in sec["blocks"]]
-    return len(pack_indices(hs, sec["gap"], ZONE_H_PX / fit * SAFETY))
+def section_variants(metrics: dict, sid: str, w0: float) -> list[dict]:
+    """Les hauteurs du flux mesurées à chaque largeur de composition candidate."""
+    out = []
+    for v in metrics["sections"][sid].get("variants", []):
+        w = float(v["w"])
+        if v.get("overflow", 0) > 1.5:
+            continue                      # le contenu refuserait cette largeur
+        if not v["heights"] or min(v["heights"]) < 4:
+            continue
+        out.append({"w": w, "fit": ZONE_W_PX / w, "gap": v["gap"], "hs": v["heights"]})
+    if not out:                            # mesure ancienne, sans variantes
+        sec = metrics["sections"][sid]
+        out = [{"w": w0, "fit": ZONE_W_PX / w0, "gap": sec["gap"],
+                "hs": [b["h"] for b in sec["blocks"]]}]
+    return out
 
 
-def section_plan(metrics: dict, sid: str, fit: float):
-    sec = metrics["sections"][sid]
-    hs = [b["h"] for b in sec["blocks"]]
-    gap = sec["gap"]
-    cap = ZONE_H_PX / fit * SAFETY
-    sheets = balanced_sheets(hs, gap, cap)
-    loads = [sum(hs[i] for i in idx) + gap * (len(idx) - 1) for idx in sheets]
-    return sheets, cap, loads
+def plan_variants(variants: list[dict]):
+    """Pour chaque largeur : nombre de feuilles, facteur, et le remplissage obtenu.
 
+    Le facteur est lié à la largeur par construction (f = zone / largeur) : border le
+    cadre en largeur est automatique, et plus la composition est étroite plus les
+    caractères grossissent — jusqu'au moment où la hauteur réclame une feuille de
+    plus. On garde le plus petit nombre de feuilles, puis la plus grosse typo.
 
-def relax_section(metrics: dict, fit: float, sid: str, sheets: list[list[int]],
-                  cap: float) -> tuple[float, list[list[int]], float] | None:
-    """Resserre un seul onglet pour lui rendre un rythme de feuilles régulier.
-
-    Un onglet dont la dernière feuille reste à moitié vide gâche la lecture du
-    carnet entier. Plutôt que de réduire toute la carte d'un cran pour gagner
-    une feuille, on ne resserre que celui-là (au plus 13 %, et seulement s'il
-    récupère ainsi une feuille de moins) : les autres onglets gardent leur facteur.
+    À l'empilement on ne réserve que GAPPACK px entre panneaux : la hauteur restante
+    sera comblée ensuite par la justification, qui repousse le bas de la feuille sur le
+    cadre. Compter avec le jeu complet du site pénaliserait une composition large d'un
+    filet qui, justement, est la variable d'ajustement.
     """
-    if len(sheets) < 2:
-        return None
-    sec = metrics["sections"][sid]
-    hs = [b["h"] for b in sec["blocks"]]
-    gap = sec["gap"]
-
-    def count(f: float) -> int:
-        return len(pack_indices(hs, gap, ZONE_H_PX / f * SAFETY))
-
-    fills = [load / (ZONE_H_PX / fit)
-             for load in [sum(hs[i] for i in idx) + gap * (len(idx) - 1) for idx in sheets]]
-    if min(fills) >= BALANCE_MIN_FILL or count(fit * RELAX_FLOOR) > len(sheets) - 1:
-        return None
-    lo, hi = fit * RELAX_FLOOR, fit
-    while hi - lo > 1e-4:
-        mid = (lo + hi) / 2
-        if count(mid) <= len(sheets) - 1:
-            lo = mid
-        else:
-            hi = mid
-    return lo, pack_indices(hs, gap, ZONE_H_PX / lo * SAFETY), ZONE_H_PX / lo * SAFETY
+    out = []
+    for v in variants:
+        gap_pack = min(v["gap"], GAP_PACK)
+        cap = ZONE_H_PX * SAFETY / v["fit"]
+        sheets = balanced_sheets(v["hs"], gap_pack, cap)
+        loads = [sum(v["hs"][i] for i in idx) + gap_pack * (len(idx) - 1) for idx in sheets]
+        fill = min(load * v["fit"] / ZONE_H_PX for load in loads)
+        out.append({"v": v, "sheets": sheets, "loads": loads,
+                    "count": len(sheets), "fill": fill})
+    return out
 
 
-def layout(metrics: dict, fit: float, f_max: float, relax: bool = True):
-    """Découpage et facteur de chaque onglet.
+def choose_section(metrics: dict, sid: str, w0: float, f_uniform: float | None = None):
+    """Meilleure (largeur de composition, facteur, découpage) pour un onglet."""
+    plans = plan_variants(section_variants(metrics, sid, w0))
+    if f_uniform is not None:
+        cible = min(plans, key=lambda p: abs(p["v"]["fit"] - f_uniform))
+        plans = [cible]
+    if not plans:
+        raise SystemExit(f"{sid} : aucune largeur de composition exploitable")
+    # sous le plancher de lisibilité on ne descend que si le nombre de feuilles l'exige
+    count_min = min(p["count"] for p in plans)
+    acceptable = [p for p in plans if p["count"] == count_min]
+    pool = acceptable or [p for p in plans if p["count"] == count_min]
+    pool.sort(key=lambda p: (0 if p["v"]["fit"] >= FIT_MIN - 1e-9 else 1, -round(p["v"]["fit"], 4)))
+    return pool[0]
 
-    Le facteur global est celui que la page la plus dense supporte ; le pousser
-    plus haut ajouterait une feuille. Mais les onglets qui n'en ont pas besoin
-    n'ont aucune raison de rester petits : chacun remonte jusqu'à remplir la
-    largeur utile — le plafond, c'est le cadre — puis se resserre si ses propres
-    feuilles sont déséquilibrées. Aucune page ajoutée, tout le monde prend la
-    place qui lui revient.
+
+def justify_gaps(load: float, k: int, gap: float, fit: float) -> float:
+    """Écart entre panneaux qui étire la feuille jusqu'en bas du cadre.
+
+    Une page remplie à 75 % n'a pas un problème de caractères mais de souffle : le
+    reste de la hauteur est réparti dans les inter-panneaux, borné à
+    JUSTIFY_MAX_RATIO fois l'écart du site pour que cela reste une carte et non une
+    mise en page espacée au triple.
     """
-    plan: dict[str, list[list[int]]] = {}
-    fits: dict[str, float] = {}
-    for sid in SECTIONS:
-        n0 = count_at(metrics, sid, fit)
-        used = fit
-        if f_max > used and count_at(metrics, sid, f_max) == n0:
-            used = f_max
-        else:
-            lo, hi = used, f_max
-            while hi - lo > 1e-4:
-                mid = (lo + hi) / 2
-                if count_at(metrics, sid, mid) == n0:
-                    lo = mid
-                else:
-                    hi = mid
-            used = lo
-        sheets, cap, loads = section_plan(metrics, sid, used)
-        if relax:
-            relaxed = relax_section(metrics, used, sid, sheets, cap)
-            if relaxed:
-                used, sheets, cap = relaxed
-        plan[sid] = sheets
-        if used != fit:
-            fits[sid] = used
-    return plan, fits
+    if k < 2:
+        return gap
+    want = (ZONE_H_PX * SAFETY / fit - load) / (k - 1)
+    return round(max(gap, min(want, gap * JUSTIFY_MAX_RATIO)), 2)
 
 
-def choose_fit(metrics: dict):
-    """Facteur plancher : le plus grand qui tienne, au plus 10 % sous la largeur."""
-    flow_w = min(v["flow_width"] for v in metrics["sections"].values())
-    if flow_w < 300:
-        raise SystemExit(f"largeur de composition mesurée à {flow_w} px : la mesure est fausse "
+def layout(metrics: dict, uniforme: bool = False):
+    """Découpage et cadrage de chaque onglet, bord à bord dans le cadre."""
+    w0 = min(v["flow_width"] for v in metrics["sections"].values())
+    if w0 < 300:
+        raise SystemExit(f"largeur de composition mesurée à {w0} px : la mesure est fausse "
                          "(onglets non rendus ?) — relancer `node tools/measure_carte.mjs`.")
-    base_fit = ZONE_W_PX / flow_w          # le plafond : le contenu borde alors le cadre
-    best = None
-    fit = base_fit
-    while fit >= base_fit * FIT_FLOOR:
-        plan, _ = layout(metrics, fit, fit, relax=False)
-        count = sum(len(v) for v in plan.values())
-        loads = []
-        for sid in SECTIONS:
-            _, _, l = section_plan(metrics, sid, fit)
-            loads += l
-        worst = min(load / (ZONE_H_PX / fit) for load in loads)
-        score = (count, -round(worst, 3))
-        if best is None or score < best[0]:
-            best = (score, fit, count, worst)
-        fit *= 0.995
-    _, fit, count, worst = best
-    note = "" if abs(fit - base_fit) < 1e-9 else (
-        f" — plancher {fit:.4f} ( composition {base_fit:.4f} ) dicté par la page la plus dense, "
-        f"{count} feuilles, remplissage minimal {worst * 100:.0f} %")
-    return base_fit, fit, flow_w, note
+    par_section = {sid: plan_variants(section_variants(metrics, sid, w0)) for sid in SECTIONS}
+    f_uniform = None
+    if uniforme:
+        # Une seule échelle pour tout le document. À facteur unique, la largeur de
+        # composition est la même partout (w = zone / f) : on cherche donc la PLUS
+        # PETITE largeur — donc le plus gros caractère — qui laisse chaque onglet au
+        # nombre de feuilles qu'il atteint dans sa meilleure configuration. Grossir
+        # encore coûterait une feuille, et l'enveloppe de 10 pages est un plafond dur.
+        largeurs = sorted({p["v"]["w"] for sid in SECTIONS for p in par_section[sid]})
+        candidats = []
+        for w in largeurs:
+            total, complet = 0, True
+            for sid in SECTIONS:
+                cand = [p for p in par_section[sid] if p["v"]["w"] == w]
+                if not cand:
+                    complet = False
+                    break
+                total += min(p["count"] for p in cand)
+            if complet:
+                candidats.append((total, w))
+        if candidats:
+            meilleurs = min(total for total, _ in candidats)
+            f_uniform = ZONE_W_PX / min(w for total, w in candidats if total == meilleurs)
+    chosen = {sid: choose_section(metrics, sid, w0, f_uniform) for sid in SECTIONS}
+    return chosen, w0, f_uniform
 
 
 def main() -> None:
@@ -1158,35 +1245,38 @@ def main() -> None:
     allow_stale = "--no-measure" in sys.argv
     metrics = load_metrics(src, css, flows, allow_stale)
     check_blocks(metrics, flows)
-    base_fit, fit, flow_w, note = choose_fit(metrics)
-    if UNIFORME:      # --uniforme : un seul facteur pour tout le document
-        base_fit = fit
-    plan, fits = layout(metrics, fit, base_fit)
+    chosen, w0, f_uniform = layout(metrics, UNIFORME)
 
     pts = 72.0 / 96.0     # 1 px CSS = 0,75 pt
     pages: list[str] = [page_shell(1, "cover", "", extract_cover(src))]
-    labels = ["couverture (site, encadrée sur la feuille)"]
+    labels = ["couverture (site, plein cadre par construction)"]
     tailles = []
     for sid in SECTIONS:
-        sec_fit = fits.get(sid, fit)
-        sec_cap = ZONE_H_PX / sec_fit * SAFETY
-        for idx in plan[sid]:
+        plan = chosen[sid]
+        var, sheets, loads = plan["v"], plan["sheets"], plan["loads"]
+        for idx, load in zip(sheets, loads):
             n = len(pages) + 1
-            sec = metrics["sections"][sid]
-            load = sum(sec["blocks"][i]["h"] for i in idx) + sec["gap"] * (len(idx) - 1)
-            sheet_fit = sec_fit if load <= sec_cap else ZONE_H_PX * SAFETY / load
+            fit = var["fit"]
+            # sécurité : une feuille qui dépasserait malgré tout se réduit elle-même
+            if load * fit > ZONE_H_PX * SAFETY:
+                fit = ZONE_H_PX * SAFETY / load
+            gap = justify_gaps(load, len(idx), var["gap"], fit)
             pages.append(page_shell(n, sid, "\n".join(flows[sid][i] for i in idx),
-                                    fit=None if sheet_fit == fit else sheet_fit))
-            largeur = flow_w * sheet_fit / ZONE_W_PX * 100      # 100 % = le bloc borde le cadre
-            tailles.append(17.9 * sheet_fit * pts)
-            extra = "" if sheet_fit == fit else f" · facteur {sheet_fit:.4f}"
-            labels.append(f"{sid:9} blocs {'+'.join(str(i + 1) for i in idx):9} — "
-                          f"hauteur {load * sheet_fit / ZONE_H_PX * 100:3.0f} %, "
-                          f"largeur {largeur:3.0f} %, intitulés {17.9 * sheet_fit * pts:.1f} pt{extra}")
+                                    fit=fit, base_w=var["w"], row_gap=gap))
+            tailles.append(TITRE_SITE_PX * fit * pts)
+            labels.append(
+                f"{sid:9} blocs {'+'.join(str(i + 1) for i in idx):9} — "
+                f"hauteur {(load + max(0, len(idx) - 1) * gap) * fit / ZONE_H_PX * 100:3.0f} %, "
+                f"largeur {var['w'] * fit / ZONE_W_PX * 100:3.0f} %, "
+                f"intitulés {TITRE_SITE_PX * fit * pts:4.1f} pt"
+                + (" ⚠ sous le plancher" if TITRE_SITE_PX * fit * pts < TITRE_MIN_PT - 0.05 else "")
+
+                + f" · composition {var['w']:g} px × {fit:.4f}"
+                + (f", inter-panneaux {gap:g} px" if gap > var["gap"] + 0.5 else ""))
 
     html = f"""<!DOCTYPE html>
 <html lang="fr" class="carte-doc" data-carte-viewport="{metrics['viewport']}" \
-      data-carte-index-hash="{metrics['index_hash']}" data-carte-base-w="{flow_w:g}">
+      data-carte-index-hash="{metrics['index_hash']}" data-carte-base-w="{w0:g}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1200,8 +1290,8 @@ def main() -> None:
 {css}
 
 html.carte-doc {{
-  --carte-base-w: {flow_w:g}px;
-  --carte-fit: {fit:.6f};
+  /* repli : la largeur du site ; chaque feuille porte la sienne en style inline */
+  --carte-base-w: {w0:g}px;
 }}
 </style>
 </head>
@@ -1214,11 +1304,13 @@ html.carte-doc {{
 """
     html = remplacer_glyphes_a_risque(html)
     OUT.write_text(html, encoding="utf-8")
-    print(f"\ncarte.html : {len(pages)} feuilles — composition {metrics['viewport']} px "
-          f"× {flow_w:g} px{note}")
+    total = sum(len(p["sheets"]) for p in chosen.values())
+    print(f"\ncarte.html : {len(pages)} feuilles ({total} de contenu) — fenêtre "
+          f"{metrics['viewport']} px, site composé à {w0:g} px")
     print(f"  zone utile {ZONE_W_MM:.1f} × {SHEET_H_MM - ZONE_TOP_MM - ZONE_BOTTOM_MM:.1f} mm, "
-          f"soit {JEU_DANS_CADRE_MM:.1f} mm dans le filet doré ; facteurs par onglet "
-          f"de × {min(fits.values(), default=fit):.4f} à × {max(list(fits.values()) + [fit, base_fit]):.4f}")
+          f"soit {JEU_DANS_CADRE_MM:.1f} mm dans le filet doré · "
+          + (f"échelle unique × {ZONE_W_PX / min(p['v']['w'] for p in chosen.values()):.4f}"
+             if f_uniform else "largeur de composition réglée par onglet"))
     print(f"  intitulés (17,9 px site) de {min(tailles):.1f} pt à {max(tailles):.1f} pt sur le papier")
     for label in labels:
         print(f"  {label}")

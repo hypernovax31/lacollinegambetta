@@ -6,13 +6,18 @@
  *
  * Deux documents, un seul rendu :
  *   1. index.html, à la largeur de composition (data-carte-viewport) : on relève
- *      la largeur naturelle du flux de chaque onglet — c'est elle que la feuille
- *      devra retrouver avant mise à l'échelle — et le nombre de blocs, pour
+ *      la largeur naturelle du flux de chaque onglet et le nombre de blocs, pour
  *      vérifier que le générateur n'en a pas perdu en route.
  *   2. carte-measure.html, écrit par tools/build_carte.py avec la CSS exacte des
  *      feuilles (mêmes règles propres au papier, même imbrication
  *      .carte-flow > .tab-flow > blocs), sans découpage et sans transformation :
- *      chaque bloc y est mesuré à la largeur trouvée en 1.
+ *      chaque bloc y est mesuré **à chaque largeur de composition candidate**
+ *      (data-carte-width-ratios, émis par le générateur — une seule source de
+ *      vérité). La hauteur n'est pas une propriété du bloc mais du couple
+ *      (bloc, largeur) : c'est l'échelle qui permet au build de choisir pour
+ *      chaque onglet la largeur faisant border le cadre, sans surprise de
+ *      rebord. Le débordement horizontal est relevé en même temps, pour écarter
+ *      une largeur que le contenu refuserait (tableaux à min-width).
  *
  * Mesurer le site seul serait faux dès que la carte ajoute une règle — les
  * cocktails en une colonne, par exemple. La mesure porte l'empreinte
@@ -73,6 +78,7 @@ async function main() {
   const viewport = Number(attr(docHtml, 'viewport')) || Number(process.argv.find((a, i) => process.argv[i - 1] === '--width')) || 1180;
   const indexHash = attr(docHtml, 'index-hash');
   const cssHash = attr(docHtml, 'css-hash');
+  const ratios = (attr(docHtml, 'width-ratios') || '1').split(',').map(Number);
 
   process.env.AWS_EXECUTION_ENV ??= 'AWS_Lambda_nodejs22.x';
   setupLambdaEnvironment(join(tmpdir(), 'al2023', 'lib'));
@@ -135,43 +141,74 @@ async function main() {
         + 'les onglets ne sont pas rendus, la mesure serait fausse.');
     }
     const base = Math.min(...widths);
-    await doc.addStyleTag({ content: `html.carte-measure { --carte-base-w: ${base}px; }` });
-    await doc.waitForTimeout(200);
 
-    const sections = await doc.evaluate((ids) => {
-      const out = {};
-      for (const id of ids) {
-        const sec = document.querySelector(`.carte-measure-sec[data-sec="${id}"]`);
-        if (!sec) throw new Error(`carte-measure.html : section ${id} absente`);
-        const flow = sec.querySelector('.tab-flow');
-        const cs = getComputedStyle(flow);
-        const gap = parseFloat(cs.rowGap || '0') || 0;
-        const blocks = [...flow.querySelectorAll(':scope > [data-block]')].map((el) => ({
-          i: Number(el.getAttribute('data-block')),
-          tag: el.tagName.toLowerCase(),
-          cls: (el.getAttribute('class') || '').replace('data-block', '').trim().slice(0, 44),
-          h: +el.getBoundingClientRect().height.toFixed(2),
-        })).sort((a, b) => a.i - b.i);
-        out[id] = { flow_width: +flow.getBoundingClientRect().width.toFixed(2), gap, blocks };
-      }
-      return out;
-    }, ids);
+    // Chaque onglet sera composé à LA largeur qui fait border son bloc au cadre :
+    // il faut donc connaître sa hauteur à chaque largeur possible, pas seulement
+    // à celle du site (1 140 px). On relève les deux — débordement horizontal
+    // compris, pour écarter une largeur que le contenu refuserait de tenir.
+    await doc.goto(`http://127.0.0.1:${port}/carte-measure.html`, { waitUntil: 'networkidle' });
+    await doc.evaluate(async () => { await document.fonts.ready; });
 
-    for (const [id, info] of Object.entries(siteInfo)) {
-      const mine = sections[id].blocks.length;
-      if (mine !== info.blocks) {
-        throw new Error(`${id} : ${mine} blocs dans le document de mesure, ${info.blocks} sur le site — `
-          + 'le générateur perd ou double un bloc (commentaires, texte nu).');
+    // Le site plafonne ses flux à la largeur de son conteneur d'écran avec un
+    // !important assis sur un id : seule une déclaration inline en !important la fait
+    // sauter. Sans ça, every width variant would silently stay at 1140 px.
+    await doc.evaluate(() => {
+      for (const el of document.querySelectorAll('.carte-measure-sec .tab-flow')) {
+        el.style.setProperty('max-width', 'none', 'important');
       }
-      if (Math.abs(sections[id].flow_width - base) > 1) {
-        throw new Error(`${id} : le flux de carte-measure.html fait ${sections[id].flow_width} px au lieu de ${base} px — `
-          + 'la largeur de composition n’a pas été appliquée.');
+    });
+
+    const variants = {};
+    for (const w of ratios.map((r) => Math.round(base * r))) {
+      await doc.evaluate((px) => {
+        document.documentElement.style.setProperty('--carte-base-w', `${px}px`);
+      }, w);
+      await doc.waitForTimeout(140);
+      const at = await doc.evaluate(({ ids2, w }) => {
+        const out = {};
+        for (const id of ids2) {
+          const sec = document.querySelector(`.carte-measure-sec[data-sec="${id}"]`);
+          if (!sec) throw new Error(`carte-measure.html : section ${id} absente`);
+          const flow = sec.querySelector('.tab-flow');
+          const holder = sec.querySelector('.carte-flow') || sec;
+          const cs = getComputedStyle(flow);
+          out[id] = {
+            w,
+            gap: parseFloat(cs.rowGap || '0') || 0,
+            overflow: +(holder.scrollWidth - holder.clientWidth).toFixed(2),
+            heights: [...flow.querySelectorAll(':scope > [data-block]')]
+              .sort((a, b) => Number(a.dataset.block) - Number(b.dataset.block))
+              .map((el) => +el.getBoundingClientRect().height.toFixed(2)),
+            count: flow.querySelectorAll(':scope > [data-block]').length,
+          };
+        }
+        return out;
+      }, { ids2: ids, w });
+      for (const [id, v] of Object.entries(at)) {
+        (variants[id] ??= []).push(v);
       }
-      const zero = sections[id].blocks.filter((b) => b.h < 4);
+    }
+
+    const sections = {};
+    for (const id of ids) {
+      const atNatural = variants[id].find((v) => v.w === base);
+      const nSite = siteInfo[id].blocks;
+      if (!atNatural) throw new Error(`${id} : la largeur du site (${base} px) n'est pas dans les variantes mesurées`);
+      if (atNatural.count !== nSite) {
+        throw new Error(`${id} : ${atNatural.count} blocs dans le document de mesure, ${nSite} sur le site — `
+          + 'le générateur perd ou double un bloc.');
+      }
+      const zero = variants[id].filter((v) => v.heights.some((h) => h < 4));
       if (zero.length) {
-        throw new Error(`${id} : ${zero.length} bloc(s) mesuré(s) à ~0 px (affichés nulle part ?) — `
-          + 'la CSS de la carte ne reproduit pas le site.');
+        throw new Error(`${id} : ${zero.length} variante(s) mesurée(s) à ~0 px — la CSS de la carte `
+          + 'ne reproduit pas le site.');
       }
+      sections[id] = {
+        flow_width: base,
+        gap: atNatural.gap,
+        blocks: atNatural.heights.map((h, i) => ({ i, tag: 'block', cls: '', h })),
+        variants: variants[id],
+      };
     }
 
     const metrics = {
@@ -184,12 +221,12 @@ async function main() {
       sections,
     };
     const total = Object.values(sections).reduce((a, s) => a + s.blocks.reduce((x, b) => x + b.h + s.gap, -s.gap), 0);
-    console.log(`mesure @${viewport} px · flux ${base} px · ${Object.keys(sections).length} onglets · `
-      + `${Object.values(sections).reduce((a, s) => a + s.blocks.length, 0)} blocs · `
-      + `${Math.round(total)} px cumulés · fontes ${fonts.join(', ')}`);
+    console.log(`mesure @${viewport} px · flux site ${base} px · ${variants[ids[0]].length} largeurs de composition · `
+      + `${Object.values(sections).reduce((a, s) => a + s.blocks.length, 0)} blocs · ${Math.round(total)} px `
+      + `cumulés à la largeur du site · fontes ${fonts.join(', ')}`);
     for (const [id, s] of Object.entries(sections)) {
-      console.log(`  ${id.padEnd(9)} gap ${String(s.gap).padStart(2)} — ${s.blocks.map((b) => Math.round(b.h)).join(' + ')}`
-        + ` = ${Math.round(s.blocks.reduce((a, b) => a + b.h, 0))}`);
+      const et = s.variants.map((v) => `${v.w}:${Math.round(v.heights.reduce((a, b) => a + b, 0))}`).join(' ');
+      console.log(`  ${id.padEnd(9)} ${et}`);
     }
     if (process.argv.includes('--print')) return;
     writeFileSync(OUT, `${JSON.stringify(metrics, null, 1)}\n`);

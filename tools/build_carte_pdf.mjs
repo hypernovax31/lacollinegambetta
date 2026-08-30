@@ -64,12 +64,20 @@ function composition(file) {
   const html = readFileSync(file, 'utf8');
   const viewport = Number((html.match(/data-carte-viewport="(\d+)"/) || [])[1]);
   const base = Number((html.match(/data-carte-base-w="([\d.]+)/) || [])[1]);
-  const fit = Number((html.match(/--carte-fit:\s*([\d.]+)/) || [])[1]);
-  if (!viewport || !base || !fit) {
+  // une largeur de composition et une échelle par feuille : c'est ce qui fait border le
+  // cadre à chaque onglet. Le contrôle porte donc sur l'éventail complet, pas sur un nombre.
+  const reglages = [...html.matchAll(/--carte-fit:\s*([\d.]+);\s*--carte-base-w:\s*([\d.]+)px/g)]
+    .map((m) => ({ fit: Number(m[1]), base: Number(m[2]) }));
+  const fits = reglages.length ? reglages.map((r) => r.fit) : [Number((html.match(/--carte-fit:\s*([\d.]+)/) || [])[1])];
+  const fit = Math.min(...fits.filter(Number.isFinite));
+  if (!viewport || !base || !Number.isFinite(fit)) {
     throw new Error(`${basename(file)} : --carte-base-w / --carte-fit / data-carte-viewport absents — `
       + `relancer python3 tools/build_carte.py`);
   }
-  return { viewport, base, fit };
+  const etals = reglages.length
+    ? `× ${Math.min(...fits).toFixed(4)}–${Math.max(...fits).toFixed(4)} sur ${reglages.length} feuilles`
+    : `× ${fit.toFixed(4)}`;
+  return { viewport, base, fit, etals };
 }
 
 const MIME = {
@@ -156,7 +164,8 @@ async function main() {
     throw new Error(`${SRC} introuvable — lancer d'abord : python3 tools/build_carte.py`);
   }
   const comp = composition(join(ROOT, SRC));
-  console.log(`composition : flux ${comp.base} px réduit × ${comp.fit.toFixed(4)} (fenêtre ${comp.viewport} px)`);
+  console.log(`composition : site à ${comp.base} px, chaque feuille réglée ${comp.etals} `
+    + `(fenêtre ${comp.viewport} px)`);
   const imagesDir = join(ROOT, IMAGES_DIR);
   rmSync(STAGE, { recursive: true, force: true });
   mkdirSync(STAGE, { recursive: true });
