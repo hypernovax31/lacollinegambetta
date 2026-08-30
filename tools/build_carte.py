@@ -34,7 +34,13 @@ MEASURE = ROOT / "tools" / "measure_carte.mjs"
 MEASURE_DOC = ROOT / "carte-measure.html"
 BASE_VIEWPORT = 1180        # largeur d'écran à laquelle le site est composé
 
-SECTIONS = ["entrees", "plats", "desserts", "menus", "boissons", "vins", "cocktails"]
+# Ordre des feuilles de la carte, identique à celui du site (boutons de navigation
+# et sections du document) : entrées, plats, menus, boissons, cocktails, vins,
+# desserts. Ce n'est pas l'ordre d'un menu type « Entrées / Plats / Desserts » —
+# c'est celui que la maison a choisi, et le PDF doit se feuilleter comme le site
+# se parcourt. Le générateur compose les feuilles dans cet ordre ; les onglets
+# denses gardent leurs deux feuilles, dans le même ordre.
+SECTIONS = ["entrees", "plats", "menus", "boissons", "cocktails", "vins", "desserts"]
 
 # Géométrie de la feuille, en accord avec les règles « contenant » plus bas.
 #
@@ -392,7 +398,7 @@ def page_shell(number: int, kind: str, content: str, cover_html: str | None = No
         return (
             f'<div class="print-page-frame"><section class="print-page print-page--cover" '
             f'id="carte-p{number}" data-page="{number}">\n{cover_html}\n'
-            f'<div class="print-page__number">{number}</div>\n</section></div>'
+            f'</section></div>'
         )
     reglages = []
     if fit is not None:
@@ -413,7 +419,7 @@ def page_shell(number: int, kind: str, content: str, cover_html: str | None = No
         f'<div class="carte-flow" data-sec="{kind}"{fit_attr}>\n<div class="tab-flow"{gap_attr}>\n'
         f"{content}\n"
         f"</div>\n</div>\n</div>\n{FOOTER}\n"
-        f'<div class="print-page__number">{number}</div>\n</section></div>'
+        f'</section></div>'
     )
 
 
@@ -503,8 +509,10 @@ html.carte-doc .print-page__footer-contact svg {
   stroke: #fff;
   color: #fff;
 }
-html.carte-doc .print-page__number { bottom: 6.2mm !important; }
-
+/* Pas de numéro de page sur la carte : la feuille se lit dans l'ordre du site,
+   et le document est pensé pour être agrafé — un « 5 » en bas à droite ne sert à
+   rien dès lors que l'en-tête porte le nom de la maison et le pied ses contacts.
+   (La règle du site, elle, reste : elle sert l'impression depuis le navigateur.) */
 /* Cadres / zone utile : pied un peu plus haut. */
 html.carte-doc .print-page:not(.print-page--cover)::before {
   inset: 41mm 6mm 23.5mm !important;
@@ -680,10 +688,6 @@ html.carte-doc .print-page--cover a.contact-link.cover-action {
   pointer-events: auto;
   cursor: pointer;
 }
-html.carte-doc .print-page--cover .print-page__number {
-  display: none !important;
-}
-
 
 
 /* Écran : pages A4 mises à l’échelle dans la fenêtre, sans déformer le format. */

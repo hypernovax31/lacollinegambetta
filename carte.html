@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="carte-doc" data-carte-viewport="1180"       data-carte-index-hash="0810258019abe498" data-carte-base-w="1140">
+<html lang="fr" class="carte-doc" data-carte-viewport="1180"       data-carte-index-hash="89834b0566b07bc0" data-carte-base-w="1140">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -3837,7 +3837,7 @@ html :is(#cover-section, .print-page--cover) .cover-footer .cover-links {
      2. UNE COLONNE + « intitulé à gauche, prix à droite » ;
      3. MODE PETIT ÉCRAN : une colonne + le prix SOUS son intitulé
         (et, pour Bières/Vins/Happy Hour, les prix passent en colonnes
-        étiquetées sous le nom : 25 cl • 50 cl • HH, 12,5 cl • 25 cl • …).
+        étiquetées sous le nom : 25 cl • 50 cl • HH, 14 cl • 25 cl • …).
 
    L'onglet passe au mode suivant dès que son intitulé le plus long ne tient
    plus sur UNE ligne à côté de son prix, avec la gouttière de 12 px : le
@@ -3884,7 +3884,7 @@ html :is(#cover-section, .print-page--cover) .cover-footer .cover-links {
 }
 
 /* --- 2. Mode petit écran : sous le nom, chaque prix reprend l'étiquette de sa
-       colonne (25 cl / 50 cl / HH, 12,5 cl / 75 cl, Prix / HH) — l'en-tête du
+       colonne (25 cl / 50 cl / HH, 14 cl / 75 cl, Prix / HH) — l'en-tête du
        tableau devient inutile, donc retiré : plus aucune colonne à chevaucher. --- */
 html :is(#interior-menu, #print-document) .beer-row__price::before,
 html :is(#interior-menu, #print-document) .beer-row__hh::before,
@@ -4405,8 +4405,10 @@ html.carte-doc .print-page__footer-contact svg {
   stroke: #fff;
   color: #fff;
 }
-html.carte-doc .print-page__number { bottom: 6.2mm !important; }
-
+/* Pas de numéro de page sur la carte : la feuille se lit dans l'ordre du site,
+   et le document est pensé pour être agrafé — un « 5 » en bas à droite ne sert à
+   rien dès lors que l'en-tête porte le nom de la maison et le pied ses contacts.
+   (La règle du site, elle, reste : elle sert l'impression depuis le navigateur.) */
 /* Cadres / zone utile : pied un peu plus haut. */
 html.carte-doc .print-page:not(.print-page--cover)::before {
   inset: 41mm 6mm 23.5mm !important;
@@ -4582,10 +4584,6 @@ html.carte-doc .print-page--cover a.contact-link.cover-action {
   pointer-events: auto;
   cursor: pointer;
 }
-html.carte-doc .print-page--cover .print-page__number {
-  display: none !important;
-}
-
 
 
 /* Écran : pages A4 mises à l’échelle dans la fenêtre, sans déformer le format. */
@@ -4888,7 +4886,6 @@ html.carte-doc {
         </div>
       </div>
     </div>
-<div class="print-page__number">1</div>
 </section></div><div class="print-page-frame"><section class="print-page print-page--entrees" id="carte-p2" data-page="2">
 <header class="print-page__header">
 <div class="print-page__kicker">LA</div>
@@ -4918,7 +4915,6 @@ html.carte-doc {
 </div>
 <small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>
-<div class="print-page__number">2</div>
 </section></div><div class="print-page-frame"><section class="print-page print-page--plats" id="carte-p3" data-page="3">
 <header class="print-page__header">
 <div class="print-page__kicker">LA</div>
@@ -4950,38 +4946,7 @@ html.carte-doc {
 </div>
 <small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>
-<div class="print-page__number">3</div>
-</section></div><div class="print-page-frame"><section class="print-page print-page--desserts" id="carte-p4" data-page="4">
-<header class="print-page__header">
-<div class="print-page__kicker">LA</div>
-<div class="print-page__brand">COLLINE</div>
-<div class="print-page__brand print-page__brand--sub">GAMBETTA</div>
-<div class="print-page__meta">BAR • RESTAURANT • PARIS 20<sup>e</sup></div>
-<div class="print-page__meta print-page__meta--sub"><i class="carte-star" aria-hidden="true"></i> FAIT MAISON • SERVICE CONTINU • TERRASSE <i class="carte-star" aria-hidden="true"></i></div>
-</header>
-<div class="print-page__content">
-<div class="carte-flow" data-sec="desserts" style="--carte-fit: 0.658887; --carte-base-w: 1083.00px">
-<div class="tab-flow" style="max-width: none !important; row-gap: 34.85px">
-<article class="panel"><div class="panel__head"><h4 class="panel__title">Desserts</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Crème brûlée</h5><strong>6,80</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Mousse au chocolat</h5><strong>7,10</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Panna cotta</h5><strong>7,50</strong></div><p class="food-card__note">Coulis de fruits rouges</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Tiramisu</h5><strong>7,50</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Tarte aux pommes</h5><strong>8,50</strong></div><p class="food-card__note">Glace vanille</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Pain perdu de la Colline</h5><strong>8,50</strong></div><p class="food-card__note">Glace vanille ou caramel beurre salé</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Moelleux au chocolat</h5><strong>7,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Profiteroles</h5><strong>7,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Café gourmand</h5><strong>8,90</strong></div><p class="food-card__note">Assortiment de mignardises</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Thé gourmand</h5><strong>9,90</strong></div><p class="food-card__note">Assortiment de mignardises</p></article></div></article>
-<article class="panel"><div class="panel__head"><h4 class="panel__title">Glaces</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Crème glacée (3 boules)</h5><strong>8,50</strong></div><p class="food-card__note">Vanille, caramel beurre salé, chocolat, café, pistache, noisette</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Sorbet (3 boules)</h5><strong>8,50</strong></div><p class="food-card__note">Citron vert, fraise, framboise</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Dame blanche aux éclats de chocolat</h5><strong>8,90</strong></div><p class="food-card__note">2 boules vanille, sauce chocolat, chantilly</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Chocolat liégeois</h5><strong>8,90</strong></div><p class="food-card__note">2 boules chocolat, sauce chocolat, chantilly</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Café liégeois</h5><strong>8,90</strong></div><p class="food-card__note">2 boules café, expresso, chantilly</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Caramello</h5><strong>8,90</strong></div><p class="food-card__note">2 boules caramel beurre salé, sauce caramel, chantilly</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Le Colonel de la Colline</h5><strong>8,90</strong></div><p class="food-card__note">2 boules citron vert arrosées de vodka (<span class="qty">2 cl</span>)</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Supplément boule de glace ou sorbet</h5><strong>3,00</strong></div></article></div></article>
-<article class="panel"><div class="panel__head"><h4 class="panel__title">Fromages</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Pont-l’Évêque</h5><strong>5,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Fourme d’Ambert</h5><strong>6,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Cantal</h5><strong>6,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Chèvre</h5><strong>5,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Assiette mixte</h5><strong>8,50</strong></div></article></div></article>
-</div>
-</div>
-</div>
-<footer class="print-page__footer">
-<div><i class="carte-star" aria-hidden="true"></i> PRIX NETS EN EUROS • SERVICE COMPRIS <i class="carte-star" aria-hidden="true"></i></div>
-<strong>LA COLLINE GAMBETTA</strong>
-<div class="print-page__footer-contact">
-<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>lacolline.gambetta</span>
-<span aria-hidden="true">·</span>
-<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</span>
-<span aria-hidden="true">·</span>
-<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>lacollinegambetta@mailo.com</span>
-</div>
-<small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
-</footer>
-<div class="print-page__number">4</div>
-</section></div><div class="print-page-frame"><section class="print-page print-page--menus" id="carte-p5" data-page="5">
+</section></div><div class="print-page-frame"><section class="print-page print-page--menus" id="carte-p4" data-page="4">
 <header class="print-page__header">
 <div class="print-page__kicker">LA</div>
 <div class="print-page__brand">COLLINE</div>
@@ -5009,8 +4974,7 @@ html.carte-doc {
 </div>
 <small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>
-<div class="print-page__number">5</div>
-</section></div><div class="print-page-frame"><section class="print-page print-page--boissons" id="carte-p6" data-page="6">
+</section></div><div class="print-page-frame"><section class="print-page print-page--boissons" id="carte-p5" data-page="5">
 <header class="print-page__header">
 <div class="print-page__kicker">LA</div>
 <div class="print-page__brand">COLLINE</div>
@@ -5039,8 +5003,7 @@ html.carte-doc {
 </div>
 <small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>
-<div class="print-page__number">6</div>
-</section></div><div class="print-page-frame"><section class="print-page print-page--boissons" id="carte-p7" data-page="7">
+</section></div><div class="print-page-frame"><section class="print-page print-page--boissons" id="carte-p6" data-page="6">
 <header class="print-page__header">
 <div class="print-page__kicker">LA</div>
 <div class="print-page__brand">COLLINE</div>
@@ -5070,39 +5033,7 @@ html.carte-doc {
 </div>
 <small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>
-<div class="print-page__number">7</div>
-</section></div><div class="print-page-frame"><section class="print-page print-page--vins" id="carte-p8" data-page="8">
-<header class="print-page__header">
-<div class="print-page__kicker">LA</div>
-<div class="print-page__brand">COLLINE</div>
-<div class="print-page__brand print-page__brand--sub">GAMBETTA</div>
-<div class="print-page__meta">BAR • RESTAURANT • PARIS 20<sup>e</sup></div>
-<div class="print-page__meta print-page__meta--sub"><i class="carte-star" aria-hidden="true"></i> FAIT MAISON • SERVICE CONTINU • TERRASSE <i class="carte-star" aria-hidden="true"></i></div>
-</header>
-<div class="print-page__content">
-<div class="carte-flow" data-sec="vins" style="--carte-fit: 0.625943; --carte-base-w: 1140.00px">
-<div class="tab-flow" style="max-width: none !important; row-gap: 18.00px">
-<article class="panel"><div class="panel__head"><h4 class="panel__title">Vin rouge</h4></div><div class="table-wrap"><table class="wine-table"><thead><tr><th>N°</th><th class="th-name">Appellation</th><th class="qty">12,5 cl</th><th class="qty">25 cl</th><th class="qty">50 cl</th><th class="qty">75 cl</th></tr></thead><tbody><tr><td data-label="N°" class="wine-no">1</td><td class="wine-name">Côtes du Rhône AOP Bio — Les 3 Garçons</td><td data-label="12,5 cl">4,90</td><td data-label="25 cl">9,50</td><td data-label="50 cl">17,90</td><td data-label="75 cl">21,90</td></tr><tr><td data-label="N°" class="wine-no">2</td><td class="wine-name">Bordeaux AOP — L’Attrape Rêve</td><td data-label="12,5 cl">5,20</td><td data-label="25 cl">9,90</td><td data-label="50 cl">18,90</td><td data-label="75 cl">22,90</td></tr><tr><td data-label="N°" class="wine-no">3</td><td class="wine-name">Bourgueil AOP — Prestige &amp; Tradition</td><td data-label="12,5 cl">5,40</td><td data-label="25 cl">10,40</td><td data-label="50 cl">19,50</td><td data-label="75 cl">23,90</td></tr><tr><td data-label="N°" class="wine-no">4</td><td class="wine-name">Côtes de Bourg AOP — Hipster de Barbe</td><td data-label="12,5 cl">5,60</td><td data-label="25 cl">10,50</td><td data-label="50 cl">19,80</td><td data-label="75 cl">24,90</td></tr><tr><td data-label="N°" class="wine-no">5</td><td class="wine-name">Lussac-Saint-Émilion AOP — Grand Ricombre</td><td data-label="12,5 cl">6,60</td><td data-label="25 cl">12,80</td><td data-label="50 cl">23,90</td><td data-label="75 cl">29,90</td></tr><tr><td data-label="N°" class="wine-no">6</td><td class="wine-name">Brouilly AOP — Réserve de Beauvoisie</td><td data-label="12,5 cl">6,90</td><td data-label="25 cl">13,60</td><td data-label="50 cl">26,50</td><td data-label="75 cl">32,90</td></tr><tr><td data-label="N°" class="wine-no">7</td><td class="wine-name">IGP Pays d’Oc Bio — Laroche La Chevrière Pinot Noir</td><td data-label="12,5 cl">5,90</td><td data-label="25 cl">10,90</td><td data-label="50 cl">19,90</td><td data-label="75 cl">26,90</td></tr><tr><td data-label="N°" class="wine-no">8</td><td class="wine-name">Bourgogne Côte Chalonnaise AOP — Millebuis Pinot Noir</td><td data-label="12,5 cl">8,30</td><td data-label="25 cl">15,90</td><td data-label="50 cl">29,90</td><td data-label="75 cl">37,60</td></tr><tr><td data-label="N°" class="wine-no">9</td><td class="wine-name">Pic Saint-Loup AOP — Puech de Fourques</td><td data-label="12,5 cl">—</td><td data-label="25 cl">—</td><td data-label="50 cl">—</td><td data-label="75 cl">38,70</td></tr><tr><td data-label="N°" class="wine-no">10</td><td class="wine-name">Crozes-Hermitage AOP — Chante Passo</td><td data-label="12,5 cl">—</td><td data-label="25 cl">—</td><td data-label="50 cl">—</td><td data-label="75 cl">45,90</td></tr><tr><td data-label="N°" class="wine-no">11</td><td class="wine-name">Gigondas AOP Bio — Pierre Amadieu Romane Machotte</td><td data-label="12,5 cl">—</td><td data-label="25 cl">—</td><td data-label="50 cl">—</td><td data-label="75 cl">58,00</td></tr></tbody></table></div></article>
-<article class="panel"><div class="panel__head"><h4 class="panel__title">Vin blanc</h4></div><div class="table-wrap"><table class="wine-table"><thead><tr><th>N°</th><th class="th-name">Appellation</th><th class="qty">12,5 cl</th><th class="qty">25 cl</th><th class="qty">50 cl</th><th class="qty">75 cl</th></tr></thead><tbody><tr><td data-label="N°" class="wine-no">1</td><td class="wine-name">Bourgogne Côte Chalonnaise AOP — Millebuis Chardonnay</td><td data-label="12,5 cl">7,80</td><td data-label="25 cl">15,50</td><td data-label="50 cl">29,90</td><td data-label="75 cl">36,90</td></tr><tr><td data-label="N°" class="wine-no">2</td><td class="wine-name">Petit Chablis AOP — La Revrie</td><td data-label="12,5 cl">8,30</td><td data-label="25 cl">16,20</td><td data-label="50 cl">30,50</td><td data-label="75 cl">42,10</td></tr><tr><td data-label="N°" class="wine-no">3</td><td class="wine-name">IGP Pays d’Oc — Le Sudiste Chardonnay</td><td data-label="12,5 cl">4,60</td><td data-label="25 cl">8,90</td><td data-label="50 cl">15,90</td><td data-label="75 cl">22,50</td></tr><tr><td data-label="N°" class="wine-no">4</td><td class="wine-name">IGP Pays de l’Hérault Bio — Domaine de Petit Roubié Sauvignon</td><td data-label="12,5 cl">5,60</td><td data-label="25 cl">10,80</td><td data-label="50 cl">19,80</td><td data-label="75 cl">27,90</td></tr><tr><td data-label="N°" class="wine-no">5</td><td class="wine-name">IGT Terre Siciliane Bio — Vinisella Pinot Grigio La Passione</td><td data-label="12,5 cl">4,50</td><td data-label="25 cl">8,60</td><td data-label="50 cl">15,50</td><td data-label="75 cl">21,90</td></tr><tr><td data-label="N°" class="wine-no">6</td><td class="wine-name">IGP Côtes de Thau Moelleux — L’Or de l’Ange</td><td data-label="12,5 cl">6,90</td><td data-label="25 cl">13,50</td><td data-label="50 cl">25,90</td><td data-label="75 cl">35,80</td></tr></tbody></table></div></article>
-<article class="panel"><div class="panel__head"><h4 class="panel__title">Vin rosé</h4></div><div class="table-wrap"><table class="wine-table"><thead><tr><th>N°</th><th class="th-name">Appellation</th><th class="qty">12,5 cl</th><th class="qty">25 cl</th><th class="qty">50 cl</th><th class="qty">75 cl</th></tr></thead><tbody><tr><td data-label="N°" class="wine-no">1</td><td class="wine-name">Côtes de Provence AOP Bio — MV Presqu’île de St-Tropez — Romain Desbastides</td><td data-label="12,5 cl">7,60</td><td data-label="25 cl">14,50</td><td data-label="50 cl">26,90</td><td data-label="75 cl">33,90</td></tr><tr><td data-label="N°" class="wine-no">2</td><td class="wine-name">IGP Méditerranée Bio — La Demoiselle sans Gêne</td><td data-label="12,5 cl">5,60</td><td data-label="25 cl">10,50</td><td data-label="50 cl">19,90</td><td data-label="75 cl">29,90</td></tr><tr><td data-label="N°" class="wine-no">3</td><td class="wine-name">IGP Méditerranée — Le Roi Soleil</td><td data-label="12,5 cl">5,30</td><td data-label="25 cl">9,40</td><td data-label="50 cl">18,40</td><td data-label="75 cl">26,10</td></tr></tbody></table></div></article>
-<article class="panel"><div class="panel__head"><h4 class="panel__title">Bulles</h4></div><div class="table-wrap"><table class="wine-table wine-table--short"><thead><tr><th class="th-name">Appellation</th><th class="qty">Coupe 12 cl</th><th class="qty">75 cl</th></tr></thead><tbody><tr><td class="wine-name">Champagne H. Richard — Cuvée Henri</td><td data-label="Coupe 12 cl">10,50</td><td data-label="75 cl">62,00</td></tr><tr><td class="wine-name">Champagne Nicolas Feuillatte — Brut Réserve Exclusive</td><td data-label="Coupe 12 cl">—</td><td data-label="75 cl">81,00</td></tr><tr><td class="wine-name">Prosecco Spumante Il Poggio — Blanc de Noirs Extra Dry</td><td data-label="Coupe 12 cl">4,90</td><td data-label="75 cl">28,90</td></tr></tbody></table></div></article>
-</div>
-</div>
-</div>
-<footer class="print-page__footer">
-<div><i class="carte-star" aria-hidden="true"></i> PRIX NETS EN EUROS • SERVICE COMPRIS <i class="carte-star" aria-hidden="true"></i></div>
-<strong>LA COLLINE GAMBETTA</strong>
-<div class="print-page__footer-contact">
-<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>lacolline.gambetta</span>
-<span aria-hidden="true">·</span>
-<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</span>
-<span aria-hidden="true">·</span>
-<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>lacollinegambetta@mailo.com</span>
-</div>
-<small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
-</footer>
-<div class="print-page__number">8</div>
-</section></div><div class="print-page-frame"><section class="print-page print-page--cocktails" id="carte-p9" data-page="9">
+</section></div><div class="print-page-frame"><section class="print-page print-page--cocktails" id="carte-p7" data-page="7">
 <header class="print-page__header">
 <div class="print-page__kicker">LA</div>
 <div class="print-page__brand">COLLINE</div>
@@ -5130,8 +5061,7 @@ html.carte-doc {
 </div>
 <small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>
-<div class="print-page__number">9</div>
-</section></div><div class="print-page-frame"><section class="print-page print-page--cocktails" id="carte-p10" data-page="10">
+</section></div><div class="print-page-frame"><section class="print-page print-page--cocktails" id="carte-p8" data-page="8">
 <header class="print-page__header">
 <div class="print-page__kicker">LA</div>
 <div class="print-page__brand">COLLINE</div>
@@ -5159,7 +5089,65 @@ html.carte-doc {
 </div>
 <small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>
-<div class="print-page__number">10</div>
+</section></div><div class="print-page-frame"><section class="print-page print-page--vins" id="carte-p9" data-page="9">
+<header class="print-page__header">
+<div class="print-page__kicker">LA</div>
+<div class="print-page__brand">COLLINE</div>
+<div class="print-page__brand print-page__brand--sub">GAMBETTA</div>
+<div class="print-page__meta">BAR • RESTAURANT • PARIS 20<sup>e</sup></div>
+<div class="print-page__meta print-page__meta--sub"><i class="carte-star" aria-hidden="true"></i> FAIT MAISON • SERVICE CONTINU • TERRASSE <i class="carte-star" aria-hidden="true"></i></div>
+</header>
+<div class="print-page__content">
+<div class="carte-flow" data-sec="vins" style="--carte-fit: 0.625943; --carte-base-w: 1140.00px">
+<div class="tab-flow" style="max-width: none !important; row-gap: 18.00px">
+<article class="panel"><div class="panel__head"><h4 class="panel__title">Vin rouge</h4></div><div class="table-wrap"><table class="wine-table"><thead><tr><th>N°</th><th class="th-name">Appellation</th><th class="qty">14 cl</th><th class="qty">25 cl</th><th class="qty">50 cl</th><th class="qty">75 cl</th></tr></thead><tbody><tr><td data-label="N°" class="wine-no">1</td><td class="wine-name">Côtes du Rhône AOP Bio — Les 3 Garçons</td><td data-label="14 cl">4,90</td><td data-label="25 cl">9,50</td><td data-label="50 cl">17,90</td><td data-label="75 cl">21,90</td></tr><tr><td data-label="N°" class="wine-no">2</td><td class="wine-name">Bordeaux AOP — L’Attrape Rêve</td><td data-label="14 cl">5,20</td><td data-label="25 cl">9,90</td><td data-label="50 cl">18,90</td><td data-label="75 cl">22,90</td></tr><tr><td data-label="N°" class="wine-no">3</td><td class="wine-name">Bourgueil AOP — Prestige &amp; Tradition</td><td data-label="14 cl">5,40</td><td data-label="25 cl">10,40</td><td data-label="50 cl">19,50</td><td data-label="75 cl">23,90</td></tr><tr><td data-label="N°" class="wine-no">4</td><td class="wine-name">Côtes de Bourg AOP — Hipster de Barbe</td><td data-label="14 cl">5,60</td><td data-label="25 cl">10,50</td><td data-label="50 cl">19,80</td><td data-label="75 cl">24,90</td></tr><tr><td data-label="N°" class="wine-no">5</td><td class="wine-name">Lussac-Saint-Émilion AOP — Grand Ricombre</td><td data-label="14 cl">6,60</td><td data-label="25 cl">12,80</td><td data-label="50 cl">23,90</td><td data-label="75 cl">29,90</td></tr><tr><td data-label="N°" class="wine-no">6</td><td class="wine-name">Brouilly AOP — Réserve de Beauvoisie</td><td data-label="14 cl">6,90</td><td data-label="25 cl">13,60</td><td data-label="50 cl">26,50</td><td data-label="75 cl">32,90</td></tr><tr><td data-label="N°" class="wine-no">7</td><td class="wine-name">IGP Pays d’Oc Bio — Laroche La Chevrière Pinot Noir</td><td data-label="14 cl">5,90</td><td data-label="25 cl">10,90</td><td data-label="50 cl">19,90</td><td data-label="75 cl">26,90</td></tr><tr><td data-label="N°" class="wine-no">8</td><td class="wine-name">Bourgogne Côte Chalonnaise AOP — Millebuis Pinot Noir</td><td data-label="14 cl">8,30</td><td data-label="25 cl">15,90</td><td data-label="50 cl">29,90</td><td data-label="75 cl">37,60</td></tr><tr><td data-label="N°" class="wine-no">9</td><td class="wine-name">Pic Saint-Loup AOP — Puech de Fourques</td><td data-label="14 cl">—</td><td data-label="25 cl">—</td><td data-label="50 cl">—</td><td data-label="75 cl">38,70</td></tr><tr><td data-label="N°" class="wine-no">10</td><td class="wine-name">Crozes-Hermitage AOP — Chante Passo</td><td data-label="14 cl">—</td><td data-label="25 cl">—</td><td data-label="50 cl">—</td><td data-label="75 cl">45,90</td></tr><tr><td data-label="N°" class="wine-no">11</td><td class="wine-name">Gigondas AOP Bio — Pierre Amadieu Romane Machotte</td><td data-label="14 cl">—</td><td data-label="25 cl">—</td><td data-label="50 cl">—</td><td data-label="75 cl">58,00</td></tr></tbody></table></div></article>
+<article class="panel"><div class="panel__head"><h4 class="panel__title">Vin blanc</h4></div><div class="table-wrap"><table class="wine-table"><thead><tr><th>N°</th><th class="th-name">Appellation</th><th class="qty">14 cl</th><th class="qty">25 cl</th><th class="qty">50 cl</th><th class="qty">75 cl</th></tr></thead><tbody><tr><td data-label="N°" class="wine-no">1</td><td class="wine-name">Bourgogne Côte Chalonnaise AOP — Millebuis Chardonnay</td><td data-label="14 cl">7,80</td><td data-label="25 cl">15,50</td><td data-label="50 cl">29,90</td><td data-label="75 cl">36,90</td></tr><tr><td data-label="N°" class="wine-no">2</td><td class="wine-name">Petit Chablis AOP — La Revrie</td><td data-label="14 cl">8,30</td><td data-label="25 cl">16,20</td><td data-label="50 cl">30,50</td><td data-label="75 cl">42,10</td></tr><tr><td data-label="N°" class="wine-no">3</td><td class="wine-name">IGP Pays d’Oc — Le Sudiste Chardonnay</td><td data-label="14 cl">4,60</td><td data-label="25 cl">8,90</td><td data-label="50 cl">15,90</td><td data-label="75 cl">22,50</td></tr><tr><td data-label="N°" class="wine-no">4</td><td class="wine-name">IGP Pays de l’Hérault Bio — Domaine de Petit Roubié Sauvignon</td><td data-label="14 cl">5,60</td><td data-label="25 cl">10,80</td><td data-label="50 cl">19,80</td><td data-label="75 cl">27,90</td></tr><tr><td data-label="N°" class="wine-no">5</td><td class="wine-name">IGT Terre Siciliane Bio — Vinisella Pinot Grigio La Passione</td><td data-label="14 cl">4,50</td><td data-label="25 cl">8,60</td><td data-label="50 cl">15,50</td><td data-label="75 cl">21,90</td></tr><tr><td data-label="N°" class="wine-no">6</td><td class="wine-name">IGP Côtes de Thau Moelleux — L’Or de l’Ange</td><td data-label="14 cl">6,90</td><td data-label="25 cl">13,50</td><td data-label="50 cl">25,90</td><td data-label="75 cl">35,80</td></tr></tbody></table></div></article>
+<article class="panel"><div class="panel__head"><h4 class="panel__title">Vin rosé</h4></div><div class="table-wrap"><table class="wine-table"><thead><tr><th>N°</th><th class="th-name">Appellation</th><th class="qty">14 cl</th><th class="qty">25 cl</th><th class="qty">50 cl</th><th class="qty">75 cl</th></tr></thead><tbody><tr><td data-label="N°" class="wine-no">1</td><td class="wine-name">Côtes de Provence AOP Bio — MV Presqu’île de St-Tropez — Romain Desbastides</td><td data-label="14 cl">7,60</td><td data-label="25 cl">14,50</td><td data-label="50 cl">26,90</td><td data-label="75 cl">33,90</td></tr><tr><td data-label="N°" class="wine-no">2</td><td class="wine-name">IGP Méditerranée Bio — La Demoiselle sans Gêne</td><td data-label="14 cl">5,60</td><td data-label="25 cl">10,50</td><td data-label="50 cl">19,90</td><td data-label="75 cl">29,90</td></tr><tr><td data-label="N°" class="wine-no">3</td><td class="wine-name">IGP Méditerranée — Le Roi Soleil</td><td data-label="14 cl">5,30</td><td data-label="25 cl">9,40</td><td data-label="50 cl">18,40</td><td data-label="75 cl">26,10</td></tr></tbody></table></div></article>
+<article class="panel"><div class="panel__head"><h4 class="panel__title">Bulles</h4></div><div class="table-wrap"><table class="wine-table wine-table--short"><thead><tr><th class="th-name">Appellation</th><th class="qty">Coupe 12 cl</th><th class="qty">75 cl</th></tr></thead><tbody><tr><td class="wine-name">Champagne H. Richard — Cuvée Henri</td><td data-label="Coupe 12 cl">10,50</td><td data-label="75 cl">62,00</td></tr><tr><td class="wine-name">Champagne Nicolas Feuillatte — Brut Réserve Exclusive</td><td data-label="Coupe 12 cl">—</td><td data-label="75 cl">81,00</td></tr><tr><td class="wine-name">Prosecco Spumante Il Poggio — Blanc de Noirs Extra Dry</td><td data-label="Coupe 12 cl">4,90</td><td data-label="75 cl">28,90</td></tr></tbody></table></div></article>
+</div>
+</div>
+</div>
+<footer class="print-page__footer">
+<div><i class="carte-star" aria-hidden="true"></i> PRIX NETS EN EUROS • SERVICE COMPRIS <i class="carte-star" aria-hidden="true"></i></div>
+<strong>LA COLLINE GAMBETTA</strong>
+<div class="print-page__footer-contact">
+<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>lacolline.gambetta</span>
+<span aria-hidden="true">·</span>
+<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</span>
+<span aria-hidden="true">·</span>
+<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>lacollinegambetta@mailo.com</span>
+</div>
+<small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
+</footer>
+</section></div><div class="print-page-frame"><section class="print-page print-page--desserts" id="carte-p10" data-page="10">
+<header class="print-page__header">
+<div class="print-page__kicker">LA</div>
+<div class="print-page__brand">COLLINE</div>
+<div class="print-page__brand print-page__brand--sub">GAMBETTA</div>
+<div class="print-page__meta">BAR • RESTAURANT • PARIS 20<sup>e</sup></div>
+<div class="print-page__meta print-page__meta--sub"><i class="carte-star" aria-hidden="true"></i> FAIT MAISON • SERVICE CONTINU • TERRASSE <i class="carte-star" aria-hidden="true"></i></div>
+</header>
+<div class="print-page__content">
+<div class="carte-flow" data-sec="desserts" style="--carte-fit: 0.658887; --carte-base-w: 1083.00px">
+<div class="tab-flow" style="max-width: none !important; row-gap: 34.85px">
+<article class="panel"><div class="panel__head"><h4 class="panel__title">Desserts</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Crème brûlée</h5><strong>6,80</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Mousse au chocolat</h5><strong>7,10</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Panna cotta</h5><strong>7,50</strong></div><p class="food-card__note">Coulis de fruits rouges</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Tiramisu</h5><strong>7,50</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Tarte aux pommes</h5><strong>8,50</strong></div><p class="food-card__note">Glace vanille</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Pain perdu de la Colline</h5><strong>8,50</strong></div><p class="food-card__note">Glace vanille ou caramel beurre salé</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Moelleux au chocolat</h5><strong>7,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Profiteroles</h5><strong>7,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Café gourmand</h5><strong>8,90</strong></div><p class="food-card__note">Assortiment de mignardises</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Thé gourmand</h5><strong>9,90</strong></div><p class="food-card__note">Assortiment de mignardises</p></article></div></article>
+<article class="panel"><div class="panel__head"><h4 class="panel__title">Glaces</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Crème glacée (3 boules)</h5><strong>8,50</strong></div><p class="food-card__note">Vanille, caramel beurre salé, chocolat, café, pistache, noisette</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Sorbet (3 boules)</h5><strong>8,50</strong></div><p class="food-card__note">Citron vert, fraise, framboise</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Dame blanche aux éclats de chocolat</h5><strong>8,90</strong></div><p class="food-card__note">2 boules vanille, sauce chocolat, chantilly</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Chocolat liégeois</h5><strong>8,90</strong></div><p class="food-card__note">2 boules chocolat, sauce chocolat, chantilly</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Café liégeois</h5><strong>8,90</strong></div><p class="food-card__note">2 boules café, expresso, chantilly</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Caramello</h5><strong>8,90</strong></div><p class="food-card__note">2 boules caramel beurre salé, sauce caramel, chantilly</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Le Colonel de la Colline</h5><strong>8,90</strong></div><p class="food-card__note">2 boules citron vert arrosées de vodka (<span class="qty">2 cl</span>)</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Supplément boule de glace ou sorbet</h5><strong>3,00</strong></div></article></div></article>
+<article class="panel"><div class="panel__head"><h4 class="panel__title">Fromages</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Pont-l’Évêque</h5><strong>5,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Fourme d’Ambert</h5><strong>6,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Cantal</h5><strong>6,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Chèvre</h5><strong>5,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Assiette mixte</h5><strong>8,50</strong></div></article></div></article>
+</div>
+</div>
+</div>
+<footer class="print-page__footer">
+<div><i class="carte-star" aria-hidden="true"></i> PRIX NETS EN EUROS • SERVICE COMPRIS <i class="carte-star" aria-hidden="true"></i></div>
+<strong>LA COLLINE GAMBETTA</strong>
+<div class="print-page__footer-contact">
+<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>lacolline.gambetta</span>
+<span aria-hidden="true">·</span>
+<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</span>
+<span aria-hidden="true">·</span>
+<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>lacollinegambetta@mailo.com</span>
+</div>
+<small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
+</footer>
 </section></div>
 </main>
 </body>

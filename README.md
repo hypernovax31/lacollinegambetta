@@ -14,7 +14,8 @@ python3 tools/build_carte.py      # mesure, met en page, écrit carte.html
 npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
 ```
 
-- Une feuille par onglet ; les onglets denses (Boissons, Cocktails) en occupent
+- Une feuille par onglet, dans l'ordre des onglets du site (`entrees, plats, menus,
+  boissons, cocktails, vins, desserts`) ; les onglets denses (Boissons, Cocktails) en occupent
   deux. Le nombre de pages et la répartition viennent de `tools/measure_carte.mjs`,
   qui mesure le rendu réel (Chromium, fontes du site) — pas d'à-peu-près.
 - **Cocktails : une seule colonne, sur deux feuilles.** Le site présente cet
@@ -96,8 +97,20 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
   `build_carte_pdf.mjs` (`cadrage : symétrique à ± 0,00 mm et 2,6 mm avant le
   filet du cadre`) : un centrage faux ou un contenu qui toucherait le cadre
   arrête la construction, au lieu de passer inaperçu sur dix pages d'images.
-- Les feuilles gardent le bandeau **COLLINE GAMBETTA** en tête, le pied légal et
-  la pagination en bas à droite : un document imprimé isolé doit se suffire.
+- Les feuilles gardent le bandeau **COLLINE GAMBETTA** en tête et le pied légal :
+  un document imprimé isolé doit se suffire. **Elles ne sont pas numérotées** —
+  la carte se feuille dans l'ordre des onglets du site, ce numéro ne servait donc
+  à rien (et le `data-page` des pages ne sert plus qu'aux outils).
+- **L'ordre des feuilles est celui du site**, même s'il ne suit pas l'ordre d'un
+  menu type : `entrees, plats, menus, boissons, cocktails, vins, desserts`. Il est
+  écrit une fois dans l'en-tête de `tools/build_carte.py` (`SECTIONS`) et doit être
+  répercuté dans la navigation du site (les boutons `.nav-btn`, qui suivent le même
+  ordre que les sections du document) **et** dans `buildPrintDocument()`, le
+  document A4 que le site construit pour l'impression depuis le navigateur : les
+  trois listes (onglets, sections du document, feuilles) doivent rester identiques,
+  sinon le client qui imprime et celui qui télécharge le PDF ne feuillettent pas la
+  même carte. Celle-ci non plus ne numérote plus ses feuilles ; les onglets denses
+  gardent leurs deux feuilles, dans le même ordre.
 - Aperçu : ouvrir `carte.html` — les pages gardent le ratio A4 et s'adaptent à la
   largeur de la fenêtre, sans déformation. Impression : icône de téléchargement,
   Imprimer → Enregistrer au format PDF (A4 portrait réel).
@@ -234,7 +247,11 @@ police qui descend sous le lisible.
 
 ### Nos Vins sur téléphone : deux bandes par bouteille
 
-L'onglet Vins est le seul à avoir **quatre prix par ligne** (12,5 / 25 / 50 / 75 cl) :
+L'onglet Vins est le seul à avoir **quatre prix par ligne** (14 / 25 / 50 / 75 cl — la
+première colonne s'intitule `14 cl` depuis que le verre est servi à 14 centilitres ; le
+libellé figure dans l'en-tête et dans le `data-label` de chaque prix, puisque c'est ce
+`data-label` que le mode téléphone affiche au-dessus du prix. Les bulles, elles, gardent
+« Coupe 12 cl ») :
 c'est lui qui sature en premier. Sous le repère `@stack-rows vins` (706 px), chaque vin
 forme une grille à deux bandes — `2.4em` pour le numéro, puis quatre parts égales :
 
@@ -254,7 +271,7 @@ forme une grille à deux bandes — `2.4em` pour le numéro, puis quatre parts �
   sans règle équivalente, ni le corps ni l'interligne de la liste des vins ne bougeaient ;
 - un seul filet sépare deux vins (les bordures par cellule créaient trois tirets
   décalés sous chaque ligne) ;
-- `Bulles`, qui n'a ni numéro ni 12,5 cl, prend deux moitiés (`wine-table--short`) et
+- `Bulles`, qui n'a ni numéro ni 14 cl, prend deux moitiés (`wine-table--short`) et
   l'appellation toute la ligne.
 
 Les colonnes de prix portent `!important` : le mode « comme les Bières pression » du site
