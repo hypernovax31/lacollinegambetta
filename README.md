@@ -31,16 +31,40 @@ npm run build:carte-pdf
 
 ## PDF A4 téléchargeable (`carte-a4.pdf`)
 
-L’icône de téléchargement du header de `index.html` ouvre **`carte-a4.pdf`** : la carte A4 (10 pages, même contenu que `carte.html`) au format PDF, avec les polices du site intégrées. Le navigateur l’affiche et propose le téléchargement.
-
-Généré par `tools/build_carte_pdf.mjs` (Chromium headless à partir de `carte.html`) :
+L’icône de téléchargement du header de `index.html` ouvre **`carte-a4.pdf`** : la carte en
+**10 pages images** — une page = une feuille de `carte.html` photographiée à 300 dpi.
+Les mêmes feuilles sont livrées en JPEG dans **`carte-a4-pages/`** (`page-01.jpg` … `page-10.jpg`),
+prêtes à envoyer telles quelles à un imprimeur.
 
 ```bash
-npm install
-npm run build:carte-pdf
+npm install                      # Playwright + Chromium (@sparticuz) + fontes @fontsource
+python3 tools/build_carte.py     # régénère carte.html depuis le site
+npm run build:carte-pdf          # les 10 JPEG, puis le PDF unifié
 ```
 
-À régénérer après chaque modification du site (avec `build_carte.py`).
+Le choix du tout-image est assumé : le PDF rendu est identique à la carte affichée à l’écran,
+sur n’importe quelle machine, sans police à installer ni substitution au moment d’imprimer.
+Contrepartie : le texte n’est plus sélectionnable ni rechercheable, et le fichier pèse
+~7,1 Mo au lieu de 3,7 Mo en vectoriel.
+
+Comment ça marche (`tools/build_carte_pdf.mjs`) :
+
+- Chromium rend `carte.html` sous média `print`, viewport 1200 × 1600 et
+  `deviceScaleFactor` 3,125 : une feuille de 210 mm (= 793,7 px CSS) sort à 2 480 px, soit 300 dpi ;
+- les polices du site sont servies par `tools/local-fonts.mjs` (Cinzel et Montserrat depuis
+  `node_modules/@fontsource`) — le build **s’arrête** si elles ne sont pas réellement chargées,
+  et si une feuille déborde de son 297 mm (le rognage serait sinon silencieux) ;
+- les JPEG sont ramenés à 2 480 × 3 508 exact quand ImageMagick est présent (Chromium arrondit
+  les millimètres selon les feuilles et le liseré doré ajoute un pixel par bord ; sans `convert`,
+  ±6 px sont tolérés) ;
+- chaque fichier est contrôlé avant d’être retenu : format A4, ratio, RVB 8 bits, poids minimal
+  (une page blanche ou un rendu cassé sont éliminés d’office) ;
+- `tools/jpeg-pdf.mjs` assemble ensuite le PDF **sans aucune dépendance** : les JPEG entrent tels
+  quels (`/DCTDecode`), octet pour octet, chaque page mesurant un A4 strict (595,276 × 841,89 pt).
+
+Options : `--jpgs-only` (les images seules, sans PDF), `--quality 88` (JPEG plus légers, PDF plus petit).
+
+À régénérer après chaque modification du site : `build_carte.py` puis cette commande.
 
 ## Générer les livrables imprimables (pipeline Chromium)
 
@@ -87,8 +111,11 @@ Montserrat depuis `node_modules/@fontsource` (déjà en `devDependencies`), et l
 refuse de mesurer si elles ne sont pas réellement chargées — sans elles, les largeurs de
 texte — donc les repères — seraient fausses. `--remote-fonts` force le passage par
 Google Fonts. Les deux générateurs de PDF (`build_carte_pdf.mjs`, `build_browser_print.mjs`)
-utilisent la même source et **vérifient les polices embarquées dans le PDF produit** :
-un build hors-ligne ne peut plus sortir une carte composée en Open Sans par erreur. Après un libellé ou un prix modifié, relancer `--breakpoints --write`
+utilisent la même source et vérifient les fontes réellement chargées dans la page avant de
+composer : un build hors-ligne ne peut plus sortir une carte en Open Sans par erreur.
+`build_browser_print.mjs`, qui produit un PDF vectoriel, contrôle de plus les polices
+embarquées dans le fichier ; le pipeline image (`build_carte_pdf.mjs`) n'a plus de polices
+dans son PDF — ce sont les captures qui doivent être justes. Après un libellé ou un prix modifié, relancer `--breakpoints --write`
 puis le contrôle : les repères suivent le contenu. Un repère à `0px` est volontaire
 (aucune largeur ne descend à 0) : il désactive un mode devenu inutile, par exemple les
 deux colonnes de l'onglet Boissons ne serront jamais assez pour gêner un prix.
