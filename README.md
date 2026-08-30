@@ -71,6 +71,18 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
   8,4 pt et noms de bouteilles à 8,6 pt, au lieu de 7,1 pt sur deux feuilles.
   Les cocktails bénéficient du même échange (8 → 5,5 px de padding de ligne) et
   remontent de 7,0 à 7,6 pt.
+- **Page « Nos Menus » : trois cartons d'une seule hauteur.** « Formule Duo » et
+  « La formule complète » étaient deux cartons bas posés au-dessus d'un « Menu enfant »
+  plus haut ; ils prennent désormais la hauteur de ce dernier (244 px de composition),
+  le contenu se centre dans le carton, et la rangée est dimensionnée par
+  `grid-auto-rows: minmax(…, auto)` — pas par `min-height` sur la carte : le site rejoue
+  dans la carte sa règle `#menus .offer-card { min-height: 0 !important }`, assise sur un
+  id, donc aucune hauteur minimale ne la ferait plier, alors qu'une rangée est libre.
+  La valeur n'est pas crue : `MESURE_REFS` fait mesurer par `measure_carte.mjs` la hauteur
+  réelle du carton de référence à **chaque** largeur candidate, et `garde_uniformite`
+  arrête le build si elle s'écarte de plus de 8 px de la cible — la carte d'un restaurant
+  n'a pas à porter trois gabarits différents parce qu'un libellé a changé. La page
+  recomposée se cale à 100 % du cadre (× 0,7824, intitulés à 10,5 pt).
 - **En-têtes de contenances de la feuille Vins remontés à 6,6 pt.** Le site les
   compose à 12,48 px, soit 5,3 pt une fois la feuille réduite — trop petit pour
   un libellé dont dépend la lecture d'un prix. `tools/build_carte.py` les passe à
@@ -194,7 +206,23 @@ embarquées dans le fichier ; le pipeline image (`build_carte_pdf.mjs`) n'a plus
 dans son PDF — ce sont les captures qui doivent être justes. Après un libellé ou un prix modifié, relancer `--breakpoints --write`
 puis le contrôle : les repères suivent le contenu. Un repère à `0px` est volontaire
 (aucune largeur ne descend à 0) : il désactive un mode devenu inutile, par exemple les
-deux colonnes de l'onglet Boissons ne serront jamais assez pour gêner un prix.
+deux colonnes de l'onglet Boissons ne serront jamais assez pour gêner un prix — et
+`menus` est à `0px` pour la même raison : son duo « Menu enfant / Petit déjeuner »
+contre « Menu du jour » reste lisible jusqu'au plus étroit des écrans balayés.
+
+**Le duo « Nos menus » prend la largeur de son voisin.** Les trois cartons de bas de
+page (Menu enfant, Petit déjeuner, Menu du jour) sont assis sur une grille à deux
+colonnes égales ; le carton « Petit déjeuner » était en fait une carte *dans* un
+panneau, et son cartouche lui mangeait 32 px de largeur utile — ses lignes
+n'avaient donc pas la largeur du bloc côte à côte. La règle « un seul encadrement »
+visait une structure qui n'existe plus (`.menus-duo__left > .panel:first-child` : le
+premier enfant est le carton « Menu enfant », pas un panneau) et ne s'appliquait
+à rien. Elle cible maintenant le panneau réellement concerné, le `grid-template-rows`
+de la colonne laisse sa 2ᵉ ligne prendre le reste, et les deux cartons de gauche
+finissent à la hauteur du « Menu du jour ». Le seuil qui décide du côte à côte est
+celui du duo lui-même (720 px, règle existante) : en dessous chaque bloc occupe déjà
+toute la largeur, il n'y a plus rien à aligner — et `check-responsive` vérifie qu'aucun
+intitulé ne gêne aucun prix de 1300 à 320 px.
 
 Sous 640 px la typographie ne rétrécit plus (plancher de lisibilité en `!important`) :
 quand ça manque de place, c'est la mise en page qui change de mode, jamais la taille de

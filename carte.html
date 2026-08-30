@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="carte-doc" data-carte-viewport="1180"       data-carte-index-hash="05d6f894a2a70dac" data-carte-base-w="1140">
+<html lang="fr" class="carte-doc" data-carte-viewport="1180"       data-carte-index-hash="2f662080acd6e03d" data-carte-base-w="1140">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -2716,9 +2716,17 @@ body {overflow:visible;}
   .panel__title { font-size: 0.96rem !important; }
 }
 
-/* Menu enfant / menu du jour : un seul encadrement */
-:is(#menus, [data-sec="menus"]) .menus-duo__left > .panel:first-child,
-:is(#menus, [data-sec="menus"]) .menus-duo > .panel {
+/* Menu enfant / Petit déjeuner / Menu du jour : un seul encadrement, une seule
+   largeur. Les deux sélecteurs visaient une structure qui n'existe plus (le
+   premier enfant de .menus-duo__left n'est pas un .panel) : le panneau « Petit
+   déjeuner » gardait donc son cartouche *autour* de sa carte, et ses lignes
+   avaient 32 px de moins que celles du bloc côte à côte. Le cadre est retiré du
+   conteneur, la carte garde le sien — la largeur utile redevient celle de la
+   colonne, donc celle du voisin. Le duo ne se met en deux colonnes qu'à partir de
+   720 px (voir @media plus bas) : en dessous chaque bloc prend déjà toute la
+   largeur, il n'y a rien à aligner. */
+:is(#menus, [data-sec="menus"]) .menus-duo > .panel,
+:is(#menus, [data-sec="menus"]) .menus-duo__left > .panel {
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
@@ -2735,7 +2743,9 @@ body {overflow:visible;}
 }
 :is(#menus, [data-sec="menus"]) .menus-duo__left {
   gap: 16px !important;
-  grid-template-rows: auto auto !important;
+  /* la 2e ligne prend le reste de la colonne : « Petit déjeuner » finit à la
+     hauteur du « Menu du jour » au lieu de laisser un blanc sous son carton. */
+  grid-template-rows: auto minmax(0, 1fr) !important;
 }
 :is(#menus, [data-sec="menus"]) .offer-card {
   min-height: 210px;
@@ -4731,6 +4741,25 @@ html.carte-doc .carte-flow[data-sec="cocktails"] .hh-line__name {
   font-size: 18.6px !important;
 }
 
+/* --- La page « Nos Menus » : trois cartons d'une seule hauteur --------------
+   « Formule Duo » et « La formule complète » se rangent sur le gabarit du
+   « Menu enfant », et le contenu se centre dans le carton au lieu de rester
+   collé en haut. Valeur en pixels de composition : la feuille entière est
+   réduite d'un coup, le rapport entre les blocs est donc respecté à l'impression.
+   Le site, lui, garde ses cartons courts (la règle est sous html.carte-doc). */
+html.carte-doc .carte-flow[data-sec="menus"] .offer-grid {
+  /* la ligne porte la hauteur, pas la carte : le site rejoue dans la carte sa
+     règle « .offer-card { min-height: 0 !important } », assise sur un id — aucune
+     hauteur minimale ne la ferait plier. Une rangée, elle, est libre. */
+  grid-auto-rows: minmax(244px, auto);
+}
+html.carte-doc .carte-flow[data-sec="menus"] .offer-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* le prix respire au milieu du carton, comme « Menu enfant » */
+  align-items: center;       /* sinon le cartouche doré, enfant du flex, s'étire en bandeau */
+}
+
 /* En-têtes de contenances du tableau des vins : le site les compose à 12,48 px,
    ce qui donne 5,3 pt une fois la feuille réduite — le seul endroit de la carte
    où un chiffre aussi petit sert à quelque chose d'essentiel (savoir à quel
@@ -4963,7 +4992,7 @@ html.carte-doc {
 </header>
 <div class="print-page__content">
 <div class="carte-flow" data-sec="menus" style="--carte-fit: 0.782429; --carte-base-w: 912.00px">
-<div class="tab-flow" style="max-width: none !important; row-gap: 42.28px">
+<div class="tab-flow" style="max-width: none !important; row-gap: 22.00px">
 <article class="panel"><div class="panel__head"><h4 class="panel__title">Formules</h4></div><div class="offer-grid"><article class="offer-card"><div class="offer-card__badge">Formule Duo</div><div class="offer-card__sub"><strong>Entrée + plat</strong> <em>ou</em> <strong>plat + dessert</strong></div><div class="offer-card__price">24,90</div><div class="offer-card__foot">Choix ci-dessous</div></article><article class="offer-card offer-card--accent"><div class="offer-card__badge">La formule complète</div><div class="offer-card__sub">Entrée + plat + dessert</div><div class="offer-card__price">29,90</div><div class="offer-card__foot">Choix ci-dessous</div></article></div><div class="choice-grid"><article class="choice-card"><h5><span>1</span>Entrée au choix</h5><ul><li>Salade au poulet</li><li>Escargots de Bourgogne</li><li>Pâté de campagne</li><li>Œuf cocotte</li><li>Assiette de charcuterie</li></ul></article><article class="choice-card"><h5><span>2</span>Plat au choix</h5><ul><li>Escalope de veau</li><li>Bavette d’aloyau — Sauce au choix</li><li>Cuisse de canard confite</li></ul></article><article class="choice-card"><h5><span>3</span>Dessert au choix</h5><ul><li>Panna cotta</li><li>Crème brûlée</li><li>Mousse au chocolat</li><li>Tiramisu</li><li>2 boules de glace — Parfum au choix</li></ul></article></div></article>
 <div class="menus-duo"><div class="menus-duo__left"><article class="special-card special-card--compact"><div class="special-card__badge">Menu enfant</div><p class="special-card__sub">Moins de 12 ans</p><ul class="menu-points"><li>Eau ou soda</li><li>Burger enfant ou Cordon bleu</li><li>Frites maison</li><li>1 boule de glace (parfum au choix)</li></ul><strong>11,90</strong></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Petit déjeuner</h4></div><article class="breakfast-card breakfast-card--simple"><ul class="menu-points"><li>Boisson chaude au choix</li><li>Croissant ou Tartine au beurre</li><li>Verre de jus de fruits au choix</li></ul><strong>7,00</strong></article></article></div><article class="special-card special-card--dark"><div class="special-card__badge" style="color:#24102e !important;">Menu du jour</div><p class="special-card__sub">Choix selon l’ardoise</p><div class="day-options"><div class="day-option"><span class="day-option__desc">Entrée + plat <em>ou</em> plat + dessert</span><strong>17,90</strong></div><div class="day-option"><span class="day-option__desc">Entrée + plat + dessert</span><strong>21,90</strong></div></div><p style="color:rgba(255,255,255,0.88) !important;">Uniquement le midi — sauf weekends et jours fériés</p></article></div>
 </div>

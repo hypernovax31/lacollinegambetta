@@ -68,7 +68,12 @@ function startStaticServer() {
   });
 }
 
-const attr = (html, name) => (html.match(new RegExp(`data-carte-${name}="([^"]+)"`)) || [])[1];
+// les attributs du document de mesure, en guillemets simples OU doubles : refs est du
+// JSON, il ne peut pas s'écrire en guillemets doubles
+const attr = (html, name) => {
+  const m = html.match(new RegExp(`data-carte-${name}="([^"]*)"|data-carte-${name}='([^']*)'`));
+  return m ? (m[1] ?? m[2]) : undefined;
+};
 
 async function main() {
   if (!existsSync(DOC)) {
@@ -79,6 +84,7 @@ async function main() {
   const indexHash = attr(docHtml, 'index-hash');
   const cssHash = attr(docHtml, 'css-hash');
   const ratios = (attr(docHtml, 'width-ratios') || '1').split(',').map(Number);
+  const refs = JSON.parse(attr(docHtml, 'refs') || '{}');
 
   process.env.AWS_EXECUTION_ENV ??= 'AWS_Lambda_nodejs22.x';
   setupLambdaEnvironment(join(tmpdir(), 'al2023', 'lib'));
@@ -164,16 +170,25 @@ async function main() {
         document.documentElement.style.setProperty('--carte-base-w', `${px}px`);
       }, w);
       await doc.waitForTimeout(140);
-      const at = await doc.evaluate(({ ids2, w }) => {
+      const at = await doc.evaluate(({ ids2, w, refs2 }) => {
         const out = {};
         for (const id of ids2) {
           const sec = document.querySelector(`.carte-measure-sec[data-sec="${id}"]`);
           if (!sec) throw new Error(`carte-measure.html : section ${id} absente`);
+          // quelques éléments de référence (un carton dont la carte doit connaître la
+          // taille réelle pour imposer un gabarit à ses voisins) — mêmes largeurs qu'au-dessus
+          const refsH = {};
+          for (const [nom, sel] of Object.entries(refs2[id] || {})) {
+            const el = sec.querySelector(sel);
+            if (!el) throw new Error(`carte-measure.html : « ${nom} » (${sel}) absent de ${id}`);
+            refsH[nom] = +el.getBoundingClientRect().height.toFixed(2);
+          }
           const flow = sec.querySelector('.tab-flow');
           const holder = sec.querySelector('.carte-flow') || sec;
           const cs = getComputedStyle(flow);
           out[id] = {
             w,
+            refs: refsH,
             gap: parseFloat(cs.rowGap || '0') || 0,
             overflow: +(holder.scrollWidth - holder.clientWidth).toFixed(2),
             heights: [...flow.querySelectorAll(':scope > [data-block]')]
@@ -183,7 +198,7 @@ async function main() {
           };
         }
         return out;
-      }, { ids2: ids, w });
+      }, { ids2: ids, w, refs2: refs });
       for (const [id, v] of Object.entries(at)) {
         (variants[id] ??= []).push(v);
       }
@@ -206,6 +221,7 @@ async function main() {
       sections[id] = {
         flow_width: base,
         gap: atNatural.gap,
+        refs: atNatural.refs || {},
         blocks: atNatural.heights.map((h, i) => ({ i, tag: 'block', cls: '', h })),
         variants: variants[id],
       };

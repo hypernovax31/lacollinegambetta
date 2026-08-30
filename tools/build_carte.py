@@ -68,6 +68,17 @@ JUSTIFY_MAX_RATIO = 2.4   # le inter-panneaux ne dépasse pas 2,4× celui du sit
 # qu'en grossissant son caractère doit pouvoir le grossir, c'est la demande explicite ;
 # FIT_MAX n'intervient plus que comme repère du journal.
 TITRE_MIN_PT, TITRE_MAX_PT = 7.2, 11.0
+# Hauteur commune des cartons de la page « Nos Menus », en pixels de composition.
+# Sur le papier, « Formule Duo » et « La formule complète » étaient deux cartons
+# bas posés au-dessus d'un « Menu enfant » plus haut : trois cartons de même
+# famille, trois gabarits. Ils prennent tous la hauteur du carton « Menu enfant »,
+# mesuree a la largeur choisie pour l'onglet — d'ou MESURE_REFS, et la garde plus
+# bas : si le carton de reference bouge de plus de quelques pixels, le build refuse
+# de laisser une valeur cible qui ne serait plus la bonne.
+OFFRE_H = 244
+OFFRE_H_TOLERANCE = 8
+# Éléments dont la carte a besoin de connaître la taille réelle, par onglet.
+MESURE_REFS = {"menus": {"menu-enfant": ".special-card--compact"}}
 TITRE_SITE_PX = 17.9
 FIT_MIN = TITRE_MIN_PT / (TITRE_SITE_PX * 0.75)
 FIT_MAX = TITRE_MAX_PT / (TITRE_SITE_PX * 0.75)
@@ -855,6 +866,25 @@ html.carte-doc .carte-flow[data-sec="cocktails"] .hh-line__name {
   font-size: 18.6px !important;
 }
 
+/* --- La page « Nos Menus » : trois cartons d'une seule hauteur --------------
+   « Formule Duo » et « La formule complète » se rangent sur le gabarit du
+   « Menu enfant », et le contenu se centre dans le carton au lieu de rester
+   collé en haut. Valeur en pixels de composition : la feuille entière est
+   réduite d'un coup, le rapport entre les blocs est donc respecté à l'impression.
+   Le site, lui, garde ses cartons courts (la règle est sous html.carte-doc). */
+html.carte-doc .carte-flow[data-sec="menus"] .offer-grid {
+  /* la ligne porte la hauteur, pas la carte : le site rejoue dans la carte sa
+     règle « .offer-card { min-height: 0 !important } », assise sur un id — aucune
+     hauteur minimale ne la ferait plier. Une rangée, elle, est libre. */
+  grid-auto-rows: minmax(@@OFFRE_H@@px, auto);
+}
+html.carte-doc .carte-flow[data-sec="menus"] .offer-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* le prix respire au milieu du carton, comme « Menu enfant » */
+  align-items: center;       /* sinon le cartouche doré, enfant du flex, s'étire en bandeau */
+}
+
 /* En-têtes de contenances du tableau des vins : le site les compose à 12,48 px,
    ce qui donne 5,3 pt une fois la feuille réduite — le seul endroit de la carte
    où un chiffre aussi petit sert à quelque chose d'essentiel (savoir à quel
@@ -986,7 +1016,7 @@ def compose_css(src: str) -> tuple[str, dict]:
 
 {FIT_CSS}
 
-{CARD_OVERRIDES}
+{CARD_OVERRIDES.replace('@@OFFRE_H@@', f'{OFFRE_H:g}')}
 """
     return full, stats
 
@@ -1009,10 +1039,11 @@ def measure_doc(css: str, flows: dict[str, list[str]], viewport: int,
         parts.append(f'<div class="carte-measure-sec" data-sec="{sid}">\n'
                      + flow_markup(sid, flows[sid], tag_blocks=True) + "\n</div>")
     ratios = ",".join(f"{r:.2f}" for r in WIDTH_RATIOS)
+    refs = json.dumps(MESURE_REFS, ensure_ascii=False)
     return f"""<!DOCTYPE html>
 <html lang="fr" class="carte-doc carte-measure" data-carte-viewport="{viewport}"
       data-carte-index-hash="{idx_hash}" data-carte-css-hash="{css_hash}"
-      data-carte-width-ratios="{ratios}">
+      data-carte-width-ratios="{ratios}" data-carte-refs='{refs}'>
 <head>
 <meta charset="UTF-8">
 <title>Mesure — carte La Colline Gambetta</title>
@@ -1202,6 +1233,25 @@ def justify_gaps(load: float, k: int, gap: float, fit: float) -> float:
     return round(max(gap, min(want, gap * JUSTIFY_MAX_RATIO)), 2)
 
 
+def garde_uniformite(metrics: dict, chosen: dict) -> None:
+    """La cible de hauteur doit coller au carton de référence, à la largeur choisie."""
+    for sid, refs in MESURE_REFS.items():
+        plan = chosen.get(sid)
+        if not plan:
+            continue
+        var = plan["v"]
+        for nom in refs:
+            mesure = (var.get("refs") or {}).get(nom)
+            if mesure is None:
+                continue          # mesure ancienne : la clé n'y est pas, on re-mesurera
+            if abs(mesure - OFFRE_H) > OFFRE_H_TOLERANCE:
+                raise SystemExit(
+                    f"{sid} : le carton « {nom} » mesure {mesure:.0f} px à la largeur "
+                    f"{var['w']:g} px, et OFFRE_H vaut {OFFRE_H} px. Les cartons « Formule Duo » "
+                    f"et « La formule complète » ne seraient plus du même gabarit — porter "
+                    f"OFFRE_H à {mesure:.0f} dans tools/build_carte.py (et re-mesurer).")
+
+
 def layout(metrics: dict, uniforme: bool = False):
     """Découpage et cadrage de chaque onglet, bord à bord dans le cadre."""
     w0 = min(v["flow_width"] for v in metrics["sections"].values())
@@ -1246,6 +1296,7 @@ def main() -> None:
     metrics = load_metrics(src, css, flows, allow_stale)
     check_blocks(metrics, flows)
     chosen, w0, f_uniform = layout(metrics, UNIFORME)
+    garde_uniformite(metrics, chosen)
 
     pts = 72.0 / 96.0     # 1 px CSS = 0,75 pt
     pages: list[str] = [page_shell(1, "cover", "", extract_cover(src))]

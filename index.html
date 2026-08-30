@@ -3016,9 +3016,17 @@ button,a { font:inherit; }
   .panel__title { font-size: 0.96rem !important; }
 }
 
-/* Menu enfant / menu du jour : un seul encadrement */
-#menus .menus-duo__left > .panel:first-child,
-#menus .menus-duo > .panel {
+/* Menu enfant / Petit déjeuner / Menu du jour : un seul encadrement, une seule
+   largeur. Les deux sélecteurs visaient une structure qui n'existe plus (le
+   premier enfant de .menus-duo__left n'est pas un .panel) : le panneau « Petit
+   déjeuner » gardait donc son cartouche *autour* de sa carte, et ses lignes
+   avaient 32 px de moins que celles du bloc côte à côte. Le cadre est retiré du
+   conteneur, la carte garde le sien — la largeur utile redevient celle de la
+   colonne, donc celle du voisin. Le duo ne se met en deux colonnes qu'à partir de
+   720 px (voir @media plus bas) : en dessous chaque bloc prend déjà toute la
+   largeur, il n'y a rien à aligner. */
+#menus .menus-duo > .panel,
+#menus .menus-duo__left > .panel {
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
@@ -3035,7 +3043,9 @@ button,a { font:inherit; }
 }
 #menus .menus-duo__left {
   gap: 16px !important;
-  grid-template-rows: auto auto !important;
+  /* la 2e ligne prend le reste de la colonne : « Petit déjeuner » finit à la
+     hauteur du « Menu du jour » au lieu de laisser un blanc sous son carton. */
+  grid-template-rows: auto minmax(0, 1fr) !important;
 }
 #menus .offer-card {
   min-height: 210px;

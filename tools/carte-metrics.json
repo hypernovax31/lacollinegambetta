@@ -1,7 +1,7 @@
 {
  "generator": "tools/measure_carte.mjs",
- "index_hash": "05d6f894a2a70dac",
- "css_hash": "71d1bc3e7115f5f9",
+ "index_hash": "2f662080acd6e03d",
+ "css_hash": "734520ef03a57871",
  "viewport": 1180,
  "base_width": 1140,
  "fonts": [
@@ -17,6 +17,7 @@
   "entrees": {
    "flow_width": 1140,
    "gap": 18,
+   "refs": {},
    "blocks": [
     {
      "i": 0,
@@ -40,6 +41,7 @@
    "variants": [
     {
      "w": 1482,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -51,6 +53,7 @@
     },
     {
      "w": 1425,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -62,6 +65,7 @@
     },
     {
      "w": 1368,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -73,6 +77,7 @@
     },
     {
      "w": 1311,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -84,6 +89,7 @@
     },
     {
      "w": 1254,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -95,6 +101,7 @@
     },
     {
      "w": 1197,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -106,6 +113,7 @@
     },
     {
      "w": 1140,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -117,6 +125,7 @@
     },
     {
      "w": 1083,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -128,6 +137,7 @@
     },
     {
      "w": 1026,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -139,6 +149,7 @@
     },
     {
      "w": 969,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -150,6 +161,7 @@
     },
     {
      "w": 912,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -161,6 +173,7 @@
     },
     {
      "w": 855,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -172,6 +185,7 @@
     },
     {
      "w": 798,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -186,6 +200,7 @@
   "plats": {
    "flow_width": 1140,
    "gap": 18,
+   "refs": {},
    "blocks": [
     {
      "i": 0,
@@ -221,6 +236,7 @@
    "variants": [
     {
      "w": 1482,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -234,6 +250,7 @@
     },
     {
      "w": 1425,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -247,6 +264,7 @@
     },
     {
      "w": 1368,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -260,6 +278,7 @@
     },
     {
      "w": 1311,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -273,6 +292,7 @@
     },
     {
      "w": 1254,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -286,6 +306,7 @@
     },
     {
      "w": 1197,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -299,6 +320,7 @@
     },
     {
      "w": 1140,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -312,6 +334,7 @@
     },
     {
      "w": 1083,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -325,6 +348,7 @@
     },
     {
      "w": 1026,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -338,6 +362,7 @@
     },
     {
      "w": 969,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -351,6 +376,7 @@
     },
     {
      "w": 912,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -364,6 +390,7 @@
     },
     {
      "w": 855,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -377,6 +404,7 @@
     },
     {
      "w": 798,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -393,148 +421,190 @@
   "menus": {
    "flow_width": 1140,
    "gap": 22,
+   "refs": {
+    "menu-enfant": 244.34
+   },
    "blocks": [
     {
      "i": 0,
      "tag": "block",
      "cls": "",
-     "h": 472.16
+     "h": 537.34
     },
     {
      "i": 1,
      "tag": "block",
      "cls": "",
-     "h": 508.75
+     "h": 474.75
     }
    ],
    "variants": [
     {
      "w": 1482,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      472.16,
-      508.75
+      537.34,
+      474.75
      ],
      "count": 2
     },
     {
      "w": 1425,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      472.16,
-      508.75
+      537.34,
+      474.75
      ],
      "count": 2
     },
     {
      "w": 1368,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      472.16,
-      508.75
+      537.34,
+      474.75
      ],
      "count": 2
     },
     {
      "w": 1311,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      472.16,
-      508.75
+      537.34,
+      474.75
      ],
      "count": 2
     },
     {
      "w": 1254,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      472.16,
-      508.75
+      537.34,
+      474.75
      ],
      "count": 2
     },
     {
      "w": 1197,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      472.16,
-      508.75
+      537.34,
+      474.75
      ],
      "count": 2
     },
     {
      "w": 1140,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      472.16,
-      508.75
+      537.34,
+      474.75
      ],
      "count": 2
     },
     {
      "w": 1083,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      472.16,
-      508.75
+      537.34,
+      474.75
      ],
      "count": 2
     },
     {
      "w": 1026,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      472.16,
-      508.75
+      537.34,
+      474.75
      ],
      "count": 2
     },
     {
      "w": 969,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      488.97,
-      508.75
+      554.16,
+      474.75
      ],
      "count": 2
     },
     {
      "w": 912,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.44,
-      508.75
+      571.63,
+      474.75
      ],
      "count": 2
     },
     {
      "w": 855,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.44,
-      508.75
+      571.63,
+      474.75
      ],
      "count": 2
     },
     {
      "w": 798,
+     "refs": {
+      "menu-enfant": 244.34
+     },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.44,
-      508.75
+      571.63,
+      474.75
      ],
      "count": 2
     }
@@ -543,6 +613,7 @@
   "cocktails": {
    "flow_width": 1140,
    "gap": 18,
+   "refs": {},
    "blocks": [
     {
      "i": 0,
@@ -572,6 +643,7 @@
    "variants": [
     {
      "w": 1482,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -584,6 +656,7 @@
     },
     {
      "w": 1425,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -596,6 +669,7 @@
     },
     {
      "w": 1368,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -608,6 +682,7 @@
     },
     {
      "w": 1311,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -620,6 +695,7 @@
     },
     {
      "w": 1254,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -632,6 +708,7 @@
     },
     {
      "w": 1197,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -644,6 +721,7 @@
     },
     {
      "w": 1140,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -656,6 +734,7 @@
     },
     {
      "w": 1083,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -668,6 +747,7 @@
     },
     {
      "w": 1026,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -680,6 +760,7 @@
     },
     {
      "w": 969,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -692,6 +773,7 @@
     },
     {
      "w": 912,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -704,6 +786,7 @@
     },
     {
      "w": 855,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -716,6 +799,7 @@
     },
     {
      "w": 798,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -731,6 +815,7 @@
   "vins": {
    "flow_width": 1140,
    "gap": 18,
+   "refs": {},
    "blocks": [
     {
      "i": 0,
@@ -760,6 +845,7 @@
    "variants": [
     {
      "w": 1482,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -772,6 +858,7 @@
     },
     {
      "w": 1425,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -784,6 +871,7 @@
     },
     {
      "w": 1368,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -796,6 +884,7 @@
     },
     {
      "w": 1311,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -808,6 +897,7 @@
     },
     {
      "w": 1254,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -820,6 +910,7 @@
     },
     {
      "w": 1197,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -832,6 +923,7 @@
     },
     {
      "w": 1140,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -844,6 +936,7 @@
     },
     {
      "w": 1083,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -856,6 +949,7 @@
     },
     {
      "w": 1026,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -868,6 +962,7 @@
     },
     {
      "w": 969,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -880,6 +975,7 @@
     },
     {
      "w": 912,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -892,6 +988,7 @@
     },
     {
      "w": 855,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -904,6 +1001,7 @@
     },
     {
      "w": 798,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -919,6 +1017,7 @@
   "boissons": {
    "flow_width": 1140,
    "gap": 18,
+   "refs": {},
    "blocks": [
     {
      "i": 0,
@@ -966,6 +1065,7 @@
    "variants": [
     {
      "w": 1482,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -981,6 +1081,7 @@
     },
     {
      "w": 1425,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -996,6 +1097,7 @@
     },
     {
      "w": 1368,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1011,6 +1113,7 @@
     },
     {
      "w": 1311,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1026,6 +1129,7 @@
     },
     {
      "w": 1254,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1041,6 +1145,7 @@
     },
     {
      "w": 1197,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1056,6 +1161,7 @@
     },
     {
      "w": 1140,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1071,6 +1177,7 @@
     },
     {
      "w": 1083,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1086,6 +1193,7 @@
     },
     {
      "w": 1026,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1101,6 +1209,7 @@
     },
     {
      "w": 969,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1116,6 +1225,7 @@
     },
     {
      "w": 912,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1131,6 +1241,7 @@
     },
     {
      "w": 855,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1146,6 +1257,7 @@
     },
     {
      "w": 798,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1164,6 +1276,7 @@
   "desserts": {
    "flow_width": 1140,
    "gap": 18,
+   "refs": {},
    "blocks": [
     {
      "i": 0,
@@ -1187,6 +1300,7 @@
    "variants": [
     {
      "w": 1482,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1198,6 +1312,7 @@
     },
     {
      "w": 1425,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1209,6 +1324,7 @@
     },
     {
      "w": 1368,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1220,6 +1336,7 @@
     },
     {
      "w": 1311,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1231,6 +1348,7 @@
     },
     {
      "w": 1254,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1242,6 +1360,7 @@
     },
     {
      "w": 1197,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1253,6 +1372,7 @@
     },
     {
      "w": 1140,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1264,6 +1384,7 @@
     },
     {
      "w": 1083,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1275,6 +1396,7 @@
     },
     {
      "w": 1026,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1286,6 +1408,7 @@
     },
     {
      "w": 969,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1297,6 +1420,7 @@
     },
     {
      "w": 912,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1308,6 +1432,7 @@
     },
     {
      "w": 855,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
@@ -1319,6 +1444,7 @@
     },
     {
      "w": 798,
+     "refs": {},
      "gap": 18,
      "overflow": 0,
      "heights": [
