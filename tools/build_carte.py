@@ -1,10 +1,55 @@
 #!/usr/bin/env python3
-"""Build carte.html from index.html — same PC styles, A4 pages, nav order."""
+"""Carte A4 : la mise en page du site, posée telle quelle sur des feuilles.
+
+Le générateur ne retypographie plus rien. Il copie la feuille de style du site,
+lui rend les règles que la neutralisation « html:not(.carte-doc) » écartait,
+compose chaque onglet à la largeur d'écran mesurée (1180 px), puis applique un
+seul facteur de réduction uniforme pour remplir le A4. Titres, pastilles,
+colonnes, interlignes, alignements de prix : ce que voit le navigateur.
+
+La répartition sur les feuilles vient de mesures réelles
+(tools/measure_carte.mjs, rendu Chromium avec les fontes du site) : un bloc est
+placé tant qu'il tient, sinon il passe à la feuille suivante. Rien n'est coupé,
+aucun corps n'est bricolé à la main.
+
+    python3 tools/build_carte.py     → carte.html
+    npm run build:carte-pdf          → carte-a4-pages/*.jpg + carte-a4.pdf
+
+Options : --no-measure (réutiliser carte-metrics.json même périmé).
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import re
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-INDEX = (ROOT / "index.html").read_text(encoding="utf-8")
+INDEX = ROOT / "index.html"
 OUT = ROOT / "carte.html"
+METRICS = ROOT / "tools" / "carte-metrics.json"
+MEASURE = ROOT / "tools" / "measure_carte.mjs"
+
+SECTIONS = ["entrees", "plats", "desserts", "menus", "boissons", "vins", "cocktails"]
+
+# Géométrie de la feuille, en accord avec les règles « contenant » plus bas.
+SHEET_H_MM = 297.0
+ZONE_LEFT_MM = 13.0
+ZONE_TOP_MM = 47.0
+ZONE_BOTTOM_MM = 27.0
+ZONE_W_MM = 184.0
+PX_PER_MM = 96 / 25.4
+ZONE_W_PX = ZONE_W_MM * PX_PER_MM                                    # 695,43 px
+ZONE_H_PX = (SHEET_H_MM - ZONE_TOP_MM - ZONE_BOTTOM_MM) * PX_PER_MM  # 842,86 px
+
+SAFETY = 0.985     # les hauteurs sont mesurées sur le site, pas dans la feuille
+FIT_FLOOR = 0.90   # on ne descend pas de plus de 10 % sous l'échelle de composition
+
+
+def index_text() -> str:
+    return INDEX.read_text(encoding="utf-8")
 
 
 def take_element(src: str, tag: str) -> tuple[str, str]:
@@ -35,39 +80,97 @@ def take_element(src: str, tag: str) -> tuple[str, str]:
 
 
 def split_flow(inner: str) -> list[str]:
-    parts = []
-    rest = inner.strip()
-    while rest:
-        rest = rest.lstrip()
-        if not rest:
+    """Les enfants de premier niveau de .tab-flow, dans l'ordre du document.
+
+    Commentaires et texte nu sont ignorés : ce ne sont pas des blocs
+    mesurables. S'arrêter au premier commentaire, comme le faisait l'ancienne
+    version, amputait la carte d'un panneau entier.
+    """
+    parts: list[str] = []
+    i = 0
+    n = len(inner)
+    while i < n:
+        lt = inner.find("<", i)
+        if lt < 0:
             break
-        if rest.startswith("<article"):
-            node, rest = take_element(rest, "article")
-            parts.append(node)
-        elif rest.startswith("<div"):
-            node, rest = take_element(rest, "div")
-            parts.append(node)
-        elif rest.startswith("<p"):
-            node, rest = take_element(rest, "p")
-            parts.append(node)
-        else:
-            break
+        if inner.startswith("<!--", lt):
+            end = inner.find("-->", lt)
+            i = n if end < 0 else end + 3
+            continue
+        m = re.match(r"<([a-zA-Z][\w-]*)", inner[lt:])
+        if not m:
+            i = lt + 1
+            continue
+        node, rest = take_element(inner[lt:], m.group(1))
+        parts.append(node)
+        i = n - len(rest)
     return parts
 
 
-def section_flow(sid: str) -> str:
-    start = INDEX.find(f'<section id="{sid}"')
+def block_signature(block: str) -> tuple[str, str]:
+    m = re.match(r"<(\w+)([^>]*)>", block)
+    if not m:
+        return ("?", "")
+    cls = re.search(r'class="([^"]*)"', m.group(2))
+    return (m.group(1).lower(), " ".join((cls.group(1) if cls else "").split()))
+
+
+def section_flow(src: str, sid: str) -> str:
+    start = src.find(f'<section id="{sid}"')
     if start < 0:
         raise SystemExit(f"missing section {sid}")
-    nxt = INDEX.find("<section id=", start + 10)
-    block = INDEX[start:nxt] if nxt > 0 else INDEX[start:]
+    block, _ = take_element(src[start:], "section")   # borné à la section, pas à la suivante
     i = block.find('<div class="tab-flow">')
+    if i < 0:
+        raise SystemExit(f"{sid} : pas de .tab-flow")
     inner = block[i + len('<div class="tab-flow">') :]
-    inner = inner.rsplit("</div>", 1)[0]
-    return inner
+    j = inner.rfind("</div>")
+    return inner[:j]
+
+
+def print_containing_only(css: str) -> tuple[str, int, int]:
+    """Remplace chaque « @media print » du site par sa seule partie contenant.
+
+    La feuille d'impression du site re-typographie la carte en points : gardée
+    telle quelle, elle ferait diverger l'impression depuis le navigateur et les
+    JPEG (qui, eux, sont la mise en page écran). Les règles de contenant
+    (.print-page, @page, en-têtes et pieds de feuille) sont conservées, celles
+    qui touchent le contenu sont retirées sur place, le reste du fichier garde
+    sa forme d'origine.
+    """
+    out: list[str] = []
+    i = 0
+    kept = 0
+    dropped = 0
+    while True:
+        j = css.find("@media print", i)
+        if j < 0:
+            out.append(css[i:])
+            break
+        k = css.find("{", j)
+        depth = 0
+        p = k
+        while p < len(css):
+            if css[p] == "{":
+                depth += 1
+            elif css[p] == "}":
+                depth -= 1
+                if depth == 0:
+                    break
+            p += 1
+        if p >= len(css):                       # bloc déséquilibré : on n'y touche pas
+            out.append(css[i:])
+            break
+        inner, k2, d2 = chrome_only(css[k + 1 : p])
+        kept += k2
+        dropped += d2
+        out.append(css[i : k + 1] + "\n" + inner + "\n")
+        i = p
+    return "".join(out), kept, dropped
 
 
 def media_print_bodies(css: str) -> str:
+    """Les corps des blocs « @media print », extraits tels quels."""
     bodies = []
     i = 0
     while True:
@@ -92,9 +195,109 @@ def media_print_bodies(css: str) -> str:
     return "\n\n".join(bodies)
 
 
-def extract_cover() -> str:
-    start = INDEX.find('<div class="cover-page">')
-    node, _ = take_element(INDEX[start:], "div")
+# Le contenu obéit au site ; ne passent la porte que les règles de contenant.
+CONTENT_TOKENS = (
+    "panel", "food-card", "price-", "hh-", "beer-", "wine-", "offer-", "choice-",
+    "special-", "breakfast-", "day-option", "day-lines", "accent-band", "duo-grid",
+    "menus-duo", "menu-points", "tab-flow", ".qty", "note-cl", "menu-card",
+)
+
+
+def split_rules(css: str) -> list[tuple[str, str]]:
+    """[(sélecteur ou at-règle, contenu du bloc)], commentaires retirés."""
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    out: list[tuple[str, str]] = []
+    i = 0
+    n = len(css)
+    while i < n:
+        while i < n and css[i] in " \n\t;":
+            i += 1
+        if i >= n:
+            break
+        brace = -1
+        p = i
+        while p < n:
+            if css[p] == "{":
+                brace = p
+                break
+            if css[p] == "}":
+                break
+            p += 1
+        if brace < 0:
+            break
+        sel = css[i:brace].strip()
+        depth = 1
+        q = brace + 1
+        while q < n and depth:
+            if css[q] == "{":
+                depth += 1
+            elif css[q] == "}":
+                depth -= 1
+            q += 1
+        out.append((sel, css[brace + 1 : q - 1]))
+        i = q
+    return out
+
+
+def chrome_only(css: str) -> tuple[str, int, int]:
+    """Garde les règles d'impression qui ne mettent en page que la feuille.
+
+    Celles qui retypographient le contenu (.panel, .food-card, .wine-table…)
+    sont écartées : sur la carte, le contenu est réglé par le site lui-même.
+    Renvoie (css filtré, règles conservées, règles écartées).
+    """
+    kept = 0
+    dropped = 0
+    out: list[str] = []
+    for sel, body in split_rules(css):
+        if sel.startswith("@media") or sel.startswith("@supports"):
+            inner, k, d = chrome_only(body)
+            dropped += d
+            if inner.strip():
+                out.append(f"{sel} {{\n{inner}\n}}")
+                kept += k
+            continue
+        if sel.startswith("@"):        # @page, @font-face…
+            out.append(f"{sel} {{{body.strip()}}}")
+            kept += 1
+            continue
+        parts = [s.strip() for s in sel.split(",")]
+        if any(any(tok in part for tok in CONTENT_TOKENS) for part in parts):
+            dropped += 1
+            continue
+        out.append(f"{sel} {{{body.strip()}}}")
+        kept += 1
+    return "\n".join(out), kept, dropped
+
+
+def rescope_site_css(css: str) -> tuple[str, dict]:
+    """Rend au document de carte les règles que le site réservait à l'écran.
+
+    - « html:not(.carte-doc) » neutralisait tout ce qui touche la carte. Ici
+      carte-doc est le marqueur des feuilles, et le contenu doit obéir au site :
+      la neutralisation est retirée.
+    - Les règles sont écrites sous #interior-menu, #cover-section ou les ids
+      d'onglet. Dans la carte, le contenu vit dans #print-document, chaque
+      feuille porte data-sec="onglet" et la couverture a sa classe : l'ancêtre
+      est réécrit, en position d'ancêtre seulement — une règle qui vise le
+      conteneur lui-même (#interior-menu { display:none }) reste sans effet.
+    """
+    stats: dict[str, int] = {}
+    css, stats["neutralisation levée"] = re.subn(r"html:not\(\.carte-doc\)", "html", css)
+    css, stats["#interior-menu"] = re.subn(
+        r"#interior-menu(?=\s+[^\s{,])", ":is(#interior-menu, #print-document)", css)
+    css, stats["#cover-section"] = re.subn(
+        r"#cover-section(?=\s+[^\s{,])", ":is(#cover-section, .print-page--cover)", css)
+    for sid in SECTIONS:
+        css, k = re.subn(rf"#{sid}(?=[\s>+~ ])", f':is(#{sid}, [data-sec="{sid}"])', css)
+        if k:
+            stats[f"#{sid}"] = k
+    return css, stats
+
+
+def extract_cover(src: str) -> str:
+    start = src.find('<div class="cover-page">')
+    node, _ = take_element(src[start:], "div")
     node = node.replace(' onclick="showView(\'menu\')"', "")
     node = node.replace('href="#menu-nav-anchor"', 'href="index.html#menu-nav-anchor"')
     while '<a class="download-card"' in node:
@@ -118,20 +321,15 @@ def extract_cover() -> str:
     return node[:inner_start] + facade + node[inner_end:]
 
 
-def page_shell(number: int, kind: str, content: str, cover_html: str | None = None) -> str:
-    if kind == "cover":
-        return f'''<div class="print-page-frame"><section class="print-page print-page--cover" id="carte-p{number}" data-page="{number}">
-{cover_html}
-<div class="print-page__number">{number}</div>
-</section></div>'''
-    header = '''<header class="print-page__header">
+HEADER = """<header class="print-page__header">
 <div class="print-page__kicker">LA</div>
 <div class="print-page__brand">COLLINE</div>
 <div class="print-page__brand print-page__brand--sub">GAMBETTA</div>
 <div class="print-page__meta">BAR • RESTAURANT • PARIS 20ᵉ</div>
 <div class="print-page__meta print-page__meta--sub">✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦</div>
-</header>'''
-    footer = '''<footer class="print-page__footer">
+</header>"""
+
+FOOTER = """<footer class="print-page__footer">
 <div>✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦</div>
 <strong>LA COLLINE GAMBETTA</strong>
 <div class="print-page__footer-contact">
@@ -142,20 +340,30 @@ def page_shell(number: int, kind: str, content: str, cover_html: str | None = No
 <span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>lacollinegambetta@mailo.com</span>
 </div>
 <small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
-</footer>'''
-    kinds = " ".join(f"print-page--{k}" for k in kind.split())
-    return f'''<div class="print-page-frame"><section class="print-page {kinds}" id="carte-p{number}" data-page="{number}">
-{header}
-<div class="print-page__content tab-flow">
-{content}
-</div>
-{footer}
-<div class="print-page__number">{number}</div>
-</section></div>'''
+</footer>"""
 
 
-EXTRA_CSS = r"""
-/* ===== Carte A4 : équilibre, cadres hors textes, mêmes styles PC ===== */
+def page_shell(number: int, kind: str, content: str, cover_html: str | None = None,
+               fit: float | None = None) -> str:
+    if kind == "cover":
+        return (
+            f'<div class="print-page-frame"><section class="print-page print-page--cover" '
+            f'id="carte-p{number}" data-page="{number}">\n{cover_html}\n'
+            f'<div class="print-page__number">{number}</div>\n</section></div>'
+        )
+    fit_attr = f' style="--carte-fit: {fit:.6f}"' if fit else ""
+    return (
+        f'<div class="print-page-frame"><section class="print-page print-page--{kind}" '
+        f'id="carte-p{number}" data-page="{number}">\n{HEADER}\n'
+        f'<div class="print-page__content">\n'
+        f'<div class="carte-flow" data-sec="{kind}"{fit_attr}>\n<div class="tab-flow">\n'
+        f"{content}\n"
+        f"</div>\n</div>\n</div>\n{FOOTER}\n"
+        f'<div class="print-page__number">{number}</div>\n</section></div>'
+    )
+
+
+CHROME_CSS = r"""/* ===== Carte A4 : équilibre, cadres hors textes, mêmes styles PC ===== */
 html.carte-doc, html.carte-doc body {
   background: #1a0b22 !important;
   margin: 0;
@@ -259,23 +467,6 @@ html.carte-doc .print-page__content {
   bottom: 27mm !important;
 }
 
-/* Titres de section à plat : la carte imprimée ne reprend pas la pastille
-   du site (fond violet + liseré or) — seulement le texte et ses deux étoiles.
-   Une seule taille partout, comme à l'écran. */
-html.carte-doc .print-page .panel__title {
-  font-size: 9.2pt !important;
-  letter-spacing: .12em !important;
-  padding: 0.6mm 0 !important;
-  background: none !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  min-height: 0 !important;
-  color: var(--violet-900) !important;
-}
-/* Les étoiles du titre sont dessinées (pas de glyphe ✦) : sur papier, aucune
-   police système ne vient garantir ce caractère, et un carré vide se imprime mal.
-   Même procédé que le losange doré de la couverture. */
 /* Ornements ✦ du bandeau et du pied de page : losanges dessinés, jamais un
    glyphe — Cinzel ne le contient pas, et une police système absente du poste
    qui imprime le ferait sortir en carré. */
@@ -287,523 +478,6 @@ html.carte-doc .print-page i.carte-star {
   background: currentColor;
   clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 62%);
 }
-html.carte-doc .print-page .panel__title::before,
-html.carte-doc .print-page .panel__title::after {
-  content: '' !important;
-  display: inline-block !important;
-  width: 2.1mm;
-  height: 2.1mm;
-  margin: 0 1.9mm;
-  vertical-align: 0.25mm;
-  flex: 0 0 auto;
-  background: var(--gold-500) !important;
-  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 62%);
-  color: transparent !important;
-  font-size: 0 !important;
-  text-shadow: none !important;
-}
-
-/* Rythme régulier lignes / colonnes. */
-html.carte-doc .print-page .food-card-grid,
-html.carte-doc .print-page .food-card-grid--wide {
-  gap: 2.6mm 8mm !important;
-}
-html.carte-doc .print-page .price-list:not(.price-list--cols) {
-  column-gap: 8mm !important;
-}
-html.carte-doc .print-page .price-list--cols,
-html.carte-doc .print-page .hh-list--cols {
-  column-gap: 8mm !important;
-}
-
-html.carte-doc .print-page {
-  display: block !important;
-  width: 210mm;
-  height: 297mm;
-  margin: 0 auto 18px;
-  position: relative;
-  overflow: hidden !important;
-  background: var(--cream);
-  color: var(--royal-violet-ink);
-  box-shadow: 0 16px 40px rgba(0,0,0,.35);
-}
-
-
-/* Les blocs grandissent : plus de trou entre les rubriques. */
-html.carte-doc .print-page__content {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: stretch !important;
-  gap: 4.4mm !important;
-  overflow: hidden !important;
-}
-html.carte-doc .print-page__content > .panel,
-html.carte-doc .print-page__content > .menus-duo,
-html.carte-doc .print-page__content > .duo-grid {
-  min-width: 0;
-  min-height: 0;
-  flex: 1 1 0;
-  display: flex !important;
-  flex-direction: column !important;
-  overflow: hidden;
-}
-html.carte-doc .print-page .panel__head {
-  margin-bottom: 2mm !important;
-}
-html.carte-doc .print-page .food-card-grid,
-html.carte-doc .print-page .food-card-grid--wide {
-  flex: 1 1 0;
-  align-content: stretch;
-  align-items: stretch !important;
-  grid-auto-rows: 1fr;
-  row-gap: 1.6mm;
-  min-height: 0;
-}
-html.carte-doc .print-page .food-card {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  min-height: 0;
-  overflow: hidden;
-}
-html.carte-doc .print-page .wine-table {
-  flex: 1 1 0;
-  height: 100%;
-  min-height: 0;
-}
-html.carte-doc .print-page .price-list:not(.price-list--cols) {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 8mm;
-  flex: 1 1 0;
-  align-content: space-evenly;
-}
-
-/* Grilles PC forcées sous 1480px / 860px. */
-html.carte-doc .print-page .food-card-grid,
-html.carte-doc .print-page .food-card-grid--wide,
-html.carte-doc .print-page .price-list--cols,
-html.carte-doc .print-page .hh-list--cols {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  align-items: stretch !important;
-  flex: 1 1 auto;
-}
-html.carte-doc .print-page .price-list__col,
-html.carte-doc .print-page .hh-list__col {
-  display: flex !important;
-  flex-direction: column;
-  justify-content: flex-start;
-  min-height: 0;
-  height: auto;
-}
-html.carte-doc .print-page .offer-grid,
-html.carte-doc .print-page .duo-grid,
-html.carte-doc .print-page .menus-duo {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-}
-html.carte-doc .print-page .choice-grid {
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-}
-html.carte-doc .print-page .price-line__row { flex-wrap: nowrap !important; }
-html.carte-doc .print-page .price-line__dots { display: block !important; }
-html.carte-doc .print-page .hh-line__name,
-html.carte-doc .print-page .price-line__name,
-html.carte-doc .print-page .food-card__head h5,
-html.carte-doc .print-page .wine-name,
-html.carte-doc .print-page .beer-row__name {
-  min-width: 0 !important;
-  overflow-wrap: anywhere;
-}
-html.carte-doc .print-page .hh-line__price,
-html.carte-doc .print-page .hh-line__hh,
-html.carte-doc .print-page .hh-line__row .grand-price,
-html.carte-doc .print-page .price-line__price,
-html.carte-doc .print-page .food-card__head strong {
-  white-space: nowrap !important;
-}
-
-/* Page menus : Duo / Complète aussi hautes que l’enfant ; bas plus compact. */
-html.carte-doc .print-page--menus .print-page__content > .panel {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
-html.carte-doc .print-page--menus .print-page__content {
-  gap: 4.4mm !important;
-}
-html.carte-doc .print-page--menus .offer-grid {
-  align-items: stretch;
-  flex: 1.22 1 0;
-  gap: 4.4mm !important;
-}
-html.carte-doc .print-page--menus .choice-grid {
-  align-items: stretch;
-  flex: 0.92 1 0;
-  gap: 3.6mm !important;
-}
-html.carte-doc .print-page--menus .offer-card,
-html.carte-doc .print-page--menus .choice-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: stretch;
-}
-html.carte-doc .print-page--menus .offer-card {
-  padding: 6mm 5mm 5.2mm !important;
-}
-html.carte-doc .print-page--menus .offer-card__badge {
-  align-self: center;
-  width: auto !important;
-  max-width: 92%;
-  font-size: 11.4pt !important;
-  letter-spacing: .1em !important;
-  padding: 2.5mm 7mm !important;
-}
-html.carte-doc .print-page--menus .offer-card__foot {
-  font-size: 8.2pt !important;
-  letter-spacing: .16em !important;
-}
-html.carte-doc .print-page--menus .choice-card ul {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-html.carte-doc .print-page--menus .choice-card li {
-  font-size: 7.6pt !important;
-}
-html.carte-doc .print-page--menus .menus-duo {
-  flex: 0.88 1 0 !important;
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  align-items: stretch !important;
-  gap: 4mm !important;
-}
-html.carte-doc .print-page--menus .menus-duo__left {
-  display: grid !important;
-  grid-template-rows: auto auto !important;
-  gap: 3.2mm !important;
-  min-height: 0;
-}
-html.carte-doc .print-page--menus .menus-duo > .panel,
-html.carte-doc .print-page--menus .menus-duo > .special-card {
-  display: flex !important;
-  flex-direction: column !important;
-  min-height: 0;
-  height: 100%;
-}
-html.carte-doc .print-page--menus .special-card,
-html.carte-doc .print-page--menus .breakfast-card,
-html.carte-doc .print-page--menus .special-card--dark {
-  height: auto;
-  flex: 0 1 auto;
-  display: flex !important;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 1.4mm;
-  padding: 3mm 4.2mm 3.2mm !important;
-}
-html.carte-doc .print-page--menus .menus-duo > .special-card--dark {
-  height: 100%;
-  justify-content: space-evenly;
-  padding: 3.4mm 4.4mm !important;
-}
-html.carte-doc .print-page--menus .menu-points {
-  gap: 1.5mm !important;
-  font-size: 7.4pt !important;
-}
-html.carte-doc .print-page--menus .special-card strong,
-html.carte-doc .print-page--menus .breakfast-card strong {
-  font-size: 14.5pt !important;
-}
-html.carte-doc .print-page--menus .special-card__badge {
-  align-self: center;
-  width: auto !important;
-  font-size: 9pt !important;
-  padding: 1.5mm 5mm !important;
-}
-html.carte-doc .print-page--menus .day-options {
-  display: grid !important;
-  gap: 2.4mm !important;
-}
-
-/* Boissons 6 : rythme de la page 5 — écarts nets, lignes aérées et alignées. */
-html.carte-doc .print-page--drinks .print-page__content {
-  gap: 4.4mm !important;
-  justify-content: stretch !important;
-}
-html.carte-doc .print-page--drinks .print-page__content > .panel,
-html.carte-doc .print-page--drinks .print-page__content > .panel:first-child,
-html.carte-doc .print-page--drinks .print-page__content > .panel:last-child {
-  flex: 1 1 0 !important;
-  overflow: visible !important;
-  min-height: 0 !important;
-}
-html.carte-doc .print-page--drinks .price-list--cols {
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  align-items: stretch !important;
-}
-html.carte-doc .print-page--drinks .panel__head {
-  margin-bottom: 2.4mm !important;
-}
-html.carte-doc .print-page--drinks .price-list__note {
-  font-size: 5.8pt !important;
-  line-height: 1.25 !important;
-}
-html.carte-doc .print-page--drinks .price-list__col {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-evenly !important;
-  height: 100% !important;
-  min-height: 0 !important;
-  gap: 0.5mm !important;
-}
-html.carte-doc .print-page--drinks .price-line {
-  flex: 1 1 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  padding: 0.7mm 0 !important;
-  min-height: 0 !important;
-}
-
-/* Boissons 7 : mêmes écarts de rubriques que la page 6, sans trou ni coupe. */
-html.carte-doc .print-page--drinks-secondary .print-page__content {
-  gap: 2.4mm !important;
-  justify-content: flex-start !important;
-}
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel,
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:first-child {
-  flex: 0 0 auto !important;
-  overflow: visible !important;
-  min-height: auto !important;
-  justify-content: flex-start !important;
-}
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:last-child {
-  flex: 0 0 auto !important;
-  overflow: visible !important;
-  min-height: auto !important;
-  justify-content: flex-start !important;
-}
-html.carte-doc .print-page--drinks-secondary .price-list--cols {
-  flex: 0 0 auto !important;
-  align-items: start !important;
-}
-html.carte-doc .print-page--drinks-secondary .price-list:not(.price-list--cols) {
-  flex: 0 0 auto !important;
-  align-content: start !important;
-}
-html.carte-doc .print-page--drinks-secondary .price-list__note {
-  font-size: 5.6pt !important;
-  line-height: 1.2 !important;
-}
-html.carte-doc .print-page--drinks-secondary .price-list__col {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: flex-start !important;
-  height: auto !important;
-  gap: 0.5mm !important;
-}
-html.carte-doc .print-page--drinks-secondary .price-line {
-  flex: 0 0 auto !important;
-  padding: 0.32mm 0 !important;
-}
-html.carte-doc .print-page .beer-table__head,
-html.carte-doc .print-page .beer-row {
-  grid-template-columns: minmax(0, 1fr) 16mm 16mm 16mm !important;
-}
-html.carte-doc .print-page--drinks-secondary .panel__head {
-  margin-bottom: 1.5mm !important;
-}
-html.carte-doc .print-page--drinks-secondary .beer-note {
-  margin: 0.9mm 0 0.4mm !important;
-  flex: 0 0 auto !important;
-}
-html.carte-doc .print-page--drinks-secondary .beer-note--second {
-  margin-top: 0.7mm !important;
-}
-html.carte-doc .print-page--drinks-secondary .beer-table {
-  display: flex !important;
-  flex-direction: column !important;
-  margin-top: 0.6mm !important;
-  flex: 0 0 auto !important;
-  gap: 0 !important;
-}
-html.carte-doc .print-page--drinks-secondary .beer-table__head {
-  flex: 0 0 auto !important;
-}
-html.carte-doc .print-page--drinks-secondary .beer-row {
-  flex: 0 0 auto !important;
-  display: grid !important;
-  align-items: center !important;
-  padding: 0.25mm 0 !important;
-}
-html.carte-doc .print-page--drinks-secondary .hh-banner {
-  flex: 0 0 auto !important;
-  margin-top: auto !important;
-  margin-bottom: 0 !important;
-  padding: 0.6mm 0 0 !important;
-  text-align: center;
-  font-family: 'Cinzel', serif !important;
-  font-weight: 700 !important;
-  font-size: 8pt !important;
-  letter-spacing: .1em !important;
-  color: var(--gold-700) !important;
-}
-html.carte-doc .print-page--drinks-secondary .hh-banner .hh-ico {
-  display: inline-block;
-  width: 8.5pt;
-  height: 8.5pt;
-  margin: 0 0.32em -1pt;
-  vertical-align: middle;
-}
-html.carte-doc .print-page--drinks-secondary .hh-banner .hh-ico-arrow {
-  width: 12pt;
-  height: 7pt;
-  margin: 0 0.2em -0.6pt;
-}
-
-/* Cocktails : 1 colonne, tout le contenu visible, sans trou au milieu. */
-html.carte-doc .print-page--cocktails .print-page__content {
-  justify-content: stretch !important;
-  gap: 4.4mm !important;
-}
-html.carte-doc .print-page--cocktails .print-page__content > .panel,
-html.carte-doc .print-page--cocktails .print-page__content > .panel:first-child,
-html.carte-doc .print-page--cocktails .print-page__content > .panel:last-child,
-html.carte-doc .print-page--cocktails .print-page__content > .duo-grid {
-  flex: 1 1 0 !important;
-  overflow: hidden !important;
-  min-height: 0 !important;
-}
-html.carte-doc .print-page--cocktails .duo-grid {
-  grid-template-rows: auto auto !important;
-  gap: 3.6mm !important;
-}
-html.carte-doc .print-page--cocktails .hh-list--cols {
-  justify-content: flex-start !important;
-}
-html.carte-doc .print-page--cocktails .price-list,
-html.carte-doc .print-page--cocktails .price-list:not(.price-list--cols) {
-  align-content: space-evenly !important;
-}
-html.carte-doc .print-page--cocktails .hh-list--cols {
-  display: flex !important;
-  flex-direction: column !important;
-  grid-template-columns: none !important;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-html.carte-doc .print-page--cocktails .hh-list__col {
-  display: contents !important;
-}
-html.carte-doc .print-page--cocktails .hh-list__col:not(:first-child) .hh-head {
-  display: none !important;
-}
-html.carte-doc .print-page--cocktails .hh-list--cols {
-  justify-content: flex-start;
-}
-html.carte-doc .print-page--cocktails .price-list,
-html.carte-doc .print-page--cocktails .price-list:not(.price-list--cols) {
-  grid-template-columns: 1fr !important;
-  column-gap: 0 !important;
-  align-content: space-evenly;
-}
-html.carte-doc .print-page--cocktails .duo-grid {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  grid-template-rows: 1.2fr 1fr;
-  gap: 2mm !important;
-  flex: 1.15 1 0;
-}
-html.carte-doc .print-page--cocktails .duo-grid > .panel {
-  display: flex !important;
-  flex-direction: column !important;
-  min-height: 0;
-  overflow: hidden !important;
-  flex: 1 1 0 !important;
-}
-html.carte-doc .print-page--cocktails .hh-line__row,
-html.carte-doc .print-page--cocktails .hh-head {
-  grid-template-columns: minmax(0, 1fr) 15mm 15mm !important;
-  column-gap: 2mm !important;
-}
-html.carte-doc .print-page--cocktails .hh-line {
-  flex: 1 1 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  padding: 0.35mm 0 !important;
-  min-height: 0 !important;
-  overflow: hidden;
-}
-html.carte-doc .print-page--cocktails .price-line {
-  flex: 1 1 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  min-height: 0 !important;
-}
-html.carte-doc .print-page--cocktails .hh-line__name {
-  font-size: 8pt !important;
-}
-html.carte-doc .print-page--cocktails .hh-line .price-list__note,
-html.carte-doc .print-page--cocktails .price-list__note {
-  font-size: 5.6pt !important;
-  line-height: 1.18 !important;
-}
-html.carte-doc .print-page--cocktails .hh-head {
-  padding-bottom: 0.5mm !important;
-  font-size: 5.6pt !important;
-}
-html.carte-doc .print-page--cocktails .panel__head {
-  margin-bottom: 1.2mm !important;
-}
-html.carte-doc .print-page--cocktails .price-line {
-  padding: 0.7mm 0 !important;
-}
-html.carte-doc .print-page--cocktails .hh-line__price,
-html.carte-doc .print-page--cocktails .hh-line__hh {
-  justify-self: end !important;
-  text-align: right !important;
-}
-
-html.carte-doc .print-page--menus .breakfast-card .menu-points {
-  font-size: 7.6pt !important;
-  gap: 1.6mm !important;
-}
-html.carte-doc .print-page--menus .breakfast-card--simple {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 2mm 4mm 3mm !important;
-}
-html.carte-doc .print-page--entrees .print-page__content > .panel,
-html.carte-doc .print-page--plats .print-page__content > .panel,
-html.carte-doc .print-page--desserts .print-page__content > .panel,
-html.carte-doc .print-page--vins .print-page__content > .panel {
-  flex: 1 1 0 !important;
-  overflow: hidden !important;
-}
-html.carte-doc .print-page--plats .print-page__content > .panel--accent {
-  flex: 0 0 auto !important;
-}
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(1) { flex: 1.72 1 0 !important; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(2) { flex: 1.43 1 0 !important; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(3) { flex: 1 1 0 !important; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(4) { flex: 0.86 1 0 !important; }
-html.carte-doc .print-page--vins .wine-table td {
-  padding-top: 0.7mm !important;
-  padding-bottom: 0.7mm !important;
-}
-
-/* Couverture : cadre or strictement sur les bords de la page, composition centrée sans chevauchement. */
 html.carte-doc .print-page--cover {
   background: #24102e !important;
 }
@@ -956,76 +630,7 @@ html.carte-doc .print-page--cover .print-page__number {
   display: none !important;
 }
 
-/* Polices A4 = web : Cinzel intitulés/prix, Montserrat contenances. */
-html.carte-doc .print-page .price-line__name,
-html.carte-doc .print-page .hh-line__name,
-html.carte-doc .print-page .beer-row__name,
-html.carte-doc .print-page .food-card__head h5,
-html.carte-doc .print-page .wine-name,
-html.carte-doc .print-page .choice-card h5,
-html.carte-doc .print-page .wine-table td.wine-name {
-  font-family: 'Cinzel', serif !important;
-  font-weight: 700 !important;
-  font-style: normal !important;
-}
-html.carte-doc .print-page .price-line__price,
-html.carte-doc .print-page .hh-line__price,
-html.carte-doc .print-page .hh-line__hh,
-html.carte-doc .print-page .hh-line__row .grand-price,
-html.carte-doc .print-page .beer-row__price,
-html.carte-doc .print-page .beer-row__hh,
-html.carte-doc .print-page .wine-table td:not(.wine-name):not(.wine-no) {
-  font-family: 'Cinzel', serif !important;
-  font-weight: 800 !important;
-  font-style: normal !important;
-}
-/* Sur le site, le prix d'une fiche est un <strong> Cinzel 700 : même graisse ici. */
-html.carte-doc .print-page .food-card__head strong {
-  font-family: 'Cinzel', serif !important;
-  font-weight: 700 !important;
-  font-style: normal !important;
-}
-html.carte-doc .print-page .qty,
-html.carte-doc .print-page .note-cl,
-html.carte-doc .print-page .price-list__note.note-cl,
-html.carte-doc .print-page .panel__subtitle.qty,
-html.carte-doc .print-page .beer-table__head,
-html.carte-doc .print-page .beer-table__head .qty,
-html.carte-doc .print-page .wine-table th.qty {
-  font-family: 'Montserrat', sans-serif !important;
-  font-weight: 400 !important;
-  font-style: normal !important;
-  text-transform: none !important;
-  letter-spacing: .02em !important;
-}
-html.carte-doc .print-page .food-card__note,
-html.carte-doc .print-page .price-list__note:not(.note-cl),
-html.carte-doc .print-page .hh-line .price-list__note:not(.note-cl) {
-  font-family: 'Montserrat', sans-serif !important;
-  font-weight: 400 !important;
-  font-style: italic !important;
-}
-html.carte-doc .print-page .beer-note {
-  font-family: 'Cinzel', serif !important;
-  font-weight: 600 !important;
-  font-style: normal !important;
-}
 
-/* Interlignes réguliers */
-html.carte-doc .print-page .price-line,
-html.carte-doc .print-page .hh-line,
-html.carte-doc .print-page .beer-row {
-  padding-top: 0.55mm !important;
-  padding-bottom: 0.55mm !important;
-}
-html.carte-doc .print-page .price-list__note,
-html.carte-doc .print-page .note-cl {
-  margin-top: 0.35mm !important;
-  line-height: 1.25 !important;
-}
-html.carte-doc .print-page .price-list--cols {
-  column-gap: 8mm !important;
-}
 
 /* Écran : pages A4 mises à l’échelle dans la fenêtre, sans déformer le format. */
 @media screen {
@@ -1111,281 +716,75 @@ html.carte-doc .print-page .price-list--cols {
     page-break-after: auto;
     break-after: auto;
   }
-}
+}"""
 
-/* ===== Rythme page 6 dupliqué sur toutes les pages (sauf menus) : polices page 3,
-       couleurs page 6, pointillés vers le prix, aucun trait de séparation ===== */
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .print-page__content {
-  gap: 4.4mm !important;
-}
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .panel__head {
-  margin-bottom: 2.4mm !important;
-}
-/* Intitulés et prix au format de la page 3 (9 pt), notes 7,3 pt */
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .food-card__head h5,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-line__name,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line__name,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .beer-row__name,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .wine-table td.wine-name {
-  font-size: 9pt !important;
-  line-height: 1.25 !important;
-}
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .food-card__head strong,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-line__price,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line__price,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line__hh,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .beer-row__price,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .beer-row__hh,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .wine-table td:not(.wine-name):not(.wine-no) {
-  font-size: 9pt !important;
-}
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .food-card__note,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-list__note {
-  font-size: 7.3pt !important;
-  line-height: 1.3 !important;
-}
-/* Couleurs de la page 6 : encre violette partout, prix en violet foncé */
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .food-card__head h5,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-line__name,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line__name,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .beer-row__name,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .wine-table td.wine-name {
-  color: #2f1740 !important;
-}
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .food-card__head strong,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-line__price,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line__price,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line__hh,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .beer-row__price,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .beer-row__hh,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .wine-table td:not(.wine-name):not(.wine-no) {
-  color: #432155 !important;
-}
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .food-card__note,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-list__note {
-  color: #5d4a6c !important;
-}
-/* Interligne régulier, comme sur la page 6 */
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .price-line,
-html.carte-doc .print-page:not(.print-page--cover):not(.print-page--menus) .hh-line {
-  padding: 0.7mm 0 !important;
-}
-/* Plus aucun trait de séparation autour des textes et des prix */
-html.carte-doc .print-page .food-card,
-html.carte-doc .print-page .price-line,
-html.carte-doc .print-page .hh-line,
-html.carte-doc .print-page .wine-table th,
-html.carte-doc .print-page .wine-table td,
-html.carte-doc .print-page .beer-row,
-html.carte-doc .print-page .beer-table__head {
-  border: 0 !important;
-  box-shadow: none !important;
-  background: transparent !important;
-}
-html.carte-doc .print-page .food-card {
-  padding: 1.2mm 0 !important;
-  border-radius: 0 !important;
-}
-html.carte-doc .print-page .food-card-grid,
-html.carte-doc .print-page .food-card-grid--wide {
-  row-gap: 1.6mm !important;
-  column-gap: 8mm !important;
-}
-/* Trait en pointillés qui mène au prix sur les plats */
-html.carte-doc .print-page .food-card__head {
-  display: flex !important;
-  align-items: center !important;
-  gap: 0 !important;
-}
-html.carte-doc .print-page .food-card__head h5 {
-  flex: 0 1 auto;
-  min-width: 0;
-}
-html.carte-doc .print-page .food-card__head h5::after {
-  content: '' !important;
-  flex: 1 1 auto;
-  min-width: 4mm;
-  border-bottom: .22mm dotted rgba(156, 122, 45, .6);
-  margin: 0 1.6mm;
-  transform: translateY(-.8mm);
-}
-html.carte-doc .print-page .food-card__head strong {
-  flex: 0 0 auto;
-}
-/* Pointillés vers le prix bien visibles sur les boissons */
-html.carte-doc .print-page .price-line__dots {
+FIT_CSS = """
+/* ===== La feuille pose le site, elle ne le recompose pas =====
+
+   Le contenu est composé à --carte-base-w — la largeur du flux sur l'écran du
+   site, mesurée — puis réduit du facteur --carte-fit pour entrer dans la zone
+   utile. Proportions, graisses, gouttières et pastilles restent les siennes :
+   la feuille ne fait pas de typographie, elle fait du cadrage. */
+html.carte-doc .print-page__content {
+  position: absolute !important;
+  z-index: 1;
+  left: %(left).3fmm;
+  width: %(zone_w).3fmm;
+  top: %(top).3fmm;
+  bottom: %(bottom).3fmm;
+  padding: 0 !important;
+  overflow: hidden !important;
   display: block !important;
-  border-bottom-width: .22mm !important;
 }
-/* Page boissons 6 : trois panneaux étirés, répartis selon leur contenu */
-html.carte-doc .print-page--drinks .print-page__content > .panel:nth-child(1) { flex: 1.55 1 0 !important; }
-html.carte-doc .print-page--drinks .print-page__content > .panel:nth-child(2) { flex: 1 1 0 !important; }
-html.carte-doc .print-page--drinks .print-page__content > .panel:nth-child(3) { flex: 1.1 1 0 !important; }
-/* Page boissons 7 (whiskies / digestifs / bières) : mêmes écarts et étirement que la page 6 */
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel,
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:first-child,
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:last-child {
-  flex: 1 1 0 !important;
-  min-height: 0 !important;
-  overflow: visible !important;
-  justify-content: flex-start !important;
+/* Sur le site, .print-page est réservé à l'impression et reste caché à l'écran.
+   Ici, c'est le document lui-même : il doit être visible dans les deux médias. */
+html.carte-doc #print-document .print-page { display: block !important; }
+html.carte-doc .carte-flow {
+  width: var(--carte-base-w);
+  margin-left: var(--carte-pad-x, 0px);
+  transform: scale(var(--carte-fit));
+  transform-origin: top left;
 }
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(1) { flex: 0.9 1 0 !important; }
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(2) { flex: 0.85 1 0 !important; }
-html.carte-doc .print-page--drinks-secondary .print-page__content > .panel:nth-child(3) { flex: 1.8 1 0 !important; }
-html.carte-doc .print-page--drinks-secondary .price-list,
-html.carte-doc .print-page--drinks-secondary .price-list--cols {
-  flex: 1 1 0 !important;
-  align-content: space-evenly !important;
-}
-html.carte-doc .print-page--drinks-secondary .price-list__col {
-  justify-content: space-evenly !important;
-  height: 100% !important;
-}
-/* Page cocktails 10 (élégance + mocktails) : plus de hauteur pour les 12 cocktails */
-html.carte-doc #carte-p10 .print-page__content > .panel:first-child { flex: 1.6 1 0 !important; }
-html.carte-doc #carte-p10 .print-page__content > .panel:last-child { flex: 1 1 0 !important; }
-html.carte-doc .print-page--cocktails .duo-grid { grid-template-rows: 1.25fr 1fr !important; }
+/* Un libellé plus long qu'une colonne ne doit jamais élargir le bloc : sinon la
+   mise à l'échelle ne correspond plus à la mesure et le prix sortirait de la
+   feuille. */
+html.carte-doc .carte-flow .tab-flow > * { min-width: 0; }
+html.carte-doc .carte-flow .tab-flow { max-width: none; }
+""" % dict(left=ZONE_LEFT_MM, zone_w=ZONE_W_MM, top=ZONE_TOP_MM, bottom=ZONE_BOTTOM_MM)
 
-/* ===== Pointillés or sur toutes les lignes (plats, boissons, bières pression, cocktails) ===== */
-html.carte-doc .print-page .price-line__dots {
-  display: block !important;
-  border-bottom-width: .3mm !important;
-  border-bottom-style: dotted !important;
-  border-bottom-color: rgba(156, 122, 45, .68) !important;
-}
-html.carte-doc .print-page .food-card__head h5::after {
+
+# Étoiles et flèches du site sont des glyphes « ✦ »/« → » : absents de Cinzel,
+# ils sortiraient en carré sur une machine sans police de secours. Ils sont donc
+# dessinés en CSS, à la place exacte où le site les écrit.
+GLYPH_CSS = """
+html.carte-doc .print-page .panel__title::before,
+html.carte-doc .print-page .panel__title::after,
+html.carte-doc .print-page .choice-card li::before {
   content: '' !important;
-  flex: 1 1 auto;
-  min-width: 5mm;
-  border-bottom: .3mm dotted rgba(156, 122, 45, .68);
-  margin: 0 1.6mm;
-  transform: translateY(-.8mm);
+  display: inline-block !important;
+  width: .78em;
+  height: .78em;
+  background: currentColor;
+  text-shadow: none !important;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 62%);
 }
-/* Pointillés or entre l'intitulé et les prix des bières pression et des cocktails HH */
-html.carte-doc .print-page .beer-row__name,
-html.carte-doc .print-page .hh-line__name {
-  display: flex !important;
-  align-items: center !important;
-  min-width: 0;
+html.carte-doc .print-page i.carte-arrow {
+  display: inline-block;
+  width: 1.15em;
+  height: .12em;
+  vertical-align: .18em;
+  background: currentColor;
+  clip-path: polygon(0 0, 72% 0, 72% -70%, 100% 50%, 72% 170%, 72% 100%, 0 100%);
 }
-html.carte-doc .print-page .beer-row__name::after,
-html.carte-doc .print-page .hh-line__name::after {
-  content: '' !important;
-  flex: 1 1 auto;
-  min-width: 3mm;
-  margin-left: 1.6mm;
-  border-bottom: .3mm dotted rgba(156, 122, 45, .68);
-  transform: translateY(-.6mm);
-}
-/* Air sur les interlignes des vins (page 8) : hauteur = contenu, jamais rogné */
-html.carte-doc .print-page--vins .print-page__content > .panel {
-  flex-basis: auto !important;
-  overflow: visible !important;
-}
-html.carte-doc .print-page--vins .wine-table th,
-html.carte-doc .print-page--vins .wine-table td {
-  padding: 1.1mm 0 !important;
-}
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(1) { flex: 1.84 1 auto !important; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(2) { flex: 1.45 1 auto !important; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(3) { flex: 1 1 auto !important; }
-html.carte-doc .print-page--vins .print-page__content > .panel:nth-child(4) { flex: 0.85 1 auto !important; }
-/* Air entre les lignes des bières pression */
-html.carte-doc .print-page--drinks-secondary .beer-row {
-  padding: 1mm 0 !important;
-}
-
-/* Page plats : section Pâtes ajoutée — 5 blocs au même rythme (la
-   répartition suit le nombre de lignes de chaque rubrique, la typo
-   est légèrement resserrée pour que rien ne soit coupé). */
-html.carte-doc .print-page--plats .print-page__content {
-  gap: 2.7mm !important;
-}
-html.carte-doc .print-page--plats .print-page__content > .panel {
-  flex: 1 1 0 !important;
-}
-html.carte-doc .print-page--plats .print-page__content > .panel:nth-child(1) { flex: 4 1 0 !important; }
-html.carte-doc .print-page--plats .print-page__content > .panel:nth-child(2) { flex: 2.9 1 0 !important; }
-html.carte-doc .print-page--plats .print-page__content > .panel:nth-child(3) { flex: 2.9 1 0 !important; }
-html.carte-doc .print-page--plats .print-page__content > .panel:nth-child(4) { flex: 2.2 1 0 !important; }
-html.carte-doc .print-page--plats .panel__head {
-  margin-bottom: 1.6mm !important;
-}
-html.carte-doc .print-page--plats .panel__title {
-  min-height: 7.2mm !important;
-  padding: 1.1mm 6mm !important;
-  font-size: 8.6pt !important;
-}
-html.carte-doc .print-page--plats .food-card-grid,
-html.carte-doc .print-page--plats .food-card-grid--wide {
-  row-gap: 1.3mm !important;
-}
-html.carte-doc .print-page--plats .food-card {
-  padding: 1.1mm 2.4mm !important;
-  gap: 0.5mm !important;
-}
-html.carte-doc .print-page--plats .food-card__head h5,
-html.carte-doc .print-page--plats .food-card__head strong {
-  font-size: 8.2pt !important;
-}
-html.carte-doc .print-page--plats .food-card__note {
-  font-size: 6.3pt !important;
-  line-height: 1.22 !important;
-}
-html.carte-doc .print-page--plats .accent-band {
-  padding: 1.5mm 4mm 2mm !important;
-}
-html.carte-doc .print-page--plats .accent-band strong {
-  font-size: 9.6pt !important;
-}
-html.carte-doc .print-page--plats .accent-band span {
-  margin-top: 0.6mm !important;
-  font-size: 11pt !important;
-}
-html.carte-doc .print-page--plats .accent-band p {
-  margin-top: 0.8mm !important;
-  font-size: 6.6pt !important;
-}
-/* ——————————————————————————————————————————————————————————
-   Dernier mot sur les titres de section (après les réglages par
-   feuille) : la pastille est retirée PARTOUT — fond, liseré, ombre,
-   min-height et padding de cadrage — et la taille redevient unique,
-   comme à l'écran. Les feuilles denses (Plats, Vins, Cocktails) y
-   gagnent les 2 mm qui manquaient en bas de page.
-   —————————————————————————————————————————————————————————— */
-html.carte-doc .print-page .panel__title,
-html.carte-doc .print-page--plats .panel__title,
-html.carte-doc .print-page--entrees .panel__title,
-html.carte-doc .print-page--desserts .panel__title,
-html.carte-doc .print-page--menus .panel__title,
-html.carte-doc .print-page--drinks .panel__title,
-html.carte-doc .print-page--drinks-secondary .panel__title,
-html.carte-doc .print-page--vins .panel__title,
-html.carte-doc .print-page--cocktails .panel__title {
-  min-height: 0 !important;
-  padding: .6mm 0 !important;
-  background: none !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  color: var(--violet-900) !important;
-  font-size: 9.2pt !important;
-  letter-spacing: .12em !important;
-}
-
 """
 
-
-
 def remplacer_glyphes_a_risque(html: str) -> str:
-    """Le corps de la carte imprimée ne doit dépendre d'aucune police système.
+    """Aucun signe ne doit dépendre d'une police absente du poste qui imprime.
 
-    - « ✦ » n'est pas dans Cinzel : remplacé par un losange dessiné en CSS ;
-    - les exposants unicode (ᵉ, ʳ, â€¦) non plus : rendus en <sup>, la police
-      du site suffit et le rendu est identique.
-    La feuille de style copiée depuis index.html reste intacte (séparation sur
-    la première balise </style>).
+    - « ✦ » et « → » ne sont pas dans Cinzel : ils sont dessinés en CSS ;
+    - les exposants unicode (ᵉ, ʳ, …) non plus : rendus en <sup>.
+    La feuille de style copiée depuis index.html reste intacte (séparation sur la
+    première balise </style>).
     """
     head, sep, body = html.partition("</style>")
     if not sep:
@@ -1394,64 +793,135 @@ def remplacer_glyphes_a_risque(html: str) -> str:
     for src, dst in (("ʳ", "r"), ("ᵈ", "d"), ("ˢ", "s"), ("ᵗ", "t"), ("ᵖ", "p"), ("ᶜ", "c")):
         body = body.replace(src, f"<sup>{dst}</sup>")
     body = body.replace("✦", '<i class="carte-star" aria-hidden="true"></i>')
+    body = body.replace("→", '<i class="carte-arrow" aria-hidden="true"></i>')
     return head + sep + body
 
+
+# ------------------------------------------------------------------ métriques
+
+
+def load_metrics(allow_stale: bool = False) -> dict:
+    digest = hashlib.sha256(index_text().encode("utf-8")).hexdigest()[:16]
+    if METRICS.exists():
+        try:
+            data = json.loads(METRICS.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise SystemExit(f"{METRICS.name} illisible : {exc}")
+        if data.get("index_hash") == digest:
+            return data
+        if allow_stale:
+            print(f"avertissement : empreinte {data.get('index_hash')} ≠ {digest} — "
+                  "mesures périmées utilisées (--no-measure)")
+            return data
+    if not MEASURE.exists():
+        raise SystemExit(f"outil de mesure manquant : {MEASURE}")
+    print("mesure des hauteurs sur le site (Chromium, fontes réelles)…")
+    res = subprocess.run(["node", str(MEASURE)], cwd=ROOT)
+    if res.returncode != 0:
+        raise SystemExit("la mesure a échoué — `npm install`, puis node tools/measure_carte.mjs")
+    data = json.loads(METRICS.read_text(encoding="utf-8"))
+    if data.get("index_hash") != digest:
+        raise SystemExit("l'empreinte enregistrée ne correspond toujours pas : "
+                         "index.html a changé pendant la mesure, relancer")
+    return data
+
+
+def check_blocks(metrics: dict, flows: dict[str, list[str]]) -> None:
+    for sid, blocks in flows.items():
+        seen = metrics["sections"][sid]["blocks"]
+        if len(blocks) != len(seen):
+            raise SystemExit(
+                f"{sid} : le générateur trouve {len(blocks)} blocs, le navigateur {len(seen)} — "
+                "la structure de .tab-flow a changé, la pagination serait fausse. "
+                "Relancer node tools/measure_carte.mjs."
+            )
+        for mine, m in zip((block_signature(b) for b in blocks), seen):
+            if mine[0] != m["tag"]:
+                raise SystemExit(f"{sid} : bloc {m['i']} <{mine[0]}> ici, <{m['tag']}> mesuré — "
+                                 "mesure à refaire.")
+
+
+def plan_sheets(metrics: dict, flows: dict[str, list[str]]):
+    """Choisit l'échelle de composition puis répartit les blocs sur les feuilles."""
+    flow_w = min(v["flow_width"] for v in metrics["sections"].values())
+    base_fit = ZONE_W_PX / flow_w
+
+    def pack(fit: float):
+        cap = ZONE_H_PX / fit * SAFETY
+        plan: dict[str, list[tuple[list[int], float]]] = {}
+        for sid in SECTIONS:
+            sec = metrics["sections"][sid]
+            gap = sec["gap"]
+            sheets: list[list[int]] = []
+            cur: list[int] = []
+            load = 0.0
+            for i, block in enumerate(sec["blocks"]):
+                add = block["h"] + (gap if cur else 0.0)
+                if cur and load + add > cap:
+                    sheets.append(cur)
+                    cur, load = [], 0.0
+                    add = block["h"]
+                cur.append(i)
+                load += add
+            if cur:
+                sheets.append(cur)
+            plan[sid] = [(idx, sum(sec["blocks"][i]["h"] for i in idx) + gap * (len(idx) - 1))
+                         for idx in sheets]
+        return plan, cap
+
+    best = None
+    fit = base_fit
+    while fit >= base_fit * FIT_FLOOR:
+        plan, cap = pack(fit)
+        count = sum(len(v) for v in plan.values())
+        worst_fill = min(load / (ZONE_H_PX / fit) for v in plan.values() for _, load in v)
+        score = (count, -round(worst_fill, 3))
+        if best is None or score < best[0]:
+            best = (score, fit, plan, cap)
+        fit *= 0.995
+    _, fit, plan, cap = best
+    note = "" if abs(fit - base_fit) < 1e-9 else (
+        f" (l'échelle de composition {base_fit:.4f} ramenée à {fit:.4f} pour éviter une feuille quasi vide)")
+    return base_fit, fit, plan, cap, flow_w, note
+
+
 def main() -> None:
-    style = INDEX.split("<style>", 1)[1].split("</style>", 1)[0]
-    # Réglage manuel de l’aperçu A4 (repris ici pour que la régénération
-    # soit fidèle à la carte validée) : le pied de page empilé de la couverture
-    # réserve un peu moins de hauteur sur la carte.
-    style = style.replace(
-        """@media (max-width: 1100px) {
-  /* Pied de page empilé : on réserve plus de hauteur */
-  html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
-    width: max(170px, min(calc(100% - 8px), calc(100svh - 64px - 470px), 488px));
-  }
-}""",
-        """@media (max-width: 780px) {
-  /* Pied de page empilé : on réserve plus de hauteur */
-  html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
-    width: max(170px, min(calc(100% - 8px), calc(100svh - 64px - 455px), 488px));
-  }
-}""",
-    )
-    print_css = media_print_bodies(style)
-    cover = extract_cover()
+    src = index_text()
+    allow_stale = "--no-measure" in sys.argv
+    style = src.split("<style>", 1)[1].split("</style>", 1)[0]
+    flows = {sid: split_flow(section_flow(src, sid)) for sid in SECTIONS}
 
-    flows = {
-        "entrees": split_flow(section_flow("entrees")),
-        "plats": split_flow(section_flow("plats")),
-        "desserts": split_flow(section_flow("desserts")),
-        "menus": split_flow(section_flow("menus")),
-        "boissons": split_flow(section_flow("boissons")),
-        "vins": split_flow(section_flow("vins")),
-        "cocktails": split_flow(section_flow("cocktails")),
-    }
+    metrics = load_metrics(allow_stale)
+    check_blocks(metrics, flows)
+    base_fit, fit, plan, cap, flow_w, note = plan_sheets(metrics, flows)
 
-    names = []
-    pages_html = []
+    css, stats = rescope_site_css(style)
+    print("CSS du site : " + ", ".join(f"{k} → {v}" for k, v in stats.items()))
+    css, kept, dropped = print_containing_only(css)
+    # Le contenant doit aussi s'appliquer à l'écran : c'est là que la feuille est
+    # rendue, photographiée, et vue dans l'aperçu. On le re-déclare hors média.
+    skin, kept2, _ = chrome_only(media_print_bodies(css))
+    print(f"@media print du site : {kept} règles de contenant conservées sur place, "
+          f"{dropped} règles de contenu écartées (le site garde la main) ; "
+          f"{kept2} rejouées hors média pour l'écran")
+    cover = extract_cover(src)
 
-    def add(kind: str, content: str, label: str, cover_html: str | None = None) -> None:
-        n = len(pages_html) + 1
-        pages_html.append(page_shell(n, kind, content, cover_html))
-        names.append(label)
+    pad_x = max(0.0, (ZONE_W_PX / fit - flow_w) / 2)
+    pages: list[str] = [page_shell(1, "cover", "", cover)]
+    labels = ["couverture (site, encadrée sur la feuille)"]
+    for sid in SECTIONS:
+        for idx, load in plan[sid]:
+            n = len(pages) + 1
+            sheet_fit = fit
+            if load > cap:            # un bloc plus haut qu'une feuille : on le serre, on le dit
+                sheet_fit = ZONE_H_PX * SAFETY / load
+            pages.append(page_shell(n, sid, "\n".join(flows[sid][i] for i in idx),
+                                    fit=None if abs(sheet_fit - fit) < 1e-9 else sheet_fit))
+            pct = load * fit / ZONE_H_PX * 100
+            labels.append(f"{sid:9} blocs {'+'.join(str(i + 1) for i in idx):9} — {pct:4.0f} % de la hauteur utile")
 
-    add("cover", "", "cover", cover)
-    add("entrees", "\n".join(flows["entrees"]), "entrees")
-    add("plats", "\n".join(flows["plats"]), "plats")
-    add("desserts", "\n".join(flows["desserts"]), "desserts")
-    add("menus", "\n".join(flows["menus"]), "menus")
-    boissons = flows["boissons"]
-    add("drinks", "\n".join(boissons[:3]), "boissons-fraiches-chaudes-aperitifs")
-    hh = '<p class="hh-banner"><svg class="hh-ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0.4 10.2 5.8 15.6 8 10.2 10.2 8 15.6 5.8 10.2 0.4 8 5.8 5.8Z"/></svg> Happy Hour (HH) · 17h <svg class="hh-ico hh-ico-arrow" viewBox="0 0 20 10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M1 5h16M13.2 2.1 18 5l-4.8 2.9"/></svg> 23h <svg class="hh-ico" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0.4 10.2 5.8 15.6 8 10.2 10.2 8 15.6 5.8 10.2 0.4 8 5.8 5.8Z"/></svg></p>'
-    add("drinks-secondary", "\n".join(boissons[3:]) + "\n" + hh, "whiskies-digestifs-bieres")
-    add("vins", "\n".join(flows["vins"]), "vins")
-    ck = flows["cocktails"]
-    add("cocktails", "\n".join(ck[:2]), "cocktails-classiques-duo")
-    add("cocktails", "\n".join(ck[2:]), "cocktails-elegance-mocktails")
-
-    html = f'''<!DOCTYPE html>
-<html lang="fr" class="carte-doc">
+    html = f"""<!DOCTYPE html>
+<html lang="fr" class="carte-doc" data-carte-viewport="{metrics['viewport']}" data-carte-base-w="{flow_w:g}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1462,44 +932,42 @@ def main() -> None:
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
-{style}
+{css}
 
-/* ===== Styles d’impression du site, appliqués aussi à l’aperçu A4 ===== */
-{print_css}
+/* ===== Contenant de la feuille, rejoué hors média (l'aperçu et la capture
+       sont en média screen ; l'impression garde ses règles @media print) ===== */
+{skin}
 
-{EXTRA_CSS}
+{CHROME_CSS}
+
+{FIT_CSS}
+
+{GLYPH_CSS}
+
+html.carte-doc {{
+  --carte-base-w: {flow_w:g}px;
+  --carte-fit: {fit:.6f};
+  --carte-pad-x: {pad_x:.2f}px;   /* le bloc réduit est centré dans la zone utile */
+}}
 </style>
 </head>
 <body>
 <main id="print-document" aria-label="Carte des menus et boissons à imprimer">
-{"".join(pages_html)}
+{"".join(pages)}
 </main>
-<script>
-(function () {{
-  const root = document.documentElement;
-  const scrollHash = function () {{
-    if (!location.hash) return;
-    const el = document.getElementById(location.hash.slice(1));
-    if (el) el.scrollIntoView({{ block: "start" }});
-  }};
-  window.addEventListener("beforeprint", function () {{
-    root.style.setProperty("--carte-scale", "1");
-  }});
-  window.addEventListener("afterprint", function () {{
-    root.style.removeProperty("--carte-scale");
-  }});
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(scrollHash);
-  scrollHash();
-}})();
-</script>
 </body>
 </html>
-'''
+"""
     html = remplacer_glyphes_a_risque(html)
     OUT.write_text(html, encoding="utf-8")
-    print(f"wrote {OUT} ({len(html)} bytes, {len(pages_html)} pages)")
-    for i, name in enumerate(names, 1):
-        print(f"  {i:02d} {name}")
+
+    pts = 72.0 / 96.0     # 1 px CSS = 0,75 pt
+    print(f"\ncarte.html : {len(pages)} feuilles — composition {metrics['viewport']} px "
+          f"× {flow_w:g} px, réduite × {fit:.4f}{note}")
+    print(f"  zone utile {ZONE_W_PX:.0f} × {ZONE_H_PX:.0f} px ; titres site 16,3 px → "
+          f"{16.3 * fit * pts:.1f} pt, intitulés 17,9 px → {17.9 * fit * pts:.1f} pt")
+    for label in labels:
+        print(f"  {label}")
 
 
 if __name__ == "__main__":

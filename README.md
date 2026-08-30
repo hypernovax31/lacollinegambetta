@@ -4,67 +4,66 @@ Carte web interactive et carte imprimable A4 portrait.
 
 ## Carte imprimable (`carte.html`)
 
-`carte.html` reprend **les mêmes contenus, polices, couleurs et styles** que le site (`index.html`). La page de garde est la couverture du site. L’ordre des pages suit les boutons de navigation :
-
-1. Couverture
-2. Entrées
-3. Plats
-4. Desserts
-5. Menus
-6. Boissons fraîches & chaudes
-7. Apéritifs, whiskies, digestifs & bières
-8. Vins
-9. Cocktails classiques, spritz & mules
-10. Élégance & mocktails
-
-Les pages intérieures portent l’en-tête **COLLINE GAMBETTA** (pas de titre « NOS … »).
-
-- Aperçu : ouvrir `carte.html` (sans impression automatique). À l’écran, les pages gardent le ratio A4 et s’adaptent à la largeur de la fenêtre, sans déformation.
-- Enregistrer en PDF : icône de téléchargement en haut à droite, puis Imprimer → Enregistrer au format PDF (A4 portrait réel)
-
-Régénérer après une modification du site :
+`carte.html` **recopie la mise en page du site** : mêmes textes, mêmes fontes,
+mêmes titres à pastille violette liseré or, mêmes colonnes, mêmes interlignes.
+Le générateur ne retape plus la carte en points — il compose chaque onglet à la
+largeur d'écran du site (1 180 px) et applique **un seul facteur de réduction**,
+calculé pour remplir la feuille sans jamais couper un bloc.
 
 ```bash
-python3 tools/build_carte.py
-npm run build:carte-pdf
+python3 tools/build_carte.py      # mesure, met en page, écrit carte.html
+npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
 ```
+
+- Une feuille par onglet ; les onglets denses (Boissons, Cocktails) en occupent
+  deux. Le nombre de pages et la répartition viennent de `tools/measure_carte.mjs`,
+  qui mesure le rendu réel (Chromium, fontes du site) — pas d'à-peu-près.
+- Les feuilles gardent le bandeau **COLLINE GAMBETTA** en tête, le pied légal et
+  la pagination en bas à droite : un document imprimé isolé doit se suffire.
+- Aperçu : ouvrir `carte.html` — les pages gardent le ratio A4 et s'adaptent à la
+  largeur de la fenêtre, sans déformation. Impression : icône de téléchargement,
+  Imprimer → Enregistrer au format PDF (A4 portrait réel).
+
+Après un libellé ou un prix modifié, relancer `python3 tools/build_carte.py` :
+l'empreinte SHA-256 d'`index.html` est comparée à celle des mesures, et une
+mesure périmée déclenche une nouvelle mesure (ou une erreur explicite).
 
 ## PDF A4 téléchargeable (`carte-a4.pdf`)
 
-L’icône de téléchargement du header de `index.html` ouvre **`carte-a4.pdf`** : la carte en
+L'icône de téléchargement du header de `index.html` ouvre **`carte-a4.pdf`** : la carte en
 **10 pages images** — une page = une feuille de `carte.html` photographiée à 300 dpi.
 Les mêmes feuilles sont livrées en JPEG dans **`carte-a4-pages/`** (`page-01.jpg` … `page-10.jpg`),
 prêtes à envoyer telles quelles à un imprimeur.
 
 ```bash
 npm install                      # Playwright + Chromium (@sparticuz) + fontes @fontsource
-python3 tools/build_carte.py     # régénère carte.html depuis le site
-npm run build:carte-pdf          # les 10 JPEG, puis le PDF unifié
+npm run build:carte              # mesure → carte.html → JPEG → PDF
+npm run build:carte-pdf          # uniquement les images et le PDF
 ```
 
-Le choix du tout-image est assumé : le PDF rendu est identique à la carte affichée à l’écran,
-sur n’importe quelle machine, sans police à installer ni substitution au moment d’imprimer.
-Contrepartie : le texte n’est plus sélectionnable ni rechercheable, et le fichier pèse
-~7,1 Mo au lieu de 3,7 Mo en vectoriel.
+Le choix du tout-image est assumé : le PDF rendu est identique à la carte affichée à l'écran,
+sur n'importe quelle machine, sans police à installer ni substitution au moment d'imprimer.
+Contrepartie : le texte n'est plus sélectionnable ni rechercheable, et le fichier pèse
+~7 Mo au lieu de 3,7 Mo en vectoriel.
 
 Comment ça marche (`tools/build_carte_pdf.mjs`) :
 
-- Chromium rend `carte.html` sous média `print`, viewport 1200 × 1600 et
-  `deviceScaleFactor` 3,125 : une feuille de 210 mm (= 793,7 px CSS) sort à 2 480 px, soit 300 dpi ;
+- Chromium rend `carte.html` sous média **screen**, à la largeur de composition mesurée
+  (1 180 px, lue dans `data-carte-viewport`) et à `deviceScaleFactor` 3,125 : une feuille de
+  210 mm (= 793,7 px CSS) sort à 2 480 px, soit 300 dpi ;
 - les polices du site sont servies par `tools/local-fonts.mjs` (Cinzel et Montserrat depuis
-  `node_modules/@fontsource`) — le build **s’arrête** si elles ne sont pas réellement chargées,
-  et si une feuille déborde de son 297 mm (le rognage serait sinon silencieux) ;
+  `node_modules/@fontsource`) — le build **s'arrête** si elles ne sont pas réellement chargées,
+  et si une feuille déborde de sa zone utile (le rognage serait sinon silencieux) ;
 - les JPEG sont ramenés à 2 480 × 3 508 exact quand ImageMagick est présent (Chromium arrondit
   les millimètres selon les feuilles et le liseré doré ajoute un pixel par bord ; sans `convert`,
   ±6 px sont tolérés) ;
-- chaque fichier est contrôlé avant d’être retenu : format A4, ratio, RVB 8 bits, poids minimal
-  (une page blanche ou un rendu cassé sont éliminés d’office) ;
-- `tools/jpeg-pdf.mjs` assemble ensuite le PDF **sans aucune dépendance** : les JPEG entrent tels
-  quels (`/DCTDecode`), octet pour octet, chaque page mesurant un A4 strict (595,276 × 841,89 pt).
+- chaque fichier est contrôlé avant d'être retenu : format A4, ratio, RVB 8 bits, poids minimal
+  (une page blanche ou un rendu cassé sont écartés d'office) ;
+- `tools/jpeg-pdf.mjs` assemble le PDF **sans aucune dépendance** : les JPEG entrent tels quels
+  (`/DCTDecode`), octet pour octet, chaque page mesurant un A4 strict (595,276 × 841,89 pt).
 
-Options : `--jpgs-only` (les images seules, sans PDF), `--quality 88` (JPEG plus légers, PDF plus petit).
-
-À régénérer après chaque modification du site : `build_carte.py` puis cette commande.
+Options : `--jpgs-only` (les images seules, sans PDF), `--quality 82` (JPEG et PDF plus légers),
+`--pages 10` (imposer le nombre de feuilles, pour un test).
 
 ## Générer les livrables imprimables (pipeline Chromium)
 

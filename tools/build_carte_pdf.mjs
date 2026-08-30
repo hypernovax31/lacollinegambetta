@@ -25,7 +25,7 @@
  * et cette fois le build s'arrête là-dessus au lieu de livrer silencieusement.
  */
 import { createServer } from 'node:http';
-import { copyFileSync, createReadStream, existsSync, mkdirSync, renameSync, rmSync, statSync } from 'node:fs';
+import { copyFileSync, createReadStream, existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync } from 'node:fs';
 import { basename, extname, join, normalize, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
@@ -40,7 +40,8 @@ const SRC = 'carte.html';
 const OUT_NAME = 'carte-a4.pdf';
 const IMAGES_DIR = 'carte-a4-pages';
 const STAGE = join(ROOT, '.carte-pdf');
-const PAGE_COUNT = 10;
+/* Le nombre de feuilles vient de carte.html (la pagination est mesurée, pas
+   devinée) ; --pages N permet de l'imposer dans un test. */
 const JPG_WIDTH = 2480;                  // 210 mm à 300 dpi
 const JPG_HEIGHT = 3508;                 // 297 mm à 300 dpi
 const JPG_SLACK = 6;                     // le liseré doré de la feuille (1 px par bord) s'ajoute au 210 × 297 mm
@@ -55,6 +56,20 @@ const flag = (name, def) => {
   return next && !next.startsWith('--') ? next : true;
 };
 const QUALITY = Number(flag('quality', 92));
+const EXPECTED_PAGES = Number(flag('pages', 0));
+
+/** Ce que build_carte.py a mesuré : à lui seul le garant de la fidélité. */
+function composition(file) {
+  const html = readFileSync(file, 'utf8');
+  const viewport = Number((html.match(/data-carte-viewport="(\d+)"/) || [])[1]);
+  const base = Number((html.match(/data-carte-base-w="([\d.]+)/) || [])[1]);
+  const fit = Number((html.match(/--carte-fit:\s*([\d.]+)/) || [])[1]);
+  if (!viewport || !base || !fit) {
+    throw new Error(`${basename(file)} : --carte-base-w / --carte-fit / data-carte-viewport absents — `
+      + `relancer python3 tools/build_carte.py`);
+  }
+  return { viewport, base, fit };
+}
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -139,6 +154,8 @@ async function main() {
   if (!existsSync(join(ROOT, SRC))) {
     throw new Error(`${SRC} introuvable — lancer d'abord : python3 tools/build_carte.py`);
   }
+  const comp = composition(join(ROOT, SRC));
+  console.log(`composition : flux ${comp.base} px réduit × ${comp.fit.toFixed(4)} (fenêtre ${comp.viewport} px)`);
   const imagesDir = join(ROOT, IMAGES_DIR);
   rmSync(STAGE, { recursive: true, force: true });
   mkdirSync(STAGE, { recursive: true });
@@ -159,9 +176,11 @@ async function main() {
       args: [...chromiumBinary.args, '--no-sandbox', '--disable-dev-shm-usage'],
     });
     const context = await browser.newContext({
-      // Plus large que la feuille : sous média print, .print-page fait exactement
-      // 210 mm (= 793,7 px CSS) et × 3,125 = 2 480 px de sortie.
-      viewport: { width: 1200, height: 1600 },
+      // La largeur de composition du site, pas une largeur au hasard : les
+      // règles responsive du site (colonnes, empilement des prix) se décident
+      // sur la fenêtre, et build_carte.py a mesé le flux à cette largeur-là.
+      viewport: { width: comp.viewport, height: 1600 },
+      // 210 mm = 793,7 px CSS ; × 3,125 = 2 480 px, soit 300 dpi sur papier.
       deviceScaleFactor: 3.125,
     });
     await installLocalFonts(context, ROOT);
@@ -177,12 +196,17 @@ async function main() {
       ]);
     });
     const pages = await page.evaluate(() => document.querySelectorAll('#print-document .print-page').length);
-    if (pages !== PAGE_COUNT) throw new Error(`${PAGE_COUNT} feuilles A4 attendues dans ${SRC}, ${pages} trouvées`);
+    if (!pages) throw new Error(`aucune feuille .print-page dans ${SRC}`);
+    if (EXPECTED_PAGES && pages !== EXPECTED_PAGES) {
+      throw new Error(`--pages ${EXPECTED_PAGES} : ${SRC} en contient ${pages}`);
+    }
     const fonts = await checkPageFonts(page);
     console.log(`carte A4 : ${pages} feuilles ; polices = ${fonts.join(', ')}`);
 
-    await page.emulateMedia({ media: 'print' });
-    await page.waitForTimeout(200);   // laisse la mise en page print se stabiliser
+    // Média « screen » : c'est la mise en page écran du site que l'on recopie
+    // (ses règles responsive sont toutes sous @media screen). Le contenant A4,
+    // lui, est posé par la feuille de style de carte.html.
+    await page.waitForTimeout(200);   // laisse la mise en page se stabiliser
 
     const sheets = page.locator('#print-document .print-page');
     for (let i = 0; i < pages; i++) {
@@ -190,12 +214,12 @@ async function main() {
       // overflow:hidden — une page trop longue serait rognée à l'écran comme ici,
       // sans un bruit. On mesure, et on s'arrête.
       const debord = await sheets.nth(i).evaluate((el) => {
-        const r = el.getBoundingClientRect();
-        let bas = r.bottom;
-        for (const node of el.querySelectorAll('.print-page__content > *')) {
-          bas = Math.max(bas, node.getBoundingClientRect().bottom);
-        }
-        return +Math.max(0, bas - r.bottom).toFixed(2);
+        const zone = el.querySelector('.print-page__content');
+        if (!zone) return 0;
+        const flow = zone.querySelector('.carte-flow');
+        const z = zone.getBoundingClientRect();
+        const f = (flow || el).getBoundingClientRect();   // déjà transformé
+        return +Math.max(0, f.bottom - z.bottom, f.right - z.right).toFixed(2);
       });
       if (debord > SHEET_OVERFLOW_PX) {
         throw new Error(`feuille ${i + 1} : le contenu dépasse le bas de la feuille de ${debord} px `

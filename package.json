@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "build:print": "node tools/build_browser_print.mjs",
-    "build:carte-pdf": "node tools/build_carte_pdf.mjs"
+    "build:carte-pdf": "node tools/build_carte_pdf.mjs",
+    "build:carte": "python3 tools/build_carte.py && node tools/build_carte_pdf.mjs"
   },
   "devDependencies": {
     "@fontsource/cinzel": "^5.3.0",

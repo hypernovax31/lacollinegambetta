@@ -1,0 +1,289 @@
+{
+ "generator": "measure_carte.mjs",
+ "index_hash": "e7391f65a17be636",
+ "viewport": 1180,
+ "fonts": [
+  "Cinzel 400",
+  "Cinzel 700",
+  "Cinzel 800",
+  "Cinzel 900",
+  "Montserrat 400",
+  "Montserrat 400 italic",
+  "Montserrat 700"
+ ],
+ "sections": {
+  "entrees": {
+   "flow_width": 1140,
+   "gap": 18,
+   "column_gap": 18,
+   "blocks": [
+    {
+     "i": 0,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Entrées",
+     "h": 427.08,
+     "w": 1140
+    },
+    {
+     "i": 1,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Planches & croques",
+     "h": 329.59,
+     "w": 1140
+    },
+    {
+     "i": 2,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Omelettes",
+     "h": 357.98,
+     "w": 1140
+    }
+   ]
+  },
+  "plats": {
+   "flow_width": 1140,
+   "gap": 18,
+   "column_gap": 18,
+   "blocks": [
+    {
+     "i": 0,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Plats",
+     "h": 449.31,
+     "w": 1140
+    },
+    {
+     "i": 1,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Burgers",
+     "h": 307.44,
+     "w": 1140
+    },
+    {
+     "i": 2,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Salades",
+     "h": 307.44,
+     "w": 1140
+    },
+    {
+     "i": 3,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Pâtes",
+     "h": 209.88,
+     "w": 1140
+    },
+    {
+     "i": 4,
+     "tag": "article",
+     "cls": "panel panel--accent",
+     "titre": "Assiette de frites",
+     "h": 105.61,
+     "w": 1140
+    }
+   ]
+  },
+  "desserts": {
+   "flow_width": 1140,
+   "gap": 18,
+   "column_gap": 18,
+   "blocks": [
+    {
+     "i": 0,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Desserts",
+     "h": 473.86,
+     "w": 1140
+    },
+    {
+     "i": 1,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Glaces",
+     "h": 441.31,
+     "w": 1140
+    },
+    {
+     "i": 2,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Fromages",
+     "h": 266.81,
+     "w": 1140
+    }
+   ]
+  },
+  "menus": {
+   "flow_width": 1140,
+   "gap": 22,
+   "column_gap": 22,
+   "blocks": [
+    {
+     "i": 0,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Formules",
+     "h": 472.16,
+     "w": 1140
+    },
+    {
+     "i": 1,
+     "tag": "div",
+     "cls": "menus-duo",
+     "titre": "Petit déjeuner",
+     "h": 508.75,
+     "w": 1140
+    }
+   ]
+  },
+  "boissons": {
+   "flow_width": 1140,
+   "gap": 18,
+   "column_gap": 18,
+   "blocks": [
+    {
+     "i": 0,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Boissons fraîches",
+     "h": 586.63,
+     "w": 1140
+    },
+    {
+     "i": 1,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Boissons chaudes",
+     "h": 406.95,
+     "w": 1140
+    },
+    {
+     "i": 2,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Apéritifs",
+     "h": 410.64,
+     "w": 1140
+    },
+    {
+     "i": 3,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Whiskies",
+     "h": 325.83,
+     "w": 1140
+    },
+    {
+     "i": 4,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Digestifs",
+     "h": 325.83,
+     "w": 1140
+    },
+    {
+     "i": 5,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Bières",
+     "h": 670.17,
+     "w": 1140
+    },
+    {
+     "i": 6,
+     "tag": "p",
+     "cls": "hh-banner",
+     "titre": "",
+     "h": 19,
+     "w": 1140
+    }
+   ]
+  },
+  "vins": {
+   "flow_width": 1140,
+   "gap": 18,
+   "column_gap": 18,
+   "blocks": [
+    {
+     "i": 0,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Vin rouge",
+     "h": 560.31,
+     "w": 1140
+    },
+    {
+     "i": 1,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Vin blanc",
+     "h": 360.63,
+     "w": 1140
+    },
+    {
+     "i": 2,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Vin rosé",
+     "h": 240.81,
+     "w": 1140
+    },
+    {
+     "i": 3,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Bulles",
+     "h": 240.81,
+     "w": 1140
+    }
+   ]
+  },
+  "cocktails": {
+   "flow_width": 1140,
+   "gap": 18,
+   "column_gap": 18,
+   "blocks": [
+    {
+     "i": 0,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Cocktails classiques",
+     "h": 458.38,
+     "w": 1140
+    },
+    {
+     "i": 1,
+     "tag": "div",
+     "cls": "duo-grid",
+     "titre": "Spritz & fraîcheur",
+     "h": 433.23,
+     "w": 1140
+    },
+    {
+     "i": 2,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Élégance & saveurs",
+     "h": 495.28,
+     "w": 1140
+    },
+    {
+     "i": 3,
+     "tag": "article",
+     "cls": "panel",
+     "titre": "Mocktails",
+     "h": 520.42,
+     "w": 1140
+    }
+   ]
+  }
+ }
+}
