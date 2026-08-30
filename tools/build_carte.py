@@ -803,6 +803,17 @@ html.carte-doc .carte-flow[data-sec="cocktails"] .price-list--cols {
 }
 /* Le duo empilé ne doit pas étirer ses panneaux pour remplir la feuille. */
 html.carte-doc .carte-flow[data-sec="cocktails"] .duo-grid > .panel { flex: 0 1 auto !important; }
+
+/* En-têtes de contenances du tableau des vins : le site les compose à 12,48 px,
+   ce qui donne 5,3 pt une fois la feuille réduite — le seul endroit de la carte
+   où un chiffre aussi petit sert à quelque chose d'essentiel (savoir à quel
+   format correspond un prix). On les remonte au corps d'un prix et on reprend
+   immédiatement la place gagnée sous l'en-tête, pour que la feuille tienne
+   toujours sur une page : la hauteur du flux reste à portée du cap. */
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table th {
+  font-size: 15.4px !important;
+  padding-bottom: 4.5px !important;
+}
 """
 
 

@@ -1,7 +1,7 @@
 {
  "generator": "tools/measure_carte.mjs",
  "index_hash": "05d6f894a2a70dac",
- "css_hash": "392bc72739a26acb",
+ "css_hash": "c242dcf30b3f31c8",
  "viewport": 1180,
  "base_width": 1140,
  "fonts": [
@@ -130,25 +130,25 @@
      "i": 0,
      "tag": "article",
      "cls": "panel",
-     "h": 560.31
+     "h": 560.81
     },
     {
      "i": 1,
      "tag": "article",
      "cls": "panel",
-     "h": 360.63
+     "h": 361.13
     },
     {
      "i": 2,
      "tag": "article",
      "cls": "panel",
-     "h": 240.81
+     "h": 241.31
     },
     {
      "i": 3,
      "tag": "article",
      "cls": "panel",
-     "h": 240.81
+     "h": 241.31
     }
    ]
   },

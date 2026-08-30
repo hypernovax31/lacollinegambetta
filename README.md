@@ -31,6 +31,11 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
   7,6 pt) et **lui seul** — l'onglet cocktails se compose à × 0,5353. Une carte
   entière à 7,2 pt pour éviter une feuille orpheline n'aurait pas été un bon
   échange ; deux feuilles un peu plus serrées, si.
+- **En-têtes de contenances de la feuille Vins remontés à 6,6 pt.** Le site les
+  compose à 12,48 px, soit 5,3 pt une fois la feuille réduite — trop petit pour
+  un libellé dont dépend la lecture d'un prix. `tools/build_carte.py` les passe à
+  15,4 px et reprend la place gagnée sous la ligne d'en-tête (`padding-bottom`),
+  ce qui laisse la feuille sur une page à 98 % et le facteur global intact.
 - **Le bloc est centré dans la feuille, après réduction.** La composition fait
   1 140 px et la zone utile 184 mm : la marge se calcule donc en millimètres de
   papier, `margin-left: max(0px, calc((var(--carte-zone-w) - var(--carte-base-w) *
