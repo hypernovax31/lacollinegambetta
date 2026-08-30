@@ -743,9 +743,15 @@ html.carte-doc .print-page__content {
 /* Sur le site, .print-page est réservé à l'impression et reste caché à l'écran.
    Ici, c'est le document lui-même : il doit être visible dans les deux médias. */
 html.carte-doc #print-document .print-page { display: block !important; }
+/* Le bloc est composé à --carte-base-w puis réduit : son emplacement, lui, est
+   en millimètres de papier. Le centrage se calcule donc APRÈS réduction, dans la
+   feuille — et non dans le repère de composition, sinon le contenu part à droite
+   de la largeur perdue. max() protège le cadre (filet à 8 mm du bord) si un
+   jour la composition débordait de la zone utile. */
+html.carte-doc { --carte-zone-w: %(zone_w).3fmm; }
 html.carte-doc .carte-flow {
   width: var(--carte-base-w);
-  margin-left: var(--carte-pad-x, 0px);
+  margin-left: max(0px, calc((var(--carte-zone-w) - var(--carte-base-w) * var(--carte-fit)) / 2));
   transform: scale(var(--carte-fit));
   transform-origin: top left;
 }
@@ -1103,7 +1109,6 @@ def main() -> None:
     base_fit, fit, _, cap, flow_w, note = choose_fit(metrics)
     plan, cap, _, fits = layout(metrics, fit, relax=True)
 
-    pad_x = max(0.0, (ZONE_W_PX / fit - flow_w) / 2)
     pages: list[str] = [page_shell(1, "cover", "", extract_cover(src))]
     labels = ["couverture (site, encadrée sur la feuille)"]
     for sid in SECTIONS:
@@ -1139,7 +1144,6 @@ def main() -> None:
 html.carte-doc {{
   --carte-base-w: {flow_w:g}px;
   --carte-fit: {fit:.6f};
-  --carte-pad-x: {pad_x:.2f}px;   /* le bloc réduit est centré dans la zone utile */
 }}
 </style>
 </head>

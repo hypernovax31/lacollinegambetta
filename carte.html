@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="carte-doc" data-carte-viewport="1180"       data-carte-index-hash="e7391f65a17be636" data-carte-base-w="1140">
+<html lang="fr" class="carte-doc" data-carte-viewport="1180"       data-carte-index-hash="ac6da04352b2b8d1" data-carte-base-w="1140">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -3958,17 +3958,76 @@ html :is(#interior-menu, #print-document) .hh-line__hh::before {
   html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table { min-width: 0 !important; }
   html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .table-wrap { overflow: visible; }
   html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table thead { display: none; }
-  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table tbody tr { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; column-gap: 10px; row-gap: 2px; align-items: start; border-bottom: 1px solid rgba(216, 178, 87, .18); padding-bottom: 8px; margin-bottom: 8px; }
-  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table.wine-table--short tbody tr { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td.wine-name { grid-column: 1 / -1; }
-  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td:not(.wine-name):not(.wine-no) { justify-self: stretch; text-align: left; }
-  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td:not(.wine-name):not(.wine-no)::before { content: attr(data-label); }
-  /* le N° reprend place à gauche de l'appellation (il ne forme plus une ligne perdue) */
-  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table tr:has(.wine-no) td.wine-name { grid-column: 2 / -1; }
-  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table tr:has(.wine-no) td.wine-no {
-    grid-column: 1 / 2; grid-row: 1; text-align: right; padding-right: 8px;
-    border-bottom: 0 !important; font-size: 0.76rem; color: var(--muted);
+  /* Une ligne de vin = deux bandes : l'appellation (au rang du numéro), puis
+     ses quatre prix dans quatre parts égales. Le numéro garde une colonne à lui,
+     étroite, pour que l'appellation commence tout de suite après lui au lieu
+     d'être rejetée au quart de la ligne. */
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table tbody tr {
+    display: grid;
+    grid-template-columns: 2.4em repeat(4, minmax(0, 1fr)) !important;
+    column-gap: 8px;
+    row-gap: 6px;
+    align-items: center;
+    border-bottom: 1px solid rgba(216, 178, 87, .22);
+    padding: 9px 0 10px;
   }
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td {
+    padding: 0;
+    border-bottom: 0;            /* un seul filet par vin, pas un par cellule */
+    background: transparent !important;
+  }
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td.wine-no {
+    display: block;
+    grid-column: 1;
+    grid-row: 1;
+    text-align: left;
+    font-family: 'Cinzel', serif;
+    font-size: 0.74rem;
+    line-height: 1;
+    color: var(--muted);
+  }
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td.wine-name {
+    grid-column: 2 / -1;
+    grid-row: 1;
+    text-align: left;
+    line-height: 1.5;            /* les deux lignes d'une appellation respirent */
+    min-height: 3em;             /* une seule ligne occupe la même place : le
+                                    défilement reste régulier, vin après vin */
+  }
+  /* pas de numéro dans les Bulles : l'appellation prend toute la ligne */
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table tr:not(:has(.wine-no)) td.wine-name {
+    grid-column: 1 / -1;
+  }
+  /* les prix sont les dernières cellules de la ligne : on les pose une par une,
+     hors appellation et numéro, qui gardent la ligne du haut */
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td:not(.wine-name):not(.wine-no):nth-last-of-type(4) { grid-column: 2; grid-row: 2; }
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td:not(.wine-name):not(.wine-no):nth-last-of-type(3) { grid-column: 3; grid-row: 2; }
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td:not(.wine-name):not(.wine-no):nth-last-of-type(2) { grid-column: 4; grid-row: 2; }
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td:not(.wine-name):not(.wine-no):nth-last-of-type(1) { grid-column: 5; grid-row: 2; }
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td:not(.wine-name):not(.wine-no) {
+    justify-self: stretch !important;   /* chaque prix occupe sa part entière :
+                                           les quatre colonnes tombent d'aplomb
+                                           sous l'appellation, sans se rassembler
+                                           au centre de leur case */
+    text-align: left !important;
+    min-width: 0;
+  }
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td:not(.wine-name):not(.wine-no)::before {
+    content: attr(data-label);
+    white-space: nowrap;
+    font-size: 0.74rem;         /* les formats se lisent sans plisser l'œil */
+    margin-bottom: 3px;
+  }
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table td:not(.wine-name):not(.wine-no) {
+    font-size: 1rem !important;  /* le prix, lui, domine sa colonne */
+    font-weight: 700;
+  }
+  /* coupes et bouteilles : deux prix, deux moitiés */
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table.wine-table--short tbody tr {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table.wine-table--short td:not(.wine-name):not(.wine-no):nth-last-of-type(2) { grid-column: 1; }
+  html :is(#interior-menu, #print-document) :is(#vins, [data-sec="vins"]) .wine-table.wine-table--short td:not(.wine-name):not(.wine-no):nth-last-of-type(1) { grid-column: 2; }
 }
 
 /* ===== Cocktails ===== */
@@ -4619,9 +4678,15 @@ html.carte-doc .print-page__content {
 /* Sur le site, .print-page est réservé à l'impression et reste caché à l'écran.
    Ici, c'est le document lui-même : il doit être visible dans les deux médias. */
 html.carte-doc #print-document .print-page { display: block !important; }
+/* Le bloc est composé à --carte-base-w puis réduit : son emplacement, lui, est
+   en millimètres de papier. Le centrage se calcule donc APRÈS réduction, dans la
+   feuille — et non dans le repère de composition, sinon le contenu part à droite
+   de la largeur perdue. max() protège le cadre (filet à 8 mm du bord) si un
+   jour la composition débordait de la zone utile. */
+html.carte-doc { --carte-zone-w: 184.000mm; }
 html.carte-doc .carte-flow {
   width: var(--carte-base-w);
-  margin-left: var(--carte-pad-x, 0px);
+  margin-left: max(0px, calc((var(--carte-zone-w) - var(--carte-base-w) * var(--carte-fit)) / 2));
   transform: scale(var(--carte-fit));
   transform-origin: top left;
 }
@@ -4651,7 +4716,6 @@ html.carte-doc .carte-flow[data-sec="cocktails"] .duo-grid > .panel { flex: 0 1 
 html.carte-doc {
   --carte-base-w: 1140px;
   --carte-fit: 0.568687;
-  --carte-pad-x: 41.44px;   /* le bloc réduit est centré dans la zone utile */
 }
 </style>
 </head>

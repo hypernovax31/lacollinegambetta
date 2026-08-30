@@ -31,6 +31,13 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
   7,6 pt) et **lui seul** — l'onglet cocktails se compose à × 0,5353. Une carte
   entière à 7,2 pt pour éviter une feuille orpheline n'aurait pas été un bon
   échange ; deux feuilles un peu plus serrées, si.
+- **Le bloc est centré dans la feuille, après réduction.** La composition fait
+  1 140 px et la zone utile 184 mm : la marge se calcule donc en millimètres de
+  papier, `margin-left: max(0px, calc((var(--carte-zone-w) - var(--carte-base-w) *
+  var(--carte-fit)) / 2))` — calculée dans le repère de composition, elle partait
+  de 36 px à droite (9 mm sur papier). Le `max()` protège le cadre : le contenu
+  reste à 11 mm du filet, jamais dessus. Chaque feuille suit son propre facteur,
+  y compris les deux qui se composent plus serré.
 - Les feuilles gardent le bandeau **COLLINE GAMBETTA** en tête, le pied légal et
   la pagination en bas à droite : un document imprimé isolé doit se suffire.
 - Aperçu : ouvrir `carte.html` — les pages gardent le ratio A4 et s'adaptent à la
@@ -141,6 +148,31 @@ deux colonnes de l'onglet Boissons ne serront jamais assez pour gêner un prix.
 Sous 640 px la typographie ne rétrécit plus (plancher de lisibilité en `!important`) :
 quand ça manque de place, c'est la mise en page qui change de mode, jamais la taille de
 police qui descend sous le lisible.
+
+### Nos Vins sur téléphone : deux bandes par bouteille
+
+L'onglet Vins est le seul à avoir **quatre prix par ligne** (12,5 / 25 / 50 / 75 cl) :
+c'est lui qui sature en premier. Sous le repère `@stack-rows vins` (706 px), chaque vin
+forme une grille à deux bandes — `2.4em` pour le numéro, puis quatre parts égales :
+
+- l'appellation occupe les quatre parts, **alignée à gauche au ras du numéro** (le numéro
+  est centré sur elle, `align-items: center`), et non rejetée au quart de la ligne comme
+  quand le numéro formait une colonne `1fr` ;
+- sous elle, les quatre prix tombent **d'aplomb** dans leurs parts, chacun coiffé de son
+  format (`::before` reprenant `data-label`), en `1rem` gras pendant que l'étiquette reste
+  à `0,74rem` ;
+- l'appellation réserve deux lignes (`min-height: 3em` pour `line-height: 1.5`) : un vin qui
+  tient sur une ligne occupe la même hauteur que les autres, et le défilement reste
+  équidistant — 103 px par vin à 390 px, au lieu de 95 / 113 / 130 px en escalier ;
+- un seul filet sépare deux vins (les bordures par cellule créaient trois tirets
+  décalés sous chaque ligne) ;
+- `Bulles`, qui n'a ni numéro ni 12,5 cl, prend deux moitiés (`wine-table--short`) et
+  l'appellation toute la ligne.
+
+Les colonnes de prix portent `!important` : le mode « comme les Bières pression » du site
+les fixe en `minmax(max-content, 48px) !important`, et sans lui la première part gonflait
+à 106 px sous le poids de l'appellation. Contrôle : `node tools/check-responsive.mjs --tabs vins`
+— zéro chevauchement et zéro débordement de 1300 à 320 px.
 
 ## Bières pression : la contenance remplace « Pinte »
 
