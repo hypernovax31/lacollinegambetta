@@ -14,6 +14,7 @@ import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import chromiumBinary, { setupLambdaEnvironment } from '@sparticuz/chromium';
+import { installLocalFonts, checkPageFonts, assertPdfFonts } from './local-fonts.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const OUT_NAME = 'carte-a4.pdf';
@@ -81,6 +82,10 @@ async function main() {
       viewport: { width: 900, height: 1273 },
       deviceScaleFactor: 2,
     });
+    // Cinzel et Montserrat sont servies par node_modules/@fontsource : sans ces
+    // fichiers (ou sans réseau), Chromium composerait en Open Sans et le PDF
+    // n'aurait plus la police du site.
+    await installLocalFonts(context, ROOT);
     const page = await context.newPage();
     await page.goto(url, { waitUntil: 'networkidle' });
     await page.evaluate(async () => {
@@ -93,14 +98,12 @@ async function main() {
     });
     const info = await page.evaluate(() => ({
       pages: document.querySelectorAll('#print-document .print-page').length,
-      fontStatus: document.fonts.status,
-      cinzel: document.fonts.check('700 24px Cinzel'),
-      montserrat: document.fonts.check('400 10px Montserrat'),
     }));
     if (info.pages !== PAGE_COUNT) {
       throw new Error(`expected ${PAGE_COUNT} A4 pages in carte.html, found ${info.pages}`);
     }
-    console.log(`carte A4: ${info.pages} pages; fonts=${info.fontStatus}; Cinzel=${info.cinzel}; Montserrat=${info.montserrat}`);
+    const fonts = await checkPageFonts(page);
+    console.log(`carte A4: ${info.pages} pages; polices chargées = ${fonts.join(', ')}`);
 
     // Print media: every .print-page-frame is a 210 mm x 297 mm sheet.
     await page.emulateMedia({ media: 'print' });
@@ -112,6 +115,8 @@ async function main() {
       preferCSSPageSize: true,
       margin: { top: '0', right: '0', bottom: '0', left: '0' },
     });
+    const embedded = assertPdfFonts(out);
+    console.log(`polices embarquées dans le PDF : ${embedded.join(', ')}`);
     await context.close();
   } finally {
     if (browser) await browser.close();

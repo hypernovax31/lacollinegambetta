@@ -259,11 +259,48 @@ html.carte-doc .print-page__content {
   bottom: 27mm !important;
 }
 
-/* Titres pastilles violettes : une seule taille partout. */
+/* Titres de section à plat : la carte imprimée ne reprend pas la pastille
+   du site (fond violet + liseré or) — seulement le texte et ses deux étoiles.
+   Une seule taille partout, comme à l'écran. */
 html.carte-doc .print-page .panel__title {
   font-size: 9.2pt !important;
   letter-spacing: .12em !important;
-  padding: 1.7mm 6mm !important;
+  padding: 0.6mm 0 !important;
+  background: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  min-height: 0 !important;
+  color: var(--violet-900) !important;
+}
+/* Les étoiles du titre sont dessinées (pas de glyphe ✦) : sur papier, aucune
+   police système ne vient garantir ce caractère, et un carré vide se imprime mal.
+   Même procédé que le losange doré de la couverture. */
+/* Ornements ✦ du bandeau et du pied de page : losanges dessinés, jamais un
+   glyphe — Cinzel ne le contient pas, et une police système absente du poste
+   qui imprime le ferait sortir en carré. */
+html.carte-doc .print-page i.carte-star {
+  display: inline-block;
+  width: .6em;
+  height: .6em;
+  vertical-align: .04em;
+  background: currentColor;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 62%);
+}
+html.carte-doc .print-page .panel__title::before,
+html.carte-doc .print-page .panel__title::after {
+  content: '' !important;
+  display: inline-block !important;
+  width: 2.1mm;
+  height: 2.1mm;
+  margin: 0 1.9mm;
+  vertical-align: 0.25mm;
+  flex: 0 0 auto;
+  background: var(--gold-500) !important;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 62%);
+  color: transparent !important;
+  font-size: 0 !important;
+  text-shadow: none !important;
 }
 
 /* Rythme régulier lignes / colonnes. */
@@ -935,12 +972,17 @@ html.carte-doc .print-page .price-line__price,
 html.carte-doc .print-page .hh-line__price,
 html.carte-doc .print-page .hh-line__hh,
 html.carte-doc .print-page .hh-line__row .grand-price,
-html.carte-doc .print-page .food-card__head strong,
 html.carte-doc .print-page .beer-row__price,
 html.carte-doc .print-page .beer-row__hh,
 html.carte-doc .print-page .wine-table td:not(.wine-name):not(.wine-no) {
   font-family: 'Cinzel', serif !important;
   font-weight: 800 !important;
+  font-style: normal !important;
+}
+/* Sur le site, le prix d'une fiche est un <strong> Cinzel 700 : même graisse ici. */
+html.carte-doc .print-page .food-card__head strong {
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
   font-style: normal !important;
 }
 html.carte-doc .print-page .qty,
@@ -1305,8 +1347,54 @@ html.carte-doc .print-page--plats .accent-band p {
   margin-top: 0.8mm !important;
   font-size: 6.6pt !important;
 }
+/* ——————————————————————————————————————————————————————————
+   Dernier mot sur les titres de section (après les réglages par
+   feuille) : la pastille est retirée PARTOUT — fond, liseré, ombre,
+   min-height et padding de cadrage — et la taille redevient unique,
+   comme à l'écran. Les feuilles denses (Plats, Vins, Cocktails) y
+   gagnent les 2 mm qui manquaient en bas de page.
+   —————————————————————————————————————————————————————————— */
+html.carte-doc .print-page .panel__title,
+html.carte-doc .print-page--plats .panel__title,
+html.carte-doc .print-page--entrees .panel__title,
+html.carte-doc .print-page--desserts .panel__title,
+html.carte-doc .print-page--menus .panel__title,
+html.carte-doc .print-page--drinks .panel__title,
+html.carte-doc .print-page--drinks-secondary .panel__title,
+html.carte-doc .print-page--vins .panel__title,
+html.carte-doc .print-page--cocktails .panel__title {
+  min-height: 0 !important;
+  padding: .6mm 0 !important;
+  background: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--violet-900) !important;
+  font-size: 9.2pt !important;
+  letter-spacing: .12em !important;
+}
+
 """
 
+
+
+def remplacer_glyphes_a_risque(html: str) -> str:
+    """Le corps de la carte imprimée ne doit dépendre d'aucune police système.
+
+    - « ✦ » n'est pas dans Cinzel : remplacé par un losange dessiné en CSS ;
+    - les exposants unicode (ᵉ, ʳ, â€¦) non plus : rendus en <sup>, la police
+      du site suffit et le rendu est identique.
+    La feuille de style copiée depuis index.html reste intacte (séparation sur
+    la première balise </style>).
+    """
+    head, sep, body = html.partition("</style>")
+    if not sep:
+        return html
+    body = body.replace("ʳᵉ", "<sup>re</sup>").replace("ᵉ", "<sup>e</sup>")
+    for src, dst in (("ʳ", "r"), ("ᵈ", "d"), ("ˢ", "s"), ("ᵗ", "t"), ("ᵖ", "p"), ("ᶜ", "c")):
+        body = body.replace(src, f"<sup>{dst}</sup>")
+    body = body.replace("✦", '<i class="carte-star" aria-hidden="true"></i>')
+    return head + sep + body
 
 def main() -> None:
     style = INDEX.split("<style>", 1)[1].split("</style>", 1)[0]
@@ -1407,6 +1495,7 @@ def main() -> None:
 </body>
 </html>
 '''
+    html = remplacer_glyphes_a_risque(html)
     OUT.write_text(html, encoding="utf-8")
     print(f"wrote {OUT} ({len(html)} bytes, {len(pages_html)} pages)")
     for i, name in enumerate(names, 1):

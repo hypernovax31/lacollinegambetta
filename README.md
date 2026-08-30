@@ -77,14 +77,18 @@ Contrôle et recalcul (Chromium headless, mesures sur le rendu réel — pas de 
 
 ```bash
 npm install
-node tools/check-responsive.mjs --local-fonts                                  # balayage 1300 → 320 px
-node tools/check-responsive.mjs --local-fonts --min 272 --max 1700 --step 8     # contrôle large
-node tools/check-responsive.mjs --breakpoints --local-fonts --write             # re-mesure les repères
+node tools/check-responsive.mjs                                  # balayage 1300 → 320 px
+node tools/check-responsive.mjs --min 272 --max 1700 --step 8    # contrôle large
+node tools/check-responsive.mjs --breakpoints --write            # re-mesure les repères
 ```
 
-`--local-fonts` lit Cinzel et Montserrat dans `node_modules/@fontsource` (déjà en
-`devDependencies`) : sans les vraies polices, les largeurs de texte — donc les repères —
-seraient fausses. Après un libellé ou un prix modifié, relancer `--breakpoints --write`
+Les mesures exigent les vraies fontes du site : `tools/local-fonts.mjs` sert Cinzel et
+Montserrat depuis `node_modules/@fontsource` (déjà en `devDependencies`), et l'outil
+refuse de mesurer si elles ne sont pas réellement chargées — sans elles, les largeurs de
+texte — donc les repères — seraient fausses. `--remote-fonts` force le passage par
+Google Fonts. Les deux générateurs de PDF (`build_carte_pdf.mjs`, `build_browser_print.mjs`)
+utilisent la même source et **vérifient les polices embarquées dans le PDF produit** :
+un build hors-ligne ne peut plus sortir une carte composée en Open Sans par erreur. Après un libellé ou un prix modifié, relancer `--breakpoints --write`
 puis le contrôle : les repères suivent le contenu. Un repère à `0px` est volontaire
 (aucune largeur ne descend à 0) : il désactive un mode devenu inutile, par exemple les
 deux colonnes de l'onglet Boissons ne serront jamais assez pour gêner un prix.

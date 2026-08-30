@@ -3,8 +3,10 @@
  * Build the printable card from the real website with Chromium.
  *
  * Unlike the former ImageMagick renderer, this script loads index.html,
- * waits for the website fonts, lets the page build its nine print pages, and
- * exports the exact print DOM to a PDF plus one high-resolution JPG per page.
+ * loads the website fonts from node_modules/@fontsource (so an offline build
+ * cannot silently fall back to a system font), lets the page build its nine
+ * print pages, and exports the exact print DOM to a PDF plus one
+ * high-resolution JPG per page.
  */
 import { createServer } from 'node:http';
 import { createReadStream, existsSync, mkdirSync, renameSync, rmSync, statSync } from 'node:fs';
@@ -14,6 +16,7 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { chromium } from 'playwright';
 import chromiumBinary, { setupLambdaEnvironment } from '@sparticuz/chromium';
+import { installLocalFonts, checkPageFonts, assertPdfFonts } from './local-fonts.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const OUT = join(ROOT, 'print-assets');
@@ -124,6 +127,7 @@ async function main() {
       viewport: { width: 1600, height: 900 },
       deviceScaleFactor: 3.125,
     });
+    await installLocalFonts(context, ROOT);
     const page = await context.newPage();
     await page.goto(url, { waitUntil: 'networkidle' });
     await page.evaluate(async () => {
@@ -138,11 +142,9 @@ async function main() {
 
     const info = await page.evaluate(() => ({
       pages: document.querySelectorAll('.print-page').length,
-      fontStatus: document.fonts.status,
-      cinzel: document.fonts.check('700 24px Cinzel'),
-      montserrat: document.fonts.check('500 16px Montserrat'),
     }));
-    console.log(`website print DOM: ${info.pages} pages; fonts=${info.fontStatus}; Cinzel=${info.cinzel}; Montserrat=${info.montserrat}`);
+    const fonts = await checkPageFonts(page);
+    console.log(`website print DOM: ${info.pages} pages; polices chargées = ${fonts.join(', ')}`);
 
     await page.pdf({
       path: join(STAGE, PDF_NAME),
@@ -151,6 +153,7 @@ async function main() {
       preferCSSPageSize: true,
       margin: { top: '0', right: '0', bottom: '0', left: '0' },
     });
+    console.log(`polices embarquées dans le PDF : ${assertPdfFonts(join(STAGE, PDF_NAME)).join(', ')}`);
 
     const pages = page.locator('.print-page');
     for (let i = 0; i < PAGE_COUNT; i += 1) {

@@ -19,12 +19,12 @@
  *       --write les écrit dans index.html (marqueurs @stack-wide / @stack-rows).
  *
  * Options communes : --tabs entrees,boissons --step 8 --min 320 --max 1300
- *                    --margin 3 --json /tmp/rapport.json --local-fonts
+ *                    --margin 3 --json /tmp/rapport.json [--remote-fonts]
  *
- * Le site charge Cinzel et Montserrat depuis Google Fonts. Sans réseau, ces
- * polices ne se chargent pas et les mesures sont fausses : ajouter
- * --local-fonts pour les lire dans node_modules/@fontsource
- * (npm i -D @fontsource/cinzel @fontsource/montserrat).
+ * Les mesures exigent les vraies fontes du site (Cinzel, Montserrat) : elles
+ * sont lues automatiquement dans node_modules/@fontsource (npm install les
+ * pose). Sans elles, les largeurs de texte — donc les repères — seraient
+ * fausses ; --remote-fonts force au contraire le passage par Google Fonts.
  */
 import { createServer } from 'node:http';
 import { createReadStream, existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
@@ -32,6 +32,7 @@ import { extname, join, normalize, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { chromium } from 'playwright';
 import chromiumBinary, { setupLambdaEnvironment } from '@sparticuz/chromium';
+import { installLocalFonts, checkPageFonts } from './local-fonts.mjs';
 
 const ROOT = resolve(new URL('..', import.meta.url).pathname);
 const INDEX = join(ROOT, 'index.html');
@@ -106,27 +107,6 @@ function serve(root, mode = {}) {
     server.once('error', fail);
     server.listen(0, '127.0.0.1', () => done({ server, url: `http://127.0.0.1:${server.address().port}/index.html#menu-nav-anchor` }));
   });
-}
-
-/* Polices locales @fontsource (mêmes fontes que Google Fonts → mêmes métriques). */
-function localFontCss() {
-  const base = join(ROOT, 'node_modules', '@fontsource');
-  if (!existsSync(join(base, 'cinzel'))) return null;
-  const unicode = {
-    latin: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
-    'latin-ext': 'U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF',
-  };
-  const faces = [];
-  const spec = [['cinzel', 'Cinzel', [400, 500, 600, 700, 800, 900], ['normal']], ['montserrat', 'Montserrat', [400, 500, 600, 700, 800], ['normal', 'italic']]];
-  for (const [dir, family, weights, styles] of spec) {
-    for (const weight of weights) for (const style of styles) for (const subset of ['latin', 'latin-ext']) {
-      const slug = subset === 'latin' ? dir : `${dir}-ext`;
-      const file = join(base, dir, 'files', `${slug}-${weight}-${style}.woff2`);
-      if (existsSync(file)) faces.push({ url: `/__localfont/${slug}-${weight}-${style}.woff2`, file, weight, style, family, subset });
-    }
-  }
-  const css = faces.map(f => `@font-face{font-family:'${f.family}';font-style:${f.style};font-weight:${f.weight};font-display:block;src:url('${f.url}') format('woff2');unicode-range:${unicode[f.subset]};`).join('\n');
-  return { css, byUrl: new Map(faces.map(f => [f.url, f.file])) };
 }
 
 /* --------------------------------------------------------------------- sonde */
@@ -242,26 +222,14 @@ async function withPage(mode, run) {
       args: [...chromiumBinary.args, '--no-sandbox', '--disable-dev-shm-usage'],
     });
     const ctx = await browser.newContext({ viewport: { width: 1000, height: 900 } });
-    if (argv['local-fonts']) {
-      const local = localFontCss();
-      if (!local) throw new Error('@fontsource non installé : npm i -D @fontsource/cinzel @fontsource/montserrat');
-      await ctx.route(/fonts\.(googleapis|gstatic)\.com/, route => {
-        const u = route.request().url();
-        const cut = u.indexOf('/__localfont/');
-        if (cut > -1) {
-          const file = local.byUrl.get(u.slice(cut));
-          if (file) return route.fulfill({ status: 200, contentType: 'font/woff2', body: readFileSync(file) });
-        }
-        return route.fulfill({ status: 200, contentType: 'text/css', body: local.css });
-      });
-    }
+    if (!argv['remote-fonts']) await installLocalFonts(ctx, ROOT);
     const page = await ctx.newPage();
     await page.goto(url, { waitUntil: 'domcontentloaded' });
     await page.evaluate(() => document.fonts.ready.catch(() => {}));
-    const fonts = await page.evaluate(() => ({ cinzel: document.fonts.check('700 16px Cinzel'), montserrat: document.fonts.check('400 16px Montserrat') }));
-    if (!fonts.cinzel || !fonts.montserrat) {
-      console.warn(`⚠ polices du site non chargées (Cinzel=${fonts.cinzel}, Montserrat=${fonts.montserrat}) → mesures fausses.`);
-      console.warn('  hors réseau : ajouter --local-fonts');
+    try {
+      await checkPageFonts(page);   // document.fonts.check() ment en repli système : on regarde les fontes réellement chargées
+    } catch (e) {
+      throw new Error(`${e.message}\n  (sinon : npm install, puis relancer la mesure)`);
     }
     await page.evaluate(() => {
       const menu = document.getElementById('interior-menu');
