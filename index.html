@@ -3709,9 +3709,16 @@ html:not(.carte-doc) .control-btn {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
-html:not(.carte-doc) .menu-nav-wrap {
+/* Bandeau supérieur (Page de Garde / Menu & Carte) ancré en haut */
+html:not(.carte-doc) .top-controls {
   position: sticky;
   top: 0;
+  z-index: 1002;
+}
+/* Bandeau de sélection (Nos entrées, Nos plats…) ancré sous le bandeau supérieur */
+html:not(.carte-doc) .menu-nav-wrap {
+  position: sticky;
+  top: var(--top-ctrl-h, 0px);
   z-index: 1000;
   isolation: isolate;
   width: 100vw;
@@ -3765,7 +3772,7 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   }
   html:not(.carte-doc) .menu-nav-wrap.is-overflow {
     grid-template-columns: minmax(0, 1fr);
-    position: relative;
+    position: sticky;
   }
   html:not(.carte-doc) .menu-nav-hint {
     display: none;
@@ -4798,8 +4805,12 @@ function showView(view) {
     btnMenu.classList.add('active');
     animateScrollTo(0, 220);
     requestAnimationFrame(() => {
+      syncTopControlsHeight();
       syncMenuNavHints();
-      requestAnimationFrame(syncMenuNavHints);
+      requestAnimationFrame(() => {
+        syncTopControlsHeight();
+        syncMenuNavHints();
+      });
     });
   }
 }
@@ -4943,6 +4954,21 @@ function initMenuNavHints() {
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initMenuNavHints);
 else initMenuNavHints();
+
+/* ===== Mesure de la hauteur du bandeau supérieur pour ancrer la sélection juste en dessous ===== */
+function syncTopControlsHeight() {
+  const top = document.querySelector('.top-controls');
+  if (!top) return;
+  const h = top.offsetHeight;
+  document.documentElement.style.setProperty('--top-ctrl-h', h + 'px');
+}
+(function initTopCtrlHeight() {
+  const top = document.querySelector('.top-controls');
+  if (!top) return;
+  syncTopControlsHeight();
+  window.addEventListener('resize', syncTopControlsHeight);
+  if (window.ResizeObserver) new ResizeObserver(syncTopControlsHeight).observe(top);
+})();
 
 window.addEventListener('resize', sizeCoverMedallion);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeCoverMedallion);
