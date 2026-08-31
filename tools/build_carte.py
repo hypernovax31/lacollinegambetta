@@ -59,17 +59,17 @@ MERGE = {"boissons": [(0, 1), (2, 3, 4, 5, 6)],
 
 # Groupes de MERGE autorisés à passer en DEUX colonnes de lignes sur leur
 # feuille quand la hauteur manque (les quatre catégories boissons + bandeau
-# HH, les cocktails en deux pages) : par défaut les catégories s'empilent
-# pleine largeur, comme « Boissons fraîches + chaudes » ; si leur hauteur
-# cumulée dépasse la feuille, le plan de mise en page bascule en deux
-# colonnes de lignes les sections les plus grandes (mesurées par le probe
-# .carte-twocolsec-probe) jusqu'à ce que tout tienne. Le bandeau HH
-# (hh-banner) n'est jamais basculé : sa hauteur ne change pas, la bascule ne
-# l'atteint donc pas. La hauteur de l'unité est la somme des hauteurs de ses
-# blocs dans leur mode + les gaps, pas la hauteur d'une disposition côte à
-# côte.
-TWOC = {"boissons": [(2, 3, 4, 5, 6)],
-       "cocktails": [(0, 1, 2), (3, 4)]}
+# HH) : par défaut les catégories s'empilent pleine largeur, comme
+# « Boissons fraîches + chaudes » ; si leur hauteur cumulée dépasse la
+# feuille, le plan de mise en page bascule en deux colonnes de lignes les
+# sections les plus grandes (mesurées par le probe .carte-twocolsec-probe)
+# jusqu'à ce que tout tienne. Le bandeau HH (hh-banner) n'est jamais basculé :
+# sa hauteur ne change pas, la bascule ne l'atteint donc pas. La hauteur de
+# l'unité est la somme des hauteurs de ses blocs dans leur mode + les gaps,
+# pas la hauteur d'une disposition côte à côte. Les cocktails, eux, restent
+# toujours en une colonne (ligne par ligne, notes sous chaque libellé) : leur
+# police est volontairement plus petite, ce sont les pages les plus denses.
+TWOC = {"boissons": [(2, 3, 4, 5, 6)]}
 
 # Géométrie de la feuille, en accord avec les règles « contenant » plus bas.
 #
@@ -225,7 +225,7 @@ def split_flow(inner: str) -> list[str]:
 # chaque note et le facteur d'échelle monte — c'est le levier « taille de
 # police » demandé. Appliqué AVANT la mesure comme avant la composition : les
 # deux documents restent alignés (empreinte + hauteurs).
-_ARTICLE_RE = re.compile(r'<article class="(?:price-line|hh-line)"[^>]*>.*?</article>', re.S)
+_ARTICLE_RE = re.compile(r'<article class="price-line"[^>]*>.*?</article>', re.S)
 
 
 def _inline_note_in_article(article: str) -> str:
@@ -1098,7 +1098,7 @@ CARD_OVERRIDES = """
    leur espacement normal (padding 3 px) et la section forme une seule liste
    continue, comme « la section du bas regroupée avec celle du haut ». En
    mode deux colonnes de lignes (carte-2col), la règle plus spécifique
-   repasse le gap à 18 px. */
+   repasse la gouttière à 40 px (lecture) — l'écart de rangées, lui, reste 0. */
 #print-document .carte-flow [data-merge="1"] .price-list--cols,
 #print-document .carte-flow [data-merge="1"] .hh-list--cols {
   gap: 0 !important;
@@ -1142,6 +1142,13 @@ CARD_OVERRIDES = """
 #print-document .carte-flow [data-merge="1"] .hh-list__note {
   font-size: 11.5px !important;
 }
+/* Cocktails : prix et tarif HH un cran plus petits que l'intitulé — la
+   réduction générale de la page (fit) les fait déjà suivre, on marque en plus
+   la hiérarchie : le nom reste le premier mot de la ligne. */
+#print-document .carte-flow [data-merge="1"] .hh-line__price,
+#print-document .carte-flow [data-merge="1"] .hh-line__hh {
+  font-size: .92em !important;
+}
 /* Notes remontées dans la ligne (le générateur les a déplacées après le nom,
    en .carte-inline-note) : petites, en italique comme sur le site, en retrait
    — ce sont des informations de service, pas des noms. nowrap : une note ne
@@ -1178,7 +1185,15 @@ CARD_OVERRIDES = """
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols,
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list {
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 18px;
+  /* !important : la neutralisation 1-col pose gap: 0 !important (shorthand),
+     qui écraserait ces longhands sans !important — la gouttière doit gagner.
+     Seule la gouttière CENTRALE est élargie (40 px) : entre les prix de la
+     colonne de gauche et les intitulés de celle de droite, l'œil suit sa
+     rangée. Les rangées gardent l'espacement de la carte (padding 3 px),
+     comme les listes en une colonne — row-gap 0, sinon la page boissons
+     perdrait 2 points de police pour un air qui existe déjà. */
+  column-gap: 40px !important;
+  row-gap: 0 !important;
 }
 #print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols .price-list__col,
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-list__col {
@@ -1702,8 +1717,8 @@ def choose_section(metrics: dict, sid: str, w0: float, f_uniform: float | None =
                 else min(v["gap"], GAP_PACK)
             total = load + (0 if not justify else max(0, len(idx) - 1) * (gap - GAP_PACK))
             cap = ZONE_H_PX * SAFETY
-            if total * v["fit"] > cap or (is_twocol and total * v["fit"] < cap * 0.97):
-                fits.append(cap / total)   # la garde (haute ou basse) recadre
+            if total * v["fit"] > cap:
+                fits.append(cap / total)   # la garde haute recadre (débordement)
             else:
                 fits.append(v["fit"])
         return min(fits)
@@ -1838,21 +1853,14 @@ def main() -> None:
                 else min(var["gap"], GAP_PACK)
             total = load + (0 if not justify else max(0, len(idx) - 1) * (gap - GAP_PACK))
             base_w = var["w"]
-            if total * fit > ZONE_H_PX * SAFETY or (is_twocol and total * fit < ZONE_H_PX * SAFETY * 0.97):
-                # La hauteur cadre la feuille : si le contenu déborde, elle se
-                # réduit jusqu'à tenir debout ; si une feuille TWOC la laisse à
-                # plus de 3 % de blanc (catégories courtes, justification
-                # bornée), elle grossit pour border le cadre. Dans les deux
-                # cas, sans rien faire de plus, elle laisserait un blanc à
+            if total * fit > ZONE_H_PX * SAFETY:
+                # La hauteur plafonne : la feuille se réduit jusqu'à tenir
+                # debout. Sans rien faire de plus, elle laisserait un blanc à
                 # droite (la composition resterait à la largeur du site) ; on
                 # l'élargit donc d'autant — la page se tient sur toute la
                 # largeur ET toute la hauteur du A4. Borné à la plus large
                 # composition mesurée, où aucune section ne déborde
-                # horizontalement. (La garde basse ne s'applique qu'aux pages
-                # TWOC : leurs hauteurs sont constantes entre les largeurs
-                # mesurées, le déplacement de base_w est donc sûr ; les pages
-                # classiques remplissent par la justification et restent sur
-                # une largeur mesurée.)
+                # horizontalement.
                 fit = ZONE_H_PX * SAFETY / total
                 base_w = min(ZONE_W_PX / fit, max(WIDTH_RATIOS) * metrics["base_width"])
                 gap = justify_gaps(load, k, var["gap"], fit) if justify \
