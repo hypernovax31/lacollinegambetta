@@ -200,6 +200,33 @@ def split_flow(inner: str) -> list[str]:
     return parts
 
 
+# Les notes des panneaux « Boissons fraîches / chaudes » sont remontées dans
+# la ligne de leur article (voir inline_notes) : la feuille gagne la hauteur de
+# chaque note et le facteur d'échelle monte — c'est le levier « taille de
+# police » demandé. Appliqué AVANT la mesure comme avant la composition : les
+# deux documents restent alignés (empreinte + hauteurs).
+_ARTICLE_RE = re.compile(r'<article class="price-line"[^>]*>.*?</article>', re.S)
+
+
+def _inline_note_in_article(article: str) -> str:
+    """Les notes (.price-list__note) d'un article remontent dans sa ligne,
+    juste après le nom — l'article ne tient plus qu'une ligne."""
+    notes = re.findall(r'<p class="price-list__note[^"]*">(.*?)</p>', article, re.S)
+    if not notes:
+        return article
+    name = re.search(r'(<div class="price-line__name">)(.*?)(</div>)', article, re.S)
+    if not name:
+        return article
+    article = re.sub(r'<p class="price-list__note[^"]*">.*?</p>', '', article, flags=re.S)
+    inline = "".join(f'<span class="carte-inline-note">{n}</span>' for n in notes)
+    return article.replace(
+        name.group(0), name.group(1) + name.group(2) + inline + name.group(3), 1)
+
+
+def inline_notes(block: str) -> str:
+    return _ARTICLE_RE.sub(lambda m: _inline_note_in_article(m.group(0)), block)
+
+
 def block_signature(block: str) -> tuple[str, str]:
     m = re.match(r"<(\w+)([^>]*)>", block)
     if not m:
@@ -964,6 +991,28 @@ CARD_OVERRIDES = """
 #print-document .carte-flow[data-sec="boissons"] .tab-flow > [data-merge="1"] .price-list__note {
   font-size: 11.5px !important;
 }
+/* Notes remontées dans la ligne (le générateur les a déplacées après le nom,
+   en .carte-inline-note) : petites, en italique comme sur le site, en retrait
+   — ce sont des informations de service, pas des noms. nowrap : une note ne
+   fait jamais déborder sa ligne ; si la place manque, la variante de largeur
+   est écartée par la mesure (overflow) avant de servir. */
+#print-document .carte-flow[data-sec="boissons"] .tab-flow > [data-merge="1"] .carte-inline-note {
+  display: inline;
+  font-size: 11.5px !important;
+  font-weight: 400 !important;
+  font-style: italic;
+  line-height: 1.3;
+  color: var(--muted);
+  white-space: nowrap;
+  margin-left: .55em;
+}
+#print-document .carte-flow[data-sec="boissons"] .tab-flow > [data-merge="1"] .carte-inline-note + .carte-inline-note {
+  margin-left: 0;
+}
+#print-document .carte-flow[data-sec="boissons"] .tab-flow > [data-merge="1"] .carte-inline-note + .carte-inline-note::before {
+  content: " · ";
+  margin-left: .55em;
+}
 /* Le duo empilé ne doit pas étirer ses panneaux pour remplir la feuille. */
 html.carte-doc .carte-flow[data-sec="cocktails"] .duo-grid > .panel { flex: 0 1 auto !important; }
 /* Même arbitrage que pour les vins, côté carte des cocktails : une ligne = un nom et
@@ -1460,6 +1509,8 @@ def main() -> None:
             for i in group:
                 flows[sid][i] = re.sub(r"^<(\w+)", r'<\1 data-merge="1"',
                                        flows[sid][i], count=1)
+                # notes remontées dans la ligne de chaque article
+                flows[sid][i] = inline_notes(flows[sid][i])
 
     css, stats = compose_css(src)
     print("CSS du site : neutralisation levée → " + ", ".join(f"{k} {v}" for k, v in stats.items()))
