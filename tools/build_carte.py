@@ -247,6 +247,24 @@ def inline_notes(block: str) -> str:
     return _ARTICLE_RE.sub(lambda m: _inline_note_in_article(m.group(0)), block)
 
 
+# Les cellules « Appellation — Producteur » de la table des vins : seule
+# l'appellation est le nom ; la mention après le tiret passe en sans gras,
+# comme les informations (le span .carte-wine-producer, stylé en italique
+# doux dans CARD_OVERRIDES). Appliqué AVANT la mesure comme avant la
+# composition : les deux documents restent alignés (empreinte + hauteurs).
+_WINE_NAME_RE = re.compile(r'(<td class="wine-name">)([^<]*?)( — )([^<]*)(</td>)', re.S)
+
+
+def wine_producer_light(block: str) -> str:
+    """Le producteur après le premier « — » d'une cellule wine-name passe en
+    span .carte-wine-producer (sans gras) ; l'appellation garde son gras."""
+    def _repl(m):
+        return (m.group(1) + m.group(2) + m.group(3)
+                + f'<span class="carte-wine-producer">{m.group(4)}</span>'
+                + m.group(5))
+    return _WINE_NAME_RE.sub(_repl, block)
+
+
 def add_cls(block: str, cls: str) -> str:
     """Ajoute une classe à l'élément racine d'un bloc (qui en a déjà une)."""
     m = re.match(r"^(<\w+)([^>]*)>", block)
@@ -1283,6 +1301,16 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-no {
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   line-height: 1.45;                           /* deux lignes d'appellation respirent */
 }
+/* « Appellation — Producteur » : le producteur après le tiret n'est pas le nom
+   de la bouteille ; sans gras, comme les informations — italique, encre douce
+   (la même que les notes), un cran plus petit pour que l'appellation reste le
+   premier mot. Le générateur pose .carte-wine-producer sur cette partie. */
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name .carte-wine-producer {
+  font-weight: 400;
+  font-style: italic;
+  color: var(--muted);
+  font-size: .88em;
+}
 /* un format indisponible reste muet : le tiret ne doit pas crier « donnée
    manquante », il doit se fondre comme sur les listes du site */
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:not(.wine-name):not(.wine-no) {
@@ -1756,6 +1784,9 @@ def main() -> None:
                                        flows[sid][i], count=1)
                 # notes remontées dans la ligne de chaque article
                 flows[sid][i] = inline_notes(flows[sid][i])
+    # vins : le producteur après le tiret passe en sans gras (comme les notes)
+    for sid in SECTIONS:
+        flows[sid] = [wine_producer_light(b) for b in flows[sid]]
 
     css, stats = compose_css(src)
     print("CSS du site : neutralisation levée → " + ", ".join(f"{k} {v}" for k, v in stats.items()))
