@@ -4935,13 +4935,7 @@ function showMenuSection(sectionId, btnElement) {
   }
   syncMenuNavHints();
   const anchor = document.getElementById('menu-nav-anchor');
-  /* Compenser la hauteur des bandeaux sticky (top-controls + menu-nav-wrap)
-     pour que le contenu démarre en dessous, pas caché derrière. */
-  const topCtrl = document.querySelector('.top-controls');
-  const navWrap = document.getElementById('menu-nav-wrap');
-  const stickyOffset = ((topCtrl && topCtrl.offsetParent !== null) ? topCtrl.offsetHeight : 0)
-                     + (navWrap ? navWrap.offsetHeight : 0);
-  const target = anchor ? Math.max(0, Math.round(anchor.getBoundingClientRect().top + window.scrollY - stickyOffset)) : 0;
+  const target = anchor ? Math.max(0, Math.round(anchor.getBoundingClientRect().top + window.scrollY)) : 0;
   animateScrollTo(target, 240);
 }
 function animateScrollTo(targetY, duration) {
