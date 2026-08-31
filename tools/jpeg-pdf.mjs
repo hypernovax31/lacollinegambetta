@@ -8,11 +8,20 @@
  *   import { imagesToPdf } from './jpeg-pdf.mjs';
  *   imagesToPdf({ images: ['page-01.jpg', …], out: 'carte-a4.pdf' });
  *
+ * En ligne de commande, pour réassembler le PDF à partir des JPEG déjà rendus
+ * (sans relancer Chromium ni refaire la mise en page) :
+ *
+ *   node tools/jpeg-pdf.mjs                          # carte-a4-pages/ → carte-a4.pdf
+ *   node tools/jpeg-pdf.mjs --dir dossier --out x.pdf
+ *   node tools/jpeg-pdf.mjs page-01.jpg page-02.jpg --out x.pdf
+ *
  * Chaque page du PDF obtenu mesure exactement un A4 (595,28 × 841,89 pt) et
  * l'image y est étalée en pleine feuille : il faut donc des JPEG au format
- * A4 (2480 × 3508 px = 300 dpi), ce que verify() contrôle.
+ * A4 (2480 × 3508 px = 300 dpi), ce que imagesToPdf() contrôle.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, statSync } from 'node:fs';
+import { join, basename, resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 /** A4 en points (1 pt = 1/72 in). 210 mm × 297 mm. */
 export const A4_PT = { width: 595.2756, height: 841.8898 };
@@ -131,3 +140,61 @@ export function imagesToPdf(o) {
 }
 
 const round = (n) => (Math.round(n * 1000) / 1000).toString();
+
+/* ---------------------------------------------------------------- ligne de commande
+   Réassembler le PDF à partir des JPEG déjà rendus. Utile quand les feuilles
+   sont bonnes et qu'on ne veut que le PDF : c'est l'étape finale de
+   build_carte_pdf.mjs, isolée, sans Chromium ni remise en page.
+
+   Les pages sont prises dans l'ordre de leur nom (page-01, page-02, …), et non
+   dans celui, arbitraire, que renvoie le système de fichiers : un tri naturel
+   met page-10 après page-09, là où un tri de texte le placerait après page-01. */
+
+/** Les JPEG d'un dossier, triés dans l'ordre humain des nombres qu'ils portent. */
+export function jpegsFromDir(directory) {
+  if (!existsSync(directory) || !statSync(directory).isDirectory()) {
+    throw new Error(`${directory} : dossier introuvable`);
+  }
+  const files = readdirSync(directory).filter((f) => /\.jpe?g$/i.test(f));
+  if (!files.length) throw new Error(`${directory} : aucun JPEG`);
+  const collator = new Intl.Collator('fr', { numeric: true, sensitivity: 'base' });
+  return files.sort(collator.compare).map((f) => join(directory, f));
+}
+
+function cli(argv) {
+  const flag = (name, fallback) => {
+    const i = argv.indexOf(name);
+    return i >= 0 && argv[i + 1] ? argv[i + 1] : fallback;
+  };
+  const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+  const dir = flag('--dir', join(root, 'carte-a4-pages'));
+  const out = resolve(flag('--out', join(root, 'carte-a4.pdf')));
+  // fichiers nommés explicitement (tout ce qui n'est ni une option ni sa valeur)
+  const named = argv.filter((a, i) => !a.startsWith('--')
+    && !(i > 0 && ['--dir', '--out'].includes(argv[i - 1])));
+  const images = named.length ? named.map((f) => resolve(f)) : jpegsFromDir(dir);
+
+  for (const f of images) if (!existsSync(f)) throw new Error(`${f} : fichier introuvable`);
+  const built = imagesToPdf({ images, out, tolerate: 0.005 });
+
+  const octets = images.reduce((total, f) => total + statSync(f).size, 0);
+  const ko = (n) => Math.round(n / 1024).toLocaleString('fr-FR');
+  console.log(`${images.length} feuilles → ${basename(out)}`);
+  for (const f of images) {
+    const info = jpegInfo(f);
+    console.log(`  ${basename(f).padEnd(12)} ${info.width}×${info.height}  ${ko(statSync(f).size)} Ko`);
+  }
+  console.log(`\n${basename(out)} : ${built.pages} pages A4 `
+    + `(${round(built.width)} × ${round(built.height)} pt), ${ko(built.bytes)} Ko — `
+    + `les JPEG pèsent ${ko(octets)} Ko, embarqués octet pour octet, aucune re-compression.`);
+}
+
+// exécuté directement (et non importé) : on assemble.
+if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
+  try {
+    cli(process.argv.slice(2));
+  } catch (error) {
+    console.error(`Assemblage impossible : ${error.message}`);
+    process.exitCode = 1;
+  }
+}

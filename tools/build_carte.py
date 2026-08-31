@@ -83,6 +83,42 @@ TITRE_MIN_PT, TITRE_MAX_PT = 7.2, 11.0
 # de laisser une valeur cible qui ne serait plus la bonne.
 OFFRE_H = 244
 OFFRE_H_TOLERANCE = 8
+# --- Les deux signes que Cinzel ne contient pas ----------------------------
+# « ✦ » et « → » sont dessinés en CSS (voir remplacer_glyphes_a_risque). Leur
+# tracé n'est écrit qu'ici : il était recopié à trois endroits, et deux copies
+# avaient le même sommet répété deux fois — la branche haut-gauche de l'étoile
+# manquait, ce qui se voyait surtout aux petites tailles (pied de page).
+#
+# L'étoile est un losange à quatre branches : quatre pointes sur les axes
+# (haut, droite, bas, gauche) et, entre elles, quatre sommets rentrants sur la
+# diagonale. On les énumère dans le sens horaire en partant de la pointe haute.
+_CREUX = 38  # distance du centre des sommets rentrants, en % du côté
+ETOILE_CLIP = "polygon({})".format(", ".join((
+    "50% 0",                       # pointe haute
+    f"{100 - _CREUX}% {_CREUX}%",  # creux haut-droit
+    "100% 50%",                    # pointe droite
+    f"{100 - _CREUX}% {100 - _CREUX}%",  # creux bas-droit
+    "50% 100%",                    # pointe basse
+    f"{_CREUX}% {100 - _CREUX}%",  # creux bas-gauche
+    "0 50%",                       # pointe gauche
+    f"{_CREUX}% {_CREUX}%",        # creux haut-gauche — celui qui manquait
+)))
+# La flèche est dessinée dans un carré : hampe au milieu, tête en triangle. Le
+# tracé précédent plaçait deux sommets à -70 % et 170 % de la hauteur, hors de
+# la boîte donc rognés ; comme la boîte ne faisait que .12em de haut, il ne
+# restait qu'un filet et la tête disparaissait — « 17h → 23h » se lisait
+# « 17h 23h ». Ici tout tient entre 0 et 100 %.
+_HAMPE = 38  # demi-épaisseur de la hampe, en % de la hauteur
+_TETE = 58   # abscisse où commence la tête, en % de la largeur
+FLECHE_CLIP = "polygon({})".format(", ".join((
+    f"0 {50 - _HAMPE / 2}%",
+    f"{_TETE}% {50 - _HAMPE / 2}%",
+    f"{_TETE}% 0",
+    "100% 50%",
+    f"{_TETE}% 100%",
+    f"{_TETE}% {50 + _HAMPE / 2}%",
+    f"0 {50 + _HAMPE / 2}%",
+)))
 # Éléments dont la carte a besoin de connaître la taille réelle, par onglet.
 MESURE_REFS = {"menus": {"menu-enfant": ".special-card--compact"}}
 TITRE_SITE_PX = 17.9
@@ -531,14 +567,18 @@ html.carte-doc .print-page__content {
 
 /* Ornements ✦ du bandeau et du pied de page : losanges dessinés, jamais un
    glyphe — Cinzel ne le contient pas, et une police système absente du poste
-   qui imprime le ferait sortir en carré. */
+   qui imprime le ferait sortir en carré.
+   Le tracé lui-même est écrit une seule fois (ETOILE_CLIP) : le losange à
+   quatre branches a huit sommets, et il suffisait d'en recopier un de travers
+   pour que la branche haut-gauche s'effondre — c'était le cas ici, et sur les
+   petites étoiles du pied de page le reste ne ressemblait plus qu'à un éclat. */
 html.carte-doc .print-page i.carte-star {
   display: inline-block;
-  width: .6em;
-  height: .6em;
-  vertical-align: .04em;
+  width: .62em;
+  height: .62em;
+  vertical-align: -.02em;
   background: currentColor;
-  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 62%);
+  clip-path: @@ETOILE@@;
 }
 html.carte-doc .print-page--cover {
   background: #24102e !important;
@@ -601,7 +641,7 @@ html.carte-doc .print-page--cover .cover-brand .star-gold {
   margin: 0 8px;
   vertical-align: 2px;
   background: #fcf6ba;
-  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  clip-path: @@ETOILE@@;
   color: transparent !important;
   font-size: 0 !important;
   overflow: hidden;
@@ -817,29 +857,35 @@ html.carte-doc .carte-flow .tab-flow { max-width: none; }
 """ % dict(left=ZONE_LEFT_MM, zone_w=ZONE_W_MM, top=ZONE_TOP_MM, bottom=ZONE_BOTTOM_MM)
 
 
-# Étoiles et flèches du site sont des glyphes « ✦ »/« → » : absents de Cinzel,
-# ils sortiraient en carré sur une machine sans police de secours. Ils sont donc
-# dessinés en CSS, à la place exacte où le site les écrit.
-GLYPH_CSS = """
+# Les ✦ que le site écrit en CSS (::before/::after des titres de panneau, puces
+# des listes « au choix ») : sur la carte, ce sont les mêmes losanges dessinés
+# que ceux du bandeau et du pied de page. Le remplacement de texte, lui, ne peut
+# rien pour eux — un content: '✦' n'est pas dans le corps du document.
+GLYPH_CSS = f"""
 html.carte-doc .print-page .panel__title::before,
 html.carte-doc .print-page .panel__title::after,
-html.carte-doc .print-page .choice-card li::before {
+html.carte-doc .print-page .choice-card li::before {{
   content: '' !important;
   display: inline-block !important;
-  width: .78em;
-  height: .78em;
+  width: .74em;
+  height: .74em;
   background: currentColor;
   text-shadow: none !important;
-  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 62%);
-}
-html.carte-doc .print-page i.carte-arrow {
+  clip-path: {ETOILE_CLIP};
+}}
+/* La puce des listes « au choix » est posée en absolu : sans hauteur de ligne
+   pour la caler, on l'aligne à la main sur la première ligne de texte. */
+html.carte-doc .print-page .choice-card li::before {{
+  top: .34em;
+}}
+html.carte-doc .print-page i.carte-arrow {{
   display: inline-block;
-  width: 1.15em;
-  height: .12em;
-  vertical-align: .18em;
+  width: .92em;
+  height: .62em;
+  vertical-align: -.06em;
   background: currentColor;
-  clip-path: polygon(0 0, 72% 0, 72% -70%, 100% 50%, 72% 170%, 72% 100%, 0 100%);
-}
+  clip-path: {FLECHE_CLIP};
+}}
 """
 # Règles propres au papier : elles n'existent pas sur le site, donc la mesure
 # doit se faire dans la carte elle-même (voir carte-measure.html), pas dans
@@ -882,11 +928,35 @@ html.carte-doc .carte-flow[data-sec="menus"] .offer-grid {
      hauteur minimale ne la ferait plier. Une rangée, elle, est libre. */
   grid-auto-rows: minmax(@@OFFRE_H@@px, auto);
 }
+/* « Formule Duo » et « La formule complète » : le texte occupe toute la hauteur
+   du carton.
+   Ces deux cartons sont plus hauts que leur contenu — c'est la rangée qui leur
+   donne la hauteur du carton « Menu enfant » d'en face. Le contenu, simplement
+   centré, laissait donc une bande vide en bas de chacun.
+   Ils portent quatre éléments — cartouche doré, composition, prix, renvoi — et
+   la lecture veut qu'ils se suivent sans se toucher : on répartit le blanc
+   entre eux (`space-between`) plutôt que de l'entasser au-dessous, et on borne
+   l'écart pour que deux cartons de contenus inégaux (« Entrée + plat ou plat +
+   dessert » tient sur une ligne, pas toujours) restent visuellement jumeaux.
+   Le rembourrage haut et bas est identique : la symétrie tient à cela. */
 html.carte-doc .carte-flow[data-sec="menus"] .offer-card {
   display: flex;
   flex-direction: column;
-  justify-content: center;   /* le prix respire au milieu du carton, comme « Menu enfant » */
+  justify-content: space-between;
   align-items: center;       /* sinon le cartouche doré, enfant du flex, s'étire en bandeau */
+  gap: 2mm;
+  padding-top: 4mm;
+  padding-bottom: 4mm;
+}
+/* Le prix est le centre de gravité du carton : on lui laisse prendre le blanc
+   qui reste, à parts égales au-dessus et au-dessous, pour qu'il tombe au milieu
+   quelle que soit la hauteur du bloc de composition qui le précède. */
+html.carte-doc .carte-flow[data-sec="menus"] .offer-card .offer-card__price {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
 }
 
 /* En-têtes de contenances du tableau des vins : le site les compose à 12,48 px,
@@ -1016,9 +1086,11 @@ def compose_css(src: str) -> tuple[str, dict]:
    sont en média screen ; l'impression garde ses règles @media print) ===== */
 {skin}
 
-{CHROME_CSS}
+{CHROME_CSS.replace('@@ETOILE@@', ETOILE_CLIP)}
 
 {FIT_CSS}
+
+{GLYPH_CSS}
 
 {CARD_OVERRIDES.replace('@@OFFRE_H@@', f'{OFFRE_H:g}')}
 """

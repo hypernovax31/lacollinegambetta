@@ -167,6 +167,27 @@ Comment ça marche (`tools/build_carte_pdf.mjs`) :
 Options : `--jpgs-only` (les images seules, sans PDF), `--quality 82` (JPEG et PDF plus légers),
 `--pages 10` (imposer le nombre de feuilles, pour un test).
 
+### Réassembler le PDF à partir des JPEG
+
+Quand les feuilles de `carte-a4-pages/` sont déjà bonnes et qu'on ne veut *que* le PDF —
+après avoir retouché une page à la main, par exemple — inutile de relancer Chromium et la
+mise en page. `tools/jpeg-pdf.mjs` s'utilise aussi en ligne de commande :
+
+```bash
+npm run pdf:from-jpg                                   # carte-a4-pages/ → carte-a4.pdf
+node tools/jpeg-pdf.mjs --dir dossier --out sortie.pdf # autre dossier, autre nom
+node tools/jpeg-pdf.mjs page-01.jpg page-02.jpg --out extrait.pdf   # pages choisies
+```
+
+C'est la dernière étape de `build_carte_pdf.mjs`, isolée : le PDF produit est **identique
+octet pour octet** à celui du pipeline complet, en moins d'une seconde et sans Chromium.
+
+Les pages sont prises dans l'ordre **naturel** de leur nom, pas dans celui du système de
+fichiers : `page-10` vient après `page-09`, là où un tri de texte l'aurait placée juste
+après `page-01`. Les mêmes contrôles qu'en pipeline s'appliquent — un JPEG qui n'est pas au
+ratio A4, un dossier vide ou un fichier absent arrêtent l'assemblage avec un message clair
+plutôt que de produire un PDF déformé.
+
 ## Générer les livrables imprimables (pipeline Chromium)
 
 Le PDF historique est aussi composé par Chromium à partir du website :
@@ -295,24 +316,78 @@ sont alignées entre elles (25 cl / 50 cl / HH, Prix / HH), il n'y a donc pas de
 où glisser ce frère. Ces deux blocs étaient les seuls de la carte sans meneur — le regard
 traversait un blanc de plusieurs centimètres.
 
-Le meneur y est porté par l'intitulé lui-même : `.beer-row__name` et `.hh-line__name`
-deviennent des lignes en flex et reçoivent un `::after` — même trait, même
+Le meneur y est porté par la **colonne de prix** : au-dessus de 641 px, cette colonne
+devient élastique (`minmax(var(--col-prix), 1fr)`), le chiffre y reste calé à droite, et
+un `::before` occupe tout le blanc qui le précède — même trait, même
 `rgba(156,122,45,.58)`, même retrait de `-.06rem` que `.price-line__dots`. À l'œil, c'est
-le même objet ; dans le flux, il n'occupe que le blanc qui reste jusqu'à la première
-colonne de prix.
+le même objet.
 
-**Ce meneur cède toujours devant le texte** (`flex: 1 1 0`, `min-width: 0`). Un
-`min-width: 12px`, comme en porte `.price-line__dots`, lui ferait prendre ces pixels à
-l'intitulé : dans un panneau étroit, « St-Germain Spritz » se cassait en deux lignes dès
-652 px et `check-responsive` le signalait en « serré ». Un pointillé est un guide, il
-s'efface plutôt que de bousculer le nom. Là où le prix passe **sous** l'intitulé (modes
-`@stack-rows` de Boissons et Cocktails), le `::after` est masqué : il n'y a plus de prix à
-rejoindre à droite.
+**Le meneur s'arrête exactement à un écart du chiffre — 10 px, celui de la référence —
+sur toutes les lignes.** Porté par l'intitulé, il s'arrêtait au bord *gauche* de la
+colonne, donc loin devant un chiffre court : « 7,50 » traînait derrière lui tout le blanc
+réservé à « 10,90 », et l'écart allait de 25 à 46 px selon la ligne. Porté par la colonne,
+il connaît la position réelle du chiffre.
 
-Les deux repères concernés ont suivi le contenu, comme après tout changement de mise en
-page (`node tools/check-responsive.mjs --breakpoints --write`) : boissons 402 → 412 px,
-cocktails 327 → 337 px. Les cinq autres onglets sont inchangés, et le contrôle repasse à
-zéro chevauchement sur les sept onglets, de 1300 à 320 px.
+**L'alignement des prix est intact** : les colonnes suivantes gardent une largeur fixe et
+sont calées à droite du cadre, donc le bord droit de la colonne élastique tombe au même
+endroit sur toutes les lignes — mesuré à 0,00 px d'écart, en-tête comprise. Seul son bord
+gauche bouge, et c'est le pointillé qui l'absorbe.
+
+**Ce meneur cède toujours devant le texte** (`flex: 1 1 0`, `min-width: 0`, et
+`minmax(0, max-content)` sur la colonne du nom) : un nom trop long se replie au lieu de
+pousser le chiffre hors du cadre. Là où le prix passe **sous** l'intitulé (modes
+`@stack-rows` de Boissons et Cocktails, sous 641 px), le meneur est masqué : il n'y a plus
+de prix à rejoindre à droite.
+
+## Deux colonnes : la gouttière
+
+Sur grand écran et sur la carte A4, les listes se lisent sur deux colonnes. Elles n'étaient
+séparées que de 10 px : le prix de gauche touchait presque le nom de droite, et l'œil, en
+fin de ligne, sautait dans la mauvaise colonne. La gouttière passe à `1.75rem` (720 px),
+`2.25rem` (1100 px) puis `2.75rem` (1480 px) pour les listes de prix, `1.25`/`1.5rem` pour
+les grilles de cartons.
+
+C'est `column-gap` et jamais `gap` : écarter les colonnes ne doit pas écarter les lignes
+entre elles. Les colonnes restant en `minmax(0, 1fr)`, la place donnée à la gouttière est
+prise à parts égales sur les deux colonnes, jamais au texte.
+
+Les repères de bascule ont suivi le contenu, comme après tout changement de mise en page
+(`node tools/check-responsive.mjs --breakpoints --write`) : entrées 787 → 795 px, plats
+770 → 778 px, desserts 847 → 855 px, boissons 743 → 761 px. Le contrôle repasse à zéro
+chevauchement **et zéro débordement** sur les sept onglets, de 1300 à 320 px.
+
+## Les deux signes que Cinzel ne contient pas : ✦ et →
+
+Cinzel n'a ni le losange à quatre branches ni la flèche. Sur le papier, ils sont donc
+**dessinés** (`clip-path`) plutôt que composés — une police de secours absente du poste qui
+imprime les sortirait en carré. Le tracé de chacun n'est plus écrit qu'une fois, dans
+`tools/build_carte.py` (`ETOILE_CLIP`, `FLECHE_CLIP`), et les règles s'y réfèrent.
+
+Il était auparavant recopié à trois endroits, et **deux copies répétaient le même sommet
+au lieu du dernier** : la branche haut-gauche de l'étoile manquait, ce qui se voyait
+surtout aux petites tailles — pieds de page, bandeaux, puces des listes « au choix ». La
+flèche, elle, avait deux sommets à `-70 %` et `170 %` de la hauteur, hors d'une boîte de
+`.12em` : rognés, il ne restait qu'un filet, et « 17h → 23h » se lisait « 17h  23h ».
+Les deux tracés tiennent désormais entre 0 et 100 %, et sont énumérés sommet par sommet
+en commentaire.
+
+Enfin, les ✦ que le site écrit en CSS (`content: '✦'` des titres de panneau et des puces)
+échappaient au remplacement de texte, qui ne voit que le corps du document : `GLYPH_CSS`
+les couvre, et — c'était le bug — **ce bloc n'était jamais inséré dans la feuille**.
+
+## Formules : le texte occupe toute la hauteur du carton
+
+Sur la feuille « Nos menus », « Formule Duo » et « La formule complète » sont plus hauts
+que leur contenu : c'est la rangée qui leur donne la hauteur du carton « Menu enfant »
+d'en face (`grid-auto-rows: minmax(OFFRE_H px, auto)`). Leur contenu, simplement centré,
+laissait donc une bande vide sous le renvoi « Choix ci-dessous ».
+
+Les quatre éléments — cartouche doré, composition, prix, renvoi — sont maintenant répartis
+sur toute la hauteur (`justify-content: space-between`), avec un rembourrage haut et bas
+identique : c'est de là que vient la symétrie. Le prix, centre de gravité du carton,
+prend le blanc qui reste à parts égales au-dessus et au-dessous (`flex: 1 1 auto` et
+centrage interne), si bien qu'il tombe au milieu même quand la composition d'en face tient
+sur une ligne de moins.
 
 ## Les contenances : une seule définition pour toute la carte
 

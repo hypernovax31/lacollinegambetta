@@ -4210,7 +4210,7 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
 
 /* ===== Entrees ===== */
 /* @stack-wide entrees */
-@media screen and (max-width: 787px) {
+@media screen and (max-width: 795px) {
   html:not(.carte-doc) #interior-menu #entrees .food-card-grid,
   html:not(.carte-doc) #interior-menu #entrees .food-card-grid--wide { grid-template-columns: 1fr !important; }
 }
@@ -4221,7 +4221,7 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
 
 /* ===== Plats ===== */
 /* @stack-wide plats */
-@media screen and (max-width: 770px) {
+@media screen and (max-width: 778px) {
   html:not(.carte-doc) #interior-menu #plats .food-card-grid,
   html:not(.carte-doc) #interior-menu #plats .food-card-grid--wide { grid-template-columns: 1fr !important; }
 }
@@ -4234,7 +4234,7 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
 
 /* ===== Desserts ===== */
 /* @stack-wide desserts */
-@media screen and (max-width: 847px) {
+@media screen and (max-width: 855px) {
   html:not(.carte-doc) #interior-menu #desserts .food-card-grid,
   html:not(.carte-doc) #interior-menu #desserts .food-card-grid--wide { grid-template-columns: 1fr !important; }
 }
@@ -4247,7 +4247,7 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
 
 /* ===== Boissons ===== */
 /* @stack-wide boissons */
-@media screen and (max-width: 743px) {
+@media screen and (max-width: 761px) {
   html:not(.carte-doc) #interior-menu #boissons .price-list--cols { grid-template-columns: 1fr !important; }
 }
 /* @stack-rows boissons */
@@ -4448,6 +4448,135 @@ html #interior-menu .wine-table td:not(.wine-name):not(.wine-no)::before {
   text-transform: none !important;
   color: var(--qty-ink) !important;
 }
+/* =============================================================================
+   POINTILLÉS : LA MÊME DISTANCE AU PRIX PARTOUT
+   -----------------------------------------------------------------------------
+   Référence : les boissons fraîches. Leur ligne est un flex — nom, pointillé
+   élastique, prix — et le pointillé s'arrête à un seul écart (le `gap` de 10 px)
+   du chiffre. C'est cette longueur-là qu'on veut lire partout.
+
+   Les bières et les cocktails, eux, sont des grilles : leurs prix doivent
+   s'aligner d'une ligne à l'autre, ils vivent donc dans des colonnes de largeur
+   fixe où ils sont poussés à droite. Le pointillé, porté par le nom, s'arrêtait
+   au bord gauche de cette colonne — c'est-à-dire loin devant un chiffre court :
+   « 7,50 » laissait derrière lui tout le blanc réservé à « 10,90 ». D'où des
+   pointillés qui s'arrêtaient 25 à 46 px avant le prix, et de longueur
+   inégale d'une ligne à l'autre.
+
+   La correction reprend le montage de la référence, mais à l'intérieur de la
+   colonne de prix : celle-ci devient élastique (`1fr`) et flexible, le chiffre
+   reste collé à droite, et le pointillé est repris par la colonne elle-même,
+   où il occupe tout le blanc qui précède le chiffre. On retrouve exactement la
+   suite de la référence — nom, un écart, pointillé, un écart, prix — pour
+   toutes les lignes, quelle que soit la longueur du chiffre.
+
+   L'alignement des prix, lui, est intact : les colonnes qui suivent gardent une
+   largeur fixe et sont calées à droite du cadre, donc le bord droit de la
+   colonne élastique tombe au même endroit sur toutes les lignes. Seul son bord
+   gauche bouge, et c'est le pointillé qui l'absorbe.
+
+   Deux garde-fous :
+   • `minmax(0, max-content)` pour le nom et un plancher sur la colonne de prix :
+     un nom trop long se replie au lieu de pousser le chiffre hors du cadre.
+   • le réglage ne descend pas sous 641 px : en dessous, les lignes se déplient
+     en pile (le nom seul, les prix étiquetés dessous) et le pointillé est déjà
+     masqué — les régler ici ne ferait que gêner ce repli.
+
+   Les largeurs sont en `rem` parce que les prix le sont aussi : au-delà de
+   1480 px la racine grandit, le chiffre et sa colonne grandissent ensemble, et
+   l'écart reste le même à l'œil.
+   ========================================================================== */
+:root {
+  --col-prix: 2rem;          /* « 6,20 » et l'en-tête « 25 cl » à 1,08 rem */
+  --col-prix-large: 2.2rem;  /* colonne « Prix » des cocktails : « 10,90 » */
+  --ecart-pointille: 10px;   /* l'écart de la référence, de part et d'autre */
+}
+@media (min-width: 1100px) {
+  /* au-delà de 1100 px les prix passent à 1,28 rem : les colonnes suivent. */
+  :root {
+    --col-prix: 2.9rem;
+    --col-prix-large: 3.35rem;
+  }
+}
+@media (min-width: 641px) {
+  html #interior-menu #boissons .beer-table__head,
+  html #interior-menu #boissons .beer-row {
+    grid-template-columns:
+      minmax(0, max-content)
+      minmax(var(--col-prix), 1fr)
+      var(--col-prix)
+      var(--col-prix);
+  }
+  html #interior-menu #cocktails .hh-head,
+  html #interior-menu #cocktails .hh-line__row {
+    grid-template-columns:
+      minmax(0, max-content)
+      minmax(var(--col-prix-large), 1fr)
+      var(--col-prix);
+  }
+  /* Le pointillé n'est plus porté par le nom mais par la première colonne de
+     prix, la seule qui connaisse la position exacte du chiffre. */
+  html #interior-menu #boissons .beer-row__name::after,
+  html #interior-menu #cocktails .hh-line__name::after { content: none; }
+  html #interior-menu #boissons .beer-row__price:nth-child(2),
+  html #interior-menu #cocktails .hh-line__price {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    justify-self: stretch;
+    min-width: 0;
+  }
+  html #interior-menu #boissons .beer-row__price:nth-child(2)::before,
+  html #interior-menu #cocktails .hh-line__price::before {
+    content: "";
+    flex: 1 1 0;
+    min-width: 0;
+    margin-right: var(--ecart-pointille);
+    border-bottom: 1px dotted rgba(156, 122, 45, .58);
+    transform: translateY(-.06rem);
+  }
+}
+
+/* =============================================================================
+   DEUX COLONNES : DE L'AIR DANS LA GOUTTIÈRE
+   -----------------------------------------------------------------------------
+   Sur grand écran et sur la carte A4, les listes se lisent sur deux colonnes.
+   Elles n'étaient séparées que de 10 px : le prix de la colonne de gauche et le
+   nom de la colonne de droite se touchaient presque, et l'œil, en fin de ligne,
+   sautait dans la mauvaise colonne. On élargit la gouttière — et elle seule :
+   `column-gap`, jamais `gap`, pour ne pas écarter du même coup les lignes entre
+   elles.
+
+   La largeur des colonnes reste en `minmax(0, 1fr)` : ce qu'on donne à la
+   gouttière est pris à parts égales sur les deux colonnes, jamais au texte, qui
+   se replie normalement. Le repli en une seule colonne (sous 720 px) n'est pas
+   concerné : une gouttière ne sépare plus rien.
+   ========================================================================== */
+@media (min-width: 720px) {
+  html #interior-menu .price-list--cols,
+  html #interior-menu .hh-list--cols { column-gap: 1.75rem; }
+  html #interior-menu .food-card-grid,
+  html #interior-menu .food-card-grid--wide,
+  html #interior-menu .offer-grid,
+  html #interior-menu .special-grid,
+  html #interior-menu .choice-grid,
+  html #interior-menu .duo-grid { column-gap: 1.25rem; }
+}
+@media (min-width: 1100px) {
+  html #interior-menu .price-list--cols,
+  html #interior-menu .hh-list--cols { column-gap: 2.25rem; }
+  html #interior-menu .food-card-grid,
+  html #interior-menu .food-card-grid--wide,
+  html #interior-menu .offer-grid,
+  html #interior-menu .special-grid,
+  html #interior-menu .choice-grid,
+  html #interior-menu .duo-grid { column-gap: 1.5rem; }
+}
+@media (min-width: 1480px) {
+  html #interior-menu .price-list--cols,
+  html #interior-menu .hh-list--cols { column-gap: 2.75rem; }
+}
+
 /* Sur le papier, la contenance garde le même rôle : Montserrat maigre, casse
    d'origine, encre claire — la taille, elle, suit la feuille. */
 @media print {
