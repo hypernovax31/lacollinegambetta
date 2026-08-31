@@ -186,6 +186,17 @@ async function main() {
           const flow = sec.querySelector('.tab-flow');
           const holder = sec.querySelector('.carte-flow') || sec;
           const cs = getComputedStyle(flow);
+          // probe deux colonnes : la disposition réelle des groupes TWOC
+          // (mêmes blocs, même CSS) — hauteur totale et débordement à cette
+          // largeur. Absent pour les sections sans groupe TWOC.
+          const probe = sec.querySelector('.carte-twocol-probe');
+          let twocol = null;
+          if (probe) {
+            twocol = {
+              total: +probe.getBoundingClientRect().height.toFixed(2),
+              overflow: +(probe.scrollWidth - probe.clientWidth).toFixed(2),
+            };
+          }
           out[id] = {
             w,
             refs: refsH,
@@ -195,6 +206,7 @@ async function main() {
               .sort((a, b) => Number(a.dataset.block) - Number(b.dataset.block))
               .map((el) => +el.getBoundingClientRect().height.toFixed(2)),
             count: flow.querySelectorAll(':scope > [data-block]').length,
+            twocol,
           };
         }
         return out;
