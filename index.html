@@ -152,6 +152,30 @@ button,a { font:inherit; }
   .offer-grid, .special-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .choice-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
   .price-list--cols, .hh-list--cols { grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+  /* Listes 2 colonnes : aplatir les conteneurs pour aligner les rangs */
+  .price-list--cols,
+  .hh-list--cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .price-list--cols .price-list__col,
+  .hh-list--cols .hh-list__col {
+    display: contents;
+  }
+  .price-list--cols .price-list__col:nth-child(1) > *,
+  .hh-list--cols .hh-list__col:nth-child(1) > * {
+    grid-column: 1;
+  }
+  .price-list--cols .price-list__col:nth-child(2) > *,
+  .hh-list--cols .hh-list__col:nth-child(2) > * {
+    grid-column: 2;
+  }
+  /* En-tête de la colonne 2 visible en mode 2 colonnes */
+  .hh-list--cols .hh-head--ghost {
+    display: grid !important;
+    visibility: visible !important;
+  }
 }
 @media (max-width: 860px) {
   .cover-page { width:100%; padding:18px 14px 20px; }
@@ -3389,6 +3413,24 @@ html:not(.carte-doc) #menus .offer-card {
   html:not(.carte-doc) .price-list--cols,
   html:not(.carte-doc) .hh-list--cols {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  /* Listes 2 colonnes : aplatir les conteneurs pour aligner les rangs */
+  html:not(.carte-doc) .price-list--cols .price-list__col,
+  html:not(.carte-doc) .hh-list--cols .hh-list__col {
+    display: contents;
+  }
+  html:not(.carte-doc) .price-list--cols .price-list__col:nth-child(1) > *,
+  html:not(.carte-doc) .hh-list--cols .hh-list__col:nth-child(1) > * {
+    grid-column: 1;
+  }
+  html:not(.carte-doc) .price-list--cols .price-list__col:nth-child(2) > *,
+  html:not(.carte-doc) .hh-list--cols .hh-list__col:nth-child(2) > * {
+    grid-column: 2;
+  }
+  /* En-tête de la colonne 2 visible en mode 2 colonnes */
+  html:not(.carte-doc) .hh-list--cols .hh-head--ghost {
+    display: grid !important;
+    visibility: visible !important;
   }
 }
 
