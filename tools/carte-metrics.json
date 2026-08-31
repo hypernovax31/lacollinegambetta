@@ -1,7 +1,7 @@
 {
  "generator": "tools/measure_carte.mjs",
  "index_hash": "23acb5f78df6918f",
- "css_hash": "d162a4494eb6f111",
+ "css_hash": "069969cbef003385",
  "viewport": 1180,
  "base_width": 1140,
  "fonts": [
@@ -1086,25 +1086,31 @@
      "i": 0,
      "tag": "block",
      "cls": "",
-     "h": 786.56
+     "h": 548.34
     },
     {
      "i": 1,
      "tag": "block",
      "cls": "",
-     "h": 771.42
+     "h": 275.89
     },
     {
      "i": 2,
      "tag": "block",
      "cls": "",
-     "h": 962.56
+     "h": 245.31
     },
     {
      "i": 3,
      "tag": "block",
      "cls": "",
-     "h": 490.42
+     "h": 644.94
+    },
+    {
+     "i": 4,
+     "tag": "block",
+     "cls": "",
+     "h": 331.61
     }
    ],
    "variants": [
@@ -1114,14 +1120,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      396.61,
+      268.73,
+      220.16,
+      null,
+      null
+     ],
+     "overflow2col": 0
     },
     {
      "w": 1425,
@@ -1129,14 +1142,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      396.61,
+      268.73,
+      220.16,
+      null,
+      null
+     ],
+     "overflow2col": 0
     },
     {
      "w": 1368,
@@ -1144,14 +1164,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      396.61,
+      286.38,
+      220.16,
+      null,
+      null
+     ],
+     "overflow2col": 0
     },
     {
      "w": 1311,
@@ -1159,14 +1186,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      414.25,
+      286.38,
+      220.16,
+      null,
+      null
+     ],
+     "overflow2col": 0
     },
     {
      "w": 1254,
@@ -1174,14 +1208,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      453,
+      307.48,
+      220.16,
+      null,
+      null
+     ],
+     "overflow2col": 0
     },
     {
      "w": 1197,
@@ -1189,14 +1230,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      533.97,
+      346.23,
+      220.16,
+      null,
+      null
+     ],
+     "overflow2col": 0
     },
     {
      "w": 1140,
@@ -1204,14 +1252,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      597.3,
+      409.56,
+      220.16,
+      null,
+      null
+     ],
+     "overflow2col": 0
     },
     {
      "w": 1083,
@@ -1219,14 +1274,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      636.05,
+      726.2,
+      220.16,
+      null,
+      null
+     ],
+     "overflow2col": 0
     },
     {
      "w": 1026,
@@ -1234,14 +1296,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      695.91,
+      747.31,
+      255.44,
+      null,
+      null
+     ],
+     "overflow2col": 0
     },
     {
      "w": 969,
@@ -1249,14 +1318,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      987.97,
+      747.31,
+      318.77,
+      null,
+      null
+     ],
+     "overflow2col": 0
     },
     {
      "w": 912,
@@ -1264,14 +1340,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      1093.52,
+      764.95,
+      382.09,
+      null,
+      null
+     ],
+     "overflow2col": 19
     },
     {
      "w": 855,
@@ -1279,14 +1362,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      1410.16,
+      786.06,
+      424.31,
+      null,
+      null
+     ],
+     "overflow2col": 47
     },
     {
      "w": 798,
@@ -1294,14 +1384,21 @@
      "gap": 18,
      "overflow": 0,
      "heights": [
-      786.56,
-      771.42,
-      962.56,
-      490.42
+      548.34,
+      275.89,
+      245.31,
+      644.94,
+      331.61
      ],
-     "count": 4,
-     "heights2col": null,
-     "overflow2col": null
+     "count": 5,
+     "heights2col": [
+      1473.48,
+      849.39,
+      614.3,
+      null,
+      null
+     ],
+     "overflow2col": 76
     }
    ]
   },

@@ -85,6 +85,7 @@ async function main() {
   const cssHash = attr(docHtml, 'css-hash');
   const ratios = (attr(docHtml, 'width-ratios') || '1').split(',').map(Number);
   const refs = JSON.parse(attr(docHtml, 'refs') || '{}');
+  const expectedBlocks = JSON.parse(attr(docHtml, 'blocks') || '{}');
 
   process.env.AWS_EXECUTION_ENV ??= 'AWS_Lambda_nodejs22.x';
   setupLambdaEnvironment(join(tmpdir(), 'al2023', 'lib'));
@@ -234,9 +235,9 @@ async function main() {
       const atNatural = variants[id].find((v) => v.w === base);
       const nSite = siteInfo[id].blocks;
       if (!atNatural) throw new Error(`${id} : la largeur du site (${base} px) n'est pas dans les variantes mesurées`);
-      if (atNatural.count !== nSite) {
-        throw new Error(`${id} : ${atNatural.count} blocs dans le document de mesure, ${nSite} sur le site — `
-          + 'le générateur perd ou double un bloc.');
+      if (atNatural.count !== (expectedBlocks[id] ?? nSite)) {
+        throw new Error(`${id} : ${atNatural.count} blocs dans le document de mesure, `
+          + `${expectedBlocks[id] ?? nSite} attendus — le générateur perd ou double un bloc.`);
       }
       const zero = variants[id].filter((v) => v.heights.some((h) => h < 4));
       if (zero.length) {

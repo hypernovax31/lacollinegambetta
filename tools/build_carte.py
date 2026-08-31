@@ -49,19 +49,27 @@ SECTIONS = ["entrees", "plats", "menus", "boissons", "cocktails", "vins", "desse
 # marqués data-merge="1" dans la carte comme dans le document de mesure : la
 # CSS de la carte (CARD_OVERRIDES) les reconnaît par ce marqueur — et pas par
 # leur position de frère, qui change quand le découpage en pages les isole.
-MERGE = {"boissons": [(0, 1), (2, 3, 4, 5, 6)]}
+MERGE = {"boissons": [(0, 1), (2, 3, 4, 5, 6)],
+        # cocktails : le duo-grid du site (Spritz + Mules) est séparé en deux
+        # blocs par split_duo_grids — les indices ci-dessous sont ceux du flux
+        # APRÈS cette séparation : 0 Cocktails classiques, 1 Spritz & fraîcheur,
+        # 2 Mules & fizz sur une feuille ; 3 Élégance & saveurs, 4 Mocktails sur
+        # l'autre (demande expresse).
+        "cocktails": [(0, 1, 2), (3, 4)]}
 
 # Groupes de MERGE autorisés à passer en DEUX colonnes de lignes sur leur
-# feuille quand la hauteur manque (Apéritifs + Whiskies + Digestifs + Bières
-# + bandeau HH) : par défaut les catégories s'empilent pleine largeur, comme
-# « Boissons fraîches + chaudes » ; si leur hauteur cumulée dépasse la
-# feuille, le plan de mise en page bascule en deux colonnes de lignes les
-# sections les plus grandes (mesurées par le probe .carte-twocolsec-probe)
-# jusqu'à ce que tout tienne. Le bandeau HH (hh-banner) n'est jamais basculé :
-# sa hauteur ne change pas, la bascule ne l'atteint donc pas. La hauteur de
-# l'unité est la somme des hauteurs de ses blocs dans leur mode + les gaps,
-# pas la hauteur d'une disposition côte à côte.
-TWOC = {"boissons": [(2, 3, 4, 5, 6)]}
+# feuille quand la hauteur manque (les quatre catégories boissons + bandeau
+# HH, les cocktails en deux pages) : par défaut les catégories s'empilent
+# pleine largeur, comme « Boissons fraîches + chaudes » ; si leur hauteur
+# cumulée dépasse la feuille, le plan de mise en page bascule en deux
+# colonnes de lignes les sections les plus grandes (mesurées par le probe
+# .carte-twocolsec-probe) jusqu'à ce que tout tienne. Le bandeau HH
+# (hh-banner) n'est jamais basculé : sa hauteur ne change pas, la bascule ne
+# l'atteint donc pas. La hauteur de l'unité est la somme des hauteurs de ses
+# blocs dans leur mode + les gaps, pas la hauteur d'une disposition côte à
+# côte.
+TWOC = {"boissons": [(2, 3, 4, 5, 6)],
+       "cocktails": [(0, 1, 2), (3, 4)]}
 
 # Géométrie de la feuille, en accord avec les règles « contenant » plus bas.
 #
@@ -217,7 +225,7 @@ def split_flow(inner: str) -> list[str]:
 # chaque note et le facteur d'échelle monte — c'est le levier « taille de
 # police » demandé. Appliqué AVANT la mesure comme avant la composition : les
 # deux documents restent alignés (empreinte + hauteurs).
-_ARTICLE_RE = re.compile(r'<article class="price-line"[^>]*>.*?</article>', re.S)
+_ARTICLE_RE = re.compile(r'<article class="(?:price-line|hh-line)"[^>]*>.*?</article>', re.S)
 
 
 def _inline_note_in_article(article: str) -> str:
@@ -226,7 +234,7 @@ def _inline_note_in_article(article: str) -> str:
     notes = re.findall(r'<p class="price-list__note[^"]*">(.*?)</p>', article, re.S)
     if not notes:
         return article
-    name = re.search(r'(<div class="price-line__name">)(.*?)(</div>)', article, re.S)
+    name = re.search(r'(<div class="(?:price-line__name|hh-line__name)">)(.*?)(</div>)', article, re.S)
     if not name:
         return article
     article = re.sub(r'<p class="price-list__note[^"]*">.*?</p>', '', article, flags=re.S)
@@ -288,6 +296,40 @@ def probe_secs_markup(blocks: list[str], group) -> str:
             b = add_cls(b, "carte-2col")
         out.append(b)
     return "\n".join(out)
+
+
+def split_duo_grids(blocks: list[str]) -> list[str]:
+    """Les blocs « duo-grid » du site (deux panneaux côte à côte à l'écran)
+    deviennent deux blocs empilables : la page cocktails demande Spritz et
+    Mules séparés, avec leur propre bascule en deux colonnes. Le découpage se
+    fait par take_element, pas par regex : les panneaux contiennent des
+    articles imbriqués (les hh-line)."""
+    out = []
+    for b in blocks:
+        if not re.match(r'<div class="duo-grid">', b):
+            out.append(b)
+            continue
+        m0 = re.match(r'<div class="duo-grid">', b)
+        if not m0:
+            out.append(b)
+            continue
+        rest = b[m0.end():]   # sauter la balise racine : on ne prend que ses enfants
+        parts = []
+        while rest.strip():
+            lt = rest.find("<")
+            if lt < 0:
+                break
+            m = re.match(r"<([a-zA-Z][\w-]*)", rest[lt:])
+            if not m:
+                break
+            node, rest = take_element(rest[lt:], m.group(1))
+            if node.startswith("<article"):
+                parts.append(node)
+        if len(parts) >= 2:
+            out.extend(parts)
+        else:
+            out.append(b)
+    return out
 
 
 def block_signature(block: str) -> tuple[str, str]:
@@ -1016,8 +1058,8 @@ CARD_OVERRIDES = """
   grid-column: auto !important;
 }
 /* Les panneaux marqués data-merge (le générateur pose ce marqueur sur les
-   blocs insécables de MERGE — fraîches + chaudes, puis apéritifs + whiskies +
-   digestifs + bières) passent en une seule colonne pleine largeur. La règle
+   blocs insécables de MERGE — boissons, puis cocktails) passent en une seule
+   colonne pleine largeur. La règle
    du site étale leurs lignes sur deux colonnes dès 720 px ; ici on n'en garde
    qu'une (piste 1fr + placement automatique des lignes, même neutralisation
    que pour les cocktails).
@@ -1028,7 +1070,9 @@ CARD_OVERRIDES = """
    typo du site. Les sélecteurs sont en descendant (pas `>`) : un bloc
    basculé en deux colonnes de lignes (carte-2col) garde ses règles de
    panneau, seule la grille de lignes change. */
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-list--cols {
+#print-document .carte-flow [data-merge="1"] .price-list--cols,
+#print-document .carte-flow [data-merge="1"] .hh-list--cols,
+#print-document .carte-flow [data-merge="1"] .hh-list {
   grid-template-columns: 1fr !important;
 }
 /* Pleine largeur de la feuille : la règle écran du site (« deux colonnes
@@ -1037,22 +1081,29 @@ CARD_OVERRIDES = """
    63 % de sa largeur. Ici les lignes courent d'un bord à l'autre du panneau
    (le pointillé meneur absorbe le blanc), et la page entière se tient sur
    toute la largeur comme sur toute la hauteur du A4. */
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-list--cols {
+#print-document .carte-flow [data-merge="1"] .price-list--cols,
+#print-document .carte-flow [data-merge="1"] .hh-list--cols {
   width: 100% !important;
   max-width: 100% !important;
   margin-inline: 0 !important;
 }
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-list--cols .price-line,
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-list--cols .price-list__note {
+#print-document .carte-flow [data-merge="1"] .price-list--cols .price-line,
+#print-document .carte-flow [data-merge="1"] .price-list--cols .price-list__note,
+#print-document .carte-flow [data-merge="1"] .hh-list--cols .hh-line,
+#print-document .carte-flow [data-merge="1"] .hh-list--cols .hh-head,
+#print-document .carte-flow [data-merge="1"] .hh-list--cols .hh-list__note {
   grid-column: auto !important;
 }
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-line {
+#print-document .carte-flow [data-merge="1"] .price-line,
+#print-document .carte-flow [data-merge="1"] .hh-line {
   padding: 3px 0;
 }
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-line__name {
+#print-document .carte-flow [data-merge="1"] .price-line__name,
+#print-document .carte-flow [data-merge="1"] .hh-line__name {
   font-size: 16.5px !important;
 }
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-list__note {
+#print-document .carte-flow [data-merge="1"] .price-list__note,
+#print-document .carte-flow [data-merge="1"] .hh-list__note {
   font-size: 11.5px !important;
 }
 /* Notes remontées dans la ligne (le générateur les a déplacées après le nom,
@@ -1060,7 +1111,7 @@ CARD_OVERRIDES = """
    — ce sont des informations de service, pas des noms. nowrap : une note ne
    fait jamais déborder sa ligne ; si la place manque, la variante de largeur
    est écartée par la mesure (overflow) avant de servir. */
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .carte-inline-note {
+#print-document .carte-flow [data-merge="1"] .carte-inline-note {
   display: inline;
   font-size: 11.5px !important;
   font-weight: 400 !important;
@@ -1070,38 +1121,54 @@ CARD_OVERRIDES = """
   white-space: nowrap;
   margin-left: .55em;
 }
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .carte-inline-note + .carte-inline-note {
+#print-document .carte-flow [data-merge="1"] .carte-inline-note + .carte-inline-note {
   margin-left: 0;
 }
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .carte-inline-note + .carte-inline-note::before {
+#print-document .carte-flow [data-merge="1"] .carte-inline-note + .carte-inline-note::before {
   content: " · ";
   margin-left: .55em;
 }
-/* --- Page « Apéritifs + Whiskies + Digestifs + Bières » ---
-   Les quatre catégories s'empilent pleine largeur, comme fraîches + chaudes.
-   Quand la hauteur manque, le générateur pose carte-2col sur les sections les
-   plus grandes : leurs lignes s'étalent alors sur deux colonnes — même règle
-   que le mode deux colonnes du site : wrappers .price-list__col rendus en
-   display:contents, chaque wrapper nourrit sa colonne. La spécificité est
-   plus forte que la neutralisation 1fr posée plus haut (1,4,0 contre 1,3,0),
-   donc la levée l'emporte sur les blocs marqués seulement. */
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"].carte-2col .price-list--cols {
+/* --- Pages empilées à bascule (boissons, cocktails) ---
+   Les catégories s'empilent pleine largeur, comme fraîches + chaudes. Quand
+   la hauteur manque, le générateur pose carte-2col sur les sections les plus
+   grandes : leurs lignes s'étalent alors sur deux colonnes — même règle que
+   le mode deux colonnes du site : wrappers .price-list__col / .hh-list__col
+   rendus en display:contents, chaque wrapper nourrit sa colonne (les listes
+   HH simples, sans wrappers, répartissent leurs lignes en rangées, l'en-tête
+   traversant). La spécificité est plus forte que la neutralisation 1fr posée
+   plus haut (1,4,0 contre 1,3,0), donc la levée l'emporte sur les blocs
+   marqués seulement. */
+#print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols,
+#print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols,
+#print-document .carte-flow [data-merge="1"].carte-2col .hh-list {
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: 18px;
 }
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"].carte-2col .price-list--cols .price-list__col {
+#print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols .price-list__col,
+#print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-list__col {
   display: contents !important;
 }
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"].carte-2col .price-list--cols .price-list__col:nth-child(1) > * {
+#print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols .price-list__col:nth-child(1) > *,
+#print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(1) > * {
   grid-column: 1;
 }
-#print-document .carte-flow[data-sec="boissons"] [data-merge="1"].carte-2col .price-list--cols .price-list__col:nth-child(2) > * {
+#print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols .price-list__col:nth-child(2) > *,
+#print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(2) > * {
   grid-column: 2;
+}
+/* En-tête fantôme de la colonne 2 (celui que le site montre à ≥1480 px) :
+   visible quand la liste --cols bascule en deux colonnes de lignes. */
+#print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-head--ghost {
+  display: grid !important;
+  visibility: visible !important;
+}
+/* Listes HH simples (Spritz, Mules, Mocktails) : l'en-tête traverse les deux
+   colonnes, les lignes se répartissent en rangées. */
+#print-document .carte-flow [data-merge="1"].carte-2col .hh-list > .hh-head {
+  grid-column: 1 / -1;
 }
 /* Le document de mesure (probe) : mêmes règles, même écart entre les blocs. */
 .carte-twocolsec-probe .tab-flow { row-gap: 18px; }
-/* Le duo empilé ne doit pas étirer ses panneaux pour remplir la feuille. */
-html.carte-doc .carte-flow[data-sec="cocktails"] .duo-grid > .panel { flex: 0 1 auto !important; }
 /* Même arbitrage que pour les vins, côté carte des cocktails : une ligne = un nom et
    un prix, le blanc de respiration est donc entièrement dans le padding de ligne. En
    le serrant de 8 à 5,5 px et en rendant au nom sa pleine taille, la page se compose
@@ -1324,10 +1391,14 @@ def measure_doc(css: str, flows: dict[str, list[str]], viewport: int,
                      + inner + "\n</div>")
     ratios = ",".join(f"{r:.2f}" for r in WIDTH_RATIOS)
     refs = json.dumps(MESURE_REFS, ensure_ascii=False)
+    # le compte de blocs attendu par onglet : le générateur peut en avoir plus
+    # que le site (le duo-grid des cocktails est séparé en deux panneaux)
+    blocks = json.dumps({sid: len(flows[sid]) for sid in SECTIONS})
     return f"""<!DOCTYPE html>
 <html lang="fr" class="carte-doc carte-measure" data-carte-viewport="{viewport}"
       data-carte-index-hash="{idx_hash}" data-carte-css-hash="{css_hash}"
-      data-carte-width-ratios="{ratios}" data-carte-refs='{refs}'>
+      data-carte-width-ratios="{ratios}" data-carte-refs='{refs}'
+      data-carte-blocks='{blocks}'>
 <head>
 <meta charset="UTF-8">
 <title>Mesure — carte La Colline Gambetta</title>
@@ -1584,10 +1655,17 @@ def choose_section(metrics: dict, sid: str, w0: float, f_uniform: float | None =
         fits = []
         for idx, load in zip(plan["sheets"], plan["loads"]):
             is_twocol = tuple(idx) in twoc
-            k = 1 if is_twocol else len(idx)
-            gap = justify_gaps(load, k, v["gap"], v["fit"])
-            total = load + (0 if is_twocol else max(0, len(idx) - 1) * (gap - GAP_PACK))
-            fits.append(min(v["fit"], ZONE_H_PX * SAFETY / total))
+            mode = plan.get("twocol_mode", {}).get(tuple(idx), []) if is_twocol else []
+            justify = not is_twocol or not mode
+            k = len(idx) if justify else 1
+            gap = justify_gaps(load, k, v["gap"], v["fit"]) if justify \
+                else min(v["gap"], GAP_PACK)
+            total = load + (0 if not justify else max(0, len(idx) - 1) * (gap - GAP_PACK))
+            cap = ZONE_H_PX * SAFETY
+            if total * v["fit"] > cap or (is_twocol and total * v["fit"] < cap * 0.97):
+                fits.append(cap / total)   # la garde (haute ou basse) recadre
+            else:
+                fits.append(v["fit"])
         return min(fits)
 
     pool.sort(key=lambda p: (0 if p["v"]["fit"] >= FIT_MIN - 1e-9 else 1,
@@ -1668,7 +1746,7 @@ def layout(metrics: dict, uniforme: bool = False):
 
 def main() -> None:
     src = index_text()
-    flows = {sid: split_flow(section_flow(src, sid)) for sid in SECTIONS}
+    flows = {sid: split_duo_grids(split_flow(section_flow(src, sid))) for sid in SECTIONS}
     # Les blocs insécables (MERGE) portent data-merge="1" dans la carte comme
     # dans le document de mesure : la CSS de la carte les reconnait ainsi.
     for sid, groups in MERGE.items():
@@ -1699,32 +1777,43 @@ def main() -> None:
             n = len(pages) + 1
             fit = var["fit"]
             is_twocol = tuple(idx) in TWOC.get(sid, ())
+            mode = plan.get("twocol_mode", {}).get(tuple(idx), []) if is_twocol else []
             # sécurité : une feuille qui dépasserait malgré tout se réduit elle-même.
             # La garde porte sur le total RÉEL de la page — blocs + inter-panneaux
             # justifiés (le load du plan ne compte que GAP_PACK entre blocs, et la
             # justification repousse ensuite le bas de la feuille sur le cadre : une
             # page à 101 % de blocs débordait sans que load * fit ne le voie). Une
-            # feuille TWOC est une unité : ses écarts internes (load) sont
-            # comptés à GAP_PACK entre blocs, comme le plan — le row-gap posé
-            # sur la page doit donc être GAP_PACK lui aussi, pas le gap du site,
-            # sinon le rendu dépasse le calcul de la garde.
-            k = 1 if is_twocol else len(idx)
-            gap = min(var["gap"], GAP_PACK) if is_twocol \
-                else justify_gaps(load, k, var["gap"], fit)
-            total = load + (0 if is_twocol else max(0, len(idx) - 1) * (gap - GAP_PACK))
+            # feuille TWOC dont AUCUNE section n'est basculée en deux colonnes se
+            # comporte comme une page classique : ses inter-panneaux se justifient
+            # pour border le cadre. Dès qu'une section est basculée (page dense),
+            # on ne justifie plus : les écarts internes du load sont comptés à
+            # GAP_PACK et le row-gap posé sur la page doit être GAP_PACK lui aussi,
+            # pas le gap du site, sinon le rendu dépasserait le calcul de la garde.
+            justify = not is_twocol or not mode
+            k = len(idx) if justify else 1
+            gap = justify_gaps(load, k, var["gap"], fit) if justify \
+                else min(var["gap"], GAP_PACK)
+            total = load + (0 if not justify else max(0, len(idx) - 1) * (gap - GAP_PACK))
             base_w = var["w"]
-            if total * fit > ZONE_H_PX * SAFETY:
-                # La hauteur plafonne : la feuille se réduit jusqu'à tenir debout.
-                # Sans rien faire de plus, elle laisserait un blanc à droite (la
-                # composition resterait à la largeur du site) ; on l'élargit donc
-                # d'autant — la page se tient sur toute la largeur ET toute la
-                # hauteur du A4. Borné à la plus large composition mesurée, où
-                # aucune section ne déborde horizontalement.
+            if total * fit > ZONE_H_PX * SAFETY or (is_twocol and total * fit < ZONE_H_PX * SAFETY * 0.97):
+                # La hauteur cadre la feuille : si le contenu déborde, elle se
+                # réduit jusqu'à tenir debout ; si une feuille TWOC la laisse à
+                # plus de 3 % de blanc (catégories courtes, justification
+                # bornée), elle grossit pour border le cadre. Dans les deux
+                # cas, sans rien faire de plus, elle laisserait un blanc à
+                # droite (la composition resterait à la largeur du site) ; on
+                # l'élargit donc d'autant — la page se tient sur toute la
+                # largeur ET toute la hauteur du A4. Borné à la plus large
+                # composition mesurée, où aucune section ne déborde
+                # horizontalement. (La garde basse ne s'applique qu'aux pages
+                # TWOC : leurs hauteurs sont constantes entre les largeurs
+                # mesurées, le déplacement de base_w est donc sûr ; les pages
+                # classiques remplissent par la justification et restent sur
+                # une largeur mesurée.)
                 fit = ZONE_H_PX * SAFETY / total
                 base_w = min(ZONE_W_PX / fit, max(WIDTH_RATIOS) * metrics["base_width"])
-                gap = min(var["gap"], GAP_PACK) if is_twocol \
-                    else justify_gaps(load, k, var["gap"], fit)
-            mode = plan.get("twocol_mode", {}).get(tuple(idx), []) if is_twocol else []
+                gap = justify_gaps(load, k, var["gap"], fit) if justify \
+                    else min(var["gap"], GAP_PACK)
             content = secs_markup(flows[sid], idx, mode) if is_twocol \
                 else "\n".join(flows[sid][i] for i in idx)
             pages.append(page_shell(n, sid, content,
@@ -1732,7 +1821,7 @@ def main() -> None:
             tailles.append(TITRE_SITE_PX * fit * pts)
             labels.append(
                 f"{sid:9} blocs {'+'.join(str(i + 1) for i in idx):9} — "
-                f"hauteur {(load if is_twocol else load + max(0, len(idx) - 1) * gap) * fit / ZONE_H_PX * 100:3.0f} %, "
+                f"hauteur {(load if not justify else load + max(0, len(idx) - 1) * (gap - GAP_PACK)) * fit / ZONE_H_PX * 100:3.0f} %, "
                 f"largeur {base_w * fit / ZONE_W_PX * 100:3.0f} %, "
                 f"intitulés {TITRE_SITE_PX * fit * pts:4.1f} pt"
                 + (" ⚠ sous le plancher" if TITRE_SITE_PX * fit * pts < TITRE_MIN_PT - 0.05 else "")
