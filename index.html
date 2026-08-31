@@ -4004,52 +4004,63 @@ html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
 
 /* ===== Page de garde : titre toujours visible même en paysage très bas (≈400×250) ===== */
 @media (max-height: 450px) {
+  html:not(.carte-doc) #cover-section {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100svh !important;
+  }
   html:not(.carte-doc) #cover-section .cover-page {
-    padding: 6px 12px 8px !important;
+    padding: 4px 10px 6px !important;
     gap: 0 !important;
     overflow-y: auto !important;
+    justify-content: flex-start !important;
+    min-height: 100svh !important;
+    height: auto !important;
+    max-height: none !important;
   }
   html:not(.carte-doc) #cover-section .cover-brand {
-    margin-bottom: 10px !important;
+    margin-bottom: 8px !important;
     gap: 2px !important;
     flex: 0 0 auto !important;
+    display: block !important;
   }
   html:not(.carte-doc) #cover-section .cover-brand--menu-leader-lite .eyebrow,
   html:not(.carte-doc) #cover-section .leader-title {
-    font-size: clamp(0.8rem, 2.8vh, 1.1rem) !important;
+    font-size: clamp(0.75rem, 2.5vh, 1rem) !important;
     letter-spacing: .06em !important;
   }
   html:not(.carte-doc) #cover-section .leader-meta,
   html:not(.carte-doc) #cover-section .menu-leader-subline {
-    font-size: clamp(0.45rem, 1.8vh, 0.6rem) !important;
+    font-size: clamp(0.42rem, 1.6vh, 0.58rem) !important;
     letter-spacing: .04em !important;
-    line-height: 1.2 !important;
+    line-height: 1.15 !important;
   }
   html:not(.carte-doc) #cover-section .medallion-container {
-    margin-top: 10px !important;
+    margin-top: 8px !important;
   }
   html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
-    width: max(60px, min(calc(100svh - 140px), 180px)) !important;
+    width: max(50px, min(calc(100svh - 160px), 160px)) !important;
     max-width: calc(100% - 8px) !important;
-    margin-bottom: 10px !important;
+    margin-bottom: 8px !important;
   }
   html:not(.carte-doc) #cover-section .medallion-container .cover-action {
-    min-height: clamp(28px, 5vh, 40px) !important;
-    font-size: clamp(0.6rem, 2vh, 0.78rem) !important;
-    padding: 4px 12px !important;
+    min-height: clamp(26px, 4.5vh, 38px) !important;
+    font-size: clamp(0.58rem, 1.8vh, 0.72rem) !important;
+    padding: 4px 10px !important;
   }
   html:not(.carte-doc) #cover-section .cover-footer {
-    margin-top: 6px !important;
-    gap: 4px !important;
+    margin-top: 4px !important;
+    gap: 3px !important;
   }
   html:not(.carte-doc) #cover-section .cover-footer-address {
-    font-size: clamp(0.5rem, 1.6vh, 0.65rem) !important;
-    line-height: 1.2 !important;
+    font-size: clamp(0.48rem, 1.5vh, 0.62rem) !important;
+    line-height: 1.15 !important;
   }
   html:not(.carte-doc) #cover-section .cover-links .contact-link {
-    min-height: clamp(26px, 5vh, 36px) !important;
-    font-size: clamp(0.5rem, 1.6vh, 0.65rem) !important;
-    padding: 3px 6px !important;
+    min-height: clamp(24px, 4.5vh, 34px) !important;
+    font-size: clamp(0.48rem, 1.5vh, 0.62rem) !important;
+    padding: 2px 5px !important;
   }
 }
 
@@ -4924,7 +4935,13 @@ function showMenuSection(sectionId, btnElement) {
   }
   syncMenuNavHints();
   const anchor = document.getElementById('menu-nav-anchor');
-  const target = anchor ? Math.max(0, Math.round(anchor.getBoundingClientRect().top + window.scrollY)) : 0;
+  /* Compenser la hauteur des bandeaux sticky (top-controls + menu-nav-wrap)
+     pour que le contenu démarre en dessous, pas caché derrière. */
+  const topCtrl = document.querySelector('.top-controls');
+  const navWrap = document.getElementById('menu-nav-wrap');
+  const stickyOffset = ((topCtrl && topCtrl.offsetParent !== null) ? topCtrl.offsetHeight : 0)
+                     + (navWrap ? navWrap.offsetHeight : 0);
+  const target = anchor ? Math.max(0, Math.round(anchor.getBoundingClientRect().top + window.scrollY - stickyOffset)) : 0;
   animateScrollTo(target, 240);
 }
 function animateScrollTo(targetY, duration) {
