@@ -157,6 +157,7 @@ button,a { font:inherit; }
   .hh-list--cols {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: dense;
     gap: 18px;
   }
   .price-list--cols .price-list__col,
@@ -3413,6 +3414,10 @@ html:not(.carte-doc) #menus .offer-card {
   html:not(.carte-doc) .price-list--cols,
   html:not(.carte-doc) .hh-list--cols {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  html:not(.carte-doc) .price-list--cols,
+  html:not(.carte-doc) .hh-list--cols {
+    grid-auto-flow: dense !important;
   }
   /* Listes 2 colonnes : aplatir les conteneurs pour aligner les rangs */
   html:not(.carte-doc) .price-list--cols .price-list__col,
