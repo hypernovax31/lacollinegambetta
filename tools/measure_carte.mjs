@@ -191,12 +191,16 @@ async function main() {
           // carte-2col (sauf le bandeau), empilés — hauteurs individuelles et
           // débordement horizontal à cette largeur. Absent pour les sections
           // sans groupe TWOC.
-          const probe = sec.querySelector('.carte-twocolsec-probe');
+          // plusieurs groupes TWOC par section (cocktails : deux pages) : on
+          // fusionne les probes — chaque bloc n'apparaît que dans le sien
+          const probes = sec.querySelectorAll('.carte-twocolsec-probe');
           let heights2col = null, overflow2col = null;
-          if (probe) {
+          if (probes.length) {
             const map = new Map();
-            for (const el of probe.querySelectorAll(':scope [data-block]')) {
-              map.set(Number(el.dataset.block), el);
+            for (const probe of probes) {
+              for (const el of probe.querySelectorAll(':scope [data-block]')) {
+                map.set(Number(el.dataset.block), el);
+              }
             }
             // aligné sur les indices du flux principal (null hors probe) : le
             // build compare hs[i] et hs2[i] bloc à bloc
