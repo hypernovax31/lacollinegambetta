@@ -39,11 +39,12 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
   haut et en bas de la largeur du site : au-dessus, le bloc s'étire sans rien
   casser, en dessous il se resserre et monte) et **son facteur est `zone / w`** :
   border le cadre en largeur n'est plus une intention, c'est l'identité. La
-  hauteur, elle, décide du nombre de feuilles — on prend la largeur la plus
-  étroite qui ne fait pas dépasser l'enveloppe de dix pages, donc le plus gros
-  caractère possible. Journal d'un build : × 0,5690 (plats, boissons, cocktails)
-  à × 0,7824 (menus), soit des intitulés de 7,6 à 10,5 pt, feuilles à 91-100 % de
-  la hauteur et 100 % de la largeur.
+  hauteur, elle, décide du nombre de feuilles — en réglage individuel
+  (`--per-onglet`) on prend la largeur la plus étroite qui ne fait pas
+  dépasser l'enveloppe de dix pages, donc le plus gros caractère possible
+  (journal d'un build : × 0,5690 (plats, boissons, cocktails) à × 0,7824
+  (menus), soit des intitulés de 7,6 à 10,5 pt, feuilles à 91-100 % de la
+  hauteur et 100 % de la largeur).
 - **Le blanc restant en bas devient du jeu entre panneaux.** Une feuille remplie
   à 82 % n'a pas un problème de caractères mais de souffle : la hauteur restante
   est répartie dans `row-gap` du flux (porté en style inline sur `.tab-flow`, donc
@@ -55,10 +56,14 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
   papier) est une limite basse signalée par le build — l'enveloppe de dix pages
   passe avant elle, mais aucune des neuf feuilles de contenu n'y descend
   aujourd'hui. Il n'y a pas de plafond assumé : une page qui ne se remplit
-  qu'en grossissant son caractère doit pouvoir le grossir. Le revers est connu
-  et voulu : le corps de la carte varie d'un onglet à l'autre. `--uniforme` fige
-  tous les onglets sur le plus grand facteur qui les laisse tous à dix pages
-  (× 0,5690, 7,6 pt partout, avec des feuilles de 70 à 99 %).
+  qu'en grossissant son caractère doit pouvoir le grossir. **Depuis la refonte
+  « une seule police », le corps de la carte est uniforme** : la page des plats
+  (la plus dense) fixe le gabarit — composition à 1 254 px, × 0,5690, intitulés
+  à 7,6 pt — et tous les onglets prennent ce même facteur, la page « Nos Menus »
+  exceptée (ses cartons gardent leur corps propre, × 0,7824). Les feuilles
+  moins denses s'arrêtent avant le bas du cadre (70 à 99 % de hauteur) : c'est
+  le prix de l'uniformité, le blanc reste entre les panneaux, jamais au-delà du
+  cadre. `--per-onglet` rend la main au réglage individuel.
 - **La feuille des vins n'est pas un tableur.** Le site pose ses vins en tableau :
   bandes alternées sous les lignes, filet plein sous chaque cellule, quatre
   colonnes bord à bord — à l'écran un outil de lecture, sur papier un tableau

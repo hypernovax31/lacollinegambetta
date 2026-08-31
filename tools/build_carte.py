@@ -15,7 +15,8 @@ aucun corps n'est bricolé à la main.
     python3 tools/build_carte.py     → carte.html
     npm run build:carte-pdf          → carte-a4-pages/*.jpg + carte-a4.pdf
 
-Options : --no-measure (réutiliser carte-metrics.json même périmé).
+Options : --no-measure (réutiliser carte-metrics.json même périmé),
+          --per-onglet (taille de police par onglet au lieu de l'échelle unique).
 """
 from __future__ import annotations
 
@@ -89,7 +90,13 @@ PX_PER_MM = 96 / 25.4
 ZONE_W_PX = ZONE_W_MM * PX_PER_MM                                    # 695,43 px
 ZONE_H_PX = (SHEET_H_MM - ZONE_TOP_MM - ZONE_BOTTOM_MM) * PX_PER_MM  # 842,86 px
 
-UNIFORME = "--uniforme" in sys.argv   # échelle unique pour tous les onglets
+# Échelle unique de police pour toute la carte, sauf la page « Nos Menus »
+# (FORMULES) qui garde sa taille propre (demande expresse). Le gabarit est la
+# page des plats — la plus dense : la seule taille qui la laisse tenir sur sa
+# feuille, 7,6 pt, devient la taille de toute la carte. `--per-onglet` rend la
+# main au réglage individuel (chaque feuille au plus grand corps qui tient).
+UNIFORME = "--per-onglet" not in sys.argv
+UNIFORME_EXCEPT = {"menus"}
 # Largeurs de composition essayées, en fractions de celle du site. Au-dessus de 1,
 # le bloc est étiré (le site compose à 1 140 px mais rien ne l'oblige à rester à sa
 # largeur de conteneur quand on le pose sur papier) ; en dessous, il se resserre et
@@ -230,15 +237,17 @@ _ARTICLE_RE = re.compile(r'<article class="price-line"[^>]*>.*?</article>', re.S
 
 def _inline_note_in_article(article: str) -> str:
     """Les notes (.price-list__note) d'un article remontent dans sa ligne,
-    juste après le nom — l'article ne tient plus qu'une ligne."""
-    notes = re.findall(r'<p class="price-list__note[^"]*">(.*?)</p>', article, re.S)
+    juste après le nom — l'article ne tient plus qu'une ligne. La classe
+    note-cl (contenance) est conservée : la CSS lui garde son corps propre
+    (--qty-size), distinct du corps des notes descriptives."""
+    notes = re.findall(r'<p class="price-list__note([^"]*)">(.*?)</p>', article, re.S)
     if not notes:
         return article
     name = re.search(r'(<div class="(?:price-line__name|hh-line__name)">)(.*?)(</div>)', article, re.S)
     if not name:
         return article
     article = re.sub(r'<p class="price-list__note[^"]*">.*?</p>', '', article, flags=re.S)
-    inline = "".join(f'<span class="carte-inline-note">{n}</span>' for n in notes)
+    inline = "".join(f'<span class="carte-inline-note{cls}">{n}</span>' for cls, n in notes)
     return article.replace(
         name.group(0), name.group(1) + name.group(2) + inline + name.group(3), 1)
 
@@ -1083,9 +1092,9 @@ CARD_OVERRIDES = """
    que pour les cocktails).
    L'analyse de hauteur (voir le plan de build) montre que les listes en une
    colonne ne tiennent pas sur la feuille à l'espacement du site : on resserre
-   l'interligne de ces panneaux seulement (padding 3 px au lieu de 8, nom
-   16,5 px au lieu de 17,9, notes 11,5 px) — le reste de l'onglet garde la
-   typo du site. Les sélecteurs sont en descendant (pas `>`) : un bloc
+   l'interligne de ces panneaux seulement (padding 3 px au lieu de 8) — les
+   noms, notes et prix gardent les corps uniformes de la carte (ceux de la
+   page des plats). Les sélecteurs sont en descendant (pas `>`) : un bloc
    basculé en deux colonnes de lignes (carte-2col) garde ses règles de
    panneau, seule la grille de lignes change. */
 #print-document .carte-flow [data-merge="1"] .price-list--cols,
@@ -1134,35 +1143,33 @@ CARD_OVERRIDES = """
 #print-document .carte-flow [data-merge="1"] .hh-line {
   padding: 3px 0;
 }
-#print-document .carte-flow [data-merge="1"] .price-line__name,
-#print-document .carte-flow [data-merge="1"] .hh-line__name {
-  font-size: 16.5px !important;
-}
-#print-document .carte-flow [data-merge="1"] .price-list__note,
-#print-document .carte-flow [data-merge="1"] .hh-list__note {
-  font-size: 11.5px !important;
-}
-/* Cocktails : prix et tarif HH un cran plus petits que l'intitulé — la
-   réduction générale de la page (fit) les fait déjà suivre, on marque en plus
-   la hiérarchie : le nom reste le premier mot de la ligne. */
+/* Taille de police unique (la page des plats fait gabarit) : les noms, les
+   notes et les prix des blocs insécables retombent sur les corps du site —
+   1,12 rem / 0,98 rem / 1,28 rem — les mêmes que la page des plats. Rien ne
+   les réduit plus : seule la contenance (.note-cl) garde son corps propre. */
 #print-document .carte-flow [data-merge="1"] .hh-line__price,
 #print-document .carte-flow [data-merge="1"] .hh-line__hh {
-  font-size: .92em !important;
+  font-size: 1.28rem !important;
 }
 /* Notes remontées dans la ligne (le générateur les a déplacées après le nom,
-   en .carte-inline-note) : petites, en italique comme sur le site, en retrait
-   — ce sont des informations de service, pas des noms. nowrap : une note ne
-   fait jamais déborder sa ligne ; si la place manque, la variante de largeur
-   est écartée par la mesure (overflow) avant de servir. */
+   en .carte-inline-note) : en italique comme sur le site, en retrait — ce
+   sont les informations de la ligne, même corps que les notes de la carte
+   (0,98 rem). La contenance (.note-cl) garde son corps propre (--qty-size),
+   un cran sous les notes, comme sur le site. nowrap : une note ne fait
+   jamais déborder sa ligne ; si la place manque, la variante de largeur est
+   écartée par la mesure (overflow) avant de servir. */
 #print-document .carte-flow [data-merge="1"] .carte-inline-note {
   display: inline;
-  font-size: 11.5px !important;
+  font-size: 0.98rem !important;
   font-weight: 400 !important;
   font-style: italic;
   line-height: 1.3;
   color: var(--muted);
   white-space: nowrap;
   margin-left: .55em;
+}
+#print-document .carte-flow [data-merge="1"] .carte-inline-note.note-cl {
+  font-size: var(--qty-size) !important;
 }
 #print-document .carte-flow [data-merge="1"] .carte-inline-note + .carte-inline-note {
   margin-left: 0;
@@ -1214,17 +1221,14 @@ CARD_OVERRIDES = """
 }
 /* Le document de mesure (probe) : mêmes règles, même écart entre les blocs. */
 .carte-twocolsec-probe .tab-flow { row-gap: 18px; }
-/* Même arbitrage que pour les vins, côté carte des cocktails : une ligne = un nom et
-   un prix, le blanc de respiration est donc entièrement dans le padding de ligne. En
-   le serrant de 8 à 5,5 px et en rendant au nom sa pleine taille, la page se compose
-   plus étroite — donc plus grande — sans changer une ligne du site. */
+/* Côté carte des cocktails : une ligne = un nom et un prix, le blanc de
+   respiration est donc entièrement dans le padding de ligne. En le serrant de
+   8 à 5,5 px, la page se compose plus étroite — donc plus grande — sans
+   changer une ligne du site. Le nom garde le corps uniforme de la carte
+   (1,12 rem, comme la page des plats). */
 html.carte-doc .carte-flow[data-sec="cocktails"] .price-line,
 html.carte-doc .carte-flow[data-sec="cocktails"] .hh-line {
   padding: 5.5px 0;
-}
-html.carte-doc .carte-flow[data-sec="cocktails"] .price-line__name,
-html.carte-doc .carte-flow[data-sec="cocktails"] .hh-line__name {
-  font-size: 18.6px !important;
 }
 
 /* --- La page « Nos Menus » : trois cartons d'une seule hauteur --------------
@@ -1295,17 +1299,13 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td {
   border-bottom: 1px dotted rgba(156, 122, 45, .38) !important;  /* pointillé du site, pas trait plein */
   padding: 5px 0;                              /* l'air vient du filet, pas de la cellule */
 }
-/* Le corps d'une carte des vins se lit à bout de bras sur une feuille unique : le
-   site compose ses lignes à 15,6 et 16,2 px (clamp()), ce qui donnerait 5,9 pt sur
-   le papier une fois l'onglet réduit pour tenir sa page. On leur rend leur rôle —
-   le nom de la bouteille d'abord — en les remontant à ~18,5 px, et la place est
-   reprise sur le blanc de cellule. Le site, lui, garde ses clamp() intacts. */
+/* Le corps d'une carte des vins suit la taille uniforme de la carte (1,12 rem
+   pour le nom, 1,28 rem pour les prix — les corps de la page des plats) : le
+   site compose ses lignes plus petites (clamp()), la carte leur rend le corps
+   commun au lieu d'un corps propre. La place est reprise sur le blanc de
+   cellule (padding 5 px). Le site, lui, garde ses clamp() intacts. */
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table .wine-name {
-  font-size: 18.4px !important;
   line-height: 1.32;
-}
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:not(.wine-name) {
-  font-size: 18.8px !important;
 }
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table tbody tr:last-child td {
   border-bottom: 0 !important;                 /* le panneau se ferme sans filet */
@@ -1332,6 +1332,29 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
    de la bouteille ; sans gras, comme les informations — italique, encre douce
    (la même que les notes), un cran plus petit pour que l'appellation reste le
    premier mot. Le générateur pose .carte-wine-producer sur cette partie. */
+/* « Prix unifiés » du site (≥1100 px) : la règle qui porte les prix à
+   1,28 rem oublie #desserts — sa base 0,84 rem (le #desserts rescopé en
+   :is(#desserts, …) garde sa spécificité d'id) gagne donc sur la page des
+   desserts, dont les prix sortent plus petits que ceux des plats. La carte
+   rétablit le corps commun : les prix sont partout ceux de la page des
+   plats (le sélecteur porte #print-document pour reprendre l'avantage d'id). */
+#print-document .carte-flow[data-sec="desserts"] .food-card__head strong {
+  font-size: 1.28rem !important;
+}
+/* Notes des cocktails : la base 0,84 rem du site porte une variante
+   :is(#cocktails, …) (spécificité d'id) que la règle ≥1100 px (0,98 rem) n'a
+   pas — les notes sous les libellés sortiraient plus petites que celles des
+   plats. La carte rétablit le corps commun des informations (0,98 rem). */
+#print-document .carte-flow[data-sec="cocktails"] .price-list__note,
+#print-document .carte-flow[data-sec="cocktails"] .hh-list__note {
+  font-size: 0.98rem !important;
+}
+/* Cellules de prix du tableau des vins : la règle « prix unifiés » ≥1100 px
+   ne couvre pas .wine-table td (clamp 0,85-1,08 rem) — les prix des
+   bouteilles sortiraient plus petits que ceux des plats. Même corps commun. */
+#print-document .carte-flow[data-sec="vins"] .wine-table td:not(.wine-name) {
+  font-size: 1.28rem !important;
+}
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name .carte-wine-producer {
   font-weight: 400;
   font-style: italic;
@@ -1763,7 +1786,11 @@ def garde_uniformite(metrics: dict, chosen: dict) -> None:
 
 
 def layout(metrics: dict, uniforme: bool = False):
-    """Découpage et cadrage de chaque onglet, bord à bord dans le cadre."""
+    """Découpage et cadrage de chaque onglet, bord à bord dans le cadre.
+
+    En mode uniforme (défaut), un seul facteur sert à toute la carte — la
+    page des plats (le plus petit corps qui tienne, 7,6 pt) fait gabarit —
+    sauf la page « Nos Menus » (UNIFORME_EXCEPT), qui garde sa taille propre."""
     w0 = min(v["flow_width"] for v in metrics["sections"].values())
     if w0 < 300:
         raise SystemExit(f"largeur de composition mesurée à {w0} px : la mesure est fausse "
@@ -1773,16 +1800,20 @@ def layout(metrics: dict, uniforme: bool = False):
                    for sid in SECTIONS}
     f_uniform = None
     if uniforme:
-        # Une seule échelle pour tout le document. À facteur unique, la largeur de
-        # composition est la même partout (w = zone / f) : on cherche donc la PLUS
-        # PETITE largeur — donc le plus gros caractère — qui laisse chaque onglet au
-        # nombre de feuilles qu'il atteint dans sa meilleure configuration. Grossir
-        # encore coûterait une feuille, et l'enveloppe de 10 pages est un plafond dur.
-        largeurs = sorted({p["v"]["w"] for sid in SECTIONS for p in par_section[sid]})
+        # Une seule échelle pour tout le document — sauf les onglets de
+        # UNIFORME_EXCEPT (la page « Nos Menus » garde son corps propre). À
+        # facteur unique, la largeur de composition est la même partout
+        # (w = zone / f) : on cherche donc la PLUS PETITE largeur — donc le
+        # plus gros caractère — qui laisse chaque onglet au nombre de feuilles
+        # qu'il atteint dans sa meilleure configuration. Grossir encore
+        # coûterait une feuille, et l'enveloppe de 10 pages est un plafond dur.
+        uniforme_sids = [s for s in SECTIONS if s not in UNIFORME_EXCEPT]
+        largeurs = sorted({p["v"]["w"] for sid in uniforme_sids
+                           for p in par_section[sid]})
         candidats = []
         for w in largeurs:
             total, complet = 0, True
-            for sid in SECTIONS:
+            for sid in uniforme_sids:
                 cand = [p for p in par_section[sid] if p["v"]["w"] == w]
                 if not cand:
                     complet = False
@@ -1793,7 +1824,8 @@ def layout(metrics: dict, uniforme: bool = False):
         if candidats:
             meilleurs = min(total for total, _ in candidats)
             f_uniform = ZONE_W_PX / min(w for total, w in candidats if total == meilleurs)
-    chosen = {sid: choose_section(metrics, sid, w0, f_uniform,
+    chosen = {sid: choose_section(metrics, sid, w0,
+                                  None if sid in UNIFORME_EXCEPT else f_uniform,
                                   MERGE.get(sid, ()), TWOC.get(sid, ()))
               for sid in SECTIONS}
     return chosen, w0, f_uniform
@@ -1916,8 +1948,8 @@ html.carte-doc {{
           f"{metrics['viewport']} px, site composé à {w0:g} px")
     print(f"  zone utile {ZONE_W_MM:.1f} × {SHEET_H_MM - ZONE_TOP_MM - ZONE_BOTTOM_MM:.1f} mm, "
           f"soit {JEU_DANS_CADRE_MM:.1f} mm dans le filet doré · "
-          + (f"échelle unique × {ZONE_W_PX / min(p['v']['w'] for p in chosen.values()):.4f}"
-             if f_uniform else "largeur de composition réglée par onglet"))
+          + (f"échelle unique × {f_uniform:.4f}" if f_uniform
+             else "largeur de composition réglée par onglet"))
     print(f"  intitulés (17,9 px site) de {min(tailles):.1f} pt à {max(tailles):.1f} pt sur le papier")
     for label in labels:
         print(f"  {label}")
