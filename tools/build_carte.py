@@ -42,6 +42,15 @@ BASE_VIEWPORT = 1180        # largeur d'écran à laquelle le site est composé
 # denses gardent leurs deux feuilles, dans le même ordre.
 SECTIONS = ["entrees", "plats", "menus", "boissons", "cocktails", "vins", "desserts"]
 
+# Blocs qui ne doivent jamais être séparés entre deux feuilles : « Boissons
+# fraîches » + « Boissons chaudes » se partagent une seule page (demande
+# expresse), le packeur les traite donc comme une unité insécable. Les indices
+# sont ceux des blocs de .tab-flow, dans l'ordre du document. Ces blocs sont
+# marqués data-merge="1" dans la carte comme dans le document de mesure : la
+# CSS de la carte (CARD_OVERRIDES) les reconnaît par ce marqueur — et pas par
+# leur position de frère, qui change quand le découpage en pages les isole.
+MERGE = {"boissons": [(0, 1)]}
+
 # Géométrie de la feuille, en accord avec les règles « contenant » plus bas.
 #
 # La zone utile n'est pas un chiffre au hasard : elle se déduit du cadre doré
@@ -894,12 +903,66 @@ CARD_OVERRIDES = """
 /* Cocktails : une seule colonne. À deux colonnes, l'onglet tout entier tenait
    sur une feuille à 96 % et laissait la suivante à 35 % ; en une colonne, il
    se répartit sur deux feuilles du même poids, et le pointillé meneur de prix
-   reste lisible sur toute la largeur, comme pour les whiskies et les bières. */
-html.carte-doc .carte-flow[data-sec="cocktails"] .hh-list--cols,
-html.carte-doc .carte-flow[data-sec="cocktails"] .duo-grid,
-html.carte-doc .carte-flow[data-sec="cocktails"] .hh-list,
-html.carte-doc .carte-flow[data-sec="cocktails"] .price-list--cols {
+   reste lisible sur toute la largeur, comme pour les whiskies et les bières.
+   NB : « une colonne » ne se décrète pas — la règle du site pose
+   grid-column: 1 / 2 sur les lignes des deux colonnes, et un simple
+   grid-template-columns: 1fr laisserait la colonne 2 s'échapper dans une
+   piste implicite auto (deux colonnes asymétriques, comme en paysage très
+   bas sur le site). Il faut aussi rendre le placement automatique.
+   NB2 : le sélecteur porte #print-document — sans lui, la règle écran du
+   site (« deux colonnes max-content »), rescopée dans la carte avec une
+   spécificité d'id, gagnerait sur ces règles purement classées. */
+#print-document .carte-flow[data-sec="cocktails"] .hh-list--cols,
+#print-document .carte-flow[data-sec="cocktails"] .duo-grid,
+#print-document .carte-flow[data-sec="cocktails"] .hh-list,
+#print-document .carte-flow[data-sec="cocktails"] .price-list--cols {
   grid-template-columns: 1fr !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-list--cols .hh-line,
+#print-document .carte-flow[data-sec="cocktails"] .hh-list--cols .hh-list__note,
+#print-document .carte-flow[data-sec="cocktails"] .hh-list--cols .hh-head,
+#print-document .carte-flow[data-sec="cocktails"] .price-list--cols .price-line,
+#print-document .carte-flow[data-sec="cocktails"] .price-list--cols .price-list__note {
+  grid-column: auto !important;
+}
+/* Boissons fraîches + Boissons chaudes : les deux panneaux marqués
+   data-merge (le générateur pose ce marqueur sur les blocs insécables de
+   MERGE) se partagent une seule feuille, chacun en une seule colonne pleine
+   largeur. La règle du site étale leurs lignes sur deux colonnes dès 720 px ;
+   ici on n'en garde qu'une (piste 1fr + placement automatique des lignes,
+   même neutralisation que pour les cocktails).
+   L'analyse de hauteur (voir le plan de build) montre que 30 lignes + leurs
+   notes en une colonne ne tiennent pas sur la feuille à l'espacement du
+   site (1 986 px de composition contre 1 769 px de capacité à la plus large
+   composition) : on resserre l'interligne de ces deux panneaux seulement
+   (padding 3 px au lieu de 8, nom 16,5 px au lieu de 17,9, notes 11,5 px)
+   — le reste de l'onglet garde la typo du site. */
+#print-document .carte-flow[data-sec="boissons"] .tab-flow > [data-merge="1"] .price-list--cols {
+  grid-template-columns: 1fr !important;
+}
+/* Pleine largeur de la feuille : la règle écran du site (« deux colonnes
+   max-content ») pose width: fit-content + margin-inline: auto, rescopée dans
+   la carte elle fait que la grille épouse son contenu et laisse la page à
+   63 % de sa largeur. Ici les lignes courent d'un bord à l'autre du panneau
+   (le pointillé meneur absorbe le blanc), et la page entière se tient sur
+   toute la largeur comme sur toute la hauteur du A4. */
+#print-document .carte-flow[data-sec="boissons"] .tab-flow > [data-merge="1"] .price-list--cols {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-inline: 0 !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .tab-flow > [data-merge="1"] .price-list--cols .price-line,
+#print-document .carte-flow[data-sec="boissons"] .tab-flow > [data-merge="1"] .price-list--cols .price-list__note {
+  grid-column: auto !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .tab-flow > [data-merge="1"] .price-line {
+  padding: 3px 0;
+}
+#print-document .carte-flow[data-sec="boissons"] .tab-flow > [data-merge="1"] .price-line__name {
+  font-size: 16.5px !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .tab-flow > [data-merge="1"] .price-list__note {
+  font-size: 11.5px !important;
 }
 /* Le duo empilé ne doit pas étirer ses panneaux pour remplir la feuille. */
 html.carte-doc .carte-flow[data-sec="cocktails"] .duo-grid > .panel { flex: 0 1 auto !important; }
@@ -1200,41 +1263,64 @@ def check_blocks(metrics: dict, flows: dict[str, list[str]]) -> None:
 # ------------------------------------------------------------------ mise en page
 
 
-def pack_indices(hs: list[float], gap: float, cap: float) -> list[list[int]]:
+def merge_units(hs: list[float], gap: float, merge=()) -> list[tuple[list[int], float]]:
+    """Découpe les blocs en unités insécables.
+
+    Les groupes de `merge` (listes d'indices de blocs) ne peuvent jamais être
+    séparés entre deux feuilles : « Boissons fraîches » + « Boissons chaudes »
+    doivent se partager la même page. Une unité fusionnée a la hauteur de ses
+    blocs plus les gaps internes ; les blocs hors groupe restent des unités
+    d'un seul bloc.
+    """
+    units: list[tuple[list[int], float]] = []
+    used: set[int] = set()
+    for group in merge:
+        idx = [int(i) for i in group]
+        h = sum(hs[i] for i in idx) + gap * (len(idx) - 1)
+        units.append((idx, h))
+        used.update(idx)
+    for i, h in enumerate(hs):
+        if i not in used:
+            units.append(([i], h))
+    return units
+
+
+def pack_indices(hs: list[float], gap: float, cap: float, merge=()) -> list[list[int]]:
     sheets: list[list[int]] = []
     cur: list[int] = []
     load = 0.0
-    for i, h in enumerate(hs):
+    for idx, h in merge_units(hs, gap, merge):
         add = h + (gap if cur else 0.0)
         if cur and load + add > cap:
             sheets.append(cur)
             cur, load = [], 0.0
             add = h
-        cur.append(i)
+        cur.extend(idx)
         load += add
     if cur:
         sheets.append(cur)
     return sheets
 
 
-def balanced_sheets(hs: list[float], gap: float, cap: float) -> list[list[int]]:
+def balanced_sheets(hs: list[float], gap: float, cap: float, merge=()) -> list[list[int]]:
     """Même nombre de feuilles que le remplissage glouton, mais à poids égaux.
 
     Le glouton bourre la première feuille et laisse la dernière à moitié vide ;
     on remonte la charge maximale aussi bas que le permet ce nombre de feuilles,
     ce qui donne le rythme de lecture voulu — et surtout pas une page orpheline.
     """
-    sheets = pack_indices(hs, gap, cap)
+    sheets = pack_indices(hs, gap, cap, merge)
     if len(sheets) < 2:
         return sheets
-    lo, hi = max(hs), cap
+    lo, hi = max(h for _, h in merge_units(hs, gap, merge)), cap
     while hi - lo > 0.5:
         mid = (lo + hi) / 2
-        if len(pack_indices(hs, gap, mid)) <= len(sheets):
+        if len(pack_indices(hs, gap, mid, merge)) <= len(sheets):
             hi = mid
         else:
             lo = mid
-    return pack_indices(hs, gap, hi)
+    return pack_indices(hs, gap, hi, merge)
+
 
 
 def section_variants(metrics: dict, sid: str, w0: float) -> list[dict]:
@@ -1254,7 +1340,7 @@ def section_variants(metrics: dict, sid: str, w0: float) -> list[dict]:
     return out
 
 
-def plan_variants(variants: list[dict]):
+def plan_variants(variants: list[dict], merge=()):
     """Pour chaque largeur : nombre de feuilles, facteur, et le remplissage obtenu.
 
     Le facteur est lié à la largeur par construction (f = zone / largeur) : border le
@@ -1271,7 +1357,7 @@ def plan_variants(variants: list[dict]):
     for v in variants:
         gap_pack = min(v["gap"], GAP_PACK)
         cap = ZONE_H_PX * SAFETY / v["fit"]
-        sheets = balanced_sheets(v["hs"], gap_pack, cap)
+        sheets = balanced_sheets(v["hs"], gap_pack, cap, merge)
         loads = [sum(v["hs"][i] for i in idx) + gap_pack * (len(idx) - 1) for idx in sheets]
         fill = min(load * v["fit"] / ZONE_H_PX for load in loads)
         out.append({"v": v, "sheets": sheets, "loads": loads,
@@ -1279,9 +1365,10 @@ def plan_variants(variants: list[dict]):
     return out
 
 
-def choose_section(metrics: dict, sid: str, w0: float, f_uniform: float | None = None):
+def choose_section(metrics: dict, sid: str, w0: float, f_uniform: float | None = None,
+                   merge=()):
     """Meilleure (largeur de composition, facteur, découpage) pour un onglet."""
-    plans = plan_variants(section_variants(metrics, sid, w0))
+    plans = plan_variants(section_variants(metrics, sid, w0), merge)
     if f_uniform is not None:
         cible = min(plans, key=lambda p: abs(p["v"]["fit"] - f_uniform))
         plans = [cible]
@@ -1334,7 +1421,8 @@ def layout(metrics: dict, uniforme: bool = False):
     if w0 < 300:
         raise SystemExit(f"largeur de composition mesurée à {w0} px : la mesure est fausse "
                          "(onglets non rendus ?) — relancer `node tools/measure_carte.mjs`.")
-    par_section = {sid: plan_variants(section_variants(metrics, sid, w0)) for sid in SECTIONS}
+    par_section = {sid: plan_variants(section_variants(metrics, sid, w0), MERGE.get(sid, ()))
+                   for sid in SECTIONS}
     f_uniform = None
     if uniforme:
         # Une seule échelle pour tout le document. À facteur unique, la largeur de
@@ -1357,13 +1445,21 @@ def layout(metrics: dict, uniforme: bool = False):
         if candidats:
             meilleurs = min(total for total, _ in candidats)
             f_uniform = ZONE_W_PX / min(w for total, w in candidats if total == meilleurs)
-    chosen = {sid: choose_section(metrics, sid, w0, f_uniform) for sid in SECTIONS}
+    chosen = {sid: choose_section(metrics, sid, w0, f_uniform, MERGE.get(sid, ()))
+              for sid in SECTIONS}
     return chosen, w0, f_uniform
 
 
 def main() -> None:
     src = index_text()
     flows = {sid: split_flow(section_flow(src, sid)) for sid in SECTIONS}
+    # Les blocs insécables (MERGE) portent data-merge="1" dans la carte comme
+    # dans le document de mesure : la CSS de la carte les reconnait ainsi.
+    for sid, groups in MERGE.items():
+        for group in groups:
+            for i in group:
+                flows[sid][i] = re.sub(r"^<(\w+)", r'<\1 data-merge="1"',
+                                       flows[sid][i], count=1)
 
     css, stats = compose_css(src)
     print("CSS du site : neutralisation levée → " + ", ".join(f"{k} {v}" for k, v in stats.items()))
@@ -1384,21 +1480,35 @@ def main() -> None:
         for idx, load in zip(sheets, loads):
             n = len(pages) + 1
             fit = var["fit"]
-            # sécurité : une feuille qui dépasserait malgré tout se réduit elle-même
-            if load * fit > ZONE_H_PX * SAFETY:
-                fit = ZONE_H_PX * SAFETY / load
+            # sécurité : une feuille qui dépasserait malgré tout se réduit elle-même.
+            # La garde porte sur le total RÉEL de la page — blocs + inter-panneaux
+            # justifiés (le load du plan ne compte que GAP_PACK entre blocs, et la
+            # justification repousse ensuite le bas de la feuille sur le cadre : une
+            # page à 101 % de blocs débordait sans que load * fit ne le voie).
             gap = justify_gaps(load, len(idx), var["gap"], fit)
+            total = load + max(0, len(idx) - 1) * (gap - GAP_PACK)
+            base_w = var["w"]
+            if total * fit > ZONE_H_PX * SAFETY:
+                # La hauteur plafonne : la feuille se réduit jusqu'à tenir debout.
+                # Sans rien faire de plus, elle laisserait un blanc à droite (la
+                # composition resterait à la largeur du site) ; on l'élargit donc
+                # d'autant — la page se tient sur toute la largeur ET toute la
+                # hauteur du A4. Borné à la plus large composition mesurée, où
+                # aucune section ne déborde horizontalement.
+                fit = ZONE_H_PX * SAFETY / total
+                base_w = min(ZONE_W_PX / fit, max(WIDTH_RATIOS) * metrics["base_width"])
+                gap = justify_gaps(load, len(idx), var["gap"], fit)
             pages.append(page_shell(n, sid, "\n".join(flows[sid][i] for i in idx),
-                                    fit=fit, base_w=var["w"], row_gap=gap))
+                                    fit=fit, base_w=base_w, row_gap=gap))
             tailles.append(TITRE_SITE_PX * fit * pts)
             labels.append(
                 f"{sid:9} blocs {'+'.join(str(i + 1) for i in idx):9} — "
                 f"hauteur {(load + max(0, len(idx) - 1) * gap) * fit / ZONE_H_PX * 100:3.0f} %, "
-                f"largeur {var['w'] * fit / ZONE_W_PX * 100:3.0f} %, "
+                f"largeur {base_w * fit / ZONE_W_PX * 100:3.0f} %, "
                 f"intitulés {TITRE_SITE_PX * fit * pts:4.1f} pt"
                 + (" ⚠ sous le plancher" if TITRE_SITE_PX * fit * pts < TITRE_MIN_PT - 0.05 else "")
 
-                + f" · composition {var['w']:g} px × {fit:.4f}"
+                + f" · composition {base_w:g} px × {fit:.4f}"
                 + (f", inter-panneaux {gap:g} px" if gap > var["gap"] + 0.5 else ""))
 
     html = f"""<!DOCTYPE html>
