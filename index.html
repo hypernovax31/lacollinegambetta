@@ -3195,13 +3195,70 @@ html:not(.carte-doc) .offer-card__sub,
 html:not(.carte-doc) .special-card__sub,
 html:not(.carte-doc) .special-card p,
 html:not(.carte-doc) #menus .special-card p,
-html:not(.carte-doc) .day-option__desc,
-html:not(.carte-doc) .hh-line .price-list__note,
-html:not(.carte-doc) #cocktails .price-list__note {
+html:not(.carte-doc) .day-option__desc {
   font-size: 0.84rem !important;
   line-height: 1.3 !important;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+}
+
+/* ===== Les corps de la carte A4, transposés au site (gabarit page des plats) =====
+   La carte A4 a uniformisé toute sa typographie sur le gabarit de la page des
+   plats : intitulés 1,12 rem, prix 1,28 rem, notes 0,98 rem (17,92 / 20,48 /
+   15,68 px de composition) — les mêmes partout, vins compris. Le site reprend
+   ces corps et les calcule pour le responsive entre deux points ancrés :
+     · très petit écran mobile (≤ 640 px, plancher) : intitulés 0,9 rem,
+       prix 1,03 rem, notes 0,79 rem — mêmes proportions que le papier
+       (prix = intitulé × 1,14, note = intitulé × 0,875) ;
+     · grand écran PC (≥ 1100 px) : les corps exacts de la carte ;
+   entre les deux, les tailles suivent la largeur de la fenêtre (clamp 640 →
+   1100 px). Au-delà de 1440 px, l'agrandissement du corps du document
+   (17,5 px puis 19 px) fait grandir toute la carte avec lui.
+   La page « Nos Menus » garde sa typographie propre, comme la page FORMULES
+   de la carte (exclue de l'uniformisation) : elle reste sur le bloc de base.
+   Le document A4 ne voit rien de tout cela : ces règles sont toutes sous
+   html:not(.carte-doc), que la carte (html.carte-doc) ne matche jamais. */
+html:not(.carte-doc) .food-card__head h5,
+html:not(.carte-doc) #entrees .food-card__head h5,
+html:not(.carte-doc) #plats .food-card__head h5,
+html:not(.carte-doc) #desserts .food-card__head h5,
+html:not(.carte-doc) .price-line__name,
+html:not(.carte-doc) .hh-line__name,
+html:not(.carte-doc) .beer-row__name,
+html:not(.carte-doc) .wine-table .wine-name {
+  font-size: clamp(0.9rem, 0.77vw + 0.59rem, 1.12rem) !important;
+}
+/* Prix : les variantes #plats / #desserts (spécificité d'id) doivent être
+   reprises ici, sinon le bloc de base 0,84 rem les garderait en dessous de
+   1100 px — le même réflexe que la carte avec #print-document. */
+html:not(.carte-doc) .food-card__head strong,
+html:not(.carte-doc) #plats .food-card__head strong,
+html:not(.carte-doc) #desserts .food-card__head strong,
+html:not(.carte-doc) .price-line__price,
+html:not(.carte-doc) .hh-line__price,
+html:not(.carte-doc) .hh-line__hh,
+html:not(.carte-doc) .hh-line__row .grand-price,
+html:not(.carte-doc) .hh-value,
+html:not(.carte-doc) .hh-value--empty,
+html:not(.carte-doc) .hh-line__hh-value,
+html:not(.carte-doc) .beer-row__price,
+html:not(.carte-doc) .beer-row__hh,
+html:not(.carte-doc) .wine-table td:not(.wine-name):not(.wine-no) {
+  font-size: clamp(1.03rem, 1.32vw + 0.5rem, 1.28rem) !important;
+}
+/* Notes : même reprise des variantes d'id (entrées / plats / desserts,
+   cocktails — les informations sous les libellés, uniformes sur la carte),
+   et des notes des lignes Happy Hour. */
+html:not(.carte-doc) .food-card__note,
+html:not(.carte-doc) p.food-card__note,
+html:not(.carte-doc) #entrees .food-card__note,
+html:not(.carte-doc) #plats .food-card__note,
+html:not(.carte-doc) #desserts .food-card__note,
+html:not(.carte-doc) .price-list__note,
+html:not(.carte-doc) #cocktails .price-list__note,
+html:not(.carte-doc) .hh-line .price-list__note,
+html:not(.carte-doc) .beer-note {
+  font-size: clamp(0.79rem, 0.66vw + 0.53rem, 0.98rem) !important;
 }
 @media (min-width: 1100px) {
   html:not(.carte-doc) .container {
@@ -3224,8 +3281,12 @@ html:not(.carte-doc) #cocktails .price-list__note {
   html:not(.carte-doc) .hh-line__price,
   html:not(.carte-doc) .hh-line__hh,
   html:not(.carte-doc) .hh-line__row .grand-price,
+  html:not(.carte-doc) .hh-value,
+  html:not(.carte-doc) .hh-value--empty,
+  html:not(.carte-doc) .hh-line__hh-value,
   html:not(.carte-doc) .beer-row__price,
-  html:not(.carte-doc) .beer-row__hh {
+  html:not(.carte-doc) .beer-row__hh,
+  html:not(.carte-doc) .wine-table td:not(.wine-name):not(.wine-no) {
     font-size: 1.28rem !important;
   }
   html:not(.carte-doc) .food-card__note,
@@ -3234,6 +3295,7 @@ html:not(.carte-doc) #cocktails .price-list__note {
   html:not(.carte-doc) #entrees .food-card__note,
   html:not(.carte-doc) #desserts .food-card__note,
   html:not(.carte-doc) .price-list__note,
+  html:not(.carte-doc) #cocktails .price-list__note,
   html:not(.carte-doc) .beer-note,
   html:not(.carte-doc) .choice-card li,
   html:not(.carte-doc) .menu-points li,
@@ -4285,7 +4347,11 @@ html:not(.carte-doc) #cover-section .cover-footer .cover-links {
    plancher de lisibilité défini plus haut.
    ========================================================================= */
 
-/* --- 1. Plancher de lisibilité : en dessous de 640 px, on arrête de réduire. --- */
+/* --- 1. Plancher de lisibilité : en dessous de 640 px, on arrête de réduire.
+   Valeurs calculées sur les proportions de la carte A4 (gabarit page des
+   plats) : prix = intitulé x 1,14 et note = intitulé x 0,875, comme sur le
+   papier (1,12 / 1,28 / 0,98 rem). A 640 px, l'intitulé fait 0,9 rem et le
+   fluide du bloc « corps de la carte » prend le relais jusqu'a 1100 px. --- */
 @media screen and (max-width: 640px) {
   html:not(.carte-doc) #interior-menu .food-card__head h5,
   html:not(.carte-doc) #interior-menu .price-line__name,
@@ -4293,7 +4359,7 @@ html:not(.carte-doc) #cover-section .cover-footer .cover-links {
   html:not(.carte-doc) #interior-menu .beer-row__name,
   html:not(.carte-doc) #interior-menu .wine-table .wine-name,
   html:not(.carte-doc) #interior-menu .choice-card li {
-    font-size: 0.85rem !important;
+    font-size: 0.9rem !important;
     line-height: 1.3 !important;
   }
   html:not(.carte-doc) #interior-menu .food-card__head strong,
@@ -4302,13 +4368,13 @@ html:not(.carte-doc) #cover-section .cover-footer .cover-links {
   html:not(.carte-doc) #interior-menu .hh-line__hh,
   html:not(.carte-doc) #interior-menu .beer-row__price,
   html:not(.carte-doc) #interior-menu .beer-row__hh,
-  html:not(.carte-doc) #interior-menu .wine-table td:not(.wine-name) {
-    font-size: 0.9rem !important;
+  html:not(.carte-doc) #interior-menu .wine-table td:not(.wine-name):not(.wine-no) {
+    font-size: 1.03rem !important;
   }
   html:not(.carte-doc) #interior-menu .food-card__note,
   html:not(.carte-doc) #interior-menu .price-list__note,
   html:not(.carte-doc) #interior-menu #menus .day-option__desc {
-    font-size: 0.78rem !important;
+    font-size: 0.79rem !important;
     line-height: 1.35 !important;
   }
 }
@@ -4433,12 +4499,12 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
     grid-row: 1;
     text-align: left;
     /* !important partout : le plancher de lisibilité du site impose line-height: 1,3
-       et 0,85rem en !important sous 640 px — sans cela, ni l'interligne ni le corps
-       ne bougeraient d'un poil. L'appellation se lit au même corps que son prix
-       (convention du site : nom et prix au même corps), sinon le prix écrase le nom ;
-       0,95rem et pas 1rem, car au-dessus une appellation sur cinq saute à trois
-       lignes et le rythme uniforme se perd. */
-    font-size: 0.95rem !important;
+       et 0,9rem en !important sous 640 px — sans cela, ni l'interligne ni le corps
+       ne bougeraient d'un poil. L'appellation suit le corps uniforme des intitulés
+       (0,9 rem, comme toutes les cartes — le résultat de la carte A4, où les vins
+       partagent la taille des plats) ; le prix, lui, reste au corps des prix :
+       1,03 rem, un cran au-dessus, comme sur le papier. */
+    font-size: 0.9rem !important;
     line-height: 1.55 !important;   /* les deux lignes d'une appellation respirent */
     min-height: 3.1em;              /* une seule ligne occupe la même place : le
                                        défilement reste régulier, vin après vin */
@@ -4468,7 +4534,7 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
     margin-bottom: 3px;
   }
   html:not(.carte-doc) #interior-menu #vins .wine-table td:not(.wine-name):not(.wine-no) {
-    font-size: 0.95rem !important;   /* prix et appellation, même corps */
+    font-size: 1.03rem !important;   /* corps uniforme des prix (comme la carte A4) */
     font-weight: 700;
   }
   /* coupes et bouteilles : deux prix, deux moitiés */
