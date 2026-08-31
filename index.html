@@ -3260,6 +3260,47 @@ html:not(.carte-doc) .hh-line .price-list__note,
 html:not(.carte-doc) .beer-note {
   font-size: clamp(0.79rem, 0.66vw + 0.53rem, 0.98rem) !important;
 }
+
+/* ===== Les corps de la page FORMULES de la carte A4, transposés au site =====
+   La page 4 de la carte (FORMULES) garde sa typographie propre : la carte l'a
+   exclue de l'uniformisation (comme le site garde « Nos Menus » à part, page
+   par page identique à la feuille). Ses corps, mesurés dans le document A4
+   figé (composition à 1180 px, racine 16 — calibrage vérifié sur la page des
+   plats : 17,92 / 20,48 / 15,68 px) :
+     · titres des choix        1,32 rem  (21,12 px)
+     · pastilles numérotées    1,02 rem  (16,32 px)
+     · cartouches dorés        1,10625 rem (17,70 px = 1,5 vw de la composition)
+     · listes et informations  0,84 rem  (13,44 px)
+     · prix (formules, enfant, petit déjeuner, menu du jour)  1,95 rem (31,20 px)
+   Le site reprend ces corps entre deux points ancrés, comme pour le reste de
+   la carte : très petit mobile (≤ 640 px) à 0,8 × le corps du papier, puis
+   clamp fluide jusqu'aux corps exacts à 1100 px. La carte A4 ne voit rien de
+   tout cela (règles sous html:not(.carte-doc)). */
+html:not(.carte-doc) #menus .choice-card h5 {
+  font-size: clamp(1.06rem, 0.9vw + 0.7rem, 1.32rem) !important;
+}
+html:not(.carte-doc) #menus .choice-card h5 span {
+  font-size: clamp(0.82rem, 0.7vw + 0.54rem, 1.02rem) !important;
+}
+html:not(.carte-doc) #menus .choice-card li,
+html:not(.carte-doc) #menus .menu-points li,
+html:not(.carte-doc) #menus .offer-card__sub,
+html:not(.carte-doc) #menus .offer-card__foot,
+html:not(.carte-doc) #menus .special-card__sub,
+html:not(.carte-doc) #menus .special-card p,
+html:not(.carte-doc) #menus .day-option__desc {
+  font-size: clamp(0.67rem, 0.6vw + 0.43rem, 0.84rem) !important;
+}
+html:not(.carte-doc) #menus .offer-card__badge,
+html:not(.carte-doc) #menus .special-card__badge {
+  font-size: clamp(0.88rem, 0.8vw + 0.56rem, 1.10625rem) !important;
+}
+html:not(.carte-doc) #menus .day-option strong,
+html:not(.carte-doc) #menus .special-card strong,
+html:not(.carte-doc) #menus .breakfast-card strong,
+html:not(.carte-doc) #menus .offer-card__price {
+  font-size: clamp(1.56rem, 1.36vw + 1.02rem, 1.95rem) !important;
+}
 @media (min-width: 1100px) {
   html:not(.carte-doc) .container {
     width: min(100% - 40px, 1360px) !important;
@@ -3307,6 +3348,32 @@ html:not(.carte-doc) .beer-note {
   }
   html:not(.carte-doc) .menu-nav .nav-btn {
     font-size: 0.92rem !important;
+  }
+  /* Page FORMULES (Nos Menus) : les corps exacts de la feuille 4 de la carte. */
+  html:not(.carte-doc) #menus .choice-card h5 {
+    font-size: 1.32rem !important;
+  }
+  html:not(.carte-doc) #menus .choice-card h5 span {
+    font-size: 1.02rem !important;
+  }
+  html:not(.carte-doc) #menus .choice-card li,
+  html:not(.carte-doc) #menus .menu-points li,
+  html:not(.carte-doc) #menus .offer-card__sub,
+  html:not(.carte-doc) #menus .offer-card__foot,
+  html:not(.carte-doc) #menus .special-card__sub,
+  html:not(.carte-doc) #menus .special-card p,
+  html:not(.carte-doc) #menus .day-option__desc {
+    font-size: 0.84rem !important;
+  }
+  html:not(.carte-doc) #menus .offer-card__badge,
+  html:not(.carte-doc) #menus .special-card__badge {
+    font-size: 1.10625rem !important;
+  }
+  html:not(.carte-doc) #menus .day-option strong,
+  html:not(.carte-doc) #menus .special-card strong,
+  html:not(.carte-doc) #menus .breakfast-card strong,
+  html:not(.carte-doc) #menus .offer-card__price {
+    font-size: 1.95rem !important;
   }
 }
 @media (min-width: 1440px) {
@@ -4376,6 +4443,38 @@ html:not(.carte-doc) #cover-section .cover-footer .cover-links {
   html:not(.carte-doc) #interior-menu #menus .day-option__desc {
     font-size: 0.79rem !important;
     line-height: 1.35 !important;
+  }
+}
+/* --- 1b. Plancher de la page FORMULES : mêmes proportions que la feuille 4
+   de la carte, réduites à 0,8 × (prix = 1,56 rem, titres des choix 1,06 rem,
+   listes et informations 0,67 rem, pastilles 0,82 rem, cartouches 0,88 rem).
+   Spécificité d'id en plus du plancher général : la page garde ses propres
+   corps sous 640 px, comme la carte lui garde sa propre feuille. --- */
+@media screen and (max-width: 640px) {
+  html:not(.carte-doc) #interior-menu #menus .choice-card h5 {
+    font-size: 1.06rem !important;
+  }
+  html:not(.carte-doc) #interior-menu #menus .choice-card h5 span {
+    font-size: 0.82rem !important;
+  }
+  html:not(.carte-doc) #interior-menu #menus .choice-card li,
+  html:not(.carte-doc) #interior-menu #menus .menu-points li,
+  html:not(.carte-doc) #interior-menu #menus .offer-card__sub,
+  html:not(.carte-doc) #interior-menu #menus .offer-card__foot,
+  html:not(.carte-doc) #interior-menu #menus .special-card__sub,
+  html:not(.carte-doc) #interior-menu #menus .special-card p,
+  html:not(.carte-doc) #interior-menu #menus .day-option__desc {
+    font-size: 0.67rem !important;
+  }
+  html:not(.carte-doc) #interior-menu #menus .offer-card__badge,
+  html:not(.carte-doc) #interior-menu #menus .special-card__badge {
+    font-size: 0.88rem !important;
+  }
+  html:not(.carte-doc) #interior-menu #menus .day-option strong,
+  html:not(.carte-doc) #interior-menu #menus .special-card strong,
+  html:not(.carte-doc) #interior-menu #menus .breakfast-card strong,
+  html:not(.carte-doc) #interior-menu #menus .offer-card__price {
+    font-size: 1.56rem !important;
   }
 }
 
