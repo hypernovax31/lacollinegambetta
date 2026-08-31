@@ -2453,7 +2453,14 @@ html .hh-line__name::after {
   .print-page--cover .cover-brand .leader-meta,
   .print-page--cover .cover-brand .menu-leader-subline { font-size:7.5pt !important; letter-spacing:.1em !important; }
   .print-page--cover .medallion-container { width:118mm !important; margin:4mm auto 1mm !important; }
-  .print-page--cover .cover-action { display:none !important; }
+  .print-page--cover .cover-action {
+    display: inline-flex !important;
+    font-size: 14pt !important;
+    letter-spacing: .18em !important;
+    padding: 4mm 12mm !important;
+    margin-top: 6mm !important;
+    min-height: 14mm !important;
+  }
   .print-page--cover .cover-footer { gap:3mm; }
   .print-page--cover .cover-footer-address { font-size:7.6pt !important; line-height:1.4; }
   .print-page--cover .cover-links { width:135mm; gap:2mm; }
@@ -2616,18 +2623,22 @@ html .hh-line__name::after {
     right:0;
     bottom:0;
     height:18mm;
-    padding:2.2mm 18mm 1mm;
+    padding:2.5mm 18mm 2mm;
     background:linear-gradient(180deg,#6b3c87 0%,#592e6f 60%,#432155 100%);
     border-top:1px solid rgba(216,178,87,.9);
     text-align:center;
     color:var(--gold-100);
     font-family:'Cinzel',serif;
-    font-size:5.8pt;
-    letter-spacing:.14em;
-    line-height:1.22;
+    font-size:7.5pt;
+    letter-spacing:.16em;
+    line-height:1.35;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
   }
-  .print-page__footer strong { display:block; margin:.7mm 0; font-size:7.2pt; letter-spacing:.26em; color:#fff; }
-  .print-page__footer small { display:block; font-family:'Montserrat',sans-serif; font-size:4.8pt; letter-spacing:.01em; color:rgba(255,255,255,.82); }
+  .print-page__footer strong { display:block; margin:1mm 0; font-size:9.5pt; letter-spacing:.28em; color:#fff; }
+  .print-page__footer small { display:block; font-family:'Montserrat',sans-serif; font-size:6pt; letter-spacing:.02em; color:rgba(255,255,255,.82); margin-top:.8mm; }
   .print-page__legal { display:none !important; }
   .print-page__number {
     left:auto;
