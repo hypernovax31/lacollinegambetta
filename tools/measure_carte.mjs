@@ -186,16 +186,28 @@ async function main() {
           const flow = sec.querySelector('.tab-flow');
           const holder = sec.querySelector('.carte-flow') || sec;
           const cs = getComputedStyle(flow);
-          // probe deux colonnes : la disposition réelle des groupes TWOC
-          // (mêmes blocs, même CSS) — hauteur totale et débordement à cette
-          // largeur. Absent pour les sections sans groupe TWOC.
-          const probe = sec.querySelector('.carte-twocol-probe');
-          let twocol = null;
+          // probe deux colonnes de lignes : les blocs du groupe TWOC avec
+          // carte-2col (sauf le bandeau), empilés — hauteurs individuelles et
+          // débordement horizontal à cette largeur. Absent pour les sections
+          // sans groupe TWOC.
+          const probe = sec.querySelector('.carte-twocolsec-probe');
+          let heights2col = null, overflow2col = null;
           if (probe) {
-            twocol = {
-              total: +probe.getBoundingClientRect().height.toFixed(2),
-              overflow: +(probe.scrollWidth - probe.clientWidth).toFixed(2),
-            };
+            const map = new Map();
+            for (const el of probe.querySelectorAll(':scope [data-block]')) {
+              map.set(Number(el.dataset.block), el);
+            }
+            // aligné sur les indices du flux principal (null hors probe) : le
+            // build compare hs[i] et hs2[i] bloc à bloc
+            heights2col = [...flow.querySelectorAll(':scope > [data-block]')]
+              .sort((a, b) => Number(a.dataset.block) - Number(b.dataset.block))
+              .map((el) => {
+                const p = map.get(Number(el.dataset.block));
+                return p ? +p.getBoundingClientRect().height.toFixed(2) : null;
+              });
+            overflow2col = Math.max(0, ...[...map.values()]
+              .map((el) => el.scrollWidth - el.clientWidth));
+            overflow2col = +overflow2col.toFixed(2);
           }
           out[id] = {
             w,
@@ -206,7 +218,8 @@ async function main() {
               .sort((a, b) => Number(a.dataset.block) - Number(b.dataset.block))
               .map((el) => +el.getBoundingClientRect().height.toFixed(2)),
             count: flow.querySelectorAll(':scope > [data-block]').length,
-            twocol,
+            heights2col,
+            overflow2col,
           };
         }
         return out;

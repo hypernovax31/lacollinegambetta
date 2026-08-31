@@ -51,14 +51,16 @@ SECTIONS = ["entrees", "plats", "menus", "boissons", "cocktails", "vins", "desse
 # leur position de frère, qui change quand le découpage en pages les isole.
 MERGE = {"boissons": [(0, 1), (2, 3, 4, 5, 6)]}
 
-# Groupes de MERGE composés en DEUX colonnes sur leur feuille (Apéritifs +
-# Whiskies à gauche, Digestifs + Bières à droite, bandeau HH pleine largeur en
-# bas) : leurs hauteurs cumulées en une colonne dépassent la feuille (1 824 px
-# de composition contre ~1 724 px de capacité à la plus large largeur), deux
-# colonnes font tenir la page — et la hauteur de l'unité est alors celle du
-# probe de mesure .carte-twocol-probe (max des deux colonnes + bandeau), pas la
-# somme des blocs. Le dernier bloc du groupe (le bandeau) traverse toute la
-# largeur sous les colonnes.
+# Groupes de MERGE autorisés à passer en DEUX colonnes de lignes sur leur
+# feuille quand la hauteur manque (Apéritifs + Whiskies + Digestifs + Bières
+# + bandeau HH) : par défaut les catégories s'empilent pleine largeur, comme
+# « Boissons fraîches + chaudes » ; si leur hauteur cumulée dépasse la
+# feuille, le plan de mise en page bascule en deux colonnes de lignes les
+# sections les plus grandes (mesurées par le probe .carte-twocolsec-probe)
+# jusqu'à ce que tout tienne. Le bandeau HH (hh-banner) n'est jamais basculé :
+# sa hauteur ne change pas, la bascule ne l'atteint donc pas. La hauteur de
+# l'unité est la somme des hauteurs de ses blocs dans leur mode + les gaps,
+# pas la hauteur d'une disposition côte à côte.
 TWOC = {"boissons": [(2, 3, 4, 5, 6)]}
 
 # Géométrie de la feuille, en accord avec les règles « contenant » plus bas.
@@ -237,25 +239,54 @@ def inline_notes(block: str) -> str:
     return _ARTICLE_RE.sub(lambda m: _inline_note_in_article(m.group(0)), block)
 
 
-def twocol_markup(blocks: list[str], group) -> str:
-    """Les blocs d'un groupe TWOC, posés en deux colonnes.
+def add_cls(block: str, cls: str) -> str:
+    """Ajoute une classe à l'élément racine d'un bloc (qui en a déjà une)."""
+    m = re.match(r"^(<\w+)([^>]*)>", block)
+    if not m:
+        return block
+    tag, attrs = m.group(1), m.group(2)
+    if 'class="' in attrs:
+        attrs = re.sub(r'class="([^"]*)"', f'class="\\1 {cls}"', attrs, count=1)
+    else:
+        attrs += f' class="{cls}"'
+    return tag + attrs + ">" + block[m.end():]
 
-    Première moitié du groupe dans la colonne de gauche, seconde moitié dans la
-    colonne de droite ; les blocs restants (le bandeau HH) traversent toute la
-    largeur sous les colonnes. Même structure dans la carte et dans le probe de
-    mesure — les hauteurs mesurées sont donc celles de la page réelle.
+
+def secs_markup(blocks: list[str], group, mode=()) -> str:
+    """Les blocs d'un groupe TWOC, empilés pleine largeur (comme fraîches +
+    chaudes), les blocs de `mode` en deux colonnes de lignes.
+
+    Chaque catégorie garde sa pleine largeur ; celles que la hauteur force
+    (mode) voient leurs lignes s'étaler sur deux colonnes (classe carte-2col,
+    qui rend les wrappers .price-list__col en display:contents). Le bandeau HH
+    traverse toute la largeur en bas. Même structure dans la carte et dans le
+    probe de mesure — les hauteurs mesurées sont donc celles de la page réelle.
+    """
+    mode = {int(i) for i in mode}
+    out = []
+    for i in (int(i) for i in group):
+        b = blocks[i]
+        if i in mode:
+            b = add_cls(b, "carte-2col")
+        out.append(b)
+    return "\n".join(out)
+
+
+def probe_secs_markup(blocks: list[str], group) -> str:
+    """Comme secs_markup, mais toutes les sections en deux colonnes de lignes
+    (sauf le bandeau hh-banner) et chaque bloc marqué data-block pour la
+    mesure : c'est la borne haute — si le plan doit basculer, c'est vers ces
+    hauteurs-là qu'il le fait, et le probe dit aussi si une largeur fait
+    déborder une note (overflow).
     """
     g = [int(i) for i in group]
-    half = len(g) // 2
-    col1, col2 = g[:half], g[half:2 * half]
-    rest = g[2 * half:]
-    out = [
-        '<div class="twocol">',
-        '<div class="twocol__col">' + "\n".join(blocks[i] for i in col1) + "</div>",
-        '<div class="twocol__col">' + "\n".join(blocks[i] for i in col2) + "</div>",
-        "</div>",
-    ]
-    out.extend(blocks[i] for i in rest)
+    out = []
+    for i in g:
+        b = blocks[i]
+        b = re.sub(r"^(<\w+)", rf'\1 data-block="{i}"', b, count=1)
+        if "hh-banner" not in b:
+            b = add_cls(b, "carte-2col")
+        out.append(b)
     return "\n".join(out)
 
 
@@ -994,9 +1025,9 @@ CARD_OVERRIDES = """
    colonne ne tiennent pas sur la feuille à l'espacement du site : on resserre
    l'interligne de ces panneaux seulement (padding 3 px au lieu de 8, nom
    16,5 px au lieu de 17,9, notes 11,5 px) — le reste de l'onglet garde la
-   typo du site. Les sélecteurs sont en descendant (pas `>`) : sur la page
-   deux colonnes, les blocs vivent dans .twocol__col, pas à plat sous
-   .tab-flow. */
+   typo du site. Les sélecteurs sont en descendant (pas `>`) : un bloc
+   basculé en deux colonnes de lignes (carte-2col) garde ses règles de
+   panneau, seule la grille de lignes change. */
 #print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-list--cols {
   grid-template-columns: 1fr !important;
 }
@@ -1046,27 +1077,29 @@ CARD_OVERRIDES = """
   content: " · ";
   margin-left: .55em;
 }
-/* --- Page « Apéritifs + Whiskies + Digestifs + Bières » en deux colonnes ---
-   La feuille porte les quatre catégories côte à côte : apéritifs et whiskies
-   empilés à gauche, digestifs et bières à droite, et le bandeau HH traversant
-   toute la largeur en bas. Les colonnes sont des flex indépendants (leurs
-   hauteurs ne se contraignent pas mutuellement) posés dans une grille 1fr 1fr.
-   Écarts de 18 px partout, comme .tab-flow sur le site. */
-#print-document .carte-flow[data-sec="boissons"] .twocol {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 18px;
-  align-items: start;
-}
-#print-document .carte-flow[data-sec="boissons"] .twocol__col {
-  display: flex;
-  flex-direction: column;
+/* --- Page « Apéritifs + Whiskies + Digestifs + Bières » ---
+   Les quatre catégories s'empilent pleine largeur, comme fraîches + chaudes.
+   Quand la hauteur manque, le générateur pose carte-2col sur les sections les
+   plus grandes : leurs lignes s'étalent alors sur deux colonnes — même règle
+   que le mode deux colonnes du site : wrappers .price-list__col rendus en
+   display:contents, chaque wrapper nourrit sa colonne. La spécificité est
+   plus forte que la neutralisation 1fr posée plus haut (1,4,0 contre 1,3,0),
+   donc la levée l'emporte sur les blocs marqués seulement. */
+#print-document .carte-flow[data-sec="boissons"] [data-merge="1"].carte-2col .price-list--cols {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: 18px;
-  min-width: 0;
 }
-/* Le document de mesure (probe) : même géométrie, même écart entre les
-   colonnes et le bandeau. */
-.carte-twocol-probe .tab-flow { row-gap: 18px; }
+#print-document .carte-flow[data-sec="boissons"] [data-merge="1"].carte-2col .price-list--cols .price-list__col {
+  display: contents !important;
+}
+#print-document .carte-flow[data-sec="boissons"] [data-merge="1"].carte-2col .price-list--cols .price-list__col:nth-child(1) > * {
+  grid-column: 1;
+}
+#print-document .carte-flow[data-sec="boissons"] [data-merge="1"].carte-2col .price-list--cols .price-list__col:nth-child(2) > * {
+  grid-column: 2;
+}
+/* Le document de mesure (probe) : mêmes règles, même écart entre les blocs. */
+.carte-twocolsec-probe .tab-flow { row-gap: 18px; }
 /* Le duo empilé ne doit pas étirer ses panneaux pour remplir la feuille. */
 html.carte-doc .carte-flow[data-sec="cocktails"] .duo-grid > .panel { flex: 0 1 auto !important; }
 /* Même arbitrage que pour les vins, côté carte des cocktails : une ligne = un nom et
@@ -1279,14 +1312,14 @@ def measure_doc(css: str, flows: dict[str, list[str]], viewport: int,
     parts = []
     for sid in SECTIONS:
         inner = flow_markup(sid, flows[sid], tag_blocks=True)
-        # probe : la disposition réelle des groupes deux colonnes, mesurée à
-        # chaque largeur (le flux principal, lui, reste empilé pour le compte
-        # des blocs et les hauteurs pleine largeur). DANS la section, pour que
-        # la mesure le trouve.
+        # probe : les hauteurs en deux colonnes de lignes des groupes TWOC,
+        # mesurées à chaque largeur (le flux principal, lui, reste empilé pour
+        # le compte des blocs et les hauteurs pleine largeur). DANS la
+        # section, pour que la mesure le trouve.
         for group in TWOC.get(sid, ()):
-            inner += (f'\n<div class="carte-flow carte-twocol-probe" data-sec="{sid}">\n'
+            inner += (f'\n<div class="carte-flow carte-twocolsec-probe" data-sec="{sid}">\n'
                       + f'<div class="tab-flow">\n'
-                      + twocol_markup(flows[sid], group) + "\n</div>\n</div>")
+                      + probe_secs_markup(flows[sid], group) + "\n</div>\n</div>")
         parts.append(f'<div class="carte-measure-sec" data-sec="{sid}">\n'
                      + inner + "\n</div>")
     ratios = ",".join(f"{r:.2f}" for r in WIDTH_RATIOS)
@@ -1375,6 +1408,35 @@ def check_blocks(metrics: dict, flows: dict[str, list[str]]) -> None:
 # ------------------------------------------------------------------ mise en page
 
 
+def stack_or_2col(hs: list[float], hs2: list[float], group, gap: float,
+                 cap: float) -> tuple[float, list[int]]:
+    """Hauteur d'un groupe TWOC empilé, en basculant si besoin en deux colonnes.
+
+    Tout le monde s'empile pleine largeur (comme fraîches + chaudes) ; si la
+    hauteur cumulée dépasse la capacité de la feuille à cette largeur, on
+    bascule en deux colonnes de lignes les sections les plus grandes (hauteur
+    pleine largeur décroissante) jusqu'à ce que tout tienne. Un bloc dont la
+    hauteur ne diminue pas en deux colonnes (le bandeau hh-banner) n'est
+    jamais basculé. Renvoie (hauteur de l'unité, indices basculés).
+    """
+    g = [int(i) for i in group]
+    gap *= max(0, len(g) - 1)
+    hauteurs = {i: hs[i] for i in g}
+    total = sum(hauteurs.values()) + gap
+    if total <= cap:
+        return total, []
+    candidats = [i for i in g if hs2[i] is not None and hs2[i] < hs[i] - 1]
+    candidats.sort(key=lambda i: -hs[i])
+    mode: list[int] = []
+    for i in candidats:
+        if total <= cap:
+            break
+        hauteurs[i] = hs2[i]
+        total = sum(hauteurs.values()) + gap
+        mode.append(i)
+    return total, mode
+
+
 def merge_units(hs: list[float], gap: float, merge=(), twocol_totals=None) -> list[tuple[list[int], float]]:
     """Découpe les blocs en unités insécables.
 
@@ -1447,13 +1509,13 @@ def section_variants(metrics: dict, sid: str, w0: float) -> list[dict]:
         w = float(v["w"])
         if v.get("overflow", 0) > 1.5:
             continue                      # le contenu refuserait cette largeur
-        if v.get("twocol") and (v["twocol"].get("overflow", 0) > 1.5
-                                or v["twocol"].get("total", 0) < 4):
-            continue                      # la disposition deux colonnes aussi
+        if (v.get("overflow2col") or 0) > 1.5:
+            continue        # une note déborderait en deux colonnes de lignes
         if not v["heights"] or min(v["heights"]) < 4:
             continue
         out.append({"w": w, "fit": ZONE_W_PX / w, "gap": v["gap"], "hs": v["heights"],
-                   "twocol": v.get("twocol")})
+                   "heights2col": v.get("heights2col"),
+                   "overflow2col": v.get("overflow2col", 0)})
     if not out:                            # mesure ancienne, sans variantes
         sec = metrics["sections"][sid]
         out = [{"w": w0, "fit": ZONE_W_PX / w0, "gap": sec["gap"],
@@ -1472,17 +1534,21 @@ def plan_variants(variants: list[dict], merge=(), twoc=()):
     À l'empilement on ne réserve que GAPPACK px entre panneaux : la hauteur restante
     sera comblée ensuite par la justification, qui repousse le bas de la feuille sur le
     cadre. Compter avec le jeu complet du site pénaliserait une composition large d'un
-    filet qui, justement, est la variable d'ajustement. Les groupes TWOC portent la
-    hauteur mesurée de leur disposition en deux colonnes (déjà gaps internes compris).
+    filet qui, justement, est la variable d'ajustement. Les groupes TWOC portent
+    la hauteur de leur empilement (gaps internes compris), avec les sections
+    passées en deux colonnes de lignes si la hauteur manque (stack_or_2col).
     """
     out = []
     for v in variants:
         gap_pack = min(v["gap"], GAP_PACK)
         cap = ZONE_H_PX * SAFETY / v["fit"]
-        twocol_totals = {}
-        if v.get("twocol") and v["twocol"].get("total"):
+        twocol_totals, modes = {}, {}
+        hs2 = v.get("heights2col")
+        if hs2:
             for g in twoc:
-                twocol_totals[tuple(g)] = v["twocol"]["total"]
+                h, mode = stack_or_2col(v["hs"], hs2, g, gap_pack, cap)
+                twocol_totals[tuple(g)] = h
+                modes[tuple(g)] = mode
         units = merge_units(v["hs"], gap_pack, merge, twocol_totals)
         sheets = balanced_sheets(v["hs"], gap_pack, cap, merge, twocol_totals)
         loads = []
@@ -1491,7 +1557,7 @@ def plan_variants(variants: list[dict], merge=(), twoc=()):
             loads.append(sum(in_sheet) + gap_pack * (len(in_sheet) - 1))
         fill = min(load * v["fit"] / ZONE_H_PX for load in loads)
         out.append({"v": v, "sheets": sheets, "loads": loads,
-                    "count": len(sheets), "fill": fill})
+                    "count": len(sheets), "fill": fill, "twocol_mode": modes})
     return out
 
 
@@ -1638,10 +1704,13 @@ def main() -> None:
             # justifiés (le load du plan ne compte que GAP_PACK entre blocs, et la
             # justification repousse ensuite le bas de la feuille sur le cadre : une
             # page à 101 % de blocs débordait sans que load * fit ne le voie). Une
-            # feuille TWOC est une unité : ses écarts internes sont dans la mesure,
-            # il n'y a rien à justifier entre blocs.
+            # feuille TWOC est une unité : ses écarts internes (load) sont
+            # comptés à GAP_PACK entre blocs, comme le plan — le row-gap posé
+            # sur la page doit donc être GAP_PACK lui aussi, pas le gap du site,
+            # sinon le rendu dépasse le calcul de la garde.
             k = 1 if is_twocol else len(idx)
-            gap = justify_gaps(load, k, var["gap"], fit)
+            gap = min(var["gap"], GAP_PACK) if is_twocol \
+                else justify_gaps(load, k, var["gap"], fit)
             total = load + (0 if is_twocol else max(0, len(idx) - 1) * (gap - GAP_PACK))
             base_w = var["w"]
             if total * fit > ZONE_H_PX * SAFETY:
@@ -1653,8 +1722,10 @@ def main() -> None:
                 # aucune section ne déborde horizontalement.
                 fit = ZONE_H_PX * SAFETY / total
                 base_w = min(ZONE_W_PX / fit, max(WIDTH_RATIOS) * metrics["base_width"])
-                gap = justify_gaps(load, k, var["gap"], fit)
-            content = twocol_markup(flows[sid], idx) if is_twocol \
+                gap = min(var["gap"], GAP_PACK) if is_twocol \
+                    else justify_gaps(load, k, var["gap"], fit)
+            mode = plan.get("twocol_mode", {}).get(tuple(idx), []) if is_twocol else []
+            content = secs_markup(flows[sid], idx, mode) if is_twocol \
                 else "\n".join(flows[sid][i] for i in idx)
             pages.append(page_shell(n, sid, content,
                                     fit=fit, base_w=base_w, row_gap=gap))
@@ -1665,6 +1736,7 @@ def main() -> None:
                 f"largeur {base_w * fit / ZONE_W_PX * 100:3.0f} %, "
                 f"intitulés {TITRE_SITE_PX * fit * pts:4.1f} pt"
                 + (" ⚠ sous le plancher" if TITRE_SITE_PX * fit * pts < TITRE_MIN_PT - 0.05 else "")
+                + (f", {len(mode)} sections en 2 colonnes de lignes" if is_twocol and mode else "")
 
                 + f" · composition {base_w:g} px × {fit:.4f}"
                 + (f", inter-panneaux {gap:g} px" if gap > var["gap"] + 0.5 else ""))
