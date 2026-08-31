@@ -16,7 +16,8 @@ aucun corps n'est bricolé à la main.
     npm run build:carte-pdf          → carte-a4-pages/*.jpg + carte-a4.pdf
 
 Options : --no-measure (réutiliser carte-metrics.json même périmé),
-          --per-onglet (taille de police par onglet au lieu de l'échelle unique).
+          --per-onglet (taille de police par onglet au lieu de l'échelle unique),
+          --no-aeration (ne pas répartir l'espace libre dans les lignes/titres).
 """
 from __future__ import annotations
 
@@ -33,6 +34,7 @@ OUT = ROOT / "carte.html"
 METRICS = ROOT / "tools" / "carte-metrics.json"
 MEASURE = ROOT / "tools" / "measure_carte.mjs"
 MEASURE_DOC = ROOT / "carte-measure.html"
+AERATE = ROOT / "tools" / "aerate_carte.mjs"
 BASE_VIEWPORT = 1180        # largeur d'écran à laquelle le site est composé
 
 # Ordre des feuilles de la carte, identique à celui du site (boutons de navigation
@@ -597,7 +599,8 @@ FOOTER = """<footer class="print-page__footer">
 
 def page_shell(number: int, kind: str, content: str, cover_html: str | None = None,
                fit: float | None = None, base_w: float | None = None,
-               row_gap: float | None = None) -> str:
+               row_gap: float | None = None,
+               air_side: float | None = None, air_title: float | None = None) -> str:
     if kind == "cover":
         return (
             f'<div class="print-page-frame"><section class="print-page print-page--cover" '
@@ -609,6 +612,15 @@ def page_shell(number: int, kind: str, content: str, cover_html: str | None = No
         reglages.append(f"--carte-fit: {fit:.6f}")
     if base_w is not None:
         reglages.append(f"--carte-base-w: {base_w:.2f}px")
+    # aération : l'espace libre du bas de feuille revient dans les lignes
+    # (--carte-air-side) et sous les titres (--carte-air-title) — voir le bloc
+    # « Aération » de CARD_OVERRIDES. Classe portée par les feuilles de la
+    # carte composée uniquement (le document de mesure reste sans aération).
+    cls = "carte-flow"
+    if air_side is not None:
+        cls += " carte-aerate"
+        reglages.append(f"--carte-air-side: {air_side:.2f}px")
+        reglages.append(f"--carte-air-title: {air_title:.2f}px")
     fit_attr = f' style="{"; ".join(reglages)}"' if reglages else ""
     # max-width en inline + !important : le site plafonne .tab-flow à son conteneur
     # d'écran (--flowmax), ce qui interdirait toute composition plus large.
@@ -620,7 +632,7 @@ def page_shell(number: int, kind: str, content: str, cover_html: str | None = No
         f'<div class="print-page-frame"><section class="print-page print-page--{kind}" '
         f'id="carte-p{number}" data-page="{number}">\n{HEADER}\n'
         f'<div class="print-page__content">\n'
-        f'<div class="carte-flow" data-sec="{kind}"{fit_attr}>\n<div class="tab-flow"{gap_attr}>\n'
+        f'<div class="{cls}" data-sec="{kind}"{fit_attr}>\n<div class="tab-flow"{gap_attr}>\n'
         f"{content}\n"
         f"</div>\n</div>\n</div>\n{FOOTER}\n"
         f'</section></div>'
@@ -1366,6 +1378,33 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name .carte-wine
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:not(.wine-name):not(.wine-no) {
   font-variant-numeric: tabular-nums;
 }
+/* ===== Aération : la hauteur libre du bas de feuille revient dans les lignes ====
+   Le générateur mesure chaque feuille rendue (tools/aerate_carte.mjs, mêmes
+   fontes que le PDF) et répartit l'espace restant avant le plancher de garde
+   (SAFETY) entre l'interligne des lignes (--carte-air-side, ajouté au padding
+   vertical de chaque ligne) et la marge sous les titres de panneau
+   (--carte-air-title). La classe carte-aerate n'est posée que sur les
+   feuilles de la carte composée — jamais sur le document de mesure, qui reste
+   sans aération. Les bases (3 px lignes, 12 px cartes, 5 px cellules de vins,
+   12 px marge de titre) sont contrôlées par le générateur au moment de la
+   mesure, et les sélecteurs reprennent les spécificités des règles qu'ils
+   complètent pour gagner à coup sûr. */
+#print-document .carte-flow.carte-aerate [data-merge="1"] .price-line,
+#print-document .carte-flow.carte-aerate [data-merge="1"] .hh-line {
+  padding-top: calc(3px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(3px + var(--carte-air-side, 0px)) !important;
+}
+#print-document .carte-flow.carte-aerate .food-card {
+  padding-top: calc(12px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(12px + var(--carte-air-side, 0px)) !important;
+}
+#print-document .carte-flow.carte-aerate[data-sec="vins"] .tab-flow .wine-table td {
+  padding-top: calc(5px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(5px + var(--carte-air-side, 0px)) !important;
+}
+#print-document .carte-flow.carte-aerate .panel__head {
+  margin-bottom: calc(12px + var(--carte-air-title, 0px)) !important;
+}
 """
 
 
@@ -1831,35 +1870,18 @@ def layout(metrics: dict, uniforme: bool = False):
     return chosen, w0, f_uniform
 
 
-def main() -> None:
-    src = index_text()
-    flows = {sid: split_duo_grids(split_flow(section_flow(src, sid))) for sid in SECTIONS}
-    # Les blocs insécables (MERGE) portent data-merge="1" dans la carte comme
-    # dans le document de mesure : la CSS de la carte les reconnait ainsi.
-    for sid, groups in MERGE.items():
-        for group in groups:
-            for i in group:
-                flows[sid][i] = re.sub(r"^<(\w+)", r'<\1 data-merge="1"',
-                                       flows[sid][i], count=1)
-                # notes remontées dans la ligne de chaque article
-                flows[sid][i] = inline_notes(flows[sid][i])
-    # vins : le producteur après le tiret passe en sans gras (comme les notes)
-    for sid in SECTIONS:
-        flows[sid] = [wine_producer_light(b) for b in flows[sid]]
+def compose_pages(src: str, metrics: dict, flows: dict, chosen: dict, w0: float,
+                  airs: dict | None = None):
+    """Toutes les feuilles : la couverture, puis une feuille par page de contenu.
 
-    css, stats = compose_css(src)
-    print("CSS du site : neutralisation levée → " + ", ".join(f"{k} {v}" for k, v in stats.items()))
-
-    allow_stale = "--no-measure" in sys.argv
-    metrics = load_metrics(src, css, flows, allow_stale)
-    check_blocks(metrics, flows)
-    chosen, w0, f_uniform = layout(metrics, UNIFORME)
-    garde_uniformite(metrics, chosen)
-
+    airs : {n: (air_side, air_title, rows, titles, free)} — l'aération posée
+    sur la feuille n (voir main, passe d'aération).
+    """
     pts = 72.0 / 96.0     # 1 px CSS = 0,75 pt
     pages: list[str] = [page_shell(1, "cover", "", extract_cover(src))]
     labels = ["couverture (site, plein cadre par construction)"]
     tailles = []
+    infos: dict[int, dict] = {}
     for sid in SECTIONS:
         plan = chosen[sid]
         var, sheets, loads = plan["v"], plan["sheets"], plan["loads"]
@@ -1897,23 +1919,42 @@ def main() -> None:
                 base_w = min(ZONE_W_PX / fit, max(WIDTH_RATIOS) * metrics["base_width"])
                 gap = justify_gaps(load, k, var["gap"], fit) if justify \
                     else min(var["gap"], GAP_PACK)
+            air_side = air_title = None
+            air_rows = air_titles = 0
+            if airs and n in airs:
+                air_side, air_title, air_rows, air_titles, _, _ = airs[n]
             content = secs_markup(flows[sid], idx, mode) if is_twocol \
                 else "\n".join(flows[sid][i] for i in idx)
             pages.append(page_shell(n, sid, content,
-                                    fit=fit, base_w=base_w, row_gap=gap))
+                                    fit=fit, base_w=base_w, row_gap=gap,
+                                    air_side=air_side, air_title=air_title))
             tailles.append(TITRE_SITE_PX * fit * pts)
+            hauteur = (load if not justify
+                       else load + max(0, len(idx) - 1) * (gap - GAP_PACK)) * fit
+            if air_side is not None:
+                # la feuille se remplit jusqu'au plancher de garde : la hauteur
+                # finale vaut la hauteur RÉELLEMENT mesurée (rendu) + l'aération
+                # distribuée — le plan (metrics) peut différer du rendu
+                hauteur = airs[n][5] + airs[n][4]
             labels.append(
                 f"{sid:9} blocs {'+'.join(str(i + 1) for i in idx):9} — "
-                f"hauteur {(load if not justify else load + max(0, len(idx) - 1) * (gap - GAP_PACK)) * fit / ZONE_H_PX * 100:3.0f} %, "
+                f"hauteur {hauteur / ZONE_H_PX * 100:3.0f} %, "
                 f"largeur {base_w * fit / ZONE_W_PX * 100:3.0f} %, "
                 f"intitulés {TITRE_SITE_PX * fit * pts:4.1f} pt"
                 + (" ⚠ sous le plancher" if TITRE_SITE_PX * fit * pts < TITRE_MIN_PT - 0.05 else "")
                 + (f", {len(mode)} sections en 2 colonnes de lignes" if is_twocol and mode else "")
-
+                + ("".join([
+                    f", aéré interligne +{air_side:.1f} px" if air_rows else "",
+                    (f", titres +{air_title:.1f} px" if air_titles else ""),
+                    ]) if air_side is not None else "")
                 + f" · composition {base_w:g} px × {fit:.4f}"
                 + (f", inter-panneaux {gap:g} px" if gap > var["gap"] + 0.5 else ""))
+            infos[n] = {"sid": sid, "fit": fit}
+    return pages, labels, tailles, infos
 
-    html = f"""<!DOCTYPE html>
+
+def assemble_html(metrics: dict, w0: float, css: str, pages: list[str]) -> str:
+    return f"""<!DOCTYPE html>
 <html lang="fr" class="carte-doc" data-carte-viewport="{metrics['viewport']}" \
       data-carte-index-hash="{metrics['index_hash']}" data-carte-base-w="{w0:g}">
 <head>
@@ -1941,8 +1982,124 @@ html.carte-doc {{
 </body>
 </html>
 """
-    html = remplacer_glyphes_a_risque(html)
+
+
+def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
+                 metrics: dict, w0: float, src: str, flows: dict,
+                 chosen: dict) -> tuple[list[str], list[str], dict[int, dict]]:
+    """Passe d'aération : mesure chaque feuille rendue (mêmes fontes que le
+    PDF), répartit l'espace libre avant le plancher de garde entre l'interligne
+    des lignes et la marge sous les titres, recompose, puis vérifie le rendu.
+
+    Les hauteurs du plan (metrics) sont mesurées dans le document de mesure,
+    sans feuille ni échelle ; le rendu réel d'une feuille peut s'en écarter
+    (fontes, arrondis) — on ne distribue donc que l'espace constaté sur le
+    rendu. La classe carte-aerate et les variables d'air ne sont posées que
+    par cette passe : le document de mesure et la carte sans aération restent
+    les mêmes qu'avant.
+    """
+    res = subprocess.run(["node", str(AERATE)], cwd=ROOT, capture_output=True, text=True)
+    if res.returncode != 0:
+        raise SystemExit(f"l'aération a échoué :\n{res.stdout}{res.stderr}")
+    try:
+        meas = {m["page"]: m for m in json.loads(res.stdout)}
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"aerate_carte.mjs : sortie illisible ({exc})")
+    attentes = {"entrees": 12, "plats": 12, "desserts": 12,
+                "boissons": 3, "cocktails": 3, "vins": 5}
+    airs: dict[int, tuple[float, float, int, int, float]] = {}
+    for n, info in infos.items():
+        m = meas.get(n)
+        if not m or m.get("kind") == "cover":
+            continue
+        # contrôle des bases : la CSS d'aération compose sur des paddings
+        # connus — si une règle du site les a changés, on ne devine pas.
+        if m["kind"] in attentes:
+            tag, attendu = ("td", attentes[m["kind"]]) if m["kind"] == "vins" else ("article", attentes[m["kind"]])
+            base = m.get("bases", {}).get(tag)
+            if m["rows"] and base is not None and abs(base - attendu) > 0.5:
+                raise SystemExit(
+                    f"aération {m['kind']} (page {n}) : base de ligne {base} px, "
+                    f"{attendu} px attendu — la CSS des lignes a changé, revoir "
+                    f"le bloc « Aération » de CARD_OVERRIDES.")
+        free = ZONE_H_PX * SAFETY - m["flowH"]
+        rows, titles = m["rows"], m["titles"]
+        if free > 0.5 and rows + titles > 0:
+            air_side = free / (2 * info["fit"] * (rows + titles))
+            airs[n] = (round(max(air_side, 0.0), 2), round(2 * max(air_side, 0.0), 2),
+                       rows, titles, free, m["flowH"])
+    if not airs:
+        return pages, [], {}
+    pages2, labels2, _, infos2 = compose_pages(src, metrics, flows, chosen, w0, airs)
+    OUT.write_text(remplacer_glyphes_a_risque(assemble_html(metrics, w0, css, pages2)),
+                   encoding="utf-8")
+    # garde : aucune feuille au-dessus du plancher (tolérance d'arrondi). Si une
+    # feuille déborde malgré tout, on rabat son aération au prorata du rendu.
+    for _ in range(2):
+        res = subprocess.run(["node", str(AERATE)], cwd=ROOT, capture_output=True, text=True)
+        meas2 = {m["page"]: m for m in json.loads(res.stdout)} if res.returncode == 0 else {}
+        mauvaises = [n for n in airs
+                     if meas2.get(n, {}).get("flowH", 0) > ZONE_H_PX * SAFETY + 2]
+        if not mauvaises:
+            break
+        for n in mauvaises:
+            A, T, rows, titles, free, flowH0 = airs[n]
+            m1 = meas.get(n, {}).get("flowH", 0)
+            m2 = meas2.get(n, {}).get("flowH", 0)
+            croissance = max(m2 - m1, 0.01)
+            garde = max(0.0, (ZONE_H_PX * SAFETY - m1) / croissance)
+            airs[n] = (round(A * garde, 2), round(T * garde, 2), rows, titles, free, flowH0)
+        pages2, labels2, _, infos2 = compose_pages(src, metrics, flows, chosen, w0, airs)
+        OUT.write_text(remplacer_glyphes_a_risque(assemble_html(metrics, w0, css, pages2)),
+                       encoding="utf-8")
+    else:
+        raise SystemExit("aération : une feuille déborde encore après rabattement — "
+                         "relancer et vérifier la CSS d'aération")
+    return pages2, labels2, airs
+
+
+def main() -> None:
+    src = index_text()
+    flows = {sid: split_duo_grids(split_flow(section_flow(src, sid))) for sid in SECTIONS}
+    # Les blocs insécables (MERGE) portent data-merge="1" dans la carte comme
+    # dans le document de mesure : la CSS de la carte les reconnait ainsi.
+    for sid, groups in MERGE.items():
+        for group in groups:
+            for i in group:
+                flows[sid][i] = re.sub(r"^<(\w+)", r'<\1 data-merge="1"',
+                                       flows[sid][i], count=1)
+                # notes remontées dans la ligne de chaque article
+                flows[sid][i] = inline_notes(flows[sid][i])
+    # vins : le producteur après le tiret passe en sans gras (comme les notes)
+    for sid in SECTIONS:
+        flows[sid] = [wine_producer_light(b) for b in flows[sid]]
+
+    css, stats = compose_css(src)
+    print("CSS du site : neutralisation levée → " + ", ".join(f"{k} {v}" for k, v in stats.items()))
+
+    allow_stale = "--no-measure" in sys.argv
+    metrics = load_metrics(src, css, flows, allow_stale)
+    check_blocks(metrics, flows)
+    chosen, w0, f_uniform = layout(metrics, UNIFORME)
+    garde_uniformite(metrics, chosen)
+
+    pages, labels, tailles, infos = compose_pages(src, metrics, flows, chosen, w0)
+    html = remplacer_glyphes_a_risque(assemble_html(metrics, w0, css, pages))
     OUT.write_text(html, encoding="utf-8")
+
+    # Aération : l'espace libre du bas de chaque feuille revient dans
+    # l'interligne des lignes et sous les titres de panneau, jusqu'au plancher
+    # de garde — jamais au-delà (la passe vérifie le rendu et rabat si besoin).
+    if "--no-aeration" not in sys.argv:
+        pages, labels_aeres, airs = aerate_pages(infos, pages, css, metrics, w0, src, flows, chosen)
+        if airs:
+            labels = labels[:1] + labels_aeres[1:]
+            print(f"  aération : {len(airs)} feuilles aérées — interligne "
+                  f"+{min(a[0] for a in airs.values()):.1f} à +{max(a[0] for a in airs.values()):.1f} "
+                  f"px/ligne, titres +{min(a[1] for a in airs.values()):.1f} à "
+                  f"+{max(a[1] for a in airs.values()):.1f} px, plafond de garde "
+                  f"{SAFETY * 100:.1f} %")
+
     total = sum(len(p["sheets"]) for p in chosen.values())
     print(f"\ncarte.html : {len(pages)} feuilles ({total} de contenu) — fenêtre "
           f"{metrics['viewport']} px, site composé à {w0:g} px")

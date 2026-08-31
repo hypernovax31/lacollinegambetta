@@ -45,13 +45,19 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
   (journal d'un build : × 0,5690 (plats, boissons, cocktails) à × 0,7824
   (menus), soit des intitulés de 7,6 à 10,5 pt, feuilles à 91-100 % de la
   hauteur et 100 % de la largeur).
-- **Le blanc restant en bas devient du jeu entre panneaux.** Une feuille remplie
-  à 82 % n'a pas un problème de caractères mais de souffle : la hauteur restante
-  est répartie dans `row-gap` du flux (porté en style inline sur `.tab-flow`, donc
-  en pixels non scalés), borné à 2,4 × l'écart du site (`JUSTIFY_MAX_RATIO`) pour
-  que cela reste une carte et non une mise en page espacée au triple. Une page y
-  a le droit de rester un peu courte plutôt que d'ouvrir ses panneaux comme un
-  classeur : la dernière feuille des cocktails s'arrête à 91 %.
+- **Le blanc restant en bas devient du jeu entre panneaux, puis dans les
+  lignes.** Une feuille remplie à 82 % n'a pas un problème de caractères mais de
+  souffle : une première part de la hauteur restante est répartie dans `row-gap`
+  du flux (porté en style inline sur `.tab-flow`, donc en pixels non scalés),
+  borné à 2,4 × l'écart du site (`JUSTIFY_MAX_RATIO`) pour que cela reste une
+  carte et non une mise en page espacée au triple. Ensuite, **l'aération**
+  (`tools/aerate_carte.mjs`, appelé par le build) mesure chaque feuille rendue —
+  mêmes fontes que le PDF — et distribue tout l'espace restant avant le plancher
+  de garde (`SAFETY`, 98,5 %) entre l'interligne des lignes (`--carte-air-side`,
+  ajouté au padding vertical de chaque ligne) et la marge sous les titres de
+  panneau (`--carte-air-title`). Chaque feuille se remplit ainsi jusqu'au
+  plancher, jamais au-delà : la passe vérifie le rendu et rabat l'aération d'une
+  feuille qui déborderait. `--no-aeration` désactive la passe.
 - **Plancher de lisibilité, pas de plafond.** `TITRE_MIN_PT` (7,2 pt sur le
   papier) est une limite basse signalée par le build — l'enveloppe de dix pages
   passe avant elle, mais aucune des neuf feuilles de contenu n'y descend
