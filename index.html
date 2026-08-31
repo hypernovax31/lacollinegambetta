@@ -4808,7 +4808,7 @@ html #interior-menu .wine-table td:not(.wine-name):not(.wine-no)::before {
                     <circle cx="140" cy="140" r="136" fill="none" stroke="url(#minimalGoldCover)" stroke-width="2.5" opacity="0.95" pointer-events="none" />
                     <circle cx="140" cy="140" r="130" fill="none" stroke="#592e6f" stroke-width="0.8" opacity="0.35" stroke-dasharray="4 4" pointer-events="none" />
                 </svg></div>
-      <a href="#menu-nav-anchor" class="contact-link cover-action" onclick="showView('menu')"><span class="star-gold">✦</span> Menu & Carte <span class="star-gold">✦</span></a>
+      <a href="#menu-nav-anchor" class="contact-link cover-action" onclick="showView('menu'); return false;"><span class="star-gold">✦</span> Menu & Carte <span class="star-gold">✦</span></a>
       </div>
       <div class="cover-footer">
         <div class="cover-footer-address">4 rue Belgrand • 75020 Paris • Place Gambetta</div>
@@ -5024,7 +5024,12 @@ if (document.readyState === 'loading') {
   buildPrintDocument();
 }
 function openInteractiveMenuIfHashed() {
-  if (location.hash === '#menu-nav-anchor') showView('menu');
+  if (location.hash === '#menu-nav-anchor') {
+    /* Effacer le hash AVANT showView pour empêcher le navigateur de scroller
+       nativement vers l'ancre (ce qui court-circuiterait l'animation). */
+    history.replaceState(null, '', location.pathname + location.search);
+    showView('menu');
+  }
 }
 openInteractiveMenuIfHashed();
 window.addEventListener('hashchange', openInteractiveMenuIfHashed);
