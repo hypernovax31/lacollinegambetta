@@ -3878,8 +3878,8 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   html:not(.carte-doc) .menu-nav-hint--start { left: 8px; justify-self: auto; }
   html:not(.carte-doc) .menu-nav-hint--end { right: 8px; justify-self: auto; }
   html:not(.carte-doc) .menu-nav-wrap.is-overflow .menu-nav {
-    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 52px, #000 calc(100% - 52px), transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0, #000 52px, #000 calc(100% - 52px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
   }
   html:not(.carte-doc) .menu-nav {
     display: flex !important;
@@ -4730,7 +4730,7 @@ html #interior-menu .wine-table td:not(.wine-name):not(.wine-no)::before {
       <button class="control-btn active" id="btn-show-cover" onclick="showView('cover')"><span class="star-gold">✦</span> Page de Garde</button>
       <button class="control-btn" id="btn-show-menu" onclick="showView('menu')">📖 Menu & Carte</button>
     </div>
-    <a class="download-btn" href="carte-a4.pdf" target="_blank" rel="noopener" title="Télécharger la carte (PDF A4)" aria-label="Télécharger la carte au format PDF">
+    <a class="download-btn" href="carte-a4.pdf" download="La-Colline-Gambetta-Carte.pdf" title="Télécharger la carte (PDF A4)" aria-label="Télécharger la carte au format PDF">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M12 3.5v11.5"/>
         <path d="M7.5 11.2 12 15.7l4.5-4.5"/>
@@ -4819,7 +4819,7 @@ html #interior-menu .wine-table td:not(.wine-name):not(.wine-no)::before {
                     <circle cx="140" cy="140" r="136" fill="none" stroke="url(#minimalGoldCover)" stroke-width="2.5" opacity="0.95" pointer-events="none" />
                     <circle cx="140" cy="140" r="130" fill="none" stroke="#592e6f" stroke-width="0.8" opacity="0.35" stroke-dasharray="4 4" pointer-events="none" />
                 </svg></div>
-      <a href="#menu-nav-anchor" class="contact-link cover-action" onclick="showView('menu'); return false;"><span class="star-gold">✦</span> Menu & Carte <span class="star-gold">✦</span></a>
+      <a href="index.html#menu-nav-anchor" class="contact-link cover-action" onclick="showView('menu'); return false;"><span class="star-gold">✦</span> Menu & Carte <span class="star-gold">✦</span></a>
       </div>
       <div class="cover-footer">
         <div class="cover-footer-address">4 rue Belgrand • 75020 Paris • Place Gambetta</div>
