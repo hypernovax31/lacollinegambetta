@@ -141,10 +141,10 @@ figeait toute variante au-dessus de 1 140 px sans jamais se plaindre. `tools/car
 est committé avec les deux empreintes : sans Node ni Chromium, `build_carte.py`
 réutilise ces chiffres et annonce qu'ils sont périmés plutôt que d'inventer.
 
-## PDF A4 téléchargeable (`carte-a4.pdf`)
+## PDF A4 téléchargeable (`Carte_LaCollineGambetta.pdf`)
 
-L'icône de téléchargement du header de `index.html` ouvre **`carte-a4.pdf`** : la carte en
-**10 pages images** — une page = une feuille de `carte.html` photographiée à 300 dpi.
+L'icône de téléchargement du header de `index.html` ouvre **`Carte_LaCollineGambetta.pdf`** :
+la carte en **10 pages images** — une page = une feuille de `carte.html` photographiée à 300 dpi.
 Les mêmes feuilles sont livrées en JPEG dans **`carte-a4-pages/`** (`page-01.jpg` … `page-10.jpg`),
 prêtes à envoyer telles quelles à un imprimeur.
 
