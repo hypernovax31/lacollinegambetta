@@ -4002,6 +4002,57 @@ html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
   }
 }
 
+/* ===== Page de garde : titre toujours visible même en paysage très bas (≈400×250) ===== */
+@media (max-height: 450px) {
+  html:not(.carte-doc) #cover-section .cover-page {
+    padding: 6px 12px 8px !important;
+    gap: 0 !important;
+    overflow-y: auto !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-brand {
+    margin-bottom: 10px !important;
+    gap: 2px !important;
+    flex: 0 0 auto !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader-lite .eyebrow,
+  html:not(.carte-doc) #cover-section .leader-title {
+    font-size: clamp(0.8rem, 2.8vh, 1.1rem) !important;
+    letter-spacing: .06em !important;
+  }
+  html:not(.carte-doc) #cover-section .leader-meta,
+  html:not(.carte-doc) #cover-section .menu-leader-subline {
+    font-size: clamp(0.45rem, 1.8vh, 0.6rem) !important;
+    letter-spacing: .04em !important;
+    line-height: 1.2 !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-container {
+    margin-top: 10px !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+    width: max(60px, min(calc(100svh - 140px), 180px)) !important;
+    max-width: calc(100% - 8px) !important;
+    margin-bottom: 10px !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-container .cover-action {
+    min-height: clamp(28px, 5vh, 40px) !important;
+    font-size: clamp(0.6rem, 2vh, 0.78rem) !important;
+    padding: 4px 12px !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-footer {
+    margin-top: 6px !important;
+    gap: 4px !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-footer-address {
+    font-size: clamp(0.5rem, 1.6vh, 0.65rem) !important;
+    line-height: 1.2 !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-links .contact-link {
+    min-height: clamp(26px, 5vh, 36px) !important;
+    font-size: clamp(0.5rem, 1.6vh, 0.65rem) !important;
+    padding: 3px 6px !important;
+  }
+}
+
 /* ===== Header : les trois boutons ne se chevauchent jamais ===== */
 html:not(.carte-doc) .top-controls__nav {
   flex: 1 1 0;
