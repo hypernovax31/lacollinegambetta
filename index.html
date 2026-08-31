@@ -4705,6 +4705,35 @@ html #interior-menu .wine-table td:not(.wine-name):not(.wine-no)::before {
   html #interior-menu .hh-list--cols { column-gap: 2.75rem; }
 }
 
+/* =============================================================================
+   DEUX COLONNES : LE GROUPE RECENTRÉ DANS LE PANNEAU
+   -----------------------------------------------------------------------------
+   Les listes à deux colonnes (.price-list--cols, .hh-list--cols) étaient
+   tendues sur toute la largeur du panneau (colonnes 1fr) : le contenu de
+   chaque colonne restait collé à gauche de sa moitié et le groupe semblait
+   décentré — l'œil voyait un grand vide au milieu pour « Cocktails
+   classiques » ou « Élégance & saveurs ». On laisse désormais le groupe
+   prendre sa largeur naturelle (chaque colonne à sa largeur de contenu,
+   `minmax(0, max-content)` pour qu'elle puisse encore se replier si la place
+   manque) et on le centre dans le panneau : les deux colonnes sont alors
+   équidistantes des bords.
+
+   Le recentrage ne vaut que sur écran (media `screen`), quand les deux
+   colonnes sont côte à côte (≥ 720 px) et hors paysage très bas (le mode
+   « empilé » des fenêtres ≤ 540 px de haut reste en une colonne).
+   L'impression et la carte A4 (html.carte-doc) ne sont pas touchées : leurs
+   règles propres gardent les colonnes 1fr pleine largeur.
+   ========================================================================== */
+@media screen and (min-width: 720px) and (min-height: 541px) {
+  html:not(.carte-doc) #interior-menu .price-list--cols,
+  html:not(.carte-doc) #interior-menu .hh-list--cols {
+    grid-template-columns: repeat(2, minmax(0, max-content)) !important;
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+}
+
 /* Sur le papier, la contenance garde le même rôle : Montserrat maigre, casse
    d'origine, encre claire — la taille, elle, suit la feuille. */
 @media print {
@@ -4945,8 +4974,23 @@ function showMenuSection(sectionId, btnElement) {
     btnElement.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'instant' });
   }
   syncMenuNavHints();
+  /* L'ancre « haut de la carte » (#menu-nav-anchor) est posée au-dessus des
+     deux bandeaux qui restent épinglés en haut (.top-controls puis
+     .menu-nav-wrap) : en défilant jusqu'à elle, le premier titre de l'onglet
+     finissait caché derrière ces bandeaux — la page s'arrêtait au milieu du
+     titre. On défile donc jusqu'au haut de la section active, moins la
+     hauteur totale des deux bandeaux épinglés et un léger jeu : le premier
+     panneau commence juste sous la barre de sélection, titre entièrement
+     visible. */
   const anchor = document.getElementById('menu-nav-anchor');
-  const target = anchor ? Math.max(0, Math.round(anchor.getBoundingClientRect().top + window.scrollY)) : 0;
+  const section = document.getElementById(sectionId);
+  const topBar = document.querySelector('.top-controls');
+  const navWrap = document.getElementById('menu-nav-wrap');
+  const stickyHeight = (topBar ? topBar.offsetHeight : 0) + (navWrap ? navWrap.offsetHeight : 0);
+  const base = section
+    ? section.getBoundingClientRect().top + window.scrollY
+    : (anchor ? anchor.getBoundingClientRect().top + window.scrollY : 0);
+  const target = Math.max(0, Math.round(base - stickyHeight - 10));
   animateScrollTo(target, 240);
 }
 function animateScrollTo(targetY, duration) {
