@@ -3796,6 +3796,7 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     pointer-events: none;
     cursor: pointer;
     opacity: 1;
+    transition: opacity .25s ease;
     flex: 0 0 42px;
   }
   html:not(.carte-doc) .menu-nav-hint svg {
@@ -3813,7 +3814,7 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   }
   html:not(.carte-doc) .menu-nav-wrap.is-overflow:not(.has-start) .menu-nav-hint--start,
   html:not(.carte-doc) .menu-nav-wrap.is-overflow:not(.has-end) .menu-nav-hint--end {
-    opacity: 0.45;
+    opacity: 0;
     pointer-events: none;
   }
   html:not(.carte-doc) .menu-nav-hint--start { left: 8px; justify-self: auto; }
@@ -4284,12 +4285,12 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
      d'être rejetée au quart de la ligne. */
   html:not(.carte-doc) #interior-menu #vins .wine-table tbody tr {
     display: grid;
-    grid-template-columns: 2.4em repeat(4, minmax(0, 1fr)) !important;
-    column-gap: 8px;
-    row-gap: 6px;
+    grid-template-columns: 1.8em repeat(4, minmax(0, 1fr)) !important;
+    column-gap: 4px;
+    row-gap: 4px;
     align-items: center;
     border-bottom: 1px solid rgba(216, 178, 87, .22);
-    padding: 10px 0 12px;          /* l'espace entre deux vins, pas seulement en
+    padding: 6px 0 8px;            /* l'espace entre deux vins, pas seulement en
                                       dedans : c'est lui qui rend la liste courable */
   }
   html:not(.carte-doc) #interior-menu #vins .wine-table td {
@@ -4303,7 +4304,7 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
     grid-row: 1;
     text-align: left;
     font-family: 'Cinzel', serif;
-    font-size: 0.74rem;
+    font-size: 0.7rem;
     line-height: 1;
     color: var(--muted);
   }
@@ -4939,7 +4940,19 @@ function initMenuNavHints() {
     const next = active + dir;
     if (next < 0 || next > btns.length - 1) return;
     const match = /showMenuSection\(\s*'([^']+)'\s*,/.exec(btns[next].getAttribute('onclick') || '');
-    if (match) showMenuSection(match[1], btns[next]);
+    if (match) {
+      /* Les flèches changent d'onglet SANS faire défiler la page vers
+         #menu-nav-anchor : seul un clic sur un bouton sélecteur déclenche
+         ce défilement. On change juste la section active et le bouton actif,
+         puis on recentre le bouton dans le ruban horizontal. */
+      document.querySelectorAll('.menu-section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      const targetSection = document.getElementById(match[1]);
+      if (targetSection) targetSection.classList.add('active');
+      btns[next].classList.add('active');
+      btns[next].scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'instant' });
+      syncMenuNavHints();
+    }
   };
   const bind = (el, dir) => {
     if (!el) return;
