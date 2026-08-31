@@ -32,6 +32,7 @@ import { extname, join, normalize, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { chromium } from 'playwright';
 import chromiumBinary, { setupLambdaEnvironment } from '@sparticuz/chromium';
+import { carteChromiumArgs } from './chromium-args.mjs';
 import { installLocalFonts, checkPageFonts } from './local-fonts.mjs';
 
 const ROOT = resolve(new URL('..', import.meta.url).pathname);
@@ -219,7 +220,7 @@ async function withPage(mode, run) {
     browser = await chromium.launch({
       headless: true,
       executablePath: await chromiumBinary.executablePath(),
-      args: [...chromiumBinary.args, '--no-sandbox', '--disable-dev-shm-usage'],
+      args: [...carteChromiumArgs(), '--no-sandbox', '--disable-dev-shm-usage'],
     });
     const ctx = await browser.newContext({ viewport: { width: 1000, height: 900 } });
     if (!argv['remote-fonts']) await installLocalFonts(ctx, ROOT);

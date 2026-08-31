@@ -1093,6 +1093,24 @@ CARD_OVERRIDES = """
 #print-document .carte-flow [data-merge="1"] .hh-list {
   grid-template-columns: 1fr !important;
 }
+/* Une liste --cols en une colonne : les deux moitiés (wrappers __col) se
+   suivent sans l'espace de grille du site (10 px) — les lignes reprennent
+   leur espacement normal (padding 3 px) et la section forme une seule liste
+   continue, comme « la section du bas regroupée avec celle du haut ». En
+   mode deux colonnes de lignes (carte-2col), la règle plus spécifique
+   repasse le gap à 18 px. */
+#print-document .carte-flow [data-merge="1"] .price-list--cols,
+#print-document .carte-flow [data-merge="1"] .hh-list--cols {
+  gap: 0 !important;
+}
+/* En-tête fantôme de la colonne 2 (celui que le site montre à ≥1480 px quand
+   les deux colonnes sont côte à côte) : dans la carte il réapparaissait au
+   MILIEU de la liste — le texte « Prix / HH » dupliqué entre les deux
+   moitiés. Il n'a pas lieu d'être : l'en-tête de tête suffit. */
+#print-document .carte-flow [data-merge="1"] .hh-list--cols .hh-head--ghost {
+  display: none !important;
+  visibility: hidden !important;
+}
 /* Pleine largeur de la feuille : la règle écran du site (« deux colonnes
    max-content ») pose width: fit-content + margin-inline: auto, rescopée dans
    la carte elle fait que la grille épouse son contenu et laisse la page à
@@ -1173,12 +1191,6 @@ CARD_OVERRIDES = """
 #print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols .price-list__col:nth-child(2) > *,
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(2) > * {
   grid-column: 2;
-}
-/* En-tête fantôme de la colonne 2 (celui que le site montre à ≥1480 px) :
-   visible quand la liste --cols bascule en deux colonnes de lignes. */
-#print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-head--ghost {
-  display: grid !important;
-  visibility: visible !important;
 }
 /* Listes HH simples (Spritz, Mules, Mocktails) : l'en-tête traverse les deux
    colonnes, les lignes se répartissent en rangées. */

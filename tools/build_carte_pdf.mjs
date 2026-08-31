@@ -32,6 +32,7 @@ import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import chromiumBinary, { setupLambdaEnvironment } from '@sparticuz/chromium';
+import { carteChromiumArgs } from './chromium-args.mjs';
 import { installLocalFonts, checkPageFonts } from './local-fonts.mjs';
 import { imagesToPdf, jpegInfo } from './jpeg-pdf.mjs';
 
@@ -183,7 +184,7 @@ async function main() {
     browser = await chromium.launch({
       headless: true,
       executablePath,
-      args: [...chromiumBinary.args, '--no-sandbox', '--disable-dev-shm-usage'],
+      args: [...carteChromiumArgs(), '--no-sandbox', '--disable-dev-shm-usage'],
     });
     const context = await browser.newContext({
       // La largeur de composition du site, pas une largeur au hasard : les

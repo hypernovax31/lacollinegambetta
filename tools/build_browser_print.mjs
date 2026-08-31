@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { chromium } from 'playwright';
 import chromiumBinary, { setupLambdaEnvironment } from '@sparticuz/chromium';
+import { carteChromiumArgs } from './chromium-args.mjs';
 import { installLocalFonts, checkPageFonts, assertPdfFonts } from './local-fonts.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
@@ -119,7 +120,7 @@ async function main() {
     browser = await chromium.launch({
       headless: true,
       executablePath,
-      args: [...chromiumBinary.args, '--no-sandbox', '--disable-dev-shm-usage'],
+      args: [...carteChromiumArgs(), '--no-sandbox', '--disable-dev-shm-usage'],
     });
     const context = await browser.newContext({
       // Use the site's desktop breakpoint while keeping the printed page A4.

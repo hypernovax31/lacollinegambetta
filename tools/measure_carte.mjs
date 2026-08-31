@@ -31,6 +31,7 @@ import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import chromiumBinary, { setupLambdaEnvironment } from '@sparticuz/chromium';
+import { carteChromiumArgs } from './chromium-args.mjs';
 import { installLocalFonts, checkPageFonts } from './local-fonts.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
@@ -93,7 +94,7 @@ async function main() {
   const browser = await chromium.launch({
     headless: true,
     executablePath: await chromiumBinary.executablePath(),
-    args: [...chromiumBinary.args, '--no-sandbox', '--disable-dev-shm-usage'],
+    args: [...carteChromiumArgs(), '--no-sandbox', '--disable-dev-shm-usage'],
   });
   try {
     const context = await browser.newContext({ viewport: { width: viewport, height: 1400 } });
