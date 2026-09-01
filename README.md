@@ -11,7 +11,7 @@ largeur qui remplit la feuille**, puis réduit d'un facteur lié à cette largeu
 
 ```bash
 python3 tools/build_carte.py      # mesure, met en page, écrit carte.html
-npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf
+npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf (livré sous Carte_LaCollineGambetta.pdf)
 ```
 
 - Une feuille par onglet, dans l'ordre des onglets du site (`entrees, plats, menus,
@@ -185,7 +185,7 @@ après avoir retouché une page à la main, par exemple — inutile de relancer 
 mise en page. `tools/jpeg-pdf.mjs` s'utilise aussi en ligne de commande :
 
 ```bash
-npm run pdf:from-jpg                                   # carte-a4-pages/ → carte-a4.pdf
+npm run pdf:from-jpg                                   # carte-a4-pages/ → carte-a4.pdf (à renommer Carte_LaCollineGambetta.pdf pour le site)
 node tools/jpeg-pdf.mjs --dir dossier --out sortie.pdf # autre dossier, autre nom
 node tools/jpeg-pdf.mjs page-01.jpg page-02.jpg --out extrait.pdf   # pages choisies
 ```
@@ -440,3 +440,74 @@ node tools/audit-mesures.mjs --width 390    # 141 libellés (avec les data-label
 
 `tools/shot.mjs --tab boissons --width 1440 [--selector .beer-table]` capture un onglet
 (ou un seul bloc) avec les vraies fontes, pour un contrôle à l'œil.
+
+## Feuille « Formules » (Nos Menus) : reprise à l'identique du PDF
+
+La page « Nos Menus » reproduit la feuille Formules de `Carte_LaCollineGambetta.pdf`
+(p. 4), du plus petit mobile au grand écran :
+
+- **Ornements des titres « au choix »** : les trois motifs (ancre, candélabre,
+  flamme) sont les images embarquées du PDF (57 × 57 px), vectorisées en SVG
+  **pixel par pixel** (un `<path>` par run de pixels, `viewBox 0 0 57 57`) — la
+  similarité au rendu du PDF est de 1,0 à l'échelle 1:1. Couleurs réelles lues
+  dans le PDF : `#49444d`, `#614b62`, `#594662`. Ils s'affichent à 54,9 px
+  (1,9 em sous 640 px), centrés au-dessus du titre.
+- **Titres à deux lignes** : `ENTRÉE` / `PLAT` / `DESSERT` en Cinzel bold
+  `#5b3172`, `au choix` en Cinzel regular noir, ornement au-dessus.
+- **Items sans puces**, en gris-mauve `#9a959e` (couleur mesurée sur le PDF à
+  2400 dpi), prix en violet.
+- **Rosette** 62 px (44 px mobile) en haut à gauche de chaque carton de formule,
+  badge « La formule complète » en bandeau or, médaillons Menu enfant / Petit
+  déjeuner (118 / 176 px, 92 / 128 px mobile) décalant le contenu.
+- **Prix conformes au PDF** : 24,90 duo et complète, 17,90/21,90 du menu du jour
+  en or `#d4b262`, 11,90 du menu enfant en violet, 7,00 du petit déjeuner en
+  `#b5a1bb` sur son **bandeau violet** (`linear-gradient(180deg,#603078,#481860)`)
+  qui occupe toute la largeur de la carte (margin négative sur le padding du
+  panneau, coins bas arrondis 22 px ; −14 px sous 640 px).
+
+Génération des SVG : `python` + numpy sur les PNG extraits de la p. 4
+(`pymupdf` : xref 25/26/29 = ornements 57 × 57, xref 36/37/44 = rosettes 80 × 80,
+xref 33/50 = médaillons, xref 32 = badge 374 × 59) — runs horizontaux fusionnés
+verticalement, un `<path>` par rectangle, `fill="currentColor"`.
+
+### Dernières corrections de conformité (feuille Formules)
+
+- **Sections à pleine largeur de fenêtre** : `.container` passe à `width:100%`
+  en mode web (`html:not(.carte-doc)`), les panneaux de menu couvrent donc toute
+  la largeur de l'écran, du mobile au PC (le mode carte/impression est inchangé).
+- **Gouttières centrées sur la page** : offer-grid et menus-duo en `column-gap:
+  clamp(28px,5vw,56px)` (56 px à 1440), choice-grid en `clamp(18px,3vw,32px)` —
+  la gouttière principale tombe exactement au centre de la fenêtre (720 px à
+  1440), assez large pour la lisibilité.
+- **Graisses conformes au PDF (Cinzel-Bold)** : tous les prix et `strong` de
+  `#menus` passent en `font-weight:700` (au lieu de 800/900) ; « ou » et
+  « au choix » restent en 400 (Cinzel-Regular), comme la feuille Formules.
+- **Rosettes = vrais motifs du PDF** : les rosettes des cartons de formule sont
+  désormais les motifs 80 × 80 extraits de la p. 4 (xref 36 = duo encre
+  `#403f44`, xref 37 = complète en encre sombre `#1c0e26` sur carton violet),
+  vectorisés en SVG inline pixel par pixel ; elles glissent au responsive
+  (62 → 44 px). Le menu du jour reçoit ses deux rosettes pleines (xref 44)
+  en haut du carton (40 → 32 px).
+- **Badge « Formule Duo »** : bandeau or uni `#c99d3f` (comme « La formule
+  complète »), et le badge « Menu du jour » devient un texte doré `#d4b262`
+  sur le fond sombre — conforme au PDF où le titre est en lettres d'or.
+- **Prix de la formule complète : 29,90** (vérifié par OCR sur la p. 4 du
+  PDF — « LA FORMULE COMPLETE » / « ENTRÉE + PLAT + DESSERT » / 29,90, la
+  Duo restant à 24,90) ; l'ensemble des textes de la feuille Formules a été
+  re-contrôlé à l'identique (intitulés, items, menu enfant 11,90, menu du
+  jour 17,90, carte 21,90, petit-déjeuner 7,00).
+- **Logo en image PNG en tête de l'onglet Nos Menus** : `logo-gambetta.png`
+  (852 × 643, l'image du logo utilisée sur la couverture) est affiché au-dessus
+  du titre « Formules », avec « Bar · Restaurant · Paris 20ᵉ » et « Fait
+  maison · Service continu · Terrasse » comme en haut de la feuille Formules.
+- **Gouttière des listes 2 colonnes centrée sur la page** (boissons, cocktails,
+  entrées, desserts) : les `.price-list--cols` / `.hh-list--cols` repassent en
+  colonnes égales `1fr` sur toute la largeur du panneau — la gouttière tombe
+  exactement au centre de l'écran (720 px à 1440, 960 px à 1920), vérifié à
+  tous les niveaux de zoom grand écran ; les lignes à pointillés remplissent
+  naturellement chaque colonne.
+- **Vins : appellations en capitales comme la carte A4** : les noms
+  d'appellations de la page Vins (`wine-name`) passent en `text-transform:
+  uppercase` avec un léger espacement, conformément à la p. 9 de la carte
+  (« COTES DU RHONE AOP BIO - LES 3 GARÇONS »), titres et en-têtes déjà en
+  capitales ; contenus et prix identiques à la carte (vérifiés par OCR).
