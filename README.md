@@ -482,32 +482,46 @@ verticalement, un `<path>` par rectangle, `fill="currentColor"`.
 - **Graisses conformes au PDF (Cinzel-Bold)** : tous les prix et `strong` de
   `#menus` passent en `font-weight:700` (au lieu de 800/900) ; « ou » et
   « au choix » restent en 400 (Cinzel-Regular), comme la feuille Formules.
-- **Rosettes = vrais motifs du PDF** : les rosettes des cartons de formule sont
-  désormais les motifs 80 × 80 extraits de la p. 4 (xref 36 = duo encre
-  `#403f44`, xref 37 = complète en encre sombre `#1c0e26` sur carton violet),
-  vectorisés en SVG inline pixel par pixel ; elles glissent au responsive
-  (62 → 44 px). Le menu du jour reçoit ses deux rosettes pleines (xref 44)
-  en haut du carton (40 → 32 px).
-- **Badge « Formule Duo »** : bandeau or uni `#c99d3f` (comme « La formule
-  complète »), et le badge « Menu du jour » devient un texte doré `#d4b262`
-  sur le fond sombre — conforme au PDF où le titre est en lettres d'or.
+- **Rosettes aux bons endroits** : sur la p. 4, les rosettes ne figurent que
+  sur les trois rubriques « au choix » — elles ont donc été retirées des
+  cartons Formule Duo / Formule complète et du Menu du jour (où elles
+  n'existaient pas), et conservées en tête des rubriques ENTRÉE / PLAT /
+  DESSERT au choix (motifs 80 × 80 de la p. 4, SVG inline).
+- **Médaillons PNG retirés** : les images `med-119.png` / `med-177.png`
+  (presque transparentes, posées en haut à gauche des cartons Menu enfant et
+  Petit déjeuner) ont été supprimées — la p. 4 n'en porte pas à cet endroit.
+- **Titre « Formules » en pilule violette** : comme la p. 4, le titre de la
+  feuille Formules est une pilule arrondie violette `#582e6f` au texte blanc,
+  centrée ; le titre « Petit déjeuner » est passé sur bande violette à texte
+  blanc, et « Menu enfant » s'affiche en lettres d'or (comme « MENU ENFANT »
+  sur la carte).
+- **Formule Duo / Formule complète** : la Duo est désormais en lettres d'or
+  `#9c7a2d` directement sur le fond crème, sans carton blanc ni bandeau ; la
+  complète garde son carton violet avec le titre en lettres d'or et domine la
+  Duo (≈ 1 : 2,15, comme les 484 × 1052 px de la p. 4) sur écran ≥ 1000 px.
+- **Badge « Menu du jour »** : texte doré `#d4b262` sur le fond sombre —
+  conforme au PDF où le titre est en lettres d'or.
 - **Prix de la formule complète : 29,90** (vérifié par OCR sur la p. 4 du
   PDF — « LA FORMULE COMPLETE » / « ENTRÉE + PLAT + DESSERT » / 29,90, la
   Duo restant à 24,90) ; l'ensemble des textes de la feuille Formules a été
   re-contrôlé à l'identique (intitulés, items, menu enfant 11,90, menu du
   jour 17,90, carte 21,90, petit-déjeuner 7,00).
-- **Logo en image PNG en tête de l'onglet Nos Menus** : `logo-gambetta.png`
-  (852 × 643, l'image du logo utilisée sur la couverture) est affiché au-dessus
-  du titre « Formules », avec « Bar · Restaurant · Paris 20ᵉ » et « Fait
-  maison · Service continu · Terrasse » comme en haut de la feuille Formules.
 - **Gouttière des listes 2 colonnes centrée sur la page** (boissons, cocktails,
   entrées, desserts) : les `.price-list--cols` / `.hh-list--cols` repassent en
   colonnes égales `1fr` sur toute la largeur du panneau — la gouttière tombe
   exactement au centre de l'écran (720 px à 1440, 960 px à 1920), vérifié à
   tous les niveaux de zoom grand écran ; les lignes à pointillés remplissent
   naturellement chaque colonne.
+- **Gouttières au passage 2 colonnes (720–761 px)** : quand un mode `@stack`
+  force une seule colonne, les `.price-list__col` / `.hh-list__col` repassent
+  en `display:block` — sans cela les lignes de la 2ᵉ moitié (encore en
+  `grid-column:2`) créaient une colonne implicite « auto » et la gouttière se
+  retrouvait à 174/430/489 px au lieu de 360. Même neutralisation en paysage
+  très bas (≤ 540 px de haut) pour toutes les listes.
 - **Vins : appellations en capitales comme la carte A4** : les noms
   d'appellations de la page Vins (`wine-name`) passent en `text-transform:
   uppercase` avec un léger espacement, conformément à la p. 9 de la carte
-  (« COTES DU RHONE AOP BIO - LES 3 GARÇONS »), titres et en-têtes déjà en
+  (« COTES DU RHONE AOP BIO - LES 3 GARÇONS ») ; le producteur, après le
+  tiret cadratin, reste en graisse normale (`400`, `.wine-producer`) comme
+  l'information secondaire de la carte ; titres et en-têtes déjà en
   capitales ; contenus et prix identiques à la carte (vérifiés par OCR).
