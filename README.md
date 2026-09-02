@@ -156,7 +156,9 @@ réutilise ces chiffres et annonce qu'ils sont périmés plutôt que d'inventer.
 ## PDF A4 téléchargeable (`Carte_LaCollineGambetta.pdf`)
 
 L'icône de téléchargement du header de `index.html` ouvre **`Carte_LaCollineGambetta.pdf`** :
-la carte en **9 pages images** — une page = une feuille de `carte.html` photographiée à 300 dpi.
+la carte en **9 pages images** — une page = une feuille de `carte.html` photographiée à 300 dpi,
+**sauf la feuille Formules (p. 4)** : depuis le 03/09/2026 c'est le document Formules du client
+qui y figure (fourni en image, redressé au 2480 × 3508 du lot).
 Les mêmes feuilles sont livrées en JPEG dans **`carte-a4-pages/`** (`page-01.jpg` … `page-09.jpg`),
 prêtes à envoyer telles quelles à un imprimeur.
 
@@ -543,10 +545,9 @@ verticalement, un `<path>` par rectangle, `fill="currentColor"`.
 - **Prix de la formule complète : 27,90** (au moment du calage : 29,90,
   vérifié par OCR sur la p. 4 du PDF — « LA FORMULE COMPLETE » / « ENTRÉE +
   PLAT + DESSERT », la Duo restant à 24,90). Mise à jour du 03/09/2026 :
-  complète 27,90, duo 23,90, le site et la feuille Formules du PDF régénérée
-  à l'identique ; l'ensemble des autres textes de la feuille a été re-contrôlé
-  (intitulés, items, menu enfant 11,90, menu du jour 17,90, carte 21,90,
-  petit-déjeuner 7,00).
+  complète 27,90, duo 23,90 dans le site, et la feuille Formules de la carte A4
+  (p. 4) est remplacée le même jour par le document Formules du client
+  (fourni en image — les prix 23,90 / 27,90 y figurent).
 - **Gouttière des listes 2 colonnes centrée sur la page** (boissons, cocktails,
   entrées, desserts) : les `.price-list--cols` / `.hh-list--cols` repassent en
   colonnes égales `1fr` sur toute la largeur du panneau — la gouttière tombe
