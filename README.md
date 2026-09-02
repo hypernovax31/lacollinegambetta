@@ -471,8 +471,10 @@ La page « Nos Menus » reproduit la feuille Formules de `Carte_LaCollineGambett
 - **Rosette** 62 px (44 px mobile) en haut à gauche de chaque carton de formule,
   badge « La formule complète » en bandeau or, médaillons Menu enfant / Petit
   déjeuner (118 / 176 px, 92 / 128 px mobile) décalant le contenu.
-- **Prix conformes au PDF** : 24,90 duo et complète, 17,90/21,90 du menu du jour
-  en or `#d4b262`, 11,90 du menu enfant en violet, 7,00 du petit déjeuner en
+- **Prix conformes au PDF** : 23,90 la formule duo et 27,90 la formule
+  complète (mise à jour du 03/09/2026 ; auparavant 24,90/29,90), 17,90/21,90
+  du menu du jour en or `#d4b262`, 11,90 du menu enfant en violet, 7,00 du
+  petit déjeuner en
   `#b5a1bb` sur son **bandeau violet** (`linear-gradient(180deg,#603078,#481860)`)
   qui occupe toute la largeur de la carte (margin négative sur le padding du
   panneau, coins bas arrondis 22 px ; −14 px sous 640 px).
@@ -529,19 +531,22 @@ verticalement, un `<path>` par rectangle, `fill="currentColor"`.
 - **Calage final des couleurs sur la p. 4** (mesuré pixel par pixel sur
   `page-04.jpg`) : prix de la Formule Duo et du Menu enfant en violet
   `#502868`, sous-titre de la Duo en violet foncé `#3e254f`, titre « La
-  formule duo » en or `#d4a83e`, prix 29,90 en ivoire `#f5efd4` sur le carton
-  violet, « La formule complète » en or clair `#e9cf7f`, 7,00 du petit
+  formule duo » en or `#d4a83e`, prix de la complète en ivoire `#f5efd4`
+  (29,90 à l'époque) sur le carton violet, « La formule complète » en or
+  clair `#e9cf7f` (montants passés à 23,90/27,90 le 03/09/2026), 7,00 du petit
   déjeuner en violet `#502868` directement sous la liste (plus de bande
   violette en bas du carton), 17,90 / 21,90 du Menu du jour en ivoire
   `#f5efd4` ; pilule « Formules » en `#582868`.
 - **Rubriques « au choix » sans carton** : comme la feuille, ENTRÉE / PLAT /
   DESSERT s'affichent en colonnes de texte sur le fond crème (fini le carton
   blanc bordé) avec le médaillon rond violet à gauche du titre.
-- **Prix de la formule complète : 29,90** (vérifié par OCR sur la p. 4 du
-  PDF — « LA FORMULE COMPLETE » / « ENTRÉE + PLAT + DESSERT » / 29,90, la
-  Duo restant à 24,90) ; l'ensemble des textes de la feuille Formules a été
-  re-contrôlé à l'identique (intitulés, items, menu enfant 11,90, menu du
-  jour 17,90, carte 21,90, petit-déjeuner 7,00).
+- **Prix de la formule complète : 27,90** (au moment du calage : 29,90,
+  vérifié par OCR sur la p. 4 du PDF — « LA FORMULE COMPLETE » / « ENTRÉE +
+  PLAT + DESSERT », la Duo restant à 24,90). Mise à jour du 03/09/2026 :
+  complète 27,90, duo 23,90, le site et la feuille Formules du PDF régénérée
+  à l'identique ; l'ensemble des autres textes de la feuille a été re-contrôlé
+  (intitulés, items, menu enfant 11,90, menu du jour 17,90, carte 21,90,
+  petit-déjeuner 7,00).
 - **Gouttière des listes 2 colonnes centrée sur la page** (boissons, cocktails,
   entrées, desserts) : les `.price-list--cols` / `.hh-list--cols` repassent en
   colonnes égales `1fr` sur toute la largeur du panneau — la gouttière tombe
