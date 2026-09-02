@@ -501,6 +501,19 @@ verticalement, un `<path>` par rectangle, `fill="currentColor"`.
   Duo (≈ 1 : 2,15, comme les 484 × 1052 px de la p. 4) sur écran ≥ 1000 px.
 - **Badge « Menu du jour »** : texte doré `#d4b262` sur le fond sombre —
   conforme au PDF où le titre est en lettres d'or.
+- **Blocs Nos Menus équilibrés (PC et mobile)** : les trois rubriques
+  « au choix » portent un petit médaillon rond violet `#50286e` juste à
+  gauche du titre (comme les médaillons de la feuille), plus d'ornements
+  étoile / candélabre / flamme excentrés ni de `position:absolute` qui les
+  détachait du carton ; le h5 est centré avec un espacement régulier.
+- **Plus de décalages texte / prix** : les `padding-left` résiduels
+  (132 / 190 px) laissés par les anciens médaillons PNG des cartons Menu
+  enfant et Petit déjeuner sont supprimés — badge, sous-titre, liste et prix
+  (11,90 / 7,00) sont de nouveau centrés dans leur bloc (décalage mesuré
+  0 px de 320 à 1920 px, tous prix confondus).
+- **Ajouts retirés** : puces « • » dorées devant les items du menu enfant et
+  du petit déjeuner (la feuille n'en porte pas) et règles CSS mortes
+  (`.rosette*`, `.menu-orn--star/candelabra/flame`, médaillons PNG).
 - **Prix de la formule complète : 29,90** (vérifié par OCR sur la p. 4 du
   PDF — « LA FORMULE COMPLETE » / « ENTRÉE + PLAT + DESSERT » / 29,90, la
   Duo restant à 24,90) ; l'ensemble des textes de la feuille Formules a été
