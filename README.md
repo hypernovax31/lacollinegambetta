@@ -11,20 +11,25 @@ largeur qui remplit la feuille**, puis réduit d'un facteur lié à cette largeu
 
 ```bash
 python3 tools/build_carte.py      # mesure, met en page, écrit carte.html
-npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf (livré sous Carte_LaCollineGambetta.pdf)
+npm run build:carte-pdf           # les 9 JPEG, puis carte-a4.pdf (livré sous Carte_LaCollineGambetta.pdf)
 ```
 
 - Une feuille par onglet, dans l'ordre des onglets du site (`entrees, plats, menus,
-  boissons, cocktails, vins, desserts`) ; les onglets denses (Boissons, Cocktails) en occupent
-  deux. Le nombre de pages et la répartition viennent de `tools/measure_carte.mjs`,
-  qui mesure le rendu réel (Chromium, fontes du site) — pas d'à-peu-près.
-- **Cocktails : une seule colonne, sur deux feuilles.** Le site présente cet
-  onglet en deux colonnes ; sur une feuille A4, il tenait alors tout entier sur
-  la première (96 %) et laissait la seconde à 35 %. `tools/build_carte.py` force
-  donc une colonne pour cet onglet (`html.carte-doc .carte-flow[data-sec="cocktails"] …
-  grid-template-columns: 1fr`) : les quatre panneaux se répartissent en deux
-  feuilles de poids égal et le pointillé meneur de prix court sur toute la
-  largeur, comme pour les whiskies et les bières.
+  boissons, cocktails, vins, desserts`) ; l'onglet dense Boissons en occupe
+  deux, chacun des autres tient sur la sienne. Le nombre de pages et la
+  répartition viennent de `tools/measure_carte.mjs`, qui mesure le rendu réel
+  (Chromium, fontes du site) — pas d'à-peu-près.
+- **Cocktails : tous sur une seule feuille, pleine, sans chevauchement.** Les
+  cinq panneaux de l'onglet (Classiques, Spritz & fraîcheur, Mules & fizz,
+  Élégance & saveurs, Mocktails — 36 boissons) forment une unité insécable
+  (`MERGE`) qui bascule en **deux colonnes de lignes** (`carte-2col`) dès que la
+  hauteur l'exige : chaque panneau étale ses lignes sur deux colonnes, les
+  listes à deux moitiés gardent leur en-tête « Prix / HH » au-dessus de chaque
+  colonne (le fantôme de la seconde moitié reprend sa place). L'air de cette
+  feuille seulement se serre — panneaux 5 px, pilules de titre 32 px, lignes
+  1 px, notes sans marge — pour que les corps restent **ceux de toute la
+  carte** (× 0,5759, intitulés à 7,7 pt). Le document passe de 10 à 9 feuilles
+  (8 de contenu) : vins et desserts suivent sans encombre.
 - **La zone utile se déduit du cadre doré.** Le filet est posé à 8 mm des bords,
   43 mm du haut, 25,5 mm du bas : la zone utile vaut donc 188,8 × 223,3 mm, à
   **2,6 mm** du filet — jamais dessus, parce que ces six nombres ne sont pas libres
@@ -41,10 +46,10 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf (livré sous 
   border le cadre en largeur n'est plus une intention, c'est l'identité. La
   hauteur, elle, décide du nombre de feuilles — en réglage individuel
   (`--per-onglet`) on prend la largeur la plus étroite qui ne fait pas
-  dépasser l'enveloppe de dix pages, donc le plus gros caractère possible
-  (journal d'un build : × 0,5690 (plats, boissons, cocktails) à × 0,7824
-  (menus), soit des intitulés de 7,6 à 10,5 pt, feuilles à 91-100 % de la
-  hauteur et 100 % de la largeur).
+  dépasser l'enveloppe de pages du document, donc le plus gros caractère possible
+  (journal d'un build d'avant la refonte uniforme : × 0,5690 (plats, boissons,
+  cocktails) à × 0,7824 (menus), soit des intitulés de 7,6 à 10,5 pt, feuilles
+  à 91-100 % de la hauteur et 100 % de la largeur).
 - **Le blanc restant en bas devient du jeu entre panneaux, puis dans les
   lignes.** Une feuille remplie à 82 % n'a pas un problème de caractères mais de
   souffle : une première part de la hauteur restante est répartie dans `row-gap`
@@ -59,14 +64,15 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf (livré sous 
   plancher, jamais au-delà : la passe vérifie le rendu et rabat l'aération d'une
   feuille qui déborderait. `--no-aeration` désactive la passe.
 - **Plancher de lisibilité, pas de plafond.** `TITRE_MIN_PT` (7,2 pt sur le
-  papier) est une limite basse signalée par le build — l'enveloppe de dix pages
-  passe avant elle, mais aucune des neuf feuilles de contenu n'y descend
-  aujourd'hui. Il n'y a pas de plafond assumé : une page qui ne se remplit
-  qu'en grossissant son caractère doit pouvoir le grossir. **Depuis la refonte
-  « une seule police », le corps de la carte est uniforme** : la page des plats
-  (la plus dense) fixe le gabarit — composition à 1 254 px, × 0,5690, intitulés
-  à 7,6 pt — et tous les onglets prennent ce même facteur, la page « Nos Menus »
-  exceptée (ses cartons gardent leur corps propre, × 0,7824). Les feuilles
+  papier) est une limite basse signalée par le build — l'enveloppe de pages du
+  document passe avant elle, mais aucune des huit feuilles de contenu n'y
+  descend aujourd'hui. Il n'y a pas de plafond assumé : une page qui ne se
+  remplit qu'en grossissant son caractère doit pouvoir le grossir. **Depuis la
+  refonte « une seule police », le corps de la carte est uniforme** : la page
+  des plats (la plus dense) fixe le gabarit — composition à 1 239 px,
+  × 0,5759, intitulés à 7,7 pt — et tous les onglets prennent ce même facteur,
+  la page « Nos Menus » exceptée (ses cartons gardent leur corps propre,
+  × 0,7559, intitulés à 10,1 pt). Les feuilles
   moins denses s'arrêtent avant le bas du cadre (70 à 99 % de hauteur) : c'est
   le prix de l'uniformité, le blanc reste entre les panneaux, jamais au-delà du
   cadre. `--per-onglet` rend la main au réglage individuel.
@@ -81,8 +87,13 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf (livré sous 
   cellule de 10 à 5 px, ce qui fait retomber l'onglet sur sa largeur d'origine
   (1 140 px, × 0,6259) — une seule feuille, à 100 % dans le cadre, intitulés à
   8,4 pt et noms de bouteilles à 8,6 pt, au lieu de 7,1 pt sur deux feuilles.
-  Les cocktails bénéficient du même échange (8 → 5,5 px de padding de ligne) et
-  remontent de 7,0 à 7,6 pt.
+  Depuis la refonte « une seule police », la feuille des vins se compose comme
+  les autres à l'échelle commune (1 239 px × 0,5759, intitulés à 7,7 pt) et
+  tient toujours seule sur la sienne, à 98 %.
+  Les cocktails ont bénéficié du même échange (8 → 5,5 px, puis 3 px) ; depuis
+  la refonte « tous les cocktails sur une seule feuille », leur page serre
+  encore l'air (lignes à 1 px, marge de note supprimée) pour tenir entière à
+  l'échelle commune — intitulés à 7,7 pt, comme partout.
 - **Page « Nos Menus » : trois cartons d'une seule hauteur.** « Formule Duo » et
   « La formule complète » étaient deux cartons bas posés au-dessus d'un « Menu enfant »
   plus haut ; ils prennent désormais la hauteur de ce dernier (244 px de composition),
@@ -107,7 +118,7 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf (livré sous 
   en style inline. Ces promesses sont vérifiées à chaque build par
   `build_carte_pdf.mjs` (`cadrage : symétrique à ± 0,00 mm et 2,6 mm avant le
   filet du cadre`) : un centrage faux ou un contenu qui toucherait le cadre
-  arrête la construction, au lieu de passer inaperçu sur dix pages d'images.
+  arrête la construction, au lieu de passer inaperçu sur neuf pages d'images.
 - Les feuilles gardent le bandeau **COLLINE GAMBETTA** en tête et le pied légal :
   un document imprimé isolé doit se suffire. **Elles ne sont pas numérotées** —
   la carte se feuille dans l'ordre des onglets du site, ce numéro ne servait donc
@@ -120,8 +131,9 @@ npm run build:carte-pdf           # les 10 JPEG, puis carte-a4.pdf (livré sous 
   document A4 que le site construit pour l'impression depuis le navigateur : les
   trois listes (onglets, sections du document, feuilles) doivent rester identiques,
   sinon le client qui imprime et celui qui télécharge le PDF ne feuillettent pas la
-  même carte. Celle-ci non plus ne numérote plus ses feuilles ; les onglets denses
-  gardent leurs deux feuilles, dans le même ordre.
+  même carte. Celle-ci non plus ne numérote plus ses feuilles ; l'onglet dense
+  Boissons garde ses deux feuilles, les autres tiennent sur la leur, dans le
+  même ordre.
 - Aperçu : ouvrir `carte.html` — les pages gardent le ratio A4 et s'adaptent à la
   largeur de la fenêtre, sans déformation. Impression : icône de téléchargement,
   Imprimer → Enregistrer au format PDF (A4 portrait réel).
@@ -130,7 +142,7 @@ Après un libellé ou un prix modifié, relancer `python3 tools/build_carte.py` 
 l'empreinte SHA-256 d'`index.html` **et** celle de la CSS de carte sont comparées
 à celles des mesures, et une mesure périmée déclenche une nouvelle mesure (ou une
 erreur explicite). La mesure ne se fait plus dans `index.html` : la carte a ses
-propres règles (la colonne unique des cocktails), le générateur écrit donc
+propres règles (les panneaux de cocktails en deux colonnes de lignes), le générateur écrit donc
 `carte-measure.html` — même CSS, mêmes imbriquations, sans feuille ni mise à
 l'échelle — et c'est là que les hauteurs sont relevées, **à chaque largeur de
 l'échelle** (le document porte `data-carte-width-ratios`, seule source de vérité :
@@ -144,8 +156,8 @@ réutilise ces chiffres et annonce qu'ils sont périmés plutôt que d'inventer.
 ## PDF A4 téléchargeable (`Carte_LaCollineGambetta.pdf`)
 
 L'icône de téléchargement du header de `index.html` ouvre **`Carte_LaCollineGambetta.pdf`** :
-la carte en **10 pages images** — une page = une feuille de `carte.html` photographiée à 300 dpi.
-Les mêmes feuilles sont livrées en JPEG dans **`carte-a4-pages/`** (`page-01.jpg` … `page-10.jpg`),
+la carte en **9 pages images** — une page = une feuille de `carte.html` photographiée à 300 dpi.
+Les mêmes feuilles sont livrées en JPEG dans **`carte-a4-pages/`** (`page-01.jpg` … `page-09.jpg`),
 prêtes à envoyer telles quelles à un imprimeur.
 
 ```bash
@@ -193,11 +205,11 @@ node tools/jpeg-pdf.mjs page-01.jpg page-02.jpg --out extrait.pdf   # pages choi
 C'est la dernière étape de `build_carte_pdf.mjs`, isolée : le PDF produit est **identique
 octet pour octet** à celui du pipeline complet, en moins d'une seconde et sans Chromium.
 
-Les pages sont prises dans l'ordre **naturel** de leur nom, pas dans celui du système de
-fichiers : `page-10` vient après `page-09`, là où un tri de texte l'aurait placée juste
-après `page-01`. Les mêmes contrôles qu'en pipeline s'appliquent — un JPEG qui n'est pas au
-ratio A4, un dossier vide ou un fichier absent arrêtent l'assemblage avec un message clair
-plutôt que de produire un PDF déformé.
+Les pages sont prises dans l'ordre **naturel** de leur nom (`page-01`, `page-02`,
+…, `page-09`), pas dans celui du système de fichiers : un tri de texte placerait
+`page-10` juste après `page-01`. Les mêmes contrôles qu'en pipeline s'appliquent —
+un JPEG qui n'est pas au ratio A4, un dossier vide ou un fichier absent arrêtent
+l'assemblage avec un message clair plutôt que de produire un PDF déformé.
 
 ## Générer les livrables imprimables (pipeline Chromium)
 

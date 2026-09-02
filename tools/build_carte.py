@@ -41,38 +41,42 @@ BASE_VIEWPORT = 1180        # largeur d'écran à laquelle le site est composé
 # et sections du document) : entrées, plats, menus, boissons, cocktails, vins,
 # desserts. Ce n'est pas l'ordre d'un menu type « Entrées / Plats / Desserts » —
 # c'est celui que la maison a choisi, et le PDF doit se feuilleter comme le site
-# se parcourt. Le générateur compose les feuilles dans cet ordre ; les onglets
-# denses gardent leurs deux feuilles, dans le même ordre.
+# se parcourt. Le générateur compose les feuilles dans cet ordre ; l'onglet
+# Boissons garde ses deux feuilles, les autres tiennent sur la leur.
 SECTIONS = ["entrees", "plats", "menus", "boissons", "cocktails", "vins", "desserts"]
 
 # Blocs qui ne doivent jamais être séparés entre deux feuilles : « Boissons
-# fraîches » + « Boissons chaudes » se partagent une seule page (demande
-# expresse), le packeur les traite donc comme une unité insécable. Les indices
-# sont ceux des blocs de .tab-flow, dans l'ordre du document. Ces blocs sont
-# marqués data-merge="1" dans la carte comme dans le document de mesure : la
-# CSS de la carte (CARD_OVERRIDES) les reconnaît par ce marqueur — et pas par
-# leur position de frère, qui change quand le découpage en pages les isole.
+# fraîches » + « Boissons chaudes » se partagent une seule page, et tous les
+# panneaux de l'onglet Cocktails — classiques, Spritz & fraîcheur, Mules & fizz,
+# Élégance & saveurs, Mocktails — se partagent l'autre (demandes expresses), le
+# packeur les traite donc comme des unités insécables. Les indices sont ceux
+# des blocs de .tab-flow, dans l'ordre du document. Ces blocs sont marqués
+# data-merge="1" dans la carte comme dans le document de mesure : la CSS de la
+# carte (CARD_OVERRIDES) les reconnaît par ce marqueur — et pas par leur
+# position de frère, qui change quand le découpage en pages les isole.
 MERGE = {"boissons": [(0, 1), (2, 3, 4, 5, 6)],
         # cocktails : le duo-grid du site (Spritz + Mules) est séparé en deux
         # blocs par split_duo_grids — les indices ci-dessous sont ceux du flux
         # APRÈS cette séparation : 0 Cocktails classiques, 1 Spritz & fraîcheur,
-        # 2 Mules & fizz sur une feuille ; 3 Élégance & saveurs, 4 Mocktails sur
-        # l'autre (demande expresse).
-        "cocktails": [(0, 1, 2), (3, 4)]}
+        # 2 Mules & fizz, 3 Élégance & saveurs, 4 Mocktails. Demande expresse :
+        # TOUS les cocktails tiennent sur une seule feuille, l'onglet entier est
+        # donc une unité insécable unique.
+        "cocktails": [(0, 1, 2, 3, 4)]}
 
 # Groupes de MERGE autorisés à passer en DEUX colonnes de lignes sur leur
 # feuille quand la hauteur manque (les quatre catégories boissons + bandeau
-# HH) : par défaut les catégories s'empilent pleine largeur, comme
-# « Boissons fraîches + chaudes » ; si leur hauteur cumulée dépasse la
-# feuille, le plan de mise en page bascule en deux colonnes de lignes les
-# sections les plus grandes (mesurées par le probe .carte-twocolsec-probe)
-# jusqu'à ce que tout tienne. Le bandeau HH (hh-banner) n'est jamais basculé :
-# sa hauteur ne change pas, la bascule ne l'atteint donc pas. La hauteur de
-# l'unité est la somme des hauteurs de ses blocs dans leur mode + les gaps,
-# pas la hauteur d'une disposition côte à côte. Les cocktails, eux, restent
-# toujours en une colonne (ligne par ligne, notes sous chaque libellé) : leur
-# police est volontairement plus petite, ce sont les pages les plus denses.
-TWOC = {"boissons": [(2, 3, 4, 5, 6)]}
+# HH, et les cinq panneaux de cocktails) : par défaut les catégories
+# s'empilent pleine largeur, comme « Boissons fraîches + chaudes » ; si leur
+# hauteur cumulée dépasse la feuille, le plan de mise en page bascule en deux
+# colonnes de lignes les sections les plus grandes (mesurées par le probe
+# .carte-twocolsec-probe) jusqu'à ce que tout tienne. Le bandeau HH
+# (hh-banner) n'est jamais basculé : sa hauteur ne change pas, la bascule ne
+# l'atteint donc pas. La hauteur de l'unité est la somme des hauteurs de ses
+# blocs dans leur mode + les gaps, pas la hauteur d'une disposition côte à
+# côte. C'est ce basculement qui permet aux 36 cocktails de la carte de tenir
+# sur une seule feuille pleine, sans chevauchement ni blanc perdu.
+TWOC = {"boissons": [(2, 3, 4, 5, 6)],
+        "cocktails": [(0, 1, 2, 3, 4)]}
 
 # Géométrie de la feuille, en accord avec les règles « contenant » plus bas.
 #
@@ -1071,10 +1075,14 @@ html.carte-doc .print-page i.carte-arrow {{
 # doit se faire dans la carte elle-même (voir carte-measure.html), pas dans
 # index.html.
 CARD_OVERRIDES = """
-/* Cocktails : une seule colonne. À deux colonnes, l'onglet tout entier tenait
-   sur une feuille à 96 % et laissait la suivante à 35 % ; en une colonne, il
-   se répartit sur deux feuilles du même poids, et le pointillé meneur de prix
-   reste lisible sur toute la largeur, comme pour les whiskies et les bières.
+/* Cocktails : tout l'onglet tient sur UNE feuille, pleine, sans
+   chevauchement (demande expresse). Les cinq panneaux forment une seule unité
+   insécable (MERGE + TWOC ci-dessus) ; quand la hauteur cumulée pleine
+   largeur dépasse la feuille, le plan bascule les panneaux en deux colonnes
+   de lignes (classe carte-2col, règles plus bas) jusqu'à ce que tout tienne.
+   Les règles ci-dessous restent la position par défaut — un panneau empilé
+   pleine largeur garde une colonne — et cèdent devant .carte-2col, dont les
+   sélecteurs portent le marqueur [data-merge="1"] et gagnent en spécificité.
    NB : « une colonne » ne se décrète pas — la règle du site pose
    grid-column: 1 / 2 sur les lignes des deux colonnes, et un simple
    grid-template-columns: 1fr laisserait la colonne 2 s'échapper dans une
@@ -1209,8 +1217,9 @@ CARD_OVERRIDES = """
      Seule la gouttière CENTRALE est élargie (40 px) : entre les prix de la
      colonne de gauche et les intitulés de celle de droite, l'œil suit sa
      rangée. Les rangées gardent l'espacement de la carte (padding 3 px),
-     comme les listes en une colonne — row-gap 0, sinon la page boissons
-     perdrait 2 points de police pour un air qui existe déjà. */
+     comme les listes en une colonne — row-gap 0, sinon les pages denses
+     (boissons, cocktails) perdraient 2 points de police pour un air qui
+     existe déjà. */
   column-gap: 40px !important;
   row-gap: 0 !important;
 }
@@ -1230,6 +1239,38 @@ CARD_OVERRIDES = """
    colonnes, les lignes se répartissent en rangées. */
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list > .hh-head {
   grid-column: 1 / -1;
+}
+/* Listes HH à deux moitiés (--cols : Classiques, Élégance & saveurs) : en
+   deux colonnes de lignes chaque moitié nourrit sa colonne, et l'en-tête
+   fantôme de la moitié de droite — neutralisé pleine largeur, où il
+   reparaissait au MILIEU de la liste — reprend sa place en tête de la
+   colonne de droite, exactement comme le site les montre côte à côte à
+   l'écran (les prix de chaque colonne gardent leur titre au-dessus). */
+#print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-head--ghost {
+  display: grid !important;
+  visibility: visible !important;
+}
+/* Sur la feuille cocktails seulement, le placement par moitiés (chaque
+   wrapper __col nourrit sa colonne, l'en-tête au-dessus de chaque colonne)
+   doit gagner contre les neutralisations « une colonne » des listes
+   cocktails, qui posent grid-column: auto en !important : les règles
+   génériques carte-2col ci-dessus n'ont pas !important, elles perdent, et
+   l'en-tête fantôme reparaissait au milieu de la liste. Ici, même
+   spécificité que ces règles-là + !important : les moitiés reprennent leur
+   place, exactement comme le site les montre côte à côte à l'écran. */
+#print-document .carte-flow[data-sec="cocktails"] [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(1) > *,
+#print-document .carte-flow[data-sec="cocktails"] [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(2) > * {
+  grid-column: auto !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(1) > .hh-head,
+#print-document .carte-flow[data-sec="cocktails"] [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(1) > .hh-line {
+  grid-column: 1 !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(2) > .hh-line {
+  grid-column: 2 !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(2) > .hh-head--ghost {
+  grid-column: 2 !important;
 }
 /* Le document de mesure (probe) : mêmes règles, même écart entre les blocs. */
 .carte-twocolsec-probe .tab-flow { row-gap: 18px; }
@@ -1360,6 +1401,50 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
 #print-document .carte-flow[data-sec="cocktails"] .price-list__note,
 #print-document .carte-flow[data-sec="cocktails"] .hh-list__note {
   font-size: 0.98rem !important;
+}
+/* --- Feuille cocktails : une seule page, pleine, sans chevauchement --------
+   L'onglet entier (36 cocktails, classiques → mocktails) tient sur une seule
+   feuille parce que ses cinq panneaux passent en deux colonnes de lignes
+   (carte-2col) ET que l'air de cette feuille seulement se serre : padding
+   vertical des panneaux (16 → 5 px), pilules de titre (min-height 50 →
+   32 px) et marge sous les têtes (12 → 3 px, gardant la variable
+   d'aération). Les LIGNES gardent leurs corps uniformes de la carte — noms,
+   notes et prix sont exactement ceux des autres feuilles, à leur échelle
+   commune (0,5759). La contenance des lignes est resserrée (padding 3 →
+   1 px, note sans marge haute, interligne de note 1,3 → 1,25) et le
+   générateur (attentes d'aération « cocktails ») est aligné sur cette base 1.
+   Si la feuille respire encore, la passe d'aération rend cet air aux lignes
+   (calc(1px + var(--carte-air-side))). Rien ici ne touche au site : tout est
+   sous #print-document. */
+#print-document .carte-flow[data-sec="cocktails"] .panel[data-merge="1"] {
+  padding: 5px 16px;
+}
+#print-document .carte-flow[data-sec="cocktails"] .panel[data-merge="1"] .panel__title {
+  min-height: 32px;
+  padding: 4px 18px;
+}
+#print-document .carte-flow[data-sec="cocktails"] .panel[data-merge="1"] .panel__head {
+  margin-bottom: 3px;
+}
+#print-document .carte-flow[data-sec="cocktails"].carte-aerate .panel[data-merge="1"] > .panel__head {
+  margin-bottom: calc(3px + var(--carte-air-title, 0px)) !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .tab-flow {
+  row-gap: 1px !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] [data-merge="1"] .hh-line,
+#print-document .carte-flow[data-sec="cocktails"] [data-merge="1"] .price-line {
+  padding: 1px 0 !important;
+}
+#print-document .carte-flow[data-sec="cocktails"].carte-aerate [data-merge="1"] .hh-line,
+#print-document .carte-flow[data-sec="cocktails"].carte-aerate [data-merge="1"] .price-line {
+  padding-top: calc(1px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(1px + var(--carte-air-side, 0px)) !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-line .price-list__note,
+#print-document .carte-flow[data-sec="cocktails"] .price-line .price-list__note {
+  margin-top: 0 !important;
+  line-height: 1.25 !important;
 }
 /* Cellules de prix du tableau des vins : la règle « prix unifiés » ≥1100 px
    ne couvre pas .wine-table td (clamp 0,85-1,08 rem) — les prix des
@@ -1549,7 +1634,8 @@ def load_metrics(index_src: str, css: str, flows, allow_stale: bool = False) -> 
     """Hauteurs de blocs, relevées dans la carte elle-même (voir carte-measure.html).
 
     Mesurer index.html ne suffirait plus : la carte a ses propres règles (les
-    cocktails en une colonne, par exemple). Le document de mesure est donc écrit
+    panneaux de cocktails en deux colonnes de lignes, par exemple). Le document
+    de mesure est donc écrit
     avec la CSS exactement identique à celle des feuilles, sans découpage ni mise
     à l'échelle, et l'empreinte (index.html + cette CSS) garde les chiffres
     alignés sur le document réel.
@@ -1630,8 +1716,9 @@ def merge_units(hs: list[float], gap: float, merge=(), twocol_totals=None) -> li
 
     Les groupes de `merge` (listes d'indices de blocs) ne peuvent jamais être
     séparés entre deux feuilles : « Boissons fraîches » + « Boissons chaudes »
-    doivent se partager la même page, et les quatre catégories suivantes la
-    page d'après. Une unité fusionnée a la hauteur de ses blocs plus les gaps
+    se partagent la même page, les quatre catégories suivantes la page d'après,
+    et les cinq panneaux de cocktails la page des cocktails. Une unité
+    fusionnée a la hauteur de ses blocs plus les gaps
     internes ; un groupe TWOC prend la hauteur mesurée de sa disposition en
     deux colonnes (twocol_totals, clé = tuple des indices) ; les blocs hors
     groupe restent des unités d'un seul bloc.
@@ -1845,7 +1932,7 @@ def layout(metrics: dict, uniforme: bool = False):
         # (w = zone / f) : on cherche donc la PLUS PETITE largeur — donc le
         # plus gros caractère — qui laisse chaque onglet au nombre de feuilles
         # qu'il atteint dans sa meilleure configuration. Grossir encore
-        # coûterait une feuille, et l'enveloppe de 10 pages est un plafond dur.
+        # coûterait une feuille, et l'enveloppe de pages est un plafond dur.
         uniforme_sids = [s for s in SECTIONS if s not in UNIFORME_EXCEPT]
         largeurs = sorted({p["v"]["w"] for sid in uniforme_sids
                            for p in par_section[sid]})
@@ -2006,7 +2093,7 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
     except json.JSONDecodeError as exc:
         raise SystemExit(f"aerate_carte.mjs : sortie illisible ({exc})")
     attentes = {"entrees": 12, "plats": 12, "desserts": 12,
-                "boissons": 3, "cocktails": 3, "vins": 5}
+                "boissons": 3, "cocktails": 1, "vins": 5}
     airs: dict[int, tuple[float, float, int, int, float]] = {}
     for n, info in infos.items():
         m = meas.get(n)

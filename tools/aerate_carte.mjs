@@ -16,9 +16,10 @@
 import { createServer } from 'node:http';
 import { createReadStream, existsSync, statSync } from 'node:fs';
 import { extname, join, normalize, resolve } from 'node:path';
+import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import chromiumBinary from '@sparticuz/chromium';
+import chromiumBinary, { setupLambdaEnvironment } from '@sparticuz/chromium';
 import { carteChromiumArgs } from './chromium-args.mjs';
 import { installLocalFonts, checkPageFonts } from './local-fonts.mjs';
 
@@ -53,6 +54,7 @@ async function main() {
   const viewport = Number(process.argv.find((a, i) => process.argv[i - 1] === '--width')) || 1180;
   const { server, port } = await startStaticServer();
   process.env.AWS_EXECUTION_ENV ??= 'AWS_Lambda_nodejs22.x';
+  setupLambdaEnvironment(join(tmpdir(), 'al2023', 'lib'));
   const browser = await chromium.launch({
     headless: true,
     executablePath: await chromiumBinary.executablePath(),

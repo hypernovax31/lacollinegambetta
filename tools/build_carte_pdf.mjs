@@ -3,8 +3,8 @@
  * Carte A4 téléchargeable : une image par page, puis un PDF unifié.
  *
  *   node tools/build_carte_pdf.mjs
- *     → carte-a4-pages/page-01.jpg … page-10.jpg   (A4 300 dpi, 2480 × 3508 px)
- *     → carte-a4.pdf                               (les 10 pages assemblées)
+ *     → carte-a4-pages/page-01.jpg … page-09.jpg   (A4 300 dpi, 2480 × 3508 px)
+ *     → carte-a4.pdf                               (les 9 pages assemblées)
  *
  *   node tools/build_carte_pdf.mjs --jpgs-only     (les images seules, sans PDF)
  *   node tools/build_carte_pdf.mjs --quality 88    (JPEG plus légers)
@@ -142,7 +142,7 @@ function checkJpg(file, dimsExactes) {
 }
 
 /**
- * Ramène les 10 JPEG au 2480 × 3508 exact. Chromium arrondit les millimètres
+ * Ramène les JPEG au 2480 × 3508 exact. Chromium arrondit les millimètres
  * selon les feuilles et le liseré doré ajoute un pixel par bord : sans cela,
  * les pages n'auraient pas toutes la même taille dans le PDF. Même correction
  * que tools/build_browser_print.mjs pour ses propres JPEG. Renvoie false si
