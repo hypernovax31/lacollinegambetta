@@ -514,6 +514,17 @@ verticalement, un `<path>` par rectangle, `fill="currentColor"`.
 - **Ajouts retirés** : puces « • » dorées devant les items du menu enfant et
   du petit déjeuner (la feuille n'en porte pas) et règles CSS mortes
   (`.rosette*`, `.menu-orn--star/candelabra/flame`, médaillons PNG).
+- **Calage final des couleurs sur la p. 4** (mesuré pixel par pixel sur
+  `page-04.jpg`) : prix de la Formule Duo et du Menu enfant en violet
+  `#502868`, sous-titre de la Duo en violet foncé `#3e254f`, titre « La
+  formule duo » en or `#d4a83e`, prix 29,90 en ivoire `#f5efd4` sur le carton
+  violet, « La formule complète » en or clair `#e9cf7f`, 7,00 du petit
+  déjeuner en violet `#502868` directement sous la liste (plus de bande
+  violette en bas du carton), 17,90 / 21,90 du Menu du jour en ivoire
+  `#f5efd4` ; pilule « Formules » en `#582868`.
+- **Rubriques « au choix » sans carton** : comme la feuille, ENTRÉE / PLAT /
+  DESSERT s'affichent en colonnes de texte sur le fond crème (fini le carton
+  blanc bordé) avec le médaillon rond violet à gauche du titre.
 - **Prix de la formule complète : 29,90** (vérifié par OCR sur la p. 4 du
   PDF — « LA FORMULE COMPLETE » / « ENTRÉE + PLAT + DESSERT » / 29,90, la
   Duo restant à 24,90) ; l'ensemble des textes de la feuille Formules a été

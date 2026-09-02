@@ -5153,6 +5153,58 @@ html:not(.carte-doc) #menus .menus-duo__left > .panel .panel__title {
   padding: 0;
   width: auto;
 }
+
+/* ===== Nos Menus : calage fin sur les couleurs et la mise en page de la p. 4 =====
+   (web uniquement — la chaîne carte/PDF n'est pas touchée)
+   Mesures p.4 : prix Duo 24,90 et complète 29,90 = violet #502868 (le prix de
+   la complète est clair sur le carton violet) ; sous-titre duo = violet foncé
+   #3e254f ; 7,00 = violet #502868 directement sous la liste (pas de bande) ;
+   17,90 / 21,90 = ivoire #f5efd4 ; rubriques au choix = texte seul, sans
+   carton (la feuille n'en dessine pas). */
+html:not(.carte-doc) #menus .panel__title { background: #582868; }
+html:not(.carte-doc) #menus .menus-duo__left > .panel .panel__head { background: #582868; }
+/* Formule Duo : titre or, sous-titre violet foncé, prix violet #502868 */
+html:not(.carte-doc) #menus .offer-card--duo .offer-card__badge {
+  background: none;
+  color: #d4a83e !important;
+}
+html:not(.carte-doc) #menus .offer-card--duo .offer-card__sub { color: #3e254f !important; }
+html:not(.carte-doc) #menus .offer-card--duo .offer-card__price { color: #502868 !important; }
+html:not(.carte-doc) #menus .offer-card--duo .offer-card__foot { color: #b88828 !important; }
+/* Formule complète : titre or clair sur le carton violet, prix ivoire */
+html:not(.carte-doc) #menus .offer-card--accent .offer-card__badge {
+  color: #e9cf7f !important;
+}
+html:not(.carte-doc) #menus .offer-card--accent .offer-card__price { color: #f5efd4 !important; }
+/* Menu enfant : titre or (comme la p.4), prix violet */
+html:not(.carte-doc) #menus .special-card--compact .special-card__badge {
+  color: #c08f2c !important;
+}
+/* Rubriques « au choix » : texte seul, sans carton (p.4) */
+html:not(.carte-doc) #menus .choice-card {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 4px 0;
+}
+html:not(.carte-doc) #menus .choice-card h5 {
+  justify-content: flex-start;
+  padding: 0;
+}
+html:not(.carte-doc) #menus .choice-card ul { margin-top: 10px; }
+/* Petit déjeuner : prix violet simple sous la liste (pas de bande violette) */
+html:not(.carte-doc) #menus .menus-duo__left .breakfast-card strong {
+  background: none;
+  margin: 8px 0 0;
+  padding: 0;
+  color: #502868 !important;
+  border-radius: 0;
+  text-align: left;
+  justify-self: auto;
+}
+/* Menu du jour : prix ivoire sur le carton sombre (p.4) */
+html:not(.carte-doc) #menus .special-card--dark .day-option strong { color: #f5efd4 !important; }
+html:not(.carte-doc) #menus .special-card--dark .special-card__badge { color: #e9cf7f !important; }
 </style>
 </head>
 <body>
