@@ -548,6 +548,21 @@ verticalement, un `<path>` par rectangle, `fill="currentColor"`.
   complète 27,90, duo 23,90 dans le site, et la feuille Formules de la carte A4
   (p. 4) est remplacée le même jour par le document Formules du client
   (fourni en image — les prix 23,90 / 27,90 y figurent).
+- **L'onglet NOS MENUS reproduit la page 4 actuelle de la carte** (mise à
+  jour du 03/09/2026 — la p. 4 du PDF est désormais le document Formules du
+  client, prix 23,90 / 27,90). Mesures pixels de ce document : pilules
+  Formules et Petit déjeuner `#582e6e` ; carton Duo blanc — badge pilule or
+  dégradée « Formule Duo » (sans « La », comme la feuille), sous-titre et
+  prix `#5b3172`, pied « Choix ci-dessous » or `#d5b363` ; carton Complète
+  violet — badge pilule or, textes blancs, prix ivoire `#fffcf2` ; rosace
+  **grise** `#a09e9f` à gauche des rubriques ENTRÉE / PLAT / DESSERT au
+  choix (titres `#5b3172`, « AU CHOIX » noir), items gris-mauve `#9a989c`
+  sans puces ; Menu enfant — badge pilule or, « Moins de 12 ans » gris
+  `#6e696f`, prix `#563468` ; Menu du jour sur carton sombre (ivoire
+  17,90 / 21,90) ; Petit déjeuner — pilule violette, prix `#563468`.
+  Responsive : duo + complète côte à côte dès 760 px, trois rubriques au
+  choix dès 900 px, empilement complet en petit mobile (enfant → petit
+  déjeuner → menu du jour).
 - **Gouttière des listes 2 colonnes centrée sur la page** (boissons, cocktails,
   entrées, desserts) : les `.price-list--cols` / `.hh-list--cols` repassent en
   colonnes égales `1fr` sur toute la largeur du panneau — la gouttière tombe
