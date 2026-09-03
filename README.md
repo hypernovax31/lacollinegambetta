@@ -569,6 +569,27 @@ verticalement, un `<path>` par rectangle, `fill="currentColor"`.
   Responsive : duo + complète côte à côte dès 760 px, trois rubriques au
   choix dès 900 px, empilement complet en petit mobile (enfant → petit
   déjeuner → menu du jour).
+- **Carte et site : mise à jour des prix et des cartes (04/09/2026)** —
+  entrées (foie gras 17,90, œuf cocotte 7,90, œuf dur 6,20, 6 escargots au
+  roquefort 7,90, saumon fumé 7,50, tartare d'avocat 7,90 — pâté de
+  campagne, escargots de Bourgogne et salade au poulet retirés), planches
+  (paysanne 19,90 « cochonnaille et fromagère », croque-monsieur 11,70,
+  croque-madame 12,70), omelettes (mixte 13,90, champignons 13,70), plats
+  (entrecôte **190 g** 19,90 — carpaccio retiré —, cuisse de poulet rôtie
+  15,20, bande « Assiette de frites 4,90 — Accompagnement : frites, haricots
+  verts, pâtes »), burgers (La Colline 17,90, Royal 17,70), salades (16,90 /
+  16,50 / 12,60 avec haricots verts / 17,20), pâtes (saumon 16,20, penne
+  16,50), apéritifs (martini 4,20, kir 4,10, kir royal 9,90, americano 7,90,
+  negroni 8,20, porto 4,20, suze 4,20, muscat 4,20), digestifs (cognac 7,30),
+  bières pression (« bière blonde » 3,30/6,10, blanche bio 4,10/7,90, triple
+  4,50/8,80 HH 7,50, IPA 4,20/8,20 — supplément picon 1,00), desserts
+  (mousse 6,50, panna cotta 6,90, tiramisu 7,20, tarte 7,50, pain perdu
+  7,50, profiteroles 7,20, café gourmand 8,20 — thé + 1 € —, thé gourmand
+  retiré), glaces (crème glacée et sorbet 3 boules 8,10, dame blanche /
+  liégeois / café liégeois / caramello / colonel 8,30, supplément boule
+  2,90). Les feuilles entrées et plats, allégées, sont ré-aérées
+  uniformément par le générateur (plafond 98,5 %) : aucun chevauchement,
+  aucun débordement.
 - **Gouttière des listes 2 colonnes centrée sur la page** (boissons, cocktails,
   entrées, desserts) : les `.price-list--cols` / `.hh-list--cols` repassent en
   colonnes égales `1fr` sur toute la largeur du panneau — la gouttière tombe
