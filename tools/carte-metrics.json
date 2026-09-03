@@ -1,7 +1,7 @@
 {
  "generator": "tools/measure_carte.mjs",
- "index_hash": "a6bbdd48a75161e6",
- "css_hash": "e5a94441fb9f688c",
+ "index_hash": "7424eb405ad0f233",
+ "css_hash": "98ace7a52a2fae5f",
  "viewport": 1180,
  "base_width": 1180,
  "fonts": [
@@ -474,33 +474,33 @@
    "flow_width": 1180,
    "gap": 22,
    "refs": {
-    "menu-enfant": 245.34
+    "menu-enfant": 241.34
    },
    "blocks": [
     {
      "i": 0,
      "tag": "block",
      "cls": "",
-     "h": 533.28
+     "h": 506.22
     },
     {
      "i": 1,
      "tag": "block",
      "cls": "",
-     "h": 499.75
+     "h": 495.75
     }
    ],
    "variants": [
     {
      "w": 1534,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      533.28,
-      499.75
+      506.22,
+      495.75
      ],
      "count": 2,
      "heights2col": null,
@@ -509,13 +509,13 @@
     {
      "w": 1475,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      533.28,
-      499.75
+      506.22,
+      495.75
      ],
      "count": 2,
      "heights2col": null,
@@ -524,13 +524,13 @@
     {
      "w": 1416,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      533.28,
-      499.75
+      506.22,
+      495.75
      ],
      "count": 2,
      "heights2col": null,
@@ -539,13 +539,13 @@
     {
      "w": 1357,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      533.28,
-      499.75
+      506.22,
+      495.75
      ],
      "count": 2,
      "heights2col": null,
@@ -554,13 +554,13 @@
     {
      "w": 1298,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      533.28,
-      499.75
+      506.22,
+      495.75
      ],
      "count": 2,
      "heights2col": null,
@@ -569,13 +569,13 @@
     {
      "w": 1239,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      533.28,
-      499.75
+      506.22,
+      495.75
      ],
      "count": 2,
      "heights2col": null,
@@ -584,13 +584,13 @@
     {
      "w": 1180,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      533.28,
-      499.75
+      506.22,
+      495.75
      ],
      "count": 2,
      "heights2col": null,
@@ -599,13 +599,13 @@
     {
      "w": 1121,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      533.28,
-      499.75
+      506.22,
+      495.75
      ],
      "count": 2,
      "heights2col": null,
@@ -614,13 +614,13 @@
     {
      "w": 1062,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      533.28,
-      499.75
+      506.22,
+      495.75
      ],
      "count": 2,
      "heights2col": null,
@@ -629,13 +629,13 @@
     {
      "w": 1003,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      533.28,
-      499.75
+      506.22,
+      495.75
      ],
      "count": 2,
      "heights2col": null,
@@ -644,13 +644,13 @@
     {
      "w": 944,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      533.28,
-      499.75
+      506.22,
+      495.75
      ],
      "count": 2,
      "heights2col": null,
@@ -659,13 +659,13 @@
     {
      "w": 885,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      533.28,
-      499.75
+      527.78,
+      495.75
      ],
      "count": 2,
      "heights2col": null,
@@ -674,13 +674,13 @@
     {
      "w": 826,
      "refs": {
-      "menu-enfant": 245.34
+      "menu-enfant": 241.34
      },
      "gap": 22,
      "overflow": 0,
      "heights": [
-      575.2,
-      499.75
+      545.25,
+      495.75
      ],
      "count": 2,
      "heights2col": null,

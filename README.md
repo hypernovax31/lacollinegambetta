@@ -156,9 +156,9 @@ réutilise ces chiffres et annonce qu'ils sont périmés plutôt que d'inventer.
 ## PDF A4 téléchargeable (`Carte_LaCollineGambetta.pdf`)
 
 L'icône de téléchargement du header de `index.html` ouvre **`Carte_LaCollineGambetta.pdf`** :
-la carte en **9 pages images** — une page = une feuille de `carte.html` photographiée à 300 dpi,
-**sauf la feuille Formules (p. 4)** : depuis le 03/09/2026 c'est le document Formules du client
-qui y figure (fourni en image, redressé au 2480 × 3508 du lot).
+la carte en **9 pages images** — une page = une feuille de `carte.html` photographiée à 300 dpi
+(le document Formules fourni par le client le 03/09/2026 a été intégré au site, et la feuille
+Formules, p. 4, est composée par le générateur comme les autres).
 Les mêmes feuilles sont livrées en JPEG dans **`carte-a4-pages/`** (`page-01.jpg` … `page-09.jpg`),
 prêtes à envoyer telles quelles à un imprimeur.
 
@@ -474,8 +474,8 @@ La page « Nos Menus » reproduit la feuille Formules de `Carte_LaCollineGambett
   badge « La formule complète » en bandeau or, médaillons Menu enfant / Petit
   déjeuner (118 / 176 px, 92 / 128 px mobile) décalant le contenu.
 - **Prix conformes au PDF** : 23,90 la formule duo et 27,90 la formule
-  complète (mise à jour du 03/09/2026 ; auparavant 24,90/29,90), 17,90/21,90
-  du menu du jour en or `#d4b262`, 11,90 du menu enfant en violet, 7,00 du
+  complète (mise à jour du 03/09/2026 ; auparavant 24,90/29,90), 14,90/17,90
+  du menu du jour en or `#d4b262`, 10,90 du menu enfant en violet, 7,00 du
   petit déjeuner en
   `#b5a1bb` sur son **bandeau violet** (`linear-gradient(180deg,#603078,#481860)`)
   qui occupe toute la largeur de la carte (margin négative sur le padding du
@@ -525,7 +525,7 @@ verticalement, un `<path>` par rectangle, `fill="currentColor"`.
 - **Plus de décalages texte / prix** : les `padding-left` résiduels
   (132 / 190 px) laissés par les anciens médaillons PNG des cartons Menu
   enfant et Petit déjeuner sont supprimés — badge, sous-titre, liste et prix
-  (11,90 / 7,00) sont de nouveau centrés dans leur bloc (décalage mesuré
+  (10,90 / 7,00) sont de nouveau centrés dans leur bloc (décalage mesuré
   0 px de 320 à 1920 px, tous prix confondus).
 - **Ajouts retirés** : puces « • » dorées devant les items du menu enfant et
   du petit déjeuner (la feuille n'en porte pas) et règles CSS mortes
@@ -537,20 +537,25 @@ verticalement, un `<path>` par rectangle, `fill="currentColor"`.
   (29,90 à l'époque) sur le carton violet, « La formule complète » en or
   clair `#e9cf7f` (montants passés à 23,90/27,90 le 03/09/2026), 7,00 du petit
   déjeuner en violet `#502868` directement sous la liste (plus de bande
-  violette en bas du carton), 17,90 / 21,90 du Menu du jour en ivoire
+  violette en bas du carton), prix du Menu du jour en ivoire (à l'époque
+  17,90 / 21,90)
   `#f5efd4` ; pilule « Formules » en `#582868`.
 - **Rubriques « au choix » sans carton** : comme la feuille, ENTRÉE / PLAT /
   DESSERT s'affichent en colonnes de texte sur le fond crème (fini le carton
   blanc bordé) avec le médaillon rond violet à gauche du titre.
 - **Prix de la formule complète : 27,90** (au moment du calage : 29,90,
   vérifié par OCR sur la p. 4 du PDF — « LA FORMULE COMPLETE » / « ENTRÉE +
-  PLAT + DESSERT », la Duo restant à 24,90). Mise à jour du 03/09/2026 :
-  complète 27,90, duo 23,90 dans le site, et la feuille Formules de la carte A4
-  (p. 4) est remplacée le même jour par le document Formules du client
-  (fourni en image — les prix 23,90 / 27,90 y figurent).
-- **L'onglet NOS MENUS reproduit la page 4 actuelle de la carte** (mise à
-  jour du 03/09/2026 — la p. 4 du PDF est désormais le document Formules du
-  client, prix 23,90 / 27,90). Mesures pixels de ce document : pilules
+  PLAT + DESSERT », la Duo restant à 24,90). Le 03/09/2026 : duo 23,90,
+  complète 27,90, et la feuille Formules (p. 4) passe au document Formules
+  du client (fourni en image). Mise à jour du 04/09/2026 : l'onglet NOS
+  MENUS et la carte passent au menu enfant 10,90, au menu du jour 14,90 /
+  17,90 (« Voir l'ardoise »), aux choix Entrée (escargots au Roquefort, œuf
+  cocotte, assiette de charcuterie) et Dessert (sans tiramisu) ; la p. 4 est
+  de nouveau composée par le générateur depuis le site.
+- **L'onglet NOS MENUS reproduit la page 4 actuelle de la carte** (le
+  document Formules du client déposé le 03/09/2026, prix 23,90 / 27,90, sert
+  de référence à la maquette ; prix et choix mis à jour le 04/09/2026).
+  Mesures pixels de ce document : pilules
   Formules et Petit déjeuner `#582e6e` ; carton Duo blanc — badge pilule or
   dégradée « Formule Duo » (sans « La », comme la feuille), sous-titre et
   prix `#5b3172`, pied « Choix ci-dessous » or `#d5b363` ; carton Complète
@@ -558,8 +563,9 @@ verticalement, un `<path>` par rectangle, `fill="currentColor"`.
   **grise** `#a09e9f` à gauche des rubriques ENTRÉE / PLAT / DESSERT au
   choix (titres `#5b3172`, « AU CHOIX » noir), items gris-mauve `#9a989c`
   sans puces ; Menu enfant — badge pilule or, « Moins de 12 ans » gris
-  `#6e696f`, prix `#563468` ; Menu du jour sur carton sombre (ivoire
-  17,90 / 21,90) ; Petit déjeuner — pilule violette, prix `#563468`.
+  `#6e696f`, prix `#563468` ; Menu du jour sur carton sombre (ivoire,
+  14,90 / 17,90 depuis le 04/09/2026 — « Voir l'ardoise ») ; Petit déjeuner
+  — pilule violette, prix `#563468`.
   Responsive : duo + complète côte à côte dès 760 px, trois rubriques au
   choix dès 900 px, empilement complet en petit mobile (enfant → petit
   déjeuner → menu du jour).
