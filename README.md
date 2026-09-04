@@ -156,11 +156,11 @@ réutilise ces chiffres et annonce qu'ils sont périmés plutôt que d'inventer.
 ## PDF A4 téléchargeable (`Carte_LaCollineGambetta.pdf`)
 
 L'icône de téléchargement du header de `index.html` ouvre **`Carte_LaCollineGambetta.pdf`** :
-la carte en **9 pages images** — une page = une feuille de `carte.html` photographiée à 300 dpi
-(le document Formules fourni par le client le 03/09/2026 a été intégré au site, et la feuille
-Formules, p. 4, est composée par le générateur comme les autres).
-Les mêmes feuilles sont livrées en JPEG dans **`carte-a4-pages/`** (`page-01.jpg` … `page-09.jpg`),
-prêtes à envoyer telles quelles à un imprimeur.
+le fichier livré par le client le 05/09/2026 (9 pages A4 ; sa page « Nos menus », p. 4, y
+figure telle qu'il l'a composée — document Canva `Formules.pdf`). Les feuilles JPEG de
+**`carte-a4-pages/`** (`page-01.jpg` … `page-09.jpg`) sont recréées depuis ce PDF
+(extraction des pages images ; la p. 4 vectorielle est rendue à 300 dpi), prêtes à envoyer
+telles quelles à un imprimeur.
 
 ```bash
 npm install                      # Playwright + Chromium (@sparticuz) + fontes @fontsource
