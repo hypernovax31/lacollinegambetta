@@ -21,7 +21,7 @@ npm run build:carte-pdf           # les 9 JPEG, puis carte-a4.pdf (livré sous C
   (Chromium, fontes du site) — pas d'à-peu-près.
 - **Cocktails : tous sur une seule feuille, pleine, sans chevauchement.** Les
   cinq panneaux de l'onglet (Classiques, Spritz & fraîcheur, Mules & fizz,
-  Élégance & saveurs, Mocktails — 36 boissons) forment une unité insécable
+  Élégance & saveurs, Mocktails — 35 boissons) forment une unité insécable
   (`MERGE`) qui bascule en **deux colonnes de lignes** (`carte-2col`) dès que la
   hauteur l'exige : chaque panneau étale ses lignes sur deux colonnes, les
   listes à deux moitiés gardent leur en-tête « Prix / HH » au-dessus de chaque
