@@ -5523,34 +5523,34 @@ html:not(.carte-doc) #menus .fm .fm-day__form .fm-ou { font-weight: 400; text-tr
 
 
 
-/* ============ NOS MENUS — « Formules », carte professionnelle lisible
+/* ============ NOS MENUS — « Formules », carte professionnelle
    Palette récupérée des blocs de la feuille Formules du PDF de référence :
-   papier crème + liseré doré pour les formules claires, violet profond pour
-   la complète et le menu du jour. Typographies du PDF : Cinzel (titres,
-   prix, mentions) et Montserrat (choix). Composition aérée, responsive,
-   sans hauteur imposée (le bloc s'étend avec son contenu). */
+   papier crème + liseré doré (formules claires) et violet profond (formule
+   complète, menu du jour). Typographies du PDF : Cinzel (titres, prix,
+   mentions) et Montserrat (choix). Tout le contenu des blocs — icônes,
+   titres, listes, prix, mentions — est centré dans chaque bloc, et le bloc
+   s'étend avec son contenu (hauteur recalculée, pied de page jamais
+   recouvert). */
 html:not(.carte-doc) #menus .fm {
   container-type: inline-size;
-  /* —— styles couleur des blocs, repris de la feuille Formules —— */
-  --fm-cream: #fffef8;          /* papier clair */
-  --fm-cream-2: #fbf2e0;        /* papier clair (replat) */
-  --fm-gold: #b98d3b;           /* or des filets et mentions */
-  --fm-gold-2: #dcc078;         /* or adouci */
+  /* styles couleur des blocs, repris de la feuille Formules */
+  --fm-cream: #fffef8;
+  --fm-cream-2: #fbf2e0;
+  --fm-gold: #b98d3b;
+  --fm-gold-2: #dcc078;
   --fm-gold-line: rgba(185, 141, 59, .42);
-  --fm-violet: #5b3172;         /* violet des titres et prix clairs */
-  --fm-ink: #2a1633;            /* encre des listes */
-  --fm-soft: #6e5468;           /* notes « au choix » */
-  --fm-dark-1: #5a3477;         /* dégradé violet profond */
+  --fm-violet: #5b3172;
+  --fm-ink: #2a1633;
+  --fm-soft: #6e5468;
+  --fm-dark-1: #5a3477;
   --fm-dark-2: #3c1d52;
   --fm-dark-3: #2b1439;
-  --fm-gold-dark: #e4c680;      /* or sur fond sombre */
+  --fm-gold-dark: #e4c680;
   display: flex; flex-direction: column; align-items: stretch;
-  gap: clamp(16px, 2.4vw, 32px);
+  gap: clamp(18px, 2.4vw, 32px);
   width: min(100%, 1080px); max-width: 100%;
   margin: 0 auto; padding: 0 0 4px;
   position: relative;
-  /* —— recalcule les hauteurs : aucune hauteur fixe, le conteneur grandit
-     avec ses blocs (le pied de page n'est plus recouvert) —— */
   aspect-ratio: auto; height: auto; min-height: 0; overflow: visible;
   background: transparent;
   font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
@@ -5561,11 +5561,12 @@ html:not(.carte-doc) #menus .fm .ou {
   font-weight: 400; text-transform: lowercase;
   padding: 0 .2em; letter-spacing: .01em;
 }
-/* --- Panneaux : fonds « papier » et « violet profond » --- */
+/* ---------- Panneaux ---------- */
 html:not(.carte-doc) #menus .fm .fmb-card {
-  display: flex; flex-direction: column;
-  gap: clamp(12px, 1.7cqw, 20px);
-  padding: clamp(18px, 2.4cqw, 30px);
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  gap: clamp(10px, 1.5cqw, 18px);
+  padding: clamp(20px, 2.6cqw, 34px);
   border-radius: 18px;
 }
 html:not(.carte-doc) #menus .fm .fmb-card--duo,
@@ -5582,53 +5583,52 @@ html:not(.carte-doc) #menus .fm .fmb-card--day {
   box-shadow: 0 16px 34px rgba(36, 16, 46, .26);
   color: #fff;
 }
-/* --- En-tête : icône | titre | prix --- */
+/* ---------- En-tête centré : icône / titre / prix ---------- */
 html:not(.carte-doc) #menus .fm .fmb-head {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: clamp(12px, 1.8cqw, 20px);
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; width: 100%;
+  gap: clamp(6px, 1cqw, 12px);
 }
 html:not(.carte-doc) #menus .fm .fmb-ico {
-  width: clamp(52px, 5.8cqw, 78px); height: auto;
+  width: clamp(52px, 5.2cqw, 72px); height: auto;
   background: transparent; border: 0; padding: 0; border-radius: 0;
   filter: drop-shadow(0 3px 8px rgba(36, 16, 46, .16));
 }
 html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-ico,
 html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-ico {
-  width: clamp(46px, 5cqw, 68px);
+  width: clamp(48px, 4.8cqw, 66px);
 }
 html:not(.carte-doc) #menus .fm .fmb-title {
-  margin: 0; min-width: 0;
+  margin: 0; text-align: center;
   font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
-  font-size: clamp(1.02rem, 1.9cqw, 1.32rem);
-  line-height: 1.32; letter-spacing: .045em;
+  font-size: clamp(1.06rem, 1.9cqw, 1.36rem);
+  line-height: 1.32; letter-spacing: .05em;
   text-transform: uppercase; color: var(--fm-violet);
 }
 html:not(.carte-doc) #menus .fm .fmb-title > span { display: block; }
 html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-title,
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title { color: #fff; }
 html:not(.carte-doc) #menus .fm .fmb-price {
-  margin: 0; white-space: nowrap; text-align: right;
+  margin: clamp(2px, .6cqw, 8px) 0 0; text-align: center;
   font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
-  font-size: clamp(1.65rem, 3.6cqw, 2.45rem);
-  line-height: 1; color: var(--fm-violet);
+  font-size: clamp(1.8rem, 3.6cqw, 2.5rem);
+  line-height: 1; letter-spacing: .02em; color: var(--fm-violet);
 }
 html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-price,
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price { color: #fffbf1; }
-/* --- Mention « Choix ci-dessous » : petits filets dorés de part et d'autre --- */
+/* ---------- Mention « Choix ci-dessous » ---------- */
 html:not(.carte-doc) #menus .fm .fmb-foot {
   display: flex; align-items: center; justify-content: center;
-  gap: .85em; margin: auto 0 0; padding-top: clamp(2px, .4cqw, 6px);
+  gap: .85em; margin: auto 0 0; padding-top: clamp(4px, .6cqw, 10px);
   font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
-  font-size: clamp(.7rem, 1.15cqw, .78rem);
+  font-size: clamp(.7rem, 1.1cqw, .78rem);
   letter-spacing: .2em; text-transform: uppercase;
   color: var(--fm-gold); text-align: center;
 }
 html:not(.carte-doc) #menus .fm .fmb-foot .fmb-star { display: none; }
 html:not(.carte-doc) #menus .fm .fmb-foot::before,
 html:not(.carte-doc) #menus .fm .fmb-foot::after {
-  content: ""; height: 1px; width: clamp(16px, 4cqw, 42px); flex: 0 0 auto;
+  content: ""; height: 1px; width: clamp(16px, 4cqw, 44px); flex: 0 0 auto;
   background: linear-gradient(90deg, transparent, var(--fm-gold));
 }
 html:not(.carte-doc) #menus .fm .fmb-foot::after {
@@ -5644,96 +5644,91 @@ html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot::after,
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-foot::after {
   background: linear-gradient(90deg, var(--fm-gold-dark), transparent);
 }
-/* --- Menu du jour : bande pleine largeur, ligne « icône | formules | prix » --- */
+/* ---------- Menu du jour : bande centrée pleine largeur ---------- */
 html:not(.carte-doc) #menus .fm .fmb-card--day {
-  padding: clamp(20px, 2.8cqw, 36px) clamp(18px, 3cqw, 44px);
+  padding: clamp(24px, 2.8cqw, 38px) clamp(16px, 3cqw, 44px);
 }
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head {
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: clamp(14px, 2.6cqw, 34px);
-}
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico { width: clamp(58px, 6.4cqw, 92px); }
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title { justify-self: center; text-align: center; min-width: 0; }
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head { gap: clamp(8px, 1.2cqw, 16px); }
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico { width: clamp(56px, 5.6cqw, 80px); }
 html:not(.carte-doc) #menus .fm .fmb-kicker {
-  display: block; margin-bottom: .5em;
+  display: block; margin: 0 0 .45em;
   font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
-  font-size: clamp(.7rem, 1.3cqw, .88rem);
-  letter-spacing: .34em; line-height: 1.3;
+  font-size: clamp(.7rem, 1.2cqw, .88rem);
+  letter-spacing: .36em; line-height: 1.3;
   color: var(--fm-gold-dark);
 }
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title {
-  font-size: clamp(1.22rem, 2.5cqw, 1.85rem);
-  letter-spacing: .04em;
+  font-size: clamp(1.2rem, 2.4cqw, 1.8rem);
+  letter-spacing: .05em;
 }
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
-  font-size: clamp(2rem, 4.2cqw, 3.1rem);
+  font-size: clamp(2.1rem, 4.2cqw, 3rem);
+  margin-top: clamp(4px, .8cqw, 10px);
 }
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-note {
-  margin: 0; padding-top: clamp(12px, 1.7cqw, 20px);
+  margin: clamp(6px, 1cqw, 12px) 0 0; padding-top: clamp(12px, 1.6cqw, 20px);
   width: 100%; text-align: center;
   border-top: 1px solid rgba(228, 198, 128, .34);
   color: rgba(255, 255, 255, .92);
   font-weight: 500; text-transform: uppercase;
-  font-size: clamp(.74rem, 1.3cqw, .92rem);
-  letter-spacing: .22em;
+  font-size: clamp(.74rem, 1.2cqw, .92rem);
+  letter-spacing: .24em;
 }
-/* --- Choix Entrée / Plat / Dessert : trois colonnes --- */
+/* ---------- Choix Entrée / Plat / Dessert ---------- */
 html:not(.carte-doc) #menus .fm .fmb-choices {
   display: grid; grid-template-columns: 1fr;
-  gap: clamp(12px, 1.7cqw, 24px);
+  gap: clamp(14px, 1.8cqw, 24px);
 }
 html:not(.carte-doc) #menus .fm .fmb-choice {
   display: flex; flex-direction: column; align-items: center;
   text-align: center;
-  padding: clamp(18px, 2.2cqw, 28px) clamp(16px, 2cqw, 26px);
+  padding: clamp(20px, 2.4cqw, 30px) clamp(16px, 2cqw, 26px);
   border-radius: 18px;
   background: linear-gradient(180deg, var(--fm-cream) 0%, var(--fm-cream-2) 100%);
   border: 1px solid var(--fm-gold-line);
 }
 html:not(.carte-doc) #menus .fm .fmb-medal {
-  width: clamp(58px, 6cqw, 84px); height: auto;
+  width: clamp(58px, 5.6cqw, 84px); height: auto;
   filter: drop-shadow(0 4px 10px rgba(91, 49, 114, .2));
 }
 html:not(.carte-doc) #menus .fm .fmb-choice-title {
-  margin: clamp(4px, .7cqw, 9px) 0 0;
+  margin: clamp(6px, .8cqw, 10px) 0 0;
   font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
-  font-size: clamp(1rem, 1.8cqw, 1.24rem);
-  line-height: 1.3; letter-spacing: .07em;
+  font-size: clamp(1.06rem, 1.8cqw, 1.3rem);
+  line-height: 1.3; letter-spacing: .09em;
   text-transform: uppercase; color: var(--fm-violet);
 }
 html:not(.carte-doc) #menus .fm .fmb-choice-title em {
   display: block; font-style: normal;
   font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 400;
-  font-size: .8em; letter-spacing: .26em; text-transform: uppercase;
+  font-size: .8em; letter-spacing: .3em; text-transform: uppercase;
   color: var(--fm-ink); line-height: 1.8;
 }
-/* --- Listes : étoile dorée, interligne aéré, jamais de petites capitales --- */
+/* ---------- Listes : centrées, étoile dorée devant chaque ligne ---------- */
 html:not(.carte-doc) #menus .fm .fmb-list {
-  margin: clamp(8px, 1.2cqw, 14px) 0 0; padding: clamp(10px, 1.3cqw, 16px) 0 0;
+  margin: clamp(10px, 1.3cqw, 16px) 0 0; padding: clamp(10px, 1.3cqw, 16px) 0 0;
   width: 100%;
   list-style: none;
-  display: flex; flex-direction: column;
+  display: flex; flex-direction: column; align-items: center;
   gap: clamp(8px, 1.1cqw, 12px);
   border-top: 1px solid var(--fm-gold-line);
   font-weight: 500;
-  font-size: clamp(.98rem, 1.55cqw, 1.1rem);
+  font-size: clamp(.98rem, 1.5cqw, 1.08rem);
   line-height: 1.5; color: var(--fm-ink);
-  text-align: left;
 }
-html:not(.carte-doc) #menus .fm .fmb-card .fmb-list,
-html:not(.carte-doc) #menus .fm .fmb-choices .fmb-list { margin-top: auto; padding-top: clamp(10px, 1.3cqw, 16px); }
 html:not(.carte-doc) #menus .fm .fmb-list li {
-  display: flex; align-items: flex-start; gap: .6em;
+  display: flex; align-items: flex-start; justify-content: center;
+  gap: .55em; text-align: center; max-width: 100%;
 }
 html:not(.carte-doc) #menus .fm .fmb-list li::before {
-  content: ""; flex: 0 0 auto; width: .84em; height: .84em;
+  content: ""; flex: 0 0 auto; width: .8em; height: .8em;
   margin-top: .32em;
   background: url('assets/menus/star.png') no-repeat center / contain;
 }
 html:not(.carte-doc) #menus .fm .fmb-list em {
   font-style: normal; font-weight: 400; color: var(--fm-soft);
 }
-/* --- Grille « carte » sur grand écran --- */
+/* ---------- Grille « carte » sur grand écran ---------- */
 @media (min-width: 920px) {
   html:not(.carte-doc) #menus .fm {
     display: grid;
@@ -5749,37 +5744,16 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
   html:not(.carte-doc) #menus .fm .fmb-card--pdj   { grid-column: 2; grid-row: 4; }
   html:not(.carte-doc) #menus .fm .fmb-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-/* --- Petit écran : tout est empilé dans l'ordre, prix sous le titre --- */
+/* ---------- Petit écran : empilement centré ---------- */
 @media (max-width: 919px) {
   html:not(.carte-doc) #menus .fm .fmb-choices { grid-template-columns: 1fr; }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head {
-    grid-template-columns: auto minmax(0, 1fr);
-    text-align: left;
-  }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title { justify-self: start; text-align: left; }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
-    grid-column: 1 / -1; justify-self: end; margin-top: 2px;
-  }
 }
 @media (max-width: 640px) {
-  html:not(.carte-doc) #menus .fm .fmb-head {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-  html:not(.carte-doc) #menus .fm .fmb-price {
-    grid-column: 1 / -1; justify-self: end; margin-top: 2px;
-  }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head {
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: center; text-align: center;
-  }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title { justify-self: center; text-align: center; }
+  html:not(.carte-doc) #menus .fm .fmb-ico { width: clamp(44px, 12vw, 56px); }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico { display: none; }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
-    grid-column: auto; justify-self: center; margin-top: 4px;
-  }
 }
 
-Bouton « Télécharger la carte (PDF) » — pied de page commun =====
+/* ===== Bouton « Télécharger la carte (PDF) » — pied de page commun =====
    Volontairement discret et fin : fond transparent, fine bordure ton sur
    ton, téléchargement direct sur l'appareil (attribut download). */
 .footer-download-wrap { margin: 8px auto 4px; }
