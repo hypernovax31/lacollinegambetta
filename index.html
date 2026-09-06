@@ -5523,208 +5523,194 @@ html:not(.carte-doc) #menus .fm .fm-day__form .fm-ou { font-weight: 400; text-tr
 
 
 
-/* ============ NOS MENUS — reproduction de la feuille A4 « Formules »
-   Repère .fm : x PDF 26–589 pt → 0–100 %, y PDF 152,4–765,9 pt → 0–100 %
-   1 cqw = 5,63 pt. Images extraites du PDF (300 dpi), textes composés
-   en Cinzel / Montserrat. */
+/* ============ NOS MENUS — « Formules » : blocs empilés, responsives
+   Même contenu et même typographie que la feuille Formules du PDF de
+   référence (Cinzel pour titres / prix / mentions, Montserrat pour les
+   choix), mais les formules sont présentées en blocs alignés l'un sous
+   l'autre pour la lisibilité, sur grand écran comme sur petit écran.
+   La feuille A4 téléchargeable reste inchangée. */
 html:not(.carte-doc) #menus .fm {
   container-type: inline-size;
-  position: relative;
-  aspect-ratio: 563.0 / 613.5;
-  width: min(100%, 1408px);
-  margin: 0 auto;
+  display: flex; flex-direction: column; align-items: stretch;
+  gap: clamp(16px, 3.2cqw, 30px);
+  width: min(100%, 1240px); max-width: 100%;
+  margin: 0 auto; padding: 0 0 8px;
+  position: relative; aspect-ratio: auto; height: auto;
+  background: transparent;
   font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
   color: #000;
-  background: #fff;
 }
-html:not(.carte-doc) #menus .fm, html:not(.carte-doc) #menus .fm * { box-sizing: border-box; margin: 0; padding: 0; }
-html:not(.carte-doc) #menus .fm img { display: block; }
-html:not(.carte-doc) #menus .fm ul { list-style: none; }
-html:not(.carte-doc) #menus .fm .fm-txt { position: absolute; white-space: nowrap; }
-html:not(.carte-doc) #menus .fm .fm-img { position: absolute; }
 html:not(.carte-doc) #menus .fm .ou {
   font-family: 'Cinzel', 'Times New Roman', serif;
-  font-weight: 400; text-transform: none;
+  font-weight: 400; text-transform: lowercase;
+  padding: 0 .16em; letter-spacing: .02em;
 }
-html:not(.carte-doc) #menus .fm em { font-style: normal; font-weight: 400; color: #3f2e46; }
-
-/* ---------- Formule duo (coin gauche) ---------- */
-html:not(.carte-doc) #menus .fm .fm-badge-duo { left:3.0906%; top:0%; width:41.5631%; }
-html:not(.carte-doc) #menus .fm .fm-icon-duo { left:5.3464%; top:11.9152%; width:7.0693%; }
-html:not(.carte-doc) #menus .fm .fm-sub-duo {
-  left:15.2931%; top:12.4857%;
-  font-family:'Cinzel','Times New Roman',serif; font-weight:700;
-  font-size:2.1314cqw; line-height:2.9485cqw; letter-spacing:.02em;
-  color:#5b3172; text-transform:uppercase;
+/* ---------- Blocs formule (empilés) ---------- */
+html:not(.carte-doc) #menus .fm .fmb-card {
+  display: flex; flex-direction: column;
+  gap: clamp(12px, 2.2cqw, 20px);
+  padding: clamp(16px, 3.2cqw, 30px);
+  border-radius: clamp(16px, 2.8cqw, 24px);
+  background: linear-gradient(180deg, #fffef8 0%, #faf3e4 100%);
+  border: 1px solid rgba(197, 161, 94, .5);
+  box-shadow: 0 12px 30px rgba(91, 49, 114, .1);
 }
-html:not(.carte-doc) #menus .fm .fm-sub-duo .fm-l { display:block; }
-html:not(.carte-doc) #menus .fm .fm-price-duo,
-html:not(.carte-doc) #menus .fm .fm-foot-duo { left:25.0533%; transform:translateX(-50%); }
-html:not(.carte-doc) #menus .fm .fm-price-duo {
-  top:18.2559%;
-  font-family:'Cinzel','Times New Roman',serif; font-weight:700;
-  font-size:4.4405cqw; line-height:5.5062cqw; color:#5b3172;
+html:not(.carte-doc) #menus .fm .fmb-card--complete,
+html:not(.carte-doc) #menus .fm .fmb-card--day {
+  background: linear-gradient(178deg, #532e6b 0%, #3a1c4d 52%, #2b1439 100%);
+  border-color: rgba(255, 255, 255, .1);
+  box-shadow: 0 14px 32px rgba(36, 16, 46, .28);
+  color: #fff;
 }
-html:not(.carte-doc) #menus .fm .fm-foot-duo {
-  top:24.3032%;
-  font-family:'Cinzel','Times New Roman',serif; font-weight:700;
-  font-size:1.6163cqw; line-height:1.9538cqw; letter-spacing:.13em;
-  color:#d5b363; text-transform:uppercase;
+html:not(.carte-doc) #menus .fm .fmb-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(12px, 2.6cqw, 22px);
 }
-/* ---------- La formule complète (panneau violet arrondi) ---------- */
-html:not(.carte-doc) #menus .fm .fm-panel-complete {
-  left:48.7744%; top:4.401%; width:45.968%;
-  border-radius:1.45cqw; overflow:hidden;
+html:not(.carte-doc) #menus .fm .fmb-ico {
+  width: clamp(48px, 7.5cqw, 80px); height: auto;
+  border-radius: 20%;
+  background: #fff; padding: 3px;
+  border: 1px solid rgba(197, 161, 94, .55);
+  box-shadow: 0 4px 12px rgba(36, 16, 46, .16);
 }
-html:not(.carte-doc) #menus .fm .fm-glow-sub { left:61.3321%; top:13.969%; width:29.325%; }
-html:not(.carte-doc) #menus .fm .fm-glow-price { left:65.5062%; top:18.3537%; width:11.7229%; }
-html:not(.carte-doc) #menus .fm .fm-glow-foot { left:62.7353%; top:24.2217%; width:17.3535%; }
-html:not(.carte-doc) #menus .fm .fm-icon-complete { left:52.238%; top:12.1108%; width:7.0693%; }
-html:not(.carte-doc) #menus .fm .fm-badge-complete { left:48.579%; top:0.2282%; width:45.0622%; }
-html:not(.carte-doc) #menus .fm .fm-sub-complete {
-  left:61.6163%; top:14.0342%;
-  font-family:'Cinzel','Times New Roman',serif; font-weight:700;
-  font-size:2.1314cqw; line-height:2.5933cqw; letter-spacing:.02em;
-  color:#fff; text-transform:uppercase;
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-ico,
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico {
+  border-color: rgba(255, 255, 255, .35);
 }
-html:not(.carte-doc) #menus .fm .fm-price-complete,
-html:not(.carte-doc) #menus .fm .fm-foot-complete { left:71.3321%; transform:translateX(-50%); }
-html:not(.carte-doc) #menus .fm .fm-price-complete {
-  top:18.2559%;
-  font-family:'Cinzel','Times New Roman',serif; font-weight:700;
-  font-size:4.4405cqw; line-height:5.5062cqw; color:#fffbf1;
+html:not(.carte-doc) #menus .fm .fmb-title {
+  margin: 0; min-width: 0;
+  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
+  font-size: clamp(1.04rem, 3.1cqw, 1.6rem);
+  line-height: 1.28; letter-spacing: .02em;
+  text-transform: uppercase; color: #5b3172;
 }
-html:not(.carte-doc) #menus .fm .fm-foot-complete {
-  top:24.3032%;
-  font-family:'Cinzel','Times New Roman',serif; font-weight:700;
-  font-size:1.6163cqw; line-height:1.9538cqw; letter-spacing:.13em;
-  color:#d5b363; text-transform:uppercase;
+html:not(.carte-doc) #menus .fm .fmb-title > span { display: block; }
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-title,
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title { color: #fff; }
+html:not(.carte-doc) #menus .fm .fmb-kicker {
+  display: block; margin-bottom: .4em;
+  font-size: .62em; letter-spacing: .26em; line-height: 1.3;
+  color: #d5b363;
 }
-/* ---------- Médaillons + titres Entrée / Plat / Dessert ---------- */
-html:not(.carte-doc) #menus .fm .fm-h5 {
-  position:absolute; white-space:nowrap; text-align:center; transform:translateX(-50%);
+html:not(.carte-doc) #menus .fm .fmb-price {
+  margin: 0; white-space: nowrap; text-align: right;
+  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
+  font-size: clamp(1.6rem, 5.9cqw, 2.7rem); line-height: 1;
+  color: #5b3172;
 }
-html:not(.carte-doc) #menus .fm .fm-medal-1 { left:5.3464%; top:28.8509%; width:5.0622%; }
-html:not(.carte-doc) #menus .fm .fm-medal-2 { left:35.8437%; top:28.8509%; width:5.0622%; }
-html:not(.carte-doc) #menus .fm .fm-medal-3 { left:65.8082%; top:28.8183%; width:5.0622%; }
-html:not(.carte-doc) #menus .fm .fm-h5-1 { left:19.0195%; top:28.7857%; }
-html:not(.carte-doc) #menus .fm .fm-h5-2 { left:49.5613%; top:28.7857%; }
-html:not(.carte-doc) #menus .fm .fm-h5-3 { left:80.675%; top:28.6716%; }
-html:not(.carte-doc) #menus .fm .fm-ct1 {
-  font-size:2.1314cqw; line-height:2.9307cqw; color:#5b3172; font-weight:700;
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-price,
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price { color: #fffbf1; }
+html:not(.carte-doc) #menus .fm .fmb-foot {
+  display: flex; align-items: center; justify-content: center;
+  gap: .55em; margin: 0;
+  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
+  font-size: clamp(.62rem, 1.7cqw, .8rem);
+  letter-spacing: .18em; text-transform: uppercase;
+  color: #d5b363; text-align: center;
 }
-html:not(.carte-doc) #menus .fm .fm-ct2 {
-  font-size:2.1314cqw; line-height:2.9307cqw; color:#000; font-weight:400;
+html:not(.carte-doc) #menus .fm .fmb-foot .fmb-star { line-height: 1; font-size: 1.2em; }
+html:not(.carte-doc) #menus .fm .fmb-note {
+  margin: 0; padding-top: clamp(10px, 1.8cqw, 16px);
+  border-top: 1px solid rgba(213, 179, 99, .35);
+  text-align: center; color: #fff;
+  font-weight: 500; text-transform: uppercase;
+  font-size: clamp(.7rem, 1.9cqw, .95rem);
+  letter-spacing: .16em;
 }
-/* ---------- Listes de choix : étoile puis texte, une ligne sous l'autre ---------- */
-html:not(.carte-doc) #menus .fm .fm-items {
-  position:absolute; left:2.984%; top:37.0438%;
-  font-family:'Montserrat','Segoe UI',system-ui,sans-serif;
-  font-size:1.5986cqw; font-weight:500; line-height:1.9538cqw; color:#000;
+/* ---------- Choix des formules : entrée / plat / dessert ---------- */
+html:not(.carte-doc) #menus .fm .fmb-choices {
+  display: grid; grid-template-columns: 1fr;
+  gap: clamp(12px, 2.6cqw, 24px);
 }
-html:not(.carte-doc) #menus .fm .fm-items li {
-  position:absolute; left:0; display:block;
-  white-space:nowrap; padding-left:1.4036cqw; padding-right:0.2cqw;
+@media (min-width: 880px) {
+  html:not(.carte-doc) #menus .fm .fmb-choices {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
-html:not(.carte-doc) #menus .fm .fm-items .fm-star {
-  position:absolute; left:0.15cqw; top:0.42cqw;
-  width:1.119cqw; height:1.119cqw;
-  background:url('assets/menus/star.png') no-repeat 0 0 / 100% 100%;
+html:not(.carte-doc) #menus .fm .fmb-choice {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  padding: clamp(16px, 3cqw, 26px) clamp(14px, 2.4cqw, 22px);
+  border-radius: clamp(14px, 2.4cqw, 20px);
+  background: linear-gradient(180deg, #fffef8 0%, #fcf6ea 100%);
+  border: 1px solid rgba(197, 161, 94, .42);
 }
-html:not(.carte-doc) #menus .fm .fm-items em { font-weight:400; color:#3f2e46; }
-html:not(.carte-doc) #menus .fm .fm-items-c1 li:nth-child(1) { top:0cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-c1 li:nth-child(2) { top:3.411cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-c1 li:nth-child(3) { top:6.715cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-c2 { left:33.6412%; }
-html:not(.carte-doc) #menus .fm .fm-items-c2 li:nth-child(1) { top:0cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-c2 li:nth-child(2) { top:3.411cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-c2 li:nth-child(3) { top:6.715cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-c3 { left:64.7957%; top:36.3562%; }
-html:not(.carte-doc) #menus .fm .fm-items-c3 li:nth-child(1) { top:0cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-c3 li:nth-child(2) { top:3.481cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-c3 li:nth-child(3) { top:6.714cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-c3 li:nth-child(4) { top:9.734cqw; }
-/* ---------- Menu enfant ---------- */
-html:not(.carte-doc) #menus .fm .fm-badge-enfant { left:3.0906%; top:48.8183%; width:41.5631%; }
-html:not(.carte-doc) #menus .fm .fm-icon-enfant { left:2.984%; top:61.9886%; width:10.5329%; }
-html:not(.carte-doc) #menus .fm .fm-items-enfant { left:14.7957%; top:62.7124%; }
-html:not(.carte-doc) #menus .fm .fm-items-enfant li:nth-child(1) { top:0cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-enfant li:nth-child(2) { top:2.736cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-enfant li:nth-child(3) { top:5.472cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-enfant li:nth-child(4) { top:8.208cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-enfant em { font-weight:500; color:#3f2e46; }
-html:not(.carte-doc) #menus .fm .fm-price-enfant {
-  left:23.9964%; transform:translateX(-50%); top:72.4857%;
-  font-family:'Cinzel','Times New Roman',serif; font-weight:700;
-  font-size:3.5524cqw; line-height:4.4405cqw; color:#5b3172;
+html:not(.carte-doc) #menus .fm .fmb-medal {
+  width: clamp(60px, 7.5cqw, 88px); height: auto;
+  margin-bottom: clamp(4px, .8cqw, 8px);
 }
-/* ---------- Petit déjeuner ---------- */
-html:not(.carte-doc) #menus .fm .fm-icon-pdj { left:0%; top:81.9723%; width:15.7194%; }
-html:not(.carte-doc) #menus .fm img.fm-pill {
-  display:block; background:none; border-radius:0; padding:0;
-  font-size:0; letter-spacing:0; line-height:0;
+html:not(.carte-doc) #menus .fm .fmb-choice-title {
+  margin: 0;
+  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
+  font-size: clamp(1.06rem, 3cqw, 1.5rem);
+  line-height: 1.24; text-transform: uppercase; color: #5b3172;
 }
-html:not(.carte-doc) #menus .fm .fm-pill { left:10.1243%; top:79.9674%; width:27.3535%; }
-html:not(.carte-doc) #menus .fm .fm-items-pdj { left:14.8313%; top:86.1605%; }
-html:not(.carte-doc) #menus .fm .fm-items-pdj li:nth-child(1) { top:0cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-pdj li:nth-child(2) { top:3.411cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-pdj li:nth-child(3) { top:6.715cqw; }
-html:not(.carte-doc) #menus .fm .fm-items-pdj em { font-weight:500; color:#3f2e46; }
-html:not(.carte-doc) #menus .fm .fm-price-pdj {
-  left:23.9964%; transform:translateX(-50%); top:95.2404%;
-  font-family:'Cinzel','Times New Roman',serif; font-weight:700;
-  font-size:3.5524cqw; line-height:4.4405cqw; color:#5b3172;
+html:not(.carte-doc) #menus .fm .fmb-choice-title em {
+  display: block; font-style: normal;
+  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 400;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: #000; line-height: 1.45;
 }
-/* ---------- Menu du jour ---------- */
-html:not(.carte-doc) #menus .fm .fm-daybg {
-  position:absolute; left:48.7389%; top:53.6267%; width:47.8508%; height:46.3733%;
-  border-radius:2cqw; overflow:hidden;
-  background:linear-gradient(180deg,#2e143b 0%, #3c1c50 28%, #4b2665 52%, #46225e 76%, #311647 100%);
+/* ---------- Listes de choix : étoile dorée, une ligne sous l'autre ---------- */
+html:not(.carte-doc) #menus .fm .fmb-list {
+  margin: clamp(6px, 1.2cqw, 12px) 0 0; padding: 0; list-style: none;
+  display: flex; flex-direction: column;
+  gap: clamp(8px, 1.6cqw, 14px);
+  width: 100%;
+  font-weight: 500;
+  font-size: clamp(.95rem, 2.1cqw, 1.12rem);
+  line-height: 1.42; color: #000;
+  text-align: left;
 }
-html:not(.carte-doc) #menus .fm .fm-daybody { position:absolute; left:0; top:0; width:100%; height:100%; }
-html:not(.carte-doc) #menus .fm .fm-panel-jour { left:45.6838%; top:60.6683%; width:54.2629%; }
-html:not(.carte-doc) #menus .fm .fm-badge-jour { left:51.7762%; top:52.8117%; width:41.6163%; }
-html:not(.carte-doc) #menus .fm .fm-strip-bottom { left:48.7389%; top:91.8337%; width:47.8508%; }
-html:not(.carte-doc) #menus .fm .fm-glow-form { left:63.4991%; top:73.4637%; width:22.5044%; }
-html:not(.carte-doc) #menus .fm .fm-icon-jour { left:53.4991%; top:73.48%; width:7.0693%; }
-html:not(.carte-doc) #menus .fm .fm-ardoise {
-  left:72.7087%; transform:translateX(-50%); top:64.0424%;
-  font-weight:500; text-transform:uppercase;
-  font-size:1.7762cqw; line-height:2.1314cqw; letter-spacing:.085em; color:#fff;
+html:not(.carte-doc) #menus .fm .fmb-list li {
+  display: flex; align-items: flex-start; gap: .6em;
 }
-html:not(.carte-doc) #menus .fm .fm-form-jour {
-  left:63.6945%; top:73.6104%;
-  font-family:'Cinzel','Times New Roman',serif; font-weight:700;
-  font-size:2.3091cqw; line-height:3.1972cqw; color:#fff; text-transform:uppercase;
+html:not(.carte-doc) #menus .fm .fmb-list li::before {
+  content: "";
+  flex: 0 0 auto; width: .88em; height: .88em;
+  margin-top: .28em;
+  background: url('assets/menus/star.png') no-repeat center / contain;
 }
-html:not(.carte-doc) #menus .fm .fm-form-jour .fm-l { display:block; }
-html:not(.carte-doc) #menus .fm .fm-form-jour .ou { font-weight:400; text-transform:lowercase; }
-html:not(.carte-doc) #menus .fm .fm-price-jour {
-  left:72.6909%; transform:translateX(-50%); top:82.2331%;
-  font-family:'Cinzel','Times New Roman',serif; font-weight:700;
-  font-size:4.0853cqw; line-height:4.9734cqw; color:#fffbf1;
+html:not(.carte-doc) #menus .fm .fmb-list em {
+  font-style: normal; font-weight: 400; color: #3f2e46;
+}
+/* petit écran : le prix passe sous le titre, aligné à droite */
+@media (max-width: 560px) {
+  html:not(.carte-doc) #menus .fm .fmb-head {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  html:not(.carte-doc) #menus .fm .fmb-price {
+    grid-column: 1 / -1; justify-self: end;
+  }
 }
 
-
-/* ===== Bouton « Télécharger la carte (PDF) » — pied de page commun ===== */
-.footer-download-wrap { margin:14px auto 2px; }
+/* ===== Bouton « Télécharger la carte (PDF) » — pied de page commun =====
+   Volontairement discret et fin : fond transparent, fine bordure ton sur
+   ton, téléchargement direct sur l'appareil (attribut download). */
+.footer-download-wrap { margin: 8px auto 4px; }
 .footer-download {
-  display:inline-flex; align-items:center; justify-content:center; gap:9px;
-  width:auto; min-width:min(100%,300px);
-  padding:12px 26px; border-radius:999px;
-  background:linear-gradient(180deg,#f7e6b0 0%,#e3c276 55%,#d8b257 100%);
-  color:#2a1439 !important; text-decoration:none;
-  font-family:'Montserrat',system-ui,sans-serif; font-weight:700;
-  font-size:.82rem; letter-spacing:.09em; text-transform:uppercase;
-  border:1px solid #fcf6ba;
-  box-shadow:0 3px 10px rgba(36,16,46,.35);
-  cursor:pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 7px; width: auto;
+  padding: 6px 14px; border-radius: 999px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .24);
+  color: rgba(255, 255, 255, .78);
+  text-decoration: none;
+  font-family: 'Montserrat', system-ui, sans-serif; font-weight: 500;
+  font-size: .64rem; letter-spacing: .18em; text-transform: uppercase;
+  transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+  cursor: pointer;
 }
-.footer-download svg { width:16px; height:16px; flex:0 0 auto; }
-.footer-download:hover { background:linear-gradient(180deg,#fff3cf 0%,#eed28d 55%,#e6c26e 100%); }
-.footer-download:active { transform:translateY(1px); }
+.footer-download svg { width: 12px; height: 12px; flex: 0 0 auto; opacity: .85; }
+.footer-download:hover {
+  color: #fff; border-color: rgba(216, 178, 87, .7);
+  background: rgba(255, 255, 255, .05);
+}
+.footer-download:active { transform: translateY(1px); }
 @media (max-width: 640px) {
-  .footer-download { width:min(100%,420px); font-size:.76rem; }
+  .footer-download { font-size: .6rem; letter-spacing: .14em; padding: 5px 12px; }
 }
 </style>
 </head>
@@ -5865,76 +5851,96 @@ html:not(.carte-doc) #menus .fm .fm-price-jour {
 <section id="plats" class="menu-section"><div class="tab-flow"><article class="panel"><div class="panel__head"><h4 class="panel__title">Plats</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Entrecôte 190 g</h5><strong>19,90</strong></div><p class="food-card__note">Fleur de sel, sauce au choix</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Bavette d’aloyau</h5><strong>17,50</strong></div><p class="food-card__note">Sauce au choix</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Escalope de veau</h5><strong>19,90</strong></div><p class="food-card__note">Sauce champignons, pâtes</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Cuisse de canard confite</h5><strong>19,70</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Poisson</h5><strong>17,90</strong></div><p class="food-card__note">Selon arrivage</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Tartare de bœuf</h5><strong>17,80</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Cuisse de poulet rôtie</h5><strong>15,20</strong></div><p class="food-card__note">Riz basmati</p></article></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Burgers</h4></div><div class="food-card-grid"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Burger La Colline</h5><strong>17,90</strong></div><p class="food-card__note">Pain brioché, cheddar, steak haché, bacon, oignons caramélisés, salade, tomate, sauce burger.</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Le Royal Fishburger</h5><strong>17,70</strong></div><p class="food-card__note">Pain brioché, cheddar, poisson pané, légumes grillés, salade, tomate, sauce burger.</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Burger Chicken Croustillant</h5><strong>17,90</strong></div><p class="food-card__note">Pain brioché, cheddar, escalope de poulet pané croustillant, oignons caramélisés, salade, tomate, sauce burger.</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Burger Végétarien</h5><strong>17,70</strong></div><p class="food-card__note">Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger.</p></article></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Salades</h4></div><div class="food-card-grid"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>La Colline</h5><strong>16,90</strong></div><p class="food-card__note">Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Chèvre Chaud</h5><strong>16,50</strong></div><p class="food-card__note">Salade verte, tomate, jambon sec, toast de cabécou, noix, miel.</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Végétarienne</h5><strong>12,60</strong></div><p class="food-card__note">Salade verte, tomate, concombre, haricots verts, légumes grillés, avocat.</p></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Nordique</h5><strong>17,20</strong></div><p class="food-card__note">Salade verte, saumon fumé, crevettes, avocat, concombre, tomate, feta, croûtons.</p></article></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Pâtes</h4></div><div class="food-card-grid"><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Tagliatelles à la carbonara</h5><strong>15,90</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Tagliatelles au saumon</h5><strong>16,20</strong></div></article><article class="food-card menu-card-grid__item"><div class="food-card__head"><h5>Penne au poulet et champignons</h5><strong>16,50</strong></div></article></div></article><article class="panel panel--accent"><div class="accent-band"><img class="accent-band__motif" src="assets/menus/motif-80a.png" alt="" aria-hidden="true" loading="lazy"><div class="accent-band__title"><strong>Assiette de frites</strong><span>4,90</span></div><p>Accompagnement : frites, haricots verts, pâtes</p><p class="accent-band__sauce">Sauce au choix : poivre · champignons · roquefort — supplément sauce 2,00</p></div></article></div></section>
 <section id="menus" class="menu-section"><div class="tab-flow"><article class="panel"><div class="panel__head"><h4 class="panel__title">Formules</h4></div>
 <div class="fm" data-ref="Formules.pdf">
-  <!-- ============ Formule duo ============ -->
-  <img class="fm-img fm-badge-duo" src="assets/menus/badge-duo.png" alt="" aria-hidden="true" loading="lazy">
-  <img class="fm-img fm-icon-duo" src="assets/menus/icon-duo.png" alt="" aria-hidden="true" loading="lazy">
-  <div class="fm-txt fm-sub-duo"><span class="fm-l">Entrée + plat <span class="ou">ou</span></span><span class="fm-l">plat + dessert</span></div>
-  <div class="fm-txt fm-price-duo">23,90</div>
-  <div class="fm-txt fm-foot-duo">Choix ci-dessous</div>
-  <!-- ============ La formule complète ============ -->
-  <img class="fm-img fm-panel-complete" src="assets/menus/panneau-complete.png" alt="" aria-hidden="true" loading="lazy">
-  <img class="fm-img fm-glow-sub" src="assets/menus/glow-sub.png" alt="" aria-hidden="true" loading="lazy">
-  <img class="fm-img fm-glow-price" src="assets/menus/glow-price.png" alt="" aria-hidden="true" loading="lazy">
-  <img class="fm-img fm-glow-foot" src="assets/menus/glow-foot.png" alt="" aria-hidden="true" loading="lazy">
-  <img class="fm-img fm-icon-complete" src="assets/menus/icon-complete.png" alt="" aria-hidden="true" loading="lazy">
-  <img class="fm-img fm-badge-complete" src="assets/menus/badge-complete.png" alt="La formule complète" loading="lazy">
-  <div class="fm-txt fm-sub-complete">Entrée + plat + dessert</div>
-  <div class="fm-txt fm-price-complete">27,90</div>
-  <div class="fm-txt fm-foot-complete">Choix ci-dessous</div>
-  <!-- ============ Entrées / Plats / Desserts au choix ============ -->
-  <img class="fm-img fm-medal fm-medal-1" src="assets/menus/medal-entree.png" alt="" aria-hidden="true" loading="lazy">
-  <img class="fm-img fm-medal fm-medal-2" src="assets/menus/medal-plat.png" alt="" aria-hidden="true" loading="lazy">
-  <img class="fm-img fm-medal fm-medal-3" src="assets/menus/medal-dessert.png" alt="" aria-hidden="true" loading="lazy">
-  <h5 class="fm-h5 fm-h5-1"><span class="fm-ct1">Entrée</span><span class="fm-ct2">Au choix</span></h5>
-  <h5 class="fm-h5 fm-h5-2"><span class="fm-ct1">Plat</span><span class="fm-ct2">Au choix</span></h5>
-  <h5 class="fm-h5 fm-h5-3"><span class="fm-ct1">Dessert</span><span class="fm-ct2">Au choix</span></h5>
-  <ul class="fm-items fm-items-c1">
-    <li><i class="fm-star"></i>Escargots de Bourgogne</li>
-    <li><i class="fm-star"></i>Œuf cocotte</li>
-    <li><i class="fm-star"></i>Assiette de charcuterie</li>
-  </ul>
-  <ul class="fm-items fm-items-c2">
-    <li><i class="fm-star"></i>Escalope de veau</li>
-    <li><i class="fm-star"></i>Bavette d’aloyau <em>Sauce au choix</em></li>
-    <li><i class="fm-star"></i>Poisson <em>selon arrivage</em></li>
-  </ul>
-  <ul class="fm-items fm-items-c3">
-    <li><i class="fm-star"></i>Panna cotta</li>
-    <li><i class="fm-star"></i>Crème brûlée</li>
-    <li><i class="fm-star"></i>Mousse au chocolat</li>
-    <li><i class="fm-star"></i>2 boules de glace <em>Parfum au choix</em></li>
-  </ul>
-  <!-- ============ Menu enfant ============ -->
-  <img class="fm-img fm-badge-enfant" src="assets/menus/badge-enfant.png" alt="Menu enfant" loading="lazy">
-  <img class="fm-img fm-icon-enfant" src="assets/menus/icon-enfant.png" alt="" aria-hidden="true" loading="lazy">
-  <ul class="fm-items fm-items-enfant">
-    <li><i class="fm-star"></i>1 Verre de soda</li>
-    <li><i class="fm-star"></i>Burger enfant ou Cordon bleu</li>
-    <li><i class="fm-star"></i>Frites maison</li>
-    <li><i class="fm-star"></i>1 Boule de glace <em>— parfum au choix</em></li>
-  </ul>
-  <div class="fm-txt fm-price-enfant">10,90</div>
-  <!-- ============ Petit déjeuner ============ -->
-  <img class="fm-img fm-icon-pdj" src="assets/menus/icon-pdj.png" alt="" aria-hidden="true" loading="lazy">
-  <img class="fm-img fm-pill" src="assets/menus/pill-petit-dejeuner.png" alt="Petit déjeuner" loading="lazy">
-  <ul class="fm-items fm-items-pdj">
-    <li><i class="fm-star"></i>Boisson chaude <em>au choix</em></li>
-    <li><i class="fm-star"></i>Croissant ou Tartine au beurre</li>
-    <li><i class="fm-star"></i>Verre de jus de fruits <em>au choix</em></li>
-  </ul>
-  <div class="fm-txt fm-price-pdj">7,00</div>
-  <!-- ============ Menu du jour ============ -->
-  <div class="fm-daybg"></div>
-  <div class="fm-daybody">
-    <img class="fm-img fm-panel-jour" src="assets/menus/panneau-jour.png" alt="" aria-hidden="true" loading="lazy">
-    <img class="fm-img fm-badge-jour" src="assets/menus/badge-jour.png" alt="Menu du jour" loading="lazy">
-    <img class="fm-img fm-strip-bottom" src="assets/menus/strip-jour-bas.png" alt="" aria-hidden="true" loading="lazy">
-    <img class="fm-img fm-glow-form" src="assets/menus/glow-form.png" alt="" aria-hidden="true" loading="lazy">
-    <img class="fm-img fm-icon-jour" src="assets/menus/icon-jour.png" alt="" aria-hidden="true" loading="lazy">
-    <div class="fm-txt fm-ardoise">Choix selon l’ardoise</div>
-    <div class="fm-txt fm-form-jour"><span class="fm-l">Entrée + plat <span class="ou">ou</span></span><span class="fm-l">plat + dessert</span></div>
-    <div class="fm-txt fm-price-jour">14,90</div>
+  <!-- ============ Formule « duo » : entrée + plat, ou plat + dessert ============ -->
+  <article class="fmb-card fmb-card--duo">
+    <div class="fmb-head">
+      <img class="fmb-ico" src="assets/menus/icon-duo.png" alt="" aria-hidden="true" loading="lazy">
+      <h3 class="fmb-title"><span>Entrée + plat <span class="ou">ou</span></span><span>plat + dessert</span></h3>
+      <p class="fmb-price">23,90</p>
+    </div>
+    <p class="fmb-foot"><span class="fmb-star" aria-hidden="true">✦</span>Choix ci-dessous</p>
+  </article>
+
+  <!-- ============ Formule complète ============ -->
+  <article class="fmb-card fmb-card--complete">
+    <div class="fmb-head">
+      <img class="fmb-ico" src="assets/menus/icon-complete.png" alt="" aria-hidden="true" loading="lazy">
+      <h3 class="fmb-title">Entrée + plat + dessert</h3>
+      <p class="fmb-price">27,90</p>
+    </div>
+    <p class="fmb-foot"><span class="fmb-star" aria-hidden="true">✦</span>Choix ci-dessous</p>
+  </article>
+
+  <!-- ============ Choix des formules : entrée / plat / dessert au choix ============ -->
+  <div class="fmb-choices">
+    <section class="fmb-choice">
+      <img class="fmb-medal" src="assets/menus/medal-entree.png" alt="" aria-hidden="true" loading="lazy">
+      <h4 class="fmb-choice-title">Entrée <em>Au choix</em></h4>
+      <ul class="fmb-list">
+        <li>Escargots de Bourgogne</li>
+        <li>Œuf cocotte</li>
+        <li>Assiette de charcuterie</li>
+      </ul>
+    </section>
+    <section class="fmb-choice">
+      <img class="fmb-medal" src="assets/menus/medal-plat.png" alt="" aria-hidden="true" loading="lazy">
+      <h4 class="fmb-choice-title">Plat <em>Au choix</em></h4>
+      <ul class="fmb-list">
+        <li>Escalope de veau</li>
+        <li>Bavette d’aloyau <em>Sauce au choix</em></li>
+        <li>Poisson <em>selon arrivage</em></li>
+      </ul>
+    </section>
+    <section class="fmb-choice">
+      <img class="fmb-medal" src="assets/menus/medal-dessert.png" alt="" aria-hidden="true" loading="lazy">
+      <h4 class="fmb-choice-title">Dessert <em>Au choix</em></h4>
+      <ul class="fmb-list">
+        <li>Panna cotta</li>
+        <li>Crème brûlée</li>
+        <li>Mousse au chocolat</li>
+        <li>2 boules de glace <em>Parfum au choix</em></li>
+      </ul>
+    </section>
   </div>
+
+  <!-- ============ Menu enfant ============ -->
+  <article class="fmb-card fmb-card--child">
+    <div class="fmb-head">
+      <img class="fmb-ico" src="assets/menus/icon-enfant.png" alt="" aria-hidden="true" loading="lazy">
+      <h3 class="fmb-title">Menu enfant</h3>
+      <p class="fmb-price">10,90</p>
+    </div>
+    <ul class="fmb-list">
+      <li>1 Verre de soda</li>
+      <li>Burger enfant ou Cordon bleu</li>
+      <li>Frites maison</li>
+      <li>1 Boule de glace <em>— parfum au choix</em></li>
+    </ul>
+  </article>
+
+  <!-- ============ Petit déjeuner ============ -->
+  <article class="fmb-card fmb-card--pdj">
+    <div class="fmb-head">
+      <img class="fmb-ico" src="assets/menus/icon-pdj.png" alt="" aria-hidden="true" loading="lazy">
+      <h3 class="fmb-title">Petit déjeuner</h3>
+      <p class="fmb-price">7,00</p>
+    </div>
+    <ul class="fmb-list">
+      <li>Boisson chaude <em>au choix</em></li>
+      <li>Croissant ou Tartine au beurre</li>
+      <li>Verre de jus de fruits <em>au choix</em></li>
+    </ul>
+  </article>
+
+  <!-- ============ Menu du jour ============ -->
+  <article class="fmb-card fmb-card--day">
+    <div class="fmb-head">
+      <img class="fmb-ico" src="assets/menus/icon-jour.png" alt="" aria-hidden="true" loading="lazy">
+      <h3 class="fmb-title"><span class="fmb-kicker">Menu du jour</span><span>Entrée + plat <span class="ou">ou</span></span><span>plat + dessert</span></h3>
+      <p class="fmb-price">14,90</p>
+    </div>
+    <p class="fmb-note">Choix selon l’ardoise</p>
+  </article>
 </div>
 </article></div></section>
 <section id="boissons" class="menu-section"><div class="tab-flow"><article class="panel"><div class="panel__head"><h4 class="panel__title">Boissons fraîches</h4></div><div class="price-list price-list--cols"><div class="price-list__col"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Vittel</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">3,90 / 4,90 / 5,90</div></div><p class="price-list__note note-cl">25 cl / 50 cl / 1 L</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">San Pellegrino</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,90 / 6,20</div></div><p class="price-list__note note-cl">50 cl / 1 L</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Badoit</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,50 / 6,20</div></div><p class="price-list__note note-cl">33 cl / 1 L</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Perrier</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,50</div></div><p class="price-list__note note-cl">33 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Coca / Zéro / Cherry</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,50</div></div><p class="price-list__note note-cl">33 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Fanta / Sprite / Fuze Tea</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,50</div></div><p class="price-list__note note-cl">25 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Orangina / Citronnade / Ginger Beer</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,50</div></div><p class="price-list__note note-cl">25 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Diabolo / Limonade</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,50</div></div><p class="price-list__note note-cl">25 cl</p></article></div><div class="price-list__col"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Schweppes Tonic / Agrumes</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,50</div></div><p class="price-list__note note-cl">25 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Jus / Nectar de fruits</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,50</div></div><p class="price-list__note note-cl">25 cl</p><p class="price-list__note">orange, pomme, ananas, abricot, fraise, tomate</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Sirop à l’eau</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">3,00</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Supplément sirop · <span class="qty">2 cl</span></div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">0,50</div></div><p class="price-list__note">grenadine • fraise • citron • menthe • pêche • violette • passion • vanille • coco • orgeat • cassis</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Orange pressée / Citron pressé</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">5,30</div></div><p class="price-list__note note-cl">25 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Milkshake</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">5,90</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Café frappé</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,90</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Latte frappé</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">5,50</div></div></article></div></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Boissons chaudes</h4></div><div class="price-list price-list--cols"><div class="price-list__col"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Café</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">2,20</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Décaféiné</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">2,30</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Café noisette / allongé</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">2,40</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Double café / décaféiné</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,40</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Café crème / chocolat chaud</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">3,90</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Cappuccino</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,60</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Crème / chocolat viennois</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,60</div></div></article></div><div class="price-list__col"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Café viennois</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,40</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Infusion / thé parfumé</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,50</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Grog</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">5,90</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Vin chaud aux épices</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,80</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Irish coffee</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">9,20</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Café allongé</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">2,70</div></div><p class="price-list__note">Caramel ou vanille</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Lait chaud</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">3,10</div></div></article></div></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Apéritifs</h4></div><div class="price-list price-list--cols"><div class="price-list__col"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Martini</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,20</div></div><p class="price-list__note"><span class="qty">5 cl</span> — Blanc, rouge</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Ricard / Pastis</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">3,90</div></div><p class="price-list__note note-cl">2 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Kir</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,10</div></div><p class="price-list__note"><span class="qty">12 cl</span> — Cassis, framboise, mûre, pêche</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Kir Royal</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">9,90</div></div><p class="price-list__note note-cl">12 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Americano</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,90</div></div><p class="price-list__note note-cl">8 cl</p></article></div><div class="price-list__col"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Negroni</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">8,20</div></div><p class="price-list__note note-cl">8 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Porto</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,20</div></div><p class="price-list__note"><span class="qty">5 cl</span> — Blanc, rouge</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Suze / Campari</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,20</div></div><p class="price-list__note note-cl">5 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Muscat / Salers</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,20</div></div><p class="price-list__note note-cl">5 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Cidre brut</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,90</div></div><p class="price-list__note note-cl">25 cl</p></article></div></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Whiskies</h4><p class="panel__subtitle qty">4 cl</p></div><div class="price-list"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Clan Campbell</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,60</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Jameson</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,80</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Jack Daniels</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">8,60</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Johnny Walker</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">8,80</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Chivas Regal</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">8,80</div></div></article></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Digestifs</h4><p class="panel__subtitle qty">4 cl</p></div><div class="price-list price-list--cols"><div class="price-list__col"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Bas Armagnac VSOP</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,20</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Rhum des Îles, Calvados</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">6,20</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Vodka</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">6,90</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Get 27 / 31, Bailey’s, Malibu</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,10</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Cognac VSOP</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,30</div></div></article></div><div class="price-list__col"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Manzana Verde</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">6,10</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Vieille Prune de Souillac</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,20</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Poire, Mirabelle, Framboise</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,20</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Amaretto, Fernet Branca</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,20</div></div></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Grand Marnier, Cointreau</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">7,20</div></div></article></div></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Bières</h4></div><div class="beer-note">Bouteille</div><div class="price-list"><article class="price-line"><div class="price-line__row"><div class="price-line__name">Heineken</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,90</div></div><p class="price-list__note note-cl">25 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">1664 Blanc</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,90</div></div><p class="price-list__note note-cl">25 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Desperados</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">5,90</div></div><p class="price-list__note note-cl">33 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Corona</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">6,20</div></div><p class="price-list__note note-cl">33 cl</p></article><article class="price-line"><div class="price-line__row"><div class="price-line__name">Bière sans alcool</div><span class="price-line__dots" aria-hidden="true"></span><div class="price-line__price">4,90</div></div><p class="price-list__note note-cl">25 cl</p></article></div><div class="beer-note beer-note--second">Pression</div><div class="beer-table"><div class="beer-table__head"><span></span><span class="qty">25 cl</span><span class="qty">50 cl</span><span>HH</span></div><article class="beer-row"><div class="beer-row__name">Bière blonde</div><div class="beer-row__price" data-label="25 cl">3,30</div><div class="beer-row__price" data-label="50 cl">6,10</div><div class="beer-row__hh" data-label="HH">3,90</div></article><article class="beer-row"><div class="beer-row__name">Bière blanche bio</div><div class="beer-row__price" data-label="25 cl">4,10</div><div class="beer-row__price" data-label="50 cl">7,90</div><div class="beer-row__hh" data-label="HH">6,00</div></article><article class="beer-row"><div class="beer-row__name">Triple d’Orgemont bio</div><div class="beer-row__price" data-label="25 cl">4,50</div><div class="beer-row__price" data-label="50 cl">8,80</div><div class="beer-row__hh" data-label="HH">7,50</div></article><article class="beer-row"><div class="beer-row__name">Légionnaire IPA</div><div class="beer-row__price" data-label="25 cl">4,20</div><div class="beer-row__price" data-label="50 cl">8,20</div><div class="beer-row__hh" data-label="HH">7,00</div></article><p class="price-list__note" style="text-align:center;margin:10px 0 0;">Supplément Picon · 1,00</p></div></article></article><p class="hh-banner">✦ Happy Hour (HH) · 17h → 23h ✦</p></div></section>
