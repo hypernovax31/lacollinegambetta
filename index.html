@@ -5523,33 +5523,222 @@ html:not(.carte-doc) #menus .fm .fm-day__form .fm-ou { font-weight: 400; text-tr
 
 
 
-/* ============ NOS MENUS — « Formules », façon carte professionnelle
-   Esprit de la feuille Formules du PDF de référence : panneaux crème et
-   panneaux violet profond, médaillons, étoiles dorées, Cinzel pour les
-   titres / prix / mentions et Montserrat pour les choix. Présentation
-   responsive : formules principales côte à côte puis empilées, choix sur
-   trois colonnes, en une seule colonne sur petit écran. */
+/* ============ NOS MENUS — « Formules », carte professionnelle lisible
+   Palette récupérée des blocs de la feuille Formules du PDF de référence :
+   papier crème + liseré doré pour les formules claires, violet profond pour
+   la complète et le menu du jour. Typographies du PDF : Cinzel (titres,
+   prix, mentions) et Montserrat (choix). Composition aérée, responsive,
+   sans hauteur imposée (le bloc s'étend avec son contenu). */
 html:not(.carte-doc) #menus .fm {
   container-type: inline-size;
-  display: block;
-  width: min(100%, 1100px); max-width: 100%;
-  margin: 0 auto; padding: 0 0 6px;
+  /* —— styles couleur des blocs, repris de la feuille Formules —— */
+  --fm-cream: #fffef8;          /* papier clair */
+  --fm-cream-2: #fbf2e0;        /* papier clair (replat) */
+  --fm-gold: #b98d3b;           /* or des filets et mentions */
+  --fm-gold-2: #dcc078;         /* or adouci */
+  --fm-gold-line: rgba(185, 141, 59, .42);
+  --fm-violet: #5b3172;         /* violet des titres et prix clairs */
+  --fm-ink: #2a1633;            /* encre des listes */
+  --fm-soft: #6e5468;           /* notes « au choix » */
+  --fm-dark-1: #5a3477;         /* dégradé violet profond */
+  --fm-dark-2: #3c1d52;
+  --fm-dark-3: #2b1439;
+  --fm-gold-dark: #e4c680;      /* or sur fond sombre */
+  display: flex; flex-direction: column; align-items: stretch;
+  gap: clamp(16px, 2.4vw, 32px);
+  width: min(100%, 1080px); max-width: 100%;
+  margin: 0 auto; padding: 0 0 4px;
   position: relative;
+  /* —— recalcule les hauteurs : aucune hauteur fixe, le conteneur grandit
+     avec ses blocs (le pied de page n'est plus recouvert) —— */
+  aspect-ratio: auto; height: auto; min-height: 0; overflow: visible;
+  background: transparent;
   font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
-  color: #24102e;
+  color: var(--fm-ink);
 }
 html:not(.carte-doc) #menus .fm .ou {
   font-family: 'Cinzel', 'Times New Roman', serif;
   font-weight: 400; text-transform: lowercase;
-  padding: 0 .18em; letter-spacing: .02em;
+  padding: 0 .2em; letter-spacing: .01em;
 }
-/* --- grille « carte de dégustation » : duo | complète, puis menu du jour,
-   puis les choix, puis enfant | petit-déjeuner --- */
+/* --- Panneaux : fonds « papier » et « violet profond » --- */
+html:not(.carte-doc) #menus .fm .fmb-card {
+  display: flex; flex-direction: column;
+  gap: clamp(12px, 1.7cqw, 20px);
+  padding: clamp(18px, 2.4cqw, 30px);
+  border-radius: 18px;
+}
+html:not(.carte-doc) #menus .fm .fmb-card--duo,
+html:not(.carte-doc) #menus .fm .fmb-card--child,
+html:not(.carte-doc) #menus .fm .fmb-card--pdj {
+  background: linear-gradient(180deg, var(--fm-cream) 0%, var(--fm-cream-2) 100%);
+  border: 1px solid var(--fm-gold-line);
+  box-shadow: 0 10px 24px rgba(91, 49, 114, .08);
+}
+html:not(.carte-doc) #menus .fm .fmb-card--complete,
+html:not(.carte-doc) #menus .fm .fmb-card--day {
+  background: linear-gradient(178deg, var(--fm-dark-1) 0%, var(--fm-dark-2) 55%, var(--fm-dark-3) 100%);
+  border: 1px solid rgba(255, 255, 255, .09);
+  box-shadow: 0 16px 34px rgba(36, 16, 46, .26);
+  color: #fff;
+}
+/* --- En-tête : icône | titre | prix --- */
+html:not(.carte-doc) #menus .fm .fmb-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(12px, 1.8cqw, 20px);
+}
+html:not(.carte-doc) #menus .fm .fmb-ico {
+  width: clamp(52px, 5.8cqw, 78px); height: auto;
+  background: transparent; border: 0; padding: 0; border-radius: 0;
+  filter: drop-shadow(0 3px 8px rgba(36, 16, 46, .16));
+}
+html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-ico,
+html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-ico {
+  width: clamp(46px, 5cqw, 68px);
+}
+html:not(.carte-doc) #menus .fm .fmb-title {
+  margin: 0; min-width: 0;
+  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
+  font-size: clamp(1.02rem, 1.9cqw, 1.32rem);
+  line-height: 1.32; letter-spacing: .045em;
+  text-transform: uppercase; color: var(--fm-violet);
+}
+html:not(.carte-doc) #menus .fm .fmb-title > span { display: block; }
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-title,
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title { color: #fff; }
+html:not(.carte-doc) #menus .fm .fmb-price {
+  margin: 0; white-space: nowrap; text-align: right;
+  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
+  font-size: clamp(1.65rem, 3.6cqw, 2.45rem);
+  line-height: 1; color: var(--fm-violet);
+}
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-price,
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price { color: #fffbf1; }
+/* --- Mention « Choix ci-dessous » : petits filets dorés de part et d'autre --- */
+html:not(.carte-doc) #menus .fm .fmb-foot {
+  display: flex; align-items: center; justify-content: center;
+  gap: .85em; margin: auto 0 0; padding-top: clamp(2px, .4cqw, 6px);
+  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
+  font-size: clamp(.7rem, 1.15cqw, .78rem);
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--fm-gold); text-align: center;
+}
+html:not(.carte-doc) #menus .fm .fmb-foot .fmb-star { display: none; }
+html:not(.carte-doc) #menus .fm .fmb-foot::before,
+html:not(.carte-doc) #menus .fm .fmb-foot::after {
+  content: ""; height: 1px; width: clamp(16px, 4cqw, 42px); flex: 0 0 auto;
+  background: linear-gradient(90deg, transparent, var(--fm-gold));
+}
+html:not(.carte-doc) #menus .fm .fmb-foot::after {
+  background: linear-gradient(90deg, var(--fm-gold), transparent);
+}
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot,
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-foot { color: var(--fm-gold-dark); }
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot::before,
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-foot::before {
+  background: linear-gradient(90deg, transparent, var(--fm-gold-dark));
+}
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot::after,
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-foot::after {
+  background: linear-gradient(90deg, var(--fm-gold-dark), transparent);
+}
+/* --- Menu du jour : bande pleine largeur, ligne « icône | formules | prix » --- */
+html:not(.carte-doc) #menus .fm .fmb-card--day {
+  padding: clamp(20px, 2.8cqw, 36px) clamp(18px, 3cqw, 44px);
+}
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: clamp(14px, 2.6cqw, 34px);
+}
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico { width: clamp(58px, 6.4cqw, 92px); }
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title { justify-self: center; text-align: center; min-width: 0; }
+html:not(.carte-doc) #menus .fm .fmb-kicker {
+  display: block; margin-bottom: .5em;
+  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
+  font-size: clamp(.7rem, 1.3cqw, .88rem);
+  letter-spacing: .34em; line-height: 1.3;
+  color: var(--fm-gold-dark);
+}
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title {
+  font-size: clamp(1.22rem, 2.5cqw, 1.85rem);
+  letter-spacing: .04em;
+}
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
+  font-size: clamp(2rem, 4.2cqw, 3.1rem);
+}
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-note {
+  margin: 0; padding-top: clamp(12px, 1.7cqw, 20px);
+  width: 100%; text-align: center;
+  border-top: 1px solid rgba(228, 198, 128, .34);
+  color: rgba(255, 255, 255, .92);
+  font-weight: 500; text-transform: uppercase;
+  font-size: clamp(.74rem, 1.3cqw, .92rem);
+  letter-spacing: .22em;
+}
+/* --- Choix Entrée / Plat / Dessert : trois colonnes --- */
+html:not(.carte-doc) #menus .fm .fmb-choices {
+  display: grid; grid-template-columns: 1fr;
+  gap: clamp(12px, 1.7cqw, 24px);
+}
+html:not(.carte-doc) #menus .fm .fmb-choice {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  padding: clamp(18px, 2.2cqw, 28px) clamp(16px, 2cqw, 26px);
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--fm-cream) 0%, var(--fm-cream-2) 100%);
+  border: 1px solid var(--fm-gold-line);
+}
+html:not(.carte-doc) #menus .fm .fmb-medal {
+  width: clamp(58px, 6cqw, 84px); height: auto;
+  filter: drop-shadow(0 4px 10px rgba(91, 49, 114, .2));
+}
+html:not(.carte-doc) #menus .fm .fmb-choice-title {
+  margin: clamp(4px, .7cqw, 9px) 0 0;
+  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
+  font-size: clamp(1rem, 1.8cqw, 1.24rem);
+  line-height: 1.3; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--fm-violet);
+}
+html:not(.carte-doc) #menus .fm .fmb-choice-title em {
+  display: block; font-style: normal;
+  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 400;
+  font-size: .8em; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--fm-ink); line-height: 1.8;
+}
+/* --- Listes : étoile dorée, interligne aéré, jamais de petites capitales --- */
+html:not(.carte-doc) #menus .fm .fmb-list {
+  margin: clamp(8px, 1.2cqw, 14px) 0 0; padding: clamp(10px, 1.3cqw, 16px) 0 0;
+  width: 100%;
+  list-style: none;
+  display: flex; flex-direction: column;
+  gap: clamp(8px, 1.1cqw, 12px);
+  border-top: 1px solid var(--fm-gold-line);
+  font-weight: 500;
+  font-size: clamp(.98rem, 1.55cqw, 1.1rem);
+  line-height: 1.5; color: var(--fm-ink);
+  text-align: left;
+}
+html:not(.carte-doc) #menus .fm .fmb-card .fmb-list,
+html:not(.carte-doc) #menus .fm .fmb-choices .fmb-list { margin-top: auto; padding-top: clamp(10px, 1.3cqw, 16px); }
+html:not(.carte-doc) #menus .fm .fmb-list li {
+  display: flex; align-items: flex-start; gap: .6em;
+}
+html:not(.carte-doc) #menus .fm .fmb-list li::before {
+  content: ""; flex: 0 0 auto; width: .84em; height: .84em;
+  margin-top: .32em;
+  background: url('assets/menus/star.png') no-repeat center / contain;
+}
+html:not(.carte-doc) #menus .fm .fmb-list em {
+  font-style: normal; font-weight: 400; color: var(--fm-soft);
+}
+/* --- Grille « carte » sur grand écran --- */
 @media (min-width: 920px) {
   html:not(.carte-doc) #menus .fm {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(20px, 2.4vw, 34px);
+    gap: clamp(22px, 2.6vw, 38px);
     align-items: stretch;
   }
   html:not(.carte-doc) #menus .fm .fmb-card--duo   { grid-column: 1; grid-row: 1; }
@@ -5558,217 +5747,39 @@ html:not(.carte-doc) #menus .fm .ou {
   html:not(.carte-doc) #menus .fm .fmb-choices     { grid-column: 1 / -1; grid-row: 3; }
   html:not(.carte-doc) #menus .fm .fmb-card--child { grid-column: 1; grid-row: 4; }
   html:not(.carte-doc) #menus .fm .fmb-card--pdj   { grid-column: 2; grid-row: 4; }
-  html:not(.carte-doc) #menus .fm .fmb-choices .fmb-choice {
-    grid-template-rows: auto auto 1fr;
-  }
+  html:not(.carte-doc) #menus .fm .fmb-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-html:not(.carte-doc) #menus .fm .fmb-card {
-  display: flex; flex-direction: column;
-  gap: clamp(14px, 1.6cqw, 22px);
-  padding: clamp(20px, 2.6cqw, 34px);
-  border-radius: 18px;
-  position: relative;
-}
-/* Panneaux clairs : papier crème, fin liseré doré */
-html:not(.carte-doc) #menus .fm .fmb-card--duo,
-html:not(.carte-doc) #menus .fm .fmb-card--child,
-html:not(.carte-doc) #menus .fm .fmb-card--pdj {
-  background: linear-gradient(180deg, #fffef9 0%, #fdf5e2 100%);
-  border: 1px solid rgba(197, 161, 94, .5);
-  box-shadow: 0 14px 30px rgba(91, 49, 114, .09);
-}
-/* Panneaux sombres : violet profond de la feuille Formules */
-html:not(.carte-doc) #menus .fm .fmb-card--complete,
-html:not(.carte-doc) #menus .fm .fmb-card--day {
-  background: linear-gradient(178deg, #532e6b 0%, #3a1c4d 52%, #2b1439 100%);
-  border: 1px solid rgba(255, 255, 255, .1);
-  box-shadow: 0 18px 38px rgba(36, 16, 46, .3);
-  color: #fff;
-}
-/* --- En-tête de panneau : icône transparente | titre | prix --- */
-html:not(.carte-doc) #menus .fm .fmb-head {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: clamp(12px, 1.8cqw, 22px);
-}
-html:not(.carte-doc) #menus .fm .fmb-ico {
-  width: clamp(52px, 6.4cqw, 84px); height: auto;
-  background: transparent; border: 0; padding: 0; border-radius: 0;
-  filter: drop-shadow(0 4px 10px rgba(36, 16, 46, .18));
-}
-html:not(.carte-doc) #menus .fm .fmb-title {
-  margin: 0; min-width: 0;
-  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
-  font-size: clamp(1rem, 1.7cqw, 1.3rem);
-  line-height: 1.3; letter-spacing: .055em;
-  text-transform: uppercase; color: #5b3172;
-}
-html:not(.carte-doc) #menus .fm .fmb-title > span { display: block; }
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-title,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title { color: #fff; }
-html:not(.carte-doc) #menus .fm .fmb-price {
-  margin: 0; white-space: nowrap; text-align: right;
-  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
-  font-size: clamp(1.55rem, 3.2cqw, 2.4rem); line-height: 1;
-  color: #5b3172;
-  letter-spacing: .02em;
-}
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-price,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price { color: #fffbf1; }
-/* --- mention « Choix ci-dessous », filets dorés de part et d'autre --- */
-html:not(.carte-doc) #menus .fm .fmb-foot {
-  display: flex; align-items: center; justify-content: center;
-  gap: .9em; margin: auto 0 0;
-  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
-  font-size: clamp(.56rem, 1.15cqw, .7rem);
-  letter-spacing: .26em; text-transform: uppercase;
-  color: #a97f2e; text-align: center;
-}
-html:not(.carte-doc) #menus .fm .fmb-foot .fmb-star { display: none; }
-html:not(.carte-doc) #menus .fm .fmb-foot::before,
-html:not(.carte-doc) #menus .fm .fmb-foot::after {
-  content: ""; height: 1px; width: clamp(18px, 4.5cqw, 46px); flex: 0 0 auto;
-  background: linear-gradient(90deg, rgba(169, 127, 46, 0), #b98d3b);
-}
-html:not(.carte-doc) #menus .fm .fmb-foot::after {
-  background: linear-gradient(90deg, #b98d3b, rgba(169, 127, 46, 0));
-}
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-foot { color: #dfc078; }
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot::before,
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot::after,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-foot::before,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-foot::after {
-  background: linear-gradient(90deg, rgba(223, 192, 120, 0), #dfc078);
-}
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot::after,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-foot::after {
-  background: linear-gradient(90deg, #dfc078, rgba(223, 192, 120, 0));
-}
-/* --- Menu du jour : « plaque » pleine largeur, centrée --- */
-html:not(.carte-doc) #menus .fm .fmb-card--day {
-  text-align: center;
-  align-items: center;
-  padding: clamp(26px, 3.4cqw, 44px) clamp(20px, 3cqw, 40px);
-}
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head {
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  text-align: left;
-  width: 100%;
-}
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title {
-  text-align: center;
-}
-html:not(.carte-doc) #menus .fm .fmb-kicker {
-  display: block; margin-bottom: .45em;
-  font-size: clamp(.6rem, 1.2cqw, .78rem);
-  letter-spacing: .42em; line-height: 1.3;
-  color: #dfc078;
-}
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
-  font-size: clamp(1.8rem, 4.4cqw, 3.1rem);
-}
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-note {
-  margin: 0; padding-top: clamp(14px, 2cqw, 22px);
-  width: 100%;
-  border-top: 1px solid rgba(223, 192, 120, .32);
-  color: rgba(255, 255, 255, .88);
-  font-weight: 500; text-transform: uppercase;
-  font-size: clamp(.68rem, 1.35cqw, .88rem);
-  letter-spacing: .3em; text-align: center;
-}
-/* --- Choix des formules : trois colonnes façon feuille Formules --- */
-html:not(.carte-doc) #menus .fm .fmb-choices {
-  display: grid; grid-template-columns: 1fr;
-  gap: clamp(14px, 1.8cqw, 24px);
-}
-@media (min-width: 920px) {
-  html:not(.carte-doc) #menus .fm .fmb-choices {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-html:not(.carte-doc) #menus .fm .fmb-choice {
-  display: grid;
-  grid-template-rows: auto auto auto;
-  justify-items: center; align-items: start;
-  text-align: center;
-  padding: clamp(20px, 2.2cqw, 30px) clamp(16px, 2cqw, 26px);
-  border-radius: 18px;
-  background: linear-gradient(180deg, #fffef9 0%, #fcf4e2 100%);
-  border: 1px solid rgba(197, 161, 94, .42);
-}
-html:not(.carte-doc) #menus .fm .fmb-medal {
-  width: clamp(62px, 6.2cqw, 92px); height: auto;
-  filter: drop-shadow(0 6px 14px rgba(91, 49, 114, .22));
-}
-html:not(.carte-doc) #menus .fm .fmb-choice-title {
-  margin: clamp(4px, .8cqw, 10px) 0 0;
-  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
-  font-size: clamp(1rem, 1.8cqw, 1.32rem);
-  line-height: 1.3; text-transform: uppercase; color: #5b3172;
-  letter-spacing: .08em;
-}
-html:not(.carte-doc) #menus .fm .fmb-choice-title em {
-  display: block; font-style: normal;
-  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 400;
-  font-size: .82em; letter-spacing: .34em; text-transform: uppercase;
-  color: #24102e; line-height: 1.9;
-}
-/* --- listes : étoile dorée, une ligne sous l'autre --- */
-html:not(.carte-doc) #menus .fm .fmb-list {
-  margin: clamp(10px, 1.4cqw, 18px) 0 0; padding: clamp(10px, 1.4cqw, 18px) 0 0;
-  width: 100%;
-  list-style: none;
-  display: flex; flex-direction: column;
-  gap: clamp(7px, 1.1cqw, 12px);
-  border-top: 1px solid rgba(197, 161, 94, .35);
-  font-weight: 500;
-  font-size: clamp(.95rem, 1.55cqw, 1.06rem);
-  line-height: 1.45; color: #24102e;
-  text-align: left;
-}
-html:not(.carte-doc) #menus .fm .fmb-choice .fmb-list { align-self: center; }
-html:not(.carte-doc) #menus .fm .fmb-list li {
-  display: flex; align-items: flex-start; gap: .55em;
-}
-html:not(.carte-doc) #menus .fm .fmb-list li::before {
-  content: "";
-  flex: 0 0 auto; width: .86em; height: .86em;
-  margin-top: .3em;
-  background: url('assets/menus/star.png') no-repeat center / contain;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .12));
-}
-html:not(.carte-doc) #menus .fm .fmb-list em {
-  font-style: normal; font-weight: 400; color: #6d5164;
-}
-/* --- Menu enfant & petit-déjeuner : listes pleine largeur --- */
-html:not(.carte-doc) #menus .fm .fmb-card .fmb-list {
-  border-top-color: rgba(197, 161, 94, .32);
-}
-/* --- petit écran : tout est empilé dans l'ordre, prix sous le titre --- */
+/* --- Petit écran : tout est empilé dans l'ordre, prix sous le titre --- */
 @media (max-width: 919px) {
-  html:not(.carte-doc) #menus .fm .fmb-card { align-items: stretch; }
+  html:not(.carte-doc) #menus .fm .fmb-choices { grid-template-columns: 1fr; }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head {
+    grid-template-columns: auto minmax(0, 1fr);
+    text-align: left;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title { justify-self: start; text-align: left; }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
+    grid-column: 1 / -1; justify-self: end; margin-top: 2px;
+  }
 }
 @media (max-width: 640px) {
   html:not(.carte-doc) #menus .fm .fmb-head {
     grid-template-columns: auto minmax(0, 1fr);
   }
   html:not(.carte-doc) #menus .fm .fmb-price {
-    grid-column: 1 / -1; justify-self: end;
-    margin-top: 2px;
+    grid-column: 1 / -1; justify-self: end; margin-top: 2px;
   }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head {
     grid-template-columns: minmax(0, 1fr);
-    justify-items: center;
+    justify-items: center; text-align: center;
   }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title { justify-self: center; text-align: center; }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico { display: none; }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
-    grid-column: auto; justify-self: center; margin-top: 2px;
+    grid-column: auto; justify-self: center; margin-top: 4px;
   }
 }
 
-/* ===== Bouton « Télécharger la carte (PDF) » — pied de page commun =====
+Bouton « Télécharger la carte (PDF) » — pied de page commun =====
    Volontairement discret et fin : fond transparent, fine bordure ton sur
    ton, téléchargement direct sur l'appareil (attribut download). */
 .footer-download-wrap { margin: 8px auto 4px; }
