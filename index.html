@@ -5730,8 +5730,12 @@ html:not(.carte-doc) #menus .fm .fmb-list li::before {
 html:not(.carte-doc) #menus .fm .fmb-list em {
   font-style: normal; font-weight: 400; color: var(--fm-soft);
 }
-/* ---------- Grille « carte » sur grand écran ---------- */
-@media (min-width: 920px) {
+/* ---------- Écrans larges / paysage : architecture de la feuille
+   « Formules » (page 4 de la carte A4) — duo et complète côte à côte,
+   les trois « au choix » en bande pleine largeur, puis en bas le menu
+   du jour à droite pendant qu'enfant et petit-déjeuner s'empilent à
+   gauche. ---------- */
+@media (min-width: 720px) {
   html:not(.carte-doc) #menus .fm {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -5741,15 +5745,12 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
   html:not(.carte-doc) #menus .fm .fmb-card--duo   { grid-column: 1; grid-row: 1; }
   html:not(.carte-doc) #menus .fm .fmb-card--complete { grid-column: 2; grid-row: 1; }
   html:not(.carte-doc) #menus .fm .fmb-choices     { grid-column: 1 / -1; grid-row: 2; }
-  html:not(.carte-doc) #menus .fm .fmb-card--day   { grid-column: 1 / -1; grid-row: 3; }
-  html:not(.carte-doc) #menus .fm .fmb-card--child { grid-column: 1; grid-row: 4; }
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj   { grid-column: 2; grid-row: 4; }
+  html:not(.carte-doc) #menus .fm .fmb-card--day   { grid-column: 2; grid-row: 3 / 5; justify-content: space-between; }
+  html:not(.carte-doc) #menus .fm .fmb-card--child { grid-column: 1; grid-row: 3; }
+  html:not(.carte-doc) #menus .fm .fmb-card--pdj   { grid-column: 1; grid-row: 4; }
   html:not(.carte-doc) #menus .fm .fmb-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-/* ---------- Petit écran : empilement centré ---------- */
-@media (max-width: 919px) {
-  html:not(.carte-doc) #menus .fm .fmb-choices { grid-template-columns: 1fr; }
-}
+/* ---------- Écran étroit (< 720 px) : empilement centré ---------- */
 @media (max-width: 640px) {
   html:not(.carte-doc) #menus .fm .fmb-ico { width: clamp(44px, 12vw, 56px); }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico { display: none; }
