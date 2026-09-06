@@ -5738,8 +5738,8 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
   }
   html:not(.carte-doc) #menus .fm .fmb-card--duo   { grid-column: 1; grid-row: 1; }
   html:not(.carte-doc) #menus .fm .fmb-card--complete { grid-column: 2; grid-row: 1; }
-  html:not(.carte-doc) #menus .fm .fmb-card--day   { grid-column: 1 / -1; grid-row: 2; }
-  html:not(.carte-doc) #menus .fm .fmb-choices     { grid-column: 1 / -1; grid-row: 3; }
+  html:not(.carte-doc) #menus .fm .fmb-choices     { grid-column: 1 / -1; grid-row: 2; }
+  html:not(.carte-doc) #menus .fm .fmb-card--day   { grid-column: 1 / -1; grid-row: 3; }
   html:not(.carte-doc) #menus .fm .fmb-card--child { grid-column: 1; grid-row: 4; }
   html:not(.carte-doc) #menus .fm .fmb-card--pdj   { grid-column: 2; grid-row: 4; }
   html:not(.carte-doc) #menus .fm .fmb-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -5980,15 +5980,7 @@ html:not(.carte-doc) .cover-action::after {
     <p class="fmb-foot"><span class="fmb-star" aria-hidden="true">✦</span>Choix ci-dessous</p>
   </article>
 
-  <!-- ============ Menu du jour ============ -->
-  <article class="fmb-card fmb-card--day">
-    <div class="fmb-head">
-      <img class="fmb-ico" src="assets/menus/icon-jour.png" alt="" aria-hidden="true" loading="lazy">
-      <h3 class="fmb-title"><span class="fmb-kicker">Menu du jour</span><span>Entrée + plat <span class="ou">ou</span></span><span>plat + dessert</span></h3>
-      <p class="fmb-price">14,90</p>
-    </div>
-    <p class="fmb-note">Choix selon l’ardoise</p>
-  </article>
+  
 
 <!-- ============ Choix des formules : entrée / plat / dessert au choix ============ -->
   <div class="fmb-choices">
@@ -6022,7 +6014,17 @@ html:not(.carte-doc) .cover-action::after {
     </section>
   </div>
 
-  <!-- ============ Menu enfant ============ -->
+  <!-- ============ Menu du jour ============ -->
+  <article class="fmb-card fmb-card--day">
+    <div class="fmb-head">
+      <img class="fmb-ico" src="assets/menus/icon-jour.png" alt="" aria-hidden="true" loading="lazy">
+      <h3 class="fmb-title"><span class="fmb-kicker">Menu du jour</span><span>Entrée + plat <span class="ou">ou</span></span><span>plat + dessert</span></h3>
+      <p class="fmb-price">14,90</p>
+    </div>
+    <p class="fmb-note">Choix selon l’ardoise</p>
+  </article>
+
+<!-- ============ Menu enfant ============ -->
   <article class="fmb-card fmb-card--child">
     <div class="fmb-head">
       <img class="fmb-ico" src="assets/menus/icon-enfant.png" alt="" aria-hidden="true" loading="lazy">
