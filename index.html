@@ -4789,8 +4789,10 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
        1,03 rem, un cran au-dessus, comme sur le papier. */
     font-size: 0.9rem !important;
     line-height: 1.55 !important;   /* les deux lignes d'une appellation respirent */
-    min-height: 3.1em;              /* une seule ligne occupe la même place : le
-                                       défilement reste régulier, vin après vin */
+    /* Pas de min-height : une appellation qui tient sur une seule ligne ne doit
+       pas laisser un vide au-dessus de ses quantités (14/25/50/75 cl) — chaque
+       vin garde ses prix juste sous son texte, courte ou longue que soit la
+       ligne d'appellation. */
   }
   /* pas de numéro dans les Bulles : l'appellation prend toute la ligne */
   html:not(.carte-doc) #interior-menu #vins .wine-table tr:not(:has(.wine-no)) td.wine-name {
