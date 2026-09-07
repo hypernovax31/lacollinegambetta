@@ -5278,14 +5278,14 @@ html:not(.carte-doc) #menus .special-card--dark .special-card__badge { color: #e
 }
 
 /* ============================================================================
-   FORMULES : les PNG du client (assets/menus) — badge « La formule complète »,
-   ornements des cartes « au choix » (étoile, candélabre, flamme). Le site et
-   la carte A4 les partagent ; la carte garde ses propres tailles.
+   FORMULES : habillage des formules (bandeau « La formule complète », rubans,
+   médaillons, ornements « au choix »). Le rendu actuel se fait en CSS/SVG
+   inline (blocs .fm / .fmb-* ci-dessous) ; les PNG du client (badge-*.png,
+   orn-*.png…) ont été retirés du dépôt et ne sont plus référencés.
    ------------------------------------------------------------------------- */
 
-/* Cartouche « La formule complète » : le bandeau doré fourni par le client
-   (assets/menus/badge-374x59.png) remplace la pilule CSS sur le carton violet.
-   Spécificité forte : les règles du thème rejouent la pilule en !important. */
+/* Ancienne variante « --png » (bandeau fourni en image) : conservée à titre
+   historique ; aucune image de assets/menus n'est chargée ici aujourd'hui. */
 html:not(.carte-doc) #menus .offer-card--accent .offer-card__badge--png {
   display: block !important;
   width: min(100%, 380px) !important;
