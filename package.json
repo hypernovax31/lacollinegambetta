@@ -1,0 +1,16 @@
+{
+  "name": "lacollinegambetta",
+  "private": true,
+  "scripts": {
+    "build:print": "node tools/build_browser_print.mjs",
+    "build:carte-pdf": "node tools/build_carte_pdf.mjs",
+    "pdf:from-jpg": "node tools/jpeg-pdf.mjs",
+    "build:carte": "python3 tools/build_carte.py && node tools/build_carte_pdf.mjs"
+  },
+  "devDependencies": {
+    "@fontsource/cinzel": "^5.3.0",
+    "@fontsource/montserrat": "^5.3.0",
+    "@sparticuz/chromium": "149.0.0",
+    "playwright": "1.62.1"
+  }
+}
