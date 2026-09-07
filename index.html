@@ -143,11 +143,24 @@ html:not(.carte-doc) .container {
 .accent-band .accent-band__sauce {
   margin-top: 10px;
   padding-top: 8px;
-  border-top: 1px solid rgba(216, 178, 87, .45);
+  border-top: 0;
   color: rgba(255, 255, 255, .78) !important;
   font-size: .8rem !important;
   font-style: italic;
   letter-spacing: .04em;
+}
+/* Filet doré court et centré (et non plus sur toute la largeur) : il ne
+   s'étend plus jusqu'à l'image « assiette de frites » (motif-80a.png) placée
+   en filigrane sur le bord droit de la bande. */
+.accent-band .accent-band__sauce::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: min(52%, 300px);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(216, 178, 87, 0), rgba(216, 178, 87, .45), rgba(216, 178, 87, 0));
 }
 .table-wrap { overflow:auto; border-radius:16px; border:1px solid rgba(216,178,87,.28); }
 .wine-table { width:100%; min-width:680px; border-collapse:collapse; }
@@ -4211,7 +4224,12 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     white-space: nowrap !important;
   }
 }
-@media (orientation: landscape) and (max-height: 540px) {
+/* Ce « mode compact » paysage ne vaut que pour une fenêtre ÉTROITE (largeur
+   < 720 px, typiquement un téléphone tenu à l'horizontale). Il ne doit jamais
+   basculer un grand écran PC en affichage mobile : quand la largeur est grande,
+   on garde le mode paysage grand écran même si la hauteur de la fenêtre est
+   basse (< 540 px). C'est le garde-fou `max-width: 719px` qui le garantit. */
+@media (orientation: landscape) and (max-height: 540px) and (max-width: 719px) {
   html:not(.carte-doc) .top-controls {
     padding: 4px 8px !important;
     gap: 6px !important;
@@ -5066,13 +5084,16 @@ html #interior-menu .wine-table td:not(.wine-name):not(.wine-no)::before {
    tombe exactement au centre de la page, comme sur la carte A4. Les lignes
    à pointillés (nom ··· prix) remplissent naturellement chaque colonne.
 
-   Ce réglage ne vaut que sur écran (media `screen`), quand les deux
-   colonnes sont côte à côte (≥ 720 px) et hors paysage très bas (le mode
-   « empilé » des fenêtres ≤ 540 px de haut reste en une colonne).
+   Ce réglage ne vaut que sur écran (media `screen`), dès que la largeur
+   permet deux colonnes (≥ 720 px). Il ne dépend pas de la hauteur : sur un
+   grand écran PC dont la fenêtre est basse (hauteur < 541 px), la mise en
+   page reste bien en deux colonnes (« mode paysage grand écran ») au lieu de
+   basculer en liste empilée. Seul le mode téléphone étroit (largeur < 720 px)
+   garde une colonne.
    L'impression et la carte A4 (html.carte-doc) ne sont pas touchées : leurs
    règles propres gardent leurs propres colonnes.
    ========================================================================== */
-@media screen and (min-width: 720px) and (min-height: 541px) {
+@media screen and (min-width: 720px) {
   html:not(.carte-doc) #interior-menu .price-list--cols,
   html:not(.carte-doc) #interior-menu .hh-list--cols {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
