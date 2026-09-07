@@ -1721,6 +1721,17 @@ html:not(.carte-doc) #menus .menu-points li {
 }
 
 
+/* Page de garde (web) : le titre et le médaillon sont cliquables comme le
+   bouton « Menu & Carte » — ils mènent à la même vue. */
+html:not(.carte-doc) #cover-section .cover-brand,
+html:not(.carte-doc) #cover-section .medallion-frame {
+  cursor: pointer;
+}
+html:not(.carte-doc) #cover-section .cover-brand:focus-visible,
+html:not(.carte-doc) #cover-section .medallion-frame:focus-visible {
+  outline: 2px solid #fcf6ba;
+  outline-offset: 2px;
+}
 /* ===== Bottom cover CTA matches top Menu & Carte button ===== */
 .cover-action,
 .cover-action * {
@@ -4724,8 +4735,9 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
 }
 
 /* ===== Desserts ===== */
-/* @stack-wide desserts */
-@media screen and (max-width: 855px) {
+/* @stack-wide desserts (aligné sur les Entrées : 2 colonnes en paysage sur
+   petit écran, exactement comme Entrées & Plats) */
+@media screen and (max-width: 795px) {
   html:not(.carte-doc) #interior-menu #desserts .food-card-grid,
   html:not(.carte-doc) #interior-menu #desserts .food-card-grid--wide { grid-template-columns: 1fr !important; }
 }
@@ -6098,12 +6110,12 @@ html:not(.carte-doc) .cover-action::after {
 
   <section id="cover-section">
     <div class="cover-page">
-      <div class="cover-brand cover-brand--menu-leader cover-brand--menu-leader-lite">
+      <div class="cover-brand cover-brand--menu-leader cover-brand--menu-leader-lite" onclick="showView('menu')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('menu');}" role="link" tabindex="0" title="Voir la carte">
         <div class="eyebrow leader-title"><span class="star-gold">✦</span> LA CARTE <span class="star-gold">✦</span></div>
         <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
         <p class="leader-meta leader-meta--sub menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
       </div>
-      <div class="medallion-container"><div class="medallion-frame"><svg class="medallion-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div class="medallion-container"><div class="medallion-frame" onclick="showView('menu')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('menu');}" role="link" tabindex="0" title="Voir la carte"><svg class="medallion-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="goldGradCover" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#bf953f" /><stop offset="20%" stop-color="#fcf6ba" /><stop offset="45%" stop-color="#d8b257" /><stop offset="75%" stop-color="#b38728" /><stop offset="100%" stop-color="#fef9db" />
