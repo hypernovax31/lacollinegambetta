@@ -162,7 +162,7 @@ FLECHE_CLIP = "polygon({})".format(", ".join((
     f"0 {50 + _HAMPE / 2}%",
 )))
 # Éléments dont la carte a besoin de connaître la taille réelle, par onglet.
-MESURE_REFS = {"menus": {"menu-enfant": ".special-card--compact"}}
+MESURE_REFS = {"menus": {}}   # la feuille Formules est désormais un bloc .fm autonome (fmb-*), plus de carton « menu-enfant » à mesurer
 TITRE_SITE_PX = 17.9
 FIT_MIN = TITRE_MIN_PT / (TITRE_SITE_PX * 0.75)
 FIT_MAX = TITRE_MAX_PT / (TITRE_SITE_PX * 0.75)

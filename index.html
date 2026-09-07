@@ -6561,5 +6561,44 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 else sizeCoverMedallion();
 
 </script>
+<script>
+/* ===== Téléchargement de la carte A4 : déclenché automatiquement =====
+   Les deux contrôles « Télécharger » (.download-btn dans le bandeau, et
+   .footer-download en pied de carte) sont des liens <a download>. On force ici
+   le téléchargement côté appareil au clic : on coupe la navigation par défaut
+   (qui ouvrirait parfois le PDF dans la visionneuse) et on rejoue un clic sur
+   un lien « download » natif — le navigateur enregistre le fichier au lieu de
+   l'afficher. Aucune surcharge mémoire : le fichier n'est pas rapatrié en blob,
+   c'est le téléchargement natif du navigateur qui s'applique. */
+(function () {
+  var NOM = 'Carte_LaCollineGambetta.pdf';
+  function lier(selecteur) {
+    var els = document.querySelectorAll(selecteur);
+    for (var i = 0; i < els.length; i++) {
+      els[i].addEventListener('click', function (ev) {
+        var href = this.getAttribute('href');
+        if (!href) return;
+        ev.preventDefault();
+        var a = document.createElement('a');
+        a.rel = 'noopener';
+        a.href = href;
+        a.download = this.getAttribute('download') || NOM;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+    }
+  }
+  function prêt() {
+    lier('.download-btn');
+    lier('.footer-download');
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', prêt);
+  } else {
+    prêt();
+  }
+})();
+</script>
 </body>
 </html>

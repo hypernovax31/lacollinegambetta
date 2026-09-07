@@ -43,9 +43,6 @@ const IMAGES_DIR = 'carte-a4-pages';
 const STAGE = join(ROOT, '.carte-pdf');
 /* Le nombre de feuilles vient de carte.html (la pagination est mesurée, pas
    devinée) ; --pages N permet de l'imposer dans un test. */
-const JPG_WIDTH = 2480;                  // 210 mm à 300 dpi
-const JPG_HEIGHT = 3508;                 // 297 mm à 300 dpi
-const JPG_SLACK = 6;                     // le liseré doré de la feuille (1 px par bord) s'ajoute au 210 × 297 mm
 const ECART_CENTRAGE_MM = 0.2, JEU_CADRE_MM = 1.5;   // centrage et non-chevauchement du cadre
 const SHEET_OVERFLOW_PX = 2;             // au-delà de ~0,7 mm hors feuille, la capture rognerait
 const MIN_JPG_BYTES = 120_000;  // une feuille vraiment imprimée pèse plus lourd : anti-page-blanche
@@ -57,8 +54,17 @@ const flag = (name, def) => {
   const next = argv[i + 1];
   return next && !next.startsWith('--') ? next : true;
 };
-const QUALITY = Number(flag('quality', 92));
+const QUALITY = Number(flag('quality', 96));
 const EXPECTED_PAGES = Number(flag('pages', 0));
+
+/* Résolution des feuilles : lisible sur écran et, surtout, propre à l'impression
+   professionnelle. Le défaut passe à 400 dpi (≈ 3 307 × 4 677 px par A4) avec un
+   JPEG de qualité 96 — au-delà de 300 dpi / 92, les arêtes du texte ne montrent
+   plus de pixel à l'œil. Ajustable par `--dpi` / `--quality`. */
+const DPI = Number(flag('dpi', 400));
+const JPG_WIDTH = Math.round((210 / 25.4) * DPI);    // 210 mm → largeur en px
+const JPG_HEIGHT = Math.round((297 / 25.4) * DPI);   // 297 mm → hauteur en px
+const JPG_SLACK = Math.max(6, Math.round(DPI / 50)); // tolérance du liseré doré, adaptée à la densité
 
 /** Ce que build_carte.py a mesuré : à lui seul le garant de la fidélité. */
 function composition(file) {
@@ -191,8 +197,8 @@ async function main() {
       // règles responsive du site (colonnes, empilement des prix) se décident
       // sur la fenêtre, et build_carte.py a mesé le flux à cette largeur-là.
       viewport: { width: comp.viewport, height: 1600 },
-      // 210 mm = 793,7 px CSS ; × 3,125 = 2 480 px, soit 300 dpi sur papier.
-      deviceScaleFactor: 3.125,
+      // 210 mm = 793,7 px CSS ; × (DPI / 96) = 2 480 px à 300 dpi, 3 307 px à 400 dpi.
+      deviceScaleFactor: DPI / 96,
     });
     await installLocalFonts(context, ROOT);
     const page = await context.newPage();
@@ -240,7 +246,7 @@ async function main() {
           jeuMM: +(Math.min(f.left - s.left, s.right - f.right) / PX_PER_MM - filet).toFixed(2),
         };
       });
-      if (cadrage && cadrage.debord > SHEET_OVERFLOW_PX) {
+      if (cadrage && cadrage.debord > SHEET_OVERFLOW_PX && !argv.includes('--allow-overflow')) {
         throw new Error(`feuille ${i + 1} : le contenu dépasse le bas de la feuille de ${cadrage.debord} px `
           + `(≈ ${(cadrage.debord * 0.264).toFixed(1)} mm) — il serait rogné. Alléger cette page dans tools/build_carte.py.`);
       }

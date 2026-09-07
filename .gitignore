@@ -15,3 +15,6 @@ carte.html
 # feuilles A4 intermédiaires (regénérées par la pipeline ; le PDF final
 # versionné est Carte_LaCollineGambetta.pdf)
 carte-a4-pages/
+
+# PDF intermédiaire assemblé (le PDF versionné est Carte_LaCollineGambetta.pdf)
+carte-a4.pdf

@@ -1,16 +1,16 @@
 {
  "generator": "tools/measure_carte.mjs",
- "index_hash": "6c7e09455b84aeae",
- "css_hash": "ae114b16dcd65965",
+ "index_hash": "033af0b18ffe5a14",
+ "css_hash": "f7d81f82f5e3245c",
  "viewport": 1180,
  "base_width": 1180,
  "fonts": [
   "Cinzel 400",
   "Cinzel 700",
   "Cinzel 800",
-  "Cinzel 900",
   "Montserrat 400",
   "Montserrat 400 italic",
+  "Montserrat 500",
   "Montserrat 700"
  ],
  "sections": {
@@ -256,7 +256,7 @@
      "i": 4,
      "tag": "block",
      "cls": "",
-     "h": 118.41
+     "h": 117.41
     }
    ],
    "variants": [
@@ -270,7 +270,7 @@
       307.44,
       266.66,
       209.88,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -286,7 +286,7 @@
       307.44,
       266.66,
       209.88,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -302,7 +302,7 @@
       307.44,
       287.05,
       209.88,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -318,7 +318,7 @@
       307.44,
       307.44,
       209.88,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -334,7 +334,7 @@
       307.44,
       307.44,
       209.88,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -350,7 +350,7 @@
       307.44,
       307.44,
       209.88,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -366,7 +366,7 @@
       307.44,
       307.44,
       209.88,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -382,7 +382,7 @@
       307.44,
       307.44,
       209.88,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -398,7 +398,7 @@
       307.44,
       307.44,
       209.88,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -414,7 +414,7 @@
       327.83,
       307.44,
       209.88,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -430,7 +430,7 @@
       327.83,
       307.44,
       235.45,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -446,7 +446,7 @@
       373.8,
       307.44,
       235.45,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -462,7 +462,7 @@
       373.8,
       307.44,
       283.97,
-      118.41
+      117.41
      ],
      "count": 5,
      "heights2col": null,
@@ -473,216 +473,169 @@
   "menus": {
    "flow_width": 1180,
    "gap": 22,
-   "refs": {
-    "menu-enfant": 241.34
-   },
+   "refs": {},
    "blocks": [
     {
      "i": 0,
      "tag": "block",
      "cls": "",
-     "h": 506.22
-    },
-    {
-     "i": 1,
-     "tag": "block",
-     "cls": "",
-     "h": 495.75
+     "h": 1368.86
     }
    ],
    "variants": [
     {
      "w": 1534,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.22,
-      495.75
+      1408.81
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     },
     {
      "w": 1475,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.22,
-      495.75
+      1405.97
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     },
     {
      "w": 1416,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.22,
-      495.75
+      1402.88
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     },
     {
      "w": 1357,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.22,
-      495.75
+      1395.11
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     },
     {
      "w": 1298,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.22,
-      495.75
+      1383.19
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     },
     {
      "w": 1239,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.22,
-      495.75
+      1366.42
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     },
     {
      "w": 1180,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.22,
-      495.75
+      1368.86
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     },
     {
      "w": 1121,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.22,
-      495.75
+      1326.48
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     },
     {
      "w": 1062,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.22,
-      495.75
+      1277.61
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     },
     {
      "w": 1003,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.22,
-      495.75
+      1242.16
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     },
     {
      "w": 944,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      506.22,
-      495.75
+      1211.8
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     },
     {
      "w": 885,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      527.78,
-      495.75
+      1185.73
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     },
     {
      "w": 826,
-     "refs": {
-      "menu-enfant": 241.34
-     },
+     "refs": {},
      "gap": 22,
      "overflow": 0,
      "heights": [
-      545.25,
-      495.75
+      1166.22
      ],
-     "count": 2,
+     "count": 1,
      "heights2col": null,
      "overflow2col": null
     }
@@ -1576,7 +1529,7 @@
      "heights": [
       431.94,
       311.13,
-      216.31,
+      239.25,
       229.31
      ],
      "count": 4,
