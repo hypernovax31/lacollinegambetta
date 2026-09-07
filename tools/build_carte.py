@@ -836,12 +836,20 @@ html.carte-doc .print-page--cover .menu-leader-subline .star-gold {
   height: 7px;
   margin: 0 6px;
 }
-html.carte-doc .print-page--cover a.contact-link.cover-action {
+/* Le bouton « Menu & Carte » de la couverture : uni doré, style 3D, sans le
+   reflet brillant du site. Spécificité avec #print-document : la règle écran
+   du site (rescopée, id #cover-section) posait un dégradé brillant en
+   !important ; on la dépasse pour n'appliquer le changement qu'au document
+   imprimé (la couverture web garde son style). */
+html.carte-doc #print-document .print-page--cover a.contact-link.cover-action {
   display: inline-flex !important;
-  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%) !important;
-  border-color: #fcf6ba !important;
+  background: #d4a63e !important;              /* uni doré, sans reflet */
+  background-image: none !important;
+  border: 1px solid #9a7a22 !important;
+  border-bottom-width: 4px !important;         /* épaisseur basse : relief 3D */
   color: #24102e !important;
-  box-shadow: 0 8px 22px rgba(156, 122, 45, .35);
+  box-shadow: inset 0 -2px 5px rgba(0, 0, 0, .22),
+              0 6px 16px rgba(0, 0, 0, .40);   /* ombre portée, pas de brillance */
 }
 html.carte-doc .print-page--cover a.contact-link.cover-action,
 html.carte-doc .print-page--cover a.contact-link.cover-action * {
