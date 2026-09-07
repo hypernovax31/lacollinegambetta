@@ -6119,42 +6119,8 @@ html:not(.carte-doc) .cover-action::after {
                 </svg>
 
                 <svg class="relief-inner-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <filter id="innerEmbossCover" x="-10%" y="-10%" width="120%" height="120%">
-                            <feDropShadow dx="0" dy="1.5" stdDeviation="1" flood-color="#180a20" flood-opacity="0.35"/>
-                        </filter>
-                        <filter id="barShadowCover" x="-10%" y="-20%" width="120%" height="160%">
-                            <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.45"/>
-                        </filter>
-                        <linearGradient id="minimalGoldCover" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#bf953f" /><stop offset="30%" stop-color="#fcf6ba" /><stop offset="50%" stop-color="#d8b257" /><stop offset="80%" stop-color="#9c7a2d" /><stop offset="100%" stop-color="#fef9db" />
-                        </linearGradient>
-                        <path id="bottomArcCover" d="M 32 238 A 114 114 0 0 0 248 238" fill="none" />
-
-                    </defs>
-
-                    <rect width="280" height="280" fill="#ffffff" />
-
-                    <text x="140" y="29" text-anchor="middle" font-family="'Cinzel', serif" font-weight="900" font-size="14" fill="#180a20" letter-spacing="4.2">LA</text>
-                        <!-- Logo La Colline Gambetta : agrandi, recentré, inscrit dans le cercle doré -->
-                        <image href="logo-gambetta.png" x="50" y="40" width="180" height="135.8" preserveAspectRatio="xMidYMid meet" />
-
-                    <line x1="0" y1="33" x2="280" y2="33" stroke="url(#minimalGoldCover)" stroke-width="4" filter="url(#barShadowCover)" />
-                    <line x1="0" y1="33" x2="280" y2="33" stroke="#ffffff" stroke-width="0.8" opacity="0.6" />
-
-                    <g filter="url(#innerEmbossCover)">
-
-                        <text x="140" y="200" text-anchor="middle" font-family="'Cinzel', serif" font-weight="900" font-size="22.5" fill="#180a20" letter-spacing="4.8">COLLINE</text>
-                        <text x="140" y="223" text-anchor="middle" font-family="'Cinzel', serif" font-weight="900" font-size="14.5" fill="#592e6f" letter-spacing="5.2">GAMBETTA</text>
-                        <text x="140" y="236" text-anchor="middle" font-family="'Cinzel', serif" font-weight="700" font-size="8.5" fill="url(#minimalGoldCover)" letter-spacing="3.7">◇ ⵣ • ✦ • ⵣ ◇</text>
-                        <text font-family="'Cinzel', serif" font-weight="900" font-size="8.8px" fill="#180a20" letter-spacing="2.8px">
-                            <textPath href="#bottomArcCover" startOffset="50%" text-anchor="middle">✦ BAR • RESTAURANT • PARIS 20ᵉ ✦</textPath>
-                        </text>
-                    </g>
-
-                    <circle cx="140" cy="140" r="136" fill="none" stroke="url(#minimalGoldCover)" stroke-width="2.5" opacity="0.95" pointer-events="none" />
-                    <circle cx="140" cy="140" r="130" fill="none" stroke="#592e6f" stroke-width="0.8" opacity="0.35" stroke-dasharray="4 4" pointer-events="none" />
-                </svg></div>
+                        <image href="medallion-facade.png" x="0" y="0" width="280" height="280" preserveAspectRatio="xMidYMid slice" />
+                    </svg></div>
       <a href="index.html#menu-nav-anchor" class="contact-link cover-action" onclick="showView('menu'); return false;"><span class="star-gold">✦</span> Menu & Carte <span class="star-gold">✦</span></a>
       </div>
       <div class="cover-footer">
