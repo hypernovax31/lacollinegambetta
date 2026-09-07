@@ -873,6 +873,8 @@ html.carte-doc .print-page--cover .relief-inner-svg {
   width: 66% !important;
   height: 66% !important;
   border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+  -webkit-clip-path: circle(50% at 50% 50%);
 }
 html.carte-doc .print-page--cover .cover-footer {
   flex: 0 0 auto;
