@@ -5550,7 +5550,7 @@ html:not(.carte-doc) #menus .fm {
   --fm-gold-dark: #e4c680;
   display: flex; flex-direction: column; align-items: stretch;
   gap: clamp(18px, 2.4vw, 32px);
-  width: min(100%, 1080px); max-width: 100%;
+  width: 100%; max-width: none;
   margin: 0 auto; padding: 0 0 4px;
   position: relative;
   aspect-ratio: auto; height: auto; min-height: 0; overflow: visible;
@@ -5656,6 +5656,17 @@ html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title {
   font-size: clamp(1.2rem, 2.4cqw, 1.8rem);
   letter-spacing: .05em;
 }
+/* ---------- Sous-titre du bloc enfant (page 4 : « Moins de 12 ans ») ---------- */
+html:not(.carte-doc) #menus .fm .fmb-sub {
+  margin: 0;
+  font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+  font-weight: 500;
+  font-size: clamp(.6rem, 1.05cqw, .72rem);
+  letter-spacing: .2em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: #3f2f47;
+}
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-midi {
   margin: 0;
   font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
@@ -5719,7 +5730,7 @@ html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-pils {
   color: #fdf3d7;
   background:
     radial-gradient(130% 110% at 50% -20%, rgba(255, 255, 255, .38) 0%, rgba(255, 255, 255, .12) 44%, rgba(255, 255, 255, 0) 66%),
-    linear-gradient(180deg, #81579b 0%, #633b7e 52%, #4b2a63 100%);
+    linear-gradient(180deg, #6d4388 0%, #552f6e 52%, #3d1f51 100%);
   border-color: rgba(255, 255, 255, .26);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .4),
@@ -5780,39 +5791,184 @@ html:not(.carte-doc) #menus .fm .fmb-list li::before {
 html:not(.carte-doc) #menus .fm .fmb-list em {
   font-style: normal; font-weight: 400; color: var(--fm-soft);
 }
-/* ---------- Écrans larges / paysage : architecture de la feuille
-   « Formules » (page 4 de la carte A4) — duo et complète côte à côte,
-   les trois « au choix » en bande pleine largeur, puis en bas le menu
-   du jour à droite pendant qu'enfant et petit-déjeuner s'empilent à
-   gauche. ---------- */
+/* ---------- Écrans larges / paysage : architecture alignée sur la page 4 de la
+   carte A4 (version à jour) — duo et complète côte à côte, les trois « au
+   choix » en bande pleine largeur, puis le « Menu du jour » en bande violette
+   pleine largeur, enfin enfant et petit-déjeuner côte à côte. Le bloc s'étend
+   sur toute la largeur visible de la fenêtre et les contenus respirent. ---------- */
 @media (min-width: 720px) {
   html:not(.carte-doc) #menus .fm {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(22px, 2.6vw, 38px);
+    gap: clamp(20px, 2.4vw, 36px);
     align-items: stretch;
   }
-  html:not(.carte-doc) #menus .fm .fmb-card--duo   { grid-column: 1; grid-row: 1; }
-  html:not(.carte-doc) #menus .fm .fmb-card--complete { grid-column: 2; grid-row: 1; }
-  html:not(.carte-doc) #menus .fm .fmb-choices     { grid-column: 1 / -1; grid-row: 2; }
-  html:not(.carte-doc) #menus .fm .fmb-card--day   { grid-column: 2; grid-row: 3 / 5; justify-content: flex-start; }
-  html:not(.carte-doc) #menus .fm .fmb-card--child { grid-column: 1; grid-row: 3; }
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj   { grid-column: 1; grid-row: 4; }
+  html:not(.carte-doc) #menus .fm .fmb-card--duo     { grid-column: 1; grid-row: 1; }
+  html:not(.carte-doc) #menus .fm .fmb-card--complete{ grid-column: 2; grid-row: 1; }
+  html:not(.carte-doc) #menus .fm .fmb-choices       { grid-column: 1 / -1; grid-row: 2; }
+  html:not(.carte-doc) #menus .fm .fmb-card--day     { grid-column: 1 / -1; grid-row: 3; }
+  html:not(.carte-doc) #menus .fm .fmb-card--child   { grid-column: 1; grid-row: 4; }
+  html:not(.carte-doc) #menus .fm .fmb-card--pdj     { grid-column: 2; grid-row: 4; }
   html:not(.carte-doc) #menus .fm .fmb-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  /* Bloc « Menu du jour » : contenu réparti sur toute la hauteur (page 4) —
-     la mention reste juste sous le pils, puis le vide résiduel est réparti
-     entre les lignes au lieu de rester en bas du bloc. */
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head {
-    flex: 1 1 auto;
-    justify-content: flex-start;
-    gap: 0;
+
+  /* « Choix ci-dessous » des cartes claires : violet comme sur la page 4. */
+  html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-foot { color: var(--fm-violet); }
+  html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-foot::before {
+    background: linear-gradient(90deg, transparent, var(--fm-violet));
   }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-pils { margin: 0 auto clamp(12px, 1.6cqw, 22px); }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-midi { margin: 0 auto auto; }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title { margin: 0 auto auto; }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price { margin: clamp(18px, 2.4cqw, 40px) 0 auto; }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-note { margin: clamp(14px, 1.8cqw, 28px) 0 0; }
+  html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-foot::after {
+    background: linear-gradient(90deg, var(--fm-violet), transparent);
+  }
+
+  /* ===== « Menu du jour » : bande pleine largeur, lecture gauche/droite
+     (pilule + « selon l'ardoise » à gauche, prix au centre, composition à
+     droite, mention horaire en bas sur filet doré), comme page 4. ===== */
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head { display: contents; }
+  html:not(.carte-doc) #menus .fm .fmb-card--day {
+    display: grid;
+    grid-template-columns: minmax(0, max-content) minmax(0, max-content) minmax(0, max-content);
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "pils  price title"
+      "note  price title"
+      "midi  midi  midi";
+    justify-content: space-between;
+    align-items: center;
+    column-gap: clamp(18px, 2.2vw, 44px);
+    row-gap: 0;
+    padding: clamp(20px, 2.4vw, 34px) clamp(18px, 2.6vw, 46px);
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-pils {
+    grid-area: pils; justify-self: start; align-self: center; margin: 0;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-note {
+    grid-area: note; justify-self: center; align-self: center;
+    margin: clamp(5px, .8vw, 12px) 0 0; padding: 0; border: 0;
+    width: auto; text-align: center;
+    font-size: clamp(.58rem, .92cqw, .8rem);
+    letter-spacing: .22em; line-height: 1.4;
+    color: rgba(255, 255, 255, .94);
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
+    grid-area: price; align-self: center; justify-self: center; margin: 0;
+    font-size: clamp(1.7rem, 3.2cqw, 2.8rem);
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title {
+    grid-area: title; align-self: center; justify-self: stretch;
+    margin: 0; text-align: right;
+    font-size: clamp(.72rem, 1.24cqw, 1.05rem);
+    letter-spacing: .07em; line-height: 1.5;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-midi {
+    grid-area: midi; justify-self: stretch; align-self: center;
+    margin: clamp(10px, 1.4vw, 20px) 0 0;
+    padding: clamp(8px, 1vw, 13px) 0 0;
+    border-top: 1px solid rgba(228, 198, 128, .38);
+    width: 100%; text-align: center;
+  }
+
+  /* ===== Enfant & Petit-déjeuner (rangée du bas) : emblème puis pilule en
+     tête, liste à gauche, prix en bas entre deux filets dorés (page 4). ===== */
+  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-head,
+  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-head { display: contents; }
+
+  html:not(.carte-doc) #menus .fm .fmb-card--child {
+    display: grid;
+    grid-template-columns: auto minmax(0, max-content) minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:
+      "ico  pils ."
+      ".    sub  ."
+      "list list list"
+      "price price price";
+    column-gap: clamp(12px, 1.6vw, 26px);
+    row-gap: clamp(8px, 1.1vw, 16px);
+    align-items: center;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--pdj {
+    display: grid;
+    grid-template-columns: auto minmax(0, max-content) minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "ico  pils ."
+      "list list list"
+      "price price price";
+    column-gap: clamp(12px, 1.6vw, 26px);
+    row-gap: clamp(8px, 1.1vw, 16px);
+    align-items: center;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-ico,
+  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-ico {
+    grid-area: ico; align-self: center; justify-self: start;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-pils,
+  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-pils {
+    grid-area: pils; justify-self: start; align-self: center; margin: 0;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-sub {
+    grid-area: sub; justify-self: center; align-self: start;
+    margin: clamp(2px, .4vw, 6px) 0 0;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-list,
+  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-list {
+    grid-area: list; margin: 0; padding: 0; border: 0; width: 100%;
+    align-items: flex-start; text-align: left;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-list li,
+  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-list li {
+    justify-content: flex-start; text-align: left;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-price,
+  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-price {
+    grid-area: price; margin: clamp(2px, .4vw, 8px) 0 0;
+    display: flex; align-items: center; justify-content: center;
+    gap: clamp(12px, 1.5vw, 26px);
+    font-size: clamp(1.5rem, 2.9cqw, 2.15rem);
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-price::before,
+  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-price::after,
+  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-price::before,
+  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-price::after {
+    content: ""; height: 1px; flex: 0 0 auto;
+    width: clamp(26px, 3.4vw, 80px);
+    background: linear-gradient(90deg, rgba(185, 141, 59, 0), var(--fm-gold));
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-price::after,
+  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-price::after {
+    background: linear-gradient(90deg, var(--fm-gold), rgba(185, 141, 59, 0));
+  }
+
+  /* ===== Cartes « au choix » : médaille puis titre en tête, liste à gauche
+     sous un filet (lecture de la page 4). ===== */
+  html:not(.carte-doc) #menus .fm .fmb-choice {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "medal title"
+      "list  list";
+    align-items: center;
+    column-gap: clamp(10px, 1.4vw, 20px);
+    row-gap: clamp(8px, 1vw, 14px);
+    text-align: left;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-choice .fmb-medal {
+    grid-area: medal; align-self: center; justify-self: center; margin: 0;
+    width: clamp(42px, 4.2cqw, 66px);
+  }
+  html:not(.carte-doc) #menus .fm .fmb-choice .fmb-choice-title {
+    grid-area: title; align-self: center; justify-self: start;
+    margin: 0; text-align: left;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-choice .fmb-list {
+    grid-area: list; margin: 0; width: 100%;
+    align-items: flex-start; text-align: left;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-choice .fmb-list li {
+    justify-content: flex-start; text-align: left;
+  }
 }
+
 /* ---------- Écran étroit (< 720 px) : empilement centré ---------- */
 @media (max-width: 640px) {
   html:not(.carte-doc) #menus .fm .fmb-ico { width: clamp(44px, 12vw, 56px); }
@@ -6097,6 +6253,7 @@ html:not(.carte-doc) .cover-action::after {
   <article class="fmb-card fmb-card--child">
     <div class="fmb-head">
       <p class="fmb-pils">Menu enfant</p>
+      <p class="fmb-sub">Moins de 12 ans</p>
       <img class="fmb-ico" src="assets/menus/icon-enfant.png" alt="" aria-hidden="true" loading="lazy">
       <p class="fmb-price">10,90</p>
     </div>
