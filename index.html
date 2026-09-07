@@ -5820,26 +5820,26 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
     background: linear-gradient(90deg, var(--fm-violet), transparent);
   }
 
-  /* ===== « Menu du jour » : bande violette pleine largeur, contenu recentré
-     — pilule « Menu du jour » et « Choix selon l'ardoise » centrés, puis la
-     composition (entrée + plat ou plat + dessert) et le prix 14,90 réunis en
-     un bloc centré, prix aligné à droite de la composition. Légers rameaux
-     dorés discrets de part et d'autre de la pilule et du prix. Mention
-     horaire en bas, sur filet doré. ===== */
+  /* ===== « Menu du jour » : la bande violette garde un ensemble recentré et
+     symétrique, mais son contenu s'étend sur toute la largeur en trois zones
+     équilibrées — pilule « Menu du jour » + « Choix selon l'ardoise » à
+     gauche, composition (entrée + plat ou plat + dessert) au centre, prix
+     14,90 à droite — chaque zone recentrée dans son tiers. Légers rameaux
+     dorés autour de la pilule et du prix, mention horaire en bas sur filet
+     doré. ===== */
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head { display: contents; }
   html:not(.carte-doc) #menus .fm .fmb-card--day {
-    --fmb-orn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 30'%3E%3Cpath d='M62 15H25' stroke='%23e4c680' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3Cpath d='M25 15C15.5 15 11.5 10 11.5 4' stroke='%23e4c680' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3Cpath d='M25 15C15.5 15 11.5 20.5 11.5 26' stroke='%23e4c680' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='11.5' cy='4' r='1.4' fill='%23e4c680'/%3E%3Ccircle cx='11.5' cy='26' r='1.4' fill='%23e4c680'/%3E%3C/svg%3E");
+    --fmb-orn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 30'%3E%3Cpath d='M62 15H25' stroke='%23e4c680' stroke-width='2.4' stroke-linecap='round' fill='none'/%3E%3Cpath d='M25 15C15.5 15 11.5 10 11.5 4' stroke='%23e4c680' stroke-width='2.4' stroke-linecap='round' fill='none'/%3E%3Cpath d='M25 15C15.5 15 11.5 20.5 11.5 26' stroke='%23e4c680' stroke-width='2.4' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='11.5' cy='4' r='1.9' fill='%23e4c680'/%3E%3Ccircle cx='11.5' cy='26' r='1.9' fill='%23e4c680'/%3E%3C/svg%3E");
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, max-content) minmax(0, max-content) minmax(0, 1fr);
-    grid-template-rows: auto auto auto auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto auto auto;
     grid-template-areas:
-      ".  pils  pils  ."
-      ".  note  note  ."
-      ".  title price ."
-      "midi midi midi midi";
+      "pils  title price"
+      "note  title price"
+      "midi  midi  midi";
     align-items: center;
-    column-gap: clamp(48px, 5vw, 92px);
-    row-gap: clamp(6px, .8vw, 12px);
+    column-gap: clamp(10px, 1.6vw, 28px);
+    row-gap: clamp(2px, .5vw, 8px);
     padding: clamp(20px, 2.4vw, 34px) clamp(18px, 2.6vw, 46px);
   }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-pils {
@@ -5849,16 +5849,16 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-pils::before,
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-pils::after {
     content: ""; position: absolute; top: 50%; pointer-events: none;
-    width: clamp(24px, 2.6cqw, 44px); height: clamp(13px, 1.5cqw, 22px);
+    width: clamp(24px, 3.4cqw, 56px); height: clamp(15px, 2cqw, 30px);
     background: var(--fmb-orn) center / contain no-repeat;
-    opacity: .9;
+    opacity: .95;
     transform: translateY(-50%);
   }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-pils::before {
-    left: calc(-1 * (clamp(24px, 2.6cqw, 44px) + clamp(10px, 1.2vw, 20px)));
+    left: calc(-1 * (clamp(24px, 3.4cqw, 56px) + clamp(6px, .8vw, 12px)));
   }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-pils::after {
-    right: calc(-1 * (clamp(24px, 2.6cqw, 44px) + clamp(10px, 1.2vw, 20px)));
+    right: calc(-1 * (clamp(24px, 3.4cqw, 56px) + clamp(6px, .8vw, 12px)));
     transform: translateY(-50%) scaleX(-1);
   }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-note {
@@ -5870,8 +5870,8 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
     color: rgba(255, 255, 255, .94);
   }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title {
-    grid-area: title; align-self: center; justify-self: stretch;
-    margin: 0; text-align: right;
+    grid-area: title; align-self: center; justify-self: center;
+    margin: 0; text-align: center;
     font-size: clamp(.72rem, 1.24cqw, 1.05rem);
     letter-spacing: .07em; line-height: 1.55;
   }
@@ -5883,16 +5883,16 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price::before,
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price::after {
     content: ""; position: absolute; top: 50%; pointer-events: none;
-    width: clamp(22px, 2.4cqw, 40px); height: clamp(15px, 1.7cqw, 26px);
+    width: clamp(24px, 3.4cqw, 56px); height: clamp(15px, 2cqw, 30px);
     background: var(--fmb-orn) center / contain no-repeat;
-    opacity: .9;
+    opacity: .95;
     transform: translateY(-50%);
   }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price::before {
-    left: calc(-1 * (clamp(22px, 2.4cqw, 40px) + clamp(8px, 1vw, 16px)));
+    left: calc(-1 * (clamp(24px, 3.4cqw, 56px) + clamp(6px, .8vw, 12px)));
   }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price::after {
-    right: calc(-1 * (clamp(22px, 2.4cqw, 40px) + clamp(8px, 1vw, 16px)));
+    right: calc(-1 * (clamp(24px, 3.4cqw, 56px) + clamp(6px, .8vw, 12px)));
     transform: translateY(-50%) scaleX(-1);
   }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-midi {
