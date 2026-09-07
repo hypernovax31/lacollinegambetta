@@ -836,20 +836,22 @@ html.carte-doc .print-page--cover .menu-leader-subline .star-gold {
   height: 7px;
   margin: 0 6px;
 }
-/* Le bouton « Menu & Carte » de la couverture : uni doré, style 3D, sans le
-   reflet brillant du site. Spécificité avec #print-document : la règle écran
-   du site (rescopée, id #cover-section) posait un dégradé brillant en
-   !important ; on la dépasse pour n'appliquer le changement qu'au document
-   imprimé (la couverture web garde son style). */
+/* Le bouton « Menu & Carte » de la couverture : il reprend la pilule dorée
+   « sélectionnée » de la version web (dégradé or #bf953f→#fef9db, liseré
+   #fcf6ba, texte violet foncé), posée sur un liseré bas foncé discret pour le
+   relief et une ombre portée franche pour l'effet 3D. Spécificité avec
+   #print-document : on redéfinit le style explicitement pour n'appliquer le
+   rendu qu'au document imprimé (la couverture web garde son propre style et
+   ses animations). */
 html.carte-doc #print-document .print-page--cover a.contact-link.cover-action {
   display: inline-flex !important;
-  background: #d4a63e !important;              /* uni doré, sans reflet */
-  background-image: none !important;
-  border: 1px solid #9a7a22 !important;
-  border-bottom-width: 4px !important;         /* épaisseur basse : relief 3D */
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%) !important;
+  background-image: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%) !important;
+  border: 1px solid #fcf6ba !important;
   color: #24102e !important;
-  box-shadow: inset 0 -2px 5px rgba(0, 0, 0, .22),
-              0 6px 16px rgba(0, 0, 0, .40);   /* ombre portée, pas de brillance */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .65),
+              inset 0 -2px 6px rgba(156, 122, 45, .40),
+              0 10px 22px rgba(36, 16, 46, .45);   /* ombre portée : effet 3D */
 }
 html.carte-doc .print-page--cover a.contact-link.cover-action,
 html.carte-doc .print-page--cover a.contact-link.cover-action * {
