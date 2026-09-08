@@ -6312,9 +6312,48 @@ html.carte-doc .medallion-halo,
   }
 }
 
+
+/* ===== Noel (15 → 31 decembre) : neige + traineau du pere Noel =====
+   Actives par le script « NOEL » en bas de page, uniquement du 15 au 31
+   decembre (?noel=1 force la previsu, ?noel=0 coupe). Calques fixes
+   au-dessus de tout, pointer-events:none : ils ne captent aucun clic.
+   Jamais sur la carte A4 ni a l'impression. */
+#xmas-snow {
+  position: fixed; inset: 0; z-index: 9970;
+  display: none; pointer-events: none;
+}
+#xmas-snow.on { display: block; }
+#xmas-sleigh {
+  position: fixed; left: 0; top: 0; z-index: 9980;
+  display: none; pointer-events: none;
+  will-change: transform, opacity;
+}
+#xmas-sleigh.on { display: block; }
+#xmas-sleigh img {
+  display: block; width: 100%; height: auto;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,.45))
+          drop-shadow(0 0 26px rgba(255,200,90,.35));
+}
+#xmas-sleigh.flip img { transform: scaleX(-1); }
+#xmas-sleigh .trail {
+  position: absolute; top: 52%; width: 46%; height: 30%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255,210,120,.55), rgba(255,210,120,0));
+  filter: blur(6px);
+}
+#xmas-sleigh.ltr .trail { right: 88%; }
+#xmas-sleigh.rtl .trail { left: 88%; }
+html.carte-doc #xmas-snow,
+html.carte-doc #xmas-sleigh { display: none !important; }
+@media print {
+  #xmas-snow, #xmas-sleigh { display: none !important; }
+}
+
 </style>
 </head>
 <body>
+  <canvas id="xmas-snow" aria-hidden="true"></canvas>
+  <div id="xmas-sleigh" aria-hidden="true"><span class="trail"></span><img src="assets/noel/sleigh.png" alt="" draggable="false"></div>
   <div class="top-controls" style="display:none">
     <div class="top-controls__nav">
       <button class="control-btn active" id="btn-show-cover" onclick="showView('cover')"><span class="star-gold">✦</span> Page de Garde</button>
@@ -6839,5 +6878,158 @@ else sizeCoverMedallion();
   }
 })();
 </script>
+
+<script>
+/* ===== NOEL : neige + traineau, du 15 au 31 decembre chaque annee =====
+   - Neige : canvas plein ecran, flocons aleatoires (taille, vitesse,
+     derive, scintillement), densite proportionnelle a la fenetre.
+   - Traineau : passage occasionnel et aleatoire (toutes les ~20 a 55 s),
+     sens, hauteur, taille et duree tires au sort, trajectoire legerement
+     onduleuse avec fondu d'entree/sortie.
+   - Previsu hors saison : ?noel=1 force, ?noel=0 coupe. Expose pour les
+     tests : window.__xmas = { active, fly, flakeCount }.
+   - Coupe si prefers-reduced-motion, sur la carte A4 (html.carte-doc),
+     a l'impression (CSS), et en pause quand l'onglet est masque. */
+(function () {
+  'use strict';
+  function xmasActive() {
+    try {
+      var q = new URLSearchParams(location.search);
+      if (q.get('noel') === '1') return true;
+      if (q.get('noel') === '0') return false;
+    } catch (e) { /* sans URLSearchParams : repli sur la date */ }
+    if (document.documentElement.classList.contains('carte-doc')) return false;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+    var d = new Date();
+    return d.getMonth() === 11 && d.getDate() >= 15;
+  }
+  var api = { active: false, fly: function () {}, flakeCount: function () { return 0; } };
+  window.__xmas = api;
+  if (!xmasActive()) return;
+  api.active = true;
+
+  var rand = function (a, b) { return a + Math.random() * (b - a); };
+
+  /* ---------- Neige ---------- */
+  var canvas = document.getElementById('xmas-snow');
+  var ctx = canvas.getContext('2d');
+  var flakes = [];
+  var snowRun = true;
+  function snowResize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(window.innerWidth * dpr);
+    canvas.height = Math.round(window.innerHeight * dpr);
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var n = Math.max(60, Math.min(220, Math.round(window.innerWidth * window.innerHeight / 12000)));
+    while (flakes.length < n) flakes.push(newFlake(true));
+    flakes.length = n;
+  }
+  function newFlake(anywhere) {
+    var r = rand(0.8, 3.4);
+    return {
+      x: Math.random() * window.innerWidth,
+      y: anywhere ? Math.random() * window.innerHeight : rand(-12, -2),
+      r: r,
+      o: rand(0.35, 0.95) * (0.55 + r / 5),
+      v: rand(22, 68) * (0.6 + r / 4),
+      sway: rand(12, 42),
+      freq: rand(0.4, 1.4),
+      ph: Math.random() * Math.PI * 2,
+      tw: rand(0.5, 2.2)
+    };
+  }
+  var snowLast = 0, windT = 0;
+  function snowFrame(now) {
+    requestAnimationFrame(snowFrame);
+    if (!snowRun || document.hidden) { snowLast = now; return; }
+    var dt = Math.min(0.05, snowLast ? (now - snowLast) / 1000 : 0.016);
+    snowLast = now;
+    windT += dt;
+    var W = window.innerWidth, H = window.innerHeight;
+    var wind = Math.sin(windT * 0.35) * 14;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#ffffff';
+    for (var i = 0; i < flakes.length; i++) {
+      var f = flakes[i];
+      f.ph += dt * f.freq;
+      f.y += f.v * dt;
+      f.x += (wind * (f.r / 3.4) + Math.cos(f.ph) * f.sway * 0.35) * dt;
+      if (f.y > H + 8) { flakes[i] = newFlake(false); continue; }
+      if (f.x > W + 8) f.x = -8; else if (f.x < -8) f.x = W + 8;
+      ctx.globalAlpha = Math.max(0, Math.min(1, f.o * (0.72 + 0.28 * Math.sin(windT * f.tw + f.ph))));
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+  canvas.classList.add('on');
+  snowResize();
+  var rsT = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(rsT);
+    rsT = setTimeout(snowResize, 150);
+  });
+  document.addEventListener('visibilitychange', function () { snowLast = 0; });
+  requestAnimationFrame(snowFrame);
+  api.flakeCount = function () { return flakes.length; };
+
+  /* ---------- Traineau ---------- */
+  var sleigh = document.getElementById('xmas-sleigh');
+  var flying = false;
+  var pre = new Image();
+  pre.src = 'assets/noel/sleigh.png';
+  function fly(opts) {
+    if (flying) return;
+    flying = true;
+    opts = opts || {};
+    var W = window.innerWidth, H = window.innerHeight;
+    var ltr = opts.dir ? opts.dir === 'ltr' : Math.random() < 0.5;
+    var w = opts.width || Math.round(Math.max(200, Math.min(360, W * rand(0.22, 0.3))));
+    var top = opts.top != null ? opts.top : Math.round(H * rand(0.04, 0.38));
+    var dur = opts.duration || rand(9000, 14000);
+    var amp = rand(14, 34);
+    var waves = rand(1.2, 2.4);
+    sleigh.style.width = w + 'px';
+    sleigh.classList.remove('flip', 'ltr', 'rtl');
+    sleigh.classList.add('on');
+    sleigh.classList.add(ltr ? 'ltr' : 'rtl');
+    if (!ltr) sleigh.classList.add('flip');
+    var x0 = -w - 80, x1 = W + 80;
+    var t0 = null;
+    function step(now) {
+      if (t0 == null) t0 = now;
+      var p = Math.min(1, (now - t0) / dur);
+      var x = ltr ? x0 + (x1 - x0) * p : x1 - (x1 - x0) * p;
+      var y = top + Math.sin(p * Math.PI * 2 * waves) * amp - Math.sin(p * Math.PI) * H * 0.04;
+      var fade = p < 0.08 ? p / 0.08 : (p > 0.92 ? (1 - p) / 0.08 : 1);
+      sleigh.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0)';
+      sleigh.style.opacity = fade.toFixed(3);
+      if (p < 1 && !document.hidden) {
+        requestAnimationFrame(step);
+      } else if (p < 1) {
+        /* Onglet masque en plein vol : on reprend a la reaffichage. */
+        t0 += 250;
+        setTimeout(function () { requestAnimationFrame(step); }, 250);
+      } else {
+        sleigh.classList.remove('on');
+        sleigh.style.opacity = '';
+        sleigh.style.transform = '';
+        flying = false;
+        schedule();
+      }
+    }
+    requestAnimationFrame(step);
+  }
+  function schedule() {
+    setTimeout(fly, Math.round(rand(20000, 55000)));
+  }
+  api.fly = fly;
+  setTimeout(fly, Math.round(rand(6000, 16000)));
+})();
+</script>
+
 </body>
 </html>
