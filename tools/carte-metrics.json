@@ -1,7 +1,7 @@
 {
  "generator": "tools/measure_carte.mjs",
- "index_hash": "1629ae286f0b86e3",
- "css_hash": "0f0b924e5894257b",
+ "index_hash": "aff2d6fb23ba784e",
+ "css_hash": "e5e03b2a90398d55",
  "viewport": 1180,
  "base_width": 1180,
  "fonts": [
@@ -1545,7 +1545,7 @@
       477.81,
       311.13,
       239.25,
-      252.25
+      275.19
      ],
      "count": 4,
      "heights2col": null,
