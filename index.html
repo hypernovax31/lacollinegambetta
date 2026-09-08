@@ -6313,8 +6313,8 @@ html.carte-doc .medallion-halo,
 }
 
 
-/* ===== Noel (15 → 31 decembre) : neige + traineau du pere Noel =====
-   Actives par le script « NOEL » en bas de page, uniquement du 15 au 31
+/* ===== Noel (01 -> 31 decembre) : neige + traineau du pere Noel =====
+   Actives par le script « NOEL » en bas de page, uniquement du 1er au 31
    decembre (?noel=1 force la previsu, ?noel=0 coupe). Calques fixes
    au-dessus de tout, pointer-events:none : ils ne captent aucun clic.
    Jamais sur la carte A4 ni a l'impression. */
@@ -6353,7 +6353,7 @@ html.carte-doc #xmas-sleigh { display: none !important; }
 </head>
 <body>
   <canvas id="xmas-snow" aria-hidden="true"></canvas>
-  <div id="xmas-sleigh" aria-hidden="true"><span class="trail"></span><img src="assets/noel/sleigh.png" alt="" draggable="false"></div>
+  <div id="xmas-sleigh" aria-hidden="true"><span class="trail"></span><img src="assets/noel/sleigh.svg" alt="" draggable="false"></div>
   <div class="top-controls" style="display:none">
     <div class="top-controls__nav">
       <button class="control-btn active" id="btn-show-cover" onclick="showView('cover')"><span class="star-gold">✦</span> Page de Garde</button>
@@ -6880,12 +6880,17 @@ else sizeCoverMedallion();
 </script>
 
 <script>
-/* ===== NOEL : neige + traineau, du 15 au 31 decembre chaque annee =====
+/* ===== NOEL : neige + traineau, du 1er au 31 decembre chaque annee =====
    - Neige : canvas plein ecran, flocons aleatoires (taille, vitesse,
      derive, scintillement), densite proportionnelle a la fenetre.
    - Traineau : passage occasionnel et aleatoire (toutes les ~20 a 55 s),
      sens, hauteur, taille et duree tires au sort, trajectoire legerement
-     onduleuse avec fondu d'entree/sortie.
+     onduleuse avec fondu d'entree/sortie. Le dessin (SVG anime) est
+     oriente vers la droite, rennes en tete : les passages de gauche a
+     droite l'affichent tel quel, les passages de droite a gauche le
+     miroitent (.flip) — les rennes menent toujours la marche, le
+     traineau est tire derriere eux. Rennes au galop + pere Noel qui
+     fait coucou de la main (animation en boucle continue).
    - Previsu hors saison : ?noel=1 force, ?noel=0 coupe. Expose pour les
      tests : window.__xmas = { active, fly, flakeCount }.
    - Coupe si prefers-reduced-motion, sur la carte A4 (html.carte-doc),
@@ -6901,7 +6906,7 @@ else sizeCoverMedallion();
     if (document.documentElement.classList.contains('carte-doc')) return false;
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
     var d = new Date();
-    return d.getMonth() === 11 && d.getDate() >= 15;
+    return d.getMonth() === 11;
   }
   var api = { active: false, fly: function () {}, flakeCount: function () { return 0; } };
   window.__xmas = api;
@@ -6980,14 +6985,14 @@ else sizeCoverMedallion();
   var sleigh = document.getElementById('xmas-sleigh');
   var flying = false;
   var pre = new Image();
-  pre.src = 'assets/noel/sleigh.png';
+  pre.src = 'assets/noel/sleigh.svg';
   function fly(opts) {
     if (flying) return;
     flying = true;
     opts = opts || {};
     var W = window.innerWidth, H = window.innerHeight;
     var ltr = opts.dir ? opts.dir === 'ltr' : Math.random() < 0.5;
-    var w = opts.width || Math.round(Math.max(200, Math.min(360, W * rand(0.22, 0.3))));
+    var w = opts.width || Math.round(Math.max(230, Math.min(430, W * rand(0.25, 0.35))));
     var top = opts.top != null ? opts.top : Math.round(H * rand(0.04, 0.38));
     var dur = opts.duration || rand(9000, 14000);
     var amp = rand(14, 34);
@@ -6996,6 +7001,10 @@ else sizeCoverMedallion();
     sleigh.classList.remove('flip', 'ltr', 'rtl');
     sleigh.classList.add('on');
     sleigh.classList.add(ltr ? 'ltr' : 'rtl');
+    /* Le SVG est oriente vers la droite (rennes en tete a droite) :
+       passage gauche -> droite = tel quel ; passage droite -> gauche
+       = miroir (.flip). Dans les deux sens les rennes avancent en
+       tete et tirent le traineau derriere eux. */
     if (!ltr) sleigh.classList.add('flip');
     var x0 = -w - 80, x1 = W + 80;
     var t0 = null;
