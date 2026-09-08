@@ -9,6 +9,12 @@ tools/__pycache__/
 # intermédiaire de mesure des hauteurs (regénéré par tools/build_carte.py)
 carte-measure.html
 
-# document de composition des feuilles (regénéré par tools/build_carte.py) ;
-# les livrables versionnés sont carte-a4-pages/*.jpg et carte-a4.pdf
+# document de composition des feuilles (regénéré par tools/build_carte.py)
 carte.html
+
+# feuilles A4 intermédiaires (regénérées par la pipeline ; le PDF final
+# versionné est Carte_LaCollineGambetta.pdf)
+carte-a4-pages/
+
+# PDF intermédiaire assemblé (le PDF versionné est Carte_LaCollineGambetta.pdf)
+carte-a4.pdf

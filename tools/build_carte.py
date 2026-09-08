@@ -162,7 +162,7 @@ FLECHE_CLIP = "polygon({})".format(", ".join((
     f"0 {50 + _HAMPE / 2}%",
 )))
 # Éléments dont la carte a besoin de connaître la taille réelle, par onglet.
-MESURE_REFS = {"menus": {"menu-enfant": ".special-card--compact"}}
+MESURE_REFS = {"menus": {}}   # la feuille Formules est désormais un bloc .fm autonome (fmb-*), plus de carton « menu-enfant » à mesurer
 TITRE_SITE_PX = 17.9
 FIT_MIN = TITRE_MIN_PT / (TITRE_SITE_PX * 0.75)
 FIT_MAX = TITRE_MAX_PT / (TITRE_SITE_PX * 0.75)
@@ -836,12 +836,22 @@ html.carte-doc .print-page--cover .menu-leader-subline .star-gold {
   height: 7px;
   margin: 0 6px;
 }
-html.carte-doc .print-page--cover a.contact-link.cover-action {
+/* Le bouton « Menu & Carte » de la couverture : il reprend la pilule dorée
+   « sélectionnée » de la version web (dégradé or #bf953f→#fef9db, liseré
+   #fcf6ba, texte violet foncé), posée sur un liseré bas foncé discret pour le
+   relief et une ombre portée franche pour l'effet 3D. Spécificité avec
+   #print-document : on redéfinit le style explicitement pour n'appliquer le
+   rendu qu'au document imprimé (la couverture web garde son propre style et
+   ses animations). */
+html.carte-doc #print-document .print-page--cover a.contact-link.cover-action {
   display: inline-flex !important;
   background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%) !important;
-  border-color: #fcf6ba !important;
+  background-image: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%) !important;
+  border: 1px solid #fcf6ba !important;
   color: #24102e !important;
-  box-shadow: 0 8px 22px rgba(156, 122, 45, .35);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .65),
+              inset 0 -2px 6px rgba(156, 122, 45, .40),
+              0 10px 22px rgba(36, 16, 46, .45);   /* ombre portée : effet 3D */
 }
 html.carte-doc .print-page--cover a.contact-link.cover-action,
 html.carte-doc .print-page--cover a.contact-link.cover-action * {
@@ -873,6 +883,8 @@ html.carte-doc .print-page--cover .relief-inner-svg {
   width: 66% !important;
   height: 66% !important;
   border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
+  -webkit-clip-path: circle(50% at 50% 50%);
 }
 html.carte-doc .print-page--cover .cover-footer {
   flex: 0 0 auto;
@@ -1892,6 +1904,85 @@ def justify_gaps(load: float, k: int, gap: float, fit: float) -> float:
     return round(max(gap, min(want, gap * JUSTIFY_MAX_RATIO)), 2)
 
 
+def _interpolate(values: list[float], ws: list[float], w: float) -> float:
+    """Valeur interpolée à l'abscisse w, bornée aux extrémités mesurées."""
+    if w <= ws[0]:
+        return values[0]
+    if w >= ws[-1]:
+        return values[-1]
+    for a, b, wa, wb in zip(values, values[1:], ws, ws[1:]):
+        if wa <= w <= wb:
+            t = (w - wa) / (wb - wa) if wb > wa else 0.0
+            return a + t * (b - a)
+    return values[-1]
+
+
+def _block_heights_at(metrics: dict, sid: str, idx, mode, w: float) -> list[float] | None:
+    """Les hauteurs des blocs idx à la largeur w, interpolées sur l'échelle des
+    largeurs MESURÉES — le flux grandit en s'élargissant (les colonnes
+    s'empilent), la hauteur relevée ailleurs ne se projette pas. Une section
+    TWOC basculée (mode) prend sa hauteur en deux colonnes quand elle est
+    mesurée partout, sinon la hauteur pleine largeur (la plus grande)."""
+    variants = sorted((v for v in metrics["sections"][sid].get("variants") or []
+                       if v.get("heights")), key=lambda v: float(v["w"]))
+    if not variants:
+        return None
+    ws = [float(v["w"]) for v in variants]
+    hs = [v["heights"] for v in variants]
+    out = []
+    for i in idx:
+        h = _interpolate([a[i] for a in hs], ws, w)
+        if mode and i in mode:
+            h2s = [v.get("heights2col") for v in variants]
+            if all(h2 and i < len(h2) and h2[i] is not None for h2 in h2s):
+                h = _interpolate([h2[i] for h2 in h2s], ws, w)
+        out.append(h)
+    return out
+
+
+def _sheet_total(metrics: dict, sid: str, idx, mode, k: int, gap: float,
+                 fit: float, w: float) -> float | None:
+    """Hauteur totale de la feuille à la largeur w et au facteur fit : blocs
+    mesurés à cette largeur + inter-panneaux justifiés (une feuille TWOC dont
+    les sections sont basculées ne se justifie pas — voir compose_pages)."""
+    hs = _block_heights_at(metrics, sid, idx, mode, w)
+    if hs is None:
+        return None
+    load = sum(hs) + GAP_PACK * max(0, len(idx) - 1)
+    if mode:
+        return load
+    gap_j = justify_gaps(load, k, gap, fit)
+    return load + max(0, k - 1) * (gap_j - GAP_PACK)
+
+
+def _rewiden_width(metrics: dict, sid: str, idx, mode, k: int, var: dict,
+                   total: float) -> tuple[float, float] | None:
+    """(facteur, largeur de composition) qui borde le cadre en largeur et laisse
+    la feuille tenir debout — le flux y étant mesuré (interpolé) à la largeur
+    visée. D'abord le facteur de garde avec la composition élargie au cadre
+    (l'élargissement n'est validé que si le flux mesuré À LA LARGEUR ÉLARGIE
+    tient toujours) ; sinon la plus étroite largeur mesurée ≥ celle du plan où
+    la feuille borde le cadre et tient (le plus gros caractère). None si rien
+    ne tient : la feuille garde la largeur du plan, centrée, sans rognage."""
+    cap = ZONE_H_PX * SAFETY
+    max_w = max(WIDTH_RATIOS) * metrics["base_width"]
+    fit_h = cap / total
+    base_w = min(ZONE_W_PX / fit_h, max_w)
+    t = _sheet_total(metrics, sid, idx, mode, k, var["gap"], fit_h, base_w)
+    if t is not None and t * fit_h <= cap:
+        return fit_h, base_w
+    for w in sorted({float(v["w"]) for v in metrics["sections"][sid].get("variants") or []
+                     if float(v["w"]) >= var["w"] - 0.01
+                     and v.get("overflow", 0) <= 1.5
+                     and (v.get("overflow2col") or 0) <= 1.5
+                     and v.get("heights")}):
+        fit_w = ZONE_W_PX / w
+        t = _sheet_total(metrics, sid, idx, mode, k, var["gap"], fit_w, w)
+        if t is not None and t * fit_w <= cap:
+            return fit_w, w
+    return None
+
+
 def garde_uniformite(metrics: dict, chosen: dict) -> None:
     """La cible de hauteur doit coller au carton de référence, à la largeur choisie."""
     for sid, refs in MESURE_REFS.items():
@@ -1994,18 +2085,33 @@ def compose_pages(src: str, metrics: dict, flows: dict, chosen: dict, w0: float,
                 else min(var["gap"], GAP_PACK)
             total = load + (0 if not justify else max(0, len(idx) - 1) * (gap - GAP_PACK))
             base_w = var["w"]
+            non_bordée = False
             if total * fit > ZONE_H_PX * SAFETY:
-                # La hauteur plafonne : la feuille se réduit jusqu'à tenir
-                # debout. Sans rien faire de plus, elle laisserait un blanc à
-                # droite (la composition resterait à la largeur du site) ; on
-                # l'élargit donc d'autant — la page se tient sur toute la
-                # largeur ET toute la hauteur du A4. Borné à la plus large
-                # composition mesurée, où aucune section ne déborde
-                # horizontalement.
-                fit = ZONE_H_PX * SAFETY / total
-                base_w = min(ZONE_W_PX / fit, max(WIDTH_RATIOS) * metrics["base_width"])
-                gap = justify_gaps(load, k, var["gap"], fit) if justify \
-                    else min(var["gap"], GAP_PACK)
+                # La hauteur plafonne : à la largeur du plan le flux est trop
+                # haut pour border le cadre en largeur. Sans rien faire de
+                # plus, la page réduirait en laissant un blanc de chaque côté ;
+                # on élargit donc la composition (fit = zone / largeur) pour
+                # qu'elle se tienne sur toute la largeur ET toute la hauteur du
+                # A4. Mais le flux est plus haut à la largeur élargie qu'à celle
+                # du plan (les colonnes s'empilent) : l'élargissement n'est
+                # validé que si le flux MESURÉ (interpolé) à la largeur élargie
+                # tient toujours dans la garde — sinon la capture rogne.
+                rew = _rewiden_width(metrics, sid, idx, mode, k, var, total)
+                if rew is not None:
+                    fit, base_w = rew
+                    hs_new = _block_heights_at(metrics, sid, idx, mode, base_w)
+                    if hs_new is not None:
+                        load = sum(hs_new) + GAP_PACK * max(0, len(idx) - 1)
+                        gap = justify_gaps(load, k, var["gap"], fit) if justify \
+                            else min(var["gap"], GAP_PACK)
+                        total = load + (0 if not justify
+                                        else max(0, len(idx) - 1) * (gap - GAP_PACK))
+                else:
+                    # Rien ne tient élargi : on garde la largeur du plan, la
+                    # page se centre — le blanc reste dans la feuille, jamais
+                    # de rognage.
+                    fit = ZONE_H_PX * SAFETY / total
+                    non_bordée = True
             air_side = air_title = None
             air_rows = air_titles = 0
             if airs and n in airs:
@@ -2030,6 +2136,7 @@ def compose_pages(src: str, metrics: dict, flows: dict, chosen: dict, w0: float,
                 f"intitulés {TITRE_SITE_PX * fit * pts:4.1f} pt"
                 + (" ⚠ sous le plancher" if TITRE_SITE_PX * fit * pts < TITRE_MIN_PT - 0.05 else "")
                 + (f", {len(mode)} sections en 2 colonnes de lignes" if is_twocol and mode else "")
+                + (" ⚠ largeur non bordée — page centrée" if non_bordée else "")
                 + ("".join([
                     f", aéré interligne +{air_side:.1f} px" if air_rows else "",
                     (f", titres +{air_title:.1f} px" if air_titles else ""),

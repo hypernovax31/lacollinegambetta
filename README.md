@@ -153,44 +153,59 @@ figeait toute variante au-dessus de 1 140 px sans jamais se plaindre. `tools/car
 est committé avec les deux empreintes : sans Node ni Chromium, `build_carte.py`
 réutilise ces chiffres et annonce qu'ils sont périmés plutôt que d'inventer.
 
+**Tout changement de la carte A4 (libellé, prix, structure, CSS du site) se paie en deux
+commits au plus, jamais en un oubli : `npm run build:carte`, puis le PDF téléchargeable
+réassemblé — `Carte_LaCollineGambetta.pdf` est versionné avec la carte qu'il représente.**
+Voir [PDF A4 téléchargeable](#pdf-a4-téléchargeable-cartelacollinegambettapdf).
+
 ## PDF A4 téléchargeable (`Carte_LaCollineGambetta.pdf`)
 
 L'icône de téléchargement du header de `index.html` ouvre **`Carte_LaCollineGambetta.pdf`** :
-le fichier livré par le client le 05/09/2026 (9 pages A4 ; sa page « Nos menus », p. 4, y
-figure telle qu'il l'a composée — document Canva `Formules.pdf`). Les feuilles JPEG de
-**`carte-a4-pages/`** (`page-01.jpg` … `page-09.jpg`) sont recréées depuis ce PDF
-(extraction des pages images ; la p. 4 vectorielle est rendue à 300 dpi), prêtes à envoyer
+le rendu intégral de la **carte A4** (9 pages, une par onglet, couverture comprise) — chaque
+feuille est le rendu exact de `carte.html`, jamais un document tiers. Les feuilles JPEG de
+**`carte-a4-pages/`** (`page-01.jpg` … `page-09.jpg`) sont les mêmes images, prêtes à envoyer
 telles quelles à un imprimeur.
+
+**Règle : à chaque modification de la carte A4, régénérer le PDF téléchargeable et le
+committer avec le changement.** Le PDF versionné doit toujours être le rendu de la carte
+A4 en tête de branche — sinon le client télécharge une carte qui n'est plus celle du site.
+La régénération est un seul build, du mesureur à l'assemblage :
 
 ```bash
 npm install                      # Playwright + Chromium (@sparticuz) + fontes @fontsource
-npm run build:carte              # mesure → carte.html → JPEG → PDF
-npm run build:carte-pdf          # uniquement les images et le PDF
+npm run build:carte              # mesure → carte.html → JPEG → carte-a4.pdf
+cp carte-a4.pdf Carte_LaCollineGambetta.pdf
 ```
+
+- `npm run build:carte-pdf` rend uniquement les images et le PDF (sans re-mesurer) — utile
+  quand seule la mise en page a bougé et que `carte.html` est déjà à jour ;
+- si le build s'arrête (« le contenu dépasse le bas de la feuille »), la faute est dans la
+  page signalée — l'alléger dans `tools/build_carte.py` ou dans le contenu, pas dans le
+  rognage : le PDF ne sort jamais coupé.
 
 Le choix du tout-image est assumé : le PDF rendu est identique à la carte affichée à l'écran,
 sur n'importe quelle machine, sans police à installer ni substitution au moment d'imprimer.
 Contrepartie : le texte n'est plus sélectionnable ni rechercheable, et le fichier pèse
-~7 Mo au lieu de 3,7 Mo en vectoriel.
+~15 Mo en 400 dpi (réglable par `--dpi`, le 300 dpi fait ~7 Mo).
 
 Comment ça marche (`tools/build_carte_pdf.mjs`) :
 
 - Chromium rend `carte.html` sous média **screen**, à la largeur de composition mesurée
-  (1 180 px, lue dans `data-carte-viewport`) et à `deviceScaleFactor` 3,125 : une feuille de
-  210 mm (= 793,7 px CSS) sort à 2 480 px, soit 300 dpi ;
+  (1 180 px, lue dans `data-carte-viewport`) et à `deviceScaleFactor` 400 dpi : une feuille de
+  210 mm (= 793,7 px CSS) sort à 3 307 px (hauteur 4 677 px) ;
 - les polices du site sont servies par `tools/local-fonts.mjs` (Cinzel et Montserrat depuis
   `node_modules/@fontsource`) — le build **s'arrête** si elles ne sont pas réellement chargées,
   et si une feuille déborde de sa zone utile (le rognage serait sinon silencieux) ;
-- les JPEG sont ramenés à 2 480 × 3 508 exact quand ImageMagick est présent (Chromium arrondit
+- les JPEG sont ramenés à 3 307 × 4 677 exact quand ImageMagick est présent (Chromium arrondit
   les millimètres selon les feuilles et le liseré doré ajoute un pixel par bord ; sans `convert`,
-  ±6 px sont tolérés) ;
+  une tolérance adaptée à la densité est admise) ;
 - chaque fichier est contrôlé avant d'être retenu : format A4, ratio, RVB 8 bits, poids minimal
   (une page blanche ou un rendu cassé sont écartés d'office) ;
 - `tools/jpeg-pdf.mjs` assemble le PDF **sans aucune dépendance** : les JPEG entrent tels quels
   (`/DCTDecode`), octet pour octet, chaque page mesurant un A4 strict (595,276 × 841,89 pt).
 
 Options : `--jpgs-only` (les images seules, sans PDF), `--quality 82` (JPEG et PDF plus légers),
-`--pages 10` (imposer le nombre de feuilles, pour un test).
+`--dpi 300` (moins lourd), `--pages 10` (imposer le nombre de feuilles, pour un test).
 
 ### Réassembler le PDF à partir des JPEG
 
