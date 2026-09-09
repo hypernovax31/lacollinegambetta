@@ -6840,17 +6840,15 @@ function initMenuNavHints() {
     if (next < 0 || next > btns.length - 1) return;
     const match = /showMenuSection\(\s*'([^']+)'\s*,/.exec(btns[next].getAttribute('onclick') || '');
     if (match) {
-      /* Les flèches changent d'onglet SANS faire défiler la page vers
-         #menu-nav-anchor : seul un clic sur un bouton sélecteur déclenche
-         ce défilement. On change juste la section active et le bouton actif,
-         puis on recentre le bouton dans le ruban horizontal. */
-      document.querySelectorAll('.menu-section').forEach(sec => sec.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-      const targetSection = document.getElementById(match[1]);
-      if (targetSection) targetSection.classList.add('active');
-      btns[next].classList.add('active');
-      centerMenuNavButton(btns[next]);
-      syncMenuNavHints();
+      /* Les flèches utilisent la même routine qu'un clic sur un onglet
+         (showMenuSection) : échange de section, recentrage du ruban et
+         défilement animé vers le haut de la section. Auparavant elles
+         changeaient la section sans défiler : depuis le bas d'une grande
+         section (p. ex. boissons), l'arrivée sur une section plus courte
+         faisait brutalement « glisser » la page (le navigateur bridait
+         le défilement d'un coup, sans animation) — un comportement
+         différent de tous les autres onglets. */
+      showMenuSection(match[1], btns[next]);
     }
   };
   const bind = (el, dir) => {
