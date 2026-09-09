@@ -27,6 +27,15 @@
 }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
+/* Anti-rebond des onglets de la carte : quand un clic remplace une
+   grande section par une autre (les hauteurs vont du simple au
+   triple), le « scroll anchoring » du navigateur ajuste d'un coup le
+   defilement pour figer le contenu, puis l'animation JS vers le haut
+   de la section le ramene — la page rebondit. Ce site n'a pas de
+   contenu qui se charge au-dessus du viewport (pas d'images ni de
+   pubs tardives) : l'ancrage n'apporte rien, on le coupe pour que
+   chaque onglet defile de la meme facon, sans a-coup. */
+html { overflow-anchor:none; }
 body { margin:0; font-family:'Montserrat',sans-serif; background:linear-gradient(180deg,#24102e 0,#24102e 100vh,#fcfbf7 100vh,#fcfbf7 100%); color:var(--ink); overflow-x:hidden; }
 button,a { font:inherit; }
 .top-controls { background:#592e6f; border-bottom:1px solid rgba(216,178,87,.45); padding:10px 12px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; align-items:stretch; box-shadow:0 4px 15px rgba(0,0,0,.4); }
@@ -6662,15 +6671,25 @@ function showView(view) {
     });
   }
 }
+function centerMenuNavButton(btnElement) {
+  /* Centre l'onglet actif dans la bande défilante, en ne touchant QU'à
+     cette bande. L'ancien scrollIntoView({inline:'center'}) pouvait aussi
+     faire défiler la fenêtre elle-même (le navigateur ajuste tous les
+     ancêtres défilables) : au changement d'onglet, la page sautait d'un
+     coup puis l'animation la ramenait — le « rebond » ressenti. Ici, on
+     règle directement le scrollLeft de la bande : la page ne bouge pas. */
+  const nav = document.querySelector('.menu-nav');
+  if (!nav || !btnElement) return;
+  const target = btnElement.offsetLeft - (nav.clientWidth - btnElement.offsetWidth) / 2;
+  try { nav.scrollLeft = Math.max(0, Math.round(target)); } catch (e) { /* bande non défilante */ }
+}
 function showMenuSection(sectionId, btnElement) {
   document.querySelectorAll('.menu-section').forEach(sec => sec.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
   const targetSection = document.getElementById(sectionId);
   targetSection.classList.add('active');
   btnElement.classList.add('active');
-  if (btnElement && btnElement.scrollIntoView) {
-    btnElement.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'instant' });
-  }
+  centerMenuNavButton(btnElement);
   syncMenuNavHints();
   /* L'ancre « haut de la carte » (#menu-nav-anchor) est posée au-dessus des
      deux bandeaux qui restent épinglés en haut (.top-controls puis
@@ -6695,26 +6714,39 @@ function animateScrollTo(targetY, duration) {
   const html = document.documentElement;
   const prev = html.style.scrollBehavior;
   html.style.scrollBehavior = 'auto';
-  const startY = window.pageYOffset || document.documentElement.scrollTop;
-  const delta = targetY - startY;
-  if (Math.abs(delta) < 2) {
+  targetY = Math.max(0, Math.round(targetY));
+  if (Math.abs((window.pageYOffset || 0) - targetY) < 2) {
     window.scrollTo(0, targetY);
     html.style.scrollBehavior = prev;
     return;
   }
   if (window.__collineScrollAnim) cancelAnimationFrame(window.__collineScrollAnim);
   const t0 = performance.now();
-  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  /* Défilement auto-correctif : à chaque image on RELIT la position
+     réelle de la page et on s'en rapproche, au lieu de rejouer une
+     trajectoire calculée au départ. Au changement d'onglet, l'échange
+     d'une grande section contre une autre peut déplacer le défilement
+     d'un coup (recalage du navigateur, bandeaux épinglés) : l'ancienne
+     version s'y opposait et la page « rebondissait ». Ici, toute
+     perturbation est absorbée en quelques images, arrivée en douceur
+     garantie sur la position cible. */
+  let grace = 6;
   function step(now) {
     const p = Math.min(1, (now - t0) / duration);
-    window.scrollTo(0, startY + delta * easeOut(p));
-    if (p < 1) {
-      window.__collineScrollAnim = requestAnimationFrame(step);
-    } else {
+    const cur = window.pageYOffset || 0;
+    const remain = targetY - cur;
+    if (remain === 0 || (p >= 1 && Math.abs(remain) < 1) || (p >= 1 && grace-- <= 0)) {
       window.__collineScrollAnim = null;
       window.scrollTo(0, targetY);
       html.style.scrollBehavior = prev;
+      return;
     }
+    /* Part du chemin parcourue à cette image : elle suit la progression
+       temporelle (démarrage franc, arrivée en douceur) mais part toujours
+       de la position réelle — d'où l'absorption des perturbations. */
+    const f = Math.min(1, Math.max(0.3, 1 - Math.pow(1 - p, 3)));
+    window.scrollTo(0, Math.round(cur + remain * f));
+    window.__collineScrollAnim = requestAnimationFrame(step);
   }
   window.__collineScrollAnim = requestAnimationFrame(step);
 }
@@ -6817,7 +6849,7 @@ function initMenuNavHints() {
       const targetSection = document.getElementById(match[1]);
       if (targetSection) targetSection.classList.add('active');
       btns[next].classList.add('active');
-      btns[next].scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'instant' });
+      centerMenuNavButton(btns[next]);
       syncMenuNavHints();
     }
   };
