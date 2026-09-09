@@ -6891,8 +6891,13 @@ else sizeCoverMedallion();
      miroitent (.flip) — les rennes menent toujours la marche, le
      traineau est tire derriere eux. Rennes au galop + pere Noel qui
      fait coucou de la main (animation en boucle continue).
+   - Grelots : tintement synthetise en WebAudio qui accompagne tout le
+     passage visible du traineau — fondu d'entree/sortie aligne sur
+     celui de l'image, panoramique stereo qui suit l'attelage d'un bord
+     a l'autre de l'ecran. Respecte la politique d'autoplay : le son ne
+     peut demarrer qu'apres une premiere interaction du visiteur.
    - Previsu hors saison : ?noel=1 force, ?noel=0 coupe. Expose pour les
-     tests : window.__xmas = { active, fly, flakeCount }.
+     tests : window.__xmas = { active, fly, flakeCount, bells }.
    - Coupe si prefers-reduced-motion, sur la carte A4 (html.carte-doc),
      a l'impression (CSS), et en pause quand l'onglet est masque. */
 (function () {
@@ -6977,9 +6982,124 @@ else sizeCoverMedallion();
     clearTimeout(rsT);
     rsT = setTimeout(snowResize, 150);
   });
-  document.addEventListener('visibilitychange', function () { snowLast = 0; });
+  document.addEventListener('visibilitychange', function () { snowLast = 0; bellsPause(); });
   requestAnimationFrame(snowFrame);
   api.flakeCount = function () { return flakes.length; };
+
+  /* ---------- Grelots : tintement des sonnailles pendant le passage ---------- */
+  /* Synthese WebAudio (aucun fichier audio) : chaque tintement combine
+     des partiels inharmoniques a decay court, comme un grelot. Le
+     rythme suit le galop (accent une mesure sur deux + secousses), le
+     volume epouse le fondu d'entree/sortie du traineau et l'image
+     stereo suit sa position a l'ecran. L'AudioContext n'est cree qu'au
+     premier passage et ne peut demarrer qu'apres une interaction du
+     visiteur (politique d'autoplay des navigateurs) : sans interaction
+     le passage reste silencieux, puis le son s'active des le premier
+     clic / toucher / touche. */
+  var bctx = null, bEnv = null, bMaster = null, bPan = null, bComp = null;
+  var bTimer = null, bNext = 0, bStep = 0, bHits = 0, bOn = false;
+  function bellsInit() {
+    if (bctx) return true;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return false;
+    try {
+      bctx = new AC();
+      bComp = bctx.createDynamicsCompressor();
+      bMaster = bctx.createGain();
+      bMaster.gain.value = 0.45;
+      bEnv = bctx.createGain();
+      bEnv.gain.value = 0;
+      bPan = bctx.createStereoPanner ? bctx.createStereoPanner() : null;
+      bEnv.connect(bComp);
+      bComp.connect(bMaster);
+      if (bPan) { bMaster.connect(bPan); bPan.connect(bctx.destination); }
+      else { bMaster.connect(bctx.destination); }
+      return true;
+    } catch (e) { bctx = null; return false; }
+  }
+  function bellsWake() {
+    if (!bellsInit()) return false;
+    if (bctx.state === 'suspended') { try { bctx.resume(); } catch (e) { /* autoplay */ } }
+    return bctx.state === 'running';
+  }
+  function bellHit(t, f, v) {
+    /* Un grelot : 4 partiels inharmoniques legerement desaccordes,
+       attaque nette, resonance courte et aleatoire. */
+    var p = [[1, 1], [2.43, 0.45], [3.83, 0.25], [5.62, 0.12]];
+    for (var i = 0; i < p.length; i++) {
+      var o = bctx.createOscillator(), g = bctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = f * p[i][0] * (0.985 + Math.random() * 0.03);
+      var a = v * p[i][1] * 0.22;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(a, t + 0.004);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12 + Math.random() * 0.14);
+      o.connect(g);
+      g.connect(bEnv);
+      o.start(t);
+      o.stop(t + 0.45);
+    }
+    bHits++;
+  }
+  function bellsTick() {
+    if (!bctx || bctx.state !== 'running' || !bOn) return;
+    var now = bctx.currentTime, ahead = now + 0.35;
+    if (bNext < now) bNext = now + 0.02;
+    while (bNext < ahead) {
+      var t = bNext, s = bStep % 2, v = s ? 0.85 : 0.42;
+      bellHit(t, 1900 + Math.random() * 800, v * (0.7 + Math.random() * 0.45));
+      if (s) bellHit(t + 0.05 + Math.random() * 0.02, 2450 + Math.random() * 700, v * 0.5);
+      if (bStep % 7 === 3) {
+        /* secousse ponctuelle du harnais */
+        bellHit(t + 0.025, 2100 + Math.random() * 500, 0.4);
+        bellHit(t + 0.052, 2300 + Math.random() * 500, 0.35);
+      }
+      bStep++;
+      bNext += 0.155;
+    }
+  }
+  function bellsStart() {
+    bOn = true;
+    bStep = 0;
+    if (!bellsWake()) return; /* pas d'audio dispo : passage muet, le
+                                 premier geste du visiteur debloquera */
+    bNext = bctx.currentTime + 0.03;
+    if (!bTimer) bTimer = setInterval(bellsTick, 110);
+  }
+  function bellsSet(fade, xN) {
+    /* Appele a chaque image du passage : volume = fondu de l'attelage,
+       panoramique = position horizontale a l'ecran. */
+    if (!bctx || !bOn) return;
+    if (bctx.state === 'running') {
+      if (!bTimer) { bNext = bctx.currentTime + 0.03; bTimer = setInterval(bellsTick, 110); }
+      var t = bctx.currentTime;
+      bEnv.gain.setTargetAtTime(0.9 * fade, t, 0.05);
+      if (bPan) bPan.pan.setTargetAtTime(Math.max(-0.85, Math.min(0.85, xN * 2 - 1)), t, 0.08);
+    }
+  }
+  function bellsPause() {
+    if (bTimer) { clearInterval(bTimer); bTimer = null; }
+    if (bctx && bEnv) { try { bEnv.gain.setTargetAtTime(0, bctx.currentTime, 0.12); } catch (e) {} }
+  }
+  function bellsStop() {
+    bOn = false;
+    bellsPause();
+  }
+  /* Deblocage du son au premier geste du visiteur (politique autoplay) :
+     le contexte est repris ici, le tintement demarrera au passage vu
+     ou en cours si l'attelage est a l'ecran. */
+  ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) {
+    window.addEventListener(ev, function bellsUnlock() {
+      if (bellsInit()) bellsWake();
+    }, { once: true, passive: true });
+  });
+  api.bells = function () {
+    return {
+      on: bOn, state: bctx ? bctx.state : 'none', hits: bHits,
+      gain: bEnv ? +bEnv.gain.value.toFixed(3) : 0,
+      pan: bPan ? +bPan.pan.value.toFixed(2) : 0
+    };
+  };
 
   /* ---------- Traineau ---------- */
   var sleigh = document.getElementById('xmas-sleigh');
@@ -7006,6 +7126,8 @@ else sizeCoverMedallion();
        = miroir (.flip). Dans les deux sens les rennes avancent en
        tete et tirent le traineau derriere eux. */
     if (!ltr) sleigh.classList.add('flip');
+    /* Les grelots sonnent pendant tout le passage visible. */
+    bellsStart();
     var x0 = -w - 80, x1 = W + 80;
     var t0 = null;
     function step(now) {
@@ -7016,6 +7138,7 @@ else sizeCoverMedallion();
       var fade = p < 0.08 ? p / 0.08 : (p > 0.92 ? (1 - p) / 0.08 : 1);
       sleigh.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0)';
       sleigh.style.opacity = fade.toFixed(3);
+      bellsSet(fade, x / W);
       if (p < 1 && !document.hidden) {
         requestAnimationFrame(step);
       } else if (p < 1) {
@@ -7027,6 +7150,7 @@ else sizeCoverMedallion();
         sleigh.style.opacity = '';
         sleigh.style.transform = '';
         flying = false;
+        bellsStop();
         schedule();
       }
     }
