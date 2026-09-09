@@ -6343,10 +6343,31 @@ html.carte-doc .medallion-halo,
 }
 #xmas-sleigh.ltr .trail { right: 88%; }
 #xmas-sleigh.rtl .trail { left: 88%; }
+/* Bouton grelots : visible seulement en saison de Noel, il permet
+   d'activer / couper le tintement du traineau et sert de geste
+   debloquant pour l'audio des navigateurs (politique d'autoplay). */
+#xmas-bells-btn {
+  position: fixed; right: 16px; bottom: 16px; z-index: 9990;
+  display: none; align-items: center; justify-content: center;
+  width: 42px; height: 42px; padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(216, 178, 87, .45);
+  background: rgba(24, 12, 30, .78);
+  color: #d8b257; cursor: pointer; box-sizing: border-box;
+  transition: transform .2s ease, background-color .2s ease;
+}
+#xmas-bells-btn.on { display: inline-flex; }
+#xmas-bells-btn:hover { transform: scale(1.07); background: rgba(38, 18, 46, .9); }
+#xmas-bells-btn:focus-visible { outline: 2px solid #d8b257; outline-offset: 2px; }
+#xmas-bells-btn svg { width: 21px; height: 21px; display: block; }
+#xmas-bells-btn .bell-off { display: none; }
+#xmas-bells-btn.muted .bell-off { display: block; }
+#xmas-bells-btn.muted .bell-body { opacity: .45; }
 html.carte-doc #xmas-snow,
-html.carte-doc #xmas-sleigh { display: none !important; }
+html.carte-doc #xmas-sleigh,
+html.carte-doc #xmas-bells-btn { display: none !important; }
 @media print {
-  #xmas-snow, #xmas-sleigh { display: none !important; }
+  #xmas-snow, #xmas-sleigh, #xmas-bells-btn { display: none !important; }
 }
 
 </style>
@@ -6894,8 +6915,10 @@ else sizeCoverMedallion();
    - Grelots : tintement synthetise en WebAudio qui accompagne tout le
      passage visible du traineau — fondu d'entree/sortie aligne sur
      celui de l'image, panoramique stereo qui suit l'attelage d'un bord
-     a l'autre de l'ecran. Respecte la politique d'autoplay : le son ne
-     peut demarrer qu'apres une premiere interaction du visiteur.
+     a l'autre de l'ecran. Politique d'autoplay : le son ne demarre
+     qu'apres une interaction du visiteur ; un bouton cloche (bas a
+     droite) active/coupe le tintement et debloque l'audio, tout
+     comme le premier clic n'importe ou sur la page.
    - Previsu hors saison : ?noel=1 force, ?noel=0 coupe. Expose pour les
      tests : window.__xmas = { active, fly, flakeCount, bells }.
    - Coupe si prefers-reduced-motion, sur la carte A4 (html.carte-doc),
@@ -6991,13 +7014,17 @@ else sizeCoverMedallion();
      des partiels inharmoniques a decay court, comme un grelot. Le
      rythme suit le galop (accent une mesure sur deux + secousses), le
      volume epouse le fondu d'entree/sortie du traineau et l'image
-     stereo suit sa position a l'ecran. L'AudioContext n'est cree qu'au
-     premier passage et ne peut demarrer qu'apres une interaction du
-     visiteur (politique d'autoplay des navigateurs) : sans interaction
-     le passage reste silencieux, puis le son s'active des le premier
-     clic / toucher / touche. */
+     stereo suit sa position a l'ecran.
+     Politique d'autoplay des navigateurs : le son ne peut demarrer
+     qu'apres une interaction du visiteur. Le contexte audio n'est donc
+     JAMAIS cree hors d'un geste (clic, toucher, touche) — sinon il
+     nait « suspendu » et le passage reste muet, ce qui donne
+     l'impression que les grelots ne fonctionnent pas. Le bouton
+     cloche (bas a droite) sert de geste debloquant visible : premier
+     clic = tintement de confirmation, puis chaque passage sonne.
+     Un clic n'importe ou sur la page debloque aussi l'audio. */
   var bctx = null, bEnv = null, bMaster = null, bPan = null, bComp = null;
-  var bTimer = null, bNext = 0, bStep = 0, bHits = 0, bOn = false;
+  var bTimer = null, bNext = 0, bStep = 0, bHits = 0, bOn = false, bMuted = false;
   function bellsInit() {
     if (bctx) return true;
     var AC = window.AudioContext || window.webkitAudioContext;
@@ -7006,7 +7033,7 @@ else sizeCoverMedallion();
       bctx = new AC();
       bComp = bctx.createDynamicsCompressor();
       bMaster = bctx.createGain();
-      bMaster.gain.value = 0.45;
+      bMaster.gain.value = 0.8;
       bEnv = bctx.createGain();
       bEnv.gain.value = 0;
       bPan = bctx.createStereoPanner ? bctx.createStereoPanner() : null;
@@ -7018,7 +7045,7 @@ else sizeCoverMedallion();
     } catch (e) { bctx = null; return false; }
   }
   function bellsWake() {
-    if (!bellsInit()) return false;
+    if (!bctx) return false;
     if (bctx.state === 'suspended') { try { bctx.resume(); } catch (e) { /* autoplay */ } }
     return bctx.state === 'running';
   }
@@ -7030,7 +7057,7 @@ else sizeCoverMedallion();
       var o = bctx.createOscillator(), g = bctx.createGain();
       o.type = 'sine';
       o.frequency.value = f * p[i][0] * (0.985 + Math.random() * 0.03);
-      var a = v * p[i][1] * 0.22;
+      var a = v * p[i][1] * 0.3;
       g.gain.setValueAtTime(0, t);
       g.gain.linearRampToValueAtTime(a, t + 0.004);
       g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12 + Math.random() * 0.14);
@@ -7041,8 +7068,14 @@ else sizeCoverMedallion();
     }
     bHits++;
   }
+  function bellsJingle() {
+    /* Petit tintement de confirmation (activation du son). */
+    if (!bctx || bctx.state !== 'running' || bMuted) return;
+    var t = bctx.currentTime + 0.02;
+    for (var i = 0; i < 3; i++) bellHit(t + i * 0.11, 2150 + i * 270, 0.55 - i * 0.12);
+  }
   function bellsTick() {
-    if (!bctx || bctx.state !== 'running' || !bOn) return;
+    if (!bctx || bctx.state !== 'running' || !bOn || bMuted) return;
     var now = bctx.currentTime, ahead = now + 0.35;
     if (bNext < now) bNext = now + 0.02;
     while (bNext < ahead) {
@@ -7059,21 +7092,26 @@ else sizeCoverMedallion();
     }
   }
   function bellsStart() {
+    if (bMuted) { bOn = false; return; }
     bOn = true;
     bStep = 0;
-    if (!bellsWake()) return; /* pas d'audio dispo : passage muet, le
-                                 premier geste du visiteur debloquera */
+    /* Pas encore de contexte : il faudra un geste du visiteur (le
+       premier clic n'importe ou, ou le bouton cloche). D'ici la le
+       passage est muet — ce n'est pas un bug, c'est la politique
+       d'autoplay des navigateurs. */
+    if (!bctx) return;
+    if (!bellsWake()) return;
     bNext = bctx.currentTime + 0.03;
     if (!bTimer) bTimer = setInterval(bellsTick, 110);
   }
   function bellsSet(fade, xN) {
     /* Appele a chaque image du passage : volume = fondu de l'attelage,
        panoramique = position horizontale a l'ecran. */
-    if (!bctx || !bOn) return;
+    if (!bctx || !bOn || bMuted) return;
     if (bctx.state === 'running') {
       if (!bTimer) { bNext = bctx.currentTime + 0.03; bTimer = setInterval(bellsTick, 110); }
       var t = bctx.currentTime;
-      bEnv.gain.setTargetAtTime(0.9 * fade, t, 0.05);
+      bEnv.gain.setTargetAtTime(fade, t, 0.05);
       if (bPan) bPan.pan.setTargetAtTime(Math.max(-0.85, Math.min(0.85, xN * 2 - 1)), t, 0.08);
     }
   }
@@ -7085,17 +7123,69 @@ else sizeCoverMedallion();
     bOn = false;
     bellsPause();
   }
-  /* Deblocage du son au premier geste du visiteur (politique autoplay) :
-     le contexte est repris ici, le tintement demarrera au passage vu
-     ou en cours si l'attelage est a l'ecran. */
+  /* ---------- Bouton grelots (visible en saison, bas a droite) ---------- */
+  var bellBtn = null;
+  function bellsUpdateBtn() {
+    if (!bellBtn) return;
+    bellBtn.classList.toggle('muted', bMuted);
+    bellBtn.setAttribute('aria-pressed', bMuted ? 'false' : 'true');
+    bellBtn.title = bMuted
+      ? 'Grelots du tra\u00eeneau : coup\u00e9s (cliquer pour r\u00e9activer)'
+      : 'Grelots du tra\u00eeneau : activ\u00e9s \u2014 ils sonnent au passage du tra\u00eeneau';
+  }
+  function bellsMakeBtn() {
+    bellBtn = document.createElement('button');
+    bellBtn.type = 'button';
+    bellBtn.id = 'xmas-bells-btn';
+    bellBtn.className = 'on';
+    bellBtn.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+      'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path class="bell-body" d="M12 3.2c-3.1 0-5.2 2.2-5.2 5v3.1c0 .8-.3 1.6-.9 2.2l-1.1 1.2h14.4l-1.1-1.2c-.6-.6-.9-1.4-.9-2.2V8.2c0-2.8-2.1-5-5.2-5Z"/>' +
+      '<path class="bell-body" d="M9.6 18.6a2.5 2.5 0 0 0 4.8 0"/>' +
+      '<line class="bell-off" x1="4.5" y1="4.5" x2="19.5" y2="19.5"/>' +
+      '</svg>';
+    var bBellClicked = false;
+    bellBtn.addEventListener('click', function () {
+      /* Premier clic sur la cloche : toujours activer (c'est le geste
+         attendu — le pointerdown de deblocage a pu faire naitre le
+         contexte juste avant ce clic). Clics suivants : bascule. */
+      var wantActive = bBellClicked ? bMuted : true;
+      bBellClicked = true;
+      if (wantActive) {
+        bMuted = false;
+        bellsInit();              /* ce clic est un geste : creation autorisee */
+        if (bellsWake()) {
+          bellsJingle();
+          /* Reactivation en plein vol si l'attelage est a l'ecran. */
+          var el = document.getElementById('xmas-sleigh');
+          if (el && el.classList.contains('on')) bellsStart();
+        }
+      } else {
+        bMuted = true;
+        bellsStop();
+      }
+      bellsUpdateBtn();
+    });
+    bellsUpdateBtn();
+    document.body.appendChild(bellBtn);
+  }
+  bellsMakeBtn();
+  /* Deblocage du son au premier geste du visiteur, n'importe ou sur la
+     page (politique autoplay). Capture : fonctionne meme si un script
+     arrete la propagation. Sans « once » : on retente a chaque geste
+     jusqu'a ce que le contexte tourne (Safari iOS peut resuspendre). */
   ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) {
     window.addEventListener(ev, function bellsUnlock() {
-      if (bellsInit()) bellsWake();
-    }, { once: true, passive: true });
+      if (bMuted) return;
+      if (!bctx) bellsInit();
+      if (bctx) bellsWake();
+    }, { capture: true, passive: true });
   });
   api.bells = function () {
     return {
-      on: bOn, state: bctx ? bctx.state : 'none', hits: bHits,
+      on: bOn, muted: bMuted, unlocked: bctx ? bctx.state === 'running' : false,
+      state: bctx ? bctx.state : 'none', hits: bHits,
       gain: bEnv ? +bEnv.gain.value.toFixed(3) : 0,
       pan: bPan ? +bPan.pan.value.toFixed(2) : 0
     };

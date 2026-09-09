@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="80 114 1116 357" role="img">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="80 114 1116 363" role="img">
 <title>Traîneau du père Noël tiré par trois rennes au galop, grelots au harnais, père Noël qui fait coucou de la main.</title>
 <desc>Attelage de Noël en vol, orienté vers la droite : les rennes mènent, le traîneau est tiré derrière eux.</desc>
 <defs>
@@ -51,75 +51,91 @@
 </defs>
 <g>
   <animateTransform attributeName="transform" type="translate" values="0 0;0 5;0 0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.6s" repeatCount="indefinite"/>
-  <path d="M 299 295 C 339 310 528 308 568 296 C 608 300 770 298 810 277 C 850 280 1014 278 1054 256" fill="none" stroke="#6d5233" stroke-width="5" stroke-linecap="round" opacity="0.95"/>
-<path d="M 299 295 C 339 310 528 308 568 296 C 608 300 770 298 810 277 C 850 280 1014 278 1054 256" fill="none" stroke="#a8845c" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-  <!-- traineau -->
+  <path d="M 301 296 C 341 310 528 308 568 296 C 608 300 770 298 810 277 C 850 280 1014 278 1054 256" fill="none" stroke="#6d5233" stroke-width="5" stroke-linecap="round" opacity="0.95"/>
+<path d="M 301 296 C 341 310 528 308 568 296 C 608 300 770 298 810 277 C 850 280 1014 278 1054 256" fill="none" stroke="#a8845c" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <!-- traineau + pere noel (style canonique) -->
 <g>
   <animateTransform attributeName="transform" type="translate" values="0 0;0 3;0 0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="2.6s" repeatCount="indefinite"/>
-  <!-- patin -->
-  <path d="M 96 452 C 190 458 268 455 318 444 C 342 438 350 420 341 407 C 335 399 324 401 323 410 C 322 417 328 420 333 418" fill="none" stroke="url(#gGold)" stroke-width="7.5" stroke-linecap="round"/>
-  <path d="M 96 452 C 88 451 84 458 91 463" fill="none" stroke="url(#gGold)" stroke-width="7" stroke-linecap="round"/>
-  <path d="M 100 457 C 190 462 266 459 314 449" fill="none" stroke="#7a5a23" stroke-width="2.4" opacity="0.6"/>
-  <!-- montants -->
-  <path d="M 152 448 C 150 432 150 420 154 404 M 268 444 C 269 430 269 418 267 402" fill="none" stroke="#6d1418" stroke-width="7" stroke-linecap="round"/>
-  <!-- dossier arriere (volute) -->
-  <path d="M 128 404 C 116 372 118 336 140 318 C 154 307 170 314 166 328 C 163 339 150 340 146 332" fill="none" stroke="url(#gSledRed)" stroke-width="19" stroke-linecap="round"/>
-  <path d="M 128 404 C 116 372 118 336 140 318 C 154 307 170 314 166 328 C 163 339 150 340 146 332" fill="none" stroke="#e8b9b0" stroke-width="3" opacity="0.35"/>
-  <!-- sac de cadeaux -->
-  <path d="M 122 330 C 112 300 126 274 152 272 C 178 270 192 290 186 316 C 183 328 175 334 166 336 L 138 338 C 130 337 125 335 122 330 Z" fill="url(#gSack)"/>
-  <path d="M 140 276 C 146 268 160 267 167 273" fill="none" stroke="#4c3a26" stroke-width="5" stroke-linecap="round"/>
-  <path d="M 126 306 C 132 296 142 290 152 289" fill="none" stroke="#c8a878" stroke-width="3" opacity="0.5"/>
-  <rect x="128" y="256" width="24" height="19" rx="2.5" fill="#2e5d43"/>
-  <path d="M 140 256 L 140 275" stroke="#e3c06a" stroke-width="3.4"/>
-  <path d="M 131 262 L 149 270 M 149 262 L 131 270" stroke="#e3c06a" stroke-width="2" opacity="0.85"/>
-  <rect x="154" y="252" width="20" height="16" rx="2.5" fill="#a6262c"/>
-  <path d="M 164 252 L 164 268" stroke="#e3c06a" stroke-width="3"/>
+  <!-- sac de cadeaux (derriere le dossier) -->
+  <path d="M 121 330 C 102 296 110 250 146 236 C 178 224 204 244 199 278 C 196 298 184 314 166 322 C 152 328 132 332 121 330 Z" fill="url(#gSack)"/>
+  <path d="M 116 300 C 112 274 122 250 142 240" fill="none" stroke="#4c3a26" stroke-width="3" opacity="0.5" stroke-linecap="round"/>
+  <path d="M 140 238 C 146 230 160 228 167 233" fill="none" stroke="#4c3a26" stroke-width="5" stroke-linecap="round"/>
+  <rect x="136" y="208" width="26" height="20" rx="2.5" fill="#2e5d43"/>
+  <path d="M 149 208 L 149 228" stroke="#e3c06a" stroke-width="3.4"/>
+  <path d="M 139 216 L 159 220 M 159 216 L 139 220" stroke="#e3c06a" stroke-width="2" opacity="0.85"/>
+  <rect x="162" y="212" width="20" height="16" rx="2.5" fill="#a6262c"/>
+  <path d="M 172 212 L 172 228" stroke="#e3c06a" stroke-width="3"/>
+  <path d="M 122 236 C 116 228 118 220 126 218 C 132 224 130 233 124 237 Z" fill="#2e5d43"/>
+  <path d="M 132 232 C 138 226 146 227 148 234 C 142 240 134 238 132 234 Z" fill="#2e5d43"/>
+  <circle cx="127" cy="236" r="2.4" fill="#c22b33"/>
+  <circle cx="132" cy="240" r="2.4" fill="#c22b33"/>
+  <circle cx="123" cy="242" r="2.4" fill="#c22b33"/>
+  <!-- dossier haut enroule -->
+  <path d="M 128 388 C 108 352 108 302 130 274 C 140 262 156 265 154 277 C 152 286 142 287 139 280" fill="none" stroke="url(#gSledRed)" stroke-width="17" stroke-linecap="round"/>
+  <path d="M 131 384 C 113 352 113 306 133 281" fill="none" stroke="url(#gGold)" stroke-width="3" opacity="0.85" stroke-linecap="round"/>
+  <!-- patin dore a volute -->
+  <path d="M 97 456 C 175 466 252 462 308 447 C 334 439 345 424 339 409 C 334 397 320 394 314 403 C 310 410 316 418 323 416" fill="none" stroke="url(#gGold)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M 101 460 C 176 469 250 465 303 451" fill="none" stroke="#7a5a23" stroke-width="2" opacity="0.55" stroke-linecap="round"/>
+  <path d="M 97 456 C 89 454 85 462 93 468" fill="none" stroke="url(#gGold)" stroke-width="7" stroke-linecap="round"/>
+  <path d="M 152 452 C 150 442 149 434 151 426 M 285 443 C 286 434 287 428 289 420" fill="none" stroke="#6d1418" stroke-width="7" stroke-linecap="round"/>
+  <!-- siege interieur -->
+  <path d="M 194 336 C 220 328 266 328 290 338 L 290 392 C 262 402 224 402 196 394 Z" fill="#571014"/>
   <!-- Pere Noel -->
   <g>
-    <!-- bras lointain tenant les renes -->
-    <path d="M 212 288 C 244 300 272 302 296 296" fill="none" stroke="#7e1a1f" stroke-width="12" stroke-linecap="round"/>
-    <circle cx="299" cy="295" r="6.5" fill="#5d1114"/>
-    <!-- torse -->
-    <path d="M 186 336 C 178 316 180 292 196 280 C 208 271 232 271 243 282 C 255 294 256 316 248 334 C 228 341 205 341 186 336 Z" fill="url(#gCoat)"/>
-    <path d="M 186 328 C 205 336 229 336 247 327 L 248 336 C 228 343 205 343 186 338 Z" fill="#33151a"/>
-    <rect x="203" y="325" width="17" height="13" rx="2" fill="url(#gGold)"/>
-    <path d="M 203 330 L 220 330" stroke="#6d4e14" stroke-width="1.6"/>
-    <path d="M 210 325 L 210 338" stroke="#6d4e14" stroke-width="1.6"/>
-    <!-- fourrure du bas -->
-    <path d="M 184 334 C 205 343 230 343 249 333 L 249 341 C 228 351 204 351 184 342 Z" fill="url(#gFur)"/>
-    <!-- tete -->
-    <path d="M 214 246 C 210 268 218 285 232 286 C 247 286 254 270 250 250 C 242 260 222 260 214 246 Z" fill="url(#gFur)"/>
-    <path d="M 219 258 C 222 264 226 267 231 267 C 236 267 240 264 242 259 C 238 263 224 263 219 258 Z" fill="#d8d2c6"/>
-    <circle cx="230" cy="243" r="16" fill="url(#gSkin)"/>
-    <circle cx="241" cy="252" r="3.4" fill="#e8a587" opacity="0.5"/>
-    <circle cx="252" cy="246" r="5.4" fill="#e59a7d"/>
-    <circle cx="253.5" cy="244.5" r="1.7" fill="#ffc4ae"/>
-    <circle cx="243" cy="240" r="2.1" fill="#241811"/>
-    <path d="M 239 234 C 242 232 247 232 250 234" fill="none" stroke="#f4ede1" stroke-width="2.6" stroke-linecap="round"/>
-    <path d="M 244 258 C 252 260 259 258 263 253 C 265 258 262 263 256 264 C 250 265 245 263 244 258 Z" fill="#f4ede1"/>
-    <!-- bonnet -->
-    <path d="M 216 236 C 222 216 238 205 254 209 C 248 217 245 226 246 235 Z" fill="url(#gCoat)"/>
-    <path d="M 213 234 C 222 227 244 227 252 235 C 244 242 221 242 213 234 Z" fill="url(#gFur)"/>
-    <path d="M 219 232 C 226 238 240 239 247 235" fill="none" stroke="#d8d2c6" stroke-width="1.6" opacity="0.7"/>
-    <circle cx="212" cy="222" r="6.5" fill="url(#gFur)"/>
-    <path d="M 212 229 C 207 231 203 236 204 241" fill="none" stroke="#c9c2b4" stroke-width="2" opacity="0.6"/>
-    <!-- bras qui fait coucou -->
+    <path d="M 212 288 C 244 298 272 300 297 296" fill="none" stroke="#7e1a1f" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="299" cy="296" r="6.5" fill="#cfc8bb"/>
+    <path d="M 198 350 C 188 320 194 290 214 276 C 228 266 252 266 264 278 C 278 292 280 318 272 342 C 250 350 220 352 198 350 Z" fill="url(#gCoat)"/>
+    <path d="M 206 318 C 208 296 224 282 244 282" fill="none" stroke="#e05a50" stroke-width="5" opacity="0.22" stroke-linecap="round"/>
+    <path d="M 228 274 C 224 296 224 322 230 344 L 248 342 C 242 320 242 296 246 276 Z" fill="url(#gFurWhite)"/>
+    <path d="M 234 282 L 233 336 M 240 284 L 239 334" stroke="#d8d2c6" stroke-width="1.4" opacity="0.7"/>
+    <path d="M 196 340 C 218 350 252 350 274 338 L 276 354 C 252 366 216 366 194 356 Z" fill="#241014"/>
+    <rect x="220" y="333" width="34" height="27" rx="5" fill="url(#gGold)" stroke="#7a5a23" stroke-width="1.4"/>
+    <rect x="227" y="340" width="20" height="13" rx="2.5" fill="#241014"/>
+    <path d="M 237 333 L 237 340" stroke="#7a5a23" stroke-width="2.4"/>
+    <path d="M 224 337 C 228 335 233 334.5 237 335" fill="none" stroke="#fff7dc" stroke-width="2.2" opacity="0.8" stroke-linecap="round"/>
+    <path d="M 250 356 C 246 358 242 358.5 238 358" fill="none" stroke="#8a651f" stroke-width="1.6" opacity="0.7" stroke-linecap="round"/>
+    <path d="M 194 352 C 216 364 252 364 276 352 L 276 360 C 252 372 214 372 192 362 Z" fill="url(#gFurWhite)"/>
+    <path d="M 205 358 L 204 366 M 234 361 L 234 369 M 262 358 L 263 366" stroke="#d8d2c6" stroke-width="1.5" opacity="0.7"/>
+    <path d="M 206 240 C 197 268 199 297 214 311 C 225 321 247 322 259 311 C 273 299 277 270 267 244 C 257 257 216 257 206 240 Z" fill="url(#gFurWhite)"/>
+    <path d="M 215 300 C 224 307 242 308 252 302 M 209 280 C 219 289 246 289 256 282 M 219 258 C 228 265 248 265 256 259" fill="none" stroke="#d8d2c6" stroke-width="1.6" opacity="0.75" stroke-linecap="round"/>
+    <circle cx="234" cy="242" r="17.5" fill="url(#gSkin)"/>
+    <circle cx="225.5" cy="249" r="3.7" fill="#ea9d84" opacity="0.6"/>
+    <circle cx="243" cy="249" r="3.7" fill="#ea9d84" opacity="0.6"/>
+    <circle cx="234.5" cy="245" r="4.5" fill="#e58b6f"/>
+    <circle cx="233" cy="243.4" r="1.4" fill="#ffc4ae"/>
+    <circle cx="227" cy="238" r="2.3" fill="#241811"/>
+    <circle cx="241.5" cy="238" r="2.3" fill="#241811"/>
+    <circle cx="227.8" cy="237.2" r="0.85" fill="#ffffff"/>
+    <circle cx="242.3" cy="237.2" r="0.85" fill="#ffffff"/>
+    <path d="M 221.5 233.5 C 224.5 230.5 228.5 230.5 230.5 232.5 M 238 232.5 C 240 230.5 244.5 230.5 247.5 233.5" fill="none" stroke="url(#gFurWhite)" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M 229.5 258.5 Q 234 262.5 238.5 258.5" fill="none" stroke="#9c4a42" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 234 251 C 228 249 222 251 220 256 C 224 259.5 231 257.5 234 254 Z" fill="url(#gFurWhite)"/>
+    <path d="M 234 251 C 240 249 246 251 248 256 C 244 259.5 237 257.5 234 254 Z" fill="url(#gFurWhite)"/>
+    <path d="M 216 234 C 223 226.5 245 225 252 233 C 245 240.5 224 241.5 216 234 Z" fill="url(#gFurWhite)"/>
+    <path d="M 218 231 C 216 215 227 203 243 203.5 C 250 204 253 209 250.5 214 C 243.5 220 239.5 226 238.5 232 C 231.5 226 223 227 218 231 Z" fill="url(#gCoat)"/>
+    <path d="M 221 206 C 211 205 202 211 200 220 C 198.5 226 202 230.5 208 230 C 204 225 204.5 218 210 214.5 C 214 212 219 212 222 214 C 222.5 211 222 208 221 206 Z" fill="url(#gCoat)"/>
+    <circle cx="205" cy="233" r="7" fill="url(#gFurWhite)"/>
+    <path d="M 200 229 C 202 226 207 225 210 227" fill="none" stroke="#d8d2c6" stroke-width="1.4" opacity="0.7"/>
     <g>
-      <path d="M 240 300 C 244 288 248 276 252 264" fill="none" stroke="url(#gCoat)" stroke-width="13.5" stroke-linecap="round"/>
-      <path d="M 240 300 C 244 288 248 276 252 264" fill="none" stroke="#e8b9b0" stroke-width="2" opacity="0.25"/>
-      <path d="M 243 272 L 257 275" stroke="url(#gFur)" stroke-width="6.5" stroke-linecap="round"/>
-      <circle cx="256" cy="256" r="9" fill="url(#gFur)"/>
-      <circle cx="264" cy="252" r="3.6" fill="url(#gFur)"/>
-      <animateTransform attributeName="transform" type="rotate" values="-12 240 300;48 240 300;-12 240 300" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.15s" begin="0s" repeatCount="indefinite"/>
+      <path d="M 254 292 C 252 278 256 264 264 252" fill="none" stroke="url(#gCoat)" stroke-width="14" stroke-linecap="round"/>
+      <path d="M 258 263 L 271 268" stroke="url(#gFurWhite)" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="270" cy="244" r="9.5" fill="url(#gFurWhite)"/>
+      <circle cx="277.5" cy="239.5" r="4" fill="url(#gFurWhite)"/>
+      <animateTransform attributeName="transform" type="rotate" values="-14 254 292;44 254 292;-14 254 292" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="1.15s" begin="0s" repeatCount="indefinite"/>
     </g>
   </g>
-  <!-- caisse du traineau (devant le pere Noel) -->
-  <path d="M 118 396 C 160 410 244 408 292 396 C 302 412 302 428 296 442 C 240 452 172 452 128 444 C 116 428 110 410 118 396 Z" fill="url(#gSledDeep)"/>
-  <path d="M 118 396 C 160 410 244 408 292 396" fill="none" stroke="url(#gSledRed)" stroke-width="17" stroke-linecap="round"/>
-  <path d="M 292 396 C 306 390 314 378 312 366 C 310 356 300 354 295 361" fill="none" stroke="url(#gSledRed)" stroke-width="14" stroke-linecap="round"/>
-  <path d="M 120 392 C 162 406 244 404 290 392" fill="none" stroke="url(#gGold)" stroke-width="4" stroke-linecap="round"/>
-  <path d="M 136 428 C 168 436 232 436 268 428" fill="none" stroke="url(#gGold)" stroke-width="3" opacity="0.8"/>
-  <path d="M 158 434 C 164 420 178 414 190 418 M 224 436 C 228 424 238 418 248 420" fill="none" stroke="#c99a44" stroke-width="2.4" opacity="0.7"/>
+  <!-- caisse du traineau (devant les jambes du pere noel) -->
+  <path d="M 122 384 C 166 402 248 400 296 384 C 304 388 306 396 304 404 C 298 428 268 442 232 446 C 196 450 150 448 132 438 C 118 428 116 400 122 384 Z" fill="url(#gSledDeep)"/>
+  <path d="M 124 384 C 168 402 248 400 294 384" fill="none" stroke="url(#gSledRed)" stroke-width="16" stroke-linecap="round"/>
+  <path d="M 294 386 C 312 382 322 370 320 356 C 318 344 305 340 299 347 C 295 352 298 359 305 358" fill="none" stroke="url(#gSledRed)" stroke-width="14" stroke-linecap="round"/>
+  <path d="M 128 382 C 170 399 246 397 292 382" fill="none" stroke="url(#gGold)" stroke-width="3.5" opacity="0.9" stroke-linecap="round"/>
+  <path d="M 136 428 C 168 436 232 436 268 428" fill="none" stroke="url(#gGold)" stroke-width="2.5" opacity="0.6" stroke-linecap="round"/>
+  <path d="M 156 416 C 166 408 178 408 184 415 C 178 422 166 423 160 419 Z" fill="none" stroke="url(#gGold)" stroke-width="2.2" opacity="0.85"/>
+  <path d="M 168 414 C 172 411.5 176 412.5 177 415.5" fill="none" stroke="url(#gGold)" stroke-width="1.6" opacity="0.85"/>
+  <path d="M 230 420 C 240 412 252 412 258 419 C 252 426 240 427 234 423 Z" fill="none" stroke="url(#gGold)" stroke-width="2.2" opacity="0.85"/>
+  <path d="M 242 418 C 246 415.5 250 416.5 251 419.5" fill="none" stroke="url(#gGold)" stroke-width="1.6" opacity="0.85"/>
+  <path d="M 204 428 l 2 5 l 5 2 l -5 2 l -2 5 l -2 -5 l -5 -2 l 5 -2 Z" fill="url(#gGold)"/>
+  <path d="M 276 414 l 1.6 4 l 4 1.6 l -4 1.6 l -1.6 4 l -1.6 -4 l -4 -1.6 l 4 -1.6 Z" fill="url(#gGold)"/>
 </g>
   <g transform="translate(520 312)">
   <g>
@@ -232,7 +248,7 @@
 </g>
   </g>
 </g>
-<g transform="translate(762 293)">
+  <g transform="translate(762 293)">
   <g>
     <animateTransform attributeName="transform" type="translate" values="0 0;0 4;0 0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="0.55s" begin="-0.08s" repeatCount="indefinite"/>
     <!-- pattes lointaines -->
@@ -343,7 +359,7 @@
 </g>
   </g>
 </g>
-<g transform="translate(1006 272)">
+  <g transform="translate(1006 272)">
   <g>
     <animateTransform attributeName="transform" type="translate" values="0 0;0 4;0 0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" dur="0.55s" begin="0.0s" repeatCount="indefinite"/>
     <!-- pattes lointaines -->
