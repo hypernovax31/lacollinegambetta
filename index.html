@@ -89,7 +89,7 @@ html:not(.carte-doc) .container {
 .panel__subtitle { margin:0; color:var(--muted); font-style:italic; font-size:.9rem; }
 .food-card-grid { display:grid; grid-template-columns:1fr; gap:12px; }
 .food-card { display:flex; flex-direction:column; gap:8px; padding:12px; border:1px solid rgba(216,178,87,.34); border-radius:18px; background:#fff; min-height:auto; }
-.food-card__head { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; align-items:center; }
+.food-card__head { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; align-items:baseline; }
 .food-card__head h5 { margin:0; font-family:'Cinzel',serif; font-size:1rem; color:var(--violet-900); text-transform:uppercase; letter-spacing:.03em; line-height:1.25; }
 .food-card__head strong { font-family:'Cinzel',serif; font-size:1.36rem; color:var(--gold-700); white-space:nowrap; line-height:1; }
 .food-card__note { margin:0; color:#695879; line-height:1.45; font-style:italic; }
@@ -97,7 +97,7 @@ html:not(.carte-doc) .container {
 .price-list--cols, .hh-list--cols { display:grid; grid-template-columns:1fr; gap:10px; }
 .price-list__col, .hh-list__col { min-width:0; }
 .price-line, .hh-line { padding:8px 0; }
-.price-line__row { display:flex; align-items:center; gap:16px; }
+.price-line__row { display:flex; align-items:baseline; gap:16px; }
 .price-line__name, .hh-line__name { min-width:0; font-weight:700; line-height:1.35; }
 .price-line__dots, .hh-line .price-line__dots { flex:1 1 auto; border-bottom:1px dotted rgba(156,122,45,.58); transform:translateY(-.06rem); }
 .price-line__price { font-family:'Cinzel',serif; font-size:1.18rem; font-weight:800; color:var(--violet-900); white-space:nowrap; }
@@ -105,7 +105,7 @@ html:not(.carte-doc) .container {
 .hh-head { display:grid; grid-template-columns:minmax(0,1fr) 96px 96px; gap:16px; align-items:end; padding:0 0 8px; font-family:'Cinzel',serif; font-size:.76rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
 .hh-head span:nth-child(2), .hh-head span:nth-child(3) { justify-self:end; }
 .hh-head span:last-child { color:var(--gold-700); }
-.hh-line__row { display:grid; grid-template-columns:minmax(0,1fr) 96px 96px; gap:16px; align-items:center; }
+.hh-line__row { display:grid; grid-template-columns:minmax(0,1fr) 96px 96px; gap:16px; align-items:baseline; }
 .hh-line__prices { display:contents; }
 .hh-line__row .grand-price { font-family:'Cinzel',serif; font-size:1.18rem; font-weight:800; color:var(--violet-900); justify-self:end; white-space:nowrap; }
 .hh-value, .hh-line__hh, .hh-value--empty, .hh-line__hh-value { font-family:'Cinzel',serif; font-size:1.18rem; font-weight:800; color:var(--gold-700); justify-self:end; white-space:nowrap; }
@@ -131,7 +131,7 @@ html:not(.carte-doc) .container {
 .special-card--dark { background:linear-gradient(135deg,#2c1339 0%,#432155 100%); color:#fff; }
 .special-card--dark h5, .special-card--dark p, .special-card--dark strong { color:#fff; }
 .day-lines { display:grid; gap:10px; margin:14px 0; }
-.day-lines div { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; text-align:left; }
+.day-lines div { display:flex; justify-content:space-between; gap:12px; align-items:baseline; text-align:left; }
 .breakfast-card { display:grid; gap:10px; text-align:center; }
 .accent-band { padding:16px 18px; border-radius:18px; background:linear-gradient(135deg,#432155 0%,#592e6f 100%); color:#fff; text-align:center; border:1px solid rgba(216,178,87,.5); }
 .accent-band strong, .accent-band span { font-family:'Cinzel',serif; }
@@ -243,11 +243,10 @@ html:not(.carte-doc) .container {
   .cover-links, .footer-links { display:grid; grid-template-columns:1fr; width:100%; }
   .panel { padding:14px; }
   .food-card { padding:12px; }
-  .food-card__head { grid-template-columns:1fr; gap:6px; }
-  .food-card__head strong { justify-self:start; }
-  .price-line__dots, .grand-dots { display:none !important; }
-  .price-line__row { align-items:flex-start; flex-wrap:wrap; }
-  .price-line__price { width:100%; }
+  /* Intitulé + rigole + prix restent sur la même ligne à toutes les
+     largeurs : quand l'intitulé est long, c'est lui qui passe sur
+     plusieurs lignes dans sa colonne — le prix reste en face de la
+     première ligne (alignement baseline des règles de base). */
   .footer-details { gap:4px 12px; }
 }
 
@@ -1873,24 +1872,27 @@ html:not(.carte-doc) #cover-section .medallion-frame:focus-visible {
   }
 }
 
-/* ===== Plats & boissons : intitulé à gauche, prix à droite ; le prix passe à la ligne (à gauche) seulement en cas de chevauchement ===== */
-.food-card__head {
+/* ===== Plats & boissons : intitulé à gauche, prix à droite — le prix reste
+   TOUJOURS en vis-à-vis de la première ligne de l'intitulé. L'intitulé est
+   flexible (min-width:0) : quand il est long, la suite descend sous la
+   première ligne DANS SA PROPRE COLONNE, sans jamais pousser le prix. ===== */
+/* Web seulement : à l'impression, la grille de base (minmax(0,1fr) + baseline)
+   fait le même vis-à-vis et replie les longs titres sans aide. */
+html:not(.carte-doc) .food-card__head {
   display: flex !important;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: space-between;
   align-items: baseline;
   column-gap: 12px !important;
-  row-gap: 4px !important;
 }
-.food-card__head h5 { min-width: 0; }
-.food-card__head strong { white-space: nowrap; }
-.price-line__row {
-  flex-wrap: wrap;
+html:not(.carte-doc) .food-card__head h5 { min-width: 0; }
+html:not(.carte-doc) .food-card__head strong { white-space: nowrap; flex: 0 0 auto; }
+html:not(.carte-doc) .price-line__row {
+  flex-wrap: nowrap;
   justify-content: space-between;
   align-items: baseline;
-  row-gap: 2px;
 }
-.price-line__price { white-space: nowrap; width: auto !important; }
+html:not(.carte-doc) .price-line__price { white-space: nowrap; width: auto !important; flex: 0 0 auto; }
 
 /* ===== Boutons de sélection (Nos entrées, Nos plats…) : texte maximisé sur très petits écrans ===== */
 @media (max-width: 480px) {
@@ -1981,11 +1983,9 @@ html:not(.carte-doc) #cover-section .medallion-frame:focus-visible {
   letter-spacing: .08em;
   color: var(--royal-violet-ink);
 }
-/* Pointillés conservés sur petit écran (boissons & cocktails) */
-@media (max-width: 640px) {
-  #boissons .price-line__dots,
-  #cocktails .price-line__dots { display: block !important; }
-}
+/* (Les pointillés des boissons & cocktails ne sont plus jamais masqués :
+   la rigole reste en face de la première ligne de l'intitulé, à toutes
+   les largeurs — voir les règles de base `.price-line__dots`.) */
 
 /* ===== Pointillés meneurs : bières pression et cocktails =====
    Partout ailleurs, l'intitulé et son prix sont reliés par un `.price-line__dots`
@@ -1999,7 +1999,9 @@ html:not(.carte-doc) #cover-section .medallion-frame:focus-visible {
 html .beer-row__name,
 html .hh-line__name {
   display: flex;
-  align-items: center;
+  /* baseline : la rigole ::after s'accroche à la PREMIÈRE ligne du nom,
+     même quand l'intitulé se replie sur plusieurs lignes. */
+  align-items: baseline;
   gap: 10px;
   min-width: 0;
 }
@@ -4052,17 +4054,17 @@ html:not(.carte-doc) #cover-section .cover-footer {
 }
 
 
-/* ===== Intitulé et prix : jamais l'un SUR l'autre =====
-   Un intitulé garde sa ligne tant qu'il ne touche pas son prix ; s'il manque
-   de place, le texte se replie (il ne déborde plus sur le prix, il ne pousse
-   plus la page en défilement horizontal). Le passage franc en « l'un sous
-   l'autre » est piloté par onglet plus bas (bloc ZÉRO CHEVAUCHEMENT). */
+/* ===== Intitulé et prix : TOUJOURS sur la même ligne =====
+   Le prix reste en vis-à-vis de la PREMIÈRE ligne de l'intitulé à toutes les
+   largeurs : jamais l'un sous l'autre. L'intitulé est flexible (min-width:0 +
+   repli de mots), c'est LUI qui cède — la suite d'un intitulé long descend
+   sous la première ligne dans sa propre colonne, sans jamais déplacer le prix
+   ni la rigole de pointillés. */
 html:not(.carte-doc) .food-card__head,
 html:not(.carte-doc) .price-line__row,
 html:not(.carte-doc) .day-lines div {
-  flex-wrap: wrap !important;
+  flex-wrap: nowrap !important;
   column-gap: 12px !important;
-  row-gap: 3px !important;
 }
 html:not(.carte-doc) .food-card__head h5,
 html:not(.carte-doc) .price-line__name,
@@ -4624,23 +4626,27 @@ html:not(.carte-doc) #cover-section .cover-footer .cover-links {
 }
 
 /* ============================================================================
-   ZÉRO CHEVAUCHEMENT « INTITULÉ ⇄ PRIX » EN RESPONSIVE — bascule par onglet
+   VIS-À-VIS « INTITULÉ ⇄ PRIX » EN RESPONSIVE — bascules par onglet
    ----------------------------------------------------------------------------
-   Trois modes pour chaque onglet, du plus large au plus étroit :
+   Règle fixe, à toutes les largeurs : le prix reste en vis-à-vis de la
+   PREMIÈRE ligne de son intitulé, jamais dessous. Quand l'intitulé est long,
+   c'est LUI qui cède : sa suite descend sous la première ligne DANS SA
+   PROPRE COLONNE (white-space:normal + min-width:0 + repli de mots), sans
+   jamais déplacer le prix ni la rigole de pointillés.
 
-     1. DEUX COLONNES + « intitulé à gauche, prix à droite » ;
-     2. UNE COLONNE + « intitulé à gauche, prix à droite » ;
-     3. MODE PETIT ÉCRAN : une colonne + le prix SOUS son intitulé
-        (et, pour Bières/Vins/Happy Hour, les prix passent en colonnes
-        étiquetées sous le nom : 25 cl • 50 cl • HH, 14 cl • 25 cl • …).
+   Deux bascules restent, par onglet :
 
-   L'onglet passe au mode suivant dès que son intitulé le plus long ne tient
-   plus sur UNE ligne à côté de son prix, avec la gouttière de 12 px : le
-   rapprochement est donc bloqué au minimum lisible, et le repère de bascule
-   est différent pour chaque onglet parce qu'il dépend de son contenu.
+     1. DEUX COLONNES → UNE COLONNE (marqueur @stack-wide) : la grille de
+        l'onglet passe en une colonne quand les colonnes deviennent étroites ;
+     2. MINI-TABLEAUX MULTI-PRIX (marqueur @stack-rows) : les lignes à prix
+        unique (intitulé · pointillés · prix) n'ont PLUS de bascule — repère
+        0 partout, le vis-à-vis est permanent. Les tableaux de prix (Bières
+        25 cl/50 cl/HH, Vins au verre/bouteille, HH Prix/HH) gardent leur
+        présentation en colonnes ; sur très petit écran, seuls les Vins (une
+        appellation, quatre prix) replient leurs prix en grille étiquetée.
 
-   Les nombres ci-dessous sont mesurés sur le contenu réel (Chromium) et
-   régénérés par : node tools/check-responsive.mjs --breakpoints --write
+   Les repères sont mesurés sur le contenu réel (Chromium) et régénérés par :
+   node tools/check-responsive.mjs --breakpoints --write
    (marqueurs « @stack-wide onglet » et « @stack-rows onglet »).
 
    En deçà/au-delà de ces repères, rien ne peut se chevaucher de toute façon :
@@ -4743,22 +4749,15 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
   html:not(.carte-doc) #interior-menu #entrees .food-card-grid,
   html:not(.carte-doc) #interior-menu #entrees .food-card-grid--wide { grid-template-columns: 1fr !important; }
 }
-/* @stack-rows entrees */
-@media screen and (max-width: 415px) {
-  html:not(.carte-doc) #interior-menu #entrees .food-card__head { flex-direction: column; align-items: flex-start; row-gap: 1px; }
-}
+/* L'empilage « intitulé puis prix dessous » sur très petit écran a été
+   retiré : le prix reste en vis-à-vis de la première ligne à toutes les
+   largeurs, la suite d'un intitulé long descend dans sa colonne. */
 
 /* ===== Plats ===== */
 /* @stack-wide plats */
 @media screen and (max-width: 778px) {
   html:not(.carte-doc) #interior-menu #plats .food-card-grid,
   html:not(.carte-doc) #interior-menu #plats .food-card-grid--wide { grid-template-columns: 1fr !important; }
-}
-/* @stack-rows plats */
-@media screen and (max-width: 407px) {
-  html:not(.carte-doc) #interior-menu #plats .food-card__head { flex-direction: column; align-items: flex-start; row-gap: 1px; }
-  html:not(.carte-doc) #interior-menu #plats .price-line__row { flex-direction: column; align-items: flex-start; row-gap: 0; }
-  html:not(.carte-doc) #interior-menu #plats .price-line__dots { display: none !important; }
 }
 
 /* ===== Desserts ===== */
@@ -4767,12 +4766,6 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
 @media screen and (max-width: 795px) {
   html:not(.carte-doc) #interior-menu #desserts .food-card-grid,
   html:not(.carte-doc) #interior-menu #desserts .food-card-grid--wide { grid-template-columns: 1fr !important; }
-}
-/* @stack-rows desserts */
-@media screen and (max-width: 445px) {
-  html:not(.carte-doc) #interior-menu #desserts .food-card__head { flex-direction: column; align-items: flex-start; row-gap: 1px; }
-  html:not(.carte-doc) #interior-menu #desserts .price-line__row { flex-direction: column; align-items: flex-start; row-gap: 0; }
-  html:not(.carte-doc) #interior-menu #desserts .price-line__dots { display: none !important; }
 }
 
 /* ===== Boissons ===== */
@@ -4784,10 +4777,13 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
      implicite « auto » et la gouttière se retrouve n'importe où. */
   html:not(.carte-doc) #interior-menu #boissons .price-list--cols .price-list__col { display: block !important; }
 }
-/* @stack-rows boissons */
-@media screen and (max-width: 412px) {
-  html:not(.carte-doc) #interior-menu #boissons .price-line__row { flex-direction: column; align-items: flex-start; row-gap: 0; }
-  html:not(.carte-doc) #interior-menu #boissons .price-line__dots { display: none !important; }
+/* @stack-rows boissons — repère 0 : l'empilage est désactivé. Même les
+   bières (nom + trois prix) restent en vis-à-vis : les colonnes de prix se
+   resserrent en max-content et le nom se replie dans sa colonne. Le bloc
+   reste comme marqueur pour tools/check-responsive.mjs (max-width: 0 = ne
+   s'applique jamais ; l'outil n'y écrit une valeur que si un incident réel
+   — chevauchement, prix hors écran — est mesuré). */
+@media screen and (max-width: 0px) {
   html:not(.carte-doc) #interior-menu #boissons .beer-table__head { display: none; }
   /* Le nom passe seul sur sa ligne : il n'y a plus de prix à rejoindre à sa droite. */
   html:not(.carte-doc) #interior-menu #boissons .beer-row__name::after { display: none !important; }
@@ -4895,10 +4891,12 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
   html:not(.carte-doc) #interior-menu #cocktails .hh-list--cols,
   html:not(.carte-doc) #interior-menu #cocktails .duo-grid { grid-template-columns: 1fr !important; }
 }
-/* @stack-rows cocktails */
-@media screen and (max-width: 357px) {
-  html:not(.carte-doc) #interior-menu #cocktails .price-line__row { flex-direction: column; align-items: flex-start; row-gap: 0; }
-  html:not(.carte-doc) #interior-menu #cocktails .price-line__dots { display: none !important; }
+/* @stack-rows cocktails — repère 0 : l'empilage est désactivé. Les lignes
+   « intitulé · pointillés · prix » comme les lignes HH (nom + Prix + HH)
+   restent en vis-à-vis à toutes les largeurs ; les colonnes de prix se
+   resserrent en max-content et le nom se replie dans sa colonne. Bloc
+   conservé comme marqueur pour tools/check-responsive.mjs. */
+@media screen and (max-width: 0px) {
   html:not(.carte-doc) #interior-menu #cocktails .hh-head { display: none; }
   html:not(.carte-doc) #interior-menu #cocktails .hh-line__price::before { content: "Prix"; }
   html:not(.carte-doc) #interior-menu #cocktails .hh-line__hh::before { content: "HH"; }

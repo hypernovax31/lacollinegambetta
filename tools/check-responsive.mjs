@@ -7,16 +7,19 @@
  *         • « chevauchement »  : encre d'un intitulé sur l'encre de son prix ;
  *         • « prix hors écran » : un prix rejeté hors de la fenêtre ;
  *         • « défilement horizontal » : la page plus large que l'écran ;
- *         • « serre » : un intitulé qui doit se couper en deux, ou dont le prix
- *           est retombé sur sa propre ligne, alors que l'onglet est encore en
- *           mode « côte à côte » (= repère de bascule trop bas).
+ *         • « serre » : un prix qui ne partage plus la bande de la PREMIÈRE
+ *           ligne de son intitulé. Depuis la refonte « vis-à-vis », un intitulé
+ *           qui se replie sur plusieurs lignes dans SA colonne est NORMAL :
+ *           le prix reste en vis-à-vis de la première ligne, la rigole
+ *           s'accroche à cette même ligne, et rien ne passe dessous.
  *       Sortie ≠ 0 si un onglet échoue.
  *
  *   node tools/check-responsive.mjs --breakpoints
  *       Calcule, pour chaque onglet, les deux repères de bascule :
  *         wide : en dessous, l'onglet passe d'une colonne double à une colonne ;
- *         rows : en dessous, le prix passe sous son intitulé (mode petit écran).
- *       --write les écrit dans index.html (marqueurs @stack-wide / @stack-rows).
+ *         rows : en dessous, les mini-tableaux multi-prix (bières, HH) passent
+ *                en colonnes étiquetées. Les lignes à prix unique ne passent
+ *                JAMAIS « prix sous l'intitulé » : repère 0 par défaut.
  *
  * Options communes : --tabs entrees,boissons --step 8 --min 320 --max 1300
  *                    --margin 3 --json /tmp/rapport.json [--remote-fonts]
@@ -152,11 +155,6 @@ function inspect(context) {
     if (row.closest('.wine-table')) return spansWholeRow(row.querySelector('.wine-name') || row.firstElementChild);
     return null;
   };
-  const lineCount = rects => {
-    const tops = [];
-    for (const b of rects) if (!tops.some(t => Math.abs(t - b.top) < Math.max(4, b.height * 0.45))) tops.push(b.top);
-    return tops.length;
-  };
 
   // 1) tout onglet : deux textes ne doivent jamais se recouvrir
   for (const row of section.querySelectorAll(`${INLINE_ROWS}, ${HEAD_ROWS}`)) {
@@ -188,8 +186,12 @@ function inspect(context) {
     if (state) { stacked++; continue; }
     const mine = ink(cells[0]);
     const others = cells.slice(1).flatMap(ink);
-    const sharesBand = others.some(b => mine.some(nr => sameBand(nr, b)));
-    if (!sharesBand || lineCount(mine) > 1) {
+    /* L'intitulé peut se replier sur plusieurs lignes dans sa colonne : seule
+       compte la bande de sa PREMIÈRE ligne — le prix doit s'y trouver. */
+    const firstTop = mine.length ? Math.min(...mine.map(r => r.top)) : 0;
+    const firstLine = mine.filter(r => Math.abs(r.top - firstTop) < Math.max(4, r.height * 0.45));
+    const sharesBand = others.some(b => firstLine.some(nr => sameBand(nr, b)));
+    if (!sharesBand) {
       issues.push({ kind: 'serre', row: row.className, label: text(cells[0]), price: text(cells[1]) });
     }
   }
@@ -343,8 +345,10 @@ async function breakpoints() {
   console.log('\nRepères de bascule par onglet (largeur max, mesurés sur le contenu réel) :');
   for (const tab of TAB_LIST) {
     if (STACKED_BY_DESIGN.has(tab)) { console.log(`  ${tab.padEnd(10)} — aucune bascule : le prix est déjà sous l'intitulé à toutes les largeurs`); continue; }
-    const r = Math.min((rows[tab]?.onset ?? 0) + MARGIN, MAX);
-    const wl = Math.min((wide[tab]?.onset ?? 0) + MARGIN, MAX);
+    /* onset 0 = aucun incident nulle part : le repère reste 0 (jamais de
+       marge ajoutée à un non-incident, elle réactiverait l'empilage). */
+    const r = rows[tab]?.onset ? Math.min(rows[tab].onset + MARGIN, MAX) : 0;
+    const wl = wide[tab]?.onset ? Math.min(wide[tab].onset + MARGIN, MAX) : 0;
     if (rows[tab]?.saturated || (wide[tab]?.saturated && wl > r)) {
       warns.push(`${tab} : le serrage ne s'arrête pas avant la fin du balayage (${rows[tab]?.saturated ? rowsMax : MAX}px) — relancer avec --max plus grand, repère non écrit.`);
       continue;   // ni rows ni wide : mieux vaut 0px (mode actuel) qu'un repère faux toujours actif
