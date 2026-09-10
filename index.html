@@ -4240,18 +4240,21 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   html:not(.carte-doc) .menu-nav-hint--end { right: 8px; justify-self: auto; }
   /* ===== « D'autres onglets à droite » : deux petits signaux animés =====
      1. Battement de la flèche droite (ci-dessous) : tant que des onglets
-        restent cachés à droite (has-end) et que l'utilisateur n'a pas
-        encore touché le bandeau (pas de nav-used), la flèche dorée
-        grossit légèrement pendant qu'un anneau s'étend — une pulsation
-        toutes les 3,2 s, discret. Le premier contact avec le bandeau
-        (toucher, molette, clic sur une flèche) pose nav-used et éteint
-        le battement pour de bon : le signal a été reçu.
-     2. « Coup de pouce » du ruban (JS, menuNavNudgeOnce) : à la première
-        entrée dans la carte, le ruban glisse doucement de ~56 px vers
-        la droite et revient, révélant un instant le bouton suivant.
+        restent cachés à droite de l'onglet actif (has-end), la flèche
+        dorée grossit légèrement pendant qu'un halo s'étend — une
+        pulsation toutes les 3,2 s, discret. AUCUNE interaction ne
+        l'éteint (défilement, glissement, clic) : elle ne s'arrête que
+        quand il n'y a plus rien à révéler à droite — dernier onglet
+        actif — ou quand le bandeau ne déborde plus.
+     2. « Coup de pouce » du ruban (JS, menuNavNudge) : à CHAQUE entrée
+        dans la carte, le ruban glisse doucement de ~56 px vers la
+        droite et revient, révélant un instant le bouton suivant — et
+        rien ne l'annule : si le ruban bouge pendant la balançoire
+        (doigt, molette, onglet cliqué), elle adopte la nouvelle
+        position et repart d'elle.
      Mouvement réduit : aucun des deux — la flèche reste simplement
         posée là, le bandeau reste utilisable à l'identique. */
-  html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-end:not(.nav-used) .menu-nav-hint--end {
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-end .menu-nav-hint--end {
     animation: menuNavEndBeat 3.2s ease-in-out .35s infinite;
   }
   /* Le halo qui s'étend depuis la flèche passe par box-shadow : une ombre
@@ -4270,7 +4273,7 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-end:not(.nav-used) .menu-nav-hint--end {
+    html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-end .menu-nav-hint--end {
       animation: none;
     }
   }
@@ -6838,11 +6841,12 @@ function showView(view) {
         syncMenuNavHints();
       });
     });
-    /* Première entrée dans la carte : petit coup de pouce du bandeau pour
-       montrer les onglets cachés à droite (une seule fois par chargement,
-       jamais en mouvement réduit). Le délai laisse la bascule garde →
-       carte et le défilement de la page (220 ms) se terminer. */
-    setTimeout(menuNavNudgeOnce, 650);
+    /* À chaque entrée dans la carte : petit coup de pouce du bandeau
+       montrant les onglets cachés à droite (jamais en mouvement réduit,
+       jamais d'annulation — voir menuNavNudge). Le délai laisse la
+       bascule garde → carte et le défilement de la page (220 ms) se
+       terminer. */
+    setTimeout(menuNavNudge, 650);
   }
 }
 function centerMenuNavButton(btnElement) {
@@ -7119,20 +7123,20 @@ function syncMenuNavHints() {
 }
 
 /* ===== Bandeau : le « coup de pouce » qui montre les onglets cachés =====
-   Une fois par chargement de page, à la première entrée dans la carte,
-   si des onglets sont cachés à droite du bandeau, le ruban glisse
-   doucement vers la droite (~56 px : le bouton suivant se révèle un
-   instant) puis revient — à la façon des carrousels iOS. Le geste ne
-   touche QUE au scrollLeft du bandeau : jamais au défilement de la
-   page, donc aucun risque pour l'ancrage des onglets. Il s'annule au
-   moindre geste de l'utilisateur (toucher, molette, redimensionnement,
-   onglet masqué) et ne joue ni en mouvement réduit ni sur la carte
-   A4. La flèche droite, elle, bat en continu (CSS, .has-end sans
-   .nav-used) tant que le bandeau n'a pas été touché. */
-let __navNudgeDone = false;
-function menuNavNudgeOnce() {
-  if (__navNudgeDone) return;
-  __navNudgeDone = true;
+   À CHAQUE entrée dans la carte — pas seulement la première —, si des
+   onglets sont cachés à droite du bandeau, le ruban glisse doucement
+   vers la droite (~56 px : le bouton suivant se révèle un instant)
+   puis revient — à la façon des carrousels iOS. AUCUNE interaction ne
+   l'annule, ni défilement, ni glissement, ni clic : si le ruban bouge
+   pendant la balançoire (doigt, inertie du glissement, molette,
+   recentrage d'un onglet cliqué), elle ADOPTE la nouvelle position et
+   repart d'elle, sans jamais lutter contre l'utilisateur. Le geste ne
+   touche toujours qu'au scrollLeft du bandeau, jamais au défilement de
+   la page : l'ancrage des onglets reste hors de danger. Pas de
+   balançoire en mouvement réduit ni sur la carte A4. La flèche droite, elle, bat en continu (CSS, .has-end) tant qu'il reste des
+   onglets cachés à droite de l'onglet actif. */
+let __navNudgeGen = 0;
+function menuNavNudge() {
   if (document.documentElement.classList.contains('carte-doc')) return;
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const wrap = document.getElementById('menu-nav-wrap');
@@ -7141,24 +7145,36 @@ function menuNavNudgeOnce() {
   /* Reste-t-il des onglets cachés à droite de la position actuelle ? */
   const span = nav.scrollWidth - nav.clientWidth - nav.scrollLeft;
   if (span < 24) return;
-  const start = nav.scrollLeft;
-  const target = Math.min(56, span);
+  /* Une nouvelle entrée remplace toute balançoire en cours (jeton de
+     génération) : jamais deux balançoires qui se battraient. */
+  const gen = ++__navNudgeGen;
   const dur = 1100;
-  let t0 = 0, stop = false;
-  const cancel = () => { stop = true; };
-  nav.addEventListener('pointerdown', cancel, { capture: true, once: true, passive: true });
-  nav.addEventListener('wheel', cancel, { capture: true, once: true, passive: true });
-  window.addEventListener('resize', cancel, { once: true, passive: true });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) cancel(); }, { once: true, passive: true });
+  let start = nav.scrollLeft, lastWritten = null, t0 = 0;
   const ease = p => (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
   const step = t => {
-    if (stop) return;
+    if (gen !== __navNudgeGen) return;
+    const room = nav.scrollWidth - nav.clientWidth;
+    /* Plus rien à révéler à droite (ruban au bout) : la balançoire n'a
+       plus rien à dire. */
+    if (room - start < 2) return;
     /* L'horloge ne part qu'à la PREMIÈRE image : si la première trame
        arrive en retard (page qui finit de charger, moteur au repos), la
        balançoire joue quand même en entier au lieu de sauter à mi-course. */
     if (!t0) t0 = t;
+    /* Le ruban a bougé sous nos pieds — doigt, inertie du glissement,
+       molette, recentrage d'un onglet cliqué : on ADOPTE sa position et
+       la balançoire repart d'elle, au lieu de ramener le ruban de force
+       à son point de départ ou de lutter contre le doigt (sur iOS, les
+       écritures sont de toute façon ignorées pendant l'inertie : la
+       balançoire retrouve la main quand elle se termine). */
+    if (lastWritten !== null && Math.abs(nav.scrollLeft - lastWritten) > 1) {
+      start = nav.scrollLeft;
+      t0 = t;
+    }
     const p = Math.min(1, (t - t0) / dur);
+    const target = Math.max(0, Math.min(56, room - start));
     try { nav.scrollLeft = start + target * Math.sin(Math.PI * ease(p)); } catch (e) { return; }
+    lastWritten = nav.scrollLeft;
     if (p < 1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
@@ -7194,18 +7210,6 @@ function initMenuNavHints() {
   };
   bind(start, -1);
   bind(end, 1);
-  /* Premier contact avec le bandeau — toucher, molette ou clic sur une
-     flèche : la classe nav-used éteint le battement de la flèche droite
-     (le signal « il y a d'autres onglets » a été reçu). Défiler la PAGE
-     ne compte pas : seul un geste sur le bandeau lui-même. */
-  const markNavUsed = () => {
-    const w = document.getElementById('menu-nav-wrap');
-    if (w) w.classList.add('nav-used');
-  };
-  nav.addEventListener('pointerdown', markNavUsed, { capture: true, once: true, passive: true });
-  nav.addEventListener('wheel', markNavUsed, { capture: true, once: true, passive: true });
-  if (end) end.addEventListener('click', markNavUsed, { once: true });
-  if (start) start.addEventListener('click', markNavUsed, { once: true });
   nav.addEventListener('scroll', syncMenuNavHints, { passive: true });
   window.addEventListener('resize', syncMenuNavHints);
   if (window.ResizeObserver) new ResizeObserver(syncMenuNavHints).observe(nav);
