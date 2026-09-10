@@ -1947,11 +1947,13 @@ html:not(.carte-doc) .price-line__price { white-space: nowrap; width: auto !impo
   font-size: clamp(0.78rem, 0.3vw + 0.7rem, 0.95rem) !important;
   line-height: 1.45 !important;
 }
-/* En-têtes de tableaux (bières, vins, HH) */
+/* En-têtes de tableaux (bières, vins, HH) — même corps que les notes :
+   plus rien dans les onglets Boissons / Cocktails n'est plus petit que le
+   plus petit texte des onglets Entrées / Plats / Desserts. */
 .beer-table__head,
 .wine-table th,
 .hh-head {
-  font-size: clamp(0.7rem, 0.22vw + 0.64rem, 0.8rem) !important;
+  font-size: clamp(0.79rem, 0.66vw + 0.53rem, 0.98rem) !important;
 }
 /* Bandeau frites */
 .accent-band strong {
@@ -4929,11 +4931,11 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
      graisse  400, jamais de gras : l'information est secondaire, elle ne doit
               pas concurrencer l'intitulé ni le prix ;
      casse    telle qu'écrite (« 25 cl », pas « 25 CL ») ;
-     taille   la même partout, plancher à 11 px : un cran sous le corps des
-              notes, lisible en salle sans jamais dominer la ligne — y compris
-              pour une contenance prise dans une phrase (« 5 cl — Blanc, rouge »,
-              « arrosées de vodka (2 cl) »), qui garde donc son corps propre
-              plutôt que celui de la note qui la porte ;
+     taille   la même partout, et désormais LE corps des notes de la carte
+              (0,79 → 0,98 rem, comme les onglets Entrées / Plats / Desserts) :
+              plus petit, tout l'onglet Boissons paraissait écrire plus menu
+              que les autres — y compris une contenance prise dans une phrase
+              (« 5 cl — Blanc, rouge », « arrosées de vodka (2 cl) ») ;
      encre    --qty-ink, un violet clair unique — plus clair que l'intitulé, et
               tenant 6,0:1 sur le fond crème comme sur le blanc des panneaux.
 
@@ -4943,7 +4945,13 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
    ========================================================================= */
 :root {
   --qty-ink: #6b5a78;                                  /* violet clair, 6,0:1 sur le crème */
-  --qty-size: clamp(0.6875rem, 0.16vw + 0.645rem, 0.78rem);   /* 11 px → 12,5 px */
+  --qty-size: clamp(0.79rem, 0.66vw + 0.53rem, 0.98rem);  /* le corps des notes :
+                                                              une contenance se lit comme
+                                                              une note, exactement comme
+                                                              les onglets Entrées / Plats /
+                                                              Desserts (avant : 11 → 12,5 px,
+                                                              tout l'onglet Boissons paraissait
+                                                              plus petit que les autres) */
 }
 html .qty,
 html .price-list__note.note-cl,
@@ -5652,7 +5660,11 @@ html:not(.carte-doc) #menus .fm .fmb-head {
   gap: clamp(6px, 1cqw, 12px);
 }
 html:not(.carte-doc) #menus .fm .fmb-ico {
-  width: clamp(52px, 5.2cqw, 72px); height: auto;
+  /* aspect-ratio: la place de l'icône est réservée AVANT son chargement
+     (images « lazy », hauteur sinon 0) : sans cela, chaque icône qui arrive
+     faisait grandir sa carte d'un coup — l'onglet « Nos menus » sautait au
+     clic (section affichée, icônes en route) et au filage de la page. */
+  width: clamp(52px, 5.2cqw, 72px); height: auto; aspect-ratio: 1;
   background: transparent; border: 0; padding: 0; border-radius: 0;
   filter: drop-shadow(0 3px 8px rgba(36, 16, 46, .16));
 }
@@ -5806,7 +5818,9 @@ html:not(.carte-doc) #menus .fm .fmb-choice {
   border: 1px solid var(--fm-gold-line);
 }
 html:not(.carte-doc) #menus .fm .fmb-medal {
-  width: clamp(58px, 5.6cqw, 84px); height: auto;
+  /* même réserve de place que .fmb-ico : aucune médaille ne décale la mise
+     en page en arrivant. */
+  width: clamp(58px, 5.6cqw, 84px); height: auto; aspect-ratio: 1;
   filter: drop-shadow(0 4px 10px rgba(91, 49, 114, .2));
 }
 html:not(.carte-doc) #menus .fm .fmb-choice-title {
@@ -6103,6 +6117,11 @@ html:not(.carte-doc) .cover-action {
 }
 html:not(.carte-doc) .cover-action::after {
   content: ""; position: absolute; top: -10%; bottom: -10%;
+  /* left: -70% = la position 0 % de coverActionShine. Sans cela, pendant le
+     délai de départ (1,7 s à l'entrée chorégraphiée de la garde) et pour
+     quiconque demande moins d'animations, le reflet se posait à sa position
+     statique — en plein sur le bouton, comme une trace blanche biaisée. */
+  left: -70%;
   width: 36%; pointer-events: none;
   background: linear-gradient(105deg, rgba(255,255,255,0) 0%,
               rgba(255,255,255,.55) 50%, rgba(255,255,255,0) 100%);
