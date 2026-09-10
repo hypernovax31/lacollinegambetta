@@ -109,7 +109,8 @@ function serve(root, mode = {}) {
   });
   return new Promise((done, fail) => {
     server.once('error', fail);
-    server.listen(0, '127.0.0.1', () => done({ server, url: `http://127.0.0.1:${server.address().port}/index.html#menu-nav-anchor` }));
+    const qs = argv.query ? (String(argv.query).startsWith('?') ? String(argv.query) : `?${String(argv.query)}`) : '';
+    server.listen(0, '127.0.0.1', () => done({ server, url: `http://127.0.0.1:${server.address().port}/index.html${qs}#menu-nav-anchor` }));
   });
 }
 

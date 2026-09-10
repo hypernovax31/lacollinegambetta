@@ -3001,7 +3001,7 @@ html:not(.carte-doc) #menus .choice-card h5 em {
   width: auto !important;
   flex: 0 0 auto !important;
 }
-.download-btn {
+.lang-btn {
   position: absolute;
   right: 12px;
   top: 50%;
@@ -3021,23 +3021,117 @@ html:not(.carte-doc) #menus .choice-card h5 em {
   box-sizing: border-box;
   transition: .2s ease;
 }
-.download-btn svg {
+.lang-btn svg {
   width: 18px;
   height: 18px;
   stroke: #fff;
 }
-.download-btn:hover {
+.lang-btn:hover {
   background: rgba(255, 255, 255, .08);
   border-color: #fcf6ba;
   color: var(--gold-100);
 }
-.download-btn:hover svg {
+.lang-btn:hover svg {
   stroke: var(--gold-100);
 }
-.download-btn:focus-visible {
+.lang-btn:focus-visible {
   outline: 2px solid #fcf6ba;
   outline-offset: 2px;
 }
+.lang-btn { cursor: pointer; }
+
+/* ===== Menu des langues (bouton globe du bandeau) ===== */
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 12px;
+  z-index: 1002;
+  min-width: 232px;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+  padding: 10px 10px 12px;
+  border: 1px solid rgba(216, 178, 87, .45);
+  border-radius: 14px;
+  background: rgba(56, 27, 71, .97);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.lang-menu[hidden] { display: none; }
+.lang-menu:not([hidden]) { animation: langMenuIn .18s ease-out; }
+@keyframes langMenuIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.lang-menu__title {
+  margin: 2px 8px 8px;
+  font-family: 'Cinzel', serif;
+  font-size: .68rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold-100);
+}
+.lang-menu__list { display: grid; gap: 2px; }
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: .9rem;
+  text-align: left;
+  cursor: pointer;
+}
+.lang-option:hover, .lang-option:focus-visible { background: rgba(243, 213, 106, .14); outline: none; }
+.lang-option:focus-visible { box-shadow: inset 0 0 0 2px rgba(243, 213, 106, .55); }
+.lang-flag {
+  display: block;
+  width: 26px;
+  height: 17.5px;
+  flex: 0 0 26px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .25);
+}
+.lang-check { margin-left: auto; color: var(--gold-500); font-size: .9rem; opacity: 0; }
+.lang-option[aria-checked="true"] { background: rgba(243, 213, 106, .1); }
+.lang-option[aria-checked="true"] .lang-check { opacity: 1; }
+/* Petit écran : le menu devient une feuille ancrée en bas, largeur pleine,
+   cible tactile 44 px minimum, défilement si la fenêtre est très basse. */
+@media (max-width: 640px) {
+  .lang-menu {
+    position: fixed;
+    top: auto;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    min-width: 0;
+    max-height: 62vh;
+    overflow-y: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lang-menu:not([hidden]) { animation: none; }
+}
+@media print {
+  .lang-menu { display: none !important; }
+}
+
+/* ===== Icônes et médaillons des formules : SVG traduisibles =====
+   Les PNG d'origine (icônes duo/complète/enfant/petit-déjeuner,
+   médaillons entrée/plat/dessert) portaient leur texte dans l'image :
+   impossible à traduire. Ils sont recréés en SVG inline dans le style
+   du site (or et violet, Cinzel) — le texte y est un vrai nœud texte,
+   traduit avec le reste du site. Net à toutes les tailles. */
+#menus .fm svg.fmb-ico,
+#menus .fm svg.fmb-medal { height: auto; display: block; }
+.fmb-svg-arc, .fmb-svg-arc2, .fmb-svg-star, .fmb-svg-fig {
+  font-family: 'Cinzel', serif;
+  fill: #f0d488;
+}
+.fmb-svg-arc, .fmb-svg-arc2 { letter-spacing: 2px; }
 
 /* Contact : Instagram, téléphone, mail — 3 boutons sans surcharge */
 .cover-links,
@@ -3065,12 +3159,12 @@ html:not(.carte-doc) #menus .choice-card h5 em {
     gap: 8px !important;
   }
   .top-controls__nav { gap: 8px; }
-  .download-btn {
+  .lang-btn {
     right: 8px;
     width: 40px;
     height: 40px;
   }
-  .download-btn svg { width: 16px; height: 16px; }
+  .lang-btn svg { width: 16px; height: 16px; }
   .cover-links,
   .footer-links { gap: 8px; }
   .cover-links .contact-link,
@@ -3091,7 +3185,7 @@ html:not(.carte-doc) #menus .choice-card h5 em {
 }
 
 @media print {
-  .download-btn { display: none !important; }
+  .lang-btn { display: none !important; }
 }
 
 /* ===== Bières : titres Bouteille / Pression en violet royal ===== */
@@ -4518,12 +4612,12 @@ html:not(.carte-doc) .top-controls__nav {
     letter-spacing: 0.01em !important;
     white-space: nowrap !important;
   }
-  html:not(.carte-doc) .download-btn {
+  html:not(.carte-doc) .lang-btn {
     right: 8px !important;
     width: 38px !important;
     height: 38px !important;
   }
-  html:not(.carte-doc) .download-btn svg {
+  html:not(.carte-doc) .lang-btn svg {
     width: 16px !important;
     height: 16px !important;
   }
@@ -6511,13 +6605,46 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       <button class="control-btn active" id="btn-show-cover" onclick="showView('cover')"><span class="star-gold">✦</span> Page de Garde</button>
       <button class="control-btn" id="btn-show-menu" onclick="showView('menu')">📖 Menu & Carte</button>
     </div>
-    <a class="download-btn" href="Carte_LaCollineGambetta.pdf" download="Carte_LaCollineGambetta.pdf" title="Télécharger la carte (PDF A4)" aria-label="Télécharger la carte au format PDF">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 3.5v11.5"/>
-        <path d="M7.5 11.2 12 15.7l4.5-4.5"/>
-        <path d="M4.5 19.5h15"/>
+    <button type="button" class="lang-btn" id="lang-btn" title="Langue / Language" aria-label="Langue / Language" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.7"/>
+        <path d="M3.3 12h17.4"/>
+        <path d="M12 3.3c2.7 2.4 4.05 5.4 4.05 8.7S14.7 18.3 12 20.7C9.3 18.3 7.95 15.3 7.95 12S9.3 5.7 12 3.3z"/>
       </svg>
-    </a>
+    </button>
+    <div class="lang-menu" id="lang-menu" role="menu" aria-label="Langue / Language" hidden>
+      <p class="lang-menu__title">Langue / Language</p>
+      <div class="lang-menu__list" role="group">
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="fr" aria-checked="true">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="10" height="20" fill="#0055A4"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#EF4135"/></svg>
+          <span>Français</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="en" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#012169"/><path d="M0 0 30 20M30 0 0 20" stroke="#fff" stroke-width="4"/><path d="M0 0 30 20M30 0 0 20" stroke="#C8102E" stroke-width="1.8"/><path d="M15 0v20M0 10h30" stroke="#fff" stroke-width="6.5"/><path d="M15 0v20M0 10h30" stroke="#C8102E" stroke-width="3.6"/></svg>
+          <span>English</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="es" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#AA151B"/><rect y="5" width="30" height="10" fill="#F1BF00"/></svg>
+          <span>Español</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="de" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#000"/><rect y="6.7" width="30" height="6.6" fill="#DD0000"/><rect y="13.3" width="30" height="6.7" fill="#FFCE00"/></svg>
+          <span>Deutsch</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="it" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="10" height="20" fill="#009246"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#CE2B37"/></svg>
+          <span>Italiano</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="pt" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="12" height="20" fill="#046A38"/><rect x="12" width="18" height="20" fill="#DA291C"/><circle cx="12" cy="10" r="4.6" fill="#FFE900"/></svg>
+          <span>Português</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="nl" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#AE1C28"/><rect y="6.7" width="30" height="6.6" fill="#fff"/><rect y="13.3" width="30" height="6.7" fill="#21468B"/></svg>
+          <span>Nederlands</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+      </div>
+    </div>
   </div>
 
   <section id="cover-section" class="cover-enter">
@@ -6614,7 +6741,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
   <article class="fmb-card fmb-card--duo">
     <div class="fmb-head">
       <p class="fmb-pils">Formule duo</p>
-      <img class="fmb-ico" src="assets/menus/icon-duo.png" alt="" aria-hidden="true" loading="eager" decoding="async">
+      <svg class="fmb-ico" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmi-duo-or" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset="1" stop-color="#c9a04e"/></linearGradient><path id="fmi-duo-ar" d="M 52 106 A 56 56 0 0 0 148 106" fill="none"/></defs><g fill="none" stroke="url(#fmi-duo-or)" stroke-width="3" stroke-linecap="round"><circle cx="80" cy="84" r="29" stroke-width="3.4"/><circle cx="120" cy="84" r="29" stroke-width="3.4"/><circle cx="80" cy="84" r="20" stroke-width="1.7"/><circle cx="120" cy="84" r="20" stroke-width="1.7"/><text class="fmb-svg-star" x="100" y="40" text-anchor="middle" font-size="14">✦</text></g><text class="fmb-svg-arc2" font-size="17"><textPath href="#fmi-duo-ar" startOffset="50%" text-anchor="middle">Duo</textPath></text></svg>
       <h3 class="fmb-title"><span>Entrée + plat <span class="ou">ou</span></span><span>plat + dessert</span></h3>
       <p class="fmb-price">23,90</p>
     </div>
@@ -6625,7 +6752,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
   <article class="fmb-card fmb-card--complete">
     <div class="fmb-head">
       <p class="fmb-pils">Formule complète</p>
-      <img class="fmb-ico" src="assets/menus/icon-complete.png" alt="" aria-hidden="true" loading="eager" decoding="async">
+      <svg class="fmb-ico" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmi-complete-or" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset="1" stop-color="#c9a04e"/></linearGradient><path id="fmi-complete-ar" d="M 52 106 A 56 56 0 0 0 148 106" fill="none"/></defs><g fill="none" stroke="url(#fmi-complete-or)" stroke-width="3" stroke-linecap="round"><circle cx="100" cy="94" r="32" stroke-width="3.4"/><circle cx="100" cy="94" r="23" stroke-width="1.7"/><text class="fmb-svg-star" x="72" y="44" text-anchor="middle" font-size="12">✦</text><text class="fmb-svg-star" x="100" y="38" text-anchor="middle" font-size="14">✦</text><text class="fmb-svg-star" x="128" y="44" text-anchor="middle" font-size="12">✦</text></g><text class="fmb-svg-arc2" font-size="17"><textPath href="#fmi-complete-ar" startOffset="50%" text-anchor="middle">Complète</textPath></text></svg>
       <h3 class="fmb-title">Entrée + plat + dessert</h3>
       <p class="fmb-price">27,90</p>
     </div>
@@ -6637,7 +6764,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
 <!-- ============ Choix des formules : entrée / plat / dessert au choix ============ -->
   <div class="fmb-choices">
     <section class="fmb-choice">
-      <img class="fmb-medal" src="assets/menus/medal-entree.png" alt="" aria-hidden="true" loading="eager" decoding="async">
+      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmbm-entree-au" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset=".55" stop-color="#d8b257"/><stop offset="1" stop-color="#9a7429"/></linearGradient><radialGradient id="fmbm-entree-di" cx=".5" cy=".4" r=".85"><stop offset="0" stop-color="#4d2665"/><stop offset="1" stop-color="#24102e"/></radialGradient><path id="fmbm-entree-ar" d="M 38 102 A 64 64 0 0 1 162 102" fill="none"/></defs><circle cx="100" cy="100" r="96" fill="url(#fmbm-entree-au)"/><circle cx="100" cy="100" r="88" fill="none" stroke="#2c1537" stroke-width="1.6" opacity=".45"/><circle cx="100" cy="100" r="81" fill="url(#fmbm-entree-di)" stroke="#f3d56a" stroke-width="1.3"/><circle cx="100" cy="100" r="74" fill="none" stroke="#f0d488" stroke-width="2.4" stroke-dasharray="0 9" stroke-linecap="round"/><text class="fmb-svg-arc" font-size="21"><textPath href="#fmbm-entree-ar" startOffset="50%" text-anchor="middle">Entrée</textPath></text><g fill="none" stroke="#f0d488" stroke-width="3" stroke-linecap="round"><path d="M 92 84 v 13"/><path d="M 100 84 v 13"/><path d="M 108 84 v 13"/><path d="M 92 97 q 8 8 16 0"/><path d="M 100 105 v 17"/></g><text class="fmb-svg-star" x="100" y="158" text-anchor="middle" font-size="13">✦</text></svg>
       <h4 class="fmb-choice-title">Entrée <em>Au choix</em></h4>
       <ul class="fmb-list">
         <li>Escargots de Bourgogne</li>
@@ -6646,7 +6773,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       </ul>
     </section>
     <section class="fmb-choice">
-      <img class="fmb-medal" src="assets/menus/medal-plat.png" alt="" aria-hidden="true" loading="eager" decoding="async">
+      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmbm-plat-au" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset=".55" stop-color="#d8b257"/><stop offset="1" stop-color="#9a7429"/></linearGradient><radialGradient id="fmbm-plat-di" cx=".5" cy=".4" r=".85"><stop offset="0" stop-color="#4d2665"/><stop offset="1" stop-color="#24102e"/></radialGradient><path id="fmbm-plat-ar" d="M 38 102 A 64 64 0 0 1 162 102" fill="none"/></defs><circle cx="100" cy="100" r="96" fill="url(#fmbm-plat-au)"/><circle cx="100" cy="100" r="88" fill="none" stroke="#2c1537" stroke-width="1.6" opacity=".45"/><circle cx="100" cy="100" r="81" fill="url(#fmbm-plat-di)" stroke="#f3d56a" stroke-width="1.3"/><circle cx="100" cy="100" r="74" fill="none" stroke="#f0d488" stroke-width="2.4" stroke-dasharray="0 9" stroke-linecap="round"/><text class="fmb-svg-arc" font-size="21"><textPath href="#fmbm-plat-ar" startOffset="50%" text-anchor="middle">Plat</textPath></text><g fill="none" stroke="#f0d488" stroke-width="3" stroke-linecap="round"><path d="M 78 113 a 22 22 0 0 1 44 0"/><path d="M 72 113 h 56"/><path d="M 100 91 v -5"/><circle cx="100" cy="83" r="3.2"/></g><text class="fmb-svg-star" x="100" y="158" text-anchor="middle" font-size="13">✦</text></svg>
       <h4 class="fmb-choice-title">Plat <em>Au choix</em></h4>
       <ul class="fmb-list">
         <li>Escalope de veau</li>
@@ -6655,7 +6782,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       </ul>
     </section>
     <section class="fmb-choice">
-      <img class="fmb-medal" src="assets/menus/medal-dessert.png" alt="" aria-hidden="true" loading="eager" decoding="async">
+      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmbm-dessert-au" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset=".55" stop-color="#d8b257"/><stop offset="1" stop-color="#9a7429"/></linearGradient><radialGradient id="fmbm-dessert-di" cx=".5" cy=".4" r=".85"><stop offset="0" stop-color="#4d2665"/><stop offset="1" stop-color="#24102e"/></radialGradient><path id="fmbm-dessert-ar" d="M 38 102 A 64 64 0 0 1 162 102" fill="none"/></defs><circle cx="100" cy="100" r="96" fill="url(#fmbm-dessert-au)"/><circle cx="100" cy="100" r="88" fill="none" stroke="#2c1537" stroke-width="1.6" opacity=".45"/><circle cx="100" cy="100" r="81" fill="url(#fmbm-dessert-di)" stroke="#f3d56a" stroke-width="1.3"/><circle cx="100" cy="100" r="74" fill="none" stroke="#f0d488" stroke-width="2.4" stroke-dasharray="0 9" stroke-linecap="round"/><text class="fmb-svg-arc" font-size="21"><textPath href="#fmbm-dessert-ar" startOffset="50%" text-anchor="middle">Dessert</textPath></text><g fill="none" stroke="#f0d488" stroke-width="3" stroke-linecap="round"><path d="M 84 93 h 32"/><path d="M 84 93 q 0 17 16 17 q 16 0 16 -17"/><path d="M 100 110 v 13"/><path d="M 90 127 h 20"/></g><text class="fmb-svg-star" x="100" y="158" text-anchor="middle" font-size="13">✦</text></svg>
       <h4 class="fmb-choice-title">Dessert <em>Au choix</em></h4>
       <ul class="fmb-list">
         <li>Panna cotta</li>
@@ -6682,7 +6809,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
     <div class="fmb-head">
       <p class="fmb-pils">Menu enfant</p>
       <p class="fmb-sub">Moins de 12 ans</p>
-      <img class="fmb-ico" src="assets/menus/icon-enfant.png" alt="" aria-hidden="true" loading="eager" decoding="async">
+      <svg class="fmb-ico" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmi-enfant-or" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset="1" stop-color="#c9a04e"/></linearGradient><path id="fmi-enfant-ar" d="M 52 106 A 56 56 0 0 0 148 106" fill="none"/></defs><g fill="none" stroke="url(#fmi-enfant-or)" stroke-width="3" stroke-linecap="round"><circle cx="100" cy="88" r="31" stroke-width="3.4"/><circle cx="100" cy="88" r="22" stroke-width="1.7"/><circle cx="90" cy="83" r="2.6" fill="#f0d488" stroke="none"/><circle cx="110" cy="83" r="2.6" fill="#f0d488" stroke="none"/><path d="M 90 93 q 10 9 20 0"/></g><text class="fmb-svg-arc2" font-size="17"><textPath href="#fmi-enfant-ar" startOffset="50%" text-anchor="middle">Enfant</textPath></text></svg>
       <p class="fmb-price">10,90</p>
     </div>
     <ul class="fmb-list">
@@ -6697,7 +6824,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
   <article class="fmb-card fmb-card--pdj">
     <div class="fmb-head">
       <p class="fmb-pils">Petit déjeuner</p>
-      <img class="fmb-ico" src="assets/menus/icon-pdj.png" alt="" aria-hidden="true" loading="eager" decoding="async">
+      <svg class="fmb-ico" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmi-pdj-or" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset="1" stop-color="#c9a04e"/></linearGradient><path id="fmi-pdj-ar" d="M 52 106 A 56 56 0 0 0 148 106" fill="none"/></defs><g fill="none" stroke="url(#fmi-pdj-or)" stroke-width="3" stroke-linecap="round"><path d="M 76 80 h 40 v 17 q 0 13 -13 13 h -14 q -13 0 -13 -13 z"/><path d="M 118 84 q 14 1 13 9 q -1 8 -13 8"/><path d="M 68 118 h 56"/><path d="M 92 66 q 4 -6 0 -12"/><path d="M 104 66 q 4 -6 0 -12"/></g><text class="fmb-svg-arc2" font-size="17"><textPath href="#fmi-pdj-ar" startOffset="50%" text-anchor="middle">Petit-déj</textPath></text></svg>
       <p class="fmb-price">7,00</p>
     </div>
     <ul class="fmb-list">
@@ -7256,7 +7383,7 @@ else sizeCoverMedallion();
 </script>
 <script>
 /* ===== Téléchargement de la carte A4 : déclenché automatiquement =====
-   Les deux contrôles « Télécharger » (.download-btn dans le bandeau, et
+   Les deux contrôles « Télécharger » (.lang-btn dans le bandeau, et
    .footer-download en pied de carte) sont des liens <a download>. On force ici
    le téléchargement côté appareil au clic : on coupe la navigation par défaut
    (qui ouvrirait parfois le PDF dans la visionneuse) et on rejoue un clic sur
@@ -7283,7 +7410,7 @@ else sizeCoverMedallion();
     }
   }
   function prêt() {
-    lier('.download-btn');
+    lier('.lang-btn');
     lier('.footer-download');
   }
   if (document.readyState === 'loading') {
@@ -7645,6 +7772,1572 @@ else sizeCoverMedallion();
   }
   api.fly = fly;
   setTimeout(fly, Math.round(rand(6000, 16000)));
+})();
+</script>
+
+<script>
+/* ===== Langues du site : bouton globe, menu, traduction intégrale =====
+   Le bouton télécharger du bandeau est remplacé par un globe : au clic
+   (ou au clavier) s'ouvre un menu esthétique des langues — drapeau SVG
+   + nom de la langue dans sa propre langue. À la sélection, TOUT le
+   site est traduit : les textes de la page de garde, du bandeau, des
+   sept onglets de la carte (noms de plats et descriptions), des
+   formules « Nos menus », et jusqu'aux libellés des médaillons et
+   icônes des formules, recréés en SVG inline précisément pour que
+   leur texte soit traduisible (les PNG d'origine gravient leur texte
+   dans l'image). Restent en français : les noms propres (vins,
+   châteaux, cocktails signature, adresse), les prix et leur format.
+   Principe « propre et sûr » : le texte français EST la clé. Au
+   chargement, chaque nœud texte du document est recensé avec son
+   original ; appliquer une langue remplace le contenu par la
+   traduction si elle existe, sinon conserve l'original — aucun
+   élément ne peut être perdu, et repasser en français restaure
+   l'original exact. La langue est mémorisée (localStorage) et
+   forçable par l'URL (?lang=en), la carte A4 / impression reste en
+   français (mode carte-doc ignoré), et le mouvement réduit n'est pas
+   concerné (aucune animation obligatoire). */
+(function () {
+  'use strict';
+  if (document.documentElement.classList.contains('carte-doc')) return;
+  var STORE_KEY = 'lcg-lang';
+  var DICTS = {
+    en: {
+      "Page de Garde": "Home",
+      "Menu & Carte": "Menu & Drinks",
+      "📖 Menu & Carte": "📖 Menu & Drinks",
+      "La Colline Gambetta — Menu & Carte": "La Colline Gambetta — Menu & Drinks",
+      "LA CARTE": "THE MENU",
+      "Nos entrées": "Starters",
+      "Nos plats": "Mains",
+      "Nos menus": "Set menus",
+      "Nos boissons": "Drinks",
+      "Nos cocktails": "Cocktails",
+      "Nos vins": "Wines",
+      "Nos desserts": "Desserts",
+      "Entrées": "Starters",
+      "Plats": "Mains",
+      "Desserts": "Desserts",
+      "Burgers": "Burgers",
+      "Salades": "Salads",
+      "Pâtes": "Pasta",
+      "Omelettes": "Omelettes",
+      "Glaces": "Ice creams",
+      "Fromages": "Cheeses",
+      "Boissons fraîches": "Soft drinks",
+      "Boissons chaudes": "Hot drinks",
+      "Boisson chaude": "Hot drink",
+      "Apéritifs": "Aperitifs",
+      "Bières": "Beers",
+      "Digestifs": "Digestifs",
+      "Whiskies": "Whiskies",
+      "Bulles": "Sparkling wines",
+      "Cocktails classiques": "Classic cocktails",
+      "Spritz & fraîcheur": "Spritz & freshness",
+      "Mules & fizz": "Mules & fizz",
+      "Élégance & saveurs": "Elegance & flavours",
+      "Mocktails": "Mocktails",
+      "✦ Sans alcool —": "✦ Alcohol-free —",
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 5pm → 11pm ✦",
+      "Prix": "Price",
+      "HH": "HH",
+      "Appellation": "Appellation",
+      "Vin blanc": "White wine",
+      "Vin rouge": "Red wine",
+      "Vin rosé": "Rosé wine",
+      "Bouteille": "Bottle",
+      "Pression": "Draught",
+      "Bière blonde": "Lager",
+      "Bière blanche bio": "Organic wheat beer",
+      "Bière sans alcool": "Alcohol-free beer",
+      "Formules": "Set menus",
+      "Formule duo": "Duo set menu",
+      "Formule complète": "Complete set menu",
+      "Entrée + plat": "Starter + main",
+      "ou": "or",
+      "plat + dessert": "main + dessert",
+      "Entrée + plat + dessert": "Starter + main + dessert",
+      "Choix ci-dessous": "Choose from the selection below",
+      "Au choix": "Of your choice",
+      "au choix": "of your choice",
+      "Parfum au choix": "Flavour of your choice",
+      "— parfum au choix": "— flavour of your choice",
+      "Entrée": "Starter",
+      "Plat": "Main",
+      "Dessert": "Dessert",
+      "Duo": "Duo",
+      "Complète": "Complete",
+      "Enfant": "Kids",
+      "Petit-déj": "Breakfast",
+      "Menu enfant": "Kids’ menu",
+      "Menu du jour": "Daily special",
+      "Moins de 12 ans": "Under 12s",
+      "Choix selon l’ardoise": "Chef’s blackboard selection",
+      "Uniquement le midi - sauf weekends et jours fériés": "Lunchtime only — except weekends and public holidays",
+      "Burger enfant ou Cordon bleu": "Kids’ burger or Cordon bleu",
+      "1 Verre de soda": "1 soft drink",
+      "1 Boule de glace": "1 scoop of ice cream",
+      "2 boules de glace": "2 scoops of ice cream",
+      "Verre de jus de fruits": "Glass of fruit juice",
+      "Supplément boule de glace ou sorbet": "Extra scoop of ice cream or sorbet",
+      "Assortiment de mignardises — thé + 1 €": "Selection of mini pastries — tea + €1",
+      "Croissant ou Tartine au beurre": "Croissant or slice of buttered bread",
+      "Pain toasté, confiture d’abricots": "Toasted bread, apricot jam",
+      "Entrecôte 190 g": "Ribeye steak 190 g",
+      "Bavette d’aloyau": "Flank steak",
+      "Escalope de veau": "Veal escalope",
+      "Cuisse de canard confite": "Duck confit leg",
+      "Poisson": "Fish",
+      "Tartare de bœuf": "Beef tartare",
+      "Cuisse de poulet rôtie": "Roast chicken leg",
+      "Riz basmati": "Basmati rice",
+      "Fleur de sel, sauce au choix": "Fleur de sel, sauce of your choice",
+      "Sauce au choix": "Sauce of your choice",
+      "Selon arrivage": "According to the daily catch",
+      "selon arrivage": "according to the daily catch",
+      "Sauce champignons, pâtes": "Mushroom sauce, pasta",
+      "Burger La Colline": "La Colline Burger",
+      "Burger Chicken Croustillant": "Crispy Chicken Burger",
+      "Burger Végétarien": "Veggie Burger",
+      "Pain brioché, cheddar, steak haché, bacon, oignons caramélisés, salade, tomate, sauce burger.": "Brioche bun, cheddar, beef patty, bacon, caramelised onions, salad, tomato, burger sauce.",
+      "Pain brioché, cheddar, poisson pané, légumes grillés, salade, tomate, sauce burger.": "Brioche bun, cheddar, battered fish, grilled vegetables, salad, tomato, burger sauce.",
+      "Pain brioché, cheddar, escalope de poulet pané croustillant, oignons caramélisés, salade, tomate, sauce burger.": "Brioche bun, cheddar, crispy breaded chicken, caramelised onions, salad, tomato, burger sauce.",
+      "Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger.": "Brioche bun, cheddar, veggie patty, grilled vegetables, salad, tomato, burger sauce.",
+      "Chèvre Chaud": "Hot Goat Cheese Salad",
+      "Végétarienne": "Vegetarian",
+      "Nordique": "Nordic",
+      "Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.": "Green salad, tomato, breaded chicken escalope, mimosa egg, crouton, goat cheese toast.",
+      "Salade verte, tomate, jambon sec, toast de cabécou, noix, miel.": "Green salad, tomato, dry-cured ham, cabécou toast, walnuts, honey.",
+      "Salade verte, tomate, concombre, haricots verts, légumes grillés, avocat.": "Green salad, tomato, cucumber, green beans, grilled vegetables, avocado.",
+      "Salade verte, saumon fumé, crevettes, avocat, concombre, tomate, feta, croûtons.": "Green salad, smoked salmon, prawns, avocado, cucumber, tomato, feta, croutons.",
+      "Tagliatelles à la carbonara": "Tagliatelle carbonara",
+      "Tagliatelles au saumon": "Tagliatelle with salmon",
+      "Penne au poulet et champignons": "Chicken & mushroom penne",
+      "Assiette de frites": "Plate of fries",
+      "Accompagnement : frites, haricots verts, pâtes": "Side dish: fries, green beans, pasta",
+      "Sauce au choix : poivre · champignons · roquefort — supplément sauce 2,00": "Sauce of your choice: pepper · mushroom · roquefort — extra sauce 2.00",
+      "Supplément Picon · 1,00": "Picon extra · 1.00",
+      "Planches & croques": "Boards & toasties",
+      "Frites maison": "Homemade fries",
+      "Frites et salade": "Fries and salad",
+      "Escargots de Bourgogne": "Burgundy snails",
+      "6 Escargots au Roquefort": "6 snails with Roquefort",
+      "Œuf cocotte": "Baked egg",
+      "Œuf cocotte du moment": "Baked egg of the day",
+      "Œuf dur mayonnaise": "Hard-boiled egg with mayonnaise",
+      "Assiette de charcuterie": "Charcuterie platter",
+      "Assiette mixte": "Mixed platter",
+      "Tartare d’avocat et crevettes": "Avocado & prawn tartare",
+      "Assiette de saumon fumé": "Smoked salmon platter",
+      "Assiette de foie gras du Sud-Ouest": "Foie gras from South-West France",
+      "Œufs au plat": "Fried eggs",
+      "Omelette nature": "Plain omelette",
+      "Omelette au fromage": "Cheese omelette",
+      "Omelette au jambon": "Ham omelette",
+      "Omelette aux champignons": "Mushroom omelette",
+      "Omelette mixte": "Mixed omelette",
+      "Chèvre": "Goat cheese",
+      "Cantal": "Cantal",
+      "Fourme d’Ambert": "Fourme d’Ambert",
+      "Pont-l’Évêque": "Pont-l’Évêque",
+      "Coulis de fruits rouges": "Red berry coulis",
+      "Dame blanche aux éclats de chocolat": "Dame blanche with chocolate shards",
+      "Moelleux au chocolat": "Chocolate fondant",
+      "Mousse au chocolat": "Chocolate mousse",
+      "Pain perdu de la Colline": "La Colline French toast",
+      "Tarte aux pommes": "Apple tart",
+      "Profiteroles": "Profiteroles",
+      "Tiramisu": "Tiramisu",
+      "Panna cotta": "Panna cotta",
+      "Crème brûlée": "Crème brûlée",
+      "Crème glacée (3 boules)": "Ice cream (3 scoops)",
+      "Sorbet (3 boules)": "Sorbet (3 scoops)",
+      "Coupe 12 cl": "Cup 12 cl",
+      "Glace vanille": "Vanilla ice cream",
+      "Glace vanille ou caramel beurre salé": "Vanilla or salted butter caramel ice cream",
+      "2 boules vanille, sauce chocolat, chantilly": "2 scoops vanilla, chocolate sauce, whipped cream",
+      "2 boules chocolat, sauce chocolat, chantilly": "2 scoops chocolate, chocolate sauce, whipped cream",
+      "2 boules caramel beurre salé, sauce caramel, chantilly": "2 scoops salted butter caramel, caramel sauce, whipped cream",
+      "2 boules café, expresso, chantilly": "2 scoops coffee, espresso, whipped cream",
+      "2 boules citron vert arrosées de vodka (2 cl)": "2 scoops lime doused with vodka (2 cl)",
+      "Vanille, caramel beurre salé, chocolat, café, pistache, noisette": "Vanilla, salted butter caramel, chocolate, coffee, pistachio, hazelnut",
+      "Café gourmand": "Coffee with mini desserts",
+      "Café liégeois": "Liège iced coffee",
+      "Chocolat liégeois": "Liège iced chocolate",
+      "Madeleine": "Madeleine",
+      "Café": "Coffee",
+      "Décaféiné": "Decaffeinated",
+      "Double café / décaféiné": "Double coffee / decaffeinated",
+      "Café noisette / allongé": "Coffee with hazelnut / long black",
+      "Café allongé": "Long black coffee",
+      "Café crème / chocolat chaud": "White coffee / hot chocolate",
+      "Café frappé": "Iced blended coffee",
+      "Café viennois": "Viennese coffee",
+      "Crème / chocolat viennois": "Viennese cream / chocolate",
+      "Cappuccino": "Cappuccino",
+      "Latte frappé": "Iced blended latte",
+      "Lait chaud": "Hot milk",
+      "Infusion / thé parfumé": "Herbal tea / flavoured tea",
+      "Grog": "Hot toddy",
+      "Vin chaud aux épices": "Mulled wine",
+      "Irish coffee": "Irish coffee",
+      "Milkshake": "Milkshake",
+      "Jus / Nectar de fruits": "Fruit juice / nectar",
+      "Sirop à l’eau": "Syrup with water",
+      "Supplément sirop ·": "Extra syrup ·",
+      "Orange pressée / Citron pressé": "Freshly squeezed orange / lemon juice",
+      "Diabolo / Limonade": "Diabolo / lemonade",
+      "orange, pomme, ananas, abricot, fraise, tomate": "orange, apple, pineapple, apricot, strawberry, tomato",
+      "grenadine • fraise • citron • menthe • pêche • violette • passion • vanille • coco • orgeat • cassis": "grenadine • strawberry • lemon • mint • peach • violet • passion fruit • vanilla • coconut • orgeat • blackcurrant",
+      "— Blanc, rouge": "— White, red",
+      "— Cassis, framboise, mûre, pêche": "— Blackcurrant, raspberry, blackberry, peach",
+      "Poire, Mirabelle, Framboise": "Pear, Mirabelle, Raspberry",
+      "Kir": "Kir",
+      "Kir Royal": "Kir Royal",
+      "Vodka": "Vodka",
+      "Porto": "Port",
+      "Triple d’Orgemont bio": "Triple d’Orgemont organic",
+      "Cidre brut": "Dry cider",
+      "Télécharger la carte (PDF)": "Download the menu (PDF)",
+      "Télécharger la carte au format PDF": "Download the menu as a PDF",
+      "Voir la carte": "View the menu",
+      "Sections précédentes": "Previous sections",
+      "Autres sections": "More sections",
+      "FAIT MAISON • SERVICE CONTINU • TERRASSE": "HOMEMADE FOOD • ALL-DAY SERVICE • TERRACE",
+      "BAR • RESTAURANT • PARIS 20ᵉ": "BAR • RESTAURANT • PARIS 20TH ARR.",
+      "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta": "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta",
+      "MÉTRO GAMBETTA": "MÉTRO GAMBETTA",
+      "Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé": "Allergen information available on request • Alcohol abuse is dangerous for your health",
+      "L’abus d’alcool est dangereux pour la santé — À consommer avec modération": "Alcohol abuse is dangerous for your health — Drink in moderation",
+      "Prix nets en euros • service compris": "Prices in euros • service included",
+      "Apérol, Prosecco, orange, eau gazeuse": "Aperol, Prosecco, orange, sparkling water",
+      "Cachaça, citron vert, sucre de canne": "Cachaça, lime, cane sugar",
+      "Citron vert, fraise, framboise": "Lime, strawberry, raspberry",
+      "Citron vert, menthe, sucre de canne, eau gazeuse": "Lime, mint, cane sugar, sparkling water",
+      "Cointreau, amaretto, jus d’ananas": "Cointreau, amaretto, pineapple juice",
+      "Crème de violette, champagne, cerise": "Violet liqueur, champagne, cherry",
+      "Gin, crème de violette, jus de citron jaune": "Gin, violet liqueur, lemon juice",
+      "Gin, jus de citron vert, ginger beer": "Gin, lime juice, ginger beer",
+      "Gin, jus de citron vert, sucre de canne, limonade": "Gin, lime juice, cane sugar, lemonade",
+      "Jus de tomate, jus de citron, épices": "Tomato juice, lemon juice, spices",
+      "Jus d’ananas, crème de coco": "Pineapple juice, coconut cream",
+      "Jus d’ananas, jus d’orange, sirop de grenadine": "Pineapple juice, orange juice, grenadine syrup",
+      "Jus d’orange, jus d’ananas, jus de citron, sirop de cassis": "Orange juice, pineapple juice, lemon juice, blackcurrant syrup",
+      "Liqueur de fleurs de sureau, Prosecco, orange, eau gazeuse": "Elderflower liqueur, Prosecco, orange, sparkling water",
+      "Prosecco, crème de violette, eau gazeuse, myrtilles": "Prosecco, violet liqueur, sparkling water, blueberries",
+      "Prosecco, vodka, sirop de fruit de la passion, citron vert": "Prosecco, vodka, passion fruit syrup, lime",
+      "Rhum blanc, rhum ambré, jus de citron vert, Cointreau, sirop d’orgeat": "White rum, amber rum, lime juice, Cointreau, orgeat syrup",
+      "Rhum, Coca-Cola, jus de citron": "Rum, Coca-Cola, lemon juice",
+      "Rhum, citron vert, sucre de canne": "Rum, lime, cane sugar",
+      "Rhum, jus de citron vert, ginger beer": "Rum, lime juice, ginger beer",
+      "Rhum, jus d’ananas, crème de coco": "Rum, pineapple juice, coconut cream",
+      "Rhum, jus d’ananas, sirop de fraise, crème de coco": "Rum, pineapple juice, strawberry syrup, coconut cream",
+      "Rhum, menthe fraîche, citron vert, sucre de canne, eau gazeuse": "Rum, fresh mint, lime, cane sugar, sparkling water",
+      "Rhum, sirop de fruit de la passion, jus de citron": "Rum, passion fruit syrup, lemon juice",
+      "Sirop de violette, jus de citron vert, Schweppes Tonic": "Violet syrup, lime juice, Schweppes Tonic",
+      "Suze, Schweppes Tonic, citron": "Suze, Schweppes Tonic, lemon",
+      "Tequila, Cointreau, jus de citron vert": "Tequila, Cointreau, lime juice",
+      "Tequila, jus de citron vert, sirop de cassis, Schweppes Tonic": "Tequila, lime juice, blackcurrant syrup, Schweppes Tonic",
+      "Tequila, jus d’orange, sirop de grenadine": "Tequila, orange juice, grenadine syrup",
+      "Vodka, Cointreau, crème de pêche, jus d’orange, jus de cranberry": "Vodka, Cointreau, peach liqueur, orange juice, cranberry juice",
+      "Vodka, Cointreau, jus de cranberry, jus de citron vert": "Vodka, Cointreau, cranberry juice, lime juice",
+      "Vodka, citron vert, sucre de canne": "Vodka, lime, cane sugar",
+      "Vodka, jus de citron vert, ginger beer": "Vodka, lime juice, ginger beer",
+      "Vodka, liqueur de café, cerise": "Vodka, coffee liqueur, cherry",
+      "Vodka, liqueur de café, expresso, sucre de canne": "Vodka, coffee liqueur, espresso, cane sugar",
+      "Vodka, tomate, citron et épices": "Vodka, tomato, lemon and spices",
+      "Caramel ou vanille": "Caramel or vanilla",
+      "Cochonnaille et fromagère": "Charcuterie and cheese",
+      "Petit déjeuner": "Breakfast",
+      "Salade": "Salad",
+      "PINTE": "PINT"
+    },
+    es: {
+      "Page de Garde": "Inicio",
+      "Menu & Carte": "Carta y menús",
+      "📖 Menu & Carte": "📖 Carta y menús",
+      "La Colline Gambetta — Menu & Carte": "La Colline Gambetta — Carta y menús",
+      "LA CARTE": "LA CARTA",
+      "Nos entrées": "Entrantes",
+      "Nos plats": "Platos",
+      "Nos menus": "Menús",
+      "Nos boissons": "Bebidas",
+      "Nos cocktails": "Cócteles",
+      "Nos vins": "Vinos",
+      "Nos desserts": "Postres",
+      "Entrées": "Entrantes",
+      "Plats": "Platos",
+      "Desserts": "Postres",
+      "Burgers": "Hamburguesas",
+      "Salades": "Ensaladas",
+      "Pâtes": "Pastas",
+      "Omelettes": "Tortillas",
+      "Glaces": "Helados",
+      "Fromages": "Quesos",
+      "Boissons fraîches": "Bebidas frías",
+      "Boissons chaudes": "Bebidas calientes",
+      "Boisson chaude": "Bebida caliente",
+      "Apéritifs": "Aperitivos",
+      "Bières": "Cervezas",
+      "Digestifs": "Digestivos",
+      "Whiskies": "Whiskies",
+      "Bulles": "Espumosos",
+      "Cocktails classiques": "Cócteles clásicos",
+      "Spritz & fraîcheur": "Spritz y frescura",
+      "Mules & fizz": "Mules y fizz",
+      "Élégance & saveurs": "Elegancia y sabores",
+      "Mocktails": "Mocktails",
+      "✦ Sans alcool —": "✦ Sin alcohol —",
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17h → 23h ✦",
+      "Prix": "Precio",
+      "Appellation": "Denominación",
+      "Vin blanc": "Vino blanco",
+      "Vin rouge": "Vino tinto",
+      "Vin rosé": "Vino rosado",
+      "Bouteille": "Botella",
+      "Pression": "De barril",
+      "Bière blonde": "Cerveza rubia",
+      "Bière blanche bio": "Cerveza blanca ecológica",
+      "Bière sans alcool": "Cerveza sin alcohol",
+      "Formules": "Menús combinados",
+      "Formule duo": "Menú dúo",
+      "Formule complète": "Menú completo",
+      "Entrée + plat": "Entrante + plato",
+      "ou": "o",
+      "plat + dessert": "plato + postre",
+      "Entrée + plat + dessert": "Entrante + plato + postre",
+      "Choix ci-dessous": "A elegir de la lista",
+      "Au choix": "A elegir",
+      "au choix": "a elegir",
+      "Parfum au choix": "Sabor a elegir",
+      "— parfum au choix": "— sabor a elegir",
+      "Entrée": "Entrante",
+      "Plat": "Plato",
+      "Dessert": "Postre",
+      "Duo": "Dúo",
+      "Complète": "Completo",
+      "Enfant": "Niño",
+      "Petit-déj": "Desayuno",
+      "Menu enfant": "Menú infantil",
+      "Menu du jour": "Menú del día",
+      "Moins de 12 ans": "Menores de 12 años",
+      "Choix selon l’ardoise": "A elegir según la pizarra",
+      "Uniquement le midi - sauf weekends et jours fériés": "Solo al mediodía, excepto fines de semana y festivos",
+      "Burger enfant ou Cordon bleu": "Hamburguesa infantil o Cordon bleu",
+      "1 Verre de soda": "1 refresco",
+      "1 Boule de glace": "1 bola de helado",
+      "2 boules de glace": "2 bolas de helado",
+      "Verre de jus de fruits": "Vaso de zumo de frutas",
+      "Supplément boule de glace ou sorbet": "Bola extra de helado o sorbete",
+      "Assortiment de mignardises — thé + 1 €": "Surtido de dulces — té + 1 €",
+      "Croissant ou Tartine au beurre": "Croissant o tostada con mantequilla",
+      "Pain toasté, confiture d’abricots": "Pan tostado, mermelada de albaricoque",
+      "Entrecôte 190 g": "Entrecot 190 g",
+      "Bavette d’aloyau": "Solomillo de vaca",
+      "Escalope de veau": "Escalope de ternera",
+      "Cuisse de canard confite": "Muslo de pato confitado",
+      "Poisson": "Pescado",
+      "Tartare de bœuf": "Tartar de ternera",
+      "Cuisse de poulet rôtie": "Muslo de pollo asado",
+      "Riz basmati": "Arroz basmati",
+      "Fleur de sel, sauce au choix": "Flor de sal, salsa a elegir",
+      "Sauce au choix": "Salsa a elegir",
+      "Selon arrivage": "Según la pesca del día",
+      "selon arrivage": "según la pesca del día",
+      "Sauce champignons, pâtes": "Salsa de champiñones, pasta",
+      "Burger La Colline": "Burger La Colline",
+      "Burger Chicken Croustillant": "Burger de pollo crujiente",
+      "Burger Végétarien": "Burger vegetariano",
+      "Pain brioché, cheddar, steak haché, bacon, oignons caramélisés, salade, tomate, sauce burger.": "Pan de brioche, cheddar, carne picada, bacon, cebolla caramelizada, lechuga, tomate y salsa de burger.",
+      "Pain brioché, cheddar, poisson pané, légumes grillés, salade, tomate, sauce burger.": "Pan de brioche, cheddar, pescado rebozado, verduras a la parrilla, lechuga, tomate y salsa de burger.",
+      "Pain brioché, cheddar, escalope de poulet pané croustillant, oignons caramélisés, salade, tomate, sauce burger.": "Pan de brioche, cheddar, escalope de pollo rebozado crujiente, cebolla caramelizada, lechuga, tomate y salsa de burger.",
+      "Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger.": "Pan de brioche, cheddar, hamburguesa vegetal, verduras a la parrilla, lechuga, tomate y salsa de burger.",
+      "Chèvre Chaud": "Ensalada de queso de cabra caliente",
+      "Végétarienne": "Vegetariana",
+      "Nordique": "Nórdica",
+      "Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.": "Lechuga, tomate, escalope de pollo rebozado, huevo mimosa, picatoste y tostada de queso de cabra.",
+      "Salade verte, tomate, jambon sec, toast de cabécou, noix, miel.": "Lechuga, tomate, jamón curado, tostada de cabécou, nueces y miel.",
+      "Salade verte, tomate, concombre, haricots verts, légumes grillés, avocat.": "Lechuga, tomate, pepino, judías verdes, verduras a la parrilla y aguacate.",
+      "Salade verte, saumon fumé, crevettes, avocat, concombre, tomate, feta, croûtons.": "Lechuga, salmón ahumado, gambas, aguacate, pepino, tomate, feta y picatostes.",
+      "Tagliatelles à la carbonara": "Tagliatelle carbonara",
+      "Tagliatelles au saumon": "Tagliatelle con salmón",
+      "Penne au poulet et champignons": "Penne con pollo y champiñones",
+      "Assiette de frites": "Plato de patatas fritas",
+      "Accompagnement : frites, haricots verts, pâtes": "Guarnición: patatas fritas, judías verdes, pasta",
+      "Sauce au choix : poivre · champignons · roquefort — supplément sauce 2,00": "Salsa a elegir: pimienta · champiñones · roquefort — salsa extra 2,00",
+      "Supplément Picon · 1,00": "Picon extra · 1,00",
+      "Planches & croques": "Tablas y tostados",
+      "Frites maison": "Patatas fritas caseras",
+      "Frites et salade": "Patatas fritas y ensalada",
+      "Escargots de Bourgogne": "Caracoles a la borgoñona",
+      "6 Escargots au Roquefort": "6 caracoles con Roquefort",
+      "Œuf cocotte": "Huevo al plato",
+      "Œuf cocotte du moment": "Huevo al plato del día",
+      "Œuf dur mayonnaise": "Huevo duro con mayonesa",
+      "Assiette de charcuterie": "Tabla de embutidos",
+      "Assiette mixte": "Tabla mixta",
+      "Tartare d’avocat et crevettes": "Tartar de aguacate y gambas",
+      "Assiette de saumon fumé": "Tabla de salmón ahumado",
+      "Assiette de foie gras du Sud-Ouest": "Tabla de foie gras del Suroeste",
+      "Œufs au plat": "Huevos fritos",
+      "Omelette nature": "Tortilla natural",
+      "Omelette au fromage": "Tortilla de queso",
+      "Omelette au jambon": "Tortilla de jamón",
+      "Omelette aux champignons": "Tortilla de champiñones",
+      "Omelette mixte": "Tortilla mixta",
+      "Coulis de fruits rouges": "Coulis de frutos rojos",
+      "Dame blanche aux éclats de chocolat": "Dame blanche con trocitos de chocolate",
+      "Moelleux au chocolat": "Fundido de chocolate",
+      "Mousse au chocolat": "Mousse de chocolate",
+      "Pain perdu de la Colline": "Torrija de la Colline",
+      "Tarte aux pommes": "Tarta de manzana",
+      "Crème glacée (3 boules)": "Helado (3 bolas)",
+      "Sorbet (3 boules)": "Sorbete (3 bolas)",
+      "Coupe 12 cl": "Copa 12 cl",
+      "Glace vanille": "Helado de vainilla",
+      "Glace vanille ou caramel beurre salé": "Helado de vainilla o caramelo salado",
+      "2 boules vanille, sauce chocolat, chantilly": "2 bolas de vainilla, salsa de chocolate y nata montada",
+      "2 boules chocolat, sauce chocolat, chantilly": "2 bolas de chocolate, salsa de chocolate y nata montada",
+      "2 boules caramel beurre salé, sauce caramel, chantilly": "2 bolas de caramelo salado, salsa de caramelo y nata montada",
+      "2 boules café, expresso, chantilly": "2 bolas de café, espresso y nata montada",
+      "2 boules citron vert arrosées de vodka (2 cl)": "2 bolas de lima rociadas con vodka (2 cl)",
+      "Vanille, caramel beurre salé, chocolat, café, pistache, noisette": "Vainilla, caramelo salado, chocolate, café, pistacho y avellana",
+      "Café gourmand": "Café con dulces",
+      "Café liégeois": "Café liegés",
+      "Chocolat liégeois": "Chocolate liegés",
+      "Café": "Café",
+      "Décaféiné": "Descafeinado",
+      "Double café / décaféiné": "Café doble / descafeinado",
+      "Café noisette / allongé": "Café cortado / largo",
+      "Café allongé": "Café largo",
+      "Café crème / chocolat chaud": "Café con leche / chocolate caliente",
+      "Café frappé": "Café frappé",
+      "Café viennois": "Café vienés",
+      "Crème / chocolat viennois": "Crema / chocolate vienés",
+      "Latte frappé": "Latte frappé",
+      "Lait chaud": "Leche caliente",
+      "Infusion / thé parfumé": "Infusión / té aromatizado",
+      "Grog": "Ponche caliente",
+      "Vin chaud aux épices": "Vino especiado caliente",
+      "Jus / Nectar de fruits": "Zumo / néctar de frutas",
+      "Sirop à l’eau": "Sirop con agua",
+      "Supplément sirop ·": "Sirop extra ·",
+      "Orange pressée / Citron pressé": "Zumo de naranja / limón recién exprimido",
+      "Diabolo / Limonade": "Diabolo / gaseosa",
+      "orange, pomme, ananas, abricot, fraise, tomate": "naranja, manzana, piña, albaricoque, fresa, tomate",
+      "grenadine • fraise • citron • menthe • pêche • violette • passion • vanille • coco • orgeat • cassis": "granadina • fresa • limón • menta • melocotón • violeta • maracuyá • vainilla • coco • orgeat • grosella negra",
+      "— Blanc, rouge": "— Blanco, tinto",
+      "— Cassis, framboise, mûre, pêche": "— Grosella negra, frambuesa, mora, melocotón",
+      "Poire, Mirabelle, Framboise": "Pera, mirabel, frambuesa",
+      "Cidre brut": "Sidra seca",
+      "Télécharger la carte (PDF)": "Descargar la carta (PDF)",
+      "Télécharger la carte au format PDF": "Descargar la carta en formato PDF",
+      "Voir la carte": "Ver la carta",
+      "Sections précédentes": "Secciones anteriores",
+      "Autres sections": "Más secciones",
+      "FAIT MAISON • SERVICE CONTINU • TERRASSE": "COMIDA CASERA • SERVICIO CONTINUO • TERRAZA",
+      "BAR • RESTAURANT • PARIS 20ᵉ": "BAR • RESTAURANTE • PARÍS 20ᵉ",
+      "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta": "BAR • RESTAURANTE · 01 43 49 05 93 · ◎ lacolline.gambetta",
+      "Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé": "Alérgenos: información a petición • El abuso de alcohol es peligroso para la salud",
+      "L’abus d’alcool est dangereux pour la santé — À consommer avec modération": "El abuso de alcohol es peligroso para la salud — Consume con moderación",
+      "Prix nets en euros • service compris": "Precios en euros • servicio incluido",
+      "Apérol, Prosecco, orange, eau gazeuse": "Aperol, Prosecco, naranja, agua con gas",
+      "Cachaça, citron vert, sucre de canne": "Cachaça, lima, azúcar de caña",
+      "Citron vert, fraise, framboise": "Lima, fresa, frambuesa",
+      "Citron vert, menthe, sucre de canne, eau gazeuse": "Lima, menta, azúcar de caña, agua con gas",
+      "Cointreau, amaretto, jus d’ananas": "Cointreau, amaretto, zumo de piña",
+      "Crème de violette, champagne, cerise": "Licor de violeta, champán, cereza",
+      "Gin, crème de violette, jus de citron jaune": "Ginebra, licor de violeta, zumo de limón",
+      "Gin, jus de citron vert, ginger beer": "Ginebra, zumo de lima, ginger beer",
+      "Gin, jus de citron vert, sucre de canne, limonade": "Ginebra, zumo de lima, azúcar de caña, gaseosa",
+      "Jus de tomate, jus de citron, épices": "Zumo de tomate, zumo de limón, especias",
+      "Jus d’ananas, crème de coco": "Zumo de piña, crema de coco",
+      "Jus d’ananas, jus d’orange, sirop de grenadine": "Zumo de piña, zumo de naranja, sirope de granadina",
+      "Jus d’orange, jus d’ananas, jus de citron, sirop de cassis": "Zumo de naranja, zumo de piña, zumo de limón, sirope de grosella negra",
+      "Liqueur de fleurs de sureau, Prosecco, orange, eau gazeuse": "Licor de flor de saúco, Prosecco, naranja, agua con gas",
+      "Prosecco, crème de violette, eau gazeuse, myrtilles": "Prosecco, crema de violeta, agua con gas, arándanos",
+      "Prosecco, vodka, sirop de fruit de la passion, citron vert": "Prosecco, vodka, sirope de maracuyá, lima",
+      "Rhum blanc, rhum ambré, jus de citron vert, Cointreau, sirop d’orgeat": "Ron blanco, ron añejo, zumo de lima, Cointreau, sirope de orgeat",
+      "Rhum, Coca-Cola, jus de citron": "Ron, Coca-Cola, zumo de limón",
+      "Rhum, citron vert, sucre de canne": "Ron, lima, azúcar de caña",
+      "Rhum, jus de citron vert, ginger beer": "Ron, zumo de lima, ginger beer",
+      "Rhum, jus d’ananas, crème de coco": "Ron, zumo de piña, crema de coco",
+      "Rhum, jus d’ananas, sirop de fraise, crème de coco": "Ron, zumo de piña, sirope de fresa, crema de coco",
+      "Rhum, menthe fraîche, citron vert, sucre de canne, eau gazeuse": "Ron, menta fresca, lima, azúcar de caña, agua con gas",
+      "Rhum, sirop de fruit de la passion, jus de citron": "Ron, sirope de maracuyá, zumo de limón",
+      "Sirop de violette, jus de citron vert, Schweppes Tonic": "Sirope de violeta, zumo de lima, Schweppes Tonic",
+      "Suze, Schweppes Tonic, citron": "Suze, Schweppes Tonic, limón",
+      "Tequila, Cointreau, jus de citron vert": "Tequila, Cointreau, zumo de lima",
+      "Tequila, jus de citron vert, sirop de cassis, Schweppes Tonic": "Tequila, zumo de lima, sirope de grosella negra, Schweppes Tonic",
+      "Tequila, jus d’orange, sirop de grenadine": "Tequila, zumo de naranja, sirope de granadina",
+      "Vodka, Cointreau, crème de pêche, jus d’orange, jus de cranberry": "Vodka, Cointreau, crema de melocotón, zumo de naranja, zumo de arándanos",
+      "Vodka, Cointreau, jus de cranberry, jus de citron vert": "Vodka, Cointreau, zumo de arándanos, zumo de lima",
+      "Vodka, citron vert, sucre de canne": "Vodka, lima, azúcar de caña",
+      "Vodka, jus de citron vert, ginger beer": "Vodka, zumo de lima, ginger beer",
+      "Vodka, liqueur de café, cerise": "Vodka, licor de café, cereza",
+      "Vodka, liqueur de café, expresso, sucre de canne": "Vodka, licor de café, espresso, azúcar de caña",
+      "Vodka, tomate, citron et épices": "Vodka, tomate, limón y especias",
+      "Caramel ou vanille": "Caramelo o vainilla",
+      "Cochonnaille et fromagère": "Embutidos y quesos",
+      "Petit déjeuner": "Desayuno",
+      "Salade": "Ensalada",
+      "PINTE": "PINTA",
+      "Triple d’Orgemont bio": "Triple d’Orgemont ecológica"
+    },
+    de: {
+      "Page de Garde": "Startseite",
+      "Menu & Carte": "Speise- & Getränkekarte",
+      "📖 Menu & Carte": "📖 Speise- & Getränkekarte",
+      "La Colline Gambetta — Menu & Carte": "La Colline Gambetta — Speise- & Getränkekarte",
+      "LA CARTE": "DIE KARTE",
+      "Nos entrées": "Vorspeisen",
+      "Nos plats": "Hauptgerichte",
+      "Nos menus": "Menüs",
+      "Nos boissons": "Getränke",
+      "Nos cocktails": "Cocktails",
+      "Nos vins": "Weine",
+      "Nos desserts": "Desserts",
+      "Entrées": "Vorspeisen",
+      "Plats": "Hauptgerichte",
+      "Desserts": "Desserts",
+      "Burgers": "Burger",
+      "Salades": "Salate",
+      "Pâtes": "Teigwaren",
+      "Omelettes": "Omeletts",
+      "Glaces": "Eiscreme",
+      "Fromages": "Käse",
+      "Boissons fraîches": "Kalte Getränke",
+      "Boissons chaudes": "Warme Getränke",
+      "Boisson chaude": "Heißgetränk",
+      "Apéritifs": "Aperitifs",
+      "Bières": "Biere",
+      "Digestifs": "Digestifs",
+      "Whiskies": "Whiskys",
+      "Bulles": "Schaumweine",
+      "Cocktails classiques": "Klassische Cocktails",
+      "Spritz & fraîcheur": "Spritz & Frische",
+      "Mules & fizz": "Mules & Fizz",
+      "Élégance & saveurs": "Eleganz & Aromen",
+      "Mocktails": "Mocktails",
+      "✦ Sans alcool —": "✦ Alkoholfrei —",
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17 → 23 Uhr ✦",
+      "Prix": "Preis",
+      "Appellation": "Anbaugebiet",
+      "Vin blanc": "Weißwein",
+      "Vin rouge": "Rotwein",
+      "Vin rosé": "Roséwein",
+      "Bouteille": "Flasche",
+      "Pression": "Vom Fass",
+      "Bière blonde": "Helles Bier",
+      "Bière blanche bio": "Bio-Weißbier",
+      "Bière sans alcool": "Alkoholfreies Bier",
+      "Formules": "Menüs",
+      "Formule duo": "Duo-Menü",
+      "Formule complète": "Komplettmenü",
+      "Entrée + plat": "Vorspeise + Hauptgericht",
+      "ou": "oder",
+      "plat + dessert": "Hauptgericht + Dessert",
+      "Entrée + plat + dessert": "Vorspeise + Hauptgericht + Dessert",
+      "Choix ci-dessous": "Auswahl siehe unten",
+      "Au choix": "Nach Wahl",
+      "au choix": "nach Wahl",
+      "Parfum au choix": "Sorte nach Wahl",
+      "— parfum au choix": "— Sorte nach Wahl",
+      "Entrée": "Vorspeise",
+      "Plat": "Hauptgericht",
+      "Dessert": "Dessert",
+      "Duo": "Duo",
+      "Complète": "Komplett",
+      "Enfant": "Kinder",
+      "Petit-déj": "Frühstück",
+      "Menu enfant": "Kindermenü",
+      "Menu du jour": "Tagesgericht",
+      "Moins de 12 ans": "Unter 12 Jahren",
+      "Choix selon l’ardoise": "Auswahl laut Tafel",
+      "Uniquement le midi - sauf weekends et jours fériés": "Nur mittags — außer an Wochenenden und Feiertagen",
+      "Burger enfant ou Cordon bleu": "Kinderburger oder Cordon bleu",
+      "1 Verre de soda": "1 Softgetränk",
+      "1 Boule de glace": "1 Kugel Eis",
+      "2 boules de glace": "2 Kugeln Eis",
+      "Verre de jus de fruits": "Glas Fruchtsaft",
+      "Supplément boule de glace ou sorbet": "Zusätzliche Kugel Eis oder Sorbet",
+      "Assortiment de mignardises — thé + 1 €": "Auswahl kleiner Süßigkeiten — Tee + 1 €",
+      "Croissant ou Tartine au beurre": "Croissant oder Butterbrot",
+      "Pain toasté, confiture d’abricots": "Getoastetes Brot, Aprikosenmarmelade",
+      "Entrecôte 190 g": "Rippensteak 190 g",
+      "Bavette d’aloyau": "Rinderflanke",
+      "Escalope de veau": "Kalbsschnitzel",
+      "Cuisse de canard confite": "Confitierte Entenkeule",
+      "Poisson": "Fisch",
+      "Tartare de bœuf": "Rindertatar",
+      "Cuisse de poulet rôtie": "Gebratene Hähnchenkeule",
+      "Riz basmati": "Basmatireis",
+      "Fleur de sel, sauce au choix": "Fleur de Sel, Sauce nach Wahl",
+      "Sauce au choix": "Sauce nach Wahl",
+      "Selon arrivage": "Je nach Tagesfang",
+      "selon arrivage": "je nach Tagesfang",
+      "Sauce champignons, pâtes": "Pilzsauce, Teigwaren",
+      "Burger La Colline": "Burger La Colline",
+      "Burger Chicken Croustillant": "Crispy-Chicken-Burger",
+      "Burger Végétarien": "Veggie-Burger",
+      "Pain brioché, cheddar, steak haché, bacon, oignons caramélisés, salade, tomate, sauce burger.": "Brötchen mit Brioche, Cheddar, Rinderhack, Bacon, karamellisierten Zwiebeln, Salat, Tomate, Burgersoße.",
+      "Pain brioché, cheddar, poisson pané, légumes grillés, salade, tomate, sauce burger.": "Brötchen mit Brioche, Cheddar, paniertem Fisch, gegrilltem Gemüse, Salat, Tomate, Burgersoße.",
+      "Pain brioché, cheddar, escalope de poulet pané croustillant, oignons caramélisés, salade, tomate, sauce burger.": "Brötchen mit Brioche, Cheddar, knusprig paniertem Hähnchen, karamellisierten Zwiebeln, Salat, Tomate, Burgersoße.",
+      "Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger.": "Brötchen mit Brioche, Cheddar, vegetarischer Patty, gegrilltem Gemüse, Salat, Tomate, Burgersoße.",
+      "Chèvre Chaud": "Warmer Ziegenkäse-Salat",
+      "Végétarienne": "Vegetarisch",
+      "Nordique": "Nordisch",
+      "Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.": "Grüner Salat, Tomate, panierte Hähnchenbrust, Mimosa-Ei, Croûton, Ziegenkäse-Toast.",
+      "Salade verte, tomate, jambon sec, toast de cabécou, noix, miel.": "Grüner Salat, Tomate, luftgetrockneter Schinken, Cabécou-Toast, Walnüsse, Honig.",
+      "Salade verte, tomate, concombre, haricots verts, légumes grillés, avocat.": "Grüner Salat, Tomate, Gurke, grüne Bohnen, gegrilltes Gemüse, Avocado.",
+      "Salade verte, saumon fumé, crevettes, avocat, concombre, tomate, feta, croûtons.": "Grüner Salat, geräucherter Lachs, Garnelen, Avocado, Gurke, Tomate, Feta, Croûtons.",
+      "Tagliatelles à la carbonara": "Tagliatelle Carbonara",
+      "Tagliatelles au saumon": "Tagliatelle mit Lachs",
+      "Penne au poulet et champignons": "Penne mit Hähnchen und Champignons",
+      "Assiette de frites": "Teller Pommes frites",
+      "Accompagnement : frites, haricots verts, pâtes": "Beilage: Pommes frites, grüne Bohnen, Teigwaren",
+      "Sauce au choix : poivre · champignons · roquefort — supplément sauce 2,00": "Sauce nach Wahl: Pfeffer · Champignons · Roquefort — zusätzliche Sauce 2,00",
+      "Supplément Picon · 1,00": "Picon extra · 1,00",
+      "Planches & croques": "Brettl & Toasts",
+      "Frites maison": "Hausgemachte Pommes frites",
+      "Frites et salade": "Pommes frites und Salat",
+      "Escargots de Bourgogne": "Schnecken nach Burgunder Art",
+      "6 Escargots au Roquefort": "6 Schnecken mit Roquefort",
+      "Œuf cocotte": "Ei im Töpfchen",
+      "Œuf cocotte du moment": "Ei im Töpfchen des Tages",
+      "Œuf dur mayonnaise": "Ei mit Mayonnaise",
+      "Assiette de charcuterie": "Wurstplatten",
+      "Assiette mixte": "Gemischte Platte",
+      "Tartare d’avocat et crevettes": "Avocado-Garnelen-Tatar",
+      "Assiette de saumon fumé": "Platte mit geräuchertem Lachs",
+      "Assiette de foie gras du Sud-Ouest": "Foie gras aus dem Südwesten",
+      "Œufs au plat": "Spiegeleier",
+      "Omelette nature": "Omelett natur",
+      "Omelette au fromage": "Käseomelett",
+      "Omelette au jambon": "Schinkenomelett",
+      "Omelette aux champignons": "Champignon-Omelett",
+      "Omelette mixte": "Gemischtes Omelett",
+      "Chèvre": "Ziegenkäse",
+      "Coulis de fruits rouges": "Rote-Grütze-Coulis",
+      "Dame blanche aux éclats de chocolat": "Dame blanche mit Schokoladenstückchen",
+      "Moelleux au chocolat": "Warmer Schokoladenkuchen",
+      "Mousse au chocolat": "Schokoladenmousse",
+      "Pain perdu de la Colline": "Arme Ritter nach Art des Hauses",
+      "Tarte aux pommes": "Apfelkuchen",
+      "Crème glacée (3 boules)": "Eiscreme (3 Kugeln)",
+      "Sorbet (3 boules)": "Sorbet (3 Kugeln)",
+      "Coupe 12 cl": "Becher 12 cl",
+      "Glace vanille": "Vanilleeis",
+      "Glace vanille ou caramel beurre salé": "Vanille- oder gesalzenes Karamelleis",
+      "2 boules vanille, sauce chocolat, chantilly": "2 Kugeln Vanille, Schokoladensoße, Sahne",
+      "2 boules chocolat, sauce chocolat, chantilly": "2 Kugeln Schokolade, Schokoladensoße, Sahne",
+      "2 boules caramel beurre salé, sauce caramel, chantilly": "2 Kugeln gesalzenes Karamell, Karamellsoße, Sahne",
+      "2 boules café, expresso, chantilly": "2 Kugeln Kaffee, Espresso, Sahne",
+      "2 boules citron vert arrosées de vodka (2 cl)": "2 Kugeln Limette mit Wodka übergossen (2 cl)",
+      "Vanille, caramel beurre salé, chocolat, café, pistache, noisette": "Vanille, gesalzenes Karamell, Schokolade, Kaffee, Pistazie, Haselnuss",
+      "Café gourmand": "Kaffee mit kleinen Desserts",
+      "Café liégeois": "Lütticher Kaffee",
+      "Chocolat liégeois": "Lütticher Schokolade",
+      "Café": "Kaffee",
+      "Décaféiné": "Entkoffeiniert",
+      "Double café / décaféiné": "Doppelter Kaffee / entkoffeiniert",
+      "Café noisette / allongé": "Kaffee mit Haselnuss / Lungo",
+      "Café allongé": "Lungo",
+      "Café crème / chocolat chaud": "Milchkaffee / heiße Schokolade",
+      "Café frappé": "Eiskaffee",
+      "Café viennois": "Wiener Melange",
+      "Crème / chocolat viennois": "Wiener Sahne-/ Schokoladenkaffee",
+      "Latte frappé": "Eis-Latte",
+      "Lait chaud": "Heiße Milch",
+      "Infusion / thé parfumé": "Kräutertee / aromatisierter Tee",
+      "Grog": "Grog",
+      "Vin chaud aux épices": "Glühwein",
+      "Milkshake": "Milchshake",
+      "Jus / Nectar de fruits": "Fruchtsaft / Nektar",
+      "Sirop à l’eau": "Sirup mit Wasser",
+      "Supplément sirop ·": "Sirup extra ·",
+      "Orange pressée / Citron pressé": "Frisch gepresster Orangen-/ Zitronensaft",
+      "Diabolo / Limonade": "Diabolo / Limonade",
+      "orange, pomme, ananas, abricot, fraise, tomate": "Orange, Apfel, Ananas, Aprikose, Erdbeere, Tomate",
+      "grenadine • fraise • citron • menthe • pêche • violette • passion • vanille • coco • orgeat • cassis": "Granatapfel • Erdbeere • Zitrone • Minze • Pfirsich • Veilchen • Maracuja • Vanille • Kokos • Orgeat • Johannisbeere",
+      "— Blanc, rouge": "— Weiß, rot",
+      "— Cassis, framboise, mûre, pêche": "— Johannisbeere, Himbeere, Brombeere, Pfirsich",
+      "Poire, Mirabelle, Framboise": "Birne, Mirabelle, Himbeere",
+      "Cidre brut": "Trockener Cidre",
+      "Télécharger la carte (PDF)": "Karte herunterladen (PDF)",
+      "Télécharger la carte au format PDF": "Karte als PDF herunterladen",
+      "Voir la carte": "Karte ansehen",
+      "Sections précédentes": "Vorherige Abschnitte",
+      "Autres sections": "Weitere Abschnitte",
+      "FAIT MAISON • SERVICE CONTINU • TERRASSE": "HAUSGEMACHT • DURCHGEHENDER SERVICE • TERRASSE",
+      "BAR • RESTAURANT • PARIS 20ᵉ": "BAR • RESTAURANT • PARIS 20. ARR.",
+      "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta": "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta",
+      "Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé": "Allergeninformationen auf Anfrage • Alkoholmissbrauch ist gefährlich für die Gesundheit",
+      "L’abus d’alcool est dangereux pour la santé — À consommer avec modération": "Alkoholmissbrauch ist gefährlich für die Gesundheit — In Maßen genießen",
+      "Prix nets en euros • service compris": "Preise in Euro • Service inbegriffen",
+      "Apérol, Prosecco, orange, eau gazeuse": "Aperol, Prosecco, Orange, Sprudelwasser",
+      "Cachaça, citron vert, sucre de canne": "Cachaça, Limette, Rohrzucker",
+      "Citron vert, fraise, framboise": "Limette, Erdbeere, Himbeere",
+      "Citron vert, menthe, sucre de canne, eau gazeuse": "Limette, Minze, Rohrzucker, Sprudelwasser",
+      "Cointreau, amaretto, jus d’ananas": "Cointreau, Amaretto, Ananassaft",
+      "Crème de violette, champagne, cerise": "Veilchenlikör, Champagner, Kirsche",
+      "Gin, crème de violette, jus de citron jaune": "Gin, Veilchenlikör, Zitronensaft",
+      "Gin, jus de citron vert, ginger beer": "Gin, Limettensaft, Ginger Beer",
+      "Gin, jus de citron vert, sucre de canne, limonade": "Gin, Limettensaft, Rohrzucker, Limonade",
+      "Jus de tomate, jus de citron, épices": "Tomatensaft, Zitronensaft, Gewürze",
+      "Jus d’ananas, crème de coco": "Ananassaft, Kokoscreme",
+      "Jus d’ananas, jus d’orange, sirop de grenadine": "Ananassaft, Orangensaft, Granatapfelsirup",
+      "Jus d’orange, jus d’ananas, jus de citron, sirop de cassis": "Orangensaft, Ananassaft, Zitronensaft, Johannisbeersirup",
+      "Liqueur de fleurs de sureau, Prosecco, orange, eau gazeuse": "Holunderblütenlikör, Prosecco, Orange, Sprudelwasser",
+      "Prosecco, crème de violette, eau gazeuse, myrtilles": "Prosecco, Veilchenlikör, Sprudelwasser, Heidelbeeren",
+      "Prosecco, vodka, sirop de fruit de la passion, citron vert": "Prosecco, Wodka, Maracujasirup, Limette",
+      "Rhum blanc, rhum ambré, jus de citron vert, Cointreau, sirop d’orgeat": "Weißer Rum, brauner Rum, Limettensaft, Cointreau, Orgeatsirup",
+      "Rhum, Coca-Cola, jus de citron": "Rum, Coca-Cola, Zitronensaft",
+      "Rhum, citron vert, sucre de canne": "Rum, Limette, Rohrzucker",
+      "Rhum, jus de citron vert, ginger beer": "Rum, Limettensaft, Ginger Beer",
+      "Rhum, jus d’ananas, crème de coco": "Rum, Ananassaft, Kokoscreme",
+      "Rhum, jus d’ananas, sirop de fraise, crème de coco": "Rum, Ananassaft, Erdbeersirup, Kokoscreme",
+      "Rhum, menthe fraîche, citron vert, sucre de canne, eau gazeuse": "Rum, frische Minze, Limette, Rohrzucker, Sprudelwasser",
+      "Rhum, sirop de fruit de la passion, jus de citron": "Rum, Maracujasirup, Zitronensaft",
+      "Sirop de violette, jus de citron vert, Schweppes Tonic": "Veilchensirup, Limettensaft, Schweppes Tonic",
+      "Suze, Schweppes Tonic, citron": "Suze, Schweppes Tonic, Zitrone",
+      "Tequila, Cointreau, jus de citron vert": "Tequila, Cointreau, Limettensaft",
+      "Tequila, jus de citron vert, sirop de cassis, Schweppes Tonic": "Tequila, Limettensaft, Johannisbeersirup, Schweppes Tonic",
+      "Tequila, jus d’orange, sirop de grenadine": "Tequila, Orangensaft, Granatapfelsirup",
+      "Vodka, Cointreau, crème de pêche, jus d’orange, jus de cranberry": "Wodka, Cointreau, Pfirsichlikör, Orangensaft, Cranberrysaft",
+      "Vodka, Cointreau, jus de cranberry, jus de citron vert": "Wodka, Cointreau, Cranberrysaft, Limettensaft",
+      "Vodka, citron vert, sucre de canne": "Wodka, Limette, Rohrzucker",
+      "Vodka, jus de citron vert, ginger beer": "Wodka, Limettensaft, Ginger Beer",
+      "Vodka, liqueur de café, cerise": "Wodka, Kaffeelikör, Kirsche",
+      "Vodka, liqueur de café, expresso, sucre de canne": "Wodka, Kaffeelikör, Espresso, Rohrzucker",
+      "Vodka, tomate, citron et épices": "Wodka, Tomate, Zitrone und Gewürze",
+      "Caramel ou vanille": "Karamell oder Vanille",
+      "Cochonnaille et fromagère": "Wurst- und Käseplatten",
+      "Petit déjeuner": "Frühstück",
+      "Salade": "Salat",
+      "PINTE": "PINT",
+      "Triple d’Orgemont bio": "Triple d’Orgemont Bio"
+    },
+    it: {
+      "Page de Garde": "Home",
+      "Menu & Carte": "Menù e carta",
+      "📖 Menu & Carte": "📖 Menù e carta",
+      "La Colline Gambetta — Menu & Carte": "La Colline Gambetta — Menù e carta",
+      "LA CARTE": "LA CARTA",
+      "Nos entrées": "Antipasti",
+      "Nos plats": "Piatti principali",
+      "Nos menus": "Menù",
+      "Nos boissons": "Bevande",
+      "Nos cocktails": "Cocktail",
+      "Nos vins": "Vini",
+      "Nos desserts": "Dessert",
+      "Entrées": "Antipasti",
+      "Plats": "Piatti principali",
+      "Desserts": "Dessert",
+      "Burgers": "Hamburger",
+      "Salades": "Insalate",
+      "Pâtes": "Pasta",
+      "Omelettes": "Frittate",
+      "Glaces": "Gelati",
+      "Fromages": "Formaggi",
+      "Boissons fraîches": "Bevande fresche",
+      "Boissons chaudes": "Bevande calde",
+      "Boisson chaude": "Bevanda calda",
+      "Apéritifs": "Aperitivi",
+      "Bières": "Birre",
+      "Digestifs": "Digestivi",
+      "Whiskies": "Whisky",
+      "Bulles": "Spumanti",
+      "Cocktails classiques": "Cocktail classici",
+      "Spritz & fraîcheur": "Spritz e freschezza",
+      "Mules & fizz": "Mule e fizz",
+      "Élégance & saveurs": "Eleganza e sapori",
+      "Mocktails": "Mocktail",
+      "✦ Sans alcool —": "✦ Senza alcol —",
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17 → 23 ✦",
+      "Prix": "Prezzo",
+      "Appellation": "Denominazione",
+      "Vin blanc": "Vino bianco",
+      "Vin rouge": "Vino rosso",
+      "Vin rosé": "Vino rosé",
+      "Bouteille": "Bottiglia",
+      "Pression": "alla spina",
+      "Bière blonde": "Birra chiara",
+      "Bière blanche bio": "Birra bianca bio",
+      "Bière sans alcool": "Birra analcolica",
+      "Formules": "Menù combinati",
+      "Formule duo": "Menù duo",
+      "Formule complète": "Menù completo",
+      "Entrée + plat": "Antipasto + piatto",
+      "ou": "oppure",
+      "plat + dessert": "piatto + dessert",
+      "Entrée + plat + dessert": "Antipasto + piatto + dessert",
+      "Choix ci-dessous": "A scelta tra quelli qui sotto",
+      "Au choix": "A scelta",
+      "au choix": "a scelta",
+      "Parfum au choix": "Gusto a scelta",
+      "— parfum au choix": "— gusto a scelta",
+      "Entrée": "Antipasto",
+      "Plat": "Piatto",
+      "Dessert": "Dessert",
+      "Duo": "Duo",
+      "Complète": "Completo",
+      "Enfant": "Bambini",
+      "Petit-déj": "Colazione",
+      "Menu enfant": "Menù bambino",
+      "Menu du jour": "Piatto del giorno",
+      "Moins de 12 ans": "Meno di 12 anni",
+      "Choix selon l’ardoise": "A scelta secondo la lavagna",
+      "Uniquement le midi - sauf weekends et jours fériés": "Solo a pranzo — tranne weekend e giorni festivi",
+      "Burger enfant ou Cordon bleu": "Hamburger bambino o Cordon bleu",
+      "1 Verre de soda": "1 bibita",
+      "1 Boule de glace": "1 pallina di gelato",
+      "2 boules de glace": "2 palline di gelato",
+      "Verre de jus de fruits": "Bicchiere di succo di frutta",
+      "Supplément boule de glace ou sorbet": "Pallina extra di gelato o sorbetto",
+      "Assortiment de mignardises — thé + 1 €": "Selezione di dolcetti — tè + 1 €",
+      "Croissant ou Tartine au beurre": "Croissant o fetta biscottata al burro",
+      "Pain toasté, confiture d’abricots": "Pane tostato, marmellata di albicocche",
+      "Entrecôte 190 g": "Costata 190 g",
+      "Bavette d’aloyau": "Bavetta di manzo",
+      "Escalope de veau": "Scaloppina di vitello",
+      "Cuisse de canard confite": "Coscia d’anatra confit",
+      "Poisson": "Pesce",
+      "Tartare de bœuf": "Tartare di manzo",
+      "Cuisse de poulet rôtie": "Coscia di pollo arrosto",
+      "Riz basmati": "Riso basmati",
+      "Fleur de sel, sauce au choix": "Fleur de sel, salsa a scelta",
+      "Sauce au choix": "Salsa a scelta",
+      "Selon arrivage": "Secondo la pesca del giorno",
+      "selon arrivage": "secondo la pesca del giorno",
+      "Sauce champignons, pâtes": "Salsa ai funghi, pasta",
+      "Burger La Colline": "Burger La Colline",
+      "Burger Chicken Croustillant": "Burger di pollo croccante",
+      "Burger Végétarien": "Burger vegetariano",
+      "Pain brioché, cheddar, steak haché, bacon, oignons caramélisés, salade, tomate, sauce burger.": "Panino brioscia, cheddar, carne macinata, bacon, cipolle caramellate, insalata, pomodoro, salsa burger.",
+      "Pain brioché, cheddar, poisson pané, légumes grillés, salade, tomate, sauce burger.": "Panino brioscia, cheddar, pesce impanato, verdure grigliate, insalata, pomodoro, salsa burger.",
+      "Pain brioché, cheddar, escalope de poulet pané croustillant, oignons caramélisés, salade, tomate, sauce burger.": "Panino brioscia, cheddar, scaloppina di pollo impanata croccante, cipolle caramellate, insalata, pomodoro, salsa burger.",
+      "Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger.": "Panino brioscia, cheddar, hamburger vegetale, verdure grigliate, insalata, pomodoro, salsa burger.",
+      "Chèvre Chaud": "Insalata di caprino caldo",
+      "Végétarienne": "Vegetariana",
+      "Nordique": "Nordica",
+      "Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.": "Insalata verde, pomodoro, scaloppina di pollo impanata, uovo mimosa, crostino, toast al caprino.",
+      "Salade verte, tomate, jambon sec, toast de cabécou, noix, miel.": "Insalata verde, pomodoro, prosciutto crudo, toast al cabécou, noci, miele.",
+      "Salade verte, tomate, concombre, haricots verts, légumes grillés, avocat.": "Insalata verde, pomodoro, cetriolo, fagiolini, verdure grigliate, avocado.",
+      "Salade verte, saumon fumé, crevettes, avocat, concombre, tomate, feta, croûtons.": "Insalata verde, salmone affumicato, gamberi, avocado, cetriolo, pomodoro, feta, crostini.",
+      "Tagliatelles à la carbonara": "Tagliatelle alla carbonara",
+      "Tagliatelles au saumon": "Tagliatelle al salmone",
+      "Penne au poulet et champignons": "Penne con pollo e funghi",
+      "Assiette de frites": "Piatto di patatine fritte",
+      "Accompagnement : frites, haricots verts, pâtes": "Contorno: patatine fritte, fagiolini, pasta",
+      "Sauce au choix : poivre · champignons · roquefort — supplément sauce 2,00": "Salsa a scelta: pepe · funghi · roquefort — salsa extra 2,00",
+      "Supplément Picon · 1,00": "Picon extra · 1,00",
+      "Planches & croques": "Taglieri e toast",
+      "Frites maison": "Patatine fritte fatte in casa",
+      "Frites et salade": "Patatine fritte e insalata",
+      "Escargots de Bourgogne": "Lumache alla Borgogna",
+      "6 Escargots au Roquefort": "6 lumache al Roquefort",
+      "Œuf cocotte": "Uovo in cocotte",
+      "Œuf cocotte du moment": "Uovo in cocotte del giorno",
+      "Œuf dur mayonnaise": "Uovo sodo con maionese",
+      "Assiette de charcuterie": "Tagliere di salumi",
+      "Assiette mixte": "Piatto misto",
+      "Tartare d’avocat et crevettes": "Tartare di avocado e gamberi",
+      "Assiette de saumon fumé": "Tagliere di salmone affumicato",
+      "Assiette de foie gras du Sud-Ouest": "Tagliere di foie gras del Sud-Ovest",
+      "Œufs au plat": "Uova al tegamino",
+      "Omelette nature": "Frittata semplice",
+      "Omelette au fromage": "Frittata al formaggio",
+      "Omelette au jambon": "Frittata al prosciutto",
+      "Omelette aux champignons": "Frittata ai funghi",
+      "Omelette mixte": "Frittata mista",
+      "Chèvre": "Caprino",
+      "Coulis de fruits rouges": "Coulis di frutti rossi",
+      "Dame blanche aux éclats de chocolat": "Dame blanche con scaglie di cioccolato",
+      "Moelleux au chocolat": "Tortino al cioccolato",
+      "Mousse au chocolat": "Mousse al cioccolato",
+      "Pain perdu de la Colline": "French toast della Colline",
+      "Tarte aux pommes": "Torta di mele",
+      "Crème glacée (3 boules)": "Gelato (3 palline)",
+      "Sorbet (3 boules)": "Sorbetto (3 palline)",
+      "Coupe 12 cl": "Coppa 12 cl",
+      "Glace vanille": "Gelato alla vaniglia",
+      "Glace vanille ou caramel beurre salé": "Gelato alla vaniglia o al caramello salato",
+      "2 boules vanille, sauce chocolat, chantilly": "2 palline vaniglia, salsa al cioccolato, panna montata",
+      "2 boules chocolat, sauce chocolat, chantilly": "2 palline cioccolato, salsa al cioccolato, panna montata",
+      "2 boules caramel beurre salé, sauce caramel, chantilly": "2 palline caramello salato, salsa al caramello, panna montata",
+      "2 boules café, expresso, chantilly": "2 palline caffè, espresso, panna montata",
+      "2 boules citron vert arrosées de vodka (2 cl)": "2 palline lime irrorate di vodka (2 cl)",
+      "Vanille, caramel beurre salé, chocolat, café, pistache, noisette": "Vaniglia, caramello salato, cioccolato, caffè, pistacchio, nocciola",
+      "Café gourmand": "Caffè con dolcetti",
+      "Café liégeois": "Caffè liegiose",
+      "Chocolat liégeois": "Cioccolato liegiose",
+      "Café": "Caffè",
+      "Décaféiné": "Decaffeinato",
+      "Double café / décaféiné": "Caffè doppio / decaffeinato",
+      "Café noisette / allongé": "Caffè macchiato / lungo",
+      "Café allongé": "Caffè lungo",
+      "Café crème / chocolat chaud": "Caffellatte / cioccolata calda",
+      "Café frappé": "Caffè frappé",
+      "Café viennois": "Caffè viennese",
+      "Crème / chocolat viennois": "Panna / cioccolato viennese",
+      "Latte frappé": "Latte frappé",
+      "Lait chaud": "Latte caldo",
+      "Infusion / thé parfumé": "Tisana / tè aromatizzato",
+      "Grog": "Punch caldo",
+      "Vin chaud aux épices": "Vin brulé speziato",
+      "Jus / Nectar de fruits": "Succo / nettare di frutta",
+      "Sirop à l’eau": "Sciroppo con acqua",
+      "Supplément sirop ·": "Sciroppo extra ·",
+      "Orange pressée / Citron pressé": "Spremuta d’arancia / di limone",
+      "Diabolo / Limonade": "Diabolo / limonata",
+      "orange, pomme, ananas, abricot, fraise, tomate": "arancia, mela, ananas, albicocca, fragola, pomodoro",
+      "grenadine • fraise • citron • menthe • pêche • violette • passion • vanille • coco • orgeat • cassis": "granatina • fragola • limone • menta • pesca • viola • passione • vaniglia • cocco • orzata • ribes",
+      "— Blanc, rouge": "— Bianco, rosso",
+      "— Cassis, framboise, mûre, pêche": "— Ribes, lampone, mora, pesca",
+      "Poire, Mirabelle, Framboise": "Pera, Mirabella, Lampone",
+      "Cidre brut": "Sidro secco",
+      "Télécharger la carte (PDF)": "Scarica la carta (PDF)",
+      "Télécharger la carte au format PDF": "Scarica la carta in formato PDF",
+      "Voir la carte": "Vedi la carta",
+      "Sections précédentes": "Sezioni precedenti",
+      "Autres sections": "Altre sezioni",
+      "FAIT MAISON • SERVICE CONTINU • TERRASSE": "CUCINA CASARECCIA • SERVIZIO CONTINUO • TERRAZZA",
+      "BAR • RESTAURANT • PARIS 20ᵉ": "BAR • RISTORANTE • PARIGI 20ᵉ",
+      "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta": "BAR • RISTORANTE · 01 43 49 05 93 · ◎ lacolline.gambetta",
+      "Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé": "Allergeni: informazioni su richiesta • L’abuso di alcol è pericoloso per la salute",
+      "L’abus d’alcool est dangereux pour la santé — À consommer avec modération": "L’abuso di alcol è pericoloso per la salute — Da consumare con moderazione",
+      "Prix nets en euros • service compris": "Prezzi in euro • servizio incluso",
+      "Apérol, Prosecco, orange, eau gazeuse": "Aperol, Prosecco, arancia, acqua frizzante",
+      "Cachaça, citron vert, sucre de canne": "Cachaça, lime, zucchero di canna",
+      "Citron vert, fraise, framboise": "Lime, fragola, lampone",
+      "Citron vert, menthe, sucre de canne, eau gazeuse": "Lime, menta, zucchero di canna, acqua frizzante",
+      "Cointreau, amaretto, jus d’ananas": "Cointreau, amaretto, succo di ananas",
+      "Crème de violette, champagne, cerise": "Liquore alla viola, champagne, ciliegia",
+      "Gin, crème de violette, jus de citron jaune": "Gin, liquore alla viola, succo di limone",
+      "Gin, jus de citron vert, ginger beer": "Gin, succo di lime, ginger beer",
+      "Gin, jus de citron vert, sucre de canne, limonade": "Gin, succo di lime, zucchero di canna, limonata",
+      "Jus de tomate, jus de citron, épices": "Succo di pomodoro, succo di limone, spezie",
+      "Jus d’ananas, crème de coco": "Succo di ananas, crema di cocco",
+      "Jus d’ananas, jus d’orange, sirop de grenadine": "Succo di ananas, succo d’arancia, sciroppo di granatina",
+      "Jus d’orange, jus d’ananas, jus de citron, sirop de cassis": "Succo d’arancia, succo di ananas, succo di limone, sciroppo di ribes",
+      "Liqueur de fleurs de sureau, Prosecco, orange, eau gazeuse": "Liquore ai fiori di sambuco, Prosecco, arancia, acqua frizzante",
+      "Prosecco, crème de violette, eau gazeuse, myrtilles": "Prosecco, liquore alla viola, acqua frizzante, mirtilli",
+      "Prosecco, vodka, sirop de fruit de la passion, citron vert": "Prosecco, vodka, sciroppo alla passione, lime",
+      "Rhum blanc, rhum ambré, jus de citron vert, Cointreau, sirop d’orgeat": "Rum bianco, rum ambrato, succo di lime, Cointreau, sciroppo di orzata",
+      "Rhum, Coca-Cola, jus de citron": "Rum, Coca-Cola, succo di limone",
+      "Rhum, citron vert, sucre de canne": "Rum, lime, zucchero di canna",
+      "Rhum, jus de citron vert, ginger beer": "Rum, succo di lime, ginger beer",
+      "Rhum, jus d’ananas, crème de coco": "Rum, succo di ananas, crema di cocco",
+      "Rhum, jus d’ananas, sirop de fraise, crème de coco": "Rum, succo di ananas, sciroppo di fragola, crema di cocco",
+      "Rhum, menthe fraîche, citron vert, sucre de canne, eau gazeuse": "Rum, menta fresca, lime, zucchero di canna, acqua frizzante",
+      "Rhum, sirop de fruit de la passion, jus de citron": "Rum, sciroppo alla passione, succo di limone",
+      "Sirop de violette, jus de citron vert, Schweppes Tonic": "Sciroppo alla viola, succo di lime, Schweppes Tonic",
+      "Suze, Schweppes Tonic, citron": "Suze, Schweppes Tonic, limone",
+      "Tequila, Cointreau, jus de citron vert": "Tequila, Cointreau, succo di lime",
+      "Tequila, jus de citron vert, sirop de cassis, Schweppes Tonic": "Tequila, succo di lime, sciroppo di ribes, Schweppes Tonic",
+      "Tequila, jus d’orange, sirop de grenadine": "Tequila, succo d’arancia, sciroppo di granatina",
+      "Vodka, Cointreau, crème de pêche, jus d’orange, jus de cranberry": "Vodka, Cointreau, liquore alla pesca, succo d’arancia, succo di cranberry",
+      "Vodka, Cointreau, jus de cranberry, jus de citron vert": "Vodka, Cointreau, succo di cranberry, succo di lime",
+      "Vodka, citron vert, sucre de canne": "Vodka, lime, zucchero di canna",
+      "Vodka, jus de citron vert, ginger beer": "Vodka, succo di lime, ginger beer",
+      "Vodka, liqueur de café, cerise": "Vodka, liquore al caffè, ciliegia",
+      "Vodka, liqueur de café, expresso, sucre de canne": "Vodka, liquore al caffè, espresso, zucchero di canna",
+      "Vodka, tomate, citron et épices": "Vodka, pomodoro, limone e spezie",
+      "Caramel ou vanille": "Caramello o vaniglia",
+      "Cochonnaille et fromagère": "Salumi e formaggi",
+      "Petit déjeuner": "Colazione",
+      "Salade": "Insalata",
+      "PINTE": "PINTA",
+      "Triple d’Orgemont bio": "Triple d’Orgemont bio"
+    },
+    pt: {
+      "Page de Garde": "Início",
+      "Menu & Carte": "Carta e menus",
+      "📖 Menu & Carte": "📖 Carta e menus",
+      "La Colline Gambetta — Menu & Carte": "La Colline Gambetta — Carta e menus",
+      "LA CARTE": "A CARTA",
+      "Nos entrées": "Entradas",
+      "Nos plats": "Pratos",
+      "Nos menus": "Menus",
+      "Nos boissons": "Bebidas",
+      "Nos cocktails": "Cocktails",
+      "Nos vins": "Vinhos",
+      "Nos desserts": "Sobremesas",
+      "Entrées": "Entradas",
+      "Plats": "Pratos",
+      "Desserts": "Sobremesas",
+      "Burgers": "Hambúrgueres",
+      "Salades": "Saladas",
+      "Pâtes": "Massas",
+      "Omelettes": "Omeletes",
+      "Glaces": "Gelados",
+      "Fromages": "Queijos",
+      "Boissons fraîches": "Bebidas frescas",
+      "Boissons chaudes": "Bebidas quentes",
+      "Boisson chaude": "Bebida quente",
+      "Apéritifs": "Aperitivos",
+      "Bières": "Cervejas",
+      "Digestifs": "Digestivos",
+      "Whiskies": "Whiskies",
+      "Bulles": "Espumantes",
+      "Cocktails classiques": "Cocktails clássicos",
+      "Spritz & fraîcheur": "Spritz e frescura",
+      "Mules & fizz": "Mules e fizz",
+      "Élégance & saveurs": "Elegância e sabores",
+      "Mocktails": "Mocktails",
+      "✦ Sans alcool —": "✦ Sem álcool —",
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17h → 23h ✦",
+      "Prix": "Preço",
+      "Appellation": "Denominação",
+      "Vin blanc": "Vinho branco",
+      "Vin rouge": "Vinho tinto",
+      "Vin rosé": "Vinho rosé",
+      "Bouteille": "Garrafa",
+      "Pression": "De pressão",
+      "Bière blonde": "Cerveja lager",
+      "Bière blanche bio": "Cerveja branca bio",
+      "Bière sans alcool": "Cerveja sem álcool",
+      "Formules": "Menus combinados",
+      "Formule duo": "Menu duo",
+      "Formule complète": "Menu completo",
+      "Entrée + plat": "Entrada + prato",
+      "ou": "ou",
+      "plat + dessert": "prato + sobremesa",
+      "Entrée + plat + dessert": "Entrada + prato + sobremesa",
+      "Choix ci-dessous": "A escolher da lista",
+      "Au choix": "À escolha",
+      "au choix": "à escolha",
+      "Parfum au choix": "Sabor à escolha",
+      "— parfum au choix": "— sabor à escolha",
+      "Entrée": "Entrada",
+      "Plat": "Prato",
+      "Dessert": "Sobremesa",
+      "Duo": "Duo",
+      "Complète": "Completo",
+      "Enfant": "Criança",
+      "Petit-déj": "Pequeno-almoço",
+      "Menu enfant": "Menu infantil",
+      "Menu du jour": "Prato do dia",
+      "Moins de 12 ans": "Menos de 12 anos",
+      "Choix selon l’ardoise": "A escolher conforme o quadro",
+      "Uniquement le midi - sauf weekends et jours fériés": "Só ao almoço — exceto fins de semana e feriados",
+      "Burger enfant ou Cordon bleu": "Hambúrguer infantil ou Cordon bleu",
+      "1 Verre de soda": "1 refrigerante",
+      "1 Boule de glace": "1 bola de gelado",
+      "2 boules de glace": "2 bolas de gelado",
+      "Verre de jus de fruits": "Copo de sumo de fruta",
+      "Supplément boule de glace ou sorbet": "Bola extra de gelado ou sorvete",
+      "Assortiment de mignardises — thé + 1 €": "Seleção de docinhos — chá + 1 €",
+      "Croissant ou Tartine au beurre": "Croissant ou tosta com manteiga",
+      "Pain toasté, confiture d’abricots": "Pão torrado, compota de pêssego… damasco",
+      "Entrecôte 190 g": "Entrecosto 190 g",
+      "Bavette d’aloyau": "Fraldinha",
+      "Escalope de veau": "Escalope de vitela",
+      "Cuisse de canard confite": "Perna de pato confitada",
+      "Poisson": "Peixe",
+      "Tartare de bœuf": "Tártaro de vaca",
+      "Cuisse de poulet rôtie": "Perna de frango assada",
+      "Riz basmati": "Arroz basmati",
+      "Fleur de sel, sauce au choix": "Flor de sal, molho à escolha",
+      "Sauce au choix": "Molho à escolha",
+      "Selon arrivage": "Conforme a pesca do dia",
+      "selon arrivage": "conforme a pesca do dia",
+      "Sauce champignons, pâtes": "Molho de cogumelos, massa",
+      "Burger La Colline": "Burger La Colline",
+      "Burger Chicken Croustillant": "Burger de frango crocante",
+      "Burger Végétarien": "Burger vegetariano",
+      "Pain brioché, cheddar, steak haché, bacon, oignons caramélisés, salade, tomate, sauce burger.": "Pão brioche, cheddar, carne picada, bacon, cebola caramelizada, salada, tomate, molho de burger.",
+      "Pain brioché, cheddar, poisson pané, légumes grillés, salade, tomate, sauce burger.": "Pão brioche, cheddar, peixe panado, legumes grelhados, salada, tomate, molho de burger.",
+      "Pain brioché, cheddar, escalope de poulet pané croustillant, oignons caramélisés, salade, tomate, sauce burger.": "Pão brioche, cheddar, escalope de frango panado crocante, cebola caramelizada, salada, tomate, molho de burger.",
+      "Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger.": "Pão brioche, cheddar, hambúrguer vegetal, legumes grelhados, salada, tomate, molho de burger.",
+      "Chèvre Chaud": "Salada de queijo de cabra quente",
+      "Végétarienne": "Vegetariana",
+      "Nordique": "Nórdica",
+      "Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.": "Salada verde, tomate, escalope de frango panado, ovo mimosa, crouton, tosta de queijo de cabra.",
+      "Salade verte, tomate, jambon sec, toast de cabécou, noix, miel.": "Salada verde, tomate, presunto curado, tosta de cabécou, nozes, mel.",
+      "Salade verte, tomate, concombre, haricots verts, légumes grillés, avocat.": "Salada verde, tomate, pepino, feijão-verde, legumes grelhados, abacate.",
+      "Salade verte, saumon fumé, crevettes, avocat, concombre, tomate, feta, croûtons.": "Salada verde, salmão fumado, camarão, abacate, pepino, tomate, feta, croutons.",
+      "Tagliatelles à la carbonara": "Tagliatelle à carbonara",
+      "Tagliatelles au saumon": "Tagliatelle com salmão",
+      "Penne au poulet et champignons": "Penne com frango e cogumelos",
+      "Assiette de frites": "Prato de batatas fritas",
+      "Accompagnement : frites, haricots verts, pâtes": "Acompanhamento: batatas fritas, feijão-verde, massa",
+      "Sauce au choix : poivre · champignons · roquefort — supplément sauce 2,00": "Molho à escolha: pimenta · cogumelos · roquefort — molho extra 2,00",
+      "Supplément Picon · 1,00": "Picon extra · 1,00",
+      "Planches & croques": "Tábuas e tostas",
+      "Frites maison": "Batatas fritas caseiras",
+      "Frites et salade": "Batatas fritas e salada",
+      "Escargots de Bourgogne": "Caracóis à Borgonha",
+      "6 Escargots au Roquefort": "6 caracóis com Roquefort",
+      "Œuf cocotte": "Ovo em cocotte",
+      "Œuf cocotte du moment": "Ovo em cocotte do dia",
+      "Œuf dur mayonnaise": "Ovo cozido com maionese",
+      "Assiette de charcuterie": "Tábua de enchidos",
+      "Assiette mixte": "Prato misto",
+      "Tartare d’avocat et crevettes": "Tártaro de abacate e camarão",
+      "Assiette de saumon fumé": "Tábua de salmão fumado",
+      "Assiette de foie gras du Sud-Ouest": "Tábua de foie gras do Sudoeste",
+      "Œufs au plat": "Ovos estrelados",
+      "Omelette nature": "Omelete simples",
+      "Omelette au fromage": "Omelete de queijo",
+      "Omelette au jambon": "Omelete de presunto",
+      "Omelette aux champignons": "Omelete de cogumelos",
+      "Omelette mixte": "Omelete mista",
+      "Chèvre": "Queijo de cabra",
+      "Coulis de fruits rouges": "Coulis de frutos vermelhos",
+      "Dame blanche aux éclats de chocolat": "Dame blanche com pedaços de chocolate",
+      "Moelleux au chocolat": "Molten de chocolate",
+      "Mousse au chocolat": "Mousse de chocolate",
+      "Pain perdu de la Colline": "Rabanada da Colline",
+      "Tarte aux pommes": "Tarte de maçã",
+      "Crème glacée (3 boules)": "Gelado (3 bolas)",
+      "Sorbet (3 boules)": "Sorvete (3 bolas)",
+      "Coupe 12 cl": "Copo 12 cl",
+      "Glace vanille": "Gelado de baunilha",
+      "Glace vanille ou caramel beurre salé": "Gelado de baunilha ou caramelo salgado",
+      "2 boules vanille, sauce chocolat, chantilly": "2 bolas de baunilha, molho de chocolate, chantilly",
+      "2 boules chocolat, sauce chocolat, chantilly": "2 bolas de chocolate, molho de chocolate, chantilly",
+      "2 boules caramel beurre salé, sauce caramel, chantilly": "2 bolas de caramelo salgado, molho de caramelo, chantilly",
+      "2 boules café, expresso, chantilly": "2 bolas de café, espresso, chantilly",
+      "2 boules citron vert arrosées de vodka (2 cl)": "2 bolas de lima regadas com vodka (2 cl)",
+      "Vanille, caramel beurre salé, chocolat, café, pistache, noisette": "Baunilha, caramelo salgado, chocolate, café, pistáchio, avelã",
+      "Café gourmand": "Café com docinhos",
+      "Café liégeois": "Café liégeois",
+      "Chocolat liégeois": "Chocolate liégeois",
+      "Café": "Café",
+      "Décaféiné": "Descafeinado",
+      "Double café / décaféiné": "Café duplo / descafeinado",
+      "Café noisette / allongé": "Café garoto / longo",
+      "Café allongé": "Café longo",
+      "Café crème / chocolat chaud": "Galão / chocolate quente",
+      "Café frappé": "Café frappé",
+      "Café viennois": "Café vienense",
+      "Crème / chocolat viennois": "Nata / chocolate vienense",
+      "Latte frappé": "Latte frappé",
+      "Lait chaud": "Leite quente",
+      "Infusion / thé parfumé": "Infusão / chá aromatizado",
+      "Grog": "Punch quente",
+      "Vin chaud aux épices": "Vinho quente especiado",
+      "Jus / Nectar de fruits": "Sumo / néctar de fruta",
+      "Sirop à l’eau": "Xarope com água",
+      "Supplément sirop ·": "Xarope extra ·",
+      "Orange pressée / Citron pressé": "Laranja / limão espremido na hora",
+      "Diabolo / Limonade": "Diabolo / limonada",
+      "orange, pomme, ananas, abricot, fraise, tomate": "laranja, maçã, ananás, damasco, morango, tomate",
+      "grenadine • fraise • citron • menthe • pêche • violette • passion • vanille • coco • orgeat • cassis": "granadina • morango • limão • menta • pêssego • violeta • maracujá • baunilha • coco • orgeat • groselha",
+      "— Blanc, rouge": "— Branco, tinto",
+      "— Cassis, framboise, mûre, pêche": "— Groselha, framboesa, amora, pêssego",
+      "Poire, Mirabelle, Framboise": "Pera, Mirabela, Framboesa",
+      "Cidre brut": "Sidra seca",
+      "Télécharger la carte (PDF)": "Descarregar a carta (PDF)",
+      "Télécharger la carte au format PDF": "Descarregar a carta em formato PDF",
+      "Voir la carte": "Ver a carta",
+      "Sections précédentes": "Secções anteriores",
+      "Autres sections": "Mais secções",
+      "FAIT MAISON • SERVICE CONTINU • TERRASSE": "COMIDA CASEIRA • SERVIÇO CONTÍNUO • ESPLANADA",
+      "BAR • RESTAURANT • PARIS 20ᵉ": "BAR • RESTAURANTE • PARIS 20ᵉ",
+      "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta": "BAR • RESTAURANTE · 01 43 49 05 93 · ◎ lacolline.gambetta",
+      "Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé": "Alergénios: informações a pedido • O abuso de álcool é perigoso para a saúde",
+      "L’abus d’alcool est dangereux pour la santé — À consommer avec modération": "O abuso de álcool é perigoso para a saúde — Consuma com moderação",
+      "Prix nets en euros • service compris": "Preços em euros • serviço incluído",
+      "Apérol, Prosecco, orange, eau gazeuse": "Aperol, Prosecco, laranja, água com gás",
+      "Cachaça, citron vert, sucre de canne": "Cachaça, lima, açúcar de cana",
+      "Citron vert, fraise, framboise": "Lima, morango, framboesa",
+      "Citron vert, menthe, sucre de canne, eau gazeuse": "Lima, menta, açúcar de cana, água com gás",
+      "Cointreau, amaretto, jus d’ananas": "Cointreau, amaretto, sumo de ananás",
+      "Crème de violette, champagne, cerise": "Licor de violeta, champanhe, cereja",
+      "Gin, crème de violette, jus de citron jaune": "Gin, licor de violeta, sumo de limão",
+      "Gin, jus de citron vert, ginger beer": "Gin, sumo de lima, ginger beer",
+      "Gin, jus de citron vert, sucre de canne, limonade": "Gin, sumo de lima, açúcar de cana, limonada",
+      "Jus de tomate, jus de citron, épices": "Sumo de tomate, sumo de limão, especiarias",
+      "Jus d’ananas, crème de coco": "Sumo de ananás, creme de coco",
+      "Jus d’ananas, jus d’orange, sirop de grenadine": "Sumo de ananás, sumo de laranja, xarope de granadina",
+      "Jus d’orange, jus d’ananas, jus de citron, sirop de cassis": "Sumo de laranja, sumo de ananás, sumo de limão, xarope de groselha",
+      "Liqueur de fleurs de sureau, Prosecco, orange, eau gazeuse": "Licor de flor de sabugueiro, Prosecco, laranja, água com gás",
+      "Prosecco, crème de violette, eau gazeuse, myrtilles": "Prosecco, licor de violeta, água com gás, mirtilos",
+      "Prosecco, vodka, sirop de fruit de la passion, citron vert": "Prosecco, vodka, xarope de maracujá, lima",
+      "Rhum blanc, rhum ambré, jus de citron vert, Cointreau, sirop d’orgeat": "Rum branco, rum ambar, sumo de lima, Cointreau, xarope de orgeat",
+      "Rhum, Coca-Cola, jus de citron": "Rum, Coca-Cola, sumo de limão",
+      "Rhum, citron vert, sucre de canne": "Rum, lima, açúcar de cana",
+      "Rhum, jus de citron vert, ginger beer": "Rum, sumo de lima, ginger beer",
+      "Rhum, jus d’ananas, crème de coco": "Rum, sumo de ananás, creme de coco",
+      "Rhum, jus d’ananas, sirop de fraise, crème de coco": "Rum, sumo de ananás, xarope de morango, creme de coco",
+      "Rhum, menthe fraîche, citron vert, sucre de canne, eau gazeuse": "Rum, menta fresca, lima, açúcar de cana, água com gás",
+      "Rhum, sirop de fruit de la passion, jus de citron": "Rum, xarope de maracujá, sumo de limão",
+      "Sirop de violette, jus de citron vert, Schweppes Tonic": "Xarope de violeta, sumo de lima, Schweppes Tonic",
+      "Suze, Schweppes Tonic, citron": "Suze, Schweppes Tonic, limão",
+      "Tequila, Cointreau, jus de citron vert": "Tequila, Cointreau, sumo de lima",
+      "Tequila, jus de citron vert, sirop de cassis, Schweppes Tonic": "Tequila, sumo de lima, xarope de groselha, Schweppes Tonic",
+      "Tequila, jus d’orange, sirop de grenadine": "Tequila, sumo de laranja, xarope de granadina",
+      "Vodka, Cointreau, crème de pêche, jus d’orange, jus de cranberry": "Vodka, Cointreau, licor de pêssego, sumo de laranja, sumo de cranberry",
+      "Vodka, Cointreau, jus de cranberry, jus de citron vert": "Vodka, Cointreau, sumo de cranberry, sumo de lima",
+      "Vodka, citron vert, sucre de canne": "Vodka, lima, açúcar de cana",
+      "Vodka, jus de citron vert, ginger beer": "Vodka, sumo de lima, ginger beer",
+      "Vodka, liqueur de café, cerise": "Vodka, licor de café, cereja",
+      "Vodka, liqueur de café, expresso, sucre de canne": "Vodka, licor de café, espresso, açúcar de cana",
+      "Vodka, tomate, citron et épices": "Vodka, tomate, limão e especiarias",
+      "Caramel ou vanille": "Caramelo ou baunilha",
+      "Cochonnaille et fromagère": "Enchidos e queijos",
+      "Petit déjeuner": "Pequeno-almoço",
+      "Salade": "Salada",
+      "PINTE": "PINTA",
+      "Triple d’Orgemont bio": "Triple d’Orgemont bio"
+    },
+    nl: {
+      "Page de Garde": "Startpagina",
+      "Menu & Carte": "Menu & kaart",
+      "📖 Menu & Carte": "📖 Menu & kaart",
+      "La Colline Gambetta — Menu & Carte": "La Colline Gambetta — Menu & kaart",
+      "LA CARTE": "DE KAART",
+      "Nos entrées": "Voorgerechten",
+      "Nos plats": "Hoofdgerechten",
+      "Nos menus": "Menu’s",
+      "Nos boissons": "Dranken",
+      "Nos cocktails": "Cocktails",
+      "Nos vins": "Wijnen",
+      "Nos desserts": "Nagerechten",
+      "Entrées": "Voorgerechten",
+      "Plats": "Hoofdgerechten",
+      "Desserts": "Nagerechten",
+      "Burgers": "Burgers",
+      "Salades": "Salades",
+      "Pâtes": "Pasta",
+      "Omelettes": "Omeletten",
+      "Glaces": "Ijs",
+      "Fromages": "Kazen",
+      "Boissons fraîches": "Koude dranken",
+      "Boissons chaudes": "Warme dranken",
+      "Boisson chaude": "Warme drank",
+      "Apéritifs": "Aperitieven",
+      "Bières": "Bieren",
+      "Digestifs": "Digestieven",
+      "Whiskies": "Whisky’s",
+      "Bulles": "Mousserende wijn",
+      "Cocktails classiques": "Klassieke cocktails",
+      "Spritz & fraîcheur": "Spritz & frisheid",
+      "Mules & fizz": "Mules & fizz",
+      "Élégance & saveurs": "Elegantie & smaken",
+      "Mocktails": "Mocktails",
+      "✦ Sans alcool —": "✦ Zonder alcohol —",
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17u → 23u ✦",
+      "Prix": "Prijs",
+      "Appellation": "Herkomst",
+      "Vin blanc": "Witte wijn",
+      "Vin rouge": "Rode wijn",
+      "Vin rosé": "Roséwijn",
+      "Bouteille": "Fles",
+      "Pression": "Van de tap",
+      "Bière blonde": "Blond bier",
+      "Bière blanche bio": "Biologisch witbier",
+      "Bière sans alcool": "Alcoholvrij bier",
+      "Formules": "Menu’s",
+      "Formule duo": "Duo-menu",
+      "Formule complète": "Volledig menu",
+      "Entrée + plat": "Voorgerecht + hoofdgerecht",
+      "ou": "of",
+      "plat + dessert": "hoofdgerecht + nagerecht",
+      "Entrée + plat + dessert": "Voorgerecht + hoofdgerecht + nagerecht",
+      "Choix ci-dessous": "Kies uit onderstaande",
+      "Au choix": "Naar keuze",
+      "au choix": "naar keuze",
+      "Parfum au choix": "Smaak naar keuze",
+      "— parfum au choix": "— smaak naar keuze",
+      "Entrée": "Voorgerecht",
+      "Plat": "Hoofdgerecht",
+      "Dessert": "Nagerecht",
+      "Duo": "Duo",
+      "Complète": "Compleet",
+      "Enfant": "Kinder",
+      "Petit-déj": "Ontbijt",
+      "Menu enfant": "Kindermenu",
+      "Menu du jour": "Dagschotel",
+      "Moins de 12 ans": "Onder de 12 jaar",
+      "Choix selon l’ardoise": "Keuze volgens het bord",
+      "Uniquement le midi - sauf weekends et jours fériés": "Alleen ’s middags — behalve in het weekend en op feestdagen",
+      "Burger enfant ou Cordon bleu": "Kinderburger of Cordon bleu",
+      "1 Verre de soda": "1 frisdrank",
+      "1 Boule de glace": "1 bolletje ijs",
+      "2 boules de glace": "2 bolletjes ijs",
+      "Verre de jus de fruits": "Glas fruitsap",
+      "Supplément boule de glace ou sorbet": "Extra bolletje ijs of sorbet",
+      "Assortiment de mignardises — thé + 1 €": "Selectie van kleine zoetigheden — thee + 1 €",
+      "Croissant ou Tartine au beurre": "Croissant of boterham met boter",
+      "Pain toasté, confiture d’abricots": "Geroosterd brood, abrikozenjam",
+      "Entrecôte 190 g": "Ribeye 190 g",
+      "Bavette d’aloyau": "Flanksteak",
+      "Escalope de veau": "Kalfsschnitzel",
+      "Cuisse de canard confite": "Confit van eendenpoot",
+      "Poisson": "Vis",
+      "Tartare de bœuf": "Rundstartaar",
+      "Cuisse de poulet rôtie": "Gebraden kippendij",
+      "Riz basmati": "Basmatirijst",
+      "Fleur de sel, sauce au choix": "Fleur de sel, saus naar keuze",
+      "Sauce au choix": "Saus naar keuze",
+      "Selon arrivage": "Volgens de vangst van de dag",
+      "selon arrivage": "volgens de vangst van de dag",
+      "Sauce champignons, pâtes": "Champignonsaus, pasta",
+      "Burger La Colline": "Burger La Colline",
+      "Burger Chicken Croustillant": "Knapperige kipburger",
+      "Burger Végétarien": "Veggieburger",
+      "Pain brioché, cheddar, steak haché, bacon, oignons caramélisés, salade, tomate, sauce burger.": "Briochebroodje, cheddar, rundergehakt, bacon, gekarameliseerde ui, sla, tomaat, burgersaus.",
+      "Pain brioché, cheddar, poisson pané, légumes grillés, salade, tomate, sauce burger.": "Briochebroodje, cheddar, gepaneerde vis, gegrilde groenten, sla, tomaat, burgersaus.",
+      "Pain brioché, cheddar, escalope de poulet pané croustillant, oignons caramélisés, salade, tomate, sauce burger.": "Briochebroodje, cheddar, knapperig gepaneerde kip, gekarameliseerde ui, sla, tomaat, burgersaus.",
+      "Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger.": "Briochebroodje, cheddar, vegetarische burger, gegrilde groenten, sla, tomaat, burgersaus.",
+      "Chèvre Chaud": "Salade met warme geitenkaas",
+      "Végétarienne": "Vegetarisch",
+      "Nordique": "Noords",
+      "Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.": "Groene sla, tomaat, gepaneerde kip, mimosa-ei, crouton, toast met geitenkaas.",
+      "Salade verte, tomate, jambon sec, toast de cabécou, noix, miel.": "Groene sla, tomaat, rauwe ham, toast met cabécou, walnoten, honing.",
+      "Salade verte, tomate, concombre, haricots verts, légumes grillés, avocat.": "Groene sla, tomaat, komkommer, sperziebonen, gegrilde groenten, avocado.",
+      "Salade verte, saumon fumé, crevettes, avocat, concombre, tomate, feta, croûtons.": "Groene sla, gerookte zalm, garnalen, avocado, komkommer, tomaat, feta, croutons.",
+      "Tagliatelles à la carbonara": "Tagliatelle carbonara",
+      "Tagliatelles au saumon": "Tagliatelle met zalm",
+      "Penne au poulet et champignons": "Penne met kip en champignons",
+      "Assiette de frites": "Bord frieten",
+      "Accompagnement : frites, haricots verts, pâtes": "Bijgerecht: frieten, sperziebonen, pasta",
+      "Sauce au choix : poivre · champignons · roquefort — supplément sauce 2,00": "Saus naar keuze: peper · champignons · roquefort — extra saus 2,00",
+      "Supplément Picon · 1,00": "Picon extra · 1,00",
+      "Planches & croques": "Planken en toasts",
+      "Frites maison": "Huisgemaakte frieten",
+      "Frites et salade": "Frieten en salade",
+      "Escargots de Bourgogne": "Slakken uit Bourgondië",
+      "6 Escargots au Roquefort": "6 slakken met Roquefort",
+      "Œuf cocotte": "Ei in cocotte",
+      "Œuf cocotte du moment": "Ei in cocotte van de dag",
+      "Œuf dur mayonnaise": "Gekookt ei met mayonaise",
+      "Assiette de charcuterie": "Plank met vleeswaren",
+      "Assiette mixte": "Gemengde plank",
+      "Tartare d’avocat et crevettes": "Tartaar van avocado en garnalen",
+      "Assiette de saumon fumé": "Plank met gerookte zalm",
+      "Assiette de foie gras du Sud-Ouest": "Plank met foie gras uit het Zuidwesten",
+      "Œufs au plat": "Gebakken eieren",
+      "Omelette nature": "Omelet naturel",
+      "Omelette au fromage": "Kaasomelet",
+      "Omelette au jambon": "Hamomelet",
+      "Omelette aux champignons": "Champignonomelet",
+      "Omelette mixte": "Gemengde omelet",
+      "Chèvre": "Geitenkaas",
+      "Coulis de fruits rouges": "Coulis van rood fruit",
+      "Dame blanche aux éclats de chocolat": "Dame blanche met chocoladeschilfers",
+      "Moelleux au chocolat": "Warme chocoladetaart",
+      "Mousse au chocolat": "Chocolademousse",
+      "Pain perdu de la Colline": "Wentelteefjes van La Colline",
+      "Tarte aux pommes": "Appeltaart",
+      "Crème glacée (3 boules)": "Ijs (3 bolletjes)",
+      "Sorbet (3 boules)": "Sorbet (3 bolletjes)",
+      "Coupe 12 cl": "Beker 12 cl",
+      "Glace vanille": "Vanille-ijs",
+      "Glace vanille ou caramel beurre salé": "Vanille- of gezouten karamel-ijs",
+      "2 boules vanille, sauce chocolat, chantilly": "2 bolletjes vanille, chocoladesaus, slagroom",
+      "2 boules chocolat, sauce chocolat, chantilly": "2 bolletjes chocolade, chocoladesaus, slagroom",
+      "2 boules caramel beurre salé, sauce caramel, chantilly": "2 bolletjes gezouten karamel, karamelsaus, slagroom",
+      "2 boules café, expresso, chantilly": "2 bolletjes koffie, espresso, slagroom",
+      "2 boules citron vert arrosées de vodka (2 cl)": "2 bolletjes limoen besprenkeld met wodka (2 cl)",
+      "Vanille, caramel beurre salé, chocolat, café, pistache, noisette": "Vanille, gezouten karamel, chocolade, koffie, pistache, hazelnoot",
+      "Café gourmand": "Koffie met kleine lekkernijen",
+      "Café liégeois": "Ijskoffie Liège",
+      "Chocolat liégeois": "IJschocolade Liège",
+      "Café": "Koffie",
+      "Décaféiné": "Cafeïnevrij",
+      "Double café / décaféiné": "Dubbele koffie / cafeïnevrij",
+      "Café noisette / allongé": "Koffie met noot / lungo",
+      "Café allongé": "Lungo",
+      "Café crème / chocolat chaud": "Koffie met melk / warme chocolademelk",
+      "Café frappé": "Frappekoffie",
+      "Café viennois": "Weense koffie",
+      "Crème / chocolat viennois": "Weense slagroom-/chocoladekoffie",
+      "Latte frappé": "Frappe-latte",
+      "Lait chaud": "Warme melk",
+      "Infusion / thé parfumé": "Kruidenthee / gearomatiseerde thee",
+      "Grog": "Grog",
+      "Vin chaud aux épices": "Gekruide glühwein",
+      "Milkshake": "Milkshake",
+      "Jus / Nectar de fruits": "Fruitsap / nectar",
+      "Sirop à l’eau": "Siroop met water",
+      "Supplément sirop ·": "Extra siroop ·",
+      "Orange pressée / Citron pressé": "Vers geperst sinaasappel-/ citroensap",
+      "Diabolo / Limonade": "Diabolo / limonade",
+      "orange, pomme, ananas, abricot, fraise, tomate": "sinaasappel, appel, ananas, abrikoos, aardbei, tomaat",
+      "grenadine • fraise • citron • menthe • pêche • violette • passion • vanille • coco • orgeat • cassis": "granaatappel • aardbei • citroen • munt • perzik • violet • passievrucht • vanille • kokos • orgeat • zwarte bes",
+      "— Blanc, rouge": "— Wit, rood",
+      "— Cassis, framboise, mûre, pêche": "— Zwarte bes, framboos, braam, perzik",
+      "Poire, Mirabelle, Framboise": "Peer, Mirabelle, Framboos",
+      "Cidre brut": "Droge cider",
+      "Télécharger la carte (PDF)": "Menu downloaden (PDF)",
+      "Télécharger la carte au format PDF": "Menu downloaden als PDF",
+      "Voir la carte": "Menu bekijken",
+      "Sections précédentes": "Vorige secties",
+      "Autres sections": "Meer secties",
+      "FAIT MAISON • SERVICE CONTINU • TERRASSE": "VERSENSE GERECHTEN • DOORLOPEN SERVICE • TERRAS",
+      "BAR • RESTAURANT • PARIS 20ᵉ": "BAR • RESTAURANT • PARIJS 20ᵉ",
+      "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta": "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta",
+      "Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé": "Allergeneninformatie op aanvraag • Alcoholmisbruik is gevaarlijk voor de gezondheid",
+      "L’abus d’alcool est dangereux pour la santé — À consommer avec modération": "Alcoholmisbruik is gevaarlijk voor de gezondheid — Drink met mate",
+      "Prix nets en euros • service compris": "Prijzen in euro’s • service inbegrepen",
+      "Apérol, Prosecco, orange, eau gazeuse": "Aperol, Prosecco, sinaasappel, spa rood",
+      "Cachaça, citron vert, sucre de canne": "Cachaça, limoen, rietsuiker",
+      "Citron vert, fraise, framboise": "Limoen, aardbei, framboos",
+      "Citron vert, menthe, sucre de canne, eau gazeuse": "Limoen, munt, rietsuiker, spa rood",
+      "Cointreau, amaretto, jus d’ananas": "Cointreau, amaretto, ananassap",
+      "Crème de violette, champagne, cerise": "Viooltjeslikeur, champagne, kers",
+      "Gin, crème de violette, jus de citron jaune": "Gin, viooltjeslikeur, citroensap",
+      "Gin, jus de citron vert, ginger beer": "Gin, limoensap, ginger beer",
+      "Gin, jus de citron vert, sucre de canne, limonade": "Gin, limoensap, rietsuiker, limonade",
+      "Jus de tomate, jus de citron, épices": "Tomatensap, citroensap, kruiden",
+      "Jus d’ananas, crème de coco": "Ananassap, kokosroom",
+      "Jus d’ananas, jus d’orange, sirop de grenadine": "Ananassap, sinaasappelsap, granaatappelsiroop",
+      "Jus d’orange, jus d’ananas, jus de citron, sirop de cassis": "Sinaasappelsap, ananassap, citroensap, zwarte-bessensiroop",
+      "Liqueur de fleurs de sureau, Prosecco, orange, eau gazeuse": "Vlierbloesemlikeur, Prosecco, sinaasappel, spa rood",
+      "Prosecco, crème de violette, eau gazeuse, myrtilles": "Prosecco, viooltjeslikeur, spa rood, bosbessen",
+      "Prosecco, vodka, sirop de fruit de la passion, citron vert": "Prosecco, wodka, passievruchtsiroop, limoen",
+      "Rhum blanc, rhum ambré, jus de citron vert, Cointreau, sirop d’orgeat": "Witte rum, amberkleurige rum, limoensap, Cointreau, orgeatsiroop",
+      "Rhum, Coca-Cola, jus de citron": "Rum, Coca-Cola, citroensap",
+      "Rhum, citron vert, sucre de canne": "Rum, limoen, rietsuiker",
+      "Rhum, jus de citron vert, ginger beer": "Rum, limoensap, ginger beer",
+      "Rhum, jus d’ananas, crème de coco": "Rum, ananassap, kokosroom",
+      "Rhum, jus d’ananas, sirop de fraise, crème de coco": "Rum, ananassap, aardbeiensiroop, kokosroom",
+      "Rhum, menthe fraîche, citron vert, sucre de canne, eau gazeuse": "Rum, verse munt, limoen, rietsuiker, spa rood",
+      "Rhum, sirop de fruit de la passion, jus de citron": "Rum, passievruchtsiroop, citroensap",
+      "Sirop de violette, jus de citron vert, Schweppes Tonic": "Viooltjes siroop, limoensap, Schweppes Tonic",
+      "Suze, Schweppes Tonic, citron": "Suze, Schweppes Tonic, citroen",
+      "Tequila, Cointreau, jus de citron vert": "Tequila, Cointreau, limoensap",
+      "Tequila, jus de citron vert, sirop de cassis, Schweppes Tonic": "Tequila, limoensap, zwarte-bessensiroop, Schweppes Tonic",
+      "Tequila, jus d’orange, sirop de grenadine": "Tequila, sinaasappelsap, granaatappelsiroop",
+      "Vodka, Cointreau, crème de pêche, jus d’orange, jus de cranberry": "Wodka, Cointreau, perziklikeur, sinaasappelsap, cranberrysap",
+      "Vodka, Cointreau, jus de cranberry, jus de citron vert": "Wodka, Cointreau, cranberrysap, limoensap",
+      "Vodka, citron vert, sucre de canne": "Wodka, limoen, rietsuiker",
+      "Vodka, jus de citron vert, ginger beer": "Wodka, limoensap, ginger beer",
+      "Vodka, liqueur de café, cerise": "Wodka, koffielikeur, kers",
+      "Vodka, liqueur de café, expresso, sucre de canne": "Wodka, koffielikeur, espresso, rietsuiker",
+      "Vodka, tomate, citron et épices": "Wodka, tomaat, citroen en kruiden",
+      "Caramel ou vanille": "Karamel of vanille",
+      "Cochonnaille et fromagère": "Vleeswaren en kazen",
+      "Petit déjeuner": "Ontbijt",
+      "Salade": "Salade",
+      "PINTE": "PINT",
+      "Triple d’Orgemont bio": "Triple d’Orgemont biologisch"
+    },
+  
+  };
+  /* Attributs traduits (title, aria-label) : sélecteur, attribut, valeur française */
+  var ATTRS = [
+    ['#cover-section .medallion-frame', 'title', 'Voir la carte'],
+    ['#cover-section .cover-brand--menu-leader', 'title', 'Voir la carte'],
+    ['#menu-nav-hint-start', 'aria-label', 'Sections précédentes'],
+    ['#menu-nav-hint-end', 'aria-label', 'Autres sections'],
+    ['a.footer-download', 'title', 'Télécharger la carte au format PDF']
+  ];
+  function norm(t) { return String(t).replace(/\s+/g, ' ').trim(); }
+  var SKIP_TAGS = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, CODE: 1, PRE: 1, TEXTAREA: 1 };
+  var nodes = null;
+  function collect() {
+    var found = [];
+    var accept = {
+      acceptNode: function (n) {
+        if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        var p = n.parentElement;
+        while (p && p !== document.body) {
+          if (SKIP_TAGS[p.tagName]) return NodeFilter.FILTER_REJECT;
+          if (p.classList && p.classList.contains('lang-menu')) return NodeFilter.FILTER_REJECT;
+          p = p.parentElement;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    };
+    var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, accept);
+    var t;
+    while ((t = w.nextNode())) found.push(t);
+    /* Le titre de l'onglet (dans <head>) est aussi traduit. */
+    var titleEl = document.querySelector('title');
+    if (titleEl && titleEl.firstChild && titleEl.firstChild.nodeType === 3) found.push(titleEl.firstChild);
+    nodes = found.map(function (n) {
+      var m = n.nodeValue.match(/^(\s*)([\s\S]*?)(\s*)$/);
+      return { node: n, pre: m[1], post: m[3], key: norm(m[2]) };
+    });
+  }
+  var LANG = 'fr';
+  function applyLang(lang, save) {
+    LANG = lang;
+    var d = DICTS[lang] || {};
+    nodes.forEach(function (e) {
+      var t = (lang === 'fr') ? e.key : (d[e.key] != null ? d[e.key] : e.key);
+      e.node.nodeValue = e.pre + t + e.post;
+    });
+    document.documentElement.setAttribute('lang', lang);
+    ATTRS.forEach(function (a) {
+      var el = document.querySelector(a[0]);
+      if (!el) return;
+      el.setAttribute(a[1], (lang === 'fr') ? a[2] : (d[a[2]] != null ? d[a[2]] : a[2]));
+    });
+    var menu = document.getElementById('lang-menu');
+    if (menu) {
+      Array.prototype.forEach.call(menu.querySelectorAll('.lang-option'), function (b) {
+        b.setAttribute('aria-checked', b.getAttribute('data-lang') === lang ? 'true' : 'false');
+      });
+    }
+    if (save) { try { localStorage.setItem(STORE_KEY, lang); } catch (e) {} }
+    /* Les libellés traduits changent les largeurs et les hauteurs :
+       recalage des bandeaux, du ruban d'onglets et du médaillon. */
+    if (typeof syncTopControlsHeight === 'function') syncTopControlsHeight();
+    if (typeof syncMenuNavHints === 'function') syncMenuNavHints();
+    if (typeof sizeCoverMedallion === 'function') sizeCoverMedallion();
+  }
+  /* ---- Menu du globe : clic, clavier, fermeture au dehors ---- */
+  function initMenu() {
+    var btn = document.getElementById('lang-btn');
+    var menu = document.getElementById('lang-menu');
+    if (!btn || !menu) return;
+    var options = function () { return Array.prototype.slice.call(menu.querySelectorAll('.lang-option')); };
+    function set(open, backToBtn) {
+      menu.hidden = !open;
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) {
+        var f = options();
+        var cur = f.filter(function (b) { return b.getAttribute('aria-checked') === 'true'; })[0] || f[0];
+        if (cur) cur.focus();
+      } else if (backToBtn) {
+        btn.focus();
+      }
+    }
+    btn.addEventListener('click', function () { set(menu.hidden); });
+    btn.addEventListener('keydown', function (e) {
+      /* Flèches : ouverture directe, focus sur la première (bas) ou la
+         dernière (haut) langue — usage clavier complet sans souris. */
+      if (e.key === 'ArrowDown') { e.preventDefault(); if (menu.hidden) set(true); else options()[0].focus(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); if (menu.hidden) set(true); else options()[options().length - 1].focus(); }
+    });
+    menu.addEventListener('keydown', function (e) {
+      var f = options();
+      if (!f.length) return;
+      var i = f.indexOf(document.activeElement);
+      if (e.key === 'Escape') { e.preventDefault(); set(false, true); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); f[(i + 1) % f.length].focus(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); f[(i - 1 + f.length) % f.length].focus(); }
+      else if (e.key === 'Home') { e.preventDefault(); f[0].focus(); }
+      else if (e.key === 'End') { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (e.key === 'Tab') { set(false); }
+    });
+    menu.addEventListener('click', function (e) {
+      var b = e.target && e.target.closest ? e.target.closest('.lang-option') : null;
+      if (!b) return;
+      applyLang(b.getAttribute('data-lang'), true);
+      set(false, true);
+    });
+    document.addEventListener('pointerdown', function (e) {
+      if (menu.hidden) return;
+      if (menu.contains(e.target) || btn.contains(e.target)) return;
+      set(false);
+    });
+  }
+  collect();
+  initMenu();
+  var initial = null;
+  try { initial = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+  if (!initial) { try { initial = localStorage.getItem(STORE_KEY); } catch (e) {} }
+  if (initial && (initial === 'fr' || DICTS[initial])) applyLang(initial, false);
+  /* Exposé pour les tests et le débogage : window.__setLang('de') */
+  window.__setLang = function (l) { if (l === 'fr' || DICTS[l]) applyLang(l, false); };
+  window.__i18nDicts = DICTS;
 })();
 </script>
 
