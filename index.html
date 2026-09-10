@@ -4425,8 +4425,15 @@ html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
     margin-top: 8px !important;
   }
   html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
-    width: max(50px, min(calc(100svh - 160px), 160px)) !important;
-    max-width: calc(100% - 8px) !important;
+    /* Pas de !important sur width/max-width : un !important CSS écrase les
+       styles inline de sizeCoverMedallion(), qui pose un CARRÉ (largeur =
+       hauteur). En imposant seulement la largeur, ce bloc fabriquait un
+       cadre rectangulaire — un médaillon ovale — dès que la fenêtre
+       passait sous 450 px de haut (paysage mobile compris). La règle
+       reste comme repli sans JS (aspect-ratio: 1/1 garde le carré), et la
+       JS reprend la même limite de taille (voir sizeCoverMedallion). */
+    width: max(50px, min(calc(100svh - 160px), 160px));
+    max-width: calc(100% - 8px);
     margin-bottom: 8px !important;
   }
   html:not(.carte-doc) #cover-section .medallion-container .cover-action {
@@ -6648,7 +6655,14 @@ function sizeCoverMedallion() {
   const cs = getComputedStyle(cont);
   const rowGap = parseFloat(cs.rowGap) || 0;
   const reserved = action ? action.offsetHeight + rowGap : 0;
-  const side = Math.max(0, Math.min(cont.clientWidth, cont.clientHeight - reserved - 2));
+  let side = Math.max(0, Math.min(cont.clientWidth, cont.clientHeight - reserved - 2));
+  /* Paysage très bas (hauteur ≤ 450 px) : la feuille de style prévoit un
+     médaillon réduit — max(50px, min(hauteur − 160px, 160px)). La JS reprend
+     la même limite : le médaillon reste petit comme prévu, mais CARRÉ —
+     c'est elle qui fixe les deux dimensions, jamais le CSS contre elle. */
+  if (window.innerHeight <= 450) {
+    side = Math.min(side, Math.max(50, Math.min(window.innerHeight - 160, 160)));
+  }
   if (side < 80) {
     frame.style.display = 'none';
     return;
