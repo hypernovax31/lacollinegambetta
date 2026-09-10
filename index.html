@@ -6767,17 +6767,36 @@ function lockSectionAnchor(section, desiredTop) {
   userEvents.forEach(ev => window.addEventListener(ev, stopLock, { passive: true, capture: true }));
   const t0 = performance.now();
   const holdFrom = t0 + 320;   /* le temps du défilement animé (240 ms + marge) */
+  const maxHold = 3000;        /* garde-fou : on ne tient jamais bien longtemps */
+  /* Dernière correction, initialisée au moment où le verrou commence à
+     regarder : « calme » = 400 ms sans bouger À PARTIR DE CE MOMENT (une
+     perturbation peut très bien arriver 300 ms après l'arrivée). */
+  let lastShift = t0 + 320;
   function step(now) {
     window.__collineAnchorLock = null;
-    /* On ne capture la référence qu'une fois le défilement animé vraiment
-       terminé (sa grâce peut dépasser les 320 ms) : sinon le verrou figerait
-       une position encore en convergence et se battrait avec la dernière
-       image de l'animation. */
+    /* On n'agit qu'une fois le défilement animé vraiment terminé (sa grâce
+       peut dépasser les 320 ms) : sinon le verrou figerait une position
+       encore en convergence et se battrait avec la dernière image. */
     if (now < holdFrom || window.__collineScrollAnim) { window.__collineAnchorLock = requestAnimationFrame(step); return; }
     const top = section.getBoundingClientRect().top;
     const want = desiredTop();
-    if (Math.abs(top - want) >= 0.5) window.scrollBy(0, top - want);
-    if (now - holdFrom < 800) window.__collineAnchorLock = requestAnimationFrame(step);
+    if (Math.abs(top - want) >= 0.5) {
+      /* Position ABSOLUE (scrollTo), jamais relative (scrollBy) : certains
+         moteurs fusionnent, ignorent ou rejouent un défilement programmatique
+         pendant un défilement tactile ou élastique — avec un delta relatif,
+         l'écart s'accumule et la page oscille ; avec une cible absolue,
+         chaque image se réaligne d'elle-même, quel que soit ce qui a été
+         appliqué ou perdu au milieu. */
+      window.scrollTo(0, Math.max(0, Math.round((window.pageYOffset || 0) + (top - want))));
+      lastShift = now;
+    }
+    /* On tient jusqu'à ce que la mise en page soit CALME (400 ms sans
+       bouger) ET que les polices du site soient en place : un échange de
+       police tardif (display=swap, réseau lent) re-mesure les textes et
+         décalait la page après l'expiration d'un verrou à durée fixe. */
+    const fontsSettled = !document.fonts || document.fonts.status === 'loaded';
+    const quiet = now - lastShift > 400;
+    if (now - holdFrom < maxHold && (!quiet || !fontsSettled)) window.__collineAnchorLock = requestAnimationFrame(step);
     else stopLock();
   }
   window.__collineAnchorLock = requestAnimationFrame(step);
@@ -6790,12 +6809,18 @@ function animateScrollTo(targetY, duration, retarget) {
      d'ancre : jamais les deux ne se disputent la position. */
   if (window.__collineAnchorCleanup) window.__collineAnchorCleanup();
   targetY = Math.max(0, Math.round(targetY));
+  /* On annule TOUJOURS un défilement en vol, même quand on est déjà rendu :
+     sinon l'ancienne animation continuait de son côté vers SA cible et les
+     deux moteurs se battaient — la page glissait rapidement haut puis bas. */
+  if (window.__collineScrollAnim) {
+    cancelAnimationFrame(window.__collineScrollAnim);
+    window.__collineScrollAnim = null;
+  }
   if (Math.abs((window.pageYOffset || 0) - targetY) < 2) {
     window.scrollTo(0, targetY);
     html.style.scrollBehavior = prev;
     return;
   }
-  if (window.__collineScrollAnim) cancelAnimationFrame(window.__collineScrollAnim);
   const t0 = performance.now();
   /* Défilement auto-correctif : à chaque image on RELIT la position
      réelle de la page et on s'en rapproche, au lieu de rejouer une
