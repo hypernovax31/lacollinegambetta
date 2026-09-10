@@ -4140,6 +4140,11 @@ html:not(.carte-doc) .menu-nav-wrap {
   background: #592e6f;
   box-shadow: 0 4px 18px rgba(0,0,0,.2);
 }
+/* L'ancre des onglets est pilotée par le script (défilement auto-correctif
+   puis verrou d'ancre) : le recalage automatique du navigateur
+   (scroll anchoring) ne doit pas déplacer la page de son côté — les deux
+   se battraient et la page « glisserait » haut puis bas. */
+html:not(.carte-doc) .menu-section { overflow-anchor: none; }
 html:not(.carte-doc) .menu-nav {
   position: relative !important;
   width: 100%;
@@ -6509,7 +6514,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
   <article class="fmb-card fmb-card--duo">
     <div class="fmb-head">
       <p class="fmb-pils">Formule duo</p>
-      <img class="fmb-ico" src="assets/menus/icon-duo.png" alt="" aria-hidden="true" loading="lazy">
+      <img class="fmb-ico" src="assets/menus/icon-duo.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <h3 class="fmb-title"><span>Entrée + plat <span class="ou">ou</span></span><span>plat + dessert</span></h3>
       <p class="fmb-price">23,90</p>
     </div>
@@ -6520,7 +6525,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
   <article class="fmb-card fmb-card--complete">
     <div class="fmb-head">
       <p class="fmb-pils">Formule complète</p>
-      <img class="fmb-ico" src="assets/menus/icon-complete.png" alt="" aria-hidden="true" loading="lazy">
+      <img class="fmb-ico" src="assets/menus/icon-complete.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <h3 class="fmb-title">Entrée + plat + dessert</h3>
       <p class="fmb-price">27,90</p>
     </div>
@@ -6532,7 +6537,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
 <!-- ============ Choix des formules : entrée / plat / dessert au choix ============ -->
   <div class="fmb-choices">
     <section class="fmb-choice">
-      <img class="fmb-medal" src="assets/menus/medal-entree.png" alt="" aria-hidden="true" loading="lazy">
+      <img class="fmb-medal" src="assets/menus/medal-entree.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <h4 class="fmb-choice-title">Entrée <em>Au choix</em></h4>
       <ul class="fmb-list">
         <li>Escargots de Bourgogne</li>
@@ -6541,7 +6546,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       </ul>
     </section>
     <section class="fmb-choice">
-      <img class="fmb-medal" src="assets/menus/medal-plat.png" alt="" aria-hidden="true" loading="lazy">
+      <img class="fmb-medal" src="assets/menus/medal-plat.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <h4 class="fmb-choice-title">Plat <em>Au choix</em></h4>
       <ul class="fmb-list">
         <li>Escalope de veau</li>
@@ -6550,7 +6555,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       </ul>
     </section>
     <section class="fmb-choice">
-      <img class="fmb-medal" src="assets/menus/medal-dessert.png" alt="" aria-hidden="true" loading="lazy">
+      <img class="fmb-medal" src="assets/menus/medal-dessert.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <h4 class="fmb-choice-title">Dessert <em>Au choix</em></h4>
       <ul class="fmb-list">
         <li>Panna cotta</li>
@@ -6577,7 +6582,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
     <div class="fmb-head">
       <p class="fmb-pils">Menu enfant</p>
       <p class="fmb-sub">Moins de 12 ans</p>
-      <img class="fmb-ico" src="assets/menus/icon-enfant.png" alt="" aria-hidden="true" loading="lazy">
+      <img class="fmb-ico" src="assets/menus/icon-enfant.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <p class="fmb-price">10,90</p>
     </div>
     <ul class="fmb-list">
@@ -6592,7 +6597,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
   <article class="fmb-card fmb-card--pdj">
     <div class="fmb-head">
       <p class="fmb-pils">Petit déjeuner</p>
-      <img class="fmb-ico" src="assets/menus/icon-pdj.png" alt="" aria-hidden="true" loading="lazy">
+      <img class="fmb-ico" src="assets/menus/icon-pdj.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <p class="fmb-price">7,00</p>
     </div>
     <ul class="fmb-list">
@@ -6720,17 +6725,70 @@ function showMenuSection(sectionId, btnElement) {
   const section = document.getElementById(sectionId);
   const topBar = document.querySelector('.top-controls');
   const navWrap = document.getElementById('menu-nav-wrap');
-  const stickyHeight = (topBar ? topBar.offsetHeight : 0) + (navWrap ? navWrap.offsetHeight : 0);
-  const base = section
-    ? section.getBoundingClientRect().top + window.scrollY
-    : (anchor ? anchor.getBoundingClientRect().top + window.scrollY : 0);
-  const target = Math.max(0, Math.round(base - stickyHeight - 10));
-  animateScrollTo(target, 240);
+  /* Cible VIVANTE : le haut de section et la hauteur des bandeaux épinglés
+     sont relus à chaque image (retarget), pas seulement au départ. Si la
+     section change de place pendant le défilement — icône qui achève de se
+     charger, unités de conteneur (cqw, page « Nos menus ») qui se
+     réévaluent d'une image à l'autre — l'arrivée se fait sur la position
+     réelle, jamais sur une position périmée. */
+  const stickyOffset = () => (topBar ? topBar.offsetHeight : 0) + (navWrap ? navWrap.offsetHeight : 0);
+  const liveTarget = () => {
+    const base = section
+      ? section.getBoundingClientRect().top + window.scrollY
+      : (anchor ? anchor.getBoundingClientRect().top + window.scrollY : 0);
+    return Math.max(0, Math.round(base - stickyOffset() - 10));
+  };
+  animateScrollTo(liveTarget(), 240, liveTarget);
+  /* Le verrou impose la formule (bandeaux épinglés + jeu), pas un instantané :
+     même si le défilement animé n'a rien à faire parce que la page était déjà
+     en place, une perturbation tardive est toujours ramenée à la position
+     théorique. */
+  lockSectionAnchor(section, () => stickyOffset() + 10);
 }
-function animateScrollTo(targetY, duration) {
+/* Verrou d'ancre : une fois le défilement animé terminé, le haut de la
+   section active reste cloué à l'écran pendant un court instant. Toute
+   perturbation tardive du document — image différée qui prend enfin sa
+   place, réévaluation des cqw, recalage du navigateur — est compensée
+   immédiatement, sans animation : à l'œil, le titre ne bouge pas, comme
+   sur les onglets qui n'ont aucun contenu différé. Le moindre geste du
+   visiteur (molette, toucher, touche, clic) ou le moindre défilement
+   programmatique (animateScrollTo) rend la main immédiatement. */
+function lockSectionAnchor(section, desiredTop) {
+  if (window.__collineAnchorCleanup) window.__collineAnchorCleanup();
+  if (!section || !desiredTop) return;
+  const userEvents = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
+  const stopLock = () => {
+    if (window.__collineAnchorLock) cancelAnimationFrame(window.__collineAnchorLock);
+    window.__collineAnchorLock = null;
+    window.__collineAnchorCleanup = null;
+    userEvents.forEach(ev => window.removeEventListener(ev, stopLock, { capture: true }));
+  };
+  window.__collineAnchorCleanup = stopLock;
+  userEvents.forEach(ev => window.addEventListener(ev, stopLock, { passive: true, capture: true }));
+  const t0 = performance.now();
+  const holdFrom = t0 + 320;   /* le temps du défilement animé (240 ms + marge) */
+  function step(now) {
+    window.__collineAnchorLock = null;
+    /* On ne capture la référence qu'une fois le défilement animé vraiment
+       terminé (sa grâce peut dépasser les 320 ms) : sinon le verrou figerait
+       une position encore en convergence et se battrait avec la dernière
+       image de l'animation. */
+    if (now < holdFrom || window.__collineScrollAnim) { window.__collineAnchorLock = requestAnimationFrame(step); return; }
+    const top = section.getBoundingClientRect().top;
+    const want = desiredTop();
+    if (Math.abs(top - want) >= 0.5) window.scrollBy(0, top - want);
+    if (now - holdFrom < 800) window.__collineAnchorLock = requestAnimationFrame(step);
+    else stopLock();
+  }
+  window.__collineAnchorLock = requestAnimationFrame(step);
+}
+function animateScrollTo(targetY, duration, retarget) {
   const html = document.documentElement;
   const prev = html.style.scrollBehavior;
   html.style.scrollBehavior = 'auto';
+  /* Un nouveau défilement programmatique prend la main sur le verrou
+     d'ancre : jamais les deux ne se disputent la position. */
+  if (window.__collineAnchorCleanup) window.__collineAnchorCleanup();
   targetY = Math.max(0, Math.round(targetY));
   if (Math.abs((window.pageYOffset || 0) - targetY) < 2) {
     window.scrollTo(0, targetY);
@@ -6749,6 +6807,9 @@ function animateScrollTo(targetY, duration) {
      garantie sur la position cible. */
   let grace = 6;
   function step(now) {
+    /* Cible vivante : quand un retarget est fourni, la position visée est
+       relue à chaque image — le défilement s'ajuste si la page bouge. */
+    if (retarget) targetY = Math.max(0, Math.round(retarget()));
     const p = Math.min(1, (now - t0) / duration);
     const cur = window.pageYOffset || 0;
     const remain = targetY - cur;
