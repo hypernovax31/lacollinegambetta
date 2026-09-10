@@ -6766,12 +6766,18 @@ function lockSectionAnchor(section, desiredTop) {
   window.__collineAnchorCleanup = stopLock;
   userEvents.forEach(ev => window.addEventListener(ev, stopLock, { passive: true, capture: true }));
   const t0 = performance.now();
-  const holdFrom = t0 + 320;   /* le temps du défilement animé (240 ms + marge) */
+  /* Attente du défilement avant d'agir : animation JS (240 ms + grâce) ou
+     défilement natif WebKit (~800 ms) — le verrou complète le défilement,
+     il ne doit jamais lutter contre lui. */
+  const nativeUntil = window.__collineScrollNativeUntil || 0;
+  const holdFrom = Math.max(t0 + 320, nativeUntil + 120);
   const maxHold = 3000;        /* garde-fou : on ne tient jamais bien longtemps */
   /* Dernière correction, initialisée au moment où le verrou commence à
      regarder : « calme » = 400 ms sans bouger À PARTIR DE CE MOMENT (une
-     perturbation peut très bien arriver 300 ms après l'arrivée). */
-  let lastShift = t0 + 320;
+     perturbation peut très bien arriver 300 ms après l'arrivée). Vaut pour
+     les deux chemins : animation JS (t0 + 320) et défilement natif WebKit
+     (nativeUntil + 120, plus tardif). */
+  let lastShift = holdFrom;
   function step(now) {
     window.__collineAnchorLock = null;
     /* On n'agit qu'une fois le défilement animé vraiment terminé (sa grâce
@@ -6790,21 +6796,39 @@ function lockSectionAnchor(section, desiredTop) {
       window.scrollTo(0, Math.max(0, Math.round((window.pageYOffset || 0) + (top - want))));
       lastShift = now;
     }
-    /* On tient jusqu'à ce que la mise en page soit CALME (400 ms sans
-       bouger) ET que les polices du site soient en place : un échange de
-       police tardif (display=swap, réseau lent) re-mesure les textes et
-         décalait la page après l'expiration d'un verrou à durée fixe. */
+    /* Trois raisons de continuer à tenir :
+       — la fenêtre minimale de veille (1,2 s) n'est pas écoulée : une
+         perturbation peut arriver tard (icône qui finit d'arriver, échange
+         de police…) et le verrou doit encore être là pour l'absorber ;
+       — la mise en page n'est pas CALME (400 ms sans bouger) ;
+       — les polices du site ne sont pas en place : un échange tardif
+         (display=swap, réseau lent) re-mesure les textes et décale la page. */
     const fontsSettled = !document.fonts || document.fonts.status === 'loaded';
     const quiet = now - lastShift > 400;
-    if (now - holdFrom < maxHold && (!quiet || !fontsSettled)) window.__collineAnchorLock = requestAnimationFrame(step);
+    const armed = now < holdFrom + 1200;
+    if (now - holdFrom < maxHold && (armed || !quiet || !fontsSettled)) window.__collineAnchorLock = requestAnimationFrame(step);
     else stopLock();
   }
   window.__collineAnchorLock = requestAnimationFrame(step);
 }
+/* Safari / WebKit : ici, une animation faite de ~15 appels window.scrollTo
+   image par image pose problème — le moteur met les positions à jour sur son
+   fil d'interface et les fusionne ou les retarde : la page « colle », puis
+   rattrape, puis re-glue. Sur iPhone, à chaque changement d'onglet, cela
+   se voit : la page glisse rapidement de haut en bas. Un SEUL défilement
+   natif animé (behavior:'smooth'), piloté par le compositeur, ne peut pas
+   se battre avec lui-même — c'est la mécanique d'un clic d'ancre. */
+function engineIsWebKit() {
+  if (window.__collineForceWebKit) return true;   /* pour les tests automatisés */
+  try {
+    const ua = navigator.userAgent || '';
+    return /AppleWebKit/i.test(ua)
+      && !/Chrom(e|ium)|CriOS|Edg|EdgiOS|OPR|Android|Firefox|FxiOS|GSA/i.test(ua);
+  } catch (e) { return false; }
+}
 function animateScrollTo(targetY, duration, retarget) {
   const html = document.documentElement;
   const prev = html.style.scrollBehavior;
-  html.style.scrollBehavior = 'auto';
   /* Un nouveau défilement programmatique prend la main sur le verrou
      d'ancre : jamais les deux ne se disputent la position. */
   if (window.__collineAnchorCleanup) window.__collineAnchorCleanup();
@@ -6817,10 +6841,22 @@ function animateScrollTo(targetY, duration, retarget) {
     window.__collineScrollAnim = null;
   }
   if (Math.abs((window.pageYOffset || 0) - targetY) < 2) {
+    html.style.scrollBehavior = 'auto';
     window.scrollTo(0, targetY);
     html.style.scrollBehavior = prev;
     return;
   }
+  if (engineIsWebKit()) {
+    /* Défilement natif en UN appel : rien à animer image par image, rien
+       qui puisse osciller. Les moteurs qui ignorent behavior:'smooth'
+       font un saut franc — stable, lui aussi. Le verrou d'ancre prend le
+       relais après (voir lockSectionAnchor) pour les décalages tardifs. */
+    window.__collineScrollNativeUntil = performance.now() + 800;
+    try { window.scrollTo({ top: targetY, behavior: 'smooth' }); }
+    catch (e) { window.scrollTo(0, targetY); }
+    return;
+  }
+  html.style.scrollBehavior = 'auto';
   const t0 = performance.now();
   /* Défilement auto-correctif : à chaque image on RELIT la position
      réelle de la page et on s'en rapproche, au lieu de rejouer une
