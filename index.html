@@ -4639,6 +4639,60 @@ html:not(.carte-doc) #cover-section .cover-footer .cover-links {
   html:not(.carte-doc) #cover-section .medallion-container { gap: clamp(6px, 1vh, 12px) !important; }
 }
 
+/* ===== Garde : jamais de compression, jamais de chevauchement =====
+   Quoi qu'il arrive (fenêtre basse, redimensionnement, chemin de
+   navigation), la colonne de la garde ne comprime JAMAIS ses éléments :
+   titre, médaillon, bouton « Menu & Carte » et pied de page gardent leur
+   hauteur naturelle — s'il n'y a pas la place, la page DÉFILE. Avant, des
+   éléments flex comprimables rétrécissaient sous leur contenu selon le
+   chemin de redimensionnement (p. ex. 915×412 → 740×700), et leur texte
+   se dessinait par-dessus le voisin ; le débordement remplace donc le
+   overflow:hidden du plein écran. */
+html:not(.carte-doc) #cover-section .cover-page {
+  overflow-y: auto !important;
+}
+html:not(.carte-doc) #cover-section .cover-brand,
+html:not(.carte-doc) #cover-section .medallion-container,
+html:not(.carte-doc) #cover-section .cover-action,
+html:not(.carte-doc) #cover-section .cover-footer,
+html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+  flex-shrink: 0 !important;
+}
+
+/* ===== Fenêtre basse (≤ 560 px) : le médaillon reste, la garde grandit =====
+   La garde est une colonne en flux : titre, médaillon, bouton « Menu &
+   Carte », pied de page se suivent — aucun chevauchement possible. En
+   fenêtre basse, trois réglages remplacent le plein écran calé sur
+   100 svh :
+   · la section et la page reprennent une hauteur AUTO (min-height
+     100 svh déjà posé) : la colonne GRANDIT à la taille de son contenu
+     au lieu de le comprimer — c'est le défilement du document qui
+     prend le relais ;
+   · le conteneur du médaillon repart d'une base « hauteur du cadre »
+     (flex-basis auto) au lieu de 0 : sa contribution vaut au moins le
+     cadre garanti par la JS ;
+   · la page défile (overflow-y) si besoin.
+   NB : donner overflow-y à une page à hauteur DÉFINIE retirerait la
+   taille minimale automatique des éléments flex (spécification CSS) et
+   les comprimerait de nouveau — d'où la hauteur auto AVANT le
+   débordement. La JS, elle, taille le médaillon sur le budget réel de
+   l'écran (sizeCoverMedallion). */
+@media (max-height: 560px) {
+  html:not(.carte-doc) #cover-section {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-page {
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-container {
+    flex: 1 1 auto !important;
+  }
+}
+
 /* ============================================================================
    VIS-À-VIS « INTITULÉ ⇄ PRIX » EN RESPONSIVE — bascules par onglet
    ----------------------------------------------------------------------------
@@ -6645,7 +6699,8 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
 /* Cadre doré de la page de garde : on le dimensionne en carré sur le minimum
    (largeur disponible, hauteur disponible moins le bouton) pour qu'il reste
    proche des bords et qu'aucun élément ne se chevauche, à toute taille. */
-function sizeCoverMedallion() {
+let __coverMedallionSettleUntil = 0, __coverMedallionStable = 0, __coverMedallionLast = -1;
+function sizeCoverMedallion(fromSettle) {
   const section = document.getElementById('cover-section');
   const cont = document.querySelector('#cover-section .medallion-container');
   const frame = document.querySelector('#cover-section .medallion-frame');
@@ -6655,21 +6710,63 @@ function sizeCoverMedallion() {
   const cs = getComputedStyle(cont);
   const rowGap = parseFloat(cs.rowGap) || 0;
   const reserved = action ? action.offsetHeight + rowGap : 0;
-  let side = Math.max(0, Math.min(cont.clientWidth, cont.clientHeight - reserved - 2));
-  /* Paysage très bas (hauteur ≤ 450 px) : la feuille de style prévoit un
-     médaillon réduit — max(50px, min(hauteur − 160px, 160px)). La JS reprend
-     la même limite : le médaillon reste petit comme prévu, mais CARRÉ —
-     c'est elle qui fixe les deux dimensions, jamais le CSS contre elle. */
-  if (window.innerHeight <= 450) {
-    side = Math.min(side, Math.max(50, Math.min(window.innerHeight - 160, 160)));
+  let side;
+  if (window.innerHeight <= 560) {
+    /* Fenêtre basse (≤ 560 px) : le budget se calcule sur les VRAIS
+       voisins (titre, bouton, pied de page) rapportés à la hauteur de
+       l'ÉCRAN — jamais sur la hauteur du conteneur, qui épouserait le
+       cadre et bouclerait sur lui-même. Le médaillon prend ainsi le
+       maximum de ce qui reste ; s'il ne reste rien, la taille minimale
+       garantie ci-dessous prend le relais et la page de garde défile. */
+    const pg = document.querySelector('#cover-section .cover-page');
+    const brand = document.querySelector('#cover-section .cover-brand');
+    const foot = document.querySelector('#cover-section .cover-footer');
+    let budget = window.innerHeight - 4;
+    if (pg) {
+      const pcs = getComputedStyle(pg);
+      budget -= (parseFloat(pcs.paddingTop) || 0) + (parseFloat(pcs.paddingBottom) || 0);
+      budget -= (parseFloat(pcs.rowGap) || 0) * 3;
+    }
+    if (brand) budget -= brand.offsetHeight;
+    if (action) budget -= action.offsetHeight;
+    if (foot) budget -= foot.offsetHeight;
+    side = Math.max(0, Math.min(cont.clientWidth - 8, budget));
+  } else {
+    side = Math.max(0, Math.min(cont.clientWidth, cont.clientHeight - reserved - 2));
   }
-  if (side < 80) {
-    frame.style.display = 'none';
-    return;
-  }
+  /* Le médaillon ne disparaît JAMAIS. Si le budget ne suffit pas (fenêtre
+     très basse, paysage serré), il garde une taille minimale lisible et
+     c'est la page de garde qui défile : le bouton « Menu & Carte », déjà
+     compact dans ces régimes, et le pied de page se rangent sous le
+     médaillon — la mise en page est en flux, rien ne peut se chevaucher.
+     (Avant : sous 80 px de place, le cadre était masqué, le conteneur
+     s'effondrait et les recalculs suivants le gardaient caché.) */
+  const guaranteed = Math.min(120, Math.max(60, cont.clientWidth - 8));
+  if (side < guaranteed) side = guaranteed;
   frame.style.display = '';
   frame.style.width = side + 'px';
   frame.style.height = side + 'px';
+  /* Stabilisation : lors d'un changement de régime (bascule fenêtre
+     haute ↔ basse), les mesures prises dans le gestionnaire resize
+     sont TRANSITOIRES — le conteneur finit de se stabiliser, le bouton
+     « Menu & Carte » enchaîne sa transition compact → normal
+     (transition:all sur le padding, 0,2 s), et l'événement resize
+     n'arrive qu'une fois : plus aucun recalcul ne corrige ensuite.
+     Un seul calcul fige alors un médaillon trop grand et le centrage
+     du conteneur le fait déborder sur le titre et le pied (p. ex.
+     915×412 → 740×700 : contH mesuré 399 pour 357 réel, bouton 32
+     pour 46). On re-mesure donc régulièrement pendant ~3 s — par
+     setTimeout et non requestAnimationFrame, qui ne tire plus quand
+     aucune frame n'est produite — jusqu'à ce que la taille soit
+     stable plusieurs passes de suite : elle converge alors vers les
+     vraies valeurs, quelle que soit la durée des transitions. */
+  if (side !== __coverMedallionLast) { __coverMedallionLast = side; __coverMedallionStable = 0; }
+  else if (__coverMedallionStable < 99) __coverMedallionStable++;
+  const now = (window.performance && performance.now) ? performance.now() : Date.now();
+  if (!fromSettle) { __coverMedallionSettleUntil = now + 3000; __coverMedallionStable = 0; }
+  if (now < __coverMedallionSettleUntil && __coverMedallionStable < 8) {
+    setTimeout(() => sizeCoverMedallion(true), 60);
+  }
 }
 function showView(view) {
   const cover = document.getElementById('cover-section');
@@ -7038,6 +7135,17 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeCoverM
 if (window.ResizeObserver) {
   const coverPage = document.querySelector('#cover-section .cover-page');
   if (coverPage) new ResizeObserver(sizeCoverMedallion).observe(coverPage);
+  /* Le conteneur et le bouton « Menu & Carte » changent de taille
+     APRÈS le resize (transitions compact ↔ normal, stabilisation du
+     flex) alors que la page, elle, ne bouge pas : les observer
+     déclenche un recalcul avec les mesures FRAÎCHES dès que leurs
+     boîtes changent réellement. Le recalcul ne modifie jamais la
+     hauteur du bouton ni (en fenêtre haute) celle du conteneur : pas
+     de boucle de retour. */
+  const coverCont = document.querySelector('#cover-section .medallion-container');
+  const coverAct = document.querySelector('#cover-section .medallion-container .cover-action');
+  if (coverCont) new ResizeObserver(sizeCoverMedallion).observe(coverCont);
+  if (coverAct) new ResizeObserver(sizeCoverMedallion).observe(coverAct);
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sizeCoverMedallion);
 else sizeCoverMedallion();
