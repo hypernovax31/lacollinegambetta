@@ -3040,6 +3040,43 @@ html:not(.carte-doc) #menus .choice-card h5 em {
 }
 .lang-btn { cursor: pointer; }
 
+/* ===== Écritures non latines : fontes dédiées, mappées dans les familles
+   existantes du site — aucune règle à modifier. Chaque @font-face
+   déclare la famille 'Cinzel' (ou 'Montserrat') avec un unicode-range
+   limité à son écriture : toute règle `font-family:'Cinzel',serif`
+   rend alors ses caractères arabes en Amiri (titres) ou Tajawal
+   (texte courant, famille Montserrat), ses caractères cyrilliques en
+   Playfair Display (titres) ou Montserrat cyrillique (texte courant), ses caractères chinois en Noto Serif SC (titres)
+   ou Noto Sans SC (texte courant). Les fontes chinoises sont
+   sous-ensemblées aux ~400 caractères réellement utilisés (dictionnaire
+   chinois du site) : quelques dizaines de Ko chacune. Les autres
+   écritures (latin) restent servies par Cinzel/Montserrat d'origine. */
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/amiri-arabic-400.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/amiri-arabic-700.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/playfair-cyrillic-500.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 700; font-display:swap; src:url('assets/fonts/playfair-cyrillic-600.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:800 900; font-display:swap; src:url('assets/fonts/playfair-cyrillic-700.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/montserrat-cyrillic-400.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/montserrat-cyrillic-700.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/sc-serif-600.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/sc-serif-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/tajawal-arabic-400.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/tajawal-arabic-500.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/tajawal-arabic-700.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/sc-sans-400.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/sc-sans-500.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/sc-sans-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+/* L'arabe s'écrit en lettres liées : l'interlettrage décoratif du site
+   (jusqu'à .3em, certaines règles !important portées par un ID, p. ex.
+   « #cover-section .cover-brand--menu-leader-lite .eyebrow ») casserait
+   la liaison des lettres. Un ID (colonne a de la spécificité) écrase
+   n'importe quel nombre de classes : :is(*, #ancre) matche tout élément
+   en héritant de la spécificité (ID) de son argument — avec deux :is()
+   et deux [lang], la règle pèse (2,2,1) et aucune règle du site
+   (au plus un ID) ne peut l'emporter. */
+html[lang="ar"][lang="ar"]:is(*, #lcg-ar-ls):is(*, #lcg-ar-ls2),
+html[lang="ar"][lang="ar"]:is(*, #lcg-ar-ls):is(*, #lcg-ar-ls2) * { letter-spacing: 0 !important; }
+
 /* ===== Menu des langues (bouton globe du bandeau) ===== */
 .lang-menu {
   /* .top-controls est épinglé en haut de la fenêtre (sticky, z-index
@@ -3126,19 +3163,18 @@ html:not(.carte-doc) #menus .choice-card h5 em {
   .lang-menu { display: none !important; }
 }
 
-/* ===== Icônes et médaillons des formules : SVG traduisibles =====
-   Les PNG d'origine (icônes duo/complète/enfant/petit-déjeuner,
-   médaillons entrée/plat/dessert) portaient leur texte dans l'image :
-   impossible à traduire. Ils sont recréés en SVG inline dans le style
-   du site (or et violet, Cinzel) — le texte y est un vrai nœud texte,
-   traduit avec le reste du site. Net à toutes les tailles. */
-#menus .fm svg.fmb-ico,
+/* ===== Médaillons des formules : SVG au trait, encre violette =====
+   Les médaillons d'origine (PNG) sont des gravures à l'encre violette
+   sur fond transparent : crête florale et volutes, ruban à double
+   filet, coupe de vin (entrée) ; cloche de service, couverts croisés
+   et plat (plat) ; coupe garnie et cerise (dessert). Ils sont
+   redessinés au trait dans ce style — et le libellé (Entrée, Plat,
+   Dessert — traduit avec le site dans la langue choisie) se place
+   dans le ruban, comme sur l'original. Les icônes (duo, complète,
+   enfant, petit-déjeuner), purement décoratives et sans texte,
+   restent les PNG d'origine : rien à y traduire. */
 #menus .fm svg.fmb-medal { height: auto; display: block; }
-.fmb-svg-arc, .fmb-svg-arc2, .fmb-svg-star, .fmb-svg-fig {
-  font-family: 'Cinzel', serif;
-  fill: #f0d488;
-}
-.fmb-svg-arc, .fmb-svg-arc2 { letter-spacing: 2px; }
+.fmb-svg-arc { font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: .06em; }
 
 /* Contact : Instagram, téléphone, mail — 3 boutons sans surcharge */
 .cover-links,
@@ -6760,7 +6796,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
   <article class="fmb-card fmb-card--duo">
     <div class="fmb-head">
       <p class="fmb-pils">Formule duo</p>
-      <svg class="fmb-ico" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmi-duo-or" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset="1" stop-color="#c9a04e"/></linearGradient><path id="fmi-duo-ar" d="M 52 106 A 56 56 0 0 0 148 106" fill="none"/></defs><g fill="none" stroke="url(#fmi-duo-or)" stroke-width="3" stroke-linecap="round"><circle cx="80" cy="84" r="29" stroke-width="3.4"/><circle cx="120" cy="84" r="29" stroke-width="3.4"/><circle cx="80" cy="84" r="20" stroke-width="1.7"/><circle cx="120" cy="84" r="20" stroke-width="1.7"/><text class="fmb-svg-star" x="100" y="40" text-anchor="middle" font-size="14">✦</text></g><text class="fmb-svg-arc2" font-size="17"><textPath href="#fmi-duo-ar" startOffset="50%" text-anchor="middle">Duo</textPath></text></svg>
+      <img class="fmb-ico" src="assets/menus/icon-duo.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <h3 class="fmb-title"><span>Entrée + plat <span class="ou">ou</span></span><span>plat + dessert</span></h3>
       <p class="fmb-price">23,90</p>
     </div>
@@ -6771,7 +6807,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
   <article class="fmb-card fmb-card--complete">
     <div class="fmb-head">
       <p class="fmb-pils">Formule complète</p>
-      <svg class="fmb-ico" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmi-complete-or" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset="1" stop-color="#c9a04e"/></linearGradient><path id="fmi-complete-ar" d="M 52 106 A 56 56 0 0 0 148 106" fill="none"/></defs><g fill="none" stroke="url(#fmi-complete-or)" stroke-width="3" stroke-linecap="round"><circle cx="100" cy="94" r="32" stroke-width="3.4"/><circle cx="100" cy="94" r="23" stroke-width="1.7"/><text class="fmb-svg-star" x="72" y="44" text-anchor="middle" font-size="12">✦</text><text class="fmb-svg-star" x="100" y="38" text-anchor="middle" font-size="14">✦</text><text class="fmb-svg-star" x="128" y="44" text-anchor="middle" font-size="12">✦</text></g><text class="fmb-svg-arc2" font-size="17"><textPath href="#fmi-complete-ar" startOffset="50%" text-anchor="middle">Complète</textPath></text></svg>
+      <img class="fmb-ico" src="assets/menus/icon-complete.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <h3 class="fmb-title">Entrée + plat + dessert</h3>
       <p class="fmb-price">27,90</p>
     </div>
@@ -6783,7 +6819,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
 <!-- ============ Choix des formules : entrée / plat / dessert au choix ============ -->
   <div class="fmb-choices">
     <section class="fmb-choice">
-      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmbm-entree-au" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset=".55" stop-color="#d8b257"/><stop offset="1" stop-color="#9a7429"/></linearGradient><radialGradient id="fmbm-entree-di" cx=".5" cy=".4" r=".85"><stop offset="0" stop-color="#4d2665"/><stop offset="1" stop-color="#24102e"/></radialGradient><path id="fmbm-entree-ar" d="M 38 102 A 64 64 0 0 1 162 102" fill="none"/></defs><circle cx="100" cy="100" r="96" fill="url(#fmbm-entree-au)"/><circle cx="100" cy="100" r="88" fill="none" stroke="#2c1537" stroke-width="1.6" opacity=".45"/><circle cx="100" cy="100" r="81" fill="url(#fmbm-entree-di)" stroke="#f3d56a" stroke-width="1.3"/><circle cx="100" cy="100" r="74" fill="none" stroke="#f0d488" stroke-width="2.4" stroke-dasharray="0 9" stroke-linecap="round"/><text class="fmb-svg-arc" font-size="21"><textPath href="#fmbm-entree-ar" startOffset="50%" text-anchor="middle">Entrée</textPath></text><g fill="none" stroke="#f0d488" stroke-width="3" stroke-linecap="round"><path d="M 92 84 v 13"/><path d="M 100 84 v 13"/><path d="M 108 84 v 13"/><path d="M 92 97 q 8 8 16 0"/><path d="M 100 105 v 17"/></g><text class="fmb-svg-star" x="100" y="158" text-anchor="middle" font-size="13">✦</text></svg>
+      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g fill="none" stroke="#3f3a47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="100" cy="15" r="3.2"/><path d="M100 20 C 92 26 88 32 88 40"/><path d="M100 20 C 108 26 112 32 112 40"/><path d="M100 22 L100 40"/><path d="M88 40 C 66 44 54 36 50 26 C 48 20 54 18 57 22 C 59 25 56 28 53 27"/><path d="M112 40 C 134 44 146 36 150 26 C 152 20 146 18 143 22 C 141 25 144 28 147 27"/><path d="M16 78 H184" stroke-width="3.4"/><path d="M16 122 H184" stroke-width="3.4"/><path d="M16 80 V120" stroke-width="1.5"/><path d="M184 80 V120" stroke-width="1.5"/><path d="M62 132 H138"/><path d="M62 132 Q 68 162 100 168 L100 182"/><path d="M138 132 Q 132 162 100 168"/><path d="M74 188 Q 100 182 126 188"/></g><text class="fmb-svg-arc" x="100" y="108" text-anchor="middle" font-size="17" fill="#3f3a47">Entrée</text></svg>
       <h4 class="fmb-choice-title">Entrée <em>Au choix</em></h4>
       <ul class="fmb-list">
         <li>Escargots de Bourgogne</li>
@@ -6792,7 +6828,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       </ul>
     </section>
     <section class="fmb-choice">
-      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmbm-plat-au" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset=".55" stop-color="#d8b257"/><stop offset="1" stop-color="#9a7429"/></linearGradient><radialGradient id="fmbm-plat-di" cx=".5" cy=".4" r=".85"><stop offset="0" stop-color="#4d2665"/><stop offset="1" stop-color="#24102e"/></radialGradient><path id="fmbm-plat-ar" d="M 38 102 A 64 64 0 0 1 162 102" fill="none"/></defs><circle cx="100" cy="100" r="96" fill="url(#fmbm-plat-au)"/><circle cx="100" cy="100" r="88" fill="none" stroke="#2c1537" stroke-width="1.6" opacity=".45"/><circle cx="100" cy="100" r="81" fill="url(#fmbm-plat-di)" stroke="#f3d56a" stroke-width="1.3"/><circle cx="100" cy="100" r="74" fill="none" stroke="#f0d488" stroke-width="2.4" stroke-dasharray="0 9" stroke-linecap="round"/><text class="fmb-svg-arc" font-size="21"><textPath href="#fmbm-plat-ar" startOffset="50%" text-anchor="middle">Plat</textPath></text><g fill="none" stroke="#f0d488" stroke-width="3" stroke-linecap="round"><path d="M 78 113 a 22 22 0 0 1 44 0"/><path d="M 72 113 h 56"/><path d="M 100 91 v -5"/><circle cx="100" cy="83" r="3.2"/></g><text class="fmb-svg-star" x="100" y="158" text-anchor="middle" font-size="13">✦</text></svg>
+      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g fill="none" stroke="#54405c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="100" cy="15" r="4"/><path d="M100 19 L100 28"/><path d="M68 34 L90 88" stroke-width="2.1"/><path d="M62 28 L68 38 M65 25 L71 35 M59 32 L65 42" stroke-width="1.4"/><path d="M132 34 L110 88" stroke-width="2.1"/><path d="M136 27 C 142 31 140 40 134 42" stroke-width="1.4"/><path d="M50 96 Q 100 30 150 96"/><path d="M36 96 H164" stroke-width="3"/><path d="M46 103 H154" stroke-width="1.5"/><path d="M16 120 H184" stroke-width="3.4"/><path d="M16 164 H184" stroke-width="3.4"/><path d="M16 122 V162" stroke-width="1.5"/><path d="M184 122 V162" stroke-width="1.5"/></g><text class="fmb-svg-arc" x="100" y="150" text-anchor="middle" font-size="17" fill="#54405c">Plat</text></svg>
       <h4 class="fmb-choice-title">Plat <em>Au choix</em></h4>
       <ul class="fmb-list">
         <li>Escalope de veau</li>
@@ -6801,7 +6837,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       </ul>
     </section>
     <section class="fmb-choice">
-      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmbm-dessert-au" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset=".55" stop-color="#d8b257"/><stop offset="1" stop-color="#9a7429"/></linearGradient><radialGradient id="fmbm-dessert-di" cx=".5" cy=".4" r=".85"><stop offset="0" stop-color="#4d2665"/><stop offset="1" stop-color="#24102e"/></radialGradient><path id="fmbm-dessert-ar" d="M 38 102 A 64 64 0 0 1 162 102" fill="none"/></defs><circle cx="100" cy="100" r="96" fill="url(#fmbm-dessert-au)"/><circle cx="100" cy="100" r="88" fill="none" stroke="#2c1537" stroke-width="1.6" opacity=".45"/><circle cx="100" cy="100" r="81" fill="url(#fmbm-dessert-di)" stroke="#f3d56a" stroke-width="1.3"/><circle cx="100" cy="100" r="74" fill="none" stroke="#f0d488" stroke-width="2.4" stroke-dasharray="0 9" stroke-linecap="round"/><text class="fmb-svg-arc" font-size="21"><textPath href="#fmbm-dessert-ar" startOffset="50%" text-anchor="middle">Dessert</textPath></text><g fill="none" stroke="#f0d488" stroke-width="3" stroke-linecap="round"><path d="M 84 93 h 32"/><path d="M 84 93 q 0 17 16 17 q 16 0 16 -17"/><path d="M 100 110 v 13"/><path d="M 90 127 h 20"/></g><text class="fmb-svg-star" x="100" y="158" text-anchor="middle" font-size="13">✦</text></svg>
+      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g fill="none" stroke="#452e4e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="104" cy="19" r="4.6" fill="#8f5f78" stroke="none"/><path d="M104 14 Q 112 7 120 11" stroke-width="2"/><path d="M62 60 Q 58 42 76 37 Q 81 25 96 29 Q 113 23 119 38 Q 136 40 136 58"/><path d="M60 60 H140" stroke-width="3"/><path d="M60 60 Q 66 92 98 100 L98 122"/><path d="M140 60 Q 134 92 102 100"/><path d="M76 128 Q 100 122 124 128"/><path d="M16 138 H184" stroke-width="3.4"/><path d="M16 180 H184" stroke-width="3.4"/><path d="M16 140 V178" stroke-width="1.5"/><path d="M184 140 V178" stroke-width="1.5"/></g><text class="fmb-svg-arc" x="100" y="166" text-anchor="middle" font-size="17" fill="#452e4e">Dessert</text></svg>
       <h4 class="fmb-choice-title">Dessert <em>Au choix</em></h4>
       <ul class="fmb-list">
         <li>Panna cotta</li>
@@ -6828,7 +6864,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
     <div class="fmb-head">
       <p class="fmb-pils">Menu enfant</p>
       <p class="fmb-sub">Moins de 12 ans</p>
-      <svg class="fmb-ico" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmi-enfant-or" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset="1" stop-color="#c9a04e"/></linearGradient><path id="fmi-enfant-ar" d="M 52 106 A 56 56 0 0 0 148 106" fill="none"/></defs><g fill="none" stroke="url(#fmi-enfant-or)" stroke-width="3" stroke-linecap="round"><circle cx="100" cy="88" r="31" stroke-width="3.4"/><circle cx="100" cy="88" r="22" stroke-width="1.7"/><circle cx="90" cy="83" r="2.6" fill="#f0d488" stroke="none"/><circle cx="110" cy="83" r="2.6" fill="#f0d488" stroke="none"/><path d="M 90 93 q 10 9 20 0"/></g><text class="fmb-svg-arc2" font-size="17"><textPath href="#fmi-enfant-ar" startOffset="50%" text-anchor="middle">Enfant</textPath></text></svg>
+      <img class="fmb-ico" src="assets/menus/icon-enfant.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <p class="fmb-price">10,90</p>
     </div>
     <ul class="fmb-list">
@@ -6843,7 +6879,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
   <article class="fmb-card fmb-card--pdj">
     <div class="fmb-head">
       <p class="fmb-pils">Petit déjeuner</p>
-      <svg class="fmb-ico" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fmi-pdj-or" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e08e"/><stop offset="1" stop-color="#c9a04e"/></linearGradient><path id="fmi-pdj-ar" d="M 52 106 A 56 56 0 0 0 148 106" fill="none"/></defs><g fill="none" stroke="url(#fmi-pdj-or)" stroke-width="3" stroke-linecap="round"><path d="M 76 80 h 40 v 17 q 0 13 -13 13 h -14 q -13 0 -13 -13 z"/><path d="M 118 84 q 14 1 13 9 q -1 8 -13 8"/><path d="M 68 118 h 56"/><path d="M 92 66 q 4 -6 0 -12"/><path d="M 104 66 q 4 -6 0 -12"/></g><text class="fmb-svg-arc2" font-size="17"><textPath href="#fmi-pdj-ar" startOffset="50%" text-anchor="middle">Petit-déj</textPath></text></svg>
+      <img class="fmb-ico" src="assets/menus/icon-pdj.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <p class="fmb-price">7,00</p>
     </div>
     <ul class="fmb-list">
