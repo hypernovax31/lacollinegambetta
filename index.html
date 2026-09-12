@@ -6886,6 +6886,118 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
 @media screen and (max-width: 706px) {
   html[lang="ja"]:not(.carte-doc) #interior-menu #vins .wine-table td.wine-no { font-family:'CinzelJP','Cinzel', serif; }
 }
+
+<style>
+/* ============ Lancement de l'Happy Hour : compte à rebours plein écran ============
+   À 16h59m55s (heure de Paris), la page s'efface (flou + voile violet) et
+   devient injouable au doigt, à la molette et au clic : un compte à rebours
+   de 5 s défile en or, puis le message « L'Happy Hour démarre maintenant ! »
+   (dans la langue du visiteur) éclate au-dessus d'un bouquet final de feux
+   d'artifice — cloche de départ et explosions « supernova » comprises —
+   avant un fondu qui rend la page exactement là où elle était. Coupes :
+   mouvement réduit, carte A4, impression. */
+html.hh-lock { overflow: hidden; }
+html.hh-lock body { overflow: hidden; touch-action: none; }
+#hh-launch {
+  position: fixed; inset: 0; z-index: 12000;
+  display: flex; align-items: center; justify-content: center;
+  background:
+    radial-gradient(120% 90% at 50% 42%, rgba(90, 52, 119, .38) 0%, rgba(28, 9, 44, .66) 58%, rgba(14, 4, 24, .86) 100%);
+  -webkit-backdrop-filter: blur(10px) saturate(1.15);
+  backdrop-filter: blur(10px) saturate(1.15);
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s ease;
+  touch-action: none; cursor: default;
+  text-align: center;
+}
+#hh-launch.show { opacity: 1; pointer-events: auto; }
+#hh-launch.fade { opacity: 0; transition: opacity .7s ease; }
+#hh-launch-fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#hh-launch .hh-launch__halo {
+  position: absolute; left: 50%; top: 44%; width: min(92vmin, 900px); aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle,
+    rgba(243, 213, 106, .20) 0%, rgba(160, 110, 224, .14) 38%, transparent 68%);
+  pointer-events: none;
+  animation: hhHaloPulse 2.4s ease-in-out infinite;
+}
+#hh-launch .hh-launch__spark {
+  position: absolute; color: var(--gold-bright, #fcf6ba);
+  font-size: clamp(1.1rem, 3.4vmin, 2.2rem); line-height: 1;
+  text-shadow: 0 0 14px rgba(243, 213, 106, .8), 0 0 34px rgba(160, 110, 224, .5);
+  pointer-events: none;
+  animation: hhSparkTwinkle 1.9s ease-in-out infinite;
+}
+#hh-launch .hh-launch__spark--1 { left: 12%; top: 18%; animation-delay: 0s; }
+#hh-launch .hh-launch__spark--2 { right: 14%; top: 24%; animation-delay: .55s; color: #cfa8f2; }
+#hh-launch .hh-launch__spark--3 { left: 20%; bottom: 20%; animation-delay: 1.05s; color: #cfa8f2; }
+#hh-launch .hh-launch__spark--4 { right: 11%; bottom: 16%; animation-delay: 1.45s; }
+#hh-launch .hh-launch__count {
+  position: relative;
+  font-family: 'Cinzel', 'Tajawal', 'Noto Sans Devanagari', 'Noto Serif SC', 'Noto Serif JP', 'Noto Serif KR', 'Noto Serif Devanagari', serif;
+  font-weight: 700;
+  font-size: clamp(7.5rem, 34vmin, 21rem);
+  line-height: 1;
+  color: #f6d878;
+  text-shadow:
+    0 2px 0 #a8801f,
+    0 4px 0 #6d5114,
+    0 8px 22px rgba(0, 0, 0, .55),
+    0 0 34px rgba(243, 213, 106, .55),
+    0 0 110px rgba(160, 110, 224, .42);
+  animation: hhCountIn .82s cubic-bezier(.18, .89, .32, 1.18) both;
+}
+#hh-launch .hh-launch__msg {
+  position: relative;
+  display: grid; gap: clamp(10px, 2.2vmin, 22px); justify-items: center;
+  padding: 0 clamp(14px, 4vw, 60px);
+  animation: hhMsgIn .62s cubic-bezier(.18, .89, .32, 1.2) both;
+}
+#hh-launch .hh-launch__msg-line {
+  font-family: 'Cinzel', 'Tajawal', 'Noto Sans Devanagari', 'Noto Serif SC', 'Noto Serif JP', 'Noto Serif KR', 'Noto Serif Devanagari', serif;
+  font-weight: 700;
+  font-size: clamp(1.7rem, 6.2vmin, 4.4rem);
+  line-height: 1.22;
+  color: #f8dd82;
+  max-width: 22ch;
+  text-shadow:
+    0 1px 0 #a8801f,
+    0 3px 0 #6d5114,
+    0 6px 16px rgba(0, 0, 0, .6),
+    0 0 30px rgba(243, 213, 106, .65),
+    0 0 100px rgba(160, 110, 224, .5);
+}
+#hh-launch .hh-launch__msg-hours {
+  font-family: 'Cinzel', 'Tajawal', 'Noto Sans Devanagari', 'Noto Serif SC', 'Noto Serif JP', 'Noto Serif KR', 'Noto Serif Devanagari', serif;
+  font-weight: 600;
+  font-size: clamp(1rem, 3vmin, 1.9rem);
+  letter-spacing: .18em;
+  color: #cfa8f2;
+  text-shadow: 0 0 18px rgba(160, 110, 224, .75), 0 2px 10px rgba(0, 0, 0, .5);
+}
+@keyframes hhHaloPulse {
+  0%, 100% { opacity: .75; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+}
+@keyframes hhSparkTwinkle {
+  0%, 100% { opacity: .35; transform: scale(.8) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.25) rotate(20deg); }
+}
+@keyframes hhCountIn {
+  0% { opacity: 0; transform: scale(.42); }
+  55% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes hhMsgIn {
+  0% { opacity: 0; transform: scale(.6); }
+  60% { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* pas d'animation plein écran en mouvement réduit : la page reste
+     telle quelle (le bandeau Happy Hour des onglets est là, lui) */
+  #hh-launch { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -13691,5 +13803,337 @@ else sizeCoverMedallion();
 })();
 </script>
 
+<!-- ============ Lancement de l'Happy Hour : compte à rebours plein écran ============ -->
+<div id="hh-launch" role="alert" aria-live="assertive" hidden>
+  <canvas id="hh-launch-fx" aria-hidden="true"></canvas>
+  <div class="hh-launch__halo" aria-hidden="true"></div>
+  <span class="hh-launch__spark hh-launch__spark--1" aria-hidden="true">✦</span>
+  <span class="hh-launch__spark hh-launch__spark--2" aria-hidden="true">✦</span>
+  <span class="hh-launch__spark hh-launch__spark--3" aria-hidden="true">✦</span>
+  <span class="hh-launch__spark hh-launch__spark--4" aria-hidden="true">✦</span>
+  <div class="hh-launch__count" id="hh-launch-count">5</div>
+  <div class="hh-launch__msg" id="hh-launch-msg" hidden>
+    <span class="hh-launch__msg-line">✦ <b id="hh-launch-msg-text">L’Happy Hour démarre maintenant !</b> ✦</span>
+    <span class="hh-launch__msg-hours">17h → 23h</span>
+  </div>
+</div>
+
+
+<script>
+/* ============ Lancement de l'Happy Hour : compte à rebours plein écran ============ */
+(function () {
+  'use strict';
+  var START_MS = 17 * 3600000;              /* 17:00:00, heure de Paris */
+  var LEAD_MS = 5000;                       /* l'animation part 5 s avant */
+  var FX_MS = 3500;                         /* durée du bouquet final */
+  var DONE_KEY = 'lcg-hh-done-';
+
+  /* ---- messages localisés + chiffres locaux (arabe, hindi) ---- */
+  var MSG = {
+    fr: 'L’Happy Hour démarre maintenant !', en: 'The Happy Hour starts now!',
+    es: '¡La Happy Hour empieza ya!', de: 'Die Happy Hour beginnt jetzt!',
+    it: 'La Happy Hour inizia adesso!', pt: 'A Happy Hour começa já!',
+    nl: 'De Happy Hour begint nu!', ar: 'ساعة السعادة تبدأ الآن!',
+    zh: '欢乐时光现在开始！', uk: 'Щасливі години починаються!',
+    ja: 'ハッピーアワーのはじまりです！', ko: '해피아워가 시작됩니다!',
+    hi: 'हैप्पी आवर अभी शुरू हो रहा है!', pl: 'Happy Hour zaczyna się już teraz!',
+    tr: 'Happy Hour şimdi başlıyor!'
+  };
+  var NUM = { ar: '٠١٢٣٤٥٦٧٨٩', hi: '०१२३४५६७८९' };
+  var digit = function (n) {
+    var lang = document.documentElement.getAttribute('lang') || 'fr';
+    var map = NUM[lang];
+    return map ? map.charAt(n) : String(n);
+  };
+  var message = function () {
+    var lang = document.documentElement.getAttribute('lang') || 'fr';
+    return MSG[lang] || MSG.fr;
+  };
+
+  /* ---- heure de Paris (ms du jour + date locale Paris) ---- */
+  var fmt = null;
+  function parisNow() {
+    try {
+      if (!fmt) fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Paris', hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      var p = {};
+      fmt.formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+      var h = (+p.hour) % 24;
+      return { ms: ((h * 60 + +p.minute) * 60 + +p.second) * 1000, day: p.year + '-' + p.month + '-' + p.day };
+    } catch (e) { return null; }
+  }
+
+  /* ---- audio (WebAudio, entièrement synthétisé : cloche + supernovae) ---- */
+  var AC = null, noiseBuf = null;
+  function ctx() {
+    if (document.documentElement.classList.contains('carte-doc')) return null;
+    if (!AC) {
+      var C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return null;
+      try { AC = new C(); } catch (e) { return null; }
+    }
+    if (AC.state === 'suspended') { try { AC.resume().catch(function () {}); } catch (e) {} }
+    return AC;
+  }
+  function noise() {
+    if (noiseBuf) return noiseBuf;
+    var len = Math.floor(AC.sampleRate * 1.4);
+    noiseBuf = AC.createBuffer(1, len, AC.sampleRate);
+    var d = noiseBuf.getChannelData(0);
+    for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    return noiseBuf;
+  }
+  /* cloche de départ de course : partiels inharmoniques d'une vraie cloche */
+  function bell(t) {
+    var ac = ctx(); if (!ac) return;
+    t = t || ac.currentTime;
+    var base = 988; /* B5 — ding clair et haut */
+    [[1, .5, 2.3], [1.5, .26, 1.7], [2.0, .18, 1.35], [2.51, .1, 1.0], [3.01, .06, .8], [4.05, .03, .55]]
+      .forEach(function (p) {
+        var o = ac.createOscillator(), g = ac.createGain();
+        o.type = 'sine'; o.frequency.value = base * p[0];
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(p[1], t + 0.012);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + p[2]);
+        o.connect(g); g.connect(ac.destination);
+        o.start(t); o.stop(t + p[2] + 0.05);
+      });
+  }
+  /* explosion « supernova » : sub grave + souffle filtré + crépitement d'étincelles */
+  function boom(t, big) {
+    var ac = ctx(); if (!ac) return;
+    t = t || ac.currentTime;
+    var k = big ? 1.25 : 1;
+    var o = ac.createOscillator(), og = ac.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(92 * k, t);
+    o.frequency.exponentialRampToValueAtTime(30, t + 0.5);
+    og.gain.setValueAtTime(0.0001, t);
+    og.gain.exponentialRampToValueAtTime(0.85 * k, t + 0.02);
+    og.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+    o.connect(og); og.connect(ac.destination);
+    o.start(t); o.stop(t + 0.6);
+    var n = ac.createBufferSource(), f = ac.createBiquadFilter(), ng = ac.createGain();
+    n.buffer = noise();
+    f.type = 'lowpass'; f.Q.value = 0.7;
+    f.frequency.setValueAtTime(1500 * k, t);
+    f.frequency.exponentialRampToValueAtTime(170, t + 0.5);
+    ng.gain.setValueAtTime(0.0001, t);
+    ng.gain.exponentialRampToValueAtTime(0.6 * k, t + 0.015);
+    ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+    n.connect(f); f.connect(ng); ng.connect(ac.destination);
+    n.start(t); n.stop(t + 0.6);
+    /* crépitement des gerbes : une pluie de micro-cliquements */
+    var i, cl = big ? 30 : 18;
+    for (i = 0; i < cl; i++) {
+      var ct = t + 0.06 + Math.random() * (big ? 1.0 : 0.75);
+      var c = ac.createBufferSource(), cf = ac.createBiquadFilter(), cg = ac.createGain();
+      c.buffer = noise(); c.playbackRate.value = 0.7 + Math.random() * 0.8;
+      cf.type = 'bandpass'; cf.Q.value = 6;
+      cf.frequency.value = 900 + Math.random() * 3600;
+      var v = 0.02 + Math.random() * 0.075;
+      cg.gain.setValueAtTime(0.0001, ct);
+      cg.gain.exponentialRampToValueAtTime(v, ct + 0.004);
+      cg.gain.exponentialRampToValueAtTime(0.0001, ct + 0.05);
+      c.connect(cf); cf.connect(cg); cg.connect(ac.destination);
+      c.start(ct); c.stop(ct + 0.07);
+    }
+  }
+
+  /* ---- feux d'artifice (canvas plein écran, bouquet final court) ---- */
+  var GOLD = ['#f6d878', '#ffe9a3', '#fcf6ba', '#e9b84f'];
+  var VIOLET = ['#cfa8f2', '#a06ee0', '#8a5fc9'];
+  function fireworks(canvas) {
+    var cv = canvas, cx = cv.getContext('2d');
+    var DPR = Math.min(2, window.devicePixelRatio || 1);
+    var W = 0, H = 0, parts = [], rockets = [], raf = 0, t0 = 0, doneFn = null;
+    function size() {
+      W = cv.clientWidth; H = cv.clientHeight;
+      cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+      cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      cx.fillStyle = 'rgba(14,4,24,0)'; cx.fillRect(0, 0, W, H);
+    }
+    function burst(x, y, big) {
+      var n = big ? 130 : 70, pal = Math.random() < 0.72 ? GOLD : VIOLET;
+      var speed = big ? 7.2 : 5.4;
+      for (var i = 0; i < n; i++) {
+        var a = Math.random() * Math.PI * 2, v = speed * (0.25 + Math.random() * 0.75);
+        parts.push({ x: x, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v,
+          life: 1, decay: 0.008 + Math.random() * 0.012,
+          c: pal[(Math.random() * pal.length) | 0], s: big ? 2.3 : 1.8 });
+      }
+      /* pluie dorée : particules lourdes qui retombent lentement */
+      if (big) for (i = 0; i < 26; i++) {
+        parts.push({ x: x + (Math.random() - 0.5) * 40, y: y + (Math.random() - 0.5) * 20,
+          vx: (Math.random() - 0.5) * 1.6, vy: -0.4 - Math.random(),
+          life: 1, decay: 0.006, g: 0.016, c: GOLD[(Math.random() * GOLD.length) | 0], s: 2 });
+      }
+      boom(null, big ? 1 : 0);
+    }
+    function rocket(fxRatio) {
+      rockets.push({ x: W * fxRatio, y: H + 6, vy: -(H * 0.0135) * (0.86 + Math.random() * 0.2),
+        targetY: H * (0.2 + Math.random() * 0.2), big: Math.random() < 0.5, c: '#ffe9a3' });
+    }
+    function step(t) {
+      if (!t0) t0 = t;
+      var el = t - t0;
+      /* scénario du bouquet final (ms) */
+      if (el < 60 && rockets.length === 0 && parts.length === 0) { rocket(0.3); rocket(0.72); }
+      if (el > 620 && el < 700) { burst(W * 0.5, H * 0.3, 1); }
+      if (el > 1050 && el < 1130) rocket(0.45);
+      if (el > 1350 && el < 1430) rocket(0.85);
+      if (el > 1850 && el < 1930) burst(W * 0.38, H * 0.34, 1);
+      if (el > 2500 && el < 2580) { burst(W * 0.62, H * 0.3, 1); }
+      if (el > 2780 && el < 2860) { burst(W * 0.5, H * 0.22, 1); rocket(0.32); rocket(0.68); }
+      cx.globalCompositeOperation = 'source-over';
+      cx.fillStyle = 'rgba(14,4,24,0.22)';
+      cx.fillRect(0, 0, W, H);
+      cx.globalCompositeOperation = 'lighter';
+      var i, p;
+      for (i = rockets.length - 1; i >= 0; i--) {
+        p = rockets[i];
+        p.y += p.vy; p.vy *= 0.985;
+        cx.fillStyle = 'rgba(255,233,163,.9)';
+        cx.fillRect(p.x - 1.2, p.y, 2.4, 7);
+        if (p.y <= p.targetY) { burst(p.x, p.y, p.big); rockets.splice(i, 1); }
+      }
+      for (i = parts.length - 1; i >= 0; i--) {
+        p = parts[i];
+        p.x += p.vx; p.y += p.vy;
+        p.vy += (p.g != null ? p.g : 0.045); p.vx *= 0.985; p.vy *= 0.985;
+        p.life -= p.decay;
+        if (p.life <= 0) { parts.splice(i, 1); continue; }
+        cx.globalAlpha = Math.max(0, p.life);
+        cx.fillStyle = p.c;
+        cx.fillRect(p.x - p.s / 2, p.y - p.s / 2, p.s, p.s);
+      }
+      cx.globalAlpha = 1;
+      if (el < FX_MS - 500) raf = requestAnimationFrame(step);
+      else { cx.clearRect(0, 0, W, H); if (doneFn) doneFn(); }
+    }
+    size();
+    window.addEventListener('resize', size);
+    raf = requestAnimationFrame(step);
+    return { stop: function () { cancelAnimationFrame(raf); } };
+  }
+
+  /* ---- déroulé : verrou, décompte, GO, fondu ---- */
+  var overlay, countEl, msgEl, msgText, fxCanvas;
+  var state = 'idle', timers = [], fw = null, blockers = null, lastN = -1, fakeDeadline = null;
+  function $(id) { return document.getElementById(id); }
+  function lock() {
+    document.documentElement.classList.add('hh-lock');
+    blockers = [
+      ['wheel', function (e) { e.preventDefault(); }, { passive: false }],
+      ['touchmove', function (e) { e.preventDefault(); }, { passive: false }],
+      ['gesturestart', function (e) { e.preventDefault(); }],
+      ['contextmenu', function (e) { e.preventDefault(); }],
+      ['keydown', function (e) { if (!e.metaKey && !e.ctrlKey) e.preventDefault(); }],
+      ['mousedown', function (e) { e.preventDefault(); }],
+      ['click', function (e) { e.preventDefault(); e.stopPropagation(); }]
+    ];
+    blockers.forEach(function (b) { overlay.addEventListener(b[0], b[1], b[2]); });
+  }
+  function unlock() {
+    document.documentElement.classList.remove('hh-lock');
+    if (blockers) blockers.forEach(function (b) { overlay.removeEventListener(b[0], b[1], b[2]); });
+    blockers = null;
+  }
+  function cleanup() {
+    timers.forEach(clearTimeout); timers = [];
+    if (fw) { fw.stop(); fw = null; }
+    unlock(); state = 'idle'; lastN = -1; fakeDeadline = null;
+  }
+  function showCount(n) {
+    countEl.textContent = digit(n);
+    countEl.style.animation = 'none';
+    void countEl.offsetWidth;
+    countEl.style.animation = '';
+  }
+  function tickCount() {
+    if (state !== 'count') return;
+    var dt = fakeDeadline != null ? fakeDeadline - performance.now()
+                                  : START_MS - (parisNow() || { ms: 0 }).ms;
+    if (dt > 0) {
+      var n = Math.min(5, Math.max(1, Math.ceil(dt / 1000)));
+      if (n !== lastN) { showCount(n); lastN = n; }
+      timers.push(setTimeout(tickCount, 110));
+    } else go();
+  }
+  function go() {
+    if (state !== 'count') return;
+    state = 'go';
+    countEl.hidden = true;
+    msgText.textContent = message();
+    msgEl.hidden = false;
+    if (!document.hidden) {
+      var ac = ctx(); if (ac) bell(ac.currentTime + 0.05);
+      fw = fireworks(fxCanvas);
+    }
+    timers.push(setTimeout(close, document.hidden ? 250 : FX_MS + 200));
+  }
+  function close() {
+    if (state !== 'go') return;
+    state = 'fade';
+    overlay.classList.add('fade');
+    timers.push(setTimeout(function () {
+      overlay.classList.remove('show', 'fade');
+      overlay.hidden = true;
+      countEl.hidden = false; msgEl.hidden = true;
+      cleanup();
+    }, 760));
+  }
+  function launch(forced) {
+    if (state !== 'idle') return;
+    if (document.documentElement.classList.contains('carte-doc')) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    overlay = $('hh-launch'); countEl = $('hh-launch-count');
+    msgEl = $('hh-launch-msg'); msgText = $('hh-launch-msg-text'); fxCanvas = $('hh-launch-fx');
+    if (!overlay) return;
+    state = 'count';
+    if (forced) fakeDeadline = performance.now() + LEAD_MS;
+    var p = parisNow();
+    if (p) { try { sessionStorage.setItem(DONE_KEY + p.day, '1'); } catch (e) {} }
+    overlay.hidden = false;
+    lock();
+    requestAnimationFrame(function () { overlay.classList.add('show'); });
+    tickCount();
+  }
+
+  /* ---- planificateur : à 16h59m55s, heure de Paris ---- */
+  function scheduleTick() {
+    if (state !== 'idle') return;
+    if (document.documentElement.classList.contains('carte-doc')) return;
+    var p = parisNow(); if (!p) return;
+    var played = false;
+    try { played = sessionStorage.getItem(DONE_KEY + p.day) === '1'; } catch (e) {}
+    var dt = START_MS - p.ms;
+    if (!played && dt <= LEAD_MS && dt > -600) { launch(false); return; }
+    if (!played && dt <= -600) { try { sessionStorage.setItem(DONE_KEY + p.day, '1'); } catch (e) {} }
+    var wait = played || dt <= -600 ? 30000 : Math.min(dt - LEAD_MS + 250, 30000);
+    if (wait < 400) wait = 400;
+    timers.push(setTimeout(scheduleTick, wait));
+  }
+
+  /* ---- amorçage : ?hh=1 force l'animation (aperçu/test) ---- */
+  function boot() {
+    var forced = /[?&]hh=1(&|$)/.test(location.search);
+    var off = /[?&]hh=0(&|$)/.test(location.search);
+    if (off) return;
+    if (forced) { setTimeout(function () { launch(true); }, 600); return; }
+    scheduleTick();
+  }
+  /* l'audio ne peut démarrer qu'après un geste du visiteur : on prépare
+     le contexte dès le premier toucher/clic (souvent bien avant 16h59m55s) */
+  ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) {
+    window.addEventListener(ev, function () { ctx(); }, { once: true, passive: true });
+  });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+  /* aperçu manuel (console) : window.__hhLaunch() */
+  window.__hhLaunch = function () { launch(true); };
+})();
+</script>
+
+</body>
 </body>
 </html>
