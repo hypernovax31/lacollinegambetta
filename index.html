@@ -3207,15 +3207,14 @@ html[lang="hi"][lang="hi"]:is(*, #lcg-hi-ls):is(*, #lcg-hi-ls2) * { letter-spaci
 /* ===== Médaillons des formules : SVG au trait, encre violette =====
    Les médaillons d'origine (PNG) sont des gravures à l'encre violette
    sur fond transparent : crête florale et volutes, ruban à double
-   filet, coupe de vin (entrée) ; cloche de service, couverts croisés
-   et plat (plat) ; coupe garnie et cerise (dessert). Ils sont
-   redessinés au trait dans ce style — et le libellé (Entrée, Plat,
-   Dessert — traduit avec le site dans la langue choisie) se place
-   dans le ruban, comme sur l'original. Les icônes (duo, complète,
-   enfant, petit-déjeuner), purement décoratives et sans texte,
-   restent les PNG d'origine : rien à y traduire. */
+   coupe, cloche de service, coupe de glace garnie —, sont redessinés au
+   trait d'après les vignettes de la carte « Formules » (page 4 du PDF).
+   AUCUN TEXTE À L'INTÉRIEUR : le libellé (Entrée, Plat, Dessert) vit
+   dans le titre à côté, traduit avec le site, exactement comme sur la
+   carte papier où « ENTRÉE » est écrit sous le dessin et non dedans.
+   Les autres icônes (duo, complète, enfant, petit-déjeuner), purement
+   décoratives et sans texte, restent les PNG d'origine. */
 #menus .fm svg.fmb-medal { height: auto; display: block; }
-.fmb-svg-arc { font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: .06em; }
 
 /* Contact : Instagram, téléphone, mail — 3 boutons sans surcharge */
 .cover-links,
@@ -4360,6 +4359,19 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   }
 }
 @media (max-width: 1100px) {
+  /* LES FLÈCHES ONT LEUR PROPRE PLACE — ELLES NE RECOUVRENT JAMAIS UN ONGLET
+     ----------------------------------------------------------------------
+     Les deux flèches dorées étaient posées EN SURIMPRESSION sur le ruban
+     (position:absolute, bord gauche / bord droit) : le ruban défilait dessous,
+     et l'onglet qui passait là disparaissait sous le disque doré — « Nos
+     desserts » sous « Autres sections », deux textes dans la même bande. Le
+     défaut était permanent, mais il se voyait surtout dans les langues
+     étrangères, dont les libellés plus longs défilent davantage.
+     Les flèches sont désormais des éléments de la rangée : le ruban occupe la
+     colonne centrale et ne peut plus passer dessous. En contrepartie le ruban
+     est un peu plus court — qu'importe, il défile.
+     `display:none` (et non `opacity`) quand il n'y a rien à révéler de ce
+     côté : la colonne se referme au lieu de laisser un trou de 42 px. */
   html:not(.carte-doc) .menu-nav-wrap {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -4368,19 +4380,25 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     padding: 6px 8px;
   }
   html:not(.carte-doc) .menu-nav-wrap.is-overflow {
-    grid-template-columns: minmax(0, 1fr);
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 6px;
     position: sticky;
+  }
+  /* Le ruban prend la place restante : `min-width:0` est indispensable, sans
+     lui un enfant flex refuse de descendre sous la largeur de son contenu et
+     le ruban pousserait les flèches hors de l'écran au lieu de défiler. */
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow .menu-nav {
+    flex: 1 1 auto;
+    min-width: 0;
   }
   html:not(.carte-doc) .menu-nav-hint {
     display: none;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    top: 50%;
-    left: auto;
-    right: auto;
-    transform: translateY(-50%);
-    /* Au-dessus de .menu-nav (z-index 1000) : les flèches doivent être cliquables. */
+    position: static;
+    transform: none;
     z-index: 1001;
     width: 42px;
     height: 42px;
@@ -4403,6 +4421,13 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     fill: #1a0b22;
     stroke: none;
   }
+  /* En RTL, la rangée flex met « sections précédentes » À DROITE : chaque
+     chevron doit regarder vers l'extérieur de son côté (le début de la
+     liste est à droite). Sans ce retournement, la flèche de droite montrait
+     la gauche — exactement le sens inverse du défilement qu'elle provoque. */
+  html[dir="rtl"]:not(.carte-doc) .menu-nav-hint svg {
+    transform: scaleX(-1);
+  }
   html:not(.carte-doc) .menu-nav-wrap.is-overflow .menu-nav-hint {
     display: flex;
     pointer-events: auto;
@@ -4411,11 +4436,13 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   }
   html:not(.carte-doc) .menu-nav-wrap.is-overflow:not(.has-start) .menu-nav-hint--start,
   html:not(.carte-doc) .menu-nav-wrap.is-overflow:not(.has-end) .menu-nav-hint--end {
-    opacity: 0;
+    display: none;
     pointer-events: none;
   }
-  html:not(.carte-doc) .menu-nav-hint--start { left: 8px; justify-self: auto; }
-  html:not(.carte-doc) .menu-nav-hint--end { right: 8px; justify-self: auto; }
+  /* Le sens de lecture commande la place des flèches : dans la rangée flex,
+     la flèche « sections précédentes » vient en premier — à gauche en LTR,
+     à droite en RTL — et « autres sections » en dernier. Rien à inverser :
+     c'est l'ordre du DOM, lu dans le sens de la page. */
   /* ===== « D'autres onglets à droite » : deux petits signaux animés =====
      1. Battement de la flèche droite (ci-dessous) : tant que des onglets
         restent cachés à droite de l'onglet actif (has-end), la flèche
@@ -4442,11 +4469,11 @@ html:not(.carte-doc) .menu-nav .nav-btn {
      (page plus large que l'écran) pendant la pulsation. */
   @keyframes menuNavEndBeat {
     0%, 22%, 100% {
-      transform: translateY(-50%) scale(1);
+      transform: scale(1);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 2px 6px rgba(0,0,0,.28), 0 0 0 0 rgba(243,213,106,.6);
     }
     9% {
-      transform: translateY(-50%) scale(1.1);
+      transform: scale(1.1);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 2px 6px rgba(0,0,0,.28), 0 0 0 9px rgba(243,213,106,0);
     }
   }
@@ -4459,6 +4486,11 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
     mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
   }
+  /* En RTL le ruban commence à droite : le fondu doit l'être aussi. */
+  html[dir="rtl"]:not(.carte-doc) .menu-nav-wrap.is-overflow .menu-nav {
+    -webkit-mask-image: linear-gradient(to left, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
+    mask-image: linear-gradient(to left, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
+  }
   html:not(.carte-doc) .menu-nav {
     display: flex !important;
     flex-wrap: nowrap !important;
@@ -4468,9 +4500,12 @@ html:not(.carte-doc) .menu-nav .nav-btn {
     scrollbar-width: none;
     grid-template-columns: none !important;
     min-width: 0;
-    padding: 0 50px !important;
+    /* Les 50 px qui réservaient la place des flèches en surimpression ne
+       servent plus : elles ont leur colonne. Le ruban touche donc ses deux
+       bords, où le fondu de 16 px adoucit l'arrivée des onglets. */
+    padding: 0 4px !important;
     gap: 8px !important;
-    scroll-padding-inline: 50px;
+    scroll-padding-inline: 4px;
   }
   html:not(.carte-doc) .menu-nav::-webkit-scrollbar {
     display: none;
@@ -4688,7 +4723,13 @@ html:not(.carte-doc) .top-controls__nav {
     gap: 8px !important;
   }
   html:not(.carte-doc) .top-controls__nav .control-btn {
-    flex: 1 1 0 !important;
+    /* Base `auto` et non `0` : avec `flex: 1 1 0`, les deux boutons
+       recevaient exactement la même largeur, si bien qu'un libellé long
+       (de : « 📖 Speise- & Getränkekarte », ~148 px à 9,6 px) débordait de
+       sa pastille de 126 px pendant que « Startseite » laissait du vide.
+       En prenant la largeur du texte comme base, le bouton long puise dans
+       le mou du court : les deux tiennent sans réduire la police. */
+    flex: 1 1 auto !important;
     width: auto !important;
     min-width: 0;
     padding: 10px 6px !important;
@@ -5183,8 +5224,11 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
    conservé comme marqueur pour tools/check-responsive.mjs. */
 @media screen and (max-width: 0px) {
   html:not(.carte-doc) #interior-menu #cocktails .hh-head { display: none; }
-  html:not(.carte-doc) #interior-menu #cocktails .hh-line__price::before { content: "Prix"; }
-  html:not(.carte-doc) #interior-menu #cocktails .hh-line__hh::before { content: "HH"; }
+  /* Étiquettes écrites en CSS : elles ne passent pas par le dictionnaire.
+     Elles suivent la même règle que l'en-tête de colonne — « Prix » et le
+     sigle de la langue (voir --hh-abbr plus bas), jamais le français en dur. */
+  html:not(.carte-doc) #interior-menu #cocktails .hh-line__price::before { content: var(--label-prix, "Prix"); }
+  html:not(.carte-doc) #interior-menu #cocktails .hh-line__hh::before { content: var(--hh-abbr, "HH"); }
   html:not(.carte-doc) #interior-menu #cocktails .hh-line__row { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; column-gap: 10px; row-gap: 2px; align-items: start; }
   html:not(.carte-doc) #interior-menu #cocktails .hh-line__name { grid-column: 1 / -1; }
   /* Le nom passe seul sur sa ligne : il n'y a plus de prix à rejoindre à sa droite. */
@@ -5325,13 +5369,32 @@ html #interior-menu .wine-table td:not(.wine-name):not(.wine-no)::before {
     --col-prix-large: 3.95rem;
   }
 }
-/* Ukrainien : l'en-tête de la colonne happy-hour, « ЗНИЖКА » (6 capitales
-   cyrilliques), est plus large que le chiffre qu'elle surmonte — la colonne
-   fixe var(--col-prix) la rognerait et son encre mordrait sur « Ціна ».
-   On élargit la variable pour cette langue : têtes et valeurs partagent la
-   même largeur, donc les prix restent alignés sur leur libellé. */
-html[lang="uk"] {
-  --col-prix: 5.2rem;
+/* HAPPY HOUR : L'ABRÉVIATION EST CELLE DE LA LANGUE
+   ----------------------------------------------------------------------------
+   L'en-tête de la colonne des prix réduits ne dit « HH » qu'en français et
+   dans les langues qui écrivent « Happy Hour » en alphabet latin (en, es, de,
+   it, pt, nl, pl, tr). Partout ailleurs, il portait un mot qui n'est PAS
+   l'abréviation de « Happy Hour » mais sa traduction générique — « Réduction »
+   (التخفيض, ЗНИЖКА, 割引, 할인, छूट, 特惠). Il porte désormais les lettres de
+   H.H. dans la langue locale, et la ligne dorée du panneau
+   (« ✦ Happy Hour (HH) · 17h → 23h ✦ ») les explicite en toutes lettres à
+   côté du titre. Les deux vont ensemble : le sigle de l'en-tête est repris
+   entre parenthèses dans l'explication — « ساعة السعادة (س.س) »,
+   « 欢乐时光 (欢时) », « Щасливі години (Щ.Г.) », « ハッピーアワー
+   (ハピアワ) », « हैप्पी आवर (है.आ.) ». Seul le coréen s'en passe : son
+   sigle 해피아워 EST la transcription de « Happy Hour », la parenthèse
+   serait redondante et la ligne dit simplement « 해피아워 · 17시 → 23시 ».
+
+   Deux conséquences pour la colonne : un sigle en capitales (Щ.Г.), deux
+   idéogrammes (欢时), deux katakana/kana (ハピアワ) ou quatre syllabes
+   coréennes (해피아워) sont plus larges que le chiffre qu'ils surmontent —
+   la colonne fixe var(--col-prix) les rognerait et leur encre mordrait sur
+   « Prix ». On élargit donc la variable pour les langues concernées : têtes
+   et valeurs partagent la même largeur, les prix restent alignés sur leur
+   libellé (mesuré : tools/check-pills.mjs). */
+html[lang="ja"],
+html[lang="ko"] {
+  --col-prix: 4.9rem;
 }
 @media (min-width: 641px) {
   html #interior-menu #boissons .beer-table__head,
@@ -6127,25 +6190,48 @@ html:not(.carte-doc) #menus .fm .fmb-choice-title em {
   font-size: .8em; letter-spacing: .3em; text-transform: uppercase;
   color: var(--fm-ink); line-height: 1.8;
 }
-/* ---------- Listes : centrées, étoile dorée devant chaque ligne ---------- */
+/* ---------- Listes : étoile en tête, tous les débuts de ligne alignés ------
+   ÉTOILE DEVANT, TEXTE ALIGNÉ SUR UNE SEULE VERTICALE.
+   Chaque ligne était un conteneur flex : le nom et sa précision (« 2 boules
+   de glace » puis « Parfum au choix ») devenaient DEUX blocs flex, chacun
+   centré pour son propre compte — le second ne démarrait donc pas sous le
+   premier, et la liste dessinait un escalier (le défaut signalé sur la carte).
+   La ligne est maintenant un simple bloc : l'étoile est posée en marge
+   (position absolue, côté début de lecture) et tout le texte coule dans un
+   seul flux, si bien que la précision suit le nom sur la même ligne et que
+   les lignes suivantes reprennent exactement au même x. */
 html:not(.carte-doc) #menus .fm .fmb-list {
-  margin: clamp(10px, 1.3cqw, 16px) 0 0; padding: clamp(10px, 1.3cqw, 16px) 0 0;
-  width: 100%;
+  /* Bloc de la largeur de sa plus longue ligne, centré dans la carte : les
+     étoiles s'alignent, et l'ensemble reste centré sous le titre comme sur
+     la carte papier. `max-width:100%` laisse la ligne se replier au lieu de
+     déborder quand un libellé étranger est plus long. */
+  margin: clamp(10px, 1.3cqw, 16px) auto 0;
+  padding: clamp(10px, 1.3cqw, 16px) 0 0;
+  /* `fit-content` et non `max-content` : la liste prend la largeur de sa plus
+     longue ligne TANT QU'ELLE TIENT dans la carte, et se range à la largeur
+     disponible sinon (un libellé étranger plus long). `max-content` seul
+     faisait remonter cette largeur jusqu'à la grille, qui refusait de
+     descendre sous son contenu : la carte débordait de la fenêtre à 320 px
+     (mesuré : +109 px en japonais). */
+  width: fit-content; max-width: 100%;
   list-style: none;
-  display: flex; flex-direction: column; align-items: center;
+  display: flex; flex-direction: column; align-items: stretch;
   gap: clamp(8px, 1.1cqw, 12px);
   border-top: 1px solid var(--fm-gold-line);
   font-weight: 500;
   font-size: clamp(.98rem, 1.5cqw, 1.08rem);
   line-height: 1.5; color: var(--fm-ink);
+  text-align: start;
 }
 html:not(.carte-doc) #menus .fm .fmb-list li {
-  display: flex; align-items: flex-start; justify-content: center;
-  gap: .55em; text-align: center; max-width: 100%;
+  display: block; position: relative;
+  padding-inline-start: 1.4em;
+  text-align: start; max-width: 100%;
 }
 html:not(.carte-doc) #menus .fm .fmb-list li::before {
-  content: ""; flex: 0 0 auto; width: .8em; height: .8em;
-  margin-top: .32em;
+  content: ""; position: absolute;
+  inset-inline-start: 0; top: .38em;
+  width: .8em; height: .8em;
   background: url('assets/menus/star.png') no-repeat center / contain;
 }
 html:not(.carte-doc) #menus .fm .fmb-list em {
@@ -6292,11 +6378,7 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
   html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-list,
   html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-list {
     grid-area: list; margin: 0; padding: 0; border: 0; width: 100%;
-    align-items: flex-start; text-align: left;
-  }
-  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-list li,
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-list li {
-    justify-content: flex-start; text-align: left;
+    align-items: stretch; text-align: left;
   }
   html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-price,
   html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-price {
@@ -6342,10 +6424,7 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
   }
   html:not(.carte-doc) #menus .fm .fmb-choice .fmb-list {
     grid-area: list; margin: 0; width: 100%;
-    align-items: flex-start; text-align: left;
-  }
-  html:not(.carte-doc) #menus .fm .fmb-choice .fmb-list li {
-    justify-content: flex-start; text-align: left;
+    align-items: stretch; text-align: left;
   }
 }
 
@@ -6752,7 +6831,6 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
   html[lang="ja"] #boissons .price-line__name, html[lang="ja"] #boissons .hh-line__name, html[lang="ja"] #boissons .beer-row__name, html[lang="ja"] #cocktails .price-line__name, html[lang="ja"] #cocktails .hh-line__name, html[lang="ja"] #vins .wine-table td { font-family:'CinzelJP','Cinzel', serif; }
   html[lang="ja"] .wine-table td.wine-no { font-family:'CinzelJP','Cinzel', serif; }
   html[lang="ja"] .lang-menu__title { font-family:'CinzelJP','Cinzel', serif; }
-  html[lang="ja"] .fmb-svg-arc { font-family:'CinzelJP','Cinzel', serif; }
   html[lang="ja"] #menus .day-option__desc, html[lang="ja"] .menus-duo .day-option__desc, html[lang="ja"] .print-page .day-option__desc { font-family:'CinzelJP','Cinzel', serif !important; }
   html[lang="ja"] .contact-link--mail, html[lang="ja"] .footer-link--mail { font-family:'MontserratJP','Montserrat', sans-serif !important; }
   html[lang="ja"] .cover-links .contact-link, html[lang="ja"] .footer-links .footer-link { font-family:'MontserratJP','Montserrat', sans-serif !important; }
@@ -6993,7 +7071,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
 <!-- ============ Choix des formules : entrée / plat / dessert au choix ============ -->
   <div class="fmb-choices">
     <section class="fmb-choice">
-      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g fill="none" stroke="#3f3a47" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="100" cy="15" r="3.2"/><path d="M100 20 C 92 26 88 32 88 40"/><path d="M100 20 C 108 26 112 32 112 40"/><path d="M100 22 L100 40"/><path d="M88 40 C 66 44 54 36 50 26 C 48 20 54 18 57 22 C 59 25 56 28 53 27"/><path d="M112 40 C 134 44 146 36 150 26 C 152 20 146 18 143 22 C 141 25 144 28 147 27"/><path d="M16 78 H184" stroke-width="3.4"/><path d="M16 122 H184" stroke-width="3.4"/><path d="M16 80 V120" stroke-width="1.5"/><path d="M184 80 V120" stroke-width="1.5"/><path d="M62 132 H138"/><path d="M62 132 Q 68 162 100 168 L100 182"/><path d="M138 132 Q 132 162 100 168"/><path d="M74 188 Q 100 182 126 188"/></g><text class="fmb-svg-arc" x="100" y="108" text-anchor="middle" font-size="17" fill="#3f3a47">Entrée</text></svg>
+      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g fill="none" stroke="#3f3a47" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M34 88 C 32 64 44 46 60 48 C 66 34 86 28 98 34 C 110 24 132 30 136 48 C 152 46 166 64 164 88 Z"/><path d="M46 60 L 55 74 L 61 58"/><path d="M92 56 L 101 72 L 106 54"/><path d="M106 54 L 126 84"/><path d="M130 60 L 139 74 L 145 58"/><path d="M26 88 H174" stroke-width="3.2"/><path d="M30 98 H170" stroke-width="2.2"/><path d="M30 98 C 34 128 56 150 78 156 L 74 176 H 126 L 122 156 C 144 150 166 128 170 98"/></g></svg>
       <h4 class="fmb-choice-title">Entrée <em>Au choix</em></h4>
       <ul class="fmb-list">
         <li>Escargots de Bourgogne</li>
@@ -7002,7 +7080,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       </ul>
     </section>
     <section class="fmb-choice">
-      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g fill="none" stroke="#54405c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="100" cy="15" r="4"/><path d="M100 19 L100 28"/><path d="M68 34 L90 88" stroke-width="2.1"/><path d="M62 28 L68 38 M65 25 L71 35 M59 32 L65 42" stroke-width="1.4"/><path d="M132 34 L110 88" stroke-width="2.1"/><path d="M136 27 C 142 31 140 40 134 42" stroke-width="1.4"/><path d="M50 96 Q 100 30 150 96"/><path d="M36 96 H164" stroke-width="3"/><path d="M46 103 H154" stroke-width="1.5"/><path d="M16 120 H184" stroke-width="3.4"/><path d="M16 164 H184" stroke-width="3.4"/><path d="M16 122 V162" stroke-width="1.5"/><path d="M184 122 V162" stroke-width="1.5"/></g><text class="fmb-svg-arc" x="100" y="150" text-anchor="middle" font-size="17" fill="#54405c">Plat</text></svg>
+      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g fill="none" stroke="#54405c" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M30 168 A 70 70 0 0 1 170 168"/><path d="M92 168 L 93 96 Q 93 88 100 88 Q 107 88 107 96 L 108 168"/><path d="M74 86 C 66 78 76 70 70 60 C 64 50 72 44 70 36"/><path d="M100 84 C 92 74 102 66 96 54 C 90 42 100 36 98 26"/><path d="M86 30 Q 92 24 100 24" stroke-width="2.2"/><path d="M126 86 C 118 78 128 70 122 60 C 116 50 124 44 122 36"/><path d="M4 168 H 196 A 10 10 0 0 1 196 188 H 4 A 10 10 0 0 1 4 168 Z" stroke-width="2.6"/><path d="M156 178 H 174" stroke-width="3.4"/></g></svg>
       <h4 class="fmb-choice-title">Plat <em>Au choix</em></h4>
       <ul class="fmb-list">
         <li>Escalope de veau</li>
@@ -7011,7 +7089,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       </ul>
     </section>
     <section class="fmb-choice">
-      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g fill="none" stroke="#452e4e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="104" cy="19" r="4.6" fill="#8f5f78" stroke="none"/><path d="M104 14 Q 112 7 120 11" stroke-width="2"/><path d="M62 60 Q 58 42 76 37 Q 81 25 96 29 Q 113 23 119 38 Q 136 40 136 58"/><path d="M60 60 H140" stroke-width="3"/><path d="M60 60 Q 66 92 98 100 L98 122"/><path d="M140 60 Q 134 92 102 100"/><path d="M76 128 Q 100 122 124 128"/><path d="M16 138 H184" stroke-width="3.4"/><path d="M16 180 H184" stroke-width="3.4"/><path d="M16 140 V178" stroke-width="1.5"/><path d="M184 140 V178" stroke-width="1.5"/></g><text class="fmb-svg-arc" x="100" y="166" text-anchor="middle" font-size="17" fill="#452e4e">Dessert</text></svg>
+      <svg class="fmb-medal" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g fill="none" stroke="#452e4e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M44 114 A 21 20 0 0 1 85 114"/><path d="M115 114 A 21 20 0 0 1 156 114"/><path d="M85 114 A 30 30 0 1 1 115 114"/><path d="M76 106 C 84 98 92 114 100 105 C 108 96 116 110 124 102"/><path d="M100 36 A 10 10 0 1 1 100 56 A 10 10 0 1 1 100 36"/><path d="M100 36 C 104 26 112 21 119 19"/><path d="M34 114 H166"/><path d="M34 114 C 40 144 64 158 100 158 C 136 158 160 144 166 114"/><path d="M56 134 C 61 140 67 145 74 147" stroke-width="2.2"/><path d="M93 158 L93 178"/><path d="M107 158 L107 178"/><path d="M73 180 A 27 6 0 1 1 127 180 A 27 6 0 1 1 73 180 Z"/></g></svg>
       <h4 class="fmb-choice-title">Dessert <em>Au choix</em></h4>
       <ul class="fmb-list">
         <li>Panna cotta</li>
@@ -7205,17 +7283,58 @@ function showView(view) {
     setTimeout(menuNavNudge, 650);
   }
 }
+/* ===== Géométrie du ruban d'onglets, quel que soit le sens de lecture =====
+   Le repère de défilement n'est PAS le même dans les deux sens, et les
+   moteurs ne s'accordent pas sur le signe : `offsetLeft` et `scrollLeft`
+   (repères de l'axe physique gauche → droite) donnaient, en arabe, un
+   centrage à l'envers — l'onglet actif partait du côté opposé.
+   On ne travaille donc plus qu'avec deux quantités qui, elles, ne changent
+   jamais de sens :
+     • `pos()`      : la position défilée comptée DANS LE SENS DE LECTURE
+                      (0 = début du ruban), lue sur la valeur absolue de
+                      scrollLeft — le seul repère que les deux conventions
+                      (0 → max du standard, 0 → −max des anciens WebKit)
+                      donnent identique ;
+     • `advanceBy()` : un déplacement en pixels PHYSIQUES via scrollBy, que
+                      tous les moteurs appliquent de la même façon — le
+                      contenu suit le doigt, dans le sens de la page ;
+     • `room()`     : la place restante après l'onglet de queue, mesurée sur
+                      les boîtes, donc identique en LTR et en RTL.
+   Les index d'onglets (actif, suivant, précédent), eux, restent logiques :
+   l'ordre du DOM, lu dans le sens de la page. */
+function navMetrics(nav) {
+  if (!nav) return null;
+  const rtl = getComputedStyle(nav).direction === 'rtl';
+  const pos = () => (nav.scrollLeft <= 0 ? -nav.scrollLeft : nav.scrollLeft);
+  const advanceBy = d => {
+    if (!d) return;
+    try { nav.scrollBy({ left: rtl ? -d : d }); }
+    catch (e) { try { nav.scrollLeft = pos() + (rtl ? -d : d); } catch (e2) {} }
+  };
+  const room = () => {
+    const kids = nav.querySelectorAll('.nav-btn');
+    if (!kids.length) return 0;
+    const b = nav.getBoundingClientRect();
+    const last = kids[kids.length - 1].getBoundingClientRect();
+    return Math.max(0, rtl ? (b.left - last.left) : (last.right - b.right));
+  };
+  return { rtl, pos, advanceBy, room };
+}
 function centerMenuNavButton(btnElement) {
   /* Centre l'onglet actif dans la bande défilante, en ne touchant QU'à
      cette bande. L'ancien scrollIntoView({inline:'center'}) pouvait aussi
      faire défiler la fenêtre elle-même (le navigateur ajuste tous les
      ancêtres défilables) : au changement d'onglet, la page sautait d'un
-     coup puis l'animation la ramenait — le « rebond » ressenti. Ici, on
-     règle directement le scrollLeft de la bande : la page ne bouge pas. */
+     coup puis l'animation la ramenait — le « rebond » ressenti.
+     La cible se calcule sur les boîtes (centres) : la même soustraction
+     vaut en LTR et en RTL, et `scrollBy` reçoit un déplacement physique. */
   const nav = document.querySelector('.menu-nav');
   if (!nav || !btnElement) return;
-  const target = btnElement.offsetLeft - (nav.clientWidth - btnElement.offsetWidth) / 2;
-  try { nav.scrollLeft = Math.max(0, Math.round(target)); } catch (e) { /* bande non défilante */ }
+  const b = nav.getBoundingClientRect();
+  const r = btnElement.getBoundingClientRect();
+  const delta = (r.left + r.width / 2) - (b.left + b.width / 2);
+  if (Math.abs(delta) < 1) return;
+  try { nav.scrollBy({ left: delta, behavior: 'auto' }); } catch (e) { /* bande non défilante */ }
 }
 function showMenuSection(sectionId, btnElement) {
   document.querySelectorAll('.menu-section').forEach(sec => sec.classList.remove('active'));
@@ -7498,21 +7617,23 @@ function menuNavNudge() {
   const wrap = document.getElementById('menu-nav-wrap');
   const nav = document.querySelector('.menu-nav');
   if (!wrap || !nav || !wrap.classList.contains('is-overflow')) return;
-  /* Reste-t-il des onglets cachés à droite de la position actuelle ? */
-  const span = nav.scrollWidth - nav.clientWidth - nav.scrollLeft;
-  if (span < 24) return;
+  const m = navMetrics(nav);
+  if (!m) return;
+  /* Reste-t-il des onglets cachés AU BOUT du ruban (à droite en LTR, à gauche
+     en RTL) ? La place restante se mesure sur les boîtes : même formule dans
+     les deux sens. */
+  if (m.room() < 24) return;
   /* Une nouvelle entrée remplace toute balançoire en cours (jeton de
      génération) : jamais deux balançoires qui se battraient. */
   const gen = ++__navNudgeGen;
   const dur = 1100;
-  let start = nav.scrollLeft, lastWritten = null, t0 = 0;
+  let start = m.pos(), lastWritten = null, t0 = 0;
   const ease = p => (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
   const step = t => {
     if (gen !== __navNudgeGen) return;
-    const room = nav.scrollWidth - nav.clientWidth;
-    /* Plus rien à révéler à droite (ruban au bout) : la balançoire n'a
-       plus rien à dire. */
-    if (room - start < 2) return;
+    /* Plus rien à révéler au bout du ruban : la balançoire n'a plus rien
+       à dire. */
+    if (m.room() < 2) return;
     /* L'horloge ne part qu'à la PREMIÈRE image : si la première trame
        arrive en retard (page qui finit de charger, moteur au repos), la
        balançoire joue quand même en entier au lieu de sauter à mi-course. */
@@ -7523,14 +7644,16 @@ function menuNavNudge() {
        à son point de départ ou de lutter contre le doigt (sur iOS, les
        écritures sont de toute façon ignorées pendant l'inertie : la
        balançoire retrouve la main quand elle se termine). */
-    if (lastWritten !== null && Math.abs(nav.scrollLeft - lastWritten) > 1) {
-      start = nav.scrollLeft;
+    const cur = m.pos();
+    if (lastWritten !== null && Math.abs(cur - lastWritten) > 1) {
+      start = cur;
       t0 = t;
     }
     const p = Math.min(1, (t - t0) / dur);
-    const target = Math.max(0, Math.min(56, room - start));
-    try { nav.scrollLeft = start + target * Math.sin(Math.PI * ease(p)); } catch (e) { return; }
-    lastWritten = nav.scrollLeft;
+    const target = Math.max(0, Math.min(56, m.room()));
+    const want = start + target * Math.sin(Math.PI * ease(p));
+    m.advanceBy(want - cur);
+    lastWritten = m.pos();
     if (p < 1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
@@ -8192,7 +8315,7 @@ else sizeCoverMedallion();
       "Café gourmand": "Coffee with mini desserts",
       "Café liégeois": "Liège iced coffee",
       "Chocolat liégeois": "Liège iced chocolate",
-      "Madeleine": "Madeleine (house cocktail)",
+      "Madeleine": "Madeleine",
       "Café": "Coffee",
       "Décaféiné": "Decaffeinated",
       "Double café / décaféiné": "Double coffee / decaffeinated",
@@ -8338,19 +8461,19 @@ else sizeCoverMedallion();
       "Virgin Colada": "Virgin Colada",
       "Virgin Bloody Mary": "Virgin Bloody Mary",
       "Strawberry Colada": "Strawberry Colada",
-      "Caïpirinha": "Caipirinha (cachaça & lime)",
-      "Caïpiroska": "Caipiroska (vodka & lime)",
-      "Ti-Punch": "Ti' Punch (rum, lime & cane sugar)",
-      "St-Germain Spritz": "St-Germain Spritz (elderflower & prosecco)",
+      "Caïpirinha": "Caipirinha",
+      "Caïpiroska": "Caipiroska",
+      "Ti-Punch": "Ti' Punch",
+      "St-Germain Spritz": "St-Germain Spritz",
       "Suze Tonic": "Suze Tonic",
       "Jamaïcan Mule": "Jamaican Mule",
-      "Violette Royale": "Royal Violet (violet & champagne)",
-      "Spritz Violette": "Violet Spritz (violet, prosecco & soda)",
-      "Havane Passion": "Havana Passion (rum & passion fruit)",
-      "Passion Royal": "Royal Passion (prosecco, vodka & passion fruit)",
+      "Violette Royale": "Royal Violet",
+      "Spritz Violette": "Violet Spritz",
+      "Havane Passion": "Havana Passion",
+      "Passion Royal": "Royal Passion",
       "Expresso Martini": "Espresso Martini",
-      "St Valentin": "Valentine's (violet, lime & tonic)",
-      "Virgin Colline": "Virgin Colline (orange, pineapple & blackcurrant)",
+      "St Valentin": "Valentine's",
+      "Virgin Colline": "Virgin Colline",
       "Caramello": "Caramello (salted caramel ice cream)",
       "Le Colonel de la Colline": "The Colline Colonel (lime sorbet & vodka)",
       "N°": "No.",
@@ -8676,7 +8799,7 @@ else sizeCoverMedallion();
       "Porto": "Porto (vino fortificado)",
       "Vodka": "Vodka",
       "HH": "HH",
-      "Madeleine": "Madeleine (cóctel de la casa)",
+      "Madeleine": "Madeleine",
       "Mojito": "Mojito",
       "Mai Tai": "Mai Tai",
       "Piña Colada": "Piña Colada",
@@ -8697,19 +8820,19 @@ else sizeCoverMedallion();
       "Virgin Colada": "Virgin Colada",
       "Virgin Bloody Mary": "Virgin Bloody Mary",
       "Strawberry Colada": "Strawberry Colada",
-      "Caïpirinha": "Caipirinha (cachaça y lima)",
-      "Caïpiroska": "Caipiroska (vodka y lima)",
-      "Ti-Punch": "Ti' Punch (ron, lima y azúcar de caña)",
-      "St-Germain Spritz": "St-Germain Spritz (flor de saúco y prosecco)",
+      "Caïpirinha": "Caipirinha",
+      "Caïpiroska": "Caipiroska",
+      "Ti-Punch": "Ti' Punch",
+      "St-Germain Spritz": "St-Germain Spritz",
       "Suze Tonic": "Suze Tonic",
       "Jamaïcan Mule": "Jamaican Mule",
-      "Violette Royale": "Violeta Real (violeta y champán)",
-      "Spritz Violette": "Spritz de Violeta (violeta, prosecco y soda)",
-      "Havane Passion": "Habana Pasión (ron y maracuyá)",
-      "Passion Royal": "Pasión Real (prosecco, vodka y maracuyá)",
+      "Violette Royale": "Violeta Real",
+      "Spritz Violette": "Spritz de Violeta",
+      "Havane Passion": "Habana Pasión",
+      "Passion Royal": "Pasión Real",
       "Expresso Martini": "Espresso Martini",
-      "St Valentin": "San Valentín (violeta, lima y tónica)",
-      "Virgin Colline": "Virgin Colline (naranja, piña y grosella negra)",
+      "St Valentin": "San Valentín",
+      "Virgin Colline": "Virgin Colline",
       "Caramello": "Caramello (helado de caramelo salado)",
       "Le Colonel de la Colline": "El Coronel Colline (sorbete de lima y vodka)",
       "Tiramisu": "Tiramisú (mascarpone y café)",
@@ -9043,7 +9166,7 @@ else sizeCoverMedallion();
       "Porto": "Porto (angereicherter Wein)",
       "Vodka": "Vodka",
       "HH": "HH",
-      "Madeleine": "Madeleine (Cocktail des Hauses)",
+      "Madeleine": "Madeleine",
       "Mojito": "Mojito",
       "Mai Tai": "Mai Tai",
       "Piña Colada": "Piña Colada",
@@ -9064,19 +9187,19 @@ else sizeCoverMedallion();
       "Virgin Colada": "Virgin Colada",
       "Virgin Bloody Mary": "Virgin Bloody Mary",
       "Strawberry Colada": "Strawberry Colada",
-      "Caïpirinha": "Caipirinha (Cachaça & Limette)",
-      "Caïpiroska": "Caipiroska (Wodka & Limette)",
-      "Ti-Punch": "Ti' Punch (Rum, Limette & Rohrzucker)",
-      "St-Germain Spritz": "St-Germain Spritz (Holunderblüte & Prosecco)",
+      "Caïpirinha": "Caipirinha",
+      "Caïpiroska": "Caipiroska",
+      "Ti-Punch": "Ti' Punch",
+      "St-Germain Spritz": "St-Germain Spritz",
       "Suze Tonic": "Suze Tonic",
       "Jamaïcan Mule": "Jamaican Mule",
-      "Violette Royale": "Royal Violet (Veilchen & Champagner)",
-      "Spritz Violette": "Violetter Spritz (Veilchen, Prosecco & Soda)",
-      "Havane Passion": "Havana Passion (Rum & Maracuja)",
-      "Passion Royal": "Royal Passion (Prosecco, Wodka & Maracuja)",
+      "Violette Royale": "Royal Violet",
+      "Spritz Violette": "Violetter Spritz",
+      "Havane Passion": "Havana Passion",
+      "Passion Royal": "Royal Passion",
       "Expresso Martini": "Espresso Martini",
-      "St Valentin": "Valentine's (Veilchen, Limette & Tonic)",
-      "Virgin Colline": "Virgin Colline (Orange, Ananas & schwarze Johannisbeere)",
+      "St Valentin": "Valentine's",
+      "Virgin Colline": "Virgin Colline",
       "Caramello": "Caramello (Eis mit gesalzenem Karamell)",
       "Le Colonel de la Colline": "Der Colline Colonel (Limettensorbet & Wodka)",
       "Tiramisu": "Tiramisu (Mascarpone & Kaffee)",
@@ -9409,7 +9532,7 @@ else sizeCoverMedallion();
       "Porto": "Porto (vino liquoroso)",
       "Vodka": "Vodka",
       "HH": "HH",
-      "Madeleine": "Madeleine (cocktail della casa)",
+      "Madeleine": "Madeleine",
       "Mojito": "Mojito",
       "Mai Tai": "Mai Tai",
       "Piña Colada": "Piña Colada",
@@ -9430,19 +9553,19 @@ else sizeCoverMedallion();
       "Virgin Colada": "Virgin Colada",
       "Virgin Bloody Mary": "Virgin Bloody Mary",
       "Strawberry Colada": "Strawberry Colada",
-      "Caïpirinha": "Caipirinha (cachaça e lime)",
-      "Caïpiroska": "Caipiroska (vodka e lime)",
-      "Ti-Punch": "Ti' Punch (rum, lime e zucchero di canna)",
-      "St-Germain Spritz": "St-Germain Spritz (sambuco e prosecco)",
+      "Caïpirinha": "Caipirinha",
+      "Caïpiroska": "Caipiroska",
+      "Ti-Punch": "Ti' Punch",
+      "St-Germain Spritz": "St-Germain Spritz",
       "Suze Tonic": "Suze Tonic",
       "Jamaïcan Mule": "Jamaican Mule",
-      "Violette Royale": "Violetta Reale (viola e champagne)",
-      "Spritz Violette": "Spritz alla Viola (viola, prosecco e soda)",
-      "Havane Passion": "Havana Passion (rum e frutto della passione)",
-      "Passion Royal": "Passione Reale (prosecco, vodka e frutto della passione)",
+      "Violette Royale": "Violetta Reale",
+      "Spritz Violette": "Spritz alla Viola",
+      "Havane Passion": "Havana Passion",
+      "Passion Royal": "Passione Reale",
       "Expresso Martini": "Espresso Martini",
-      "St Valentin": "San Valentino (viola, lime e tonica)",
-      "Virgin Colline": "Virgin Colline (arancia, ananas e ribes nero)",
+      "St Valentin": "San Valentino",
+      "Virgin Colline": "Virgin Colline",
       "Caramello": "Caramello (gelato al caramello salato)",
       "Le Colonel de la Colline": "Il Colonnello Colline (sorbetto al lime e vodka)",
       "Tiramisu": "Tiramisù (mascarpone e caffè)",
@@ -9775,7 +9898,7 @@ else sizeCoverMedallion();
       "Porto": "Porto (vinho fortificado)",
       "Vodka": "Vodka",
       "HH": "HH",
-      "Madeleine": "Madeleine (cocktail da casa)",
+      "Madeleine": "Madeleine",
       "Mojito": "Mojito",
       "Mai Tai": "Mai Tai",
       "Piña Colada": "Piña Colada",
@@ -9796,19 +9919,19 @@ else sizeCoverMedallion();
       "Virgin Colada": "Virgin Colada",
       "Virgin Bloody Mary": "Virgin Bloody Mary",
       "Strawberry Colada": "Strawberry Colada",
-      "Caïpirinha": "Caipirinha (cachaça e lima)",
-      "Caïpiroska": "Caipiroska (vodka e lima)",
-      "Ti-Punch": "Ti' Punch (rum, lima e açúcar de cana)",
-      "St-Germain Spritz": "St-Germain Spritz (flor de sabugueiro e prosecco)",
+      "Caïpirinha": "Caipirinha",
+      "Caïpiroska": "Caipiroska",
+      "Ti-Punch": "Ti' Punch",
+      "St-Germain Spritz": "St-Germain Spritz",
       "Suze Tonic": "Suze Tonic",
       "Jamaïcan Mule": "Jamaican Mule",
-      "Violette Royale": "Violeta Real (violeta e champanhe)",
-      "Spritz Violette": "Spritz de Violeta (violeta, prosecco e soda)",
-      "Havane Passion": "Havana Passion (rum e maracujá)",
-      "Passion Royal": "Paixão Real (prosecco, vodka e maracujá)",
+      "Violette Royale": "Violeta Real",
+      "Spritz Violette": "Spritz de Violeta",
+      "Havane Passion": "Havana Passion",
+      "Passion Royal": "Paixão Real",
       "Expresso Martini": "Espresso Martini",
-      "St Valentin": "São Valentim (violeta, lima e tónica)",
-      "Virgin Colline": "Virgin Colline (laranja, ananás e groselha negra)",
+      "St Valentin": "São Valentim",
+      "Virgin Colline": "Virgin Colline",
       "Caramello": "Caramello (gelado de caramelo salgado)",
       "Le Colonel de la Colline": "O Coronel Colline (sorvete de lima e vodka)",
       "Tiramisu": "Tiramisu (mascarpone e café)",
@@ -10141,7 +10264,7 @@ else sizeCoverMedallion();
       "Porto": "Porto (versterkte wijn)",
       "Vodka": "Vodka",
       "HH": "HH",
-      "Madeleine": "Madeleine (cocktail van het huis)",
+      "Madeleine": "Madeleine",
       "Mojito": "Mojito",
       "Mai Tai": "Mai Tai",
       "Piña Colada": "Piña Colada",
@@ -10162,19 +10285,19 @@ else sizeCoverMedallion();
       "Virgin Colada": "Virgin Colada",
       "Virgin Bloody Mary": "Virgin Bloody Mary",
       "Strawberry Colada": "Strawberry Colada",
-      "Caïpirinha": "Caipirinha (cachaça & limoen)",
-      "Caïpiroska": "Caipiroska (wodka & limoen)",
-      "Ti-Punch": "Ti' Punch (rum, limoen & rietsuiker)",
-      "St-Germain Spritz": "St-Germain Spritz (vlierbloesem & prosecco)",
+      "Caïpirinha": "Caipirinha",
+      "Caïpiroska": "Caipiroska",
+      "Ti-Punch": "Ti' Punch",
+      "St-Germain Spritz": "St-Germain Spritz",
       "Suze Tonic": "Suze Tonic",
       "Jamaïcan Mule": "Jamaican Mule",
-      "Violette Royale": "Royal Violet (viooltje & champagne)",
-      "Spritz Violette": "Violette Spritz (viooltje, prosecco & soda)",
-      "Havane Passion": "Havana Passion (rum & passievrucht)",
-      "Passion Royal": "Royal Passion (prosecco, wodka & passievrucht)",
+      "Violette Royale": "Royal Violet",
+      "Spritz Violette": "Violette Spritz",
+      "Havane Passion": "Havana Passion",
+      "Passion Royal": "Royal Passion",
       "Expresso Martini": "Espresso Martini",
-      "St Valentin": "Valentijn (viooltje, limoen & tonic)",
-      "Virgin Colline": "Virgin Colline (sinaasappel, ananas & zwarte bes)",
+      "St Valentin": "Valentijn",
+      "Virgin Colline": "Virgin Colline",
       "Caramello": "Caramello (ijs met gezouten karamel)",
       "Le Colonel de la Colline": "De Colline Colonel (limoenijs & wodka)",
       "Tiramisu": "Tiramisu (mascarpone & koffie)",
@@ -10263,7 +10386,7 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "أناقة ومذاقات",
       "Mocktails": "الموكتيلات",
       "✦ Sans alcool —": "✦ بدون كحول —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ ساعة السعادة · 17:00 → 23:00 ✦",
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ ساعة السعادة (س.س) · 17:00 → 23:00 ✦",
       "Prix": "السعر",
       "Appellation": "التسمية",
       "Vin blanc": "نبيذ أبيض",
@@ -10474,7 +10597,7 @@ else sizeCoverMedallion();
       "Salade": "سلطة",
       "PINTE": "بينت",
       "Madeleine": "مادلين",
-      "HH": "التخفيض",
+      "HH": "س.س",
       "MÉTRO GAMBETTA": "ميترو غامبيتا",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "4 شارع بيلغراند • 75020 باريس • ساحة غامبيتا",
       "COLLINE": "كولين",
@@ -10547,10 +10670,10 @@ else sizeCoverMedallion();
       "Expresso Martini": "إسبريسو مارتيني",
       "St Valentin": "سان فالنتان",
       "Bora Bora": "بورا بورا",
-      "Virgin Colline": "كولين بدون كحول",
-      "Virgin Mojito": "موخيتو بدون كحول",
-      "Virgin Colada": "كولادا بدون كحول",
-      "Virgin Bloody Mary": "بلودي ماري بدون كحول",
+      "Virgin Colline": "فيرجين كولين",
+      "Virgin Mojito": "فيرجين موخيتو",
+      "Virgin Colada": "فيرجين كولادا",
+      "Virgin Bloody Mary": "فيرجين بلودي ماري",
       "N°": "رقم",
       "Bordeaux AOP": "بوردو — تسمية محمية",
       "— Château la Gabarre": "— شاتو لا غابار",
@@ -10647,7 +10770,7 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "优雅与风味",
       "Mocktails": "无酒精鸡尾酒",
       "✦ Sans alcool —": "✦ 无酒精 —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ 欢乐时光 · 17点 → 23点 ✦",
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ 欢乐时光 (欢时) · 17点 → 23点 ✦",
       "Prix": "价格",
       "Appellation": "产区",
       "Vin blanc": "白葡萄酒",
@@ -10858,7 +10981,7 @@ else sizeCoverMedallion();
       "Salade": "沙拉",
       "PINTE": "品脱",
       "Madeleine": "玛德琳",
-      "HH": "特惠",
+      "HH": "欢时",
       "MÉTRO GAMBETTA": "甘贝塔地铁站",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "贝勒格朗街4号 • 75020 巴黎 • 甘贝塔广场",
       "COLLINE": "拉科林",
@@ -10931,10 +11054,10 @@ else sizeCoverMedallion();
       "Expresso Martini": "浓缩咖啡马天尼",
       "St Valentin": "情人节",
       "Bora Bora": "波拉波拉",
-      "Virgin Colline": "无酒精拉科林",
-      "Virgin Mojito": "无酒精莫吉托",
-      "Virgin Colada": "无酒精椰林飘香",
-      "Virgin Bloody Mary": "无酒精血腥玛丽",
+      "Virgin Colline": "维珍拉科林",
+      "Virgin Mojito": "维珍莫吉托",
+      "Virgin Colada": "维珍椰林飘香",
+      "Virgin Bloody Mary": "维珍血腥玛丽",
       "N°": "编号",
       "Bordeaux AOP": "波尔多法定产区",
       "— Château la Gabarre": "— 加巴尔酒庄",
@@ -11031,7 +11154,7 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "Елегантність і смаки",
       "Mocktails": "Моктейлі",
       "✦ Sans alcool —": "✦ Без алкоголю —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Щасливі години · 17:00 → 23:00 ✦",
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Щасливі години (Щ.Г.) · 17:00 → 23:00 ✦",
       "Prix": "Ціна",
       "Appellation": "Апелласьйон",
       "Vin blanc": "Біле вино",
@@ -11241,7 +11364,7 @@ else sizeCoverMedallion();
       "Salade": "Салат",
       "PINTE": "ПІНТА",
       "Madeleine": "Мадлен",
-      "HH": "ЗНИЖКА",
+      "HH": "Щ.Г.",
       "MÉTRO GAMBETTA": "МЕТРО ГАМБЕТТА",
       "Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.": "Зелений салат, помідор, панірована куряча відбивна, яйце мімоза, крутон, тост із козячого сиру.",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "4 вул. Бельгран • 75020 Париж • площа Гамбетта",
@@ -11415,7 +11538,7 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "エレガンスと味わい",
       "Mocktails": "ノンアルコールカクテル",
       "✦ Sans alcool —": "✦ ノンアルコール —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ ハッピーアワー · 17時 → 23時 ✦",
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ ハッピーアワー (ハピアワ) · 17時 → 23時 ✦",
       "Prix": "価格",
       "Appellation": "原産地呼称",
       "Vin blanc": "白ワイン",
@@ -11625,8 +11748,8 @@ else sizeCoverMedallion();
       "Petit déjeuner": "朝食",
       "Salade": "サラダ",
       "PINTE": "パイント",
-      "Madeleine": "マドレーヌ（ハウスカクテル）",
-      "HH": "割引",
+      "Madeleine": "マドレーヌ",
+      "HH": "ハピアワ",
       "MÉTRO GAMBETTA": "ガンベッタ駅",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "ベルグラン通り4番 • 75020パリ • ガンベッタ広場",
       "COLLINE": "コリーヌ",
@@ -11671,16 +11794,16 @@ else sizeCoverMedallion();
       "Corona": "コロナ",
       "Légionnaire IPA": "レジオネールIPA（フランスクラフトIPA）",
       "Mojito": "モヒート",
-      "Caïpirinha": "カイピリーニャ（カシャッサとライム）",
-      "Caïpiroska": "カイピロスカ（ウォッカとライム）",
-      "Ti-Punch": "ティパンチ（ラム、ライム、きび糖）",
+      "Caïpirinha": "カイピリーニャ",
+      "Caïpiroska": "カイピロスカ",
+      "Ti-Punch": "ティパンチ",
       "Mai Tai": "マイタイ",
       "Piña Colada": "ピニャコラーダ",
       "Strawberry Colada": "ストロベリーコラーダ",
       "Cuba Libre": "キューバリブレ",
       "Tequila Sunrise": "テキーラサンライズ",
       "Spritz": "スプリッツ",
-      "St-Germain Spritz": "サンジェルマンスプリッツ（エルダーフラワーとプロセッコ）",
+      "St-Germain Spritz": "サンジェルマンスプリッツ",
       "Suze Tonic": "スーズトニック",
       "Moscow Mule": "モスクワミュール",
       "Jamaïcan Mule": "ジャマイカンミュール",
@@ -11689,17 +11812,17 @@ else sizeCoverMedallion();
       "Cosmopolitan": "コスモポリタン",
       "Sex on the Beach": "セックス・オン・ザ・ビーチ",
       "Bloody Mary": "ブラッディメアリー",
-      "Violette Royale": "ロイヤルバイオレット（バイオレットとシャンパン）",
-      "Spritz Violette": "バイオレットスプリッツ（バイオレット、プロセッコとソーダ）",
+      "Violette Royale": "ロイヤルバイオレット",
+      "Spritz Violette": "バイオレットスプリッツ",
       "Aviation": "アヴィエーション",
-      "Havane Passion": "ハバナパッション（ラムとパッションフルーツ）",
-      "Passion Royal": "ロイヤルパッション（プロセッコ、ウォッカとパッションフルーツ）",
+      "Havane Passion": "ハバナパッション",
+      "Passion Royal": "ロイヤルパッション",
       "Margarita": "マルガリータ",
       "Black Russian": "ブラックルシアン",
       "Expresso Martini": "エスプレッソマティーニ",
-      "St Valentin": "バレンタイン（バイオレット、ライムとトニック）",
+      "St Valentin": "バレンタイン",
       "Bora Bora": "ボラボラ",
-      "Virgin Colline": "ヴァージンコリーヌ（オレンジ、パイナップルとカシス）",
+      "Virgin Colline": "ヴァージンコリーヌ",
       "Virgin Mojito": "ヴァージンモヒート",
       "Virgin Colada": "ヴァージンコラーダ",
       "Virgin Bloody Mary": "ヴァージンブラッディメアリー",
@@ -11799,7 +11922,7 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "우아함과 풍미",
       "Mocktails": "논알콜 칵테일",
       "✦ Sans alcool —": "✦ 논알콜 —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ 해피아워 · 17시 → 23시 ✦",
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ 해피아워 (Happy Hour) · 17시 → 23시 ✦",
       "Prix": "가격",
       "Appellation": "원산지 호칭",
       "Vin blanc": "화이트 와인",
@@ -12009,8 +12132,8 @@ else sizeCoverMedallion();
       "Petit déjeuner": "아침 식사",
       "Salade": "샐러드",
       "PINTE": "파인트",
-      "Madeleine": "마들렌 (하우스 칵테일)",
-      "HH": "할인",
+      "Madeleine": "마들렌",
+      "HH": "해피아워",
       "MÉTRO GAMBETTA": "감베타 역",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "벨그랑 거리 4 • 75020 파리 • 감베타 광장",
       "COLLINE": "콜린",
@@ -12055,16 +12178,16 @@ else sizeCoverMedallion();
       "Corona": "코로나",
       "Légionnaire IPA": "레지오네르 IPA (프랑스 수제 맥주 IPA)",
       "Mojito": "모히토",
-      "Caïpirinha": "카이피리냐 (카샤사와 라임)",
-      "Caïpiroska": "카이피로스카 (보드카와 라임)",
-      "Ti-Punch": "티 푼치 (럼, 라임과 사탕수수 설탕)",
+      "Caïpirinha": "카이피리냐",
+      "Caïpiroska": "카이피로스카",
+      "Ti-Punch": "티 푼치",
       "Mai Tai": "마이 타이",
       "Piña Colada": "피냐 콜라다",
       "Strawberry Colada": "딸기 콜라다",
       "Cuba Libre": "쿠바 리브레",
       "Tequila Sunrise": "데킬라 선라이즈",
       "Spritz": "스프리츠",
-      "St-Germain Spritz": "생제르맹 스프리츠 (엘더플라워와 프로세코)",
+      "St-Germain Spritz": "생제르맹 스프리츠",
       "Suze Tonic": "수즈 토닉",
       "Moscow Mule": "모스코우 뮬",
       "Jamaïcan Mule": "자메이칸 뮬",
@@ -12073,17 +12196,17 @@ else sizeCoverMedallion();
       "Cosmopolitan": "코스모폴리탄",
       "Sex on the Beach": "섹스 온 더 비치",
       "Bloody Mary": "블러디 메리",
-      "Violette Royale": "로얄 바이올렛 (바이올렛과 샴페인)",
-      "Spritz Violette": "바이올렛 스프리츠 (바이올렛, 프로세코와 소다)",
+      "Violette Royale": "로얄 바이올렛",
+      "Spritz Violette": "바이올렛 스프리츠",
       "Aviation": "아비에이션",
-      "Havane Passion": "하바나 패션 (럼과 패션프루트)",
-      "Passion Royal": "로얄 패션 (프로세코, 보드카와 패션프루트)",
+      "Havane Passion": "하바나 패션",
+      "Passion Royal": "로얄 패션",
       "Margarita": "마가리타",
       "Black Russian": "블랙 러시안",
       "Expresso Martini": "에스프레소 마티니",
-      "St Valentin": "발렌타인 (바이올렛, 라임과 토닉)",
+      "St Valentin": "발렌타인",
       "Bora Bora": "보라보라",
-      "Virgin Colline": "버진 콜린 (오렌지, 파인애플과 블랙커런트)",
+      "Virgin Colline": "버진 콜린",
       "Virgin Mojito": "버진 모히토",
       "Virgin Colada": "버진 콜라다",
       "Virgin Bloody Mary": "버진 블러디 메리",
@@ -12309,7 +12432,7 @@ else sizeCoverMedallion();
       "Café gourmand": "Kawa z mini deserami",
       "Café liégeois": "Kawa po liégejsku",
       "Chocolat liégeois": "Czekolada po liégejsku",
-      "Madeleine": "Madeleine (koktajl domu)",
+      "Madeleine": "Madeleine",
       "Café": "Kawa",
       "Décaféiné": "Bez kofeiny",
       "Double café / décaféiné": "Podwójna kawa / bez kofeiny",
@@ -12455,19 +12578,19 @@ else sizeCoverMedallion();
       "Virgin Colada": "Virgin Colada",
       "Virgin Bloody Mary": "Virgin Bloody Mary",
       "Strawberry Colada": "Strawberry Colada",
-      "Caïpirinha": "Caipirinha (cachaça i limonka)",
-      "Caïpiroska": "Caipiroska (wódka i limonka)",
-      "Ti-Punch": "Ti' Punch (rum, limonka i cukier trzcinowy)",
-      "St-Germain Spritz": "St-Germain Spritz (bez czarnego bzu i prosecco)",
+      "Caïpirinha": "Caipirinha",
+      "Caïpiroska": "Caipiroska",
+      "Ti-Punch": "Ti' Punch",
+      "St-Germain Spritz": "St-Germain Spritz",
       "Suze Tonic": "Suze Tonic",
       "Jamaïcan Mule": "Jamaican Mule",
-      "Violette Royale": "Royal Violet (fiołek i szampan)",
-      "Spritz Violette": "Violet Spritz (fiołek, prosecco i soda)",
-      "Havane Passion": "Havana Passion (rum i marakuja)",
-      "Passion Royal": "Royal Passion (prosecco, wódka i marakuja)",
+      "Violette Royale": "Royal Violet",
+      "Spritz Violette": "Violet Spritz",
+      "Havane Passion": "Havana Passion",
+      "Passion Royal": "Royal Passion",
       "Expresso Martini": "Espresso Martini",
-      "St Valentin": "Walentynka (fiołek, limonka i woda tonikowa)",
-      "Virgin Colline": "Virgin Colline (pomarańcza, ananas i czarna porzeczka)",
+      "St Valentin": "Walentynka",
+      "Virgin Colline": "Virgin Colline",
       "Caramello": "Caramello (lody z solonym karmelem)",
       "Le Colonel de la Colline": "Pułkownik La Colline (sorbet limonkowy i wódka)",
       "N°": "Nr",
@@ -12675,7 +12798,7 @@ else sizeCoverMedallion();
       "Café gourmand": "Mini tatlılarla kahve",
       "Café liégeois": "Liège buzlu kahve",
       "Chocolat liégeois": "Liège buzlu çikolata",
-      "Madeleine": "Madeleine (ev kokteyli)",
+      "Madeleine": "Madeleine",
       "Café": "Kahve",
       "Décaféiné": "Kafeinsiz",
       "Double café / décaféiné": "Çift kahve / kafeinsiz",
@@ -12821,19 +12944,19 @@ else sizeCoverMedallion();
       "Virgin Colada": "Virgin Colada",
       "Virgin Bloody Mary": "Virgin Bloody Mary",
       "Strawberry Colada": "Strawberry Colada",
-      "Caïpirinha": "Caipirinha (cachaça ve misket limonu)",
-      "Caïpiroska": "Caipiroska (votka ve misket limonu)",
-      "Ti-Punch": "Ti' Punch (rom, misket limonu ve kamış şekeri)",
-      "St-Germain Spritz": "St-Germain Spritz (mürver çiçeği ve prosecco)",
+      "Caïpirinha": "Caipirinha",
+      "Caïpiroska": "Caipiroska",
+      "Ti-Punch": "Ti' Punch",
+      "St-Germain Spritz": "St-Germain Spritz",
       "Suze Tonic": "Suze Tonic",
       "Jamaïcan Mule": "Jamaican Mule",
-      "Violette Royale": "Royal Violet (menekşe ve şampanya)",
-      "Spritz Violette": "Violet Spritz (menekşe, prosecco ve soda)",
-      "Havane Passion": "Havana Passion (rom ve tutku meyvesi)",
-      "Passion Royal": "Royal Passion (prosecco, votka ve tutku meyvesi)",
+      "Violette Royale": "Royal Violet",
+      "Spritz Violette": "Violet Spritz",
+      "Havane Passion": "Havana Passion",
+      "Passion Royal": "Royal Passion",
       "Expresso Martini": "Espresso Martini",
-      "St Valentin": "Sevgililer (menekşe, misket limonu ve tonik)",
-      "Virgin Colline": "Virgin Colline (portakal, ananas ve siyah frenk üzümü)",
+      "St Valentin": "Sevgililer",
+      "Virgin Colline": "Virgin Colline",
       "Caramello": "Caramello (tuzlu karamel dondurması)",
       "Le Colonel de la Colline": "La Colline Albayı (misket limonu sorbesi ve votka)",
       "N°": "No.",
@@ -12915,7 +13038,7 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "ऐलिगेंस और स्वाद",
       "Mocktails": "मॉकटेल",
       "✦ Sans alcool —": "✦ बिना अल्कोहल —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ हैप्पी आवर · 17:00 → 23:00 ✦",
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ हैप्पी आवर (है.आ.) · 17:00 → 23:00 ✦",
       "Prix": "कीमत",
       "Appellation": "एपेलेशन",
       "Vin blanc": "व्हाइट वाइन",
@@ -13125,8 +13248,8 @@ else sizeCoverMedallion();
       "Petit déjeuner": "नाश्ता",
       "Salade": "सलाद",
       "PINTE": "पिंट",
-      "Madeleine": "मैडलीन (हाउस कॉकटेल)",
-      "HH": "छूट",
+      "Madeleine": "मैडलीन",
+      "HH": "है.आ.",
       "MÉTRO GAMBETTA": "गांबेता मेट्रो",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "रू बेलग्रां 4 • 75020 पेरिस • प्लास गांबेता",
       "COLLINE": "कोलीन",
@@ -13171,16 +13294,16 @@ else sizeCoverMedallion();
       "Corona": "कोरोना",
       "Légionnaire IPA": "लेजिओनेयर IPA (फ्रेंच क्राफ्ट IPA)",
       "Mojito": "मोहितो",
-      "Caïpirinha": "काइपिरिन्या (काशासा और लाइम)",
-      "Caïpiroska": "काइपिरोस्का (वोदका और लाइम)",
-      "Ti-Punch": "ति पंच (रम, लाइम और गन्ने की चीनी)",
+      "Caïpirinha": "काइपिरिन्या",
+      "Caïpiroska": "काइपिरोस्का",
+      "Ti-Punch": "ति पंच",
       "Mai Tai": "माई ताई",
       "Piña Colada": "पिना कोलादा",
       "Strawberry Colada": "स्ट्रॉबेरी कोलादा",
       "Cuba Libre": "क्यूबा लिब्रे",
       "Tequila Sunrise": "तकीला सनराइज़",
       "Spritz": "स्प्रिट्ज़",
-      "St-Germain Spritz": "सें-जर्में स्प्रिट्ज़ (एल्डरफ्लावर और प्रोसेको)",
+      "St-Germain Spritz": "सें-जर्में स्प्रिट्ज़",
       "Suze Tonic": "सूज़ टॉनिक",
       "Moscow Mule": "मॉस्को म्यूल",
       "Jamaïcan Mule": "जमैकन म्यूल",
@@ -13189,17 +13312,17 @@ else sizeCoverMedallion();
       "Cosmopolitan": "कॉस्मोपॉलिटन",
       "Sex on the Beach": "सेक्स ऑन द बीच",
       "Bloody Mary": "ब्लडी मैरी",
-      "Violette Royale": "रॉयल वायलेट (वायलेट और शैम्पेन)",
-      "Spritz Violette": "वायलेट स्प्रिट्ज़ (वायलेट, प्रोसेको और सोडा)",
+      "Violette Royale": "रॉयल वायलेट",
+      "Spritz Violette": "वायलेट स्प्रिट्ज़",
       "Aviation": "एविएशन",
-      "Havane Passion": "हवाना पैशन (रम और पैशन फ्रूट)",
-      "Passion Royal": "रॉयल पैशन (प्रोसेको, वोदका और पैशन फ्रूट)",
+      "Havane Passion": "हवाना पैशन",
+      "Passion Royal": "रॉयल पैशन",
       "Margarita": "मार्गरीटा",
       "Black Russian": "ब्लैक रशियन",
       "Expresso Martini": "एस्प्रेसो मार्टिनी",
-      "St Valentin": "वैलेंटाइन (वायलेट, लाइम और टॉनिक)",
+      "St Valentin": "वैलेंटाइन",
       "Bora Bora": "बोरा बोरा",
-      "Virgin Colline": "वर्जिन कोलीन (संतरा, अनानास और ब्लैककरेंट)",
+      "Virgin Colline": "वर्जिन कोलीन",
       "Virgin Mojito": "वर्जिन मोहितो",
       "Virgin Colada": "वर्जिन कोलादा",
       "Virgin Bloody Mary": "वर्जिन ब्लडी मैरी",
@@ -13341,10 +13464,44 @@ else sizeCoverMedallion();
       });
     }
     if (save) { try { localStorage.setItem(STORE_KEY, lang); } catch (e) {} }
+    /* Étiquettes écrites dans la feuille de style (mode empilé des cocktails,
+       aujourd'hui inactif) : « Prix » et le sigle du happy hour y étaient
+       figés en français. Ils viennent du dictionnaire, comme les en-têtes de
+       colonne — une seule source pour les deux, et le sigle de l'en-tête de
+       prix reste le même que celui de l'explication dorée du panneau. */
+    var root = document.documentElement;
+    var hh = (lang === 'fr') ? 'HH' : (d['HH'] != null ? d['HH'] : 'HH');
+    var prix = (lang === 'fr') ? 'Prix' : (d['Prix'] != null ? d['Prix'] : 'Prix');
+    root.style.setProperty('--hh-abbr', '"' + String(hh).replace(/"/g, '') + '"');
+    root.style.setProperty('--label-prix', '"' + String(prix).replace(/"/g, '') + '"');
     /* Les libellés traduits changent les largeurs et les hauteurs :
        recalage des bandeaux, du ruban d'onglets et du médaillon. */
     if (typeof syncTopControlsHeight === 'function') syncTopControlsHeight();
     if (typeof syncMenuNavHints === 'function') syncMenuNavHints();
+    /* Le ruban d'onglets vient de changer de sens (arabe) ou de largeur
+       (libellés traduits) : la position défilée, elle, n'a pas bougé d'un
+       pixel — elle ne désigne donc plus le même endroit. On recentre
+       l'onglet actif, comme au clic sur un onglet. */
+    if (typeof centerMenuNavButton === 'function') {
+      var activeBtn = document.querySelector('.menu-nav .nav-btn.active');
+      if (activeBtn) {
+        centerMenuNavButton(activeBtn);
+        /* Les onglets n'ont pas encore leur largeur définitive : leur
+           `transition: .2s` (voir .nav-btn) court encore, et un libellé
+           plus long finit de s'installer après coup. Ce premier recentrage
+           vise donc des boîtes de l'ANCIENNE langue — en passant de
+           l'arabe à l'allemand, l'onglet « desserts » restait 29 px hors
+           de la fenêtre du ruban. Un second passage, une fois les
+           largeurs stabilisées, cale définitivement l'onglet actif. */
+        setTimeout(function () {
+          /* On ré-interroge l'onglet actif au moment du rappel : si
+             l'utilisateur a changé de section entre-temps, c'est la
+             nouvelle qui doit être centrée, pas l'ancienne. */
+          var now = document.querySelector('.menu-nav .nav-btn.active');
+          if (now) centerMenuNavButton(now);
+        }, 250);
+      }
+    }
     if (typeof sizeCoverMedallion === 'function') sizeCoverMedallion();
   }
   /* ---- Menu du globe : clic, clavier, fermeture au dehors ---- */

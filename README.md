@@ -624,3 +624,98 @@ verticalement, un `<path>` par rectangle, `fill="currentColor"`.
   tiret cadratin, reste en graisse normale (`400`, `.wine-producer`) comme
   l'information secondaire de la carte ; titres et en-têtes déjà en
   capitales ; contenus et prix identiques à la carte (vérifiés par OCR).
+
+## Correctifs du 12/09/2026 — langues, bandeau RTL, pastilles, Formules
+
+Campagne de contrôle menée sur les quinze langues (fr, en, es, de, it, pt, nl,
+ar, zh, uk, ja, ko, pl, tr, hi), largeurs de 320 à 1440 px.
+
+### Cocktails : le titre seul, la composition intacte
+Les traductions des cocktails portaient une glose collée au titre
+(« Virgin Mojito — mojito sans alcool »). Cent vingt et une gloses ont été
+retirées ; les titres retrouvent leur longueur de carte et ne se replient plus
+sur trois lignes. Les lignes de composition (`price-list__note`, ex.
+« Rhum, menthe fraîche, citron vert, sucre de canne, eau gazeuse ») sont
+conservées à l'identique — ce sont elles qui informent. Les entrées sans
+équivalent (« Mojito » en arabe, en chinois) ont reçu une transcription
+(فيرجين موخيتو, 维珍莫吉托…) plutôt qu'une traduction de fantaisie.
+
+### Happy Hour : le sigle de chaque langue, expliqué en or
+L'en-tête de la colonne des prix réduits disait « HH » en toutes lettres latines
+ou un mot générique (« Réduction », التخفيض, ЗНИЖКА, 割引, 할인, छूट). Il porte
+maintenant l'abréviation **propre à la langue** — س.س, 欢时, Щ.Г., ハピアワ,
+해피아워, है.आ. — et la ligne dorée du panneau la développe à côté du titre
+(« ✦ Щасливі години (Щ.Г.) · 17:00 → 23:00 ✦ »). Le coréen fait exception :
+son sigle 해피아워 est déjà la transcription de « Happy Hour », la parenthèse
+serait redondante. Les en-têtes écrits en CSS lisent les deux valeurs posées par
+`applyLang` (`--label-prix`, `--hh-abbr`), jamais le français en dur. Colonne
+élargie pour le japonais et le coréen (`--col-prix: 4.9rem`) : mesuré à 320 px,
+« ハピアワ » tient sur 50,5 px dans une colonne de 78,4 px, sans mordre sur
+« Prix ».
+
+### Bandeau de sélection : le sens de lecture commande les flèches
+En arabe, la rangée flex met « sections précédentes » à droite. Les chevrons
+sont donc retournés en RTL (`html[dir="rtl"] … .menu-nav-hint svg`) : chacun
+regarde vers **l'extérieur de son côté**, c'est-à-dire dans le sens du défilement
+qu'il provoque. Les flèches ne recouvrent plus jamais un onglet (elles ont leur
+propre colonne dans la rangée), et le calcul de défilement repose sur
+`navMetrics()` — position comptée dans le sens de lecture, déplacement en pixels
+physiques (`scrollBy`), place restante mesurée sur les boîtes : la même formule
+vaut en LTR et en RTL. Le « coup de pouce » d'entrée dans la carte part du bon
+côté et révèle bien l'onglet suivant. Enfin, `applyLang` recentre l'onglet actif
+**après** la transition des libellés (250 ms) : sans ce second passage, passé de
+l'arabe à l'allemand, « desserts » restait 29 px hors de la fenêtre du ruban.
+
+### Pastilles : le texte ne déborde plus de son bouton
+- Boutons du bandeau du haut : ils se partageaient la largeur à parts égales
+  (`flex: 1 1 0`) et l'allemand « 📖 Speise- & Getränkekarte » débordait de sa
+  pastille de 11,7 px pendant que « Startseite » laissait du vide. Base `auto` :
+  le libellé long puise dans le mou du court, sans réduire la police.
+- Ruban des sections : flèches dans le flux (plus de surimpression), fondu de
+  16 px aux deux bords (retourné en RTL), rembourrage réduit à 4 px.
+- Vérification : `node tools/check-pills.mjs` — 15 langues × 11 largeurs,
+  aucun débordement, toutes les langues atteignables. Le contrôle ouvre le menu
+  des langues dans la vue « carte », exige un panneau entièrement dans la
+  fenêtre **et réellement défilant** quand la liste est plus haute (un
+  `overflow: hidden` se laisse défiler par le script, jamais par le doigt), et
+  échoue si l'onglet actif sort du ruban.
+
+### Formules : médailles sans texte, listes alignées
+- **Entrée, Plat, Dessert** : les trois médailles ont été redessinées au trait
+  d'après les vignettes de la page 4 du PDF — coupe de crudités à trois
+  feuilles, cloche de service fumante sur son plateau, coupe de glace garnie
+  d'une cerise. **Aucun texte à l'intérieur** : le libellé vit dans le titre, à
+  côté, traduit avec le site (c'est déjà ce que fait la carte papier, où
+  « ENTRÉE » est écrit sous le dessin). Les règles `.fmb-svg-arc` et la police
+  japonaise associée, devenues inutiles, ont été supprimées.
+- **Listes « au choix »** : chaque ligne était un conteneur flex, si bien que le
+  nom et sa précision (« 2 boules de glace » puis « Parfum au choix ») étaient
+  deux blocs centrés chacun pour soi — la précision ne démarrait pas sous le
+  nom et la liste dessinait un escalier. La ligne est désormais un simple bloc :
+  l'étoile est posée en marge (`inset-inline-start`, donc du bon côté en
+  arabe) et tout le texte coule d'un seul flux, sur une seule verticale. Le
+  bloc de liste prend la largeur de sa plus longue ligne (`width: max-content`,
+  centré) : les étoiles s'alignent entre elles tout en restant centrées sous le
+  titre, et `max-width: 100%` laisse la ligne se replier plutôt que déborder.
+- Vérification : `node tools/check-fm.mjs` — 15 langues × 4 largeurs : aucun
+  débordement, aucune ligne désalignée (l'alignement se mesure dans le sens de
+  lecture : bord gauche en LTR, bord droit en RTL).
+
+### Trois contrôles à lancer avant de livrer
+| Commande | Ce qu'elle vérifie | Coût |
+| --- | --- | --- |
+| `node tools/check-pills.mjs` | pastilles et bandeaux (texte dans sa boîte, pas de chevauchement) + menu des langues atteignable, fenêtres basses comprises | ≈ 4 min |
+| `node tools/check-rtl-nav.mjs` | sens des flèches du bandeau, côté où elles se rangent, avancée/recul réels, recentrage après changement de langue (fr et ar) | ≈ 15 s |
+| `node tools/check-fm.mjs` | bloc Formules : débordements, texte rogné, alignement des débuts de ligne, étoile en tête | ≈ 1 min |
+| `node tools/check-lang.mjs` | choix de la langue au premier chargement : douze scénarios d'appareil et d'opérateur (`?lang=`, choix mémorisé, `navigator.languages`, pays IP, RTL) | ≈ 35 s |
+
+Les trois premiers acceptent `--langs`, `--widths` (et `--tabs` pour le
+premier) pour limiter le tour, et rendent un rapport JSON avec `--json` ; les
+deux derniers n'ont pas d'option. Sortie non nulle dès le premier diagnostic :
+de quoi brancher la CI.
+
+`tools/check-lang.mjs` vérifie aussi les deux règles qui font la personnalité
+de la détection : l'anglais de l'appareil est **écarté** au profit de la
+première autre langue de `navigator.languages` (beaucoup de téléphones sont
+réglés EN sans que ce soit la langue de l'usager), et l'anglais seul fait
+interroger le pays de l'opérateur avant de retomber sur l'anglais.
