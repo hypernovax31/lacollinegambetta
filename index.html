@@ -6324,6 +6324,63 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
   }
 }
 
+@media (min-width: 1000px) {
+  /* ===== Menu du jour : bande violette PLEINE LARGEUR en horizontal —
+     l'ordre demandé se lit de gauche à droite : pilule de titre (+horaire
+     dessous), toque, prix, séparateur (trait VERTICAL), composition
+     « Entrée + plat ou plat + dessert », mention « Choix selon
+     l'ardoise » à droite. Sous 1000 px, l'empilement vertical (ordre
+     identique, lu de haut en bas) reste en vigueur. ===== */
+  html:not(.carte-doc) #menus .fm .fmb-card--day {
+    display: grid;
+    grid-template-columns: minmax(0, auto) auto auto auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "pils  ico  price sep  title note"
+      "midi  ico  price sep  title note";
+    column-gap: clamp(10px, 1.6vw, 28px);
+    row-gap: 2px;
+    align-items: center;
+    padding: clamp(14px, 1.8vw, 24px) clamp(16px, 2.4vw, 42px);
+  }
+  /* les quatre éléments d'en-tête deviennent des items de la grille
+     (sinon .fmb-head reste une seule cellule qui les empile). */
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head { display: contents; }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-pils {
+    grid-area: pils; justify-self: center; align-self: end; margin: 0;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-midi {
+    grid-area: midi; justify-self: center; align-self: start;
+    margin: 2px 0 0; padding: 0; border: 0; width: auto; max-width: 30ch;
+    text-align: center;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico {
+    grid-area: ico; justify-self: center; align-self: center; margin: 0;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
+    grid-area: price; justify-self: center; align-self: center; margin: 0;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-sep {
+    grid-area: sep; justify-self: center; align-self: stretch;
+    width: 1px; height: auto;
+    background: linear-gradient(180deg, transparent, rgba(228, 198, 128, .48) 15%, rgba(228, 198, 128, .48) 85%, transparent);
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title {
+    /* stretch : la boîte remplit sa colonne — une boîte rétrécie
+       (justify-self:center) coupait « Entrée + plat ou » en trois lignes
+       alors que la colonne était assez large. Le texte reste centré par
+       text-align. */
+    grid-area: title; justify-self: stretch; align-self: center; margin: 0;
+    /* un rien plus compacte que les cartes : les longues compositions
+       (néerlandais, allemand) tiennent ainsi sur leurs deux lignes. */
+    font-size: clamp(.98rem, 1.7cqw, 1.3rem);
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-note {
+    grid-area: note; justify-self: end; align-self: center;
+    margin: 0; padding: 0; width: auto; max-width: 22ch; text-align: end;
+  }
+
+}
+
 /* ---------- Écran étroit (< 720 px) : empilement centré ---------- */
 @media (max-width: 640px) {
   html:not(.carte-doc) #menus .fm .fmb-ico { width: clamp(44px, 12vw, 56px); }
