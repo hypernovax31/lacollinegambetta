@@ -6386,6 +6386,60 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
   html:not(.carte-doc) #menus .fm .fmb-ico { width: clamp(44px, 12vw, 56px); }
 }
 
+/* ===== Carte A4 (papier uniquement) : « Menu enfant » et « Petit
+   déjeuner » en bandes horizontales pleine largeur — logo et pilule de
+   titre sur une même ligne, description éventuelle, prix, séparateur
+   vertical doré, puis la liste des plats. Sur le site web, ces blocs
+   gardent leur mise en page (le séparateur y reste masqué). ===== */
+/* masqué par défaut (site ET feuille de style de base)… */
+#menus .fm .fmb-card--child .fmb-sep,
+#menus .fm .fmb-card--pdj .fmb-sep { display: none; }
+/* …affiché uniquement dans le contexte carte-doc (spécificité plus
+   forte que la règle de masquage) */
+html.carte-doc #menus .fm .fmb-card--child,
+html.carte-doc #menus .fm .fmb-card--pdj {
+  display: grid;
+  grid-template-columns: auto auto auto auto 1px minmax(0, 1fr);
+  grid-template-areas: "ico pils sub price sep list";
+  column-gap: clamp(10px, 1.6vw, 26px);
+  row-gap: 2px;
+  align-items: center;
+}
+html.carte-doc #menus .fm .fmb-card--child { grid-column: 1 / -1; grid-row: 4; }
+html.carte-doc #menus .fm .fmb-card--pdj { grid-column: 1 / -1; grid-row: 5; }
+html.carte-doc #menus .fm .fmb-card--child .fmb-head,
+html.carte-doc #menus .fm .fmb-card--pdj .fmb-head { display: contents; }
+html.carte-doc #menus .fm .fmb-card--child .fmb-ico,
+html.carte-doc #menus .fm .fmb-card--pdj .fmb-ico {
+  grid-area: ico; justify-self: center; align-self: center; margin: 0;
+}
+html.carte-doc #menus .fm .fmb-card--child .fmb-pils,
+html.carte-doc #menus .fm .fmb-card--pdj .fmb-pils {
+  grid-area: pils; justify-self: start; align-self: center; margin: 0;
+}
+html.carte-doc #menus .fm .fmb-card--child .fmb-sub {
+  grid-area: sub; justify-self: start; align-self: center; margin: 0;
+}
+html.carte-doc #menus .fm .fmb-card--child .fmb-price,
+html.carte-doc #menus .fm .fmb-card--pdj .fmb-price {
+  grid-area: price; justify-self: center; align-self: center; margin: 0;
+}
+html.carte-doc #menus .fm .fmb-card--child .fmb-price::before,
+html.carte-doc #menus .fm .fmb-card--child .fmb-price::after,
+html.carte-doc #menus .fm .fmb-card--pdj .fmb-price::before,
+html.carte-doc #menus .fm .fmb-card--pdj .fmb-price::after { content: none; }
+html.carte-doc #menus .fm .fmb-card--child .fmb-sep,
+html.carte-doc #menus .fm .fmb-card--pdj .fmb-sep {
+  display: block;
+  grid-area: sep; justify-self: center; align-self: stretch;
+  width: 1px; height: auto;
+  background: linear-gradient(180deg, transparent, rgba(185, 141, 59, .55) 15%, rgba(185, 141, 59, .55) 85%, transparent);
+}
+html.carte-doc #menus .fm .fmb-card--child .fmb-list,
+html.carte-doc #menus .fm .fmb-card--pdj .fmb-list {
+  grid-area: list; margin: 0; padding: 0; border: 0; width: 100%;
+}
+
 /* ===== Bouton « Télécharger la carte (PDF) » — pied de page commun =====
    Volontairement discret et fin : fond transparent, fine bordure ton sur
    ton, téléchargement direct sur l'appareil (attribut download). */
@@ -7059,7 +7113,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
     <div class="fmb-head">
       <p class="fmb-pils">Menu du jour</p>
       <p class="fmb-midi">Uniquement le midi - sauf weekends et jours fériés</p>
-      <svg class="fmb-ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="#f6ecd2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M30.3 4.4C29.6 4.4 26.5 5.4 25.3 6.1C24.1 6.7 22.7 8.6 21.6 8.9C20.6 9.2 19.1 8.2 18.0 8.2C16.9 8.1 15.1 8.3 14.1 8.6C13.0 8.9 11.4 9.8 10.5 10.5C9.6 11.1 8.4 12.4 7.8 13.3C7.2 14.2 6.5 15.8 6.3 16.8C6.0 17.9 5.8 19.6 5.9 20.7C6.0 21.8 6.4 23.5 6.9 24.5C7.5 25.6 8.8 27.4 9.8 28.3C10.8 29.2 12.9 29.8 13.7 30.8C14.4 31.8 14.7 33.8 15.0 35.3C15.3 36.8 15.7 39.2 15.9 41.3C16.0 43.5 16.0 47.7 16.0 50.2C16.0 52.7 15.4 57.7 16.1 59.0C16.8 60.4 18.3 59.5 20.9 59.6C23.4 59.7 30.3 59.5 34.1 59.5C37.9 59.5 45.4 59.4 47.3 59.4C49.3 59.3 47.7 60.5 47.8 59.1C47.9 57.8 47.9 52.6 48.0 50.0C48.1 47.3 48.0 42.9 48.2 40.8C48.4 38.7 48.8 36.6 49.1 35.2C49.4 33.7 49.6 31.8 50.3 30.8C51.1 29.8 53.6 28.8 54.6 28.0C55.5 27.2 56.4 26.0 56.8 25.0C57.3 24.1 57.9 23.0 58.0 21.7C58.1 20.4 58.0 17.5 57.6 16.1C57.2 14.7 55.9 12.9 55.2 12.1C54.6 11.2 53.7 10.5 53.0 10.0C52.2 9.6 51.1 8.9 50.2 8.7C49.3 8.5 48.0 8.2 46.9 8.5C45.7 8.7 43.7 10.6 42.3 10.4C41.0 10.2 38.6 7.5 37.2 6.9C35.8 6.2 33.6 6.0 32.6 5.8C31.6 5.7 30.6 6.1 30.3 5.9C30.0 5.7 31.0 4.4 30.3 4.4Z"/><path d="M16.6 46.6H47.4"/></g><g fill="none" stroke="#f6ecd2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.7 27V45.5"/><path d="M26.4 27V45.5"/><path d="M31.9 27V45.5"/><path d="M37.4 27V45.5"/><path d="M43.2 27V45.5"/><path d="M22.6 12.2v3.4M25.2 12.2v3.4M27.8 12.2v3.4"/><path d="M22.6 15.6h5.2"/><path d="M25.2 15.6V24.2"/><path d="M36 15.7C34.9 13.2 35.6 10.7 38.2 10.3C40.7 10.8 41.4 13.3 40.4 15.7C38.9 16.4 37.5 16.4 36 15.7Z"/><path d="M38.2 16.2V24.2"/></g></svg>
+      <svg class="fmb-ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="#f6ecd2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M30.3 4.4C29.6 4.4 26.5 5.4 25.3 6.1C24.1 6.7 22.7 8.6 21.6 8.9C20.6 9.2 19.1 8.2 18.0 8.2C16.9 8.1 15.1 8.3 14.1 8.6C13.0 8.9 11.4 9.8 10.5 10.5C9.6 11.1 8.4 12.4 7.8 13.3C7.2 14.2 6.5 15.8 6.3 16.8C6.0 17.9 5.8 19.6 5.9 20.7C6.0 21.8 6.4 23.5 6.9 24.5C7.5 25.6 8.8 27.4 9.8 28.3C10.8 29.2 12.9 29.8 13.7 30.8C14.4 31.8 14.7 33.8 15.0 35.3C15.3 36.8 15.7 39.2 15.9 41.3C16.0 43.5 16.0 47.7 16.0 50.2C16.0 52.7 15.4 57.7 16.1 59.0C16.8 60.4 18.3 59.5 20.9 59.6C23.4 59.7 30.3 59.5 34.1 59.5C37.9 59.5 45.4 59.4 47.3 59.4C49.3 59.3 47.7 60.5 47.8 59.1C47.9 57.8 47.9 52.6 48.0 50.0C48.1 47.3 48.0 42.9 48.2 40.8C48.4 38.7 48.8 36.6 49.1 35.2C49.4 33.7 49.6 31.8 50.3 30.8C51.1 29.8 53.6 28.8 54.6 28.0C55.5 27.2 56.4 26.0 56.8 25.0C57.3 24.1 57.9 23.0 58.0 21.7C58.1 20.4 58.0 17.5 57.6 16.1C57.2 14.7 55.9 12.9 55.2 12.1C54.6 11.2 53.7 10.5 53.0 10.0C52.2 9.6 51.1 8.9 50.2 8.7C49.3 8.5 48.0 8.2 46.9 8.5C45.7 8.7 43.7 10.6 42.3 10.4C41.0 10.2 38.6 7.5 37.2 6.9C35.8 6.2 33.6 6.0 32.6 5.8C31.6 5.7 30.6 6.1 30.3 5.9C30.0 5.7 31.0 4.4 30.3 4.4Z"/><path d="M16.6 46.6H47.4"/></g><g fill="none" stroke="#f6ecd2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.7 27.5V46.6"/><path d="M32 27.5V46.6"/><path d="M43.3 27.5V46.6"/><path d="M26.4 12.6V46.6"/><path d="M22.2 8.6v4M26.4 8.6v4M30.6 8.6v4"/><path d="M22.2 12.6h8.4"/><path d="M37.6 16.8V46.6"/><path d="M34.9 16.8C33.5 13 34.4 9.1 37.6 8.5C40.8 9.1 41.7 13 40.3 16.8C38.6 17.5 36.6 17.5 34.9 16.8Z"/></g></svg>
       <p class="fmb-price">14,90</p>
     </div>
     <div class="fmb-sep" aria-hidden="true"></div>
@@ -7075,6 +7129,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       <img class="fmb-ico" src="assets/menus/icon-enfant.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <p class="fmb-price">10,90</p>
     </div>
+    <div class="fmb-sep" aria-hidden="true"></div>
     <ul class="fmb-list">
       <li>1 Verre de soda</li>
       <li>Burger enfant ou Cordon bleu</li>
@@ -7090,6 +7145,7 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       <img class="fmb-ico" src="assets/menus/icon-pdj.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <p class="fmb-price">7,00</p>
     </div>
+    <div class="fmb-sep" aria-hidden="true"></div>
     <ul class="fmb-list">
       <li>Boisson chaude <em>au choix</em></li>
       <li>Croissant ou Tartine au beurre</li>
