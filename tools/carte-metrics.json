@@ -1,7 +1,7 @@
 {
  "generator": "tools/measure_carte.mjs",
- "index_hash": "5401dbcf024b83d4",
- "css_hash": "61fa89b8c5921051",
+ "index_hash": "f9968644f61c1086",
+ "css_hash": "74a3b9a9e5ed960b",
  "viewport": 1180,
  "base_width": 1180,
  "fonts": [
@@ -476,7 +476,7 @@
      "i": 0,
      "tag": "block",
      "cls": "",
-     "h": 1390.98
+     "h": 1491.64
     }
    ],
    "variants": [
@@ -486,7 +486,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1427.44
+      1532.69
      ],
      "count": 1,
      "heights2col": null,
@@ -498,7 +498,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1424.59
+      1529.84
      ],
      "count": 1,
      "heights2col": null,
@@ -510,7 +510,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1421.61
+      1526.86
      ],
      "count": 1,
      "heights2col": null,
@@ -522,7 +522,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1417.08
+      1519.83
      ],
      "count": 1,
      "heights2col": null,
@@ -534,7 +534,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1406.45
+      1509.09
      ],
      "count": 1,
      "heights2col": null,
@@ -546,7 +546,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1389.39
+      1490.38
      ],
      "count": 1,
      "heights2col": null,
@@ -558,7 +558,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1390.98
+      1491.64
      ],
      "count": 1,
      "heights2col": null,
@@ -570,7 +570,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1345.8
+      1445.63
      ],
      "count": 1,
      "heights2col": null,
@@ -582,7 +582,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1292.77
+      1390.5
      ],
      "count": 1,
      "heights2col": null,
@@ -594,7 +594,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1255.58
+      1348.02
      ],
      "count": 1,
      "heights2col": null,
@@ -606,7 +606,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1221.22
+      1309.88
      ],
      "count": 1,
      "heights2col": null,
@@ -618,7 +618,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1214.88
+      1289.75
      ],
      "count": 1,
      "heights2col": null,
@@ -630,7 +630,7 @@
      "gap": 22,
      "overflow": 0,
      "heights": [
-      1228.75
+      1285.28
      ],
      "count": 1,
      "heights2col": null,
