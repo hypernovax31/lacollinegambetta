@@ -18,3 +18,6 @@ carte-a4-pages/
 
 # PDF intermédiaire assemblé (le PDF versionné est Carte_LaCollineGambetta.pdf)
 carte-a4.pdf
+
+# harnais de vérification éphémère (R20)
+.tmpverify/
