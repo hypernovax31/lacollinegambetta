@@ -4468,42 +4468,46 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   html[dir="rtl"]:not(.carte-doc) .menu-nav-hint--end { right: auto; left: 8px; }
   html[dir="rtl"]:not(.carte-doc) .menu-nav-hint--start svg,
   html[dir="rtl"]:not(.carte-doc) .menu-nav-hint--end svg { transform: scaleX(-1); }
-  /* ===== « D'autres onglets à droite » : deux petits signaux animés =====
-     1. Battement de la flèche droite (ci-dessous) : tant que des onglets
-        restent cachés à droite de l'onglet actif (has-end), la flèche
-        dorée grossit légèrement pendant qu'un halo s'étend — une
-        pulsation toutes les 3,2 s, discret. AUCUNE interaction ne
-        l'éteint (défilement, glissement, clic) : elle ne s'arrête que
-        quand il n'y a plus rien à révéler à droite — dernier onglet
-        actif — ou quand le bandeau ne déborde plus.
+  /* ===== « D'autres onglets de ce côté » : deux petits signaux animés =====
+     1. Battement des flèches dorées (ci-dessous) : tant que des onglets
+        restent cachés d'un côté de l'onglet actif (has-start / has-end),
+        la flèche de ce côté esquisse une pulsation — LES DEUX FLÈCHES
+        battent à l'identique (même keyframe, même cadence) : le signal
+        est léger et discret, un frémissement de 4,5 % avec un halo
+        discret de 5 px, une pulsation toutes les 3,6 s. AUCUNE
+        interaction ne l'éteint : elle ne s'arrête que quand il n'y a
+        plus rien à révéler de ce côté — premier/dernier onglet actif —
+        ou quand le bandeau ne déborde plus.
      2. « Coup de pouce » du ruban (JS, menuNavNudge) : à CHAQUE entrée
-        dans la carte, le ruban glisse doucement de ~56 px vers la
-        droite et revient, révélant un instant le bouton suivant — et
-        rien ne l'annule : si le ruban bouge pendant la balançoire
+        dans la carte, le ruban glisse doucement de ~40 px dans le sens
+        de lecture et revient, révélant un instant le bouton suivant —
+        et rien ne l'annule : si le ruban bouge pendant la balançoire
         (doigt, molette, onglet cliqué), elle adopte la nouvelle
         position et repart d'elle.
-     Mouvement réduit : aucun des deux — la flèche reste simplement
-        posée là, le bandeau reste utilisable à l'identique. */
-  html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-end .menu-nav-hint--end {
-    animation: menuNavEndBeat 3.2s ease-in-out .35s infinite;
+     Mouvement réduit : aucun des deux — les flèches restent simplement
+        posées là, le bandeau reste utilisable à l'identique. */
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-end .menu-nav-hint--end,
+  html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-start .menu-nav-hint--start {
+    animation: menuNavBeat 3.6s ease-in-out .35s infinite;
   }
   /* Le halo qui s'étend depuis la flèche passe par box-shadow : une ombre
      n'étend JAMAIS la zone défilable de la page. Un anneau dessiné par un
      pseudo-élément agrandi en transform dépassait le bord droit du bandeau
      et faisait apparaître un débordement horizontal de quelques pixels
      (page plus large que l'écran) pendant la pulsation. */
-  @keyframes menuNavEndBeat {
+  @keyframes menuNavBeat {
     0%, 22%, 100% {
       transform: translateY(-50%) scale(1);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 2px 6px rgba(0,0,0,.28), 0 0 0 0 rgba(243,213,106,.6);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 2px 6px rgba(0,0,0,.28), 0 0 0 0 rgba(243,213,106,.38);
     }
     9% {
-      transform: translateY(-50%) scale(1.1);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 2px 6px rgba(0,0,0,.28), 0 0 0 9px rgba(243,213,106,0);
+      transform: translateY(-50%) scale(1.045);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 2px 6px rgba(0,0,0,.28), 0 0 0 5px rgba(243,213,106,0);
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-end .menu-nav-hint--end {
+    html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-end .menu-nav-hint--end,
+    html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-start .menu-nav-hint--start {
       animation: none;
     }
   }
@@ -7490,7 +7494,7 @@ function syncMenuNavHints() {
 /* ===== Bandeau : le « coup de pouce » qui montre les onglets cachés =====
    À CHAQUE entrée dans la carte — pas seulement la première —, si des
    onglets sont cachés à droite du bandeau, le ruban glisse doucement
-   vers la droite (~56 px : le bouton suivant se révèle un instant)
+   dans le sens de lecture (~40 px : le bouton suivant se révèle un instant)
    puis revient — à la façon des carrousels iOS. AUCUNE interaction ne
    l'annule, ni défilement, ni glissement, ni clic : si le ruban bouge
    pendant la balançoire (doigt, inertie du glissement, molette,
@@ -7523,7 +7527,7 @@ function menuNavNudge() {
      __navNudgeGen++ de centerMenuNavButton). */
   __navCenterGen++;
   const gen = ++__navNudgeGen;
-  const dur = 1100;
+  const dur = 850;
   let start = nav.scrollLeft, lastWritten = null, t0 = 0;
   const ease = p => (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
   const step = t => {
@@ -7548,7 +7552,7 @@ function menuNavNudge() {
       t0 = t;
     }
     const p = Math.min(1, (t - t0) / dur);
-    const target = Math.max(0, Math.min(56, rtl ? start + room : room - start));
+    const target = Math.max(0, Math.min(40, rtl ? start + room : room - start));
     const dir = rtl ? -1 : 1;
     try { nav.scrollLeft = start + dir * target * Math.sin(Math.PI * ease(p)); } catch (e) { return; }
     lastWritten = nav.scrollLeft;
