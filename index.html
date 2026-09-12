@@ -13385,6 +13385,10 @@ else sizeCoverMedallion();
     menu.addEventListener('click', function (e) {
       var b = e.target && e.target.closest ? e.target.closest('.lang-option') : null;
       if (!b) return;
+      /* Choix explicite : il gagne sur la géolocalisation opérateur
+         même si celle-ci répond après le clic, et c'est le seul cas
+         mémorisé (voir « Choix de la langue de départ » plus bas). */
+      userPicked = true;
       applyLang(b.getAttribute('data-lang'), true);
       set(false, true);
     });
@@ -13396,10 +13400,137 @@ else sizeCoverMedallion();
   }
   collect();
   initMenu();
+  /* ---- Choix de la langue de départ ----
+     Ordre de précédence :
+       1. ?lang= dans l'URL (partage de lien, tests) — jamais mémorisé ;
+       2. choix mémorisé (clic au globe) : la détection automatique ne
+          joue que pour un visiteur qui n'a jamais choisi ;
+       3. langue de l'appareil — la première langue soutenue de
+          navigator.languages, dans l'ordre de préférence. L'anglais y
+          est traité comme un réglage « par défaut » (beaucoup
+          d'appareils sont réglés EN sans que ce soit la langue de
+          l'usager) : on écarte l'anglais et on retient la première
+          autre langue de la liste — un appareil [en, ja] révèle
+          souvent un usager japonais, sans aucune requête externe ;
+       4. pays de l'opérateur (géolocalisation IP) : affine l'anglais.
+          En itinérance l'adresse IP suit le pays de la SIM, d'où le
+          nom « opérateur » — c'est le cas visé : le touriste dont le
+          téléphone est resté en anglais ;
+       5. repli final : anglais.
+     La langue détectée n'est JAMAIS mémorisée (seul un clic au globe
+     l'est) : un changement de langue de l'appareil est suivi dès la
+     visite suivante. Le pays opérateur, lui, est mis en cache le
+     temps de la session (sessionStorage) pour ne pas réinterroger le
+     service à chaque chargement. */
+  var userPicked = false;
+  var GEO_KEY = 'lcg-geo';
+  var GEO_TTL = 8 * 60 * 60 * 1000; /* 8 h : une session de visite */
+  var GEO_TIMEOUT = 2000; /* un service lent ne doit pas retarder la carte */
+  /* Pays de l'opérateur → langue du site, quand le pays a une langue
+     claire parmi les 15 proposées. Sans entrée (Belgique, bilingue
+     sans majorité nette ; Singapour, anglophone de travail ; pays
+     hors langues du site — Russie, Thaïlande…) : l'anglais reste. */
+  var COUNTRY_LANG = {
+    FR: 'fr', MC: 'fr', LU: 'fr',
+    US: 'en', GB: 'en', UK: 'en', IE: 'en', CA: 'en', AU: 'en', NZ: 'en', MT: 'en',
+    ES: 'es', MX: 'es', AR: 'es', CL: 'es', CO: 'es', PE: 'es', VE: 'es', UY: 'es',
+    PY: 'es', BO: 'es', EC: 'es', CR: 'es', PA: 'es', GT: 'es', HN: 'es', SV: 'es',
+    NI: 'es', DO: 'es', CU: 'es', PR: 'es',
+    DE: 'de', AT: 'de', CH: 'de', LI: 'de',
+    IT: 'it', SM: 'it', VA: 'it',
+    PT: 'pt', BR: 'pt', AO: 'pt', MZ: 'pt', CV: 'pt',
+    NL: 'nl',
+    SA: 'ar', AE: 'ar', QA: 'ar', KW: 'ar', BH: 'ar', OM: 'ar', IQ: 'ar', JO: 'ar',
+    LB: 'ar', PS: 'ar', SY: 'ar', YE: 'ar', EG: 'ar', LY: 'ar', TN: 'ar', DZ: 'ar',
+    MA: 'ar', MR: 'ar', SD: 'ar',
+    CN: 'zh', HK: 'zh', TW: 'zh', MO: 'zh',
+    UA: 'uk',
+    JP: 'ja',
+    KR: 'ko', KP: 'ko',
+    PL: 'pl',
+    TR: 'tr',
+    IN: 'hi'
+  };
   var initial = null;
   try { initial = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+  /* Valeur d'URL illisible (ex. ?lang=xx) : traitée comme absente. */
+  if (initial && initial !== 'fr' && !DICTS[initial]) initial = null;
   if (!initial) { try { initial = localStorage.getItem(STORE_KEY); } catch (e) {} }
-  if (initial && (initial === 'fr' || DICTS[initial])) applyLang(initial, false);
+  if (initial && (initial === 'fr' || DICTS[initial])) {
+    /* 1-2. préférence explicite : pas de détection, pas de requête. */
+    applyLang(initial, false);
+  } else {
+    /* 3. langue de l'appareil (l'anglais « par défaut » écarté). */
+    var navList = [];
+    try {
+      navList = (navigator.languages && navigator.languages.length)
+        ? navigator.languages
+        : [navigator.language || ''];
+    } catch (e) {}
+    var pick = null;
+    for (var ni = 0; ni < navList.length; ni++) {
+      var nb = String(navList[ni] || '').toLowerCase().split('-')[0];
+      if (nb !== 'en' && (nb === 'fr' || DICTS[nb])) { pick = nb; break; }
+    }
+    if (pick) {
+      applyLang(pick, false);
+    } else {
+      /* 4-5. anglais immédiat — c'est le repli final, appliqué avant
+         réponse pour ne jamais retarder l'affichage — puis pays de
+         l'opérateur : appareil réglé EN seul, ou écriture non
+         soutenue (thaï, russe…). */
+      applyLang('en', false);
+      operatorCountry(function (lang) {
+        /* Un clic au globe en cours de vol gagne toujours ; la langue
+           de l'URL ou mémorisée n'arrive jamais ici. */
+        if (lang && !userPicked && lang !== LANG) applyLang(lang, false);
+      });
+    }
+  }
+
+  /* Pays de l'opérateur : géolocalisation IP au nom du visiteur par
+     un service tiers gratuit sans clé — ipwho.is, repli geojs.io
+     (tous deux renvoient le code pays à deux lettres). Échec ou
+     lenteur : silencieux, l'anglais reste. N'est appelé que pour un
+     premier visiteur sans préférence lisible sur l'appareil. */
+  function operatorCountry(then) {
+    var cached = null;
+    try { cached = JSON.parse(sessionStorage.getItem(GEO_KEY) || 'null'); } catch (e) {}
+    if (cached && cached.t && (Date.now() - cached.t) < GEO_TTL && cached.cc !== undefined) {
+      if (cached.cc) then(COUNTRY_LANG[cached.cc] || null);
+      return;
+    }
+    var settled = false;
+    var finish = function (cc) {
+      if (settled) return;
+      settled = true;
+      /* Cache y compris les échecs (cc vide) : ne pas marteler un
+         service tombé pendant toute la session. */
+      try { sessionStorage.setItem(GEO_KEY, JSON.stringify({ t: Date.now(), cc: cc || '' })); } catch (e) {}
+      if (cc) then(COUNTRY_LANG[cc] || null);
+    };
+    var getJSON = function (url) {
+      return new Promise(function (resolve, reject) {
+        var ctl = null;
+        try { ctl = new AbortController(); } catch (e) {}
+        var timer = setTimeout(function () { if (ctl) ctl.abort(); reject(new Error('timeout')); }, GEO_TIMEOUT);
+        fetch(url, ctl ? { signal: ctl.signal } : {})
+          .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+          .then(function (j) { clearTimeout(timer); resolve(j); })
+          .catch(function (err) { clearTimeout(timer); reject(err); });
+      });
+    };
+    getJSON('https://ipwho.is/?fields=country_code')
+      .then(function (j) { finish(j && j.country_code ? String(j.country_code).toUpperCase() : ''); })
+      .catch(function () {
+        getJSON('https://get.geojs.io/v1/ip/country.json')
+          .then(function (j) {
+            var cc = j ? String(j.country || j.country_code || '').toUpperCase() : '';
+            finish(cc);
+          })
+          .catch(function () { finish(''); });
+      });
+  }
   /* Exposé pour les tests et le débogage : window.__setLang('de') */
   window.__setLang = function (l) { if (l === 'fr' || DICTS[l]) applyLang(l, false); };
   window.__i18nDicts = DICTS;
