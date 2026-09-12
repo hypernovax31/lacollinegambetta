@@ -6035,34 +6035,17 @@ html:not(.carte-doc) #menus .fm .fmb-foot {
   color: var(--fm-gold); text-align: center;
 }
 html:not(.carte-doc) #menus .fm .fmb-foot .fmb-star { display: none; }
-html:not(.carte-doc) #menus .fm .fmb-foot::before,
-html:not(.carte-doc) #menus .fm .fmb-foot::after {
-  content: ""; height: 1px; width: clamp(16px, 4cqw, 44px); flex: 0 0 auto;
-  background: linear-gradient(90deg, transparent, var(--fm-gold));
-}
-html:not(.carte-doc) #menus .fm .fmb-foot::after {
-  background: linear-gradient(90deg, var(--fm-gold), transparent);
-}
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-foot { color: var(--fm-gold-dark); }
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot::before,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-foot::before {
-  background: linear-gradient(90deg, transparent, var(--fm-gold-dark));
-}
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot::after,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-foot::after {
-  background: linear-gradient(90deg, var(--fm-gold-dark), transparent);
-}
+/* Nouvelle architecture (cf. menu enfant / petit déjeuner) : le pied
+   n'est plus qu'une mention — les séparateurs dorés entourent le prix
+   en bas de carte, plus besoin de rameaux latéraux ici. */
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot { color: var(--fm-gold-dark); }
 /* ---------- Menu du jour : bloc violet (carte A4, colonne droite ≥ 720 px) ---------- */
 html:not(.carte-doc) #menus .fm .fmb-card--day {
   padding: clamp(24px, 2.8cqw, 38px) clamp(16px, 3cqw, 44px);
 }
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head { gap: clamp(8px, 1.2cqw, 16px); }
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico { width: clamp(56px, 5.6cqw, 80px); }
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title {
-  font-size: clamp(1.2rem, 2.4cqw, 1.8rem);
-  letter-spacing: .05em;
-}
+html:not(.carte-doc) #menus .fm svg.fmb-ico { display: block; }
 /* ---------- Sous-titre du bloc enfant (page 4 : « Moins de 12 ans ») ---------- */
 html:not(.carte-doc) #menus .fm .fmb-sub {
   margin: 0;
@@ -6084,13 +6067,11 @@ html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-midi {
   color: rgba(255, 255, 255, .9);
 }
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
-  font-size: clamp(2.1rem, 4.2cqw, 3rem);
   margin-top: clamp(4px, .8cqw, 10px);
 }
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-note {
-  margin: clamp(6px, 1cqw, 12px) 0 0; padding-top: clamp(12px, 1.6cqw, 20px);
+  margin: clamp(6px, 1cqw, 12px) 0 0; padding: 0;
   width: 100%; text-align: center;
-  border-top: 1px solid rgba(228, 198, 128, .34);
   color: rgba(255, 255, 255, .92);
   font-weight: 500; text-transform: uppercase;
   font-size: clamp(.74rem, 1.2cqw, .92rem);
@@ -6233,75 +6214,106 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
     background: linear-gradient(90deg, var(--fm-violet), transparent);
   }
 
-  /* ===== « Menu du jour » : la bande violette garde un ensemble recentré et
-     symétrique, mais son contenu s'étend sur toute la largeur en trois zones
-     équilibrées — pilule « Menu du jour » + « Choix selon l'ardoise » à
-     gauche, composition (entrée + plat ou plat + dessert) au centre, prix
-     14,90 à droite — chaque zone recentrée dans son tiers. Légers rameaux
-     dorés autour de la pilule et du prix, mention horaire en bas sur filet
-     doré. ===== */
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head { display: contents; }
-  html:not(.carte-doc) #menus .fm .fmb-card--day {
-    --fmb-orn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 30'%3E%3Cpath d='M62 15H25' stroke='%23e4c680' stroke-width='2.4' stroke-linecap='round' fill='none'/%3E%3Cpath d='M25 15C15.5 15 11.5 10 11.5 4' stroke='%23e4c680' stroke-width='2.4' stroke-linecap='round' fill='none'/%3E%3Cpath d='M25 15C15.5 15 11.5 20.5 11.5 26' stroke='%23e4c680' stroke-width='2.4' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='11.5' cy='4' r='1.9' fill='%23e4c680'/%3E%3Ccircle cx='11.5' cy='26' r='1.9' fill='%23e4c680'/%3E%3C/svg%3E");
+  /* ===== Formule duo / Formule complète / Menu du jour : MÊME architecture
+     que menu enfant & petit déjeuner — emblème puis pilule en tête, puis la
+     composition « Entrée + plat … », la mention des choix, et le prix en bas
+     entre deux filets dorés (lecture de la page 4 de la carte A4). ===== */
+  html:not(.carte-doc) #menus .fm .fmb-card--duo,
+  html:not(.carte-doc) #menus .fm .fmb-card--complete {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: auto auto auto;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, max-content) minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto;
     grid-template-areas:
-      "pils  title price"
-      "note  title price"
-      "midi  midi  midi";
+      ".     ico   pils  ."
+      "comp comp comp comp"
+      "note note note note"
+      "price price price price";
+    column-gap: clamp(12px, 1.6vw, 26px);
+    row-gap: clamp(8px, 1.1vw, 16px);
     align-items: center;
-    column-gap: clamp(10px, 1.6vw, 28px);
-    row-gap: clamp(2px, .5vw, 8px);
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, max-content) minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto auto;
+    grid-template-areas:
+      ".     ico   pils  ."
+      "midi midi midi midi"
+      "comp comp comp comp"
+      "note note note note"
+      "price price price price";
+    column-gap: clamp(12px, 1.6vw, 26px);
+    row-gap: clamp(8px, 1.1vw, 16px);
+    align-items: center;
     padding: clamp(20px, 2.4vw, 34px) clamp(18px, 2.6vw, 46px);
   }
+  html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-ico,
+  html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-ico,
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico {
+    grid-area: ico; align-self: center; justify-self: center; margin: 0;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-pils,
+  html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-pils,
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-pils {
-    grid-area: pils; justify-self: center; align-self: center; margin: 0;
+    grid-area: pils; justify-self: start; align-self: center; margin: 0;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-midi {
+    grid-area: midi; justify-self: center; align-self: center;
+    margin: clamp(2px, .4vw, 6px) 0 0;
+    padding: 0; border: 0; width: auto; text-align: center;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-title,
+  html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-title,
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title {
+    grid-area: comp; margin: 0; text-align: center;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-foot,
+  html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-foot {
+    grid-area: note; margin: 0; padding-top: 0;
   }
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-note {
     grid-area: note; justify-self: center; align-self: center;
-    margin: clamp(2px, .4vw, 6px) 0 0; padding: 0; border: 0;
-    width: auto; text-align: center;
+    margin: 0; padding: 0; border: 0; width: auto; text-align: center;
     font-size: clamp(.58rem, .92cqw, .8rem);
     letter-spacing: .22em; line-height: 1.4;
     color: rgba(255, 255, 255, .94);
   }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title {
-    grid-area: title; align-self: center; justify-self: center;
-    margin: 0; text-align: center;
-    font-size: clamp(1.06rem, 1.9cqw, 1.36rem);
-    letter-spacing: .05em; line-height: 1.32;
-  }
+  html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-price,
+  html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-price,
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
-    grid-area: price; align-self: center; justify-self: center; margin: 0;
-    position: relative;
-    font-size: clamp(1.5rem, 2.9cqw, 2.5rem);
+    grid-area: price; margin: clamp(2px, .4vw, 8px) 0 0;
+    display: flex; align-items: center; justify-content: center;
+    gap: clamp(12px, 1.5vw, 26px);
+    font-size: clamp(1.5rem, 2.9cqw, 2.15rem);
   }
+  html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-price::before,
+  html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-price::after,
+  html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-price::before,
+  html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-price::after,
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price::before,
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price::after {
-    content: ""; position: absolute; top: 50%; pointer-events: none;
-    width: clamp(24px, 3.4cqw, 56px); height: clamp(15px, 2cqw, 30px);
-    background: var(--fmb-orn) center / contain no-repeat;
-    opacity: .95;
-    transform: translateY(-50%);
+    content: ""; height: 1px; flex: 0 0 auto;
+    width: clamp(26px, 3.4vw, 80px);
+    background: linear-gradient(90deg, rgba(185, 141, 59, 0), var(--fm-gold));
   }
+  html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-price::after {
+    background: linear-gradient(90deg, var(--fm-gold), rgba(185, 141, 59, 0));
+  }
+  /* cartes sombres (complète, menu du jour) : filets or clair */
+  html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-price::before,
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price::before {
-    left: calc(-1 * (clamp(24px, 3.4cqw, 56px) + clamp(6px, .8vw, 12px)));
+    background: linear-gradient(90deg, rgba(185, 141, 59, 0), var(--fm-gold-dark));
   }
+  html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-price::after,
   html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price::after {
-    right: calc(-1 * (clamp(24px, 3.4cqw, 56px) + clamp(6px, .8vw, 12px)));
-    transform: translateY(-50%) scaleX(-1);
-  }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-midi {
-    grid-area: midi; justify-self: stretch; align-self: center;
-    margin: clamp(10px, 1.4vw, 20px) 0 0;
-    padding: clamp(8px, 1vw, 13px) 0 0;
-    border-top: 1px solid rgba(228, 198, 128, .38);
-    width: 100%; text-align: center;
+    background: linear-gradient(90deg, var(--fm-gold-dark), rgba(185, 141, 59, 0));
   }
 
   /* ===== Enfant & Petit-déjeuner (rangée du bas) : emblème puis pilule en
      tête, liste à gauche, prix en bas entre deux filets dorés (page 4). ===== */
+  html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-head,
+  html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-head,
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head,
   html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-head,
   html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-head { display: contents; }
 
@@ -6396,7 +6408,6 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
 /* ---------- Écran étroit (< 720 px) : empilement centré ---------- */
 @media (max-width: 640px) {
   html:not(.carte-doc) #menus .fm .fmb-ico { width: clamp(44px, 12vw, 56px); }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico { display: none; }
 }
 
 /* ===== Bouton « Télécharger la carte (PDF) » — pied de page commun =====
@@ -7015,9 +7026,9 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       <p class="fmb-pils">Formule duo</p>
       <img class="fmb-ico" src="assets/menus/icon-duo.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <h3 class="fmb-title"><span>Entrée + plat <span class="ou">ou</span></span><span>plat + dessert</span></h3>
-      <p class="fmb-price">23,90</p>
     </div>
     <p class="fmb-foot"><span class="fmb-star" aria-hidden="true">✦</span>Choix ci-dessous</p>
+    <p class="fmb-price">23,90</p>
   </article>
 
   <!-- ============ Formule complète ============ -->
@@ -7026,9 +7037,9 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
       <p class="fmb-pils">Formule complète</p>
       <img class="fmb-ico" src="assets/menus/icon-complete.png" alt="" aria-hidden="true" loading="eager" decoding="async">
       <h3 class="fmb-title">Entrée + plat + dessert</h3>
-      <p class="fmb-price">27,90</p>
     </div>
     <p class="fmb-foot"><span class="fmb-star" aria-hidden="true">✦</span>Choix ci-dessous</p>
+    <p class="fmb-price">27,90</p>
   </article>
 
   
@@ -7070,10 +7081,11 @@ html.carte-doc #xmas-bells-btn { display: none !important; }
     <div class="fmb-head">
       <p class="fmb-pils">Menu du jour</p>
       <p class="fmb-midi">Uniquement le midi - sauf weekends et jours fériés</p>
+      <svg class="fmb-ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="#f6ecd2" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="8" width="36" height="28" rx="3"/><path d="M11 36h42"/><path d="M19 36 11 58"/><path d="M45 36 53 58"/><path d="M20 15h16"/><path d="M20 21h22"/><path d="M20 27h11"/></g></svg>
       <h3 class="fmb-title"><span>Entrée + plat <span class="ou">ou</span></span><span>plat + dessert</span></h3>
-      <p class="fmb-price">14,90</p>
     </div>
     <p class="fmb-note">Choix selon l’ardoise</p>
+    <p class="fmb-price">14,90</p>
   </article>
 
   <!-- ============ Menu enfant ============ -->
@@ -7276,7 +7288,35 @@ function centerMenuNavButton(btnElement) {
     if (s < 0) s = 0;
     if (s > max) s = max;
   }
-  try { nav.scrollLeft = Math.round(s); } catch (e) { /* bande non défilante */ }
+  s = Math.round(s);
+  const from = nav.scrollLeft;
+  /* Atteindre le dernier onglet (p. ex. « Nos desserts ») d'un clic
+     déplace la bande d'un grand coup : le saut sec est remplacé par la
+     MÊME animation que la flèche dorée (balançoire menuNavNudge) —
+     une glissade sinusoïdale. Coupes : mouvement réduit, carte-doc,
+     déplacements infimes (l'animation ne rajouterait que du bruit). */
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced || document.documentElement.classList.contains('carte-doc') || Math.abs(s - from) < 3) {
+    try { nav.scrollLeft = s; } catch (e) { /* bande non défilante */ }
+    return;
+  }
+  /* Une glissade nouvelle annule toute balançoire en cours (les deux
+     écriraient scrollLeft en même temps) — et réciproquement via le
+     jeton partagé. */
+  try { __navNudgeGen++; } catch (e) {}
+  const gen = ++__navCenterGen;
+  const dur = 500;
+  const ease = p => (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
+  let t0 = 0;
+  const step = t => {
+    if (gen !== __navCenterGen) return;
+    if (!t0) t0 = t;
+    const p = Math.min(1, (t - t0) / dur);
+    try { nav.scrollLeft = from + (s - from) * ease(p); } catch (e) { return; }
+    if (p < 1) requestAnimationFrame(step);
+    else nav.scrollLeft = s;
+  };
+  requestAnimationFrame(step);
 }
 function showMenuSection(sectionId, btnElement) {
   document.querySelectorAll('.menu-section').forEach(sec => sec.classList.remove('active'));
@@ -7553,6 +7593,7 @@ function syncMenuNavHints() {
    balançoire en mouvement réduit ni sur la carte A4. La flèche droite, elle, bat en continu (CSS, .has-end) tant qu'il reste des
    onglets cachés à droite de l'onglet actif. */
 let __navNudgeGen = 0;
+let __navCenterGen = 0;
 function menuNavNudge() {
   if (document.documentElement.classList.contains('carte-doc')) return;
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -7569,7 +7610,10 @@ function menuNavNudge() {
   const span = rtl ? nav.scrollLeft + room : room - nav.scrollLeft;
   if (span < 24) return;
   /* Une nouvelle entrée remplace toute balançoire en cours (jeton de
-     génération) : jamais deux balançoires qui se battraient. */
+     génération) : jamais deux balançoires qui se battraient — et une
+     glissade de recentrage en cours est arrêtée net (réciproque du
+     __navNudgeGen++ de centerMenuNavButton). */
+  __navCenterGen++;
   const gen = ++__navNudgeGen;
   const dur = 1100;
   let start = nav.scrollLeft, lastWritten = null, t0 = 0;
@@ -8135,7 +8179,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "Elegance & flavours",
       "Mocktails": "Mocktails",
       "✦ Sans alcool —": "✦ Alcohol-free —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 5pm → 11pm ✦",
       "Prix": "Price",
       "HH": "HH",
       "Appellation": "Appellation",
@@ -8501,7 +8544,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "Elegancia y sabores",
       "Mocktails": "Mocktails",
       "✦ Sans alcool —": "✦ Sin alcohol —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17h → 23h ✦",
       "Prix": "Precio",
       "Appellation": "Denominación",
       "Vin blanc": "Vino blanco",
@@ -8867,7 +8909,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "Eleganz & Aromen",
       "Mocktails": "Mocktails",
       "✦ Sans alcool —": "✦ Alkoholfrei —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17 → 23 Uhr ✦",
       "Prix": "Preis",
       "Appellation": "Anbaugebiet",
       "Vin blanc": "Weißwein",
@@ -9233,7 +9274,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "Eleganza e sapori",
       "Mocktails": "Mocktail",
       "✦ Sans alcool —": "✦ Senza alcol —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17 → 23 ✦",
       "Prix": "Prezzo",
       "Appellation": "Denominazione",
       "Vin blanc": "Vino bianco",
@@ -9599,7 +9639,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "Elegância e sabores",
       "Mocktails": "Mocktails",
       "✦ Sans alcool —": "✦ Sem álcool —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17h → 23h ✦",
       "Prix": "Preço",
       "Appellation": "Denominação",
       "Vin blanc": "Vinho branco",
@@ -9965,7 +10004,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "Elegantie & smaken",
       "Mocktails": "Mocktails",
       "✦ Sans alcool —": "✦ Zonder alcohol —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17u → 23u ✦",
       "Prix": "Prijs",
       "Appellation": "Herkomst",
       "Vin blanc": "Witte wijn",
@@ -10332,7 +10370,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "أناقة ومذاقات",
       "Mocktails": "الموكتيلات",
       "✦ Sans alcool —": "✦ بدون كحول —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ ساعة السعادة · 17:00 → 23:00 ✦",
       "Prix": "السعر",
       "Appellation": "التسمية",
       "Vin blanc": "نبيذ أبيض",
@@ -10716,7 +10753,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "优雅与风味",
       "Mocktails": "无酒精鸡尾酒",
       "✦ Sans alcool —": "✦ 无酒精 —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ 欢乐时光 · 17点 → 23点 ✦",
       "Prix": "价格",
       "Appellation": "产区",
       "Vin blanc": "白葡萄酒",
@@ -11100,7 +11136,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "Елегантність і смаки",
       "Mocktails": "Моктейлі",
       "✦ Sans alcool —": "✦ Без алкоголю —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Щасливі години · 17:00 → 23:00 ✦",
       "Prix": "Ціна",
       "Appellation": "Апелласьйон",
       "Vin blanc": "Біле вино",
@@ -11484,7 +11519,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "エレガンスと味わい",
       "Mocktails": "ノンアルコールカクテル",
       "✦ Sans alcool —": "✦ ノンアルコール —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ ハッピーアワー · 17時 → 23時 ✦",
       "Prix": "価格",
       "Appellation": "原産地呼称",
       "Vin blanc": "白ワイン",
@@ -11868,7 +11902,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "우아함과 풍미",
       "Mocktails": "논알콜 칵테일",
       "✦ Sans alcool —": "✦ 논알콜 —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ 해피아워 · 17시 → 23시 ✦",
       "Prix": "가격",
       "Appellation": "원산지 호칭",
       "Vin blanc": "화이트 와인",
@@ -12252,7 +12285,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "Elegancja i smaki",
       "Mocktails": "Mocktajle",
       "✦ Sans alcool —": "✦ Bez alkoholu —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17:00 → 23:00 ✦",
       "Prix": "Cena",
       "HH": "HH",
       "Appellation": "Apelacja",
@@ -12618,7 +12650,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "Zarafet ve Lezzetler",
       "Mocktails": "Mockteyller",
       "✦ Sans alcool —": "✦ Alkolsüz —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17.00 → 23.00 ✦",
       "Prix": "Fiyat",
       "HH": "HH",
       "Appellation": "Apelasyon",
@@ -12984,7 +13015,6 @@ else sizeCoverMedallion();
       "Élégance & saveurs": "ऐलिगेंस और स्वाद",
       "Mocktails": "मॉकटेल",
       "✦ Sans alcool —": "✦ बिना अल्कोहल —",
-      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ हैप्पी आवर · 17:00 → 23:00 ✦",
       "Prix": "कीमत",
       "Appellation": "एपेलेशन",
       "Vin blanc": "व्हाइट वाइन",
