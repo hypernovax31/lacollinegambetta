@@ -13965,12 +13965,16 @@ else sizeCoverMedallion();
     for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
     return noiseBuf;
   }
-  /* cloche de départ de course : partiels inharmoniques d'une vraie cloche */
-  function bell(t) {
+  /* cloche : partiels inharmoniques d'une vraie cloche. Pleine (départ de
+     course) pour le GO, légère et brève pour le carillon du décompte. */
+  function bell(t, base, light) {
     var ac = ctx(); if (!ac) return;
     t = t || ac.currentTime;
-    var base = 988; /* B5 — ding clair et haut */
-    [[1, .5, 2.3], [1.5, .26, 1.7], [2.0, .18, 1.35], [2.51, .1, 1.0], [3.01, .06, .8], [4.05, .03, .55]]
+    base = base || 988; /* B5 — ding clair et haut */
+    var partials = light
+      ? [[1, .16, .7], [1.5, .08, .5], [2.51, .04, .35]]
+      : [[1, .5, 2.3], [1.5, .26, 1.7], [2.0, .18, 1.35], [2.51, .1, 1.0], [3.01, .06, .8], [4.05, .03, .55]];
+    partials
       .forEach(function (p) {
         var o = ac.createOscillator(), g = ac.createGain();
         o.type = 'sine'; o.frequency.value = base * p[0];
@@ -13981,9 +13985,15 @@ else sizeCoverMedallion();
         o.start(t); o.stop(t + p[2] + 0.05);
       });
   }
-  /* tintement de coupes qui se trinquent : partiels aigus, très brefs */
+  /* l'audio est-il déjà déverrouillé et actif ? (utilisé par boom/clink
+     pour ne jamais programmer de sons sur un contexte suspendu) */
+  function ready() { return AC && AC.state === 'running' ? AC : null; }
+
+  /* tintement de coupes qui se trinquent : partiels aigus, très brefs.
+     Comme boom(), uniquement si l'audio tourne vraiment (rien sur un
+     contexte suspendu : pas de sons en rafale au déblocage). */
   function clink(t) {
-    var ac = ctx(); if (!ac) return;
+    var ac = ready(); if (!ac) return;
     t = t || ac.currentTime + 0.02;
     [[1319, .15, .5], [1760, .09, .4], [2637, .05, .3]].forEach(function (p) {
       var o = ac.createOscillator(), g = ac.createGain();
@@ -13995,9 +14005,10 @@ else sizeCoverMedallion();
       o.start(t); o.stop(t + p[2] + 0.05);
     });
   }
-  /* explosion « supernova » : sub grave + souffle filtré + crépitement d'étincelles */
+  /* explosion « supernova » : sub grave + souffle filtré + crépitement
+     d'étincelles — seulement si l'audio est déjà déverrouillé et actif */
   function boom(t, big) {
-    var ac = ctx(); if (!ac) return;
+    var ac = ready(); if (!ac) return;
     t = t || ac.currentTime;
     var k = big ? 1.25 : 1;
     var o = ac.createOscillator(), og = ac.createGain();
@@ -14285,6 +14296,16 @@ else sizeCoverMedallion();
     curN = null; flipT = 0;
     countEl.classList.remove('flipping', 'intro');
   }
+  /* carillon du décompte : une note par chiffre, descendante (D6 C6 Bb5
+     G#5 F#5) pour monter la tension avant la grosse cloche du départ ;
+     ne joue que si l'audio est déjà déverrouillé (sinon silence, pas de
+     retard de sons empilés) */
+  var CHIME = { 5: 1175, 4: 1046, 3: 932, 2: 831, 1: 740 };
+  function chime(n, delay) {
+    var ac = ready(); if (!ac) return;
+    bell(ac.currentTime + delay, CHIME[n] || 988, true);
+  }
+
   /* Le retournement : la carte pivote vers la droite autour de son axe
      vertical (rotateY 180°, portée par translateZ à mi-course pour se
      souligner vers le spectateur) et révèle le chiffre suivant posé sur
@@ -14298,10 +14319,12 @@ else sizeCoverMedallion();
       countEl.classList.remove('flipping');
       void countEl.offsetWidth;
       countEl.classList.add('intro');
+      chime(n, 0.02);
       return;
     }
     if (n === curN) return;
     curN = n;
+    chime(n, 0.30); /* la note tombe quand la face arrière se révèle */
     backEl.textContent = txt;
     countEl.classList.remove('intro');
     if (flipT) { clearTimeout(flipT); flipT = 0; }
@@ -14332,8 +14355,11 @@ else sizeCoverMedallion();
     msgText.textContent = message();
     msgEl.hidden = false;
     if (!document.hidden) {
-      var ac = ctx(); if (ac) bell(ac.currentTime + 0.05);
       fw = fireworks(fxCanvas);
+      var ac = ctx();
+      if (ac) ac.resume().then(function () {
+        if (AC && AC.state === 'running') bell(AC.currentTime + 0.05);
+      }).catch(function () {});
     }
     timers.push(setTimeout(close, document.hidden ? 250 : RUN_MS));
   }
