@@ -13979,12 +13979,44 @@ else sizeCoverMedallion();
   var digit = function (n) {
     var lang = document.documentElement.getAttribute('lang') || 'fr';
     var map = NUM[lang];
-    return map ? map.charAt(n) : String(n);
+    if (!map) return String(n);
+    return String(n).replace(/[0-9]/g, function (d) { return map.charAt(+d); });
   };
   var message = function () {
     var lang = document.documentElement.getAttribute('lang') || 'fr';
     return MSG[lang] || MSG.fr;
   };
+
+  /* ---- Jour de l'an : titres, vœux et calendriers ----
+     Toutes les langues du site fêtent le nouvel an grégorien le 1er janvier
+     (calendrier civil en France, Royaume-Uni, Espagne, Allemagne, Italie,
+     Portugal, Pays-Bas, Pologne, Ukraine, Japon, Corée, Turquie, Inde comme
+     dans tous les pays arabes), SAUF le chinois : son nouvel an suit le
+     calendrier luni-solaire (fête du printemps), jour férié dans tous les
+     pays sinophones — Chine, Taïwan, Hong Kong, Macao, Singapour,
+     Malaisie… — à la même date pour tous. */
+  var NY_TITLE = { fr: 'Jour de l’an', en: 'New Year’s Day', es: 'Año Nuevo', de: 'Neujahr', it: 'Capodanno', pt: 'Ano Novo', nl: 'Nieuwjaar', pl: 'Nowy Rok', zh: '新年', uk: 'Новий рік', ja: '新年', ko: '새해', ar: 'رأس السنة', tr: 'Yılbaşı', hi: 'नव वर्ष' };
+  var NY_MSG = {
+    fr: 'Bonne Année {y} !', en: 'Happy New Year {y}!', es: '¡Feliz Año {y}!',
+    de: 'Frohes neues Jahr {y}!', it: 'Felice Anno Nuovo {y}!', pt: 'Feliz Ano Novo {y}!',
+    nl: 'Gelukkig Nieuwjaar {y}!', pl: 'Szczęśliwego Nowego Roku {y}!', zh: '{y}新年快乐！',
+    uk: 'З Новим роком {y}!', ja: '{y}年 あけましておめでとう！', ko: '{y}년 새해 복 많이 받으세요!',
+    ar: 'سنة جديدة سعيدة {y}!', tr: 'Mutlu Yıllar {y}!', hi: 'नव वर्ष {y} की शुभकामनाएँ!'
+  };
+  /* 1er jour du nouvel an lunaire (minuit de Paris), 2026-2045 —
+     dates vérifiées sur plusieurs références concordantes */
+  var LUNAR_NY = ['2026-02-17', '2027-02-06', '2028-01-26', '2029-02-13', '2030-02-03',
+    '2031-01-23', '2032-02-11', '2033-01-31', '2034-02-19', '2035-02-08',
+    '2036-01-28', '2037-02-15', '2038-02-04', '2039-01-24', '2040-02-12',
+    '2041-02-01', '2042-01-22', '2043-02-10', '2044-01-30', '2045-02-17'];
+  function eveOf(day) {
+    return new Date(Date.UTC(+day.slice(0, 4), +day.slice(5, 7) - 1, +day.slice(8, 10)) - 86400000)
+      .toISOString().slice(0, 10);
+  }
+  function nextLunar(today) {
+    for (var i = 0; i < LUNAR_NY.length; i++) if (LUNAR_NY[i] > today) return LUNAR_NY[i];
+    return null; /* au-delà de la table : pas d'animation (table à étendre) */
+  }
 
   /* ---- heure de Paris (ms du jour + date locale Paris) ---- */
   var fmt = null;
@@ -14385,7 +14417,7 @@ else sizeCoverMedallion();
   }
 
   /* ---- déroulé : verrou, décompte, GO, fondu ---- */
-  var overlay, countEl, msgEl, msgText, fxCanvas, stageEl, frontEl, backEl;
+  var overlay, countEl, msgEl, msgText, fxCanvas, stageEl, frontEl, backEl, titleEl, kickerEl, hoursEl;
   var state = 'idle', timers = [], fw = null, blockers = null, lastN = -1, fakeDeadline = null;
   var curN = null, rollT = 0, landT = 0;
   function $(id) { return document.getElementById(id); }
@@ -14413,15 +14445,48 @@ else sizeCoverMedallion();
     unlock(); state = 'idle'; lastN = -1; fakeDeadline = null;
     curN = null; rollT = 0; landT = 0;
     countEl.classList.remove('rolling', 'land', 'intro');
+    /* restauration des textes Happy Hour pour la prochaine campagne */
+    camp = null;
+    if (titleEl) titleEl.textContent = 'HAPPY HOUR';
+    if (kickerEl) kickerEl.textContent = 'HAPPY HOUR';
+    if (hoursEl) hoursEl.hidden = false;
+    frontEl.textContent = '5'; backEl.textContent = '';
   }
   /* carillon du décompte : une note par chiffre, descendante (D6 C6 Bb5
      G#5 F#5) pour monter la tension avant la grosse cloche du départ ;
      ne joue que si l'audio est déjà déverrouillé (sinon silence, pas de
      retard de sons empilés) */
-  var CHIME = { 5: 1175, 4: 1046, 3: 932, 2: 831, 1: 740 };
+  var CHIME = { 5: 1175, 4: 1046, 3: 932, 2: 831, 1: 740 }; /* Happy Hour */
+  var CHIME_NY = { 10: 1319, 9: 1175, 8: 1046, 7: 988, 6: 880, 5: 784, 4: 698, 3: 659, 2: 587, 1: 523 }; /* Jour de l'an : gamme descendante */
   function chime(n, delay) {
     var ac = ready(); if (!ac) return;
-    bell(ac.currentTime + delay, CHIME[n] || 988, true);
+    var tab = camp ? camp.chime : CHIME;
+    bell(ac.currentTime + delay, tab[n] || 988, true);
+  }
+
+  /* ---- campagnes : Happy Hour quotidien et Jour de l'an ---- */
+  var camp = null;
+  var CAMP_HH = {
+    lead: LEAD_MS, max: 5, targetMs: START_MS, key: 'lcg-hh-done-', chime: CHIME,
+    title: 'HAPPY HOUR', msg: message, hours: true
+  };
+  function nyCamp(p) {
+    var lang = document.documentElement.getAttribute('lang') || 'fr';
+    var y, day;
+    if (lang === 'zh') {
+      var d = nextLunar(p ? p.day : '');
+      if (!d) return null;
+      y = +d.slice(0, 4); day = d;
+    } else {
+      y = +(p ? p.day.slice(0, 4) : String(new Date().getFullYear())) + 1;
+      day = y + '-01-01';
+    }
+    var title = NY_TITLE[lang] || NY_TITLE.fr;
+    return {
+      lead: 10000, max: 10, targetMs: 86400000, key: 'lcg-ny-done-', chime: CHIME_NY,
+      title: title, hours: false, day: day,
+      msg: function () { return (NY_MSG[lang] || NY_MSG.fr).replace('{y}', y); }
+    };
   }
 
   /* Le défilement : rouleau cinématique autour d'un cylindre invisible.
@@ -14464,9 +14529,9 @@ else sizeCoverMedallion();
   function tickCount() {
     if (state !== 'count') return;
     var dt = fakeDeadline != null ? fakeDeadline - performance.now()
-                                  : START_MS - (parisNow() || { ms: 0 }).ms;
+                                  : camp.targetMs - (parisNow() || { ms: 0 }).ms;
     if (dt > 0) {
-      var n = Math.min(5, Math.max(1, Math.ceil(dt / 1000)));
+      var n = Math.min(camp.max, Math.max(1, Math.ceil(dt / 1000)));
       if (n !== lastN) { showCount(n); lastN = n; }
       timers.push(setTimeout(tickCount, 110));
     } else go();
@@ -14475,7 +14540,7 @@ else sizeCoverMedallion();
     if (state !== 'count') return;
     state = 'go';
     stageEl.hidden = true;
-    msgText.textContent = message();
+    msgText.textContent = camp.msg();
     msgEl.hidden = false;
     if (!document.hidden) {
       fw = fireworks(fxCanvas);
@@ -14497,18 +14562,25 @@ else sizeCoverMedallion();
       cleanup();
     }, 960));
   }
-  function launch(forced) {
+  function launch(forced, cfg) {
     if (state !== 'idle') return;
     if (document.documentElement.classList.contains('carte-doc')) return;
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     overlay = $('hh-launch'); countEl = $('hh-launch-count');
     msgEl = $('hh-launch-msg'); msgText = $('hh-launch-msg-text'); fxCanvas = $('hh-launch-fx');
     stageEl = $('hh-launch-stage'); frontEl = $('hh-count-front'); backEl = $('hh-count-back');
+    titleEl = document.querySelector('#hh-launch .hh-launch__title');
+    kickerEl = document.querySelector('#hh-launch .hh-launch__msg-kicker');
+    hoursEl = document.querySelector('#hh-launch .hh-launch__msg-hours');
     if (!overlay) return;
+    camp = cfg || CAMP_HH;
     state = 'count';
-    if (forced) fakeDeadline = performance.now() + LEAD_MS;
+    if (forced) fakeDeadline = performance.now() + camp.lead;
     var p = parisNow();
-    if (p) { try { sessionStorage.setItem(DONE_KEY + p.day, '1'); } catch (e) {} }
+    try { sessionStorage.setItem(camp.key + (camp.day || (p && p.day) || ''), '1'); } catch (e) {}
+    if (titleEl) titleEl.textContent = camp.title;
+    if (kickerEl) kickerEl.textContent = camp.title;
+    if (hoursEl) hoursEl.hidden = !camp.hours;
     overlay.hidden = false;
     lock();
     requestAnimationFrame(function () { overlay.classList.add('show'); });
@@ -14516,26 +14588,49 @@ else sizeCoverMedallion();
   }
 
   /* ---- planificateur : à 16h59m55s, heure de Paris ---- */
+  var hhOff = false, nyOff = false;
   function scheduleTick() {
     if (state !== 'idle') return;
     if (document.documentElement.classList.contains('carte-doc')) return;
     var p = parisNow(); if (!p) return;
-    var played = false;
-    try { played = sessionStorage.getItem(DONE_KEY + p.day) === '1'; } catch (e) {}
-    var dt = START_MS - p.ms;
-    if (!played && dt <= LEAD_MS && dt > -600) { launch(false); return; }
-    if (!played && dt <= -600) { try { sessionStorage.setItem(DONE_KEY + p.day, '1'); } catch (e) {} }
-    var wait = played || dt <= -600 ? 30000 : Math.min(dt - LEAD_MS + 250, 30000);
+    var wait = 30000;
+    /* — Happy Hour, chaque jour à 16h59m55s (heure de Paris) — */
+    if (!hhOff) {
+      var played = false;
+      try { played = sessionStorage.getItem(DONE_KEY + p.day) === '1'; } catch (e) {}
+      var dt = START_MS - p.ms;
+      if (!played && dt <= LEAD_MS && dt > -600) { launch(false); return; }
+      if (!played && dt <= -600) { try { sessionStorage.setItem(DONE_KEY + p.day, '1'); } catch (e) {} }
+      else if (!played) wait = Math.min(dt - LEAD_MS + 250, 30000);
+    }
+    /* — Jour de l'an : 23h59m50s le 31 décembre (décompte de 10 s jusqu'à
+         minuit du 1er janvier) — ou, en chinois, la veille du 1er jour du
+         nouvel an lunaire, à minuit de Paris — */
+    if (!nyOff) {
+      var ny = nyCamp(p);
+      if (ny) {
+        var nyPlayed = false;
+        try { nyPlayed = sessionStorage.getItem(ny.key + ny.day) === '1'; } catch (e) {}
+        if (!nyPlayed) {
+          var eve = eveOf(ny.day);
+          if (p.day === eve && p.ms >= ny.targetMs - ny.lead) { launch(false, ny); return; }
+          if (p.day === eve) wait = Math.min(wait, Math.max(400, ny.targetMs - ny.lead - p.ms + 100));
+        }
+      }
+    }
     if (wait < 400) wait = 400;
     timers.push(setTimeout(scheduleTick, wait));
   }
 
   /* ---- amorçage : ?hh=1 force l'animation (aperçu/test) ---- */
   function boot() {
-    var forced = /[?&]hh=1(&|$)/.test(location.search);
-    var off = /[?&]hh=0(&|$)/.test(location.search);
-    if (off) return;
-    if (forced) { setTimeout(function () { launch(true); }, 600); return; }
+    var forcedHH = /[?&]hh=1(&|$)/.test(location.search);
+    var forcedNY = /[?&]ny=1(&|$)/.test(location.search);
+    hhOff = /[?&]hh=0(&|$)/.test(location.search);
+    nyOff = /[?&]ny=0(&|$)/.test(location.search);
+    if (hhOff && nyOff) return;
+    if (forcedHH) { setTimeout(function () { launch(true); }, 600); return; }
+    if (forcedNY) { setTimeout(function () { var c = nyCamp(parisNow()); if (c) launch(true, c); }, 600); return; }
     scheduleTick();
   }
   /* l'audio ne peut démarrer qu'après un geste du visiteur : on prépare
@@ -14545,8 +14640,9 @@ else sizeCoverMedallion();
   });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
-  /* aperçu manuel (console) : window.__hhLaunch() */
+  /* aperçus manuels (console) : window.__hhLaunch() / window.__nyLaunch() */
   window.__hhLaunch = function () { launch(true); };
+  window.__nyLaunch = function () { var c = nyCamp(parisNow()); if (c) launch(true, c); };
 })();
 </script>
 
