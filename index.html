@@ -7037,17 +7037,6 @@ html.hh-lock body { overflow: hidden; touch-action: none; }
   50% { transform: translateZ(95px) rotateY(90deg); filter: brightness(.68); }
   100% { transform: translateZ(0) rotateY(180deg); filter: brightness(1); }
 }
-#hh-launch .hh-launch__count.flipping .hh-launch__face::after {
-  content: ''; position: absolute; inset: -8% -14%;
-  background: linear-gradient(105deg, rgba(255,255,255,0) 32%, rgba(255,252,240,.34) 50%, rgba(255,255,255,0) 68%);
-  transform: translateX(-130%);
-  animation: hhSheen .6s ease both;
-  pointer-events: none;
-}
-@keyframes hhSheen {
-  from { transform: translateX(-130%); }
-  to { transform: translateX(130%); }
-}
 @keyframes hhTitleGlow {
   0%, 100% {
     text-shadow:
@@ -14309,9 +14298,8 @@ else sizeCoverMedallion();
   /* Le retournement : la carte pivote vers la droite autour de son axe
      vertical (rotateY 180°, portée par translateZ à mi-course pour se
      souligner vers le spectateur) et révèle le chiffre suivant posé sur
-     la face arrière — il paraît depuis la gauche. Un balayage lumineux
-     accompagne la rotation. À l'arrivée, les faces sont échangées sans
-     à-coup. */
+     la face arrière — il paraît depuis la gauche. À l'arrivée, les faces
+     sont échangées sans à-coup. */
   function showCount(n) {
     var txt = digit(n);
     if (curN === null) {
