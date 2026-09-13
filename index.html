@@ -7004,33 +7004,59 @@ html.hh-lock body { overflow: hidden; touch-action: none; }
   opacity: 0; pointer-events: none;
 }
 #hh-launch .hh-launch__count.land .hh-launch__ring { animation: hhRing .55s ease-out both; }
+/* le message final : affiche plein cadre — HAPPY HOUR en haut, le message
+   localisé au centre sur toute la largeur, les horaires en bas ; or
+   biseauté à extrusion 3D (dégradé + reliefs multi-couches + perspective) */
 #hh-launch .hh-launch__msg {
-  position: relative;
-  display: grid; gap: clamp(10px, 2.2vmin, 22px); justify-items: center;
-  padding: 0 clamp(14px, 4vw, 60px);
-  animation: hhMsgIn .62s cubic-bezier(.18, .89, .32, 1.2) both;
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto 1fr auto;
+  justify-items: center; align-items: center;
+  padding: clamp(20px, 6vh, 70px) clamp(16px, 5vw, 72px);
+  text-align: center;
+  perspective: 1100px;
 }
-#hh-launch .hh-launch__msg-line {
+#hh-launch .hh-launch__msg-kicker {
+  grid-row: 1;
+  font-family: 'Cinzel', 'Tajawal', 'Noto Serif SC', 'Noto Serif JP', 'Noto Serif KR', serif;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 11vw, 7rem);
+  letter-spacing: .14em; line-height: 1.05;
+  background: linear-gradient(180deg, #fff8dc 0%, #f8dd82 34%, #e9b84f 58%, #8a6416 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: #f8dd82; -webkit-text-fill-color: transparent;
+  text-shadow:
+    0 1px 0 #8a6416, 0 3px 0 #6d5114, 0 5px 0 #453108,
+    0 12px 28px rgba(0, 0, 0, .62),
+    0 0 46px rgba(243, 213, 106, .55);
+  transform: rotateX(13deg);
+  animation: hhMsgKicker .8s cubic-bezier(.18, .89, .32, 1.12) .06s both;
+}
+#hh-launch .hh-launch__msg-main {
+  grid-row: 3;
   font-family: 'Cinzel', 'Tajawal', 'Noto Sans Devanagari', 'Noto Serif SC', 'Noto Serif JP', 'Noto Serif KR', 'Noto Serif Devanagari', serif;
   font-weight: 700;
-  font-size: clamp(1.7rem, 6.2vmin, 4.4rem);
-  line-height: 1.22;
-  color: #f8dd82;
-  max-width: 22ch;
+  font-size: clamp(2rem, 7.8vw, 5.4rem);
+  line-height: 1.16;
+  max-width: 100%;
+  background: linear-gradient(180deg, #fff8dc 0%, #f8dd82 40%, #e9b84f 64%, #9c7420 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: #f8dd82; -webkit-text-fill-color: transparent;
   text-shadow:
-    0 1px 0 #a8801f,
-    0 3px 0 #6d5114,
-    0 6px 16px rgba(0, 0, 0, .6),
-    0 0 30px rgba(243, 213, 106, .65),
-    0 0 100px rgba(160, 110, 224, .5);
+    0 1px 0 #8a6416, 0 2px 0 #6d5114, 0 4px 0 #453108,
+    0 10px 24px rgba(0, 0, 0, .6),
+    0 0 38px rgba(243, 213, 106, .5);
+  animation: hhMsgMain .72s cubic-bezier(.18, .89, .32, 1.1) .2s both;
 }
 #hh-launch .hh-launch__msg-hours {
-  font-family: 'Cinzel', 'Tajawal', 'Noto Sans Devanagari', 'Noto Serif SC', 'Noto Serif JP', 'Noto Serif KR', 'Noto Serif Devanagari', serif;
+  grid-row: 5;
+  font-family: 'Cinzel', 'Tajawal', 'Noto Serif SC', 'Noto Serif JP', 'Noto Serif KR', serif;
   font-weight: 600;
-  font-size: clamp(1rem, 3vmin, 1.9rem);
-  letter-spacing: .18em;
-  color: #cfa8f2;
-  text-shadow: 0 0 18px rgba(160, 110, 224, .75), 0 2px 10px rgba(0, 0, 0, .5);
+  font-size: clamp(1.05rem, 3.2vw, 2rem);
+  letter-spacing: .24em;
+  color: #e3c8f7;
+  text-shadow: 0 0 20px rgba(160, 110, 224, .8), 0 2px 12px rgba(0, 0, 0, .55);
+  animation: hhMsgHours .66s ease .4s both;
 }
 @keyframes hhHaloPulse {
   0%, 100% { opacity: .75; transform: translate(-50%, -50%) scale(1); }
@@ -7082,10 +7108,18 @@ html.hh-lock body { overflow: hidden; touch-action: none; }
   55% { opacity: 1; transform: scale(1.1); }
   100% { opacity: 1; transform: scale(1); }
 }
-@keyframes hhMsgIn {
-  0% { opacity: 0; transform: scale(.6); }
-  60% { opacity: 1; transform: scale(1.06); }
-  100% { opacity: 1; transform: scale(1); }
+@keyframes hhMsgKicker {
+  0% { opacity: 0; transform: rotateX(74deg) translateY(-26%); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: rotateX(13deg) translateY(0); }
+}
+@keyframes hhMsgMain {
+  0% { opacity: 0; transform: translateY(52px) rotateX(26deg); filter: blur(7px); }
+  100% { opacity: 1; transform: translateY(0) rotateX(0deg); filter: blur(0); }
+}
+@keyframes hhMsgHours {
+  0% { opacity: 0; letter-spacing: .55em; }
+  100% { opacity: 1; letter-spacing: .24em; }
 }
 @media (prefers-reduced-motion: reduce) {
   /* pas d'animation plein écran en mouvement réduit : la page reste
@@ -13914,8 +13948,9 @@ else sizeCoverMedallion();
     </div>
   </div>
   <div class="hh-launch__msg" id="hh-launch-msg" hidden>
-    <span class="hh-launch__msg-line">✦ <b id="hh-launch-msg-text">L’Happy Hour démarre maintenant !</b> ✦</span>
-    <span class="hh-launch__msg-hours">17h → 23h</span>
+    <div class="hh-launch__msg-kicker">HAPPY HOUR</div>
+    <b class="hh-launch__msg-main" id="hh-launch-msg-text">L’Happy Hour démarre maintenant !</b>
+    <span class="hh-launch__msg-hours">✦ 17h → 23h ✦</span>
   </div>
 </div>
 
@@ -13926,7 +13961,7 @@ else sizeCoverMedallion();
   'use strict';
   var START_MS = 17 * 3600000;              /* 17:00:00, heure de Paris */
   var LEAD_MS = 5000;                       /* l'animation part 5 s avant */
-  var RUN_MS = 5900;                        /* bouquet final : tirs, coupes 🍻, supernova */
+  var RUN_MS = 8400;                        /* bouquet : tirs, coupes 🍻, Tour Eiffel, supernova */
   var DONE_KEY = 'lcg-hh-done-';
 
   /* ---- messages localisés + chiffres locaux (arabe, hindi) ---- */
@@ -14023,8 +14058,8 @@ else sizeCoverMedallion();
       o.start(t); o.stop(t + p[2] + 0.05);
     });
   }
-  /* explosion « supernova » : sub grave + souffle filtré + crépitement
-     d'étincelles — seulement si l'audio est déjà déverrouillé et actif */
+  /* explosion « supernova » : sub grave + souffle filtré — seulement si
+     l'audio est déjà déverrouillé et actif (pas de crépitement aigu) */
   function boom(t, big) {
     var ac = ready(); if (!ac) return;
     t = t || ac.currentTime;
@@ -14048,21 +14083,6 @@ else sizeCoverMedallion();
     ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
     n.connect(f); f.connect(ng); ng.connect(ac.destination);
     n.start(t); n.stop(t + 0.6);
-    /* crépitement des gerbes : une pluie de micro-cliquements */
-    var i, cl = big ? 30 : 18;
-    for (i = 0; i < cl; i++) {
-      var ct = t + 0.06 + Math.random() * (big ? 1.0 : 0.75);
-      var c = ac.createBufferSource(), cf = ac.createBiquadFilter(), cg = ac.createGain();
-      c.buffer = noise(); c.playbackRate.value = 0.7 + Math.random() * 0.8;
-      cf.type = 'bandpass'; cf.Q.value = 6;
-      cf.frequency.value = 900 + Math.random() * 3600;
-      var v = 0.02 + Math.random() * 0.075;
-      cg.gain.setValueAtTime(0.0001, ct);
-      cg.gain.exponentialRampToValueAtTime(v, ct + 0.004);
-      cg.gain.exponentialRampToValueAtTime(0.0001, ct + 0.05);
-      c.connect(cf); cf.connect(cg); cg.connect(ac.destination);
-      c.start(ct); c.stop(ct + 0.07);
-    }
   }
 
   /* ---- feux d'artifice : bouquet final sur toute la surface ----
@@ -14090,7 +14110,7 @@ else sizeCoverMedallion();
     }
     function pal(n) { var a = PAL[n]; return a[(Math.random() * a.length) | 0]; }
     function palFor(spec) { return Array.isArray(spec) ? pal(spec[(Math.random() * spec.length) | 0]) : pal(spec); }
-    function push(p) { if (parts.length < 2800) parts.push(p); }
+    function push(p) { if (parts.length < 3600) parts.push(p); }
     function basePart(x, y, vx, vy, c, sz, opt) {
       var p = { x: x, y: y, px: x, py: y, vx: vx, vy: vy, life: 1, decay: 0.011, c: c, s: sz, g: 0.045, tw: Math.random() * 6.28, glint: 0 };
       if (opt) for (var k in opt) p[k] = opt[k];
@@ -14191,8 +14211,79 @@ else sizeCoverMedallion();
       flash(W * 0.5, H * 0.34, Math.max(W, H) * 0.85, 0.55);
       var ac = ctx(); if (ac) boom(ac.currentTime + 0.14, 1);
     }
+    /* — la Tour Eiffel : silhouette fidèle tracée en points d'or — jambes
+         écartées et arches, 1er étage, taille concave à croisillons, 2e
+         étage, fuseau supérieur, antenne — érigée du sol vers le sommet,
+         scintillante, puis supernova finale du bouquet — */
+    var tower = null;
+    function makeTower() {
+      var TH = H * 0.60, topY = H * 0.26, TW = Math.min(W * 0.62, H * 0.5) / 2;
+      function pushPt(xn, yn) {
+        var x = W / 2 + xn * TW, y = topY + yn * TH;
+        push(basePart(x, y, 0, 0, Math.random() < 0.82 ? '#ffe9a3' : '#fcf6ba', 2,
+          { tower: 1, born: 4400 + (1 - yn) * 1700, decay: 0.0016, g: 0 }));
+      }
+      function emit(p0, c, p1, mirror) {
+        var d = Math.hypot((p1[0] - p0[0]) * TW, (p1[1] - p0[1]) * TH) * (c ? 1.35 : 1);
+        var n = Math.max(3, Math.round(d / 6)), i, t, x, y;
+        for (i = 0; i <= n; i++) {
+          t = i / n;
+          if (c) {
+            x = (1 - t) * (1 - t) * p0[0] + 2 * (1 - t) * t * c[0] + t * t * p1[0];
+            y = (1 - t) * (1 - t) * p0[1] + 2 * (1 - t) * t * c[1] + t * t * p1[1];
+          } else { x = p0[0] + (p1[0] - p0[0]) * t; y = p0[1] + (p1[1] - p0[1]) * t; }
+          pushPt(x, y);
+          if (mirror && x !== 0) pushPt(-x, y);
+        }
+      }
+      var segs = [
+        /* silhouette extérieure droite (miroir) : pied → 1er étage → taille concave → 2e étage → fuseau */
+        [[0.5, 1.0], [0.46, 0.86], [0.335, 0.73], 1],
+        [[0.335, 0.73], [0.15, 0.44], [0.10, 0.25], 1],
+        [[0.10, 0.25], [0.06, 0.14], [0.052, 0.065], 1],
+        [[0.052, 0.065], null, [0.04, 0.05], 1],
+        /* antenne */
+        [[0, 0], null, [0, 0.058], 1],
+        /* tranche du sommet */
+        [[-0.05, 0.05], null, [0.05, 0.05], 0],
+        /* bord intérieur des jambes (miroir) */
+        [[0.17, 0.76], [0.31, 0.905], [0.375, 1.0], 1],
+        /* arche décorative entre les jambes */
+        [[-0.17, 0.76], [0, 1.03], [0.17, 0.76], 0],
+        /* étages (pleine largeur) */
+        [[-0.36, 0.735], null, [0.36, 0.735], 0],
+        [[-0.36, 0.752], null, [0.36, 0.752], 0],
+        [[-0.115, 0.25], null, [0.115, 0.25], 0],
+        [[-0.115, 0.262], null, [0.115, 0.262], 0],
+        [[-0.062, 0.062], null, [0.062, 0.062], 0],
+        /* croisillons de la taille (miroir) */
+        [[-0.134, 0.32], null, [0.192, 0.44], 1],
+        [[-0.217, 0.48], null, [0.275, 0.60], 1],
+        [[-0.299, 0.64], null, [0.33, 0.71], 1]
+      ];
+      segs.forEach(function (sg) { emit(sg[0], sg[1], sg[2], sg[3]); });
+      tower = { exploded: false };
+    }
+    function explodeTower() {
+      if (!tower || tower.exploded) return;
+      tower.exploded = true;
+      var cx0 = W * 0.5, cy0 = H * 0.55;
+      parts.forEach(function (p) {
+        if (p.tower == null) return;
+        var a = Math.atan2(p.y - cy0, p.x - cx0) + (Math.random() - 0.5) * 0.5;
+        var v = 1.6 + Math.random() * 5.2;
+        p.born = null; p.tower = null;
+        p.vx = Math.cos(a) * v; p.vy = Math.sin(a) * v - 0.6;
+        p.decay = 0.011; p.g = 0.05; p.glint = Math.random() < 0.25 ? 1 : 0;
+      });
+      burst(W * 0.5, H * 0.72, { big: 1, pal: 'gold' });
+      burst(W * 0.5, H * 0.45, { big: 1, pal: ['gold', 'silver'] });
+      burst(W * 0.5, H * 0.28, { big: 1, pal: MIX });
+      flash(W * 0.5, H * 0.5, Math.max(W, H) * 0.95, 0.55);
+    }
+
     /* — scénario du bouquet (ms) : tirs sur toute la largeur, coupes 🍻,
-         tintement, supernova, salve finale — */
+         tintement, supernova, Tour Eiffel, supernova finale — */
     var SC = [
       [0, function () { rocket(0.28, 'gold'); rocket(0.72, 'violet'); }],
       [430, function () { burst(W * 0.5, H * 0.30, { big: 1, pal: 'gold' }); }],
@@ -14207,14 +14298,18 @@ else sizeCoverMedallion();
       [2650, function () { makeGlasses(); }],
       [2900, function () { rocket(0.10, 'gold'); rocket(0.90, 'violet'); }],
       [3100, function () { clinkFx(); }],
-      [4200, function () { rocket(0.18, MIX); rocket(0.50, 'gold'); rocket(0.82, 'violet'); }],
-      [4650, function () { burst(W * 0.5, H * 0.18, { big: 1, pal: MIX }); flash(W * 0.5, H * 0.25, Math.max(W, H) * 0.5, 0.4); }]
+      [4300, function () { rocket(0.13, 'gold'); rocket(0.87, 'violet'); }],
+      [6050, function () { burst(W * 0.5, H * 0.28, { pal: 'silver' }); }],
+      [6600, function () { rocket(0.07, 'rose'); }],
+      [6900, function () { rocket(0.93, 'cyan'); }]
     ];
     function step(t) {
       if (!t0) t0 = t;
       var el = t - t0; frame++;
       while (evIdx < SC.length && el >= SC[evIdx][0]) { SC[evIdx][1](); evIdx++; }
       if (glasses && !glasses.exploded && el >= 3900) explodeGlasses();
+      if (!tower && el >= 4380) makeTower();
+      if (tower && !tower.exploded && el >= 7350) explodeTower();
       if (glasses && !glasses.exploded && el >= 2980 && el <= 3880 && Math.random() < 0.75) {
         var fp = glasses.foam[(Math.random() * glasses.foam.length) | 0];
         push(basePart(fp.x + (Math.random() - 0.5) * 14, fp.y, 0, -(0.5 + Math.random() * 0.7),
@@ -14246,7 +14341,7 @@ else sizeCoverMedallion();
         p.life -= p.decay;
         if (p.life <= 0) { parts.splice(i, 1); continue; }
         var a = p.life;
-        if (p.glass != null) a = 0.6 + 0.4 * Math.sin(el * 0.02 + p.tw * 6);      /* miroitement du champagne */
+        if (p.glass != null || p.tower != null) a = 0.6 + 0.4 * Math.sin(el * 0.02 + p.tw * 6); /* miroitement or */
         else if (p.glint && p.life < 0.55) a *= 0.45 + 0.55 * Math.sin(el * 0.045 + p.tw * 7); /* scintillement */
         else if (p.life < 0.4) a *= 0.75 + 0.25 * Math.sin(el * 0.03 + p.tw * 5);
         cx.globalAlpha = Math.max(0, Math.min(1, a));
@@ -14276,7 +14371,7 @@ else sizeCoverMedallion();
       }
       /* plus de tirs après 5,3 s : les particules finissent leur vie pendant
          que le fondu de l'overlay emporte le feu d'artifice vers la page */
-      if (parts.length || rockets.length || flashes.length || el < 5300) raf = requestAnimationFrame(step);
+      if (parts.length || rockets.length || flashes.length || el < 7300) raf = requestAnimationFrame(step);
     }
     size();
     window.addEventListener('resize', size);
