@@ -13961,7 +13961,7 @@ else sizeCoverMedallion();
   'use strict';
   var START_MS = 17 * 3600000;              /* 17:00:00, heure de Paris */
   var LEAD_MS = 5000;                       /* l'animation part 5 s avant */
-  var RUN_MS = 8400;                        /* bouquet : tirs, coupes 🍻, Tour Eiffel, supernova */
+  var RUN_MS = 5800;                        /* bouquet compact : tirs, coupes 🍻, Tour Eiffel, supernova */
   var DONE_KEY = 'lcg-hh-done-';
 
   /* ---- messages localisés + chiffres locaux (arabe, hindi) ---- */
@@ -14102,7 +14102,7 @@ else sizeCoverMedallion();
     var cv = canvas, cx = cv.getContext('2d');
     var DPR = Math.min(2, window.devicePixelRatio || 1);
     var W = 0, H = 0, parts = [], rockets = [], flashes = [], evIdx = 0, glasses = null;
-    var raf = 0, t0 = 0, frame = 0;
+    var raf = 0, t0 = 0, last = 0, frame = 0;
     function size() {
       W = cv.clientWidth; H = cv.clientHeight;
       cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
@@ -14167,7 +14167,7 @@ else sizeCoverMedallion();
             var q = i / n;
             arr.push(basePart(sg[0].x + (sg[1].x - sg[0].x) * q, sg[0].y + (sg[1].y - sg[0].y) * q, 0, 0,
               Math.random() < 0.82 ? '#ffe9a3' : '#fcf6ba', 2,
-              { glass: ci, born: 2650 + 360 * sg[2], decay: 0.0016, g: 0 }));
+              { glass: ci, born: 1450 + 300 * sg[2], decay: 0.0016, g: 0 }));
           }
         });
         return { arr: arr, foam: [P(0.93, -0.05), P(0.93, 0.05)] };
@@ -14240,27 +14240,27 @@ else sizeCoverMedallion();
         }
       }
       var segs = [
-        /* jambes écartées : silhouette extérieure, bord intérieur, arche (4,4 s → 5,1 s) */
-        [[0.62, 1.0], [0.54, 0.83], [0.335, 0.73], 1, 4400, 700],
-        [[0.20, 0.76], [0.36, 0.90], [0.44, 1.0], 1, 4400, 700],
-        [[-0.20, 0.76], [0, 1.035], [0.20, 0.76], 0, 4450, 600],
-        /* premier étage : barre nette à trois lignes (5,0 s → 5,45 s) */
-        [[-0.36, 0.730], null, [0.36, 0.730], 0, 5000, 450],
-        [[-0.36, 0.742], null, [0.36, 0.742], 0, 5000, 450],
-        [[-0.36, 0.754], null, [0.36, 0.754], 0, 5000, 450],
-        /* taille concave + deux croisillons épurés (5,5 s → 6,15 s) */
-        [[0.335, 0.73], [0.15, 0.44], [0.10, 0.25], 1, 5500, 650],
-        [[-0.134, 0.32], null, [0.192, 0.44], 1, 5550, 550],
-        [[-0.217, 0.48], null, [0.275, 0.60], 1, 5650, 500],
-        /* deuxième étage : barre nette (6,1 s → 6,5 s) */
-        [[-0.115, 0.245], null, [0.115, 0.245], 0, 6100, 400],
-        [[-0.115, 0.256], null, [0.115, 0.256], 0, 6100, 400],
-        [[-0.115, 0.267], null, [0.115, 0.267], 0, 6100, 400],
-        /* fuseau, plateforme du sommet, antenne (6,5 s → 6,95 s) */
-        [[0.10, 0.25], [0.06, 0.14], [0.052, 0.065], 1, 6500, 450],
-        [[0.052, 0.065], null, [0.04, 0.05], 1, 6800, 150],
-        [[-0.05, 0.05], null, [0.05, 0.05], 0, 6800, 150],
-        [[0, 0], null, [0, 0.058], 1, 6500, 450]
+        /* jambes écartées : silhouette extérieure, bord intérieur, arche (3,1 → 3,7 s) */
+        [[0.62, 1.0], [0.54, 0.83], [0.335, 0.73], 1, 3100, 600],
+        [[0.20, 0.76], [0.36, 0.90], [0.44, 1.0], 1, 3100, 600],
+        [[-0.20, 0.76], [0, 1.035], [0.20, 0.76], 0, 3150, 500],
+        /* premier étage : barre nette à trois lignes (3,65 → 4,0 s) */
+        [[-0.36, 0.730], null, [0.36, 0.730], 0, 3650, 350],
+        [[-0.36, 0.742], null, [0.36, 0.742], 0, 3650, 350],
+        [[-0.36, 0.754], null, [0.36, 0.754], 0, 3650, 350],
+        /* taille concave + deux croisillons épurés (4,0 → 4,55 s) */
+        [[0.335, 0.73], [0.15, 0.44], [0.10, 0.25], 1, 4000, 550],
+        [[-0.134, 0.32], null, [0.192, 0.44], 1, 4050, 450],
+        [[-0.217, 0.48], null, [0.275, 0.60], 1, 4120, 400],
+        /* deuxième étage : barre nette (4,4 → 4,7 s) */
+        [[-0.115, 0.245], null, [0.115, 0.245], 0, 4400, 300],
+        [[-0.115, 0.256], null, [0.115, 0.256], 0, 4400, 300],
+        [[-0.115, 0.267], null, [0.115, 0.267], 0, 4400, 300],
+        /* fuseau, plateforme du sommet, antenne (4,65 → 5,0 s) */
+        [[0.10, 0.25], [0.06, 0.14], [0.052, 0.065], 1, 4650, 350],
+        [[0.052, 0.065], null, [0.04, 0.05], 1, 4880, 120],
+        [[-0.05, 0.05], null, [0.05, 0.05], 0, 4880, 120],
+        [[0, 0], null, [0, 0.058], 1, 4650, 350]
       ];
       segs.forEach(function (sg) { emit(sg[0], sg[1], sg[2], sg[3], sg[4], sg[5]); });
       tower = { exploded: false };
@@ -14287,37 +14287,35 @@ else sizeCoverMedallion();
          tintement, supernova, Tour Eiffel, supernova finale — */
     var SC = [
       [0, function () { rocket(0.28, 'gold'); rocket(0.72, 'violet'); }],
-      [430, function () { burst(W * 0.5, H * 0.30, { big: 1, pal: 'gold' }); }],
-      [680, function () { rocket(0.02, 'violet'); rocket(0.98, 'gold'); }],
-      [980, function () { rocket(0.5, MIX); }],
-      [1240, function () { burst(W * 0.22, H * 0.34, { ring: 1, pal: 'rose' }); burst(W * 0.78, H * 0.32, { ring: 1, pal: 'cyan' }); }],
-      [1560, function () { rocket(0.36, 'gold'); rocket(0.64, MIX); }],
-      [1880, function () { burst(W * 0.5, H * 0.22, { big: 1, pal: MIX }); }],
-      [2100, function () { rocket(0.06, 'gold'); rocket(0.94, 'violet'); }],
-      [2320, function () { burst(W * 0.16, H * 0.27, { pal: 'silver' }); burst(W * 0.84, H * 0.30, { pal: 'gold', palm: 1 }); }],
-      [2560, function () { rocket(0.5, 'rose'); }],
-      [2650, function () { makeGlasses(); }],
-      [2900, function () { rocket(0.10, 'gold'); rocket(0.90, 'violet'); }],
-      [3100, function () { clinkFx(); }],
-      [4300, function () { rocket(0.13, 'gold'); rocket(0.87, 'violet'); }],
+      [380, function () { burst(W * 0.5, H * 0.30, { big: 1, pal: 'gold' }); }],
+      [640, function () { rocket(0.02, 'violet'); rocket(0.98, 'gold'); }],
+      [900, function () { rocket(0.5, MIX); }],
+      [1150, function () { burst(W * 0.22, H * 0.34, { ring: 1, pal: 'rose' }); burst(W * 0.78, H * 0.32, { ring: 1, pal: 'cyan' }); }],
+      [1450, function () { makeGlasses(); }],
+      [1650, function () { rocket(0.36, 'gold'); rocket(0.64, MIX); }],
+      [1900, function () { burst(W * 0.5, H * 0.22, { big: 1, pal: MIX }); }],
+      [2250, function () { clinkFx(); }],
       /* la Tour Eiffel se construit salve après salve : chaque explosion
          fait naître sa section — fondations, 1er étage, taille, 2e étage, sommet */
-      [4400, function () { burst(W * 0.33, H * 0.88, { pal: 'gold' }); burst(W * 0.67, H * 0.88, { pal: 'gold' }); flash(W * 0.5, H * 0.88, Math.min(W, H) * 0.34, 0.4); }],
-      [5000, function () { burst(W * 0.5, H * 0.742, { ring: 1, pal: 'gold' }); }],
-      [5500, function () { burst(W * 0.5, H * 0.52, { pal: 'gold', palm: 1 }); }],
-      [5800, function () { rocket(0.07, 'rose'); }],
-      [6100, function () { burst(W * 0.5, H * 0.256, { ring: 1, pal: 'silver' }); }],
-      [6500, function () { burst(W * 0.5, H * 0.10, { pal: 'silver' }); flash(W * 0.5, H * 0.09, Math.min(W, H) * 0.36, 0.45); }],
-      [6900, function () { rocket(0.93, 'cyan'); }]
+      [3100, function () { burst(W * 0.33, H * 0.88, { pal: 'gold' }); burst(W * 0.67, H * 0.88, { pal: 'gold' }); flash(W * 0.5, H * 0.88, Math.min(W, H) * 0.34, 0.4); }],
+      [3650, function () { burst(W * 0.5, H * 0.742, { ring: 1, pal: 'gold' }); }],
+      [4000, function () { burst(W * 0.5, H * 0.52, { pal: 'gold', palm: 1 }); }],
+      [4400, function () { burst(W * 0.5, H * 0.256, { ring: 1, pal: 'silver' }); }],
+      [4650, function () { burst(W * 0.5, H * 0.10, { pal: 'silver' }); flash(W * 0.5, H * 0.09, Math.min(W, H) * 0.36, 0.45); }],
+      [4800, function () { rocket(0.93, 'cyan'); }]
     ];
     function step(t) {
-      if (!t0) t0 = t;
+      if (!t0) { t0 = t; last = t; }
+      /* pas de temps réel : mouvement identique à 60, 90 ou 120 Hz (et qui
+         ne ralentit pas quand une image traîne) — la clé de la fluidité */
+      var dt = Math.min(2.5, Math.max(0.2, (t - last) / 16.667));
+      last = t;
       var el = t - t0; frame++;
       while (evIdx < SC.length && el >= SC[evIdx][0]) { SC[evIdx][1](); evIdx++; }
-      if (glasses && !glasses.exploded && el >= 3900) explodeGlasses();
-      if (!tower && el >= 4380) makeTower();
-      if (tower && !tower.exploded && el >= 7350) explodeTower();
-      if (glasses && !glasses.exploded && el >= 2980 && el <= 3880 && Math.random() < 0.75) {
+      if (glasses && !glasses.exploded && el >= 2650) explodeGlasses();
+      if (!tower && el >= 3080) makeTower();
+      if (tower && !tower.exploded && el >= 5250) explodeTower();
+      if (glasses && !glasses.exploded && el >= 1750 && el <= 2580 && Math.random() < 0.75) {
         var fp = glasses.foam[(Math.random() * glasses.foam.length) | 0];
         push(basePart(fp.x + (Math.random() - 0.5) * 14, fp.y, 0, -(0.5 + Math.random() * 0.7),
           Math.random() < 0.5 ? '#ffffff' : '#fff3d6', 1.5, { decay: 0.012, g: 0, bubble: 1 }));
@@ -14330,7 +14328,7 @@ else sizeCoverMedallion();
       for (i = rockets.length - 1; i >= 0; i--) {
         p = rockets[i];
         p.px = p.x; p.py = p.y;
-        p.y += p.vy; p.vy *= 0.988;
+        p.y += p.vy * dt; p.vy *= (1 - 0.012 * dt);
         cx.globalAlpha = 1; cx.strokeStyle = '#ffe9a3'; cx.lineWidth = 2.2;
         cx.beginPath(); cx.moveTo(p.px, p.py + 9); cx.lineTo(p.x, p.y); cx.stroke();
         if (frame % 2 === 0)
@@ -14343,9 +14341,9 @@ else sizeCoverMedallion();
         if (p.born != null) { if (el < p.born) continue; if (!p.on) { p.on = 1; p.life = 1; } }
         p.px = p.x; p.py = p.y;
         if (p.bubble) p.vx = Math.sin(el * 0.02 + p.tw) * 0.35;
-        p.x += p.vx; p.y += p.vy;
-        p.vy += p.g; p.vx *= 0.985; p.vy *= 0.985;
-        p.life -= p.decay;
+        p.x += p.vx * dt; p.y += p.vy * dt;
+        p.vy += p.g * dt; p.vx *= (1 - 0.015 * dt); p.vy *= (1 - 0.015 * dt);
+        p.life -= p.decay * dt;
         if (p.life <= 0) { parts.splice(i, 1); continue; }
         var a = p.life;
         if (p.glass != null || p.tower != null) a = 0.6 + 0.4 * Math.sin(el * 0.02 + p.tw * 6); /* miroitement or */
@@ -14373,12 +14371,12 @@ else sizeCoverMedallion();
         g.addColorStop(1, 'rgba(255,220,150,0)');
         cx.fillStyle = g;
         cx.fillRect(p.x - p.r, p.y - p.r, p.r * 2, p.r * 2);
-        p.life -= 0.09;
+        p.life -= 0.09 * dt;
         if (p.life <= 0) flashes.splice(i, 1);
       }
       /* plus de tirs après 5,3 s : les particules finissent leur vie pendant
          que le fondu de l'overlay emporte le feu d'artifice vers la page */
-      if (parts.length || rockets.length || flashes.length || el < 7300) raf = requestAnimationFrame(step);
+      if (parts.length || rockets.length || flashes.length || el < 5000) raf = requestAnimationFrame(step);
     }
     size();
     window.addEventListener('resize', size);
