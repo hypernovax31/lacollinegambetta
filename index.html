@@ -13976,8 +13976,18 @@ else sizeCoverMedallion();
     tr: 'Happy Hour başladı!'
   };
   var NUM = { ar: '٠١٢٣٤٥٦٧٨٩', hi: '०१२३४५६७८९' };
+  /* numéraux traditionnels pour les langues qui ne comptent pas en chiffres
+     européens : chinois/japonais (kanji) et coréen (hangul) ; les autres
+     langues du site (latines, cyrillique, turc) écrivent réellement leurs
+     comptes à rebours en chiffres européens — c'est leur usage local */
+  var NUMS = {
+    zh: { 1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '七', 8: '八', 9: '九', 10: '十' },
+    ja: { 1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '七', 8: '八', 9: '九', 10: '十' },
+    ko: { 1: '일', 2: '이', 3: '삼', 4: '사', 5: '오', 6: '육', 7: '칠', 8: '팔', 9: '구', 10: '십' }
+  };
   var digit = function (n) {
     var lang = document.documentElement.getAttribute('lang') || 'fr';
+    if (NUMS[lang] && NUMS[lang][n] != null) return NUMS[lang][n];
     var map = NUM[lang];
     if (!map) return String(n);
     return String(n).replace(/[0-9]/g, function (d) { return map.charAt(+d); });
@@ -14333,8 +14343,7 @@ else sizeCoverMedallion();
       [3650, function () { burst(W * 0.5, H * 0.742, { ring: 1, pal: 'gold' }); }],
       [4000, function () { burst(W * 0.5, H * 0.52, { pal: 'gold', palm: 1 }); }],
       [4400, function () { burst(W * 0.5, H * 0.256, { ring: 1, pal: 'silver' }); }],
-      [4650, function () { burst(W * 0.5, H * 0.10, { pal: 'silver' }); flash(W * 0.5, H * 0.09, Math.min(W, H) * 0.36, 0.45); }],
-      [4800, function () { rocket(0.93, 'cyan'); }]
+      [4650, function () { burst(W * 0.5, H * 0.10, { pal: 'silver' }); flash(W * 0.5, H * 0.09, Math.min(W, H) * 0.36, 0.45); }]
     ];
     function step(t) {
       if (!t0) { t0 = t; last = t; }
@@ -14485,7 +14494,7 @@ else sizeCoverMedallion();
     return {
       lead: 10000, max: 10, targetMs: 86400000, key: 'lcg-ny-done-', chime: CHIME_NY,
       title: title, hours: false, day: day,
-      msg: function () { return (NY_MSG[lang] || NY_MSG.fr).replace('{y}', y); }
+      msg: function () { return (NY_MSG[lang] || NY_MSG.fr).replace('{y}', digit(y)); }
     };
   }
 
