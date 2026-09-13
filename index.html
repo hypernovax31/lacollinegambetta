@@ -7022,7 +7022,7 @@ html.hh-lock body { overflow: hidden; touch-action: none; }
   font-weight: 700;
   font-size: clamp(2.2rem, 11vw, 7rem);
   letter-spacing: .14em; line-height: 1.05;
-  background: linear-gradient(180deg, #fffdf2 0%, #ffe88f 36%, #ffd86a 58%, #b8902a 100%);
+  background: linear-gradient(180deg, #ffe88f 0%, #ffe88f 48%, #ffd86a 72%, #c99f2e 100%);
   -webkit-background-clip: text; background-clip: text;
   color: #ffe88f; -webkit-text-fill-color: transparent;
   text-shadow:
@@ -7039,7 +7039,7 @@ html.hh-lock body { overflow: hidden; touch-action: none; }
   font-size: clamp(2rem, 7.8vw, 5.4rem);
   line-height: 1.16;
   max-width: 100%;
-  background: linear-gradient(180deg, #fffdf2 0%, #ffe88f 40%, #ffd86a 64%, #b8902a 100%);
+  background: linear-gradient(180deg, #ffe88f 0%, #ffe88f 48%, #ffd86a 72%, #c99f2e 100%);
   -webkit-background-clip: text; background-clip: text;
   color: #ffe88f; -webkit-text-fill-color: transparent;
   text-shadow:
@@ -14479,22 +14479,39 @@ else sizeCoverMedallion();
     lead: LEAD_MS, max: 5, targetMs: START_MS, key: 'lcg-hh-done-', chime: CHIME,
     title: 'HAPPY HOUR', msg: message, hours: true
   };
+  /* zodiaque chinois à partir de 2026 = Cheval (suivant la table LUNAR_NY) */
+  var ZODIAC_ZH = ['\u9a6c', '\u7f8a', '\u7334', '\u9e21', '\u72d7', '\u732a',
+    '\u9f20', '\u725b', '\u864e', '\u5154', '\u9f99', '\u86c7'].map(function (c) { return JSON.parse('"' + c + '"'); });
   function nyCamp(p) {
     var lang = document.documentElement.getAttribute('lang') || 'fr';
-    var y, day;
-    if (lang === 'zh') {
-      var d = nextLunar(p ? p.day : '');
-      if (!d) return null;
-      y = +d.slice(0, 4); day = d;
+    var y, day, title, msgFn;
+    if (lang === 'zh' || lang === 'ko') {
+      /* Chine et Corée fêtent le nouvel an LUNI-SOLAIRE (le Seollal coréen
+         tombe aux mêmes dates, table vérifiée 2026-2045) ; le Japon fête
+         le 1er janvier depuis 1873 (voir branche else) */
+      var today = p ? p.day : '', idx = -1, i;
+      for (i = 0; i < LUNAR_NY.length; i++) if (LUNAR_NY[i] > today) { idx = i; break; }
+      if (idx < 0) return null;
+      day = LUNAR_NY[idx];
+      if (lang === 'zh') {
+        var cy = 4724 + idx; /* année du calendrier chinois qui arrive */
+        title = ZODIAC_ZH[idx % 12] + '\u5e74' + NY_TITLE.zh;
+        msgFn = function () { return NY_MSG.zh.replace('{y}', cy); };
+      } else {
+        var dy = +day.slice(0, 4) + 2333; /* ère Dangi (Corée) */
+        title = '\uc124\ub0a0';
+        msgFn = function () { return NY_MSG.ko.replace('{y}', '\ub2e8\uae30 ' + dy); };
+      }
     } else {
       y = +(p ? p.day.slice(0, 4) : String(new Date().getFullYear())) + 1;
       day = y + '-01-01';
+      title = NY_TITLE[lang] || NY_TITLE.fr;
+      msgFn = function () { return (NY_MSG[lang] || NY_MSG.fr).replace('{y}', digit(y)); };
     }
-    var title = NY_TITLE[lang] || NY_TITLE.fr;
     return {
       lead: 10000, max: 10, targetMs: 86400000, key: 'lcg-ny-done-', chime: CHIME_NY,
       title: title, hours: false, day: day,
-      msg: function () { return (NY_MSG[lang] || NY_MSG.fr).replace('{y}', digit(y)); }
+      msg: msgFn
     };
   }
 
