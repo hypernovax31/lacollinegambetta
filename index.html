@@ -14211,55 +14211,58 @@ else sizeCoverMedallion();
       flash(W * 0.5, H * 0.34, Math.max(W, H) * 0.85, 0.55);
       var ac = ctx(); if (ac) boom(ac.currentTime + 0.14, 1);
     }
-    /* — la Tour Eiffel : silhouette fidèle tracée en points d'or — jambes
-         bien écartées au sol et arche, 1er étage, taille concave à
-         croisillons, 2e étage, fuseau, antenne. Chaque section NAÎT de sa
-         salve d'artifice : les explosions des feux construisent la tour
-         (fondations, 1er étage, taille, 2e étage, sommet), puis supernova. */
+    /* — la Tour Eiffel : silhouette claire et limpide, traits d'or denses.
+         Chaque section SE DESSINE EN CONTINU (les points naissent le long du
+         trait, comme un trait de plume dorée), en cascade chevauchante sur
+         les salves : jambes, 1er étage, taille, 2e étage, sommet — puis
+         supernova. */
     var tower = null;
     function makeTower() {
       var TH = H * 0.60, topY = H * 0.26, TW = Math.min(W * 0.62, H * 0.5) / 2;
       function pushPt(xn, yn, bornAt) {
         var x = W / 2 + xn * TW, y = topY + yn * TH;
-        push(basePart(x, y, 0, 0, Math.random() < 0.82 ? '#ffe9a3' : '#fcf6ba', 2,
-          { tower: 1, born: bornAt + Math.random() * 140, decay: 0.0016, g: 0 }));
+        push(basePart(x, y, 0, 0, Math.random() < 0.82 ? '#ffe9a3' : '#fcf6ba', 2.2,
+          { tower: 1, born: bornAt, decay: 0.0016, g: 0 }));
       }
-      function emit(p0, c, p1, mirror, bornAt) {
+      /* p0 → p1 (droite ou quad), le trait se dessine de p0 vers p1 en dur ms */
+      function emit(p0, c, p1, mirror, bornAt, dur) {
         var d = Math.hypot((p1[0] - p0[0]) * TW, (p1[1] - p0[1]) * TH) * (c ? 1.35 : 1);
-        var n = Math.max(3, Math.round(d / 6)), i, t, x, y;
+        var n = Math.max(4, Math.round(d / 5)), i, t, x, y, b;
         for (i = 0; i <= n; i++) {
           t = i / n;
           if (c) {
             x = (1 - t) * (1 - t) * p0[0] + 2 * (1 - t) * t * c[0] + t * t * p1[0];
             y = (1 - t) * (1 - t) * p0[1] + 2 * (1 - t) * t * c[1] + t * t * p1[1];
           } else { x = p0[0] + (p1[0] - p0[0]) * t; y = p0[1] + (p1[1] - p0[1]) * t; }
-          pushPt(x, y, bornAt);
-          if (mirror && x !== 0) pushPt(-x, y, bornAt);
+          b = bornAt + t * dur + Math.random() * 50;
+          pushPt(x, y, b);
+          if (mirror && x !== 0) pushPt(-x, y, b);
         }
       }
       var segs = [
-        /* jambes écartées au sol : silhouette extérieure + bord intérieur + arche */
-        [[0.62, 1.0], [0.55, 0.85], [0.335, 0.73], 1, 4400],
-        [[0.20, 0.76], [0.36, 0.90], [0.44, 1.0], 1, 4400],
-        [[-0.20, 0.76], [0, 1.03], [0.20, 0.76], 0, 4400],
-        /* premier étage */
-        [[-0.36, 0.735], null, [0.36, 0.735], 0, 4950],
-        [[-0.36, 0.752], null, [0.36, 0.752], 0, 4950],
-        /* taille concave à croisillons */
-        [[0.335, 0.73], [0.15, 0.44], [0.10, 0.25], 1, 5500],
-        [[-0.134, 0.32], null, [0.192, 0.44], 1, 5500],
-        [[-0.217, 0.48], null, [0.275, 0.60], 1, 5500],
-        [[-0.299, 0.64], null, [0.33, 0.71], 1, 5500],
-        /* deuxième étage */
-        [[-0.115, 0.25], null, [0.115, 0.25], 0, 6050],
-        [[-0.115, 0.262], null, [0.115, 0.262], 0, 6050],
-        /* fuseau supérieur, sommet, antenne */
-        [[0.10, 0.25], [0.06, 0.14], [0.052, 0.065], 1, 6550],
-        [[0.052, 0.065], null, [0.04, 0.05], 1, 6550],
-        [[0, 0], null, [0, 0.058], 1, 6550],
-        [[-0.05, 0.05], null, [0.05, 0.05], 0, 6550]
+        /* jambes écartées : silhouette extérieure, bord intérieur, arche (4,4 s → 5,1 s) */
+        [[0.62, 1.0], [0.54, 0.83], [0.335, 0.73], 1, 4400, 700],
+        [[0.20, 0.76], [0.36, 0.90], [0.44, 1.0], 1, 4400, 700],
+        [[-0.20, 0.76], [0, 1.035], [0.20, 0.76], 0, 4450, 600],
+        /* premier étage : barre nette à trois lignes (5,0 s → 5,45 s) */
+        [[-0.36, 0.730], null, [0.36, 0.730], 0, 5000, 450],
+        [[-0.36, 0.742], null, [0.36, 0.742], 0, 5000, 450],
+        [[-0.36, 0.754], null, [0.36, 0.754], 0, 5000, 450],
+        /* taille concave + deux croisillons épurés (5,5 s → 6,15 s) */
+        [[0.335, 0.73], [0.15, 0.44], [0.10, 0.25], 1, 5500, 650],
+        [[-0.134, 0.32], null, [0.192, 0.44], 1, 5550, 550],
+        [[-0.217, 0.48], null, [0.275, 0.60], 1, 5650, 500],
+        /* deuxième étage : barre nette (6,1 s → 6,5 s) */
+        [[-0.115, 0.245], null, [0.115, 0.245], 0, 6100, 400],
+        [[-0.115, 0.256], null, [0.115, 0.256], 0, 6100, 400],
+        [[-0.115, 0.267], null, [0.115, 0.267], 0, 6100, 400],
+        /* fuseau, plateforme du sommet, antenne (6,5 s → 6,95 s) */
+        [[0.10, 0.25], [0.06, 0.14], [0.052, 0.065], 1, 6500, 450],
+        [[0.052, 0.065], null, [0.04, 0.05], 1, 6800, 150],
+        [[-0.05, 0.05], null, [0.05, 0.05], 0, 6800, 150],
+        [[0, 0], null, [0, 0.058], 1, 6500, 450]
       ];
-      segs.forEach(function (sg) { emit(sg[0], sg[1], sg[2], sg[3], sg[4]); });
+      segs.forEach(function (sg) { emit(sg[0], sg[1], sg[2], sg[3], sg[4], sg[5]); });
       tower = { exploded: false };
     }
     function explodeTower() {
@@ -14300,11 +14303,11 @@ else sizeCoverMedallion();
       /* la Tour Eiffel se construit salve après salve : chaque explosion
          fait naître sa section — fondations, 1er étage, taille, 2e étage, sommet */
       [4400, function () { burst(W * 0.33, H * 0.88, { pal: 'gold' }); burst(W * 0.67, H * 0.88, { pal: 'gold' }); flash(W * 0.5, H * 0.88, Math.min(W, H) * 0.34, 0.4); }],
-      [4950, function () { burst(W * 0.5, H * 0.735, { ring: 1, pal: 'gold' }); }],
+      [5000, function () { burst(W * 0.5, H * 0.742, { ring: 1, pal: 'gold' }); }],
       [5500, function () { burst(W * 0.5, H * 0.52, { pal: 'gold', palm: 1 }); }],
       [5800, function () { rocket(0.07, 'rose'); }],
-      [6050, function () { burst(W * 0.5, H * 0.252, { ring: 1, pal: 'silver' }); }],
-      [6550, function () { burst(W * 0.5, H * 0.10, { pal: 'silver' }); flash(W * 0.5, H * 0.09, Math.min(W, H) * 0.36, 0.45); }],
+      [6100, function () { burst(W * 0.5, H * 0.256, { ring: 1, pal: 'silver' }); }],
+      [6500, function () { burst(W * 0.5, H * 0.10, { pal: 'silver' }); flash(W * 0.5, H * 0.09, Math.min(W, H) * 0.36, 0.45); }],
       [6900, function () { rocket(0.93, 'cyan'); }]
     ];
     function step(t) {
