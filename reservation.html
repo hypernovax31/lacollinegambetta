@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Colline Gambetta — Réserver ma table</title>
+<meta name="description" content="Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --violet-950:#24102e;
+  --violet-900:#432155;
+  --violet-800:#592e6f;
+  --gold-100:#fef9db;
+  --gold-300:#f0d78f;
+  --gold-500:#d8b257;
+  --gold-700:#9c7a2d;
+  --cream:#fcfbf7;
+  --ink:#24102e;
+  --muted:#7b6a88;
+  --line:rgba(216,178,87,.28);
+  --shadow:0 12px 30px rgba(36,16,46,.08);
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0; font-family:'Montserrat',sans-serif; color:var(--ink);
+  background:var(--cream); min-height:100svh; display:flex; flex-direction:column;
+}
+.star-gold { color:var(--gold-500); }
+
+/* ===== Bandeau de retour ===== */
+.top-controls {
+  background:var(--violet-800); border-bottom:1px solid rgba(216,178,87,.45);
+  padding:10px 12px; display:flex; justify-content:center;
+  box-shadow:0 4px 15px rgba(0,0,0,.4);
+}
+.control-btn {
+  background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff;
+  border-radius:999px; min-height:44px; width:min(100%,360px); padding:10px 16px;
+  font:inherit; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+  cursor:pointer; transition:.2s ease; text-decoration:none;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+}
+.control-btn:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
+.control-btn svg { width:16px; height:16px; flex:0 0 auto; }
+
+/* ===== En-tête ===== */
+.book-header {
+  background:linear-gradient(180deg,#24102e 0,#331745 68%,#3a1b4f 100%);
+  color:#fff; text-align:center; padding:30px 16px 34px;
+  border-bottom:2px solid var(--gold-500);
+}
+.book-header .eyebrow {
+  font-family:'Cinzel',serif; letter-spacing:.3em; color:var(--gold-100);
+  text-transform:uppercase; font-size:.78rem;
+}
+.book-header h1 {
+  margin:12px 0 0; font-family:'Cinzel',serif; font-weight:700;
+  font-size:clamp(1.5rem,5vw,2.4rem); letter-spacing:.14em; text-transform:uppercase;
+}
+.book-header h1 span {
+  display:block; color:var(--gold-500); font-size:.48em; letter-spacing:.28em; margin-top:.4rem;
+}
+.book-header p {
+  margin:14px 0 0; font-family:'Cinzel',serif; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--gold-100); font-size:clamp(.7rem,2vw,.9rem);
+}
+
+/* ===== Corps ===== */
+.wrap { width:min(100% - 24px, 900px); margin:0 auto; padding:26px 0 34px; flex:1 0 auto; }
+.panel {
+  background:#fff; border:1px solid var(--line); border-radius:22px;
+  padding:18px; box-shadow:var(--shadow); margin-bottom:18px;
+}
+.panel__head { display:grid; gap:6px; justify-items:center; text-align:center; margin-bottom:16px; }
+.panel__title {
+  margin:0; display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  min-height:50px; max-width:100%; padding:10px 22px; border-radius:999px;
+  background:var(--violet-800); color:#fff; border:1px solid var(--gold-500);
+  font-family:'Cinzel',serif; font-size:clamp(1rem,1.8vw,1.24rem);
+  letter-spacing:.12em; text-transform:uppercase; text-align:center; line-height:1.2;
+}
+.panel__title::before, .panel__title::after { content:'✦'; color:var(--gold-500); font-size:.72em; }
+.panel__subtitle { margin:0; color:var(--muted); font-style:italic; font-size:.9rem; }
+
+/* ===== Formulaire ===== */
+.form-grid { display:grid; grid-template-columns:1fr; gap:14px; }
+@media (min-width:680px) {
+  .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .field--full { grid-column:1 / -1; }
+}
+.field { display:grid; gap:6px; min-width:0; }
+.field > label {
+  font-family:'Cinzel',serif; font-size:.74rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--gold-700); font-weight:700;
+}
+.field input, .field select, .field textarea {
+  font:inherit; color:var(--ink); background:#fff;
+  border:1px solid rgba(216,178,87,.5); border-radius:14px;
+  padding:11px 14px; min-height:46px; width:100%; transition:.18s ease;
+}
+.field textarea { min-height:96px; resize:vertical; line-height:1.5; }
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(216,178,87,.22);
+}
+.field__hint { margin:0; font-size:.76rem; color:var(--muted); font-style:italic; }
+.field--error input, .field--error select { border-color:#b0304a; box-shadow:0 0 0 3px rgba(176,48,74,.14); }
+.field__error { margin:0; font-size:.76rem; color:#b0304a; font-weight:600; }
+.field__error[hidden] { display:none; }
+
+.form-actions { margin-top:20px; display:grid; gap:10px; justify-items:center; }
+.btn-book {
+  font:inherit; font-family:'Cinzel',serif; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; cursor:pointer;
+  background:linear-gradient(135deg,#bf953f 0%,#fcf6ba 30%,#d8b257 60%,#fef9db 100%);
+  color:var(--violet-950); border:1px solid #fcf6ba; border-radius:999px;
+  min-height:52px; padding:12px 30px; width:min(100%,380px);
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  transition:.2s ease; box-shadow:0 8px 22px rgba(36,16,46,.16);
+}
+.btn-book:hover { filter:brightness(1.06); transform:translateY(-1px); }
+.btn-book:active { transform:translateY(1px); }
+.form-note { margin:0; text-align:center; font-size:.8rem; color:var(--muted); }
+
+.form-status {
+  margin:16px 0 0; padding:14px 16px; border-radius:16px; text-align:center;
+  border:1px solid var(--gold-500); background:#fffdf4; color:var(--violet-900);
+  font-weight:600; line-height:1.5;
+}
+.form-status[hidden] { display:none; }
+.form-status strong { font-family:'Cinzel',serif; letter-spacing:.06em; }
+
+/* ===== Colonne contact ===== */
+.info-grid { display:grid; grid-template-columns:1fr; gap:10px; }
+@media (min-width:680px) { .info-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.info-link {
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  min-height:48px; padding:10px 16px; border-radius:999px; text-decoration:none;
+  border:1px solid rgba(216,178,87,.5); color:var(--violet-900); background:#fff;
+  font-weight:700; letter-spacing:.04em; transition:.2s ease; text-align:center;
+}
+.info-link:hover { background:#fffaea; border-color:var(--gold-500); }
+.info-link svg { width:18px; height:18px; flex:0 0 auto; }
+.hours { margin:16px 0 0; display:grid; gap:6px; }
+.hours__row {
+  display:flex; justify-content:space-between; gap:16px; padding:8px 4px;
+  border-bottom:1px dotted rgba(156,122,45,.38);
+}
+.hours__row:last-child { border-bottom:0; }
+.hours__day { font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.1em; font-size:.8rem; color:var(--violet-900); }
+.hours__val { font-family:'Cinzel',serif; font-weight:700; color:var(--gold-700); white-space:nowrap; }
+
+/* ===== Pied ===== */
+.footer {
+  background:var(--violet-800); border-top:2px solid var(--gold-500); color:#fff;
+  padding:16px 12px calc(18px + env(safe-area-inset-bottom)); text-align:center;
+  margin-top:auto;
+}
+.footer-details {
+  display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px 20px;
+  color:var(--gold-100); font-family:'Cinzel',serif;
+  font-size:clamp(.62rem,1.2vw,.84rem); letter-spacing:.08em; text-transform:uppercase;
+}
+.footer-note {
+  color:var(--gold-500); font-family:'Cinzel',serif; text-transform:uppercase;
+  letter-spacing:.14em; font-size:clamp(.56rem,1vw,.76rem); margin-bottom:8px;
+}
+</style>
+</head>
+<body>
+
+<div class="top-controls">
+  <a class="control-btn" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    Retour à la carte
+  </a>
+</div>
+
+<header class="book-header">
+  <div class="eyebrow"><span class="star-gold">✦</span> RÉSERVATION <span class="star-gold">✦</span></div>
+  <h1>COLLINE <span>GAMBETTA</span></h1>
+  <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
+</header>
+
+<div class="wrap">
+
+  <article class="panel">
+    <div class="panel__head">
+      <h2 class="panel__title">Réserver ma table</h2>
+      <p class="panel__subtitle">Dites-nous quand, et pour combien — nous confirmons par téléphone ou par courriel.</p>
+    </div>
+
+    <form id="book-form" novalidate>
+      <div class="form-grid">
+        <div class="field" data-field>
+          <label for="bk-name">Nom</label>
+          <input id="bk-name" name="nom" type="text" autocomplete="name" required placeholder="Votre nom">
+          <p class="field__error" data-error hidden>Merci d’indiquer votre nom.</p>
+        </div>
+        <div class="field" data-field>
+          <label for="bk-phone">Téléphone</label>
+          <input id="bk-phone" name="telephone" type="tel" autocomplete="tel" required placeholder="06 12 34 56 78">
+          <p class="field__error" data-error hidden>Merci d’indiquer un numéro où vous joindre.</p>
+        </div>
+        <div class="field field--full" data-field>
+          <label for="bk-mail">Courriel <span style="text-transform:none;letter-spacing:0;font-weight:400">(facultatif)</span></label>
+          <input id="bk-mail" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr">
+          <p class="field__error" data-error hidden>Cette adresse ne semble pas valide.</p>
+        </div>
+        <div class="field" data-field>
+          <label for="bk-date">Date</label>
+          <input id="bk-date" name="date" type="date" required>
+          <p class="field__error" data-error hidden>Merci de choisir une date à venir.</p>
+        </div>
+        <div class="field" data-field>
+          <label for="bk-time">Heure</label>
+          <select id="bk-time" name="heure" required>
+            <option value="">Choisir…</option>
+          </select>
+          <p class="field__error" data-error hidden>Merci de choisir une heure.</p>
+        </div>
+        <div class="field" data-field>
+          <label for="bk-guests">Nombre de personnes</label>
+          <select id="bk-guests" name="couverts" required>
+            <option value="">Choisir…</option>
+          </select>
+          <p class="field__hint">Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.</p>
+        </div>
+        <div class="field" data-field>
+          <label for="bk-place">Préférence</label>
+          <select id="bk-place" name="preference">
+            <option value="Sans préférence">Sans préférence</option>
+            <option value="En terrasse">En terrasse</option>
+            <option value="En salle">En salle</option>
+            <option value="Au comptoir">Au comptoir</option>
+          </select>
+        </div>
+        <div class="field field--full">
+          <label for="bk-msg">Un mot pour nous <span style="text-transform:none;letter-spacing:0;font-weight:400">(facultatif)</span></label>
+          <textarea id="bk-msg" name="message" placeholder="Anniversaire, allergie, poussette, ami à quatre pattes…"></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-book" type="submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6"/><path d="M8 3v4M16 3v4"/><path d="M8.6 14.4h6.8"/></svg>
+          Envoyer ma demande
+        </button>
+        <p class="form-note">Une demande n’est pas une confirmation : nous vous rappelons pour valider.</p>
+      </div>
+
+      <div class="form-status" id="bk-status" role="status" aria-live="polite" hidden></div>
+    </form>
+  </article>
+
+  <article class="panel">
+    <div class="panel__head">
+      <h2 class="panel__title">Nous joindre directement</h2>
+      <p class="panel__subtitle">Pour le jour même, le téléphone reste le plus sûr.</p>
+    </div>
+    <div class="info-grid">
+      <a class="info-link" href="tel:+33143490593">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
+        01 43 49 05 93
+      </a>
+      <a class="info-link" href="mailto:lacollinegambetta@mailo.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>
+        lacollinegambetta@mailo.com
+      </a>
+      <a class="info-link" href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>
+        lacolline.gambetta
+      </a>
+      <a class="info-link" href="https://maps.google.com/?q=4+rue+Belgrand+75020+Paris" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        4 rue Belgrand, Paris 20ᵉ
+      </a>
+    </div>
+    <div class="hours">
+      <div class="hours__row"><span class="hours__day">Lundi — Vendredi</span><span class="hours__val">07h00 — 02h00</span></div>
+      <div class="hours__row"><span class="hours__day">Samedi</span><span class="hours__val">07h00 — 02h00</span></div>
+      <div class="hours__row"><span class="hours__day">Dimanche</span><span class="hours__val">08h00 — 02h00</span></div>
+      <div class="hours__row"><span class="hours__day">Service continu</span><span class="hours__val">Cuisine 12h — 23h</span></div>
+    </div>
+  </article>
+
+</div>
+
+<footer class="footer">
+  <div class="footer-note"><span class="star-gold">✦</span> Terrasse • Service continu • Fait maison <span class="star-gold">✦</span></div>
+  <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><span>4 RUE BELGRAND, 75020 PARIS</span><span>•</span><span>MÉTRO GAMBETTA</span></div>
+</footer>
+
+<script>
+(function () {
+  var form = document.getElementById('book-form');
+  var status = document.getElementById('bk-status');
+  var dateEl = document.getElementById('bk-date');
+  var timeEl = document.getElementById('bk-time');
+  var guestsEl = document.getElementById('bk-guests');
+
+  /* ---- Heures de service, par quart d'heure, 12h00 → 22h45 ---- */
+  for (var h = 12; h <= 22; h++) {
+    for (var m = 0; m < 60; m += 15) {
+      var v = (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+      var o = document.createElement('option');
+      o.value = v;
+      o.textContent = v.replace(':', 'h');
+      timeEl.appendChild(o);
+    }
+  }
+  /* ---- Couverts ---- */
+  for (var g = 1; g <= 10; g++) {
+    var og = document.createElement('option');
+    og.value = String(g);
+    og.textContent = g === 1 ? '1 personne' : g + ' personnes';
+    guestsEl.appendChild(og);
+  }
+  var big = document.createElement('option');
+  big.value = '10+';
+  big.textContent = 'Plus de 10 personnes';
+  guestsEl.appendChild(big);
+
+  /* ---- Dates : aujourd'hui minimum, trois mois d'avance au plus ---- */
+  function iso(d) {
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+  var today = new Date();
+  dateEl.min = iso(today);
+  var max = new Date(today.getTime());
+  max.setMonth(max.getMonth() + 3);
+  dateEl.max = iso(max);
+  dateEl.value = iso(today);
+
+  function setError(input, on) {
+    var field = input.closest('[data-field]');
+    if (!field) return;
+    field.classList.toggle('field--error', !!on);
+    var msg = field.querySelector('[data-error]');
+    if (msg) msg.hidden = !on;
+  }
+  ['input', 'change'].forEach(function (ev) {
+    form.addEventListener(ev, function (e) {
+      if (e.target && e.target.closest('[data-field]')) setError(e.target, false);
+    });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var bad = null;
+
+    var name = document.getElementById('bk-name');
+    var phone = document.getElementById('bk-phone');
+    var mail = document.getElementById('bk-mail');
+
+    if (!name.value.trim()) { setError(name, true); bad = bad || name; }
+    /* Un numéro français, écrit comme on veut : au moins 8 chiffres. */
+    if ((phone.value.match(/\d/g) || []).length < 8) { setError(phone, true); bad = bad || phone; }
+    if (mail.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail.value.trim())) {
+      setError(mail, true); bad = bad || mail;
+    }
+    if (!dateEl.value || dateEl.value < iso(new Date())) { setError(dateEl, true); bad = bad || dateEl; }
+    if (!timeEl.value) { setError(timeEl, true); bad = bad || timeEl; }
+    if (!guestsEl.value) { setError(guestsEl, true); bad = bad || guestsEl; }
+
+    if (bad) {
+      status.hidden = true;
+      bad.focus();
+      return;
+    }
+
+    /* Pas de serveur derrière ce site : la demande part par courriel, dans
+       le client de messagerie du visiteur, entièrement pré-remplie. Le
+       message reste affiché à l'écran pour qu'il puisse aussi appeler. */
+    var d = new Date(dateEl.value + 'T12:00:00');
+    var jolie = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    var couverts = guestsEl.options[guestsEl.selectedIndex].textContent;
+    var pref = document.getElementById('bk-place').value;
+    var msg = document.getElementById('bk-msg').value.trim();
+
+    var corps = [
+      'Bonjour,',
+      '',
+      'Je souhaite réserver une table à La Colline Gambetta.',
+      '',
+      'Nom : ' + name.value.trim(),
+      'Téléphone : ' + phone.value.trim(),
+      mail.value.trim() ? 'Courriel : ' + mail.value.trim() : null,
+      'Date : ' + jolie,
+      'Heure : ' + timeEl.value.replace(':', 'h'),
+      'Couverts : ' + couverts,
+      'Préférence : ' + pref,
+      msg ? '' : null,
+      msg ? 'Message : ' + msg : null,
+      '',
+      'Merci beaucoup,',
+      name.value.trim()
+    ].filter(function (l) { return l !== null; }).join('\n');
+
+    var sujet = 'Réservation — ' + name.value.trim() + ' — ' + jolie + ' à ' + timeEl.value.replace(':', 'h') + ' (' + couverts + ')';
+    var href = 'mailto:lacollinegambetta@mailo.com?subject=' + encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+
+    status.innerHTML = '<strong>Votre demande est prête.</strong><br>' +
+      'Votre messagerie s’ouvre avec le récapitulatif — il ne reste qu’à l’envoyer. ' +
+      'Vous préférez de vive voix ? Appelez le <a href="tel:+33143490593" style="color:#9c7a2d;font-weight:700">01 43 49 05 93</a>.';
+    status.hidden = false;
+    window.location.href = href;
+  });
+})();
+</script>
+
+</body>
+</html>
