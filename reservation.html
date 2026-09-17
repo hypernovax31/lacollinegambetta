@@ -77,10 +77,7 @@ button, a { font:inherit; }
 .control-btn, .contact-link, .footer-link { width:100%; }
 .footer-links { display:grid; grid-template-columns:1fr; width:100%; }
 .panel { padding:14px; }
-c'est lui qui passe sur
-     plusieurs lignes dans sa colonne — le prix reste en face de la
-     première ligne (alignement baseline des règles de base). */
-  .footer-details { gap:4px 12px; }
+.footer-details { gap:4px 12px; }
 }
 @media (max-width: 640px) {
 .nav-btn {
@@ -115,10 +112,15 @@ c'est lui qui passe sur
     padding: 8px 12px;
   }
 }
-/* ===== Keep top action buttons on one symmetric row ===== */
 .top-controls .control-btn {
   white-space: nowrap;
   line-height: 1.15;
+}
+@media (max-width: 480px) {
+.top-controls .control-btn {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
 }
 @media (max-width: 640px) {
 .top-controls {
@@ -143,7 +145,6 @@ c'est lui qui passe sur
     padding: 8px 6px;
   }
 }
-/* ===== Symmetric top and cover action/link buttons ===== */
 .top-controls {
   width: 100vw;
   max-width: none;
@@ -174,7 +175,6 @@ c'est lui qui passe sur
     padding: 8px 4px;
   }
 }
-/* ===== Tighter menu header scale ===== */
 .interior-header {
   padding: 18px 14px 16px;
 }
@@ -227,12 +227,6 @@ c'est lui qui passe sur
     font-size: 0.74rem !important;
   }
 }
-#entrees .panel__title, #plats .panel__title, #menus .panel__title, #desserts .panel__title {
-  color: var(--royal-violet-ink) !important;
-}
-#menus .panel__subtitle {
-  color: var(--royal-violet-muted) !important;
-}
 .interior-header, .top-controls, .footer {
   color: #ffffff;
 }
@@ -245,7 +239,6 @@ c'est lui qui passe sur
 .interior-header .eyebrow, .interior-header p, .footer-note {
   text-shadow: 0 1px 2px rgba(0,0,0,.14);
 }
-/* ===== Cover now reuses menu leader ===== */
 .menu-leader-subline {
   margin-top: 8px;
   color: var(--gold-100) !important;
@@ -253,8 +246,7 @@ c'est lui qui passe sur
 .interior-header h2 span {
   color: var(--gold-700) !important;
 }
-/* ===== Ensure title text stays white on violet title backgrounds ===== */
-.panel__title, #entrees .panel__title, #plats .panel__title, #menus .panel__title, #cocktails .panel__title, #vins .panel__title, #boissons .panel__title, #desserts .panel__title {
+.panel__title {
   color: #ffffff !important;
 }
 .star-gold {
@@ -264,7 +256,6 @@ c'est lui qui passe sur
 .panel__title::before, .panel__title::after {
   color: var(--gold-bright) !important;
 }
-/* ===== Uniform star size everywhere ===== */
 .star-gold, .panel__title::before, .panel__title::after {
   font-size: 0.78rem !important;
   line-height: 1 !important;
@@ -282,7 +273,6 @@ c'est lui qui passe sur
   color: var(--gold-bright) !important;
   text-shadow: 0 0 12px rgba(255,232,143,0.28), 0 0 1px rgba(36,16,46,0.65);
 }
-/* ===== Make “LA CARTE” match the COLLINE title style ===== */
 .interior-header .eyebrow {
   font-family: 'Cinzel', serif !important;
   font-size: clamp(1.8rem, 4.8vw, 2.8rem) !important;
@@ -300,7 +290,6 @@ c'est lui qui passe sur
     line-height: 1.05 !important;
   }
 }
-/* ===== Safety override: no dark text on violet backgrounds ===== */
 .top-controls, .interior-header, .panel__title, .footer {
   color: #ffffff !important;
 }
@@ -313,7 +302,6 @@ c'est lui qui passe sur
 .top-controls .control-btn.active, .menu-nav .nav-btn.active {
   color: var(--violet-950) !important;
 }
-/* ===== Restore original smaller LA CARTE in menu header ===== */
 .interior-header .eyebrow {
   font-family: 'Cinzel', serif !important;
   font-size: .72rem !important;
@@ -333,23 +321,18 @@ c'est lui qui passe sur
 .interior-header, .interior-header .eyebrow, .interior-header h2, .interior-header p, .top-controls, .top-controls .control-btn, .menu-nav .nav-btn, .panel__title, .panel__title *, .footer, .footer-details, .footer-note, .footer-legal, .footer-link {
   color: #ffffff !important;
 }
-/* Keep intentional non-white accents */
 .top-controls .control-btn.active, .menu-nav .nav-btn.active {
   color: var(--violet-950) !important;
 }
 .interior-header h2 span, .star-gold, .panel__title::before, .panel__title::after, .footer-note .star-gold {
   color: var(--gold-bright) !important;
 }
-/* ===== Final text color system cleanup ===== */
-/* 1) White text on every violet background area */
 .top-controls, .top-controls .control-btn, .menu-nav .nav-btn, .interior-header, .interior-header .eyebrow, .interior-header h2, .interior-header p, .panel__title, .footer, .footer-details, .footer-note, .footer-legal, .footer-link {
   color: #ffffff !important;
 }
-/* 2) Dark text only on gold backgrounds */
 .top-controls .control-btn.active, .menu-nav .nav-btn.active {
   color: var(--violet-950) !important;
 }
-/* 3) Dark text also for icons inside gold areas */
 .top-controls .control-btn.active svg, .menu-nav .nav-btn.active svg {
   stroke: var(--violet-950) !important;
 }
@@ -357,24 +340,30 @@ c'est lui qui passe sur
   color: var(--violet-950) !important;
   text-shadow: none !important;
 }
-/* 4) Keep bright gold accents everywhere else */
 .interior-header h2 span, .star-gold, .panel__title::before, .panel__title::after, .footer-note .star-gold {
   color: var(--gold-bright) !important;
 }
-mentions */
+@media (max-width: 480px) {
+.menu-nav .nav-btn:last-child {
+    grid-column: span 2;
+  }
+.nav-btn {
+    font-size: 1rem !important;
+    line-height: 1.25 !important;
+    padding: 10px 12px !important;
+    min-height: 46px !important;
+  }
+}
 .panel__subtitle {
   font-size: clamp(0.76rem, 0.28vw + 0.68rem, 0.92rem) !important;
   line-height: 1.35 !important;
 }
-/* Titres de panneaux */
 .panel__title {
   font-size: clamp(0.88rem, 1.6vw, 1.24rem) !important;
 }
-/* Boutons de contrôle du haut (Page de garde / Menu & Carte) */
 .control-btn {
   font-size: clamp(0.72rem, 0.22vw + 0.64rem, 0.85rem) !important;
 }
-/* ===== Boutons Page de garde / Menu & Carte resserrés (comme le pied de page) ===== */
 .top-controls {
   display: flex;
   justify-content: center;
@@ -386,19 +375,9 @@ mentions */
   min-width: 0 !important;
   padding: 9px 18px !important;
 }
-#cocktails .panel__title { color: #ffffff !important; }
-.menus-duo__left .panel { display: grid; grid-template-rows: auto minmax(0, 1fr); }
-.menus-duo__left .panel .special-card--compact { height: 100%; box-sizing: border-box; }
-.menus-duo > .panel { display: grid; min-height: 0; }
-.menus-duo__left .panel > article { grid-row: 2; }
 @media print {
 .top-controls { display:none !important; }
 }
-/* Les contenances sont réglées en un seul endroit : voir le bloc
-   « CONTENANCES : UN SEUL FORMAT » en fin de feuille. */
-
-
-/* ===== Téléchargement : icône discrète en haut à droite du header ===== */
 .top-controls {
   position: relative;
   display: flex;
@@ -440,6 +419,12 @@ mentions */
     letter-spacing: 0.02em !important;
   }
 }
+@media (max-width: 640px) {
+.footer-links {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
 .footer-links {
   grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr) minmax(0, 1.35fr);
 }
@@ -448,7 +433,6 @@ mentions */
     grid-template-columns: 1fr;
   }
 }
-/* Titres pastilles violettes : une seule taille (max lisible) */
 .panel__title {
   font-size: 1.08rem !important;
   letter-spacing: .12em !important;
@@ -456,17 +440,6 @@ mentions */
 }
 @media (max-width: 640px) {
 .panel__title { font-size: 0.96rem !important; }
-}
-comme partout ailleurs sur la carte.
-   Le « Petit déjeuner » doublait un encadrement (le .panel autour de sa carte) :
-   son carton à lui restait dehors, sans son
-   propre liseré. Le duo ne se met en deux colonnes qu'à partir de 720 px (voir
-   @media plus bas) : en dessous chaque bloc prend déjà toute la largeur. */
-#menus .menus-duo__left > .panel .breakfast-card {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  padding: 0 !important;
 }
 .footer-links .footer-link {
   font-family: 'Montserrat', sans-serif !important;
@@ -491,7 +464,7 @@ comme partout ailleurs sur la carte.
     letter-spacing: 0.02em !important;
   }
 }
-html .panel__subtitle.qty, html #boissons .panel__subtitle.qty, html #cocktails .panel__subtitle .qty {
+html .panel__subtitle.qty {
   font-family: 'Montserrat', sans-serif !important;
   font-weight: 400 !important;
   font-style: normal !important;
@@ -503,7 +476,6 @@ html .panel__subtitle.qty, html #boissons .panel__subtitle.qty, html #cocktails 
   white-space: nowrap;
   color: var(--qty-ink) !important;
 }
-téléchargement direct sur l'appareil (attribut download). */
 .footer-download-wrap { margin: 8px auto 4px; }
 .footer-download {
   display: inline-flex; align-items: center; justify-content: center;
@@ -536,15 +508,69 @@ html[lang="ja"] .footer-note { font-family:'CinzelJP','Cinzel',serif; }
 html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel', serif !important; }
 html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel', serif !important; }
 html[lang="ja"] .footer-links .footer-link { font-family:'MontserratJP','Montserrat', sans-serif !important; }
-html[lang="ja"] .panel__subtitle.qty, html[lang="ja"] #boissons .panel__subtitle.qty, html[lang="ja"] #cocktails .panel__subtitle .qty { font-family:'MontserratJP','Montserrat', sans-serif !important; }
+html[lang="ja"] .panel__subtitle.qty { font-family:'MontserratJP','Montserrat', sans-serif !important; }
 html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', system-ui, sans-serif; }
-police ni taille propres : c'est un .contact-link sur la
-   page de garde et un .footer-link en pied de carte {
-  background:rgba(216,178,87,.16);
-  border-color:rgba(216,178,87,.75);
-}
 
 /* ===== Propre à cette page ===== */
+
+/* Titres de section en noir.
+   Sur la carte, la pastille violette porte un texte blanc parce qu'elle
+   est posée sur du crème et lue de loin. Ici les deux titres sont les
+   repères de lecture d'un formulaire : le blanc sur violet n'offrait pas
+   assez de contraste. La pastille devient donc claire — fond crème,
+   liseré or conservé, texte noir d'encre — ce qui monte le rapport de
+   contraste bien au-delà du minimum AA sans rien changer à la forme,
+   à la fonte ni aux étoiles dorées. */
+#reservation-page .panel__head .panel__title {
+  background:#fffdf6 !important;
+  color:#14060c !important;
+  border-color:var(--gold-500) !important;
+  box-shadow:0 2px 10px rgba(36,16,46,.06);
+}
+#reservation-page .panel__head .panel__title::before,
+#reservation-page .panel__head .panel__title::after { color:var(--gold-700) !important; }
+#reservation-page .panel__head .panel__subtitle { color:#4a3d55 !important; }
+
+/* Pied de page : les pilules s'adaptent enfin à leur texte.
+   Le site impose aux .footer-link une grille de trois colonnes égales
+   avec white-space:nowrap et text-overflow:ellipsis — l'adresse de
+   courriel, bien plus longue que les deux autres, s'y trouvait coupée.
+   On rend la rangée fluide : chaque pilule prend la largeur de son
+   contenu, la ligne se replie toute seule quand la place manque, et le
+   texte n'est plus jamais tronqué (il passe à la ligne s'il le faut).
+   Aucune taille de police n'est réduite : c'est la mise en page qui
+   cède, pas la lisibilité. */
+#reservation-page .footer-links,
+#reservation-page .footer-links:where(*) {
+  display:flex !important;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:stretch;
+  gap:10px;
+  width:min(100%, 920px);
+  margin:10px auto;
+  grid-template-columns:none !important;
+}
+#reservation-page .footer-links .footer-link {
+  width:auto !important;
+  max-width:100%;
+  flex:0 1 auto;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  overflow-wrap:anywhere;
+  text-align:center;
+  line-height:1.35;
+  min-height:44px;
+  padding:9px 16px;
+  font-size:.78rem !important;
+}
+/* Écrans étroits : une pilule par ligne, pleine largeur, texte entier. */
+@media (max-width: 560px) {
+  #reservation-page .footer-links { flex-direction:column; align-items:stretch; }
+  #reservation-page .footer-links .footer-link { width:100% !important; }
+}
+
 #reservation-page { background:var(--cream); flex:1 0 auto; display:flex; flex-direction:column; }
 .book-back { padding:10px 12px; display:flex; justify-content:center; background:#592e6f; border-bottom:1px solid rgba(216,178,87,.45); box-shadow:0 4px 15px rgba(0,0,0,.4); }
 .book-back .contact-link { width:min(100%,360px); }
