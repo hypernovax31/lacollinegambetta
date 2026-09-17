@@ -25,6 +25,10 @@
   var STORE_KEY = 'lcg-lang';
   var DICTS = {
     en: {
+      "Itinéraire": "Directions",
+      "Recentrer sur le restaurant": "Recentre on the restaurant",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — Gambetta metro",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "Map: 4 rue Belgrand, Paris 20th",
       "1 personne": "1 guest",
       "2 personnes": "2 guests",
       "3 personnes": "3 guests",
@@ -438,6 +442,10 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ NET PRICES IN EUROS • SERVICE INCLUDED ✦"
     },
     es: {
+      "Itinéraire": "Cómo llegar",
+      "Recentrer sur le restaurant": "Centrar en el restaurante",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 París — metro Gambetta",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "Plano: 4 rue Belgrand, París 20",
       "1 personne": "1 persona",
       "2 personnes": "2 personas",
       "3 personnes": "3 personas",
@@ -851,6 +859,10 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     de: {
+      "Itinéraire": "Route",
+      "Recentrer sur le restaurant": "Auf das Restaurant zentrieren",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — Metro Gambetta",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "Karte: 4 rue Belgrand, Paris 20.",
       "1 personne": "1 Person",
       "2 personnes": "2 Personen",
       "3 personnes": "3 Personen",
@@ -1264,6 +1276,10 @@
       "MÉTRO GAMBETTA": "U-Bahnhof Gambetta"
     },
     it: {
+      "Itinéraire": "Itinerario",
+      "Recentrer sur le restaurant": "Centra sul ristorante",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Parigi — metrò Gambetta",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "Mappa: 4 rue Belgrand, Parigi 20",
       "1 personne": "1 persona",
       "2 personnes": "2 persone",
       "3 personnes": "3 persone",
@@ -1677,6 +1693,10 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     pt: {
+      "Itinéraire": "Como chegar",
+      "Recentrer sur le restaurant": "Centrar no restaurante",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — metro Gambetta",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "Mapa: 4 rue Belgrand, Paris 20",
       "1 personne": "1 pessoa",
       "2 personnes": "2 pessoas",
       "3 personnes": "3 pessoas",
@@ -2090,6 +2110,10 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     nl: {
+      "Itinéraire": "Route",
+      "Recentrer sur le restaurant": "Centreren op het restaurant",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Parijs — metro Gambetta",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "Kaart: 4 rue Belgrand, Parijs 20",
       "1 personne": "1 persoon",
       "2 personnes": "2 personen",
       "3 personnes": "3 personen",
@@ -2504,6 +2528,10 @@
     },
   
     ar: {
+      "Itinéraire": "الاتجاهات",
+      "Recentrer sur le restaurant": "التوسيط على المطعم",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 باريس — مترو Gambetta",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "خريطة: 4 rue Belgrand، باريس 20",
       "1 personne": "شخص واحد",
       "2 personnes": "2 أشخاص",
       "3 personnes": "3 أشخاص",
@@ -2935,6 +2963,10 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ساندويتش جمبون وجبنة مع بيضة مقلية"
     },
     zh: {
+      "Itinéraire": "路线",
+      "Recentrer sur le restaurant": "回到餐厅位置",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 巴黎 — Gambetta 地铁站",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "地图：4 rue Belgrand，巴黎 20 区",
       "1 personne": "1 位",
       "2 personnes": "2 位",
       "3 personnes": "3 位",
@@ -3366,6 +3398,10 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "烤火腿奶酪三明治，上加煎蛋"
     },
     uk: {
+      "Itinéraire": "Маршрут",
+      "Recentrer sur le restaurant": "Центрувати на ресторані",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Париж — метро Gambetta",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "Мапа: 4 rue Belgrand, Париж 20",
       "1 personne": "1 особа",
       "2 personnes": "2 осіб",
       "3 personnes": "3 осіб",
@@ -3797,6 +3833,10 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "Підсмажений сендвіч із шинкою та сиром, зверху яєчня"
     },
     ja: {
+      "Itinéraire": "経路",
+      "Recentrer sur le restaurant": "レストランに戻す",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 パリ — メトロ Gambetta",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "地図：4 rue Belgrand、パリ20区",
       "1 personne": "1名",
       "2 personnes": "2名",
       "3 personnes": "3名",
@@ -4228,6 +4268,10 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ハムとチーズのグリルサンド、ベシャメルソース、目玉焼きのせ",
     },
     ko: {
+      "Itinéraire": "길찾기",
+      "Recentrer sur le restaurant": "레스토랑으로 중심 이동",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 파리 — Gambetta 역",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "지도: 4 rue Belgrand, 파리 20구",
       "1 personne": "1명",
       "2 personnes": "2명",
       "3 personnes": "3명",
@@ -4659,6 +4703,10 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "구운 햄과 치즈 샌드위치, 베샤멜 소스, 맨 위에 프라이 에그",
     },
     pl: {
+      "Itinéraire": "Trasa",
+      "Recentrer sur le restaurant": "Wyśrodkuj na restauracji",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paryż — metro Gambetta",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "Mapa: 4 rue Belgrand, Paryż 20",
       "1 personne": "1 osoba",
       "2 personnes": "2 osób",
       "3 personnes": "3 osób",
@@ -5072,6 +5120,10 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ CENY W EURO • SERWIS WLICZONY ✦",
     },
     tr: {
+      "Itinéraire": "Yol tarifi",
+      "Recentrer sur le restaurant": "Restorana ortala",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — Gambetta metrosu",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "Harita: 4 rue Belgrand, Paris 20",
       "1 personne": "1 kişi",
       "2 personnes": "2 kişi",
       "3 personnes": "3 kişi",
@@ -5485,6 +5537,10 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ EURO CİNSİNDEN NET FİYATLAR • SERVİS DAHİL ✦",
     },
     hi: {
+      "Itinéraire": "रास्ता",
+      "Recentrer sur le restaurant": "रेस्तरां पर केंद्रित करें",
+      "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 पेरिस — Gambetta मेट्रो",
+      "Plan : 4 rue Belgrand, Paris 20ᵉ": "नक्शा: 4 rue Belgrand, पेरिस 20",
       "1 personne": "1 व्यक्ति",
       "2 personnes": "2 व्यक्ति",
       "3 personnes": "3 व्यक्ति",
@@ -5934,6 +5990,9 @@
     ['#bk-phone', 'placeholder', '06 12 34 56 78'],
     ['#bk-mail', 'placeholder', 'vous@exemple.fr'],
     ['#bk-msg', 'placeholder', 'Anniversaire, allergie, poussette, ami à quatre pattes…'],
+    ['#map-recenter', 'title', 'Recentrer sur le restaurant'],
+    ['#map-recenter', 'aria-label', 'Recentrer sur le restaurant'],
+    ['#book-map', 'aria-label', 'Plan : 4 rue Belgrand, Paris 20ᵉ'],
   ];
   function norm(t) { return String(t).replace(/\s+/g, ' ').trim(); }
   var SKIP_TAGS = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, CODE: 1, PRE: 1, TEXTAREA: 1 };

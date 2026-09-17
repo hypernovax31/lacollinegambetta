@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
 /* =====================================================================
    Page de réservation.
@@ -640,22 +641,12 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 
 /* ===== Propre à cette page ===== */
 
-/* Titres de section en noir.
-   Sur la carte, la pastille violette porte un texte blanc parce qu'elle
-   est posée sur du crème et lue de loin. Ici les deux titres sont les
-   repères de lecture d'un formulaire : le blanc sur violet n'offrait pas
-   assez de contraste. La pastille devient donc claire — fond crème,
-   liseré or conservé, texte noir d'encre — ce qui monte le rapport de
-   contraste bien au-delà du minimum AA sans rien changer à la forme,
-   à la fonte ni aux étoiles dorées. */
-#reservation-page .panel__head .panel__title {
-  background:#fffdf6 !important;
-  color:#14060c !important;
-  border-color:var(--gold-500) !important;
-  box-shadow:0 2px 10px rgba(36,16,46,.06);
-}
-#reservation-page .panel__head .panel__title::before,
-#reservation-page .panel__head .panel__title::after { color:var(--gold-700) !important; }
+/* Titres de section : la pastille violette du site, sans exception.
+   (J'avais éclairci ces deux pastilles pour gagner du contraste ; c'était
+   rompre l'unité de la carte, où tous les titres de panneau sont violets.
+   On garde donc le violet et le texte blanc du site — le contraste du
+   blanc sur #592e6f reste confortable — et c'est aux LIBELLÉS de champs,
+   traités plus bas, de passer en noir.) */
 #reservation-page .panel__head .panel__subtitle { color:#4a3d55 !important; }
 
 /* Pied de page : les pilules s'adaptent enfin à leur texte.
@@ -714,11 +705,14 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   .field--full { grid-column:1 / -1; }
 }
 .field { display:grid; gap:6px; min-width:0; }
+/* Intitulés des champs (Nom, Téléphone, Courriel, Date, Heure…) en noir :
+   ce sont les mots qu'on lit pour remplir, ils passent avant l'ornement.
+   L'or est conservé pour les seules mentions accessoires. */
 .field > label {
-  font-family:'Cinzel',serif; font-size:.74rem; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--gold-700); font-weight:700;
+  font-family:'Cinzel',serif; font-size:.78rem; letter-spacing:.12em;
+  text-transform:uppercase; color:#14060c; font-weight:700;
 }
-.field > label .opt { text-transform:none; letter-spacing:0; font-weight:400; color:var(--muted); }
+.field > label .opt { text-transform:none; letter-spacing:0; font-weight:400; color:#5d5168; }
 .field input, .field select, .field textarea {
   font:inherit; color:var(--ink); background:#fff;
   border:1px solid rgba(216,178,87,.5); border-radius:14px;
@@ -770,6 +764,80 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 }
 .info-link:hover { background:#fffaea; border-color:var(--gold-500); }
 .info-link svg { width:15px; height:15px; flex:0 0 auto; stroke:var(--violet-900); }
+
+/* ===== Plan interactif =====
+   Encart aux mêmes codes que le reste : coins arrondis, liseré or,
+   ombre douce. On peut s'y déplacer et zoomer ; le bouton en haut à
+   droite ramène la vue sur le restaurant. */
+.map-wrap {
+  position:relative; margin:4px 0 12px; border-radius:18px; overflow:hidden;
+  border:1px solid rgba(216,178,87,.5); box-shadow:var(--shadow);
+  background:#efe9dd;
+}
+#book-map { width:100%; height:clamp(240px, 42vw, 360px); background:#efe9dd; }
+.map-fallback, .map-wrap .map-error {
+  margin:0; padding:18px; text-align:center; color:var(--violet-900);
+  font-family:'Cinzel',serif; letter-spacing:.06em;
+}
+/* Pastille de recentrage : la pilule dorée du site, en rond. */
+.map-recenter {
+  position:absolute; right:10px; top:10px; z-index:500;
+  width:42px; height:42px; padding:0; border-radius:999px; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#bf953f 0%,#fcf6ba 30%,#d8b257 60%,#fef9db 100%);
+  color:var(--violet-950); border:1px solid #fcf6ba;
+  box-shadow:0 6px 16px rgba(36,16,46,.28); transition:.2s ease;
+}
+.map-recenter:hover { filter:brightness(1.06); }
+.map-recenter:active { transform:translateY(1px); }
+.map-recenter svg { width:19px; height:19px; }
+/* Épingle du restaurant, dessinée plutôt qu'en image. */
+.map-pin {
+  width:34px; height:34px; border-radius:50% 50% 50% 0;
+  background:linear-gradient(135deg,#7a3f96,#592e6f);
+  border:2px solid var(--gold-500); transform:rotate(-45deg);
+  box-shadow:0 6px 16px rgba(36,16,46,.4);
+  display:flex; align-items:center; justify-content:center;
+}
+.map-pin::after {
+  content:'✦'; transform:rotate(45deg); color:var(--gold-300);
+  font-size:15px; line-height:1;
+}
+.map-foot {
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:10px; margin-bottom:4px;
+}
+.map-address {
+  font-family:'Cinzel',serif; font-size:.82rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--violet-900); text-align:center;
+}
+.info-link--route { flex:0 0 auto; }
+/* Infobulle Leaflet aux couleurs de la maison. */
+.leaflet-popup-content-wrap {
+  border-radius:14px !important; border:1px solid var(--gold-500);
+  background:#fffdf6;
+}
+.leaflet-popup-content {
+  margin:10px 14px !important; font-family:'Montserrat',sans-serif;
+  color:var(--violet-900); text-align:center; line-height:1.45;
+}
+.leaflet-popup-content strong {
+  font-family:'Cinzel',serif; letter-spacing:.08em; color:#14060c;
+}
+.leaflet-popup-tip { background:#fffdf6 !important; border:1px solid var(--gold-500); }
+.leaflet-control-attribution { font-size:9px !important; }
+
+/* Retour à la carte, en bas de page : la pilule des liens de contact. */
+.book-back-bottom { display:flex; justify-content:center; margin:4px 0 8px; }
+.book-back-bottom .contact-link--back {
+  width:min(100%,360px); color:var(--violet-900);
+  border-color:rgba(216,178,87,.6); background:#fff;
+  font-family:'Cinzel',serif; letter-spacing:.1em;
+}
+.book-back-bottom .contact-link--back svg { stroke:var(--violet-900); }
+.book-back-bottom .contact-link--back:hover {
+  background:#fffaea; border-color:var(--gold-500); color:var(--violet-900);
+}
 
 .hours { margin:16px 0 0; display:grid; gap:2px; }
 .hours__row {
@@ -1015,9 +1083,21 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>
             lacolline.gambetta
           </a>
-          <a class="info-link" href="https://maps.google.com/?q=4+rue+Belgrand+75020+Paris" target="_blank" rel="noopener">
+        </div>
+
+        <!-- Plan : on peut s'y déplacer, et le bouton ✦ ramène au restaurant. -->
+        <div class="map-wrap">
+          <div id="book-map" role="application" aria-label="Plan : 4 rue Belgrand, Paris 20ᵉ"></div>
+          <button type="button" class="map-recenter" id="map-recenter" title="Recentrer sur le restaurant" aria-label="Recentrer sur le restaurant">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 1.6v3.2M12 19.2v3.2M22.4 12h-3.2M4.8 12H1.6"/><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"/></svg>
+          </button>
+          <noscript><p class="map-fallback">4 rue Belgrand, 75020 Paris — métro Gambetta</p></noscript>
+        </div>
+        <div class="map-foot">
+          <span class="map-address">4 rue Belgrand, 75020 Paris — métro Gambetta</span>
+          <a class="info-link info-link--route" href="https://www.openstreetmap.org/directions?to=48.8647788%2C2.3993777" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
-            4 rue Belgrand, Paris 20ᵉ
+            Itinéraire
           </a>
         </div>
         <div class="hours">
@@ -1027,6 +1107,13 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
           <div class="hours__row"><span class="hours__day">Cuisine</span><span class="hours__val">12h00 — 23h00</span></div>
         </div>
       </article>
+
+      <div class="book-back-bottom">
+        <a class="contact-link contact-link--back" href="index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+          Retour à la carte
+        </a>
+      </div>
 
     </div>
   </main>
@@ -1047,6 +1134,67 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
       <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><span>4 RUE BELGRAND, 75020 PARIS</span><span>•</span><span>MÉTRO GAMBETTA</span></div>
     </footer>
 </div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+/* Plan du restaurant.
+   Fond OpenStreetMap, déplaçable et zoomable ; le bouton rond recentre
+   sur l'adresse exacte (relevé Nominatim du 4 rue Belgrand). Si Leaflet
+   ne se charge pas — hors ligne, blocage réseau — l'encart affiche
+   l'adresse en clair plutôt qu'un rectangle vide. */
+(function () {
+  var LAT = 48.8647788, LON = 2.3993777, ZOOM = 17;
+  var el = document.getElementById('book-map');
+  var btn = document.getElementById('map-recenter');
+  if (!el) return;
+
+  if (typeof L === 'undefined') {
+    el.innerHTML = '<p class="map-error">4 rue Belgrand, 75020 Paris — métro Gambetta</p>';
+    if (btn) btn.hidden = true;
+    return;
+  }
+
+  var map = L.map(el, {
+    center: [LAT, LON],
+    zoom: ZOOM,
+    scrollWheelZoom: false,   /* la molette fait défiler la PAGE, pas le plan */
+    zoomControl: true
+  });
+  /* La molette ne zoome qu'une fois le plan touché : on ne piège pas le
+     défilement de quelqu'un qui ne fait que passer devant l'encart. */
+  map.on('focus', function () { map.scrollWheelZoom.enable(); });
+  map.on('blur', function () { map.scrollWheelZoom.disable(); });
+  el.addEventListener('mouseenter', function () { map.scrollWheelZoom.enable(); });
+  el.addEventListener('mouseleave', function () { map.scrollWheelZoom.disable(); });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  var pin = L.divIcon({
+    className: '',
+    html: '<div class="map-pin"></div>',
+    iconSize: [34, 34],
+    iconAnchor: [17, 34],
+    popupAnchor: [0, -32]
+  });
+  L.marker([LAT, LON], { icon: pin, title: 'La Colline Gambetta' })
+    .addTo(map)
+    .bindPopup('<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Métro Gambetta');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      map.flyTo([LAT, LON], ZOOM, { duration: .6 });
+    });
+  }
+  /* L'encart est dimensionné en clamp() : si sa hauteur change après le
+     premier rendu (rotation, changement de langue), Leaflet doit être
+     prévenu, sinon les tuiles restent grises sur une bande. */
+  window.addEventListener('resize', function () { map.invalidateSize(); });
+  setTimeout(function () { map.invalidateSize(); }, 300);
+})();
+</script>
 
 <script src="assets/js/i18n.js" defer></script>
 
