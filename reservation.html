@@ -11,10 +11,29 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
+/* =====================================================================
+   Page de réservation.
+
+   Les règles ci-dessous ne sont PAS réécrites : elles sont extraites
+   telles quelles de index.html (en-tête, pied de page, pilules de
+   contact, panneaux, titres à pastille violette liseré or, y compris
+   leurs points de rupture). Le seul ajout propre à cette page est le
+   formulaire, plus bas, qui reprend les mêmes variables de couleur,
+   les mêmes rayons et les mêmes fontes.
+   ===================================================================== */
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0; font-family:'Montserrat',sans-serif; color:var(--ink);
+  background:var(--cream); min-height:100svh; display:flex; flex-direction:column;
+}
+button, a { font:inherit; }
+
 :root {
   --violet-950:#24102e;
   --violet-900:#432155;
   --violet-800:#592e6f;
+  --violet-700:#6b3c87;
   --gold-100:#fef9db;
   --gold-300:#f0d78f;
   --gold-500:#d8b257;
@@ -25,70 +44,513 @@
   --line:rgba(216,178,87,.28);
   --shadow:0 12px 30px rgba(36,16,46,.08);
 }
-* { box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body {
-  margin:0; font-family:'Montserrat',sans-serif; color:var(--ink);
-  background:var(--cream); min-height:100svh; display:flex; flex-direction:column;
-}
-.star-gold { color:var(--gold-500); }
-
-/* ===== Bandeau de retour ===== */
-.top-controls {
-  background:var(--violet-800); border-bottom:1px solid rgba(216,178,87,.45);
-  padding:10px 12px; display:flex; justify-content:center;
-  box-shadow:0 4px 15px rgba(0,0,0,.4);
-}
-.control-btn {
-  background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff;
-  border-radius:999px; min-height:44px; width:min(100%,360px); padding:10px 16px;
-  font:inherit; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
-  cursor:pointer; transition:.2s ease; text-decoration:none;
-  display:inline-flex; align-items:center; justify-content:center; gap:8px;
-}
-.control-btn:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
-.control-btn svg { width:16px; height:16px; flex:0 0 auto; }
-
-/* ===== En-tête ===== */
-.book-header {
-  background:linear-gradient(180deg,#24102e 0,#331745 68%,#3a1b4f 100%);
-  color:#fff; text-align:center; padding:30px 16px 34px;
-  border-bottom:2px solid var(--gold-500);
-}
-.book-header .eyebrow {
-  font-family:'Cinzel',serif; letter-spacing:.3em; color:var(--gold-100);
-  text-transform:uppercase; font-size:.78rem;
-}
-.book-header h1 {
-  margin:12px 0 0; font-family:'Cinzel',serif; font-weight:700;
-  font-size:clamp(1.5rem,5vw,2.4rem); letter-spacing:.14em; text-transform:uppercase;
-}
-.book-header h1 span {
-  display:block; color:var(--gold-500); font-size:.48em; letter-spacing:.28em; margin-top:.4rem;
-}
-.book-header p {
-  margin:14px 0 0; font-family:'Cinzel',serif; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--gold-100); font-size:clamp(.7rem,2vw,.9rem);
-}
-
-/* ===== Corps ===== */
-.wrap { width:min(100% - 24px, 900px); margin:0 auto; padding:26px 0 34px; flex:1 0 auto; }
-.panel {
-  background:#fff; border:1px solid var(--line); border-radius:22px;
-  padding:18px; box-shadow:var(--shadow); margin-bottom:18px;
-}
-.panel__head { display:grid; gap:6px; justify-items:center; text-align:center; margin-bottom:16px; }
-.panel__title {
-  margin:0; display:inline-flex; align-items:center; justify-content:center; gap:10px;
-  min-height:50px; max-width:100%; padding:10px 22px; border-radius:999px;
-  background:var(--violet-800); color:#fff; border:1px solid var(--gold-500);
-  font-family:'Cinzel',serif; font-size:clamp(1rem,1.8vw,1.24rem);
-  letter-spacing:.12em; text-transform:uppercase; text-align:center; line-height:1.2;
-}
+.top-controls { background:#592e6f; border-bottom:1px solid rgba(216,178,87,.45); padding:10px 12px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; align-items:stretch; box-shadow:0 4px 15px rgba(0,0,0,.4); }
+.control-btn, .nav-btn, .contact-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:44px; width:100%; padding:10px 16px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; transition:.2s ease; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-align:center; }
+.control-btn:hover, .nav-btn:hover, .contact-link:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
+.control-btn.active, .nav-btn.active { background:linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%); color:var(--violet-950); border-color:#fcf6ba; }
+.footer-links { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+.contact-link svg, .footer-link svg { width:15px; height:15px; flex:0 0 auto; stroke:#fff; }
+.interior-header { background:#592e6f; color:#fff; padding:24px 16px 20px; text-align:center; border-bottom:2px solid rgba(216,178,87,.42); }
+.interior-header .eyebrow { font-family:'Cinzel',serif; letter-spacing:.3em; color:var(--gold-100); text-transform:uppercase; font-size:.78rem; }
+.interior-header h2 { margin:8px 0 10px; font-family:'Cinzel',serif; font-size:clamp(2.2rem,6vw,3.4rem); letter-spacing:.18em; text-transform:uppercase; line-height:1; }
+.interior-header h2 span { display:block; color:var(--gold-500); font-size:.48em; letter-spacing:.28em; margin-top:.28rem; }
+.interior-header p { margin:0; font-family:'Cinzel',serif; letter-spacing:.12em; text-transform:uppercase; font-size:clamp(.74rem,2vw,.98rem); }
+.nav-btn { width:100%; min-width:0; white-space:normal; text-align:center; line-height:1.2; }
+.container { width:min(100% - 24px, 1120px); margin:20px auto 0; }
+.panel { background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(252,251,247,.98)); border:1px solid rgba(216,178,87,.38); border-radius:22px; box-shadow:var(--shadow); padding:16px; }
+.panel__head { display:grid; gap:6px; justify-items:center; text-align:center; margin-bottom:12px; }
+.panel__title { margin:0; display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:50px; max-width:100%; padding:10px 22px; border-radius:999px; background:#592e6f; color:#fff; border:1px solid var(--gold-500); font-family:'Cinzel',serif; font-size:clamp(1rem,1.8vw,1.24rem); letter-spacing:.12em; text-transform:uppercase; white-space:normal; text-align:center; line-height:1.2; }
 .panel__title::before, .panel__title::after { content:'✦'; color:var(--gold-500); font-size:.72em; }
 .panel__subtitle { margin:0; color:var(--muted); font-style:italic; font-size:.9rem; }
+.footer { background:#592e6f; border-top:2px solid var(--gold-500); color:#fff; padding:16px 12px calc(18px + env(safe-area-inset-bottom)); text-align:center; margin-top:24px; }
+.footer-details { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px 20px; color:var(--gold-100); font-family:'Cinzel',serif; font-size:clamp(.62rem,1.2vw,.84rem); letter-spacing:.08em; text-transform:uppercase; }
+.footer-links { margin:10px 0; }
+.footer-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:42px; padding:8px 14px; text-decoration:none; display:inline-flex; gap:8px; align-items:center; justify-content:center; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+.footer-link:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
+.footer-link .ig-dot { fill:#fff; }
+.footer-note { color:var(--gold-500); font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.14em; font-size:clamp(.56rem,1vw,.76rem); }
+.footer-legal { margin-top:6px; color:rgba(255,255,255,.86); font-size:.75rem; }
+@media (max-width: 860px) {
+.container { width:min(100% - 16px, 1120px); }
+}
+@media (max-width: 640px) {
+.control-btn, .contact-link, .footer-link { width:100%; }
+.footer-links { display:grid; grid-template-columns:1fr; width:100%; }
+.panel { padding:14px; }
+c'est lui qui passe sur
+     plusieurs lignes dans sa colonne — le prix reste en face de la
+     première ligne (alignement baseline des règles de base). */
+  .footer-details { gap:4px 12px; }
+}
+@media (max-width: 640px) {
+.nav-btn {
+    min-height: 42px;
+    font-size: .72rem;
+    padding: 9px 10px;
+  }
+}
+@media (max-width: 420px) {
+.nav-btn {
+    width: 100%;
+  }
+}
+.footer {
+  background: linear-gradient(180deg, #6b3c87 0%, #592e6f 55%, #432155 100%) !important;
+  border-top: 1px solid rgba(216,178,87,.45) !important;
+  color: #fff;
+  box-shadow: 0 -10px 26px rgba(36,16,46,.12) inset !important;
+}
+.footer-details {
+  color: var(--gold-100);
+}
+.footer-note {
+  color: var(--gold-300);
+}
+.footer-legal {
+  color: rgba(255,255,255,.88);
+}
+@media (max-height: 760px) {
+.contact-link {
+    min-height: 40px;
+    padding: 8px 12px;
+  }
+}
+/* ===== Keep top action buttons on one symmetric row ===== */
+.top-controls .control-btn {
+  white-space: nowrap;
+  line-height: 1.15;
+}
+@media (max-width: 640px) {
+.top-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+.top-controls .control-btn {
+    flex: none !important;
+    min-width: 0;
+    padding: 9px 8px;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+  }
+}
+@media (max-width: 420px) {
+.top-controls {
+    padding: 8px;
+    gap: 6px;
+  }
+.top-controls .control-btn {
+    font-size: 0.66rem;
+    padding: 8px 6px;
+  }
+}
+/* ===== Symmetric top and cover action/link buttons ===== */
+.top-controls {
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+.top-controls .control-btn {
+  min-width: 0;
+  width: min(100%, 360px);
+  justify-self: center;
+}
+@media (max-width: 640px) {
+.top-controls {
+    width: 100vw;
+  }
+.top-controls .control-btn {
+    width: 100%;
+  }
+.top-controls .control-btn {
+    font-size: 0.68rem;
+    padding: 8px 6px;
+    letter-spacing: 0.01em;
+  }
+}
+@media (max-width: 420px) {
+.top-controls .control-btn {
+    font-size: 0.62rem;
+    padding: 8px 4px;
+  }
+}
+/* ===== Tighter menu header scale ===== */
+.interior-header {
+  padding: 18px 14px 16px;
+}
+.interior-header .eyebrow {
+  font-size: .72rem;
+  letter-spacing: .24em;
+}
+.interior-header h2 {
+  margin: 6px 0 8px;
+  font-size: clamp(1.8rem, 4.8vw, 2.8rem);
+  letter-spacing: .14em;
+}
+.interior-header h2 span {
+  font-size: .46em;
+  letter-spacing: .22em;
+  margin-top: .18rem;
+}
+.interior-header p {
+  font-size: clamp(.66rem, 1.6vw, .86rem);
+  letter-spacing: .09em;
+}
+@media (max-width: 640px) {
+.interior-header {
+    padding: 16px 12px 14px;
+  }
+.interior-header h2 {
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+  }
+}
+@media (max-width: 640px) {
+.control-btn, .nav-btn, .contact-link, .footer-link {
+    font-size: 0.78rem !important;
+    letter-spacing: 0.02em !important;
+    min-height: 42px !important;
+  }
+.panel__title {
+    font-size: 1rem !important;
+  }
+.footer-legal {
+    font-size: 0.8rem !important;
+    line-height: 1.45 !important;
+  }
+.interior-header .eyebrow, .interior-header p {
+    font-size: 0.9rem !important;
+    line-height: 1.35 !important;
+  }
+}
+@media (max-width: 420px) {
+.control-btn, .nav-btn, .contact-link, .footer-link {
+    font-size: 0.74rem !important;
+  }
+}
+#entrees .panel__title, #plats .panel__title, #menus .panel__title, #desserts .panel__title {
+  color: var(--royal-violet-ink) !important;
+}
+#menus .panel__subtitle {
+  color: var(--royal-violet-muted) !important;
+}
+.interior-header, .top-controls, .footer {
+  color: #ffffff;
+}
+.interior-header .eyebrow, .interior-header h2, .interior-header h2 span, .interior-header p, .footer-details, .footer-note, .footer-legal, .top-controls .control-btn, .menu-nav .nav-btn {
+  color: #ffffff !important;
+}
+.top-controls .control-btn.active, .menu-nav .nav-btn.active {
+  color: var(--violet-950) !important;
+}
+.interior-header .eyebrow, .interior-header p, .footer-note {
+  text-shadow: 0 1px 2px rgba(0,0,0,.14);
+}
+/* ===== Cover now reuses menu leader ===== */
+.menu-leader-subline {
+  margin-top: 8px;
+  color: var(--gold-100) !important;
+}
+.interior-header h2 span {
+  color: var(--gold-700) !important;
+}
+/* ===== Ensure title text stays white on violet title backgrounds ===== */
+.panel__title, #entrees .panel__title, #plats .panel__title, #menus .panel__title, #cocktails .panel__title, #vins .panel__title, #boissons .panel__title, #desserts .panel__title {
+  color: #ffffff !important;
+}
+.star-gold {
+  color: var(--gold-bright) !important;
+  text-shadow: 0 0 0.5px rgba(36,16,46,.75), 0 0 10px rgba(255,216,106,.22);
+}
+.panel__title::before, .panel__title::after {
+  color: var(--gold-bright) !important;
+}
+/* ===== Uniform star size everywhere ===== */
+.star-gold, .panel__title::before, .panel__title::after {
+  font-size: 0.78rem !important;
+  line-height: 1 !important;
+}
+.star-gold {
+  display: inline-block;
+  vertical-align: middle;
+  transform: translateY(-0.02em);
+}
+.interior-header h2 span {
+  color: var(--gold-bright) !important;
+  text-shadow: 0 0 10px rgba(255,232,143,0.18);
+}
+.star-gold, .panel__title::before, .panel__title::after {
+  color: var(--gold-bright) !important;
+  text-shadow: 0 0 12px rgba(255,232,143,0.28), 0 0 1px rgba(36,16,46,0.65);
+}
+/* ===== Make “LA CARTE” match the COLLINE title style ===== */
+.interior-header .eyebrow {
+  font-family: 'Cinzel', serif !important;
+  font-size: clamp(1.8rem, 4.8vw, 2.8rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: .14em !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
+  color: #ffffff !important;
+  text-shadow: 0 4px 18px rgba(0,0,0,.35);
+}
+@media (max-width: 640px) {
+.interior-header .eyebrow {
+    font-size: clamp(1.45rem, 7vw, 2.1rem) !important;
+    letter-spacing: .1em !important;
+    line-height: 1.05 !important;
+  }
+}
+/* ===== Safety override: no dark text on violet backgrounds ===== */
+.top-controls, .interior-header, .panel__title, .footer {
+  color: #ffffff !important;
+}
+.top-controls *, .interior-header *, .panel__title *, .footer * {
+  color: inherit;
+}
+.interior-header h2, .interior-header p, .interior-header .eyebrow, .panel__title, .footer-details, .footer-note, .footer-legal, .footer-link, .top-controls .control-btn, .menu-nav .nav-btn {
+  color: #ffffff !important;
+}
+.top-controls .control-btn.active, .menu-nav .nav-btn.active {
+  color: var(--violet-950) !important;
+}
+/* ===== Restore original smaller LA CARTE in menu header ===== */
+.interior-header .eyebrow {
+  font-family: 'Cinzel', serif !important;
+  font-size: .72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .24em !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase !important;
+  color: var(--gold-100) !important;
+  text-shadow: none !important;
+}
+@media (max-width: 640px) {
+.interior-header .eyebrow {
+    font-size: .72rem !important;
+    letter-spacing: .18em !important;
+  }
+}
+.interior-header, .interior-header .eyebrow, .interior-header h2, .interior-header p, .top-controls, .top-controls .control-btn, .menu-nav .nav-btn, .panel__title, .panel__title *, .footer, .footer-details, .footer-note, .footer-legal, .footer-link {
+  color: #ffffff !important;
+}
+/* Keep intentional non-white accents */
+.top-controls .control-btn.active, .menu-nav .nav-btn.active {
+  color: var(--violet-950) !important;
+}
+.interior-header h2 span, .star-gold, .panel__title::before, .panel__title::after, .footer-note .star-gold {
+  color: var(--gold-bright) !important;
+}
+/* ===== Final text color system cleanup ===== */
+/* 1) White text on every violet background area */
+.top-controls, .top-controls .control-btn, .menu-nav .nav-btn, .interior-header, .interior-header .eyebrow, .interior-header h2, .interior-header p, .panel__title, .footer, .footer-details, .footer-note, .footer-legal, .footer-link {
+  color: #ffffff !important;
+}
+/* 2) Dark text only on gold backgrounds */
+.top-controls .control-btn.active, .menu-nav .nav-btn.active {
+  color: var(--violet-950) !important;
+}
+/* 3) Dark text also for icons inside gold areas */
+.top-controls .control-btn.active svg, .menu-nav .nav-btn.active svg {
+  stroke: var(--violet-950) !important;
+}
+.top-controls .control-btn.active .star-gold, .menu-nav .nav-btn.active .star-gold {
+  color: var(--violet-950) !important;
+  text-shadow: none !important;
+}
+/* 4) Keep bright gold accents everywhere else */
+.interior-header h2 span, .star-gold, .panel__title::before, .panel__title::after, .footer-note .star-gold {
+  color: var(--gold-bright) !important;
+}
+mentions */
+.panel__subtitle {
+  font-size: clamp(0.76rem, 0.28vw + 0.68rem, 0.92rem) !important;
+  line-height: 1.35 !important;
+}
+/* Titres de panneaux */
+.panel__title {
+  font-size: clamp(0.88rem, 1.6vw, 1.24rem) !important;
+}
+/* Boutons de contrôle du haut (Page de garde / Menu & Carte) */
+.control-btn {
+  font-size: clamp(0.72rem, 0.22vw + 0.64rem, 0.85rem) !important;
+}
+/* ===== Boutons Page de garde / Menu & Carte resserrés (comme le pied de page) ===== */
+.top-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px !important;
+}
+.top-controls .control-btn {
+  width: auto !important;
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+  padding: 9px 18px !important;
+}
+#cocktails .panel__title { color: #ffffff !important; }
+.menus-duo__left .panel { display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.menus-duo__left .panel .special-card--compact { height: 100%; box-sizing: border-box; }
+.menus-duo > .panel { display: grid; min-height: 0; }
+.menus-duo__left .panel > article { grid-row: 2; }
+@media print {
+.top-controls { display:none !important; }
+}
+/* Les contenances sont réglées en un seul endroit : voir le bloc
+   « CONTENANCES : UN SEUL FORMAT » en fin de feuille. */
 
-/* ===== Formulaire ===== */
+
+/* ===== Téléchargement : icône discrète en haut à droite du header ===== */
+.top-controls {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px !important;
+  padding-left: 58px !important;
+  padding-right: 58px !important;
+}
+.top-controls__nav .control-btn {
+  width: auto !important;
+  flex: 0 0 auto !important;
+}
+.footer-links {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: min(100%, 920px);
+  gap: 10px;
+  justify-items: stretch;
+}
+.footer-links .footer-link {
+  width: 100%;
+  min-width: 0;
+  justify-content: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 720px) {
+.top-controls {
+    padding-left: 50px !important;
+    padding-right: 50px !important;
+    gap: 8px !important;
+  }
+.footer-links { gap: 8px; }
+.footer-links .footer-link {
+    font-size: 0.68rem !important;
+    padding: 8px 8px !important;
+    letter-spacing: 0.02em !important;
+  }
+}
+.footer-links {
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr) minmax(0, 1.35fr);
+}
+@media (max-width: 780px) {
+.footer-links {
+    grid-template-columns: 1fr;
+  }
+}
+/* Titres pastilles violettes : une seule taille (max lisible) */
+.panel__title {
+  font-size: 1.08rem !important;
+  letter-spacing: .12em !important;
+  padding: 10px 22px !important;
+}
+@media (max-width: 640px) {
+.panel__title { font-size: 0.96rem !important; }
+}
+comme partout ailleurs sur la carte.
+   Le « Petit déjeuner » doublait un encadrement (le .panel autour de sa carte) :
+   son carton à lui restait dehors, sans son
+   propre liseré. Le duo ne se met en deux colonnes qu'à partir de 720 px (voir
+   @media plus bas) : en dessous chaque bloc prend déjà toute la largeur. */
+#menus .menus-duo__left > .panel .breakfast-card {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+.footer-links .footer-link {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
+  font-style: normal !important;
+}
+.footer-links .footer-link svg {
+  width: 15px !important;
+  height: 15px !important;
+  flex: 0 0 auto;
+  stroke: currentColor;
+}
+.footer-links {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+@media (max-width: 780px) {
+.footer-links .footer-link {
+    font-size: 0.78rem !important;
+    letter-spacing: 0.02em !important;
+  }
+}
+html .panel__subtitle.qty, html #boissons .panel__subtitle.qty, html #cocktails .panel__subtitle .qty {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  font-size: var(--qty-size) !important;
+  line-height: 1.4 !important;
+  letter-spacing: .02em !important;
+  text-transform: none !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--qty-ink) !important;
+}
+téléchargement direct sur l'appareil (attribut download). */
+.footer-download-wrap { margin: 8px auto 4px; }
+.footer-download {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 7px; width: auto;
+  padding: 6px 14px; border-radius: 999px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .24);
+  color: rgba(255, 255, 255, .78);
+  text-decoration: none;
+  font-family: 'Montserrat', system-ui, sans-serif; font-weight: 500;
+  font-size: .64rem; letter-spacing: .18em; text-transform: uppercase;
+  transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+  cursor: pointer;
+}
+.footer-download svg { width: 12px; height: 12px; flex: 0 0 auto; opacity: .85; }
+.footer-download:hover {
+  color: #fff; border-color: rgba(216, 178, 87, .7);
+  background: rgba(255, 255, 255, .05);
+}
+.footer-download:active { transform: translateY(1px); }
+@media (max-width: 640px) {
+.footer-download { font-size: .6rem; letter-spacing: .14em; padding: 5px 12px; }
+}
+html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel',serif; }
+html[lang="ja"] .interior-header h2 { font-family:'CinzelJP','Cinzel',serif; }
+html[lang="ja"] .interior-header p { font-family:'CinzelJP','Cinzel',serif; }
+html[lang="ja"] .panel__title { font-family:'CinzelJP','Cinzel',serif; }
+html[lang="ja"] .footer-details { font-family:'CinzelJP','Cinzel',serif; }
+html[lang="ja"] .footer-note { font-family:'CinzelJP','Cinzel',serif; }
+html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel', serif !important; }
+html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel', serif !important; }
+html[lang="ja"] .footer-links .footer-link { font-family:'MontserratJP','Montserrat', sans-serif !important; }
+html[lang="ja"] .panel__subtitle.qty, html[lang="ja"] #boissons .panel__subtitle.qty, html[lang="ja"] #cocktails .panel__subtitle .qty { font-family:'MontserratJP','Montserrat', sans-serif !important; }
+html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', system-ui, sans-serif; }
+police ni taille propres : c'est un .contact-link sur la
+   page de garde et un .footer-link en pied de carte {
+  background:rgba(216,178,87,.16);
+  border-color:rgba(216,178,87,.75);
+}
+
+/* ===== Propre à cette page ===== */
+#reservation-page { background:var(--cream); flex:1 0 auto; display:flex; flex-direction:column; }
+.book-back { padding:10px 12px; display:flex; justify-content:center; background:#592e6f; border-bottom:1px solid rgba(216,178,87,.45); box-shadow:0 4px 15px rgba(0,0,0,.4); }
+.book-back .contact-link { width:min(100%,360px); }
+.book-main { flex:1 0 auto; }
+.container { margin-bottom:24px; }
+
 .form-grid { display:grid; grid-template-columns:1fr; gap:14px; }
 @media (min-width:680px) {
   .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -99,6 +561,7 @@ body {
   font-family:'Cinzel',serif; font-size:.74rem; letter-spacing:.14em;
   text-transform:uppercase; color:var(--gold-700); font-weight:700;
 }
+.field > label .opt { text-transform:none; letter-spacing:0; font-weight:400; color:var(--muted); }
 .field input, .field select, .field textarea {
   font:inherit; color:var(--ink); background:#fff;
   border:1px solid rgba(216,178,87,.5); border-radius:14px;
@@ -113,188 +576,193 @@ body {
 .field__error { margin:0; font-size:.76rem; color:#b0304a; font-weight:600; }
 .field__error[hidden] { display:none; }
 
+/* Le bouton d'envoi est la pilule dorée des onglets actifs du site
+   (.nav-btn.active) : même dégradé, même bordure, même casse. */
 .form-actions { margin-top:20px; display:grid; gap:10px; justify-items:center; }
 .btn-book {
-  font:inherit; font-family:'Cinzel',serif; font-weight:700; letter-spacing:.12em;
-  text-transform:uppercase; cursor:pointer;
-  background:linear-gradient(135deg,#bf953f 0%,#fcf6ba 30%,#d8b257 60%,#fef9db 100%);
+  background:linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%);
   color:var(--violet-950); border:1px solid #fcf6ba; border-radius:999px;
-  min-height:52px; padding:12px 30px; width:min(100%,380px);
-  display:inline-flex; align-items:center; justify-content:center; gap:10px;
-  transition:.2s ease; box-shadow:0 8px 22px rgba(36,16,46,.16);
+  min-height:48px; width:min(100%,380px); padding:10px 24px;
+  font-weight:700; letter-spacing:.04em; text-transform:uppercase; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  transition:.2s ease;
 }
-.btn-book:hover { filter:brightness(1.06); transform:translateY(-1px); }
+.btn-book:hover { filter:brightness(1.05); }
 .btn-book:active { transform:translateY(1px); }
-.form-note { margin:0; text-align:center; font-size:.8rem; color:var(--muted); }
+.btn-book svg { width:16px; height:16px; flex:0 0 auto; }
+.form-note { margin:0; text-align:center; font-size:.8rem; color:var(--muted); font-style:italic; }
 
 .form-status {
   margin:16px 0 0; padding:14px 16px; border-radius:16px; text-align:center;
   border:1px solid var(--gold-500); background:#fffdf4; color:var(--violet-900);
-  font-weight:600; line-height:1.5;
+  line-height:1.55;
 }
 .form-status[hidden] { display:none; }
 .form-status strong { font-family:'Cinzel',serif; letter-spacing:.06em; }
+.form-status a { color:var(--gold-700); font-weight:700; }
 
-/* ===== Colonne contact ===== */
+/* Les coordonnées reprennent les pilules du pied de page, sur fond clair. */
 .info-grid { display:grid; grid-template-columns:1fr; gap:10px; }
 @media (min-width:680px) { .info-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 .info-link {
-  display:inline-flex; align-items:center; justify-content:center; gap:9px;
-  min-height:48px; padding:10px 16px; border-radius:999px; text-decoration:none;
-  border:1px solid rgba(216,178,87,.5); color:var(--violet-900); background:#fff;
-  font-weight:700; letter-spacing:.04em; transition:.2s ease; text-align:center;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:44px; padding:8px 14px; border-radius:999px; text-decoration:none;
+  border:1px solid rgba(216,178,87,.45); color:var(--violet-900); background:#fff;
+  font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+  font-size:.8rem; transition:.2s ease; text-align:center;
 }
 .info-link:hover { background:#fffaea; border-color:var(--gold-500); }
-.info-link svg { width:18px; height:18px; flex:0 0 auto; }
-.hours { margin:16px 0 0; display:grid; gap:6px; }
+.info-link svg { width:15px; height:15px; flex:0 0 auto; stroke:var(--violet-900); }
+
+.hours { margin:16px 0 0; display:grid; gap:2px; }
 .hours__row {
-  display:flex; justify-content:space-between; gap:16px; padding:8px 4px;
-  border-bottom:1px dotted rgba(156,122,45,.38);
+  display:flex; justify-content:space-between; align-items:baseline; gap:16px;
+  padding:8px 4px; border-bottom:1px dotted rgba(156,122,45,.38);
 }
 .hours__row:last-child { border-bottom:0; }
 .hours__day { font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.1em; font-size:.8rem; color:var(--violet-900); }
 .hours__val { font-family:'Cinzel',serif; font-weight:700; color:var(--gold-700); white-space:nowrap; }
-
-/* ===== Pied ===== */
-.footer {
-  background:var(--violet-800); border-top:2px solid var(--gold-500); color:#fff;
-  padding:16px 12px calc(18px + env(safe-area-inset-bottom)); text-align:center;
-  margin-top:auto;
-}
-.footer-details {
-  display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px 20px;
-  color:var(--gold-100); font-family:'Cinzel',serif;
-  font-size:clamp(.62rem,1.2vw,.84rem); letter-spacing:.08em; text-transform:uppercase;
-}
-.footer-note {
-  color:var(--gold-500); font-family:'Cinzel',serif; text-transform:uppercase;
-  letter-spacing:.14em; font-size:clamp(.56rem,1vw,.76rem); margin-bottom:8px;
-}
 </style>
 </head>
 <body>
 
-<div class="top-controls">
-  <a class="control-btn" href="index.html">
+<div class="book-back">
+  <a class="contact-link" href="index.html">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
     Retour à la carte
   </a>
 </div>
 
-<header class="book-header">
-  <div class="eyebrow"><span class="star-gold">✦</span> RÉSERVATION <span class="star-gold">✦</span></div>
-  <h1>COLLINE <span>GAMBETTA</span></h1>
-  <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
-</header>
+<div id="reservation-page">
+  <header class="interior-header">
+      <div class="eyebrow"><span class="star-gold">✦</span> RÉSERVATION <span class="star-gold">✦</span></div>
+      <h2>COLLINE <span>GAMBETTA</span></h2>
+      <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
+      <p class="menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
+    </header>
 
-<div class="wrap">
+  <main class="book-main">
+    <div class="container">
 
-  <article class="panel">
-    <div class="panel__head">
-      <h2 class="panel__title">Réserver ma table</h2>
-      <p class="panel__subtitle">Dites-nous quand, et pour combien — nous confirmons par téléphone ou par courriel.</p>
+      <article class="panel">
+        <div class="panel__head">
+          <h4 class="panel__title">Réserver ma table</h4>
+          <p class="panel__subtitle">Dites-nous quand, et pour combien — nous confirmons par téléphone ou par courriel.</p>
+        </div>
+
+        <form id="book-form" novalidate>
+          <div class="form-grid">
+            <div class="field" data-field>
+              <label for="bk-name">Nom</label>
+              <input id="bk-name" name="nom" type="text" autocomplete="name" required placeholder="Votre nom">
+              <p class="field__error" data-error hidden>Merci d’indiquer votre nom.</p>
+            </div>
+            <div class="field" data-field>
+              <label for="bk-phone">Téléphone</label>
+              <input id="bk-phone" name="telephone" type="tel" autocomplete="tel" required placeholder="06 12 34 56 78">
+              <p class="field__error" data-error hidden>Merci d’indiquer un numéro où vous joindre.</p>
+            </div>
+            <div class="field field--full" data-field>
+              <label for="bk-mail">Courriel <span class="opt">(facultatif)</span></label>
+              <input id="bk-mail" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr">
+              <p class="field__error" data-error hidden>Cette adresse ne semble pas valide.</p>
+            </div>
+            <div class="field" data-field>
+              <label for="bk-date">Date</label>
+              <input id="bk-date" name="date" type="date" required>
+              <p class="field__error" data-error hidden>Merci de choisir une date à venir.</p>
+            </div>
+            <div class="field" data-field>
+              <label for="bk-time">Heure</label>
+              <select id="bk-time" name="heure" required>
+                <option value="">Choisir…</option>
+              </select>
+              <p class="field__error" data-error hidden>Merci de choisir une heure.</p>
+            </div>
+            <div class="field" data-field>
+              <label for="bk-guests">Nombre de personnes</label>
+              <select id="bk-guests" name="couverts" required>
+                <option value="">Choisir…</option>
+              </select>
+              <p class="field__hint">Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.</p>
+            </div>
+            <div class="field" data-field>
+              <label for="bk-place">Préférence</label>
+              <select id="bk-place" name="preference">
+                <option value="Sans préférence">Sans préférence</option>
+                <option value="En terrasse">En terrasse</option>
+                <option value="En salle">En salle</option>
+                <option value="Au comptoir">Au comptoir</option>
+              </select>
+            </div>
+            <div class="field field--full">
+              <label for="bk-msg">Un mot pour nous <span class="opt">(facultatif)</span></label>
+              <textarea id="bk-msg" name="message" placeholder="Anniversaire, allergie, poussette, ami à quatre pattes…"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-book" type="submit">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6"/><path d="M8 3v4M16 3v4"/><path d="M8.6 14.4h6.8"/></svg>
+              Envoyer ma demande
+            </button>
+            <p class="form-note">Une demande n’est pas une confirmation : nous vous rappelons pour valider.</p>
+          </div>
+
+          <div class="form-status" id="bk-status" role="status" aria-live="polite" hidden></div>
+        </form>
+      </article>
+
+      <article class="panel">
+        <div class="panel__head">
+          <h4 class="panel__title">Nous joindre</h4>
+          <p class="panel__subtitle">Pour le jour même, le téléphone reste le plus sûr.</p>
+        </div>
+        <div class="info-grid">
+          <a class="info-link" href="tel:+33143490593">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
+            01 43 49 05 93
+          </a>
+          <a class="info-link" href="mailto:lacollinegambetta@mailo.com">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>
+            lacollinegambetta@mailo.com
+          </a>
+          <a class="info-link" href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>
+            lacolline.gambetta
+          </a>
+          <a class="info-link" href="https://maps.google.com/?q=4+rue+Belgrand+75020+Paris" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            4 rue Belgrand, Paris 20ᵉ
+          </a>
+        </div>
+        <div class="hours">
+          <div class="hours__row"><span class="hours__day">Lundi — Vendredi</span><span class="hours__val">07h00 — 02h00</span></div>
+          <div class="hours__row"><span class="hours__day">Samedi</span><span class="hours__val">07h00 — 02h00</span></div>
+          <div class="hours__row"><span class="hours__day">Dimanche</span><span class="hours__val">08h00 — 02h00</span></div>
+          <div class="hours__row"><span class="hours__day">Cuisine</span><span class="hours__val">12h00 — 23h00</span></div>
+        </div>
+      </article>
+
     </div>
+  </main>
 
-    <form id="book-form" novalidate>
-      <div class="form-grid">
-        <div class="field" data-field>
-          <label for="bk-name">Nom</label>
-          <input id="bk-name" name="nom" type="text" autocomplete="name" required placeholder="Votre nom">
-          <p class="field__error" data-error hidden>Merci d’indiquer votre nom.</p>
-        </div>
-        <div class="field" data-field>
-          <label for="bk-phone">Téléphone</label>
-          <input id="bk-phone" name="telephone" type="tel" autocomplete="tel" required placeholder="06 12 34 56 78">
-          <p class="field__error" data-error hidden>Merci d’indiquer un numéro où vous joindre.</p>
-        </div>
-        <div class="field field--full" data-field>
-          <label for="bk-mail">Courriel <span style="text-transform:none;letter-spacing:0;font-weight:400">(facultatif)</span></label>
-          <input id="bk-mail" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr">
-          <p class="field__error" data-error hidden>Cette adresse ne semble pas valide.</p>
-        </div>
-        <div class="field" data-field>
-          <label for="bk-date">Date</label>
-          <input id="bk-date" name="date" type="date" required>
-          <p class="field__error" data-error hidden>Merci de choisir une date à venir.</p>
-        </div>
-        <div class="field" data-field>
-          <label for="bk-time">Heure</label>
-          <select id="bk-time" name="heure" required>
-            <option value="">Choisir…</option>
-          </select>
-          <p class="field__error" data-error hidden>Merci de choisir une heure.</p>
-        </div>
-        <div class="field" data-field>
-          <label for="bk-guests">Nombre de personnes</label>
-          <select id="bk-guests" name="couverts" required>
-            <option value="">Choisir…</option>
-          </select>
-          <p class="field__hint">Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.</p>
-        </div>
-        <div class="field" data-field>
-          <label for="bk-place">Préférence</label>
-          <select id="bk-place" name="preference">
-            <option value="Sans préférence">Sans préférence</option>
-            <option value="En terrasse">En terrasse</option>
-            <option value="En salle">En salle</option>
-            <option value="Au comptoir">Au comptoir</option>
-          </select>
-        </div>
-        <div class="field field--full">
-          <label for="bk-msg">Un mot pour nous <span style="text-transform:none;letter-spacing:0;font-weight:400">(facultatif)</span></label>
-          <textarea id="bk-msg" name="message" placeholder="Anniversaire, allergie, poussette, ami à quatre pattes…"></textarea>
-        </div>
+  <footer class="footer">
+      <div class="footer-note"><span class="star-gold">✦</span> Prix nets en euros • service compris <span class="star-gold">✦</span></div>
+      <div class="footer-legal">Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé</div>
+      
+      <div class="footer-download-wrap"><a class="footer-download" href="Carte_LaCollineGambetta.pdf" download="Carte_LaCollineGambetta.pdf" title="Télécharger la carte au format PDF">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11.5"/><path d="M7.5 11.2 12 15.7l4.5-4.5"/><path d="M4.5 19.5h15"/></svg>
+        <span>Télécharger la carte (PDF)</span>
+      </a></div>
+<div class="footer-links">
+        <a href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener" class="footer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle class="ig-dot" cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>lacolline.gambetta</a>
+        <a href="tel:+33143490593" class="footer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</a>
+        <a href="mailto:lacollinegambetta@mailo.com" class="footer-link footer-link--mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>lacollinegambetta@mailo.com</a>
       </div>
-
-      <div class="form-actions">
-        <button class="btn-book" type="submit">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6"/><path d="M8 3v4M16 3v4"/><path d="M8.6 14.4h6.8"/></svg>
-          Envoyer ma demande
-        </button>
-        <p class="form-note">Une demande n’est pas une confirmation : nous vous rappelons pour valider.</p>
-      </div>
-
-      <div class="form-status" id="bk-status" role="status" aria-live="polite" hidden></div>
-    </form>
-  </article>
-
-  <article class="panel">
-    <div class="panel__head">
-      <h2 class="panel__title">Nous joindre directement</h2>
-      <p class="panel__subtitle">Pour le jour même, le téléphone reste le plus sûr.</p>
-    </div>
-    <div class="info-grid">
-      <a class="info-link" href="tel:+33143490593">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
-        01 43 49 05 93
-      </a>
-      <a class="info-link" href="mailto:lacollinegambetta@mailo.com">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>
-        lacollinegambetta@mailo.com
-      </a>
-      <a class="info-link" href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>
-        lacolline.gambetta
-      </a>
-      <a class="info-link" href="https://maps.google.com/?q=4+rue+Belgrand+75020+Paris" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
-        4 rue Belgrand, Paris 20ᵉ
-      </a>
-    </div>
-    <div class="hours">
-      <div class="hours__row"><span class="hours__day">Lundi — Vendredi</span><span class="hours__val">07h00 — 02h00</span></div>
-      <div class="hours__row"><span class="hours__day">Samedi</span><span class="hours__val">07h00 — 02h00</span></div>
-      <div class="hours__row"><span class="hours__day">Dimanche</span><span class="hours__val">08h00 — 02h00</span></div>
-      <div class="hours__row"><span class="hours__day">Service continu</span><span class="hours__val">Cuisine 12h — 23h</span></div>
-    </div>
-  </article>
-
+      <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><span>4 RUE BELGRAND, 75020 PARIS</span><span>•</span><span>MÉTRO GAMBETTA</span></div>
+    </footer>
 </div>
-
-<footer class="footer">
-  <div class="footer-note"><span class="star-gold">✦</span> Terrasse • Service continu • Fait maison <span class="star-gold">✦</span></div>
-  <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><span>4 RUE BELGRAND, 75020 PARIS</span><span>•</span><span>MÉTRO GAMBETTA</span></div>
-</footer>
 
 <script>
 (function () {
@@ -409,7 +877,7 @@ body {
 
     status.innerHTML = '<strong>Votre demande est prête.</strong><br>' +
       'Votre messagerie s’ouvre avec le récapitulatif — il ne reste qu’à l’envoyer. ' +
-      'Vous préférez de vive voix ? Appelez le <a href="tel:+33143490593" style="color:#9c7a2d;font-weight:700">01 43 49 05 93</a>.';
+      'Vous préférez de vive voix ? Appelez le <a href="tel:+33143490593">01 43 49 05 93</a>.';
     status.hidden = false;
     window.location.href = href;
   });
