@@ -5222,8 +5222,13 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
   html:not(.carte-doc) #interior-menu #boissons .beer-table__head { display: none; }
   /* Le nom passe seul sur sa ligne : il n'y a plus de prix à rejoindre à sa droite. */
   html:not(.carte-doc) #interior-menu #boissons .beer-row__name::after { display: none !important; }
-  html:not(.carte-doc) #interior-menu #boissons .beer-row { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; column-gap: 10px; row-gap: 2px; align-items: start; }
-  html:not(.carte-doc) #interior-menu #boissons .beer-row__name { grid-column: 1 / -1; }
+  html:not(.carte-doc) #interior-menu #boissons .beer-row:not(.beer-row--photo),
+  html:not(.carte-doc) #interior-menu #boissons .beer-row__row { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; column-gap: 10px; row-gap: 2px; align-items: start; }
+  /* Une pression illustrée reste une pile : c'est sa rangée interne qui
+     porte la grille, et le chevron rejoint la ligne du nom. */
+  html:not(.carte-doc) #interior-menu #boissons .beer-row__name { grid-column: 1 / -2; }
+  html:not(.carte-doc) #interior-menu #boissons .beer-row:not(.beer-row--photo) .beer-row__name { grid-column: 1 / -1; }
+  html:not(.carte-doc) #interior-menu #boissons .beer-row__chevron { grid-column: -2 / -1; align-self: start; margin-top: 4px; }
   html:not(.carte-doc) #interior-menu #boissons .beer-row__price,
   html:not(.carte-doc) #interior-menu #boissons .beer-row__hh { justify-self: stretch; text-align: left; }
   html:not(.carte-doc) #interior-menu #boissons .beer-row__price::before,
@@ -5336,7 +5341,9 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
   html:not(.carte-doc) #interior-menu #cocktails .hh-line__price::before { content: "Prix"; }
   html:not(.carte-doc) #interior-menu #cocktails .hh-line__hh::before { content: "HH"; }
   html:not(.carte-doc) #interior-menu #cocktails .hh-line__row { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; column-gap: 10px; row-gap: 2px; align-items: start; }
-  html:not(.carte-doc) #interior-menu #cocktails .hh-line__name { grid-column: 1 / -1; }
+  html:not(.carte-doc) #interior-menu #cocktails .hh-line__name { grid-column: 1 / -2; }
+  html:not(.carte-doc) #interior-menu #cocktails .hh-line:not(.hh-line--photo) .hh-line__name { grid-column: 1 / -1; }
+  html:not(.carte-doc) #interior-menu #cocktails .hh-line__chevron { grid-column: -2 / -1; align-self: start; margin-top: 4px; }
   /* Le nom passe seul sur sa ligne : il n'y a plus de prix à rejoindre à sa droite. */
   html:not(.carte-doc) #interior-menu #cocktails .hh-line__name::after { display: none !important; }
   html:not(.carte-doc) #interior-menu #cocktails .hh-line__price,
@@ -7484,6 +7491,16 @@ html:not(.carte-doc) .foldall__btn[aria-pressed="true"] .foldall__ico { transfor
   html:not(.carte-doc) .foldall__btn { height:34px; font-size:10px; }
   html:not(.carte-doc) .foldall__label { max-width:none; }
 }
+/* Paysage sur téléphone : la largeur revient, mais pas la hauteur. Le
+   bouton retourne donc à droite du titre — l'empiler gaspillerait deux
+   lignes précieuses — tout en restant compact. */
+@media (orientation: landscape) and (max-height: 560px) and (min-width: 560px) {
+  html:not(.carte-doc) .panel:has(> .foldall) { grid-template-columns:minmax(0,1fr) auto; }
+  html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { grid-column:1; margin-bottom:6px; }
+  html:not(.carte-doc) .panel:has(> .foldall) > .foldall { grid-column:2; justify-self:end; margin-bottom:8px; }
+  html:not(.carte-doc) .foldall__btn { height:30px; padding:0 10px; font-size:10px; }
+  html:not(.carte-doc) .foldall__label { max-width:96px; }
+}
 @media print { .foldall { display:none !important; } }
 @media (prefers-reduced-motion: reduce) {
   html:not(.carte-doc) .foldall__ico,
@@ -7595,6 +7612,90 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
   html:not(.carte-doc) #boissons .beer-table__head--photo {
     grid-template-columns:minmax(0,1fr) repeat(3,minmax(max-content,64px)) 12px;
   }
+}
+
+/* ===== Responsive des dépliants : chevron, encarts et photos ==========
+   Trois familles de lignes dépliantes coexistent (plats, cocktails,
+   boissons, pressions). Les règles ci-dessous n'ajustent QUE la colonne
+   du chevron, les marges intérieures des encarts et la hauteur des
+   photos : les grilles de prix ne sont jamais retouchées, sous peine de
+   désaligner les colonnes. */
+
+/* -- Petits écrans : la colonne du chevron se resserre et les encarts
+      rendent de la marge intérieure au contenu. -- */
+@media (max-width:640px) {
+  html:not(.carte-doc) .hh-line--photo .hh-line__row,
+  html:not(.carte-doc) #cocktails .hh-head {
+    grid-template-columns:minmax(0,1fr) repeat(2,minmax(max-content,56px)) 11px;
+    gap:8px;
+  }
+  html:not(.carte-doc) .beer-row--photo .beer-row__row,
+  html:not(.carte-doc) #boissons .beer-table__head--photo {
+    grid-template-columns:minmax(0,1fr) repeat(3,minmax(max-content,52px)) 11px;
+    gap:8px;
+  }
+  html:not(.carte-doc) #boissons .price-line,
+  html:not(.carte-doc) #cocktails .hh-line,
+  html:not(.carte-doc) #boissons .beer-row { padding:10px; border-radius:15px; }
+  html:not(.carte-doc) #boissons .beer-table__head { padding:0 10px 4px; }
+  html:not(.carte-doc) .price-line__photo,
+  html:not(.carte-doc) .hh-line__photo,
+  html:not(.carte-doc) .beer-row__photo { border-radius:12px; }
+}
+
+/* -- Très petits écrans : le chevron ne peut plus voler de place au nom,
+      il passe donc sous la barre des 10 px et les colonnes de prix se
+      contentent de leur contenu. -- */
+@media (max-width:420px) {
+  html:not(.carte-doc) .hh-line--photo .hh-line__row,
+  html:not(.carte-doc) #cocktails .hh-head {
+    grid-template-columns:minmax(0,1fr) repeat(2,max-content) 9px;
+    gap:6px;
+  }
+  html:not(.carte-doc) .beer-row--photo .beer-row__row,
+  html:not(.carte-doc) #boissons .beer-table__head--photo {
+    grid-template-columns:minmax(0,1fr) repeat(3,max-content) 9px;
+    gap:6px;
+  }
+  html:not(.carte-doc) .hh-line__chevron,
+  html:not(.carte-doc) .price-line__chevron,
+  html:not(.carte-doc) .beer-row__chevron { width:8px; height:8px; }
+  html:not(.carte-doc) #boissons .price-line,
+  html:not(.carte-doc) #cocktails .hh-line,
+  html:not(.carte-doc) #boissons .beer-row { padding:9px; border-radius:14px; }
+  html:not(.carte-doc) #boissons .beer-table__head { padding:0 9px 4px; }
+}
+
+/* -- Paysage sur téléphone : la hauteur est la ressource rare. Une photo
+      en 4/3 y mangerait tout l'écran et masquerait les lignes voisines ;
+      on la plafonne en hauteur et l'image se recadre. -- */
+@media (orientation:landscape) and (max-height:560px) {
+  html:not(.carte-doc) .price-line__photo,
+  html:not(.carte-doc) .hh-line__photo,
+  html:not(.carte-doc) .beer-row__photo,
+  html:not(.carte-doc) .food-card__photo {
+    aspect-ratio:auto; height:min(42vh,190px);
+  }
+  html:not(.carte-doc) .price-line__photo img,
+  html:not(.carte-doc) .hh-line__photo img,
+  html:not(.carte-doc) .beer-row__photo img,
+  html:not(.carte-doc) .food-card__photo img { height:100%; object-fit:cover; }
+  html:not(.carte-doc) #boissons .price-line,
+  html:not(.carte-doc) #cocktails .hh-line,
+  html:not(.carte-doc) #boissons .beer-row { padding:9px 12px; }
+  html:not(.carte-doc) .foldall { margin-bottom:8px; }
+}
+
+/* -- Grands écrans : au-delà, l'encart ne doit pas s'étirer au point que
+      le chevron s'éloigne du prix. La colonne reste fixe, l'espace
+      supplémentaire va au nom. -- */
+@media (min-width:1480px) {
+  html:not(.carte-doc) .price-line__photo,
+  html:not(.carte-doc) .hh-line__photo,
+  html:not(.carte-doc) .beer-row__photo { max-height:340px; }
+  html:not(.carte-doc) .price-line__photo img,
+  html:not(.carte-doc) .hh-line__photo img,
+  html:not(.carte-doc) .beer-row__photo img { object-fit:cover; }
 }
 html:not(.carte-doc) #boissons .beer-table { gap:12px; }
 /* L'en-tête des colonnes garde l'aplomb des prix malgré le retrait
