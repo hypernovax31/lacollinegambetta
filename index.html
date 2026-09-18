@@ -7508,10 +7508,27 @@ html:not(.carte-doc) #vins .wine-table tbody tr:hover td { border-color:rgba(216
    pour la carte imprimable, qui garde ses lignes serrées. */
 html:not(.carte-doc) #boissons .price-line,
 html:not(.carte-doc) #cocktails .hh-line {
-  padding:12px; margin:0;
+  /* Exactement la géométrie d'une .food-card : mêmes marges intérieures,
+     même écart interne, même hauteur — celle du contenu. `height:auto` et
+     `align-self:start` sont indispensables : les colonnes étant aplaties
+     en `display:contents`, ce sont ces lignes qui deviennent les cases de
+     la grille, et une case s'étire par défaut à la hauteur de la plus
+     haute de sa rangée. C'est ce qui donnait des encarts trop grands,
+     avec du blanc sous le prix. */
+  display:flex; flex-direction:column; gap:8px;
+  padding:12px; margin:0; height:auto; min-height:0; align-self:start;
   border:1px solid rgba(216,178,87,.34); border-radius:18px; background:#fff;
   transition:border-color .22s ease, box-shadow .22s ease;
 }
+/* Le bouton du dépliant occupe toute la carte ; ses enfants gardent le
+   même rythme vertical que dans une fiche de plat. */
+html:not(.carte-doc) #boissons .price-line > .price-line__toggle,
+html:not(.carte-doc) #cocktails .hh-line > .hh-line__toggle {
+  display:flex; flex-direction:column; gap:6px;
+}
+/* La description : même encre et même italique que .food-card__note. */
+html:not(.carte-doc) #boissons .price-list__note,
+html:not(.carte-doc) #cocktails .price-list__note { margin:0; }
 html:not(.carte-doc) #boissons .price-line:hover,
 html:not(.carte-doc) #cocktails .hh-line:hover { border-color:rgba(216,178,87,.6); }
 html:not(.carte-doc) #boissons .price-line--open,
@@ -7528,12 +7545,18 @@ html:not(.carte-doc) #cocktails .hh-line--open {
 html:not(.carte-doc) #boissons .price-list:not(.price-list--cols),
 html:not(.carte-doc) #cocktails .hh-list:not(.hh-list--cols) { display:grid; gap:12px; }
 html:not(.carte-doc) #boissons .price-list--cols,
-html:not(.carte-doc) #cocktails .hh-list--cols { gap:12px; align-items:start; }
+html:not(.carte-doc) #cocktails .hh-list--cols {
+  gap:12px;
+  /* Les rangées se calent sur leur contenu au lieu de s'étirer.
+     `align-items` manquait côté boissons : d'où des encarts plus hauts
+     que leur texte dès qu'un voisin de rangée portait une description. */
+  align-items:start; align-content:start; grid-auto-rows:min-content;
+}
 html:not(.carte-doc) #boissons .price-list--cols .price-list__col,
 html:not(.carte-doc) #cocktails .hh-list--cols .hh-list__col { gap:12px; }
 html:not(.carte-doc) #boissons .price-list:not(.price-list--cols) .price-list__col,
 html:not(.carte-doc) #cocktails .hh-list:not(.hh-list--cols) .hh-list__col {
-  display:grid; gap:12px; align-content:start;
+  display:grid; gap:12px; align-content:start; grid-auto-rows:min-content;
 }
 /* Dans un encart, les pointillés de raccord n'ont plus lieu d'être :
    le cadre porte déjà le lien entre le nom et le prix. */
