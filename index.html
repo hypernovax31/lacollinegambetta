@@ -8374,7 +8374,7 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
         <button type="button" class="finder__tag" data-diet="vegetarien">Végétarien</button>
         <button type="button" class="finder__tag" data-diet="poisson">Poisson</button>
         <button type="button" class="finder__tag" data-diet="viande">Viande</button>
-        <button type="button" class="finder__tag" data-max="15">Moins de 15 €</button>
+        <button type="button" class="finder__tag" data-kw="fruit">Fruit</button>
       </div>
       <p class="finder__count" id="finder-count" role="status" aria-live="polite"></p>
     </div>
@@ -9510,7 +9510,7 @@ else sizeCoverMedallion();
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609190450" defer></script>
+<script src="assets/js/i18n.js?v=202609190610" defer></script>
 
 <!-- ============ Assiettes en photo : les fiches deviennent des dépliants ============ -->
 <script>
@@ -9947,35 +9947,41 @@ else sizeCoverMedallion();
     /* Le végétarien se DÉDUIT : ni viande ni poisson dans le texte. Une
        liste positive raterait les plats décrits par leur garniture. */
 
+    /* Fruits : cherchés en mots entiers, sinon « cocotte » répondrait
+       pour coco et « pêcher » pour pêche. « Fruits de mer » est écarté
+       à part — c'en est l'exact contraire. */
+    var FRUIT_RE = new RegExp('\\b(' + [
+      'fruit','fruits','pomme','pommes','poire','poires','citron','citrons',
+      'citronnade','orange','oranges','orangina','pamplemousse','agrume','agrumes',
+      'fraise','fraises','strawberry','framboise','framboises','cassis','cerise',
+      'cerises','cherry','myrtille','myrtilles','abricot','abricots','peche',
+      'peches','prune','prunes','mirabelle','figue','raisin','melon','pasteque',
+      'ananas','mangue','banane','coco','colada','passion','kiwi','litchi','grenade'
+    ].sort(function (a, b) { return b.length - a.length; }).join('|') + ')\\b');
+    var FRUIT_NON = /fruits de mer/;
+
+    function isFruit(text) {
+      return FRUIT_RE.test(text.replace(FRUIT_NON, ''));
+    }
+
     var items = [];        /* fiches indexées */
     var groups = [];       /* panneaux, pour masquer ceux qui se vident */
     var sections = [];
     var input, clear, count, tagBox, box;
-    var diet = '', maxPrice = 0, term = '';
+    var diet = '', fruit = false, term = '';
 
     function norm(t) {
       /* Accents et ligatures écartés : « bœuf » doit répondre à « boeuf »,
-         « poêlée » à « poelee ». */
+         « poêlée » à « poelee ».
+         Les textes relevés dans le DOM sont collés bout à bout, sans
+         séparateur : « Tarte aux pommes » suivie de son prix donnait
+         « pommes7,50 », où « pommes » n'est plus un mot entier faute de
+         frontière entre le s et le 7. On sépare donc chiffres et lettres
+         avant d'indexer. */
       return (t || '').toLowerCase()
         .replace(/œ/g, 'oe').replace(/æ/g, 'ae')
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    }
-
-    function priceOf(el) {
-      /* Le plus bas des tarifs affichés : une bouteille en trois
-         contenances doit répondre à « moins de 15 € » par sa plus petite.
-         Virgule décimale, comme sur la carte. */
-      var best = 0;
-      Array.prototype.forEach.call(
-        el.querySelectorAll('.food-card__head strong, .hh-line__price, .price-line__price, .beer-row__price'),
-        function (n) {
-          (n.textContent.match(/\d+[.,]\d{2}/g) || []).forEach(function (raw) {
-            var v = parseFloat(raw.replace(',', '.'));
-            if (v > 0 && (!best || v < best)) best = v;
-          });
-        }
-      );
-      return best;
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/([a-z])(\d)/g, '$1 $2').replace(/(\d)([a-z])/g, '$1 $2');
     }
 
     function dietOf(text) {
@@ -10000,7 +10006,8 @@ else sizeCoverMedallion();
         var sec = el.closest('.menu-section');
         var id = sec ? sec.id : '';
         return {
-          el: el, text: txt, diet: dietOf(txt), price: priceOf(el),
+          el: el, text: txt, diet: dietOf(txt),
+          fruit: isFruit(txt),
           /* Seuls les onglets qui se mangent sont soumis aux régimes. */
           food: id === 'entrees' || id === 'plats' || id === 'desserts'
         };
@@ -10012,14 +10019,15 @@ else sizeCoverMedallion();
     function matches(it) {
       if (term && it.text.indexOf(term) < 0) return false;
       if (diet && (!it.food || it.diet !== diet)) return false;
-      /* Un article sans prix lisible (formule, encart) n'est pas écarté
-         par un filtre de prix : on ne peut rien affirmer sur son tarif. */
-      if (maxPrice && it.price && it.price >= maxPrice) return false;
+      /* Le fruit traverse toute la carte : une tarte aux pommes, un jus
+         d'orange et un Mojito y répondent tous. Il se cumule donc avec
+         un régime au lieu de l'exclure. */
+      if (fruit && !it.fruit) return false;
       return true;
     }
 
     function apply() {
-      var active = !!(term || diet || maxPrice);
+      var active = !!(term || diet || fruit);
       document.documentElement.classList.toggle('finder-on', active);
 
       if (!active) {
@@ -10063,16 +10071,15 @@ else sizeCoverMedallion();
 
     function setTag(btn) {
       var d = btn.getAttribute('data-diet') || '';
-      var m = parseFloat(btn.getAttribute('data-max') || '0');
       var on = btn.classList.contains('is-on');
       /* Les régimes s'excluent — on ne mange pas végétarien ET viande —
-         mais le filtre de prix se cumule avec l'un d'eux. */
+         mais le fruit se cumule avec l'un d'eux. */
       if (d) {
         Array.prototype.forEach.call(tagBox.querySelectorAll('[data-diet]'),
           function (b) { b.classList.remove('is-on'); b.setAttribute('aria-pressed', 'false'); });
         diet = on ? '' : d;
-      } else if (m) {
-        maxPrice = on ? 0 : m;
+      } else if (btn.hasAttribute('data-kw')) {
+        fruit = !on;
       }
       if (!on) { btn.classList.add('is-on'); btn.setAttribute('aria-pressed', 'true'); }
       else { btn.classList.remove('is-on'); btn.setAttribute('aria-pressed', 'false'); }

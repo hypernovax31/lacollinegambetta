@@ -25,6 +25,7 @@
   var STORE_KEY = 'lcg-lang';
   var DICTS = {
     en: {
+      "Fruit": "Fruit",
       "proposition": "proposal",
       "propositions": "proposals",
       "Rien ne correspond — essayez un autre mot.": "Nothing matches — try another word.",
@@ -32,7 +33,6 @@
       "Végétarien": "Vegetarian",
       "Poisson": "Fish",
       "Viande": "Meat",
-      "Moins de 15 €": "Under €15",
       "Rechercher un plat": "Search for a dish",
       "Effacer": "Clear",
       "Fermer": "Close",
@@ -471,6 +471,7 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ NET PRICES IN EUROS • SERVICE INCLUDED ✦"
     },
     es: {
+      "Fruit": "Fruta",
       "proposition": "propuesta",
       "propositions": "propuestas",
       "Rien ne correspond — essayez un autre mot.": "Nada coincide: pruebe otra palabra.",
@@ -478,7 +479,6 @@
       "Végétarien": "Vegetariano",
       "Poisson": "Pescado",
       "Viande": "Carne",
-      "Moins de 15 €": "Menos de 15 €",
       "Rechercher un plat": "Buscar un plato",
       "Effacer": "Borrar",
       "Fermer": "Cerrar",
@@ -917,6 +917,7 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     de: {
+      "Fruit": "Obst",
       "proposition": "Vorschlag",
       "propositions": "Vorschläge",
       "Rien ne correspond — essayez un autre mot.": "Nichts gefunden — versuchen Sie ein anderes Wort.",
@@ -924,7 +925,6 @@
       "Végétarien": "Vegetarisch",
       "Poisson": "Fisch",
       "Viande": "Fleisch",
-      "Moins de 15 €": "Unter 15 €",
       "Rechercher un plat": "Gericht suchen",
       "Effacer": "Löschen",
       "Fermer": "Schließen",
@@ -1363,6 +1363,7 @@
       "MÉTRO GAMBETTA": "U-Bahnhof Gambetta"
     },
     it: {
+      "Fruit": "Frutta",
       "proposition": "proposta",
       "propositions": "proposte",
       "Rien ne correspond — essayez un autre mot.": "Nessun risultato — provi un'altra parola.",
@@ -1370,7 +1371,6 @@
       "Végétarien": "Vegetariano",
       "Poisson": "Pesce",
       "Viande": "Carne",
-      "Moins de 15 €": "Meno di 15 €",
       "Rechercher un plat": "Cerca un piatto",
       "Effacer": "Cancella",
       "Fermer": "Chiudi",
@@ -1809,6 +1809,7 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     pt: {
+      "Fruit": "Fruta",
       "proposition": "proposta",
       "propositions": "propostas",
       "Rien ne correspond — essayez un autre mot.": "Nada corresponde — tente outra palavra.",
@@ -1816,7 +1817,6 @@
       "Végétarien": "Vegetariano",
       "Poisson": "Peixe",
       "Viande": "Carne",
-      "Moins de 15 €": "Menos de 15 €",
       "Rechercher un plat": "Procurar um prato",
       "Effacer": "Limpar",
       "Fermer": "Fechar",
@@ -2255,6 +2255,7 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     nl: {
+      "Fruit": "Fruit",
       "proposition": "suggestie",
       "propositions": "suggesties",
       "Rien ne correspond — essayez un autre mot.": "Niets gevonden — probeer een ander woord.",
@@ -2262,7 +2263,6 @@
       "Végétarien": "Vegetarisch",
       "Poisson": "Vis",
       "Viande": "Vlees",
-      "Moins de 15 €": "Onder € 15",
       "Rechercher un plat": "Zoek een gerecht",
       "Effacer": "Wissen",
       "Fermer": "Sluiten",
@@ -2702,6 +2702,7 @@
     },
   
     ar: {
+      "Fruit": "فاكهة",
       "proposition": "اقتراح",
       "propositions": "اقتراحات",
       "Rien ne correspond — essayez un autre mot.": "لا نتائج — جرّب كلمة أخرى.",
@@ -2709,7 +2710,6 @@
       "Végétarien": "نباتي",
       "Poisson": "سمك",
       "Viande": "لحم",
-      "Moins de 15 €": "أقل من 15 يورو",
       "Rechercher un plat": "ابحث عن طبق",
       "Effacer": "مسح",
       "Fermer": "إغلاق",
@@ -3166,6 +3166,7 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ساندويتش جمبون وجبنة مع بيضة مقلية"
     },
     zh: {
+      "Fruit": "水果",
       "proposition": "项",
       "propositions": "项",
       "Rien ne correspond — essayez un autre mot.": "没有匹配项 — 请换个词试试。",
@@ -3173,7 +3174,6 @@
       "Végétarien": "素食",
       "Poisson": "鱼类",
       "Viande": "肉类",
-      "Moins de 15 €": "15 欧元以下",
       "Rechercher un plat": "搜索菜品",
       "Effacer": "清除",
       "Fermer": "关闭",
@@ -3630,6 +3630,7 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "烤火腿奶酪三明治，上加煎蛋"
     },
     uk: {
+      "Fruit": "Фрукти",
       "proposition": "пропозиція",
       "propositions": "пропозицій",
       "Rien ne correspond — essayez un autre mot.": "Нічого не знайдено — спробуйте інше слово.",
@@ -3637,7 +3638,6 @@
       "Végétarien": "Вегетаріанське",
       "Poisson": "Риба",
       "Viande": "М’ясо",
-      "Moins de 15 €": "Менше 15 €",
       "Rechercher un plat": "Пошук страви",
       "Effacer": "Очистити",
       "Fermer": "Закрити",
@@ -4094,6 +4094,7 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "Підсмажений сендвіч із шинкою та сиром, зверху яєчня"
     },
     ja: {
+      "Fruit": "フルーツ",
       "proposition": "件",
       "propositions": "件",
       "Rien ne correspond — essayez un autre mot.": "該当なし — 別の言葉でお試しください。",
@@ -4101,7 +4102,6 @@
       "Végétarien": "ベジタリアン",
       "Poisson": "魚",
       "Viande": "肉",
-      "Moins de 15 €": "15ユーロ未満",
       "Rechercher un plat": "料理を検索",
       "Effacer": "消去",
       "Fermer": "閉じる",
@@ -4558,6 +4558,7 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ハムとチーズのグリルサンド、ベシャメルソース、目玉焼きのせ",
     },
     ko: {
+      "Fruit": "과일",
       "proposition": "개",
       "propositions": "개",
       "Rien ne correspond — essayez un autre mot.": "결과 없음 — 다른 단어로 검색해 보세요.",
@@ -4565,7 +4566,6 @@
       "Végétarien": "채식",
       "Poisson": "생선",
       "Viande": "고기",
-      "Moins de 15 €": "15유로 미만",
       "Rechercher un plat": "요리 검색",
       "Effacer": "지우기",
       "Fermer": "닫기",
@@ -5022,6 +5022,7 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "구운 햄과 치즈 샌드위치, 베샤멜 소스, 맨 위에 프라이 에그",
     },
     pl: {
+      "Fruit": "Owoce",
       "proposition": "propozycja",
       "propositions": "propozycji",
       "Rien ne correspond — essayez un autre mot.": "Brak wyników — spróbuj innego słowa.",
@@ -5029,7 +5030,6 @@
       "Végétarien": "Wegetariańskie",
       "Poisson": "Ryby",
       "Viande": "Mięso",
-      "Moins de 15 €": "Poniżej 15 €",
       "Rechercher un plat": "Szukaj dania",
       "Effacer": "Wyczyść",
       "Fermer": "Zamknij",
@@ -5468,6 +5468,7 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ CENY W EURO • SERWIS WLICZONY ✦",
     },
     tr: {
+      "Fruit": "Meyve",
       "proposition": "öneri",
       "propositions": "öneri",
       "Rien ne correspond — essayez un autre mot.": "Sonuç yok — başka bir kelime deneyin.",
@@ -5475,7 +5476,6 @@
       "Végétarien": "Vejetaryen",
       "Poisson": "Balık",
       "Viande": "Et",
-      "Moins de 15 €": "15 € altı",
       "Rechercher un plat": "Yemek ara",
       "Effacer": "Temizle",
       "Fermer": "Kapat",
@@ -5914,6 +5914,7 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ EURO CİNSİNDEN NET FİYATLAR • SERVİS DAHİL ✦",
     },
     hi: {
+      "Fruit": "फल",
       "proposition": "सुझाव",
       "propositions": "सुझाव",
       "Rien ne correspond — essayez un autre mot.": "कुछ नहीं मिला — कोई और शब्द आज़माएँ।",
@@ -5921,7 +5922,6 @@
       "Végétarien": "शाकाहारी",
       "Poisson": "मछली",
       "Viande": "मांस",
-      "Moins de 15 €": "15 € से कम",
       "Rechercher un plat": "व्यंजन खोजें",
       "Effacer": "साफ़ करें",
       "Fermer": "बंद करें",
