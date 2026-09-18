@@ -8177,11 +8177,11 @@ html:not(.carte-doc) .price-line__photo:has(img.is-loaded)::after {
    du décor. Réduits à la largeur d'une ligne de carte, le sujet devenait
    minuscule et l'on ne distinguait plus ce que l'on commandait.
 
-   On resserre par le cadre plutôt qu'en retouchant les fichiers : le
-   rapport passe en 3/2, plus proche du sujet, et « object-position »
-   cale la vue sur la droite de l'image, là où se trouvent verre et
-   bouteille dans toute la série. Un léger agrandissement finit de
-   remplir le cadre en écartant les bords vides.
+   Les clichés sont désormais photographiés serrés, en 3/2 natif et le
+   sujet centré : le cadre reprend ce rapport et se contente de le
+   respecter. Le décalage et l'agrandissement qui rattrapaient les
+   anciennes vues de salle n'ont plus lieu d'être — ils rogneraient
+   maintenant la bouteille.
 
    Les cocktails ne sont PAS concernés : leur composition est déjà
    centrée et l'utilisateur les a validés tels quels. */
@@ -8192,17 +8192,7 @@ html:not(.carte-doc) #boissons .beer-row__photo {
 html:not(.carte-doc) #boissons .price-line__photo img,
 html:not(.carte-doc) #boissons .beer-row__photo img {
   object-fit:cover;
-  /* 68 % : le sujet est à droite du cadre sans jamais être rogné. */
-  object-position:68% 58%;
-  transform:scale(1.22);
-  transform-origin:68% 58%;
-}
-/* Les pressions font exception : le verre y est déjà centré et grand.
-   Le recentrage suffit, sans agrandissement. */
-html:not(.carte-doc) #boissons .beer-row__photo img {
-  object-position:50% 52%;
-  transform:scale(1.1);
-  transform-origin:50% 52%;
+  object-position:50% 50%;
 }
 @media (prefers-reduced-motion: reduce) {
   html:not(.carte-doc) #boissons .price-line__photo img,
