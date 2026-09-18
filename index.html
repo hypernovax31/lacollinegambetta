@@ -526,9 +526,11 @@ html:not(.carte-doc) .container {
   justify-self: center;
 }
 .cover-links {
-  width: min(100%, 760px);
+  /* Quatre pilules : sur écran large elles tiennent sur UNE ligne.
+     Le gabarit à deux colonnes les cassait systématiquement en 2x2. */
+  width: min(100%, 1180px);
   display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 10px;
 }
 .cover-links .contact-link {
@@ -551,7 +553,7 @@ html:not(.carte-doc) .container {
   }
   .cover-links {
     width: 100%;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 8px;
   }
   .cover-links .contact-link,
@@ -3572,8 +3574,10 @@ html:not(.carte-doc) #menus .menus-duo__left .breakfast-card strong {
   font-family: 'Montserrat', sans-serif !important;
 }
 .cover-links,
+/* Ancien gabarit à trois colonnes asymétriques : il datait d'un pied de
+   page à trois boutons. Le quatrième retombait seul en dessous. */
 .footer-links {
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr) minmax(0, 1.35fr);
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
 }
 @media (max-width: 780px) {
   .cover-links,
@@ -3671,7 +3675,7 @@ html:not(.carte-doc) #menus .menus-duo__left .breakfast-card strong {
 }
 .cover-links,
 .footer-links {
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) !important;
 }
 .contact-link--mail,
 .footer-link--mail {
@@ -3937,11 +3941,14 @@ html:not(.carte-doc) #menus .offer-card__price {
 html:not(.carte-doc) .cover-links,
 html:not(.carte-doc) .footer-links {
   display: grid !important;
-  width: min(100%, 960px);
+  /* 960 px ne laissait pas la place à quatre pilules : la quatrième
+     passait à la ligne. Élargi, et colonnes en auto-fit pour qu'elles
+     se répartissent sur une seule ligne tant que la largeur suffit. */
+  width: min(100%, 1180px);
   margin-inline: auto;
   gap: 10px !important;
   justify-items: stretch;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) !important;
 }
 html:not(.carte-doc) .cover-links .contact-link,
 html:not(.carte-doc) .footer-links .footer-link {
@@ -3962,8 +3969,10 @@ html:not(.carte-doc) .footer-links .footer-link {
 @media (max-width: 1100px) {
   html:not(.carte-doc) .cover-links,
   html:not(.carte-doc) .footer-links {
-    grid-template-columns: 1fr !important;
-    width: min(100%, 440px);
+    /* Empiler en une seule colonne dès 1100 px était brutal : jusqu'à
+       640 px, deux ou quatre pilules tiennent encore côte à côte. */
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) !important;
+    width: min(100%, 1100px);
   }
   html:not(.carte-doc) .cover-links .contact-link,
   html:not(.carte-doc) .footer-links .footer-link {
@@ -3975,8 +3984,8 @@ html:not(.carte-doc) .footer-links .footer-link {
 @media (orientation: landscape) and (max-height: 500px) and (min-width: 640px) {
   html:not(.carte-doc) .cover-links,
   html:not(.carte-doc) .footer-links {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    width: min(100%, 920px);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+    width: min(100%, 1100px);
   }
   html:not(.carte-doc) .cover-links .contact-link,
   html:not(.carte-doc) .footer-links .footer-link {
@@ -4100,22 +4109,35 @@ html:not(.carte-doc) #menus .offer-card {
   html:not(.carte-doc) .hh-list--cols {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
-  /* Deux colonnes : chaque case doit garder SA hauteur. Par défaut une
-     grille étire toutes les cases d'une rangée à la plus haute, si bien
-     que déplier une fiche faisait grandir sa voisine en vis-à-vis —
-     « Bavette » ouvrait « Entrecôte » sur du vide. Les colonnes de prix
-     sont en display:contents : ce sont les fiches elles-mêmes qui sont
-     les cases, d'où l'ancrage posé aussi sur elles. */
+  /* Fiches de plats : colonnes COULANTES, pas une grille.
+     Une grille raisonne par rangées : même sans étirement, la fiche
+     placée sous « Bavette » attend que la rangée entière soit finie,
+     si bien que déplier « Entrecôte » creusait un vide blanc sous sa
+     voisine. Avec `columns`, chaque colonne coule indépendamment : une
+     fiche qui grandit ne repousse que celles de SA colonne, et le vide
+     disparaît. `break-inside:avoid` empêche une fiche d'être coupée en
+     deux entre les colonnes. */
   html:not(.carte-doc) .food-card-grid,
-  html:not(.carte-doc) .food-card-grid--wide,
+  html:not(.carte-doc) .food-card-grid--wide {
+    display: block !important;
+    columns: 2;
+    column-gap: 12px;
+  }
+  html:not(.carte-doc) .food-card-grid > .food-card,
+  html:not(.carte-doc) .food-card-grid--wide > .food-card {
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    margin: 0 0 12px;
+    height: auto !important;
+    display: flex;
+  }
+  /* Les autres grilles restent des grilles : leurs cartes ne se
+     déplient pas, mais on leur retire l'étirement par cohérence. */
   html:not(.carte-doc) .offer-grid,
   html:not(.carte-doc) .special-grid {
     align-items: start !important; align-content: start !important;
     grid-auto-rows: min-content !important;
-  }
-  html:not(.carte-doc) .food-card-grid > .food-card,
-  html:not(.carte-doc) .food-card-grid--wide > .food-card {
-    align-self: start !important; height: auto !important;
   }
   html:not(.carte-doc) .price-list--cols,
   html:not(.carte-doc) .hh-list--cols {
@@ -7534,12 +7556,8 @@ html:not(.carte-doc) .foldall--hint .foldall__btn {
 html:not(.carte-doc) .foldall--hint .foldall__ico {
   animation:foldall-nudge 2.6s ease-in-out infinite;
 }
-/* Le survol met l'indice en pause sans l'éteindre : la souris est
-   au-dessus, le geste reste à faire. Seul le clic y met fin. */
-html:not(.carte-doc) .foldall--hint .foldall__btn:hover,
-html:not(.carte-doc) .foldall--hint .foldall__btn:hover .foldall__ico {
-  animation-play-state:paused;
-}
+/* Ni le survol ni le focus n'interrompent l'indice : il bat sans
+   discontinuer tant que le bouton n'a pas été cliqué. */
 /* La pastille garde sa place au centre : gouttière symétrique, calculée
    sur la largeur réelle du bouton (libellé compris). */
 
@@ -9243,7 +9261,7 @@ else sizeCoverMedallion();
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609181510" defer></script>
+<script src="assets/js/i18n.js?v=202609182240" defer></script>
 
 <!-- ============ Assiettes en photo : les fiches deviennent des dépliants ============ -->
 <script>
@@ -9603,11 +9621,14 @@ else sizeCoverMedallion();
     function hintSeen() {
       try { return sessionStorage.getItem(HINT_KEY) === '1'; } catch (e) { return false; }
     }
+    /* Appelé UNIQUEMENT au clic sur un bouton dépliant. L'indice
+       s'éteint alors sur tous les boutons et pour toute la session. */
     function markSeen() {
       try { sessionStorage.setItem(HINT_KEY, '1'); } catch (e) {}
-      document.querySelectorAll('.foldall--hint').forEach(function (el) {
-        el.classList.remove('foldall--hint');
-      });
+      Array.prototype.forEach.call(
+        document.querySelectorAll('.foldall--hint'),
+        function (el) { el.classList.remove('foldall--hint'); }
+      );
     }
     if (!hintSeen()) {
       if (typeof IntersectionObserver === 'function') {
@@ -9615,13 +9636,7 @@ else sizeCoverMedallion();
           entries.forEach(function (en) {
             if (!en.isIntersecting) return;
             io.unobserve(en.target);
-            /* Un panneau déjà déplié n'a rien à expliquer. */
-            if (hintSeen() || targets().some(function (el) {
-              return el.classList.contains('food-card--open') ||
-                     el.classList.contains('hh-line--open') ||
-                     el.classList.contains('price-line--open') ||
-                     el.classList.contains('beer-row--open');
-            })) return;
+            if (hintSeen()) return;
             /* L'indice tourne sans fin : il ne s'arrête qu'au clic. */
             bar.classList.add('foldall--hint');
           });
@@ -9650,11 +9665,12 @@ else sizeCoverMedallion();
       sync();
     });
 
-    /* Une fiche ouverte ou fermée à la main remet le bouton d'accord —
-       et prouve que le geste est compris : l'indice s'arrête partout. */
+    /* Une fiche ouverte ou fermée à la main remet le bouton d'accord.
+       En revanche l'indice CONTINUE : seul un clic sur le bouton
+       dépliant lui-même l'arrête. Déplier une fiche ne prouve pas que
+       l'on a repéré la commande « tout voir ». */
     host.addEventListener('click', function (e) {
       if (e.target.closest && e.target.closest('.foldall')) return;
-      markSeen();
       setTimeout(sync, 0);
     });
   }

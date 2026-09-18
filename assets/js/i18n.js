@@ -25,6 +25,9 @@
   var STORE_KEY = 'lcg-lang';
   var DICTS = {
     en: {
+      "Tous les jours": "Every day",
+      "07h00 — 02h00 en continu": "7 AM — 2 AM non-stop",
+      "12h00 — 00h00": "12 PM — 12 AM",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 5 PM → 11 PM ✦",
       "✦ 17h → 23h ✦": "✦ 5 PM → 11 PM ✦",
       "HAPPY HOUR": "HAPPY HOUR",
@@ -455,6 +458,9 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ NET PRICES IN EUROS • SERVICE INCLUDED ✦"
     },
     es: {
+      "Tous les jours": "Todos los días",
+      "07h00 — 02h00 en continu": "07:00 — 02:00 sin interrupción",
+      "12h00 — 00h00": "12:00 — 00:00",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17:00 → 23:00 ✦",
       "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
       "HAPPY HOUR": "HAPPY HOUR",
@@ -885,6 +891,9 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     de: {
+      "Tous les jours": "Täglich",
+      "07h00 — 02h00 en continu": "07:00 — 02:00 durchgehend",
+      "12h00 — 00h00": "12:00 — 00:00",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17 → 23 Uhr ✦",
       "✦ 17h → 23h ✦": "✦ 17 → 23 Uhr ✦",
       "HAPPY HOUR": "HAPPY HOUR",
@@ -1315,6 +1324,9 @@
       "MÉTRO GAMBETTA": "U-Bahnhof Gambetta"
     },
     it: {
+      "Tous les jours": "Tutti i giorni",
+      "07h00 — 02h00 en continu": "07:00 — 02:00 orario continuato",
+      "12h00 — 00h00": "12:00 — 00:00",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17:00 → 23:00 ✦",
       "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
       "HAPPY HOUR": "HAPPY HOUR",
@@ -1745,6 +1757,9 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     pt: {
+      "Tous les jours": "Todos os dias",
+      "07h00 — 02h00 en continu": "07h00 — 02h00 sem interrupção",
+      "12h00 — 00h00": "12h00 — 00h00",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17h → 23h ✦",
       "✦ 17h → 23h ✦": "✦ 17h → 23h ✦",
       "HAPPY HOUR": "HAPPY HOUR",
@@ -2175,6 +2190,9 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     nl: {
+      "Tous les jours": "Elke dag",
+      "07h00 — 02h00 en continu": "07.00 — 02.00 doorlopend",
+      "12h00 — 00h00": "12.00 — 00.00",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17.00 → 23.00 uur ✦",
       "✦ 17h → 23h ✦": "✦ 17.00 → 23.00 uur ✦",
       "HAPPY HOUR": "HAPPY HOUR",
@@ -2606,6 +2624,9 @@
     },
   
     ar: {
+      "Tous les jours": "كل يوم",
+      "07h00 — 02h00 en continu": "٧ ص — ٢ ص دون انقطاع",
+      "12h00 — 00h00": "١٢ ظ — ١٢ ص",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ ساعة السعادة · ٥ م ← ١١ م ✦",
       "✦ 17h → 23h ✦": "✦ ٥ م ← ١١ م ✦",
       "HAPPY HOUR": "ساعة السعادة",
@@ -3054,6 +3075,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ساندويتش جمبون وجبنة مع بيضة مقلية"
     },
     zh: {
+      "Tous les jours": "每天",
+      "07h00 — 02h00 en continu": "07:00 — 02:00 全天营业",
+      "12h00 — 00h00": "12:00 — 00:00",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ 欢乐时光 · 17:00 → 23:00 ✦",
       "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
       "HAPPY HOUR": "欢乐时光",
@@ -3502,6 +3526,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "烤火腿奶酪三明治，上加煎蛋"
     },
     uk: {
+      "Tous les jours": "Щодня",
+      "07h00 — 02h00 en continu": "07:00 — 02:00 без перерви",
+      "12h00 — 00h00": "12:00 — 00:00",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Щаслива година (HH) · 17:00 → 23:00 ✦",
       "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
       "HAPPY HOUR": "ЩАСЛИВА ГОДИНА",
@@ -3950,6 +3977,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "Підсмажений сендвіч із шинкою та сиром, зверху яєчня"
     },
     ja: {
+      "Tous les jours": "毎日",
+      "07h00 — 02h00 en continu": "7時 — 翌2時 通し営業",
+      "12h00 — 00h00": "12時 — 24時",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ ハッピーアワー · 17時 → 23時 ✦",
       "✦ 17h → 23h ✦": "✦ 17時 → 23時 ✦",
       "HAPPY HOUR": "ハッピーアワー",
@@ -4398,6 +4428,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ハムとチーズのグリルサンド、ベシャメルソース、目玉焼きのせ",
     },
     ko: {
+      "Tous les jours": "매일",
+      "07h00 — 02h00 en continu": "07시 — 02시 연중무휴",
+      "12h00 — 00h00": "12시 — 24시",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ 해피아워 · 17시 → 23시 ✦",
       "✦ 17h → 23h ✦": "✦ 17시 → 23시 ✦",
       "HAPPY HOUR": "해피아워",
@@ -4846,6 +4879,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "구운 햄과 치즈 샌드위치, 베샤멜 소스, 맨 위에 프라이 에그",
     },
     pl: {
+      "Tous les jours": "Codziennie",
+      "07h00 — 02h00 en continu": "07:00 — 02:00 bez przerwy",
+      "12h00 — 00h00": "12:00 — 00:00",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17:00 → 23:00 ✦",
       "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
       "HAPPY HOUR": "HAPPY HOUR",
@@ -5276,6 +5312,9 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ CENY W EURO • SERWIS WLICZONY ✦",
     },
     tr: {
+      "Tous les jours": "Her gün",
+      "07h00 — 02h00 en continu": "07.00 — 02.00 kesintisiz",
+      "12h00 — 00h00": "12.00 — 00.00",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17.00 → 23.00 ✦",
       "✦ 17h → 23h ✦": "✦ 17.00 → 23.00 ✦",
       "HAPPY HOUR": "HAPPY HOUR",
@@ -5706,6 +5745,9 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ EURO CİNSİNDEN NET FİYATLAR • SERVİS DAHİL ✦",
     },
     hi: {
+      "Tous les jours": "प्रतिदिन",
+      "07h00 — 02h00 en continu": "सुबह 7 — रात 2 लगातार",
+      "12h00 — 00h00": "दोपहर 12 — रात 12",
       "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ हैप्पी आवर · शाम 5 → रात 11 ✦",
       "✦ 17h → 23h ✦": "✦ शाम 5 → रात 11 ✦",
       "HAPPY HOUR": "हैप्पी आवर",
