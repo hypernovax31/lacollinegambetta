@@ -1013,6 +1013,50 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 .hours__row:last-child { border-bottom:0; }
 .hours__day { font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.1em; font-size:.8rem; color:var(--violet-900); }
 .hours__val { font-family:'Cinzel',serif; font-weight:700; color:var(--gold-700); white-space:nowrap; }
+
+/* ===== Scintillement des étoiles dorées (même dispositif qu'index) ====
+   Les ✦ respirent chacune à leur rythme plutôt que de rester figées ou
+   de battre à l'unisson. Opacité seule — propriété composée, animée par
+   le GPU, sans recalcul de mise en page. Cycles longs et premiers entre
+   eux, retards négatifs pour que les étoiles soient déjà en cours de
+   cycle au chargement. */
+@keyframes starBreath {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .62; }
+}
+.star-gold,
+.panel__title::before,
+.panel__title::after {
+  animation: starBreath 4.3s ease-in-out infinite !important;
+  will-change: opacity;
+}
+/* Les deux étoiles d'un même libellé ne battent jamais ensemble. */
+.star-gold:last-child:not(:first-child) {
+  animation-duration: 5.7s !important;
+  animation-delay: -2.4s !important;
+}
+.star-gold:first-child { animation-delay: -.7s !important; }
+.panel__title::before {
+  animation-duration: 6.9s !important; animation-delay: -1.9s !important;
+}
+.panel__title::after {
+  animation-duration: 5.1s !important; animation-delay: -3.6s !important;
+}
+.panel:nth-of-type(2n) .panel__title::before { animation-delay: -3.1s !important; }
+.panel:nth-of-type(2n) .panel__title::after  { animation-delay: -1.2s !important; }
+/* La coche du menu de langue signale une sélection : une information,
+   pas un ornement. */
+.lang-check { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .star-gold, .panel__title::before, .panel__title::after {
+    animation: none !important; opacity: 1 !important;
+  }
+}
+@media print {
+  .star-gold, .panel__title::before, .panel__title::after {
+    animation: none !important; opacity: 1 !important;
+  }
+}
 </style>
 </head>
 <body>

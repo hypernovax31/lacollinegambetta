@@ -6843,13 +6843,102 @@ html:not(.carte-doc) #cover-section .medallion-frame:hover {
 }
 /* --- Etoiles du titre : pulsation douce --- */
 html:not(.carte-doc) #cover-section .cover-brand .star-gold {
-  display: inline-block;
-  animation: coverStarPulse 2.8s ease-in-out infinite;
+  display: inline-block;   /* rythme défini plus bas, avec le reste */
 }
-html:not(.carte-doc) #cover-section .cover-brand .eyebrow .star-gold:last-child,
-html:not(.carte-doc) #cover-section .cover-brand .menu-leader-subline .star-gold:last-child {
-  animation-delay: 1.4s;
+/* ===== Scintillement des étoiles dorées ============================
+   Les ✦ du site restaient d'un éclat parfaitement fixe, et les rares
+   animées battaient toutes ensemble — un clignotement d'enseigne plutôt
+   qu'un reflet. Chacune respire désormais à son propre rythme.
+
+   Le procédé reste sobre, la retenue faisant tout l'effet : l'opacité
+   varie entre .62 et 1, sans changement de taille ni de couleur, sur des
+   cycles longs et volontairement premiers entre eux (3,1 / 4,3 / 5,7 /
+   6,9 s) pour que la figure ne se répète jamais à l'œil. Les retards
+   sont négatifs : les étoiles sont déjà en cours de cycle au chargement,
+   au lieu de démarrer toutes au même instant.
+
+   Opacité seule : c'est une propriété composée, animée par le GPU, sans
+   recalcul de mise en page. Le coût reste nul même avec cent étoiles. */
+@keyframes starBreath {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .62; }
 }
+/* Variante plus creusée pour les étoiles isolées, qui portent seules le
+   regard : le contraste y passe inaperçu là où il serait trop appuyé
+   dans une file de pastilles. */
+@keyframes starBreathDeep {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .48; }
+}
+html:not(.carte-doc) .star-gold,
+html:not(.carte-doc) .panel__title::before,
+html:not(.carte-doc) .panel__title::after,
+html:not(.carte-doc) .fmb-star {
+  animation: starBreath 4.3s ease-in-out infinite;
+  will-change: opacity;
+}
+/* Les deux étoiles qui encadrent un même libellé ne doivent jamais
+   battre à l'unisson : l'une précède l'autre d'une demi-respiration. */
+html:not(.carte-doc) .star-gold:last-child:not(:first-child) {
+  animation-duration: 5.7s;
+  animation-delay: -2.4s;
+}
+html:not(.carte-doc) .star-gold:first-child { animation-delay: -.7s; }
+/* Ouverture et fermeture des pastilles de titre : durées distinctes,
+   pour qu'une colonne de rubriques ne clignote pas en chœur. */
+html:not(.carte-doc) .panel__title::before {
+  animation-duration: 6.9s; animation-delay: -1.9s;
+}
+html:not(.carte-doc) .panel__title::after {
+  animation-duration: 5.1s; animation-delay: -3.6s;
+}
+/* Les rubriques se décalent ensuite les unes par rapport aux autres :
+   sans cela, toutes les pastilles d'un onglet respireraient ensemble. */
+html:not(.carte-doc) .panel:nth-of-type(2n) .panel__title::before { animation-delay: -3.1s; }
+html:not(.carte-doc) .panel:nth-of-type(2n) .panel__title::after  { animation-delay: -1.2s; }
+html:not(.carte-doc) .panel:nth-of-type(3n) .panel__title::before { animation-delay: -5.4s; }
+html:not(.carte-doc) .panel:nth-of-type(3n) .panel__title::after  { animation-delay: -4.3s; }
+/* Puces des formules : une file verticale, donc un décalage régulier
+   qui donne l'impression d'une onde plutôt que d'un battement. */
+html:not(.carte-doc) .choice-card li::before {
+  animation: starBreath 5.7s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -.43s);
+  will-change: opacity;
+}
+html:not(.carte-doc) .choice-card li:nth-child(1)::before { --i: 0; }
+html:not(.carte-doc) .choice-card li:nth-child(2)::before { --i: 1; }
+html:not(.carte-doc) .choice-card li:nth-child(3)::before { --i: 2; }
+html:not(.carte-doc) .choice-card li:nth-child(4)::before { --i: 3; }
+html:not(.carte-doc) .choice-card li:nth-child(5)::before { --i: 4; }
+html:not(.carte-doc) .choice-card li:nth-child(6)::before { --i: 5; }
+html:not(.carte-doc) .choice-card li:nth-child(7)::before { --i: 6; }
+html:not(.carte-doc) .choice-card li:nth-child(8)::before { --i: 7; }
+/* Étoiles de la page de garde : plus lentes et plus creusées. Elles
+   figurent sur un fond sombre, où le reflet porte davantage. */
+html:not(.carte-doc) #cover-section .cover-brand .star-gold {
+  animation: starBreathDeep 6.4s ease-in-out infinite;
+}
+html:not(.carte-doc) #cover-section .cover-brand .star-gold:last-child {
+  animation-duration: 7.6s; animation-delay: -3.2s;
+}
+/* Le bouton « Menu & Carte » scintille déjà par son reflet : ses étoiles
+   restent stables pour ne pas surcharger le même point du regard. */
+html:not(.carte-doc) .cover-action .star-gold { animation: none; }
+/* La coche du menu de langue marque une sélection : une information,
+   pas un ornement. Elle ne doit pas respirer. */
+html:not(.carte-doc) .lang-check { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  html:not(.carte-doc) .star-gold,
+  html:not(.carte-doc) .panel__title::before,
+  html:not(.carte-doc) .panel__title::after,
+  html:not(.carte-doc) .choice-card li::before,
+  html:not(.carte-doc) .fmb-star { animation: none !important; opacity: 1 !important; }
+}
+@media print {
+  .star-gold, .panel__title::before, .panel__title::after,
+  .choice-card li::before, .fmb-star { animation: none !important; opacity: 1 !important; }
+}
+
 /* --- Decors caches sur la carte imprimee / le document A4 --- */
 html.carte-doc .cover-ambient,
 html.carte-doc .cover-sparkles,
