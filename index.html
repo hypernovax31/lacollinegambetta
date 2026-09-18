@@ -3084,14 +3084,42 @@ body:has(#cover-section:not([style*="display: none"])) .lang-dock .lang-btn {
   -webkit-backdrop-filter: blur(6px);
 }
 .lang-dock .lang-menu {
-  position: absolute;
+  /* Le menu est ancré à la FENÊTRE, pas au socle : le socle ne fait que
+     66 px de large, et un panneau en absolu dedans ne pouvait plus
+     s'étendre ni se centrer. C'est ce qui avait fait perdre au menu son
+     affichage pleine largeur sur petit écran. En `fixed`, il retrouve la
+     fenêtre pour cadre de référence, à l'identique sur les trois pages. */
+  position: fixed;
   top: 60px;
   right: 12px;
+  left: auto;
+  transform: none;
+}
+/* Petit écran : pleine largeur, comme avant le socle. */
+@media (max-width: 640px) {
+  .lang-dock .lang-menu {
+    top: 56px;
+    left: 10px;
+    right: 10px;
+    min-width: 0;
+    max-height: calc(100vh - 76px);
+  }
+}
+/* Fenêtre basse : le panneau s'élargit et se centre horizontalement
+   pour que les quinze langues tiennent sans défilement interne. */
+@media (min-width: 641px) and (max-height: 500px) {
+  .lang-dock .lang-menu {
+    top: 50%;
+    right: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: calc(100vh - 32px);
+  }
 }
 @media (max-width: 720px) {
   .lang-dock { width: 58px; height: 58px; }
   .lang-dock .lang-btn { right: 8px; top: 9px; }
-  .lang-dock .lang-menu { top: 56px; right: 8px; }
+  .lang-dock .lang-menu { top: 56px; }
 }
 
 /* ===== Écritures non latines : fontes dédiées, mappées dans les familles
@@ -7340,8 +7368,15 @@ html:not(.carte-doc) .hh-line__photo:not(:has(img.is-loaded))::after { box-shado
    contient des dépliants. Même or, même trait que les chevrons des
    fiches : c'est le même geste, en grand. */
 html:not(.carte-doc) .foldall {
-  display:flex; justify-content:flex-end; margin:0 2px -6px;
+  /* Le bouton débordait de l'encart : la barre vivait dans le flux de
+     l'onglet, en dehors du .panel, donc calée sur la largeur de la page
+     et non sur celle de la pastille. Elle est désormais posée DANS le
+     premier panneau, en absolu, à la hauteur du titre : le chevron
+     s'aligne sur la pastille violette et reste à l'intérieur du cadre. */
+  position:absolute; top:16px; right:16px; z-index:2;
+  display:flex; align-items:center; height:50px;
 }
+html:not(.carte-doc) .panel:has(> .foldall) { position:relative; }
 html:not(.carte-doc) .foldall__btn {
   appearance:none; -webkit-appearance:none; cursor:pointer;
   width:38px; height:38px; padding:0; display:grid; place-items:center;
@@ -7369,6 +7404,27 @@ html:not(.carte-doc) .foldall__ico::after {
 html:not(.carte-doc) .foldall__ico::before { top:-3px; }
 html:not(.carte-doc) .foldall__ico::after  { top:2px; }
 html:not(.carte-doc) .foldall__btn[aria-pressed="true"] .foldall__ico { transform:rotate(180deg); }
+/* La pastille garde sa place au centre : on lui réserve la gouttière du
+   bouton des deux côtés pour qu'elle reste centrée sans passer dessous. */
+html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0 46px; }
+@media (max-width: 560px) {
+  html:not(.carte-doc) .foldall { top:12px; right:12px; height:42px; }
+  html:not(.carte-doc) .foldall__btn { width:34px; height:34px; }
+  html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0 40px; }
+}
+/* Mention légale au pied de chaque photo : « non contractuelle » est la
+   formule consacrée en droit français de la consommation, doublée de
+   « suggestion de présentation » comme sur les emballages alimentaires. */
+.sr-only {
+  position:absolute !important; width:1px; height:1px; overflow:hidden;
+  clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; border:0; padding:0; margin:-1px;
+}
+html:not(.carte-doc) .photo-legal {
+  margin:6px 2px 0; font-family:'Montserrat',sans-serif;
+  font-size:.62rem; line-height:1.35; letter-spacing:.02em;
+  color:var(--muted); font-style:italic; text-align:center;
+}
+html:not(.carte-doc) .hh-line__photo + .photo-legal { margin-bottom:4px; }
 @media print { .foldall { display:none !important; } }
 @media (prefers-reduced-motion: reduce) {
   html:not(.carte-doc) .foldall__ico,
@@ -7683,9 +7739,16 @@ html:not(.carte-doc) .foldall__btn[aria-pressed="true"] .foldall__ico { transfor
 <section id="vins" class="menu-section"><div class="tab-flow"><article class="panel"><div class="panel__head"><h4 class="panel__title">Vin rouge</h4></div><div class="table-wrap"><table class="wine-table"><thead><tr><th>N°</th><th class="th-name">Appellation</th><th class="qty">14 cl</th><th class="qty">25 cl</th><th class="qty">50 cl</th><th class="qty">75 cl</th></tr></thead><tbody><tr><td data-label="N°" class="wine-no">1</td><td class="wine-name">Bordeaux AOP<span class="wine-producer"> — Château la Gabarre</span></td><td data-label="14 cl">5,20</td><td data-label="25 cl">9,90</td><td data-label="50 cl">18,90</td><td data-label="75 cl">22,90</td></tr><tr><td data-label="N°" class="wine-no">2</td><td class="wine-name">Côtes du Rhône AOP Bio<span class="wine-producer"> — Les 3 Garçons</span></td><td data-label="14 cl">4,50</td><td data-label="25 cl">8,60</td><td data-label="50 cl">16,50</td><td data-label="75 cl">20,90</td></tr><tr><td data-label="N°" class="wine-no">3</td><td class="wine-name">Brouilly AOP<span class="wine-producer"> — Réserve de Beauvoisie</span></td><td data-label="14 cl">6,50</td><td data-label="25 cl">12,50</td><td data-label="50 cl">23,90</td><td data-label="75 cl">28,90</td></tr><tr><td data-label="N°" class="wine-no">4</td><td class="wine-name">IGP Pays d’Oc Bio<span class="wine-producer"> — Le Titi, Pinot Noir</span></td><td data-label="14 cl">3,50</td><td data-label="25 cl">6,50</td><td data-label="50 cl">11,90</td><td data-label="75 cl">16,90</td></tr><tr><td data-label="N°" class="wine-no">5</td><td class="wine-name">Saint-Pourçain AOP<span class="wine-producer"> — La Ficelle</span></td><td data-label="14 cl">4,90</td><td data-label="25 cl">9,40</td><td data-label="50 cl">17,90</td><td data-label="75 cl">21,90</td></tr><tr><td data-label="N°" class="wine-no">6</td><td class="wine-name">Pic Saint-Loup AOP<span class="wine-producer"> — Puech de Fourques</span></td><td data-label="14 cl">—</td><td data-label="25 cl">—</td><td data-label="50 cl">—</td><td data-label="75 cl">37,50</td></tr><tr><td data-label="N°" class="wine-no">7</td><td class="wine-name">Crozes-Hermitage AOP<span class="wine-producer"> — Chante Passo</span></td><td data-label="14 cl">—</td><td data-label="25 cl">—</td><td data-label="50 cl">—</td><td data-label="75 cl">45,90</td></tr><tr><td data-label="N°" class="wine-no">8</td><td class="wine-name">Gigondas AOP Bio<span class="wine-producer"> — Pierre Amadieu, Romane Machotte</span></td><td data-label="14 cl">—</td><td data-label="25 cl">—</td><td data-label="50 cl">—</td><td data-label="75 cl">58,00</td></tr></tbody></table></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Vin blanc</h4></div><div class="table-wrap"><table class="wine-table"><thead><tr><th>N°</th><th class="th-name">Appellation</th><th class="qty">14 cl</th><th class="qty">25 cl</th><th class="qty">50 cl</th><th class="qty">75 cl</th></tr></thead><tbody><tr><td data-label="N°" class="wine-no">1</td><td class="wine-name">Petit Chablis AOP<span class="wine-producer"> — La Revire</span></td><td data-label="14 cl">8,10</td><td data-label="25 cl">15,60</td><td data-label="50 cl">29,90</td><td data-label="75 cl">39,90</td></tr><tr><td data-label="N°" class="wine-no">2</td><td class="wine-name">IGP Pays d’Oc<span class="wine-producer"> — Le Sudiste Chardonnay</span></td><td data-label="14 cl">4,40</td><td data-label="25 cl">8,30</td><td data-label="50 cl">15,50</td><td data-label="75 cl">21,50</td></tr><tr><td data-label="N°" class="wine-no">3</td><td class="wine-name">IGT Terre Siciliane Bio<span class="wine-producer"> — Vinisella Pinot Grigio La Passione</span></td><td data-label="14 cl">4,10</td><td data-label="25 cl">7,80</td><td data-label="50 cl">14,50</td><td data-label="75 cl">19,50</td></tr><tr><td data-label="N°" class="wine-no">4</td><td class="wine-name">IGP Côtes de Gascogne Bio<span class="wine-producer"> — Domaine de Maouries, les fruits</span></td><td data-label="14 cl">6,90</td><td data-label="25 cl">12,90</td><td data-label="50 cl">24,60</td><td data-label="75 cl">31,90</td></tr></tbody></table></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Vin rosé</h4></div><div class="table-wrap"><table class="wine-table"><thead><tr><th>N°</th><th class="th-name">Appellation</th><th class="qty">14 cl</th><th class="qty">25 cl</th><th class="qty">50 cl</th><th class="qty">75 cl</th></tr></thead><tbody><tr><td data-label="N°" class="wine-no">1</td><td class="wine-name">Côtes de Provence AOP Bio<span class="wine-producer"> — Romain Desbastides</span></td><td data-label="14 cl">5,80</td><td data-label="25 cl">10,50</td><td data-label="50 cl">19,90</td><td data-label="75 cl">26,90</td></tr><tr><td data-label="N°" class="wine-no">2</td><td class="wine-name">IGP Méditerranée Bio<span class="wine-producer"> — La Demoiselle sans Gêne</span></td><td data-label="14 cl">4,80</td><td data-label="25 cl">8,50</td><td data-label="50 cl">16,20</td><td data-label="75 cl">22,60</td></tr></tbody></table></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Bulles</h4></div><div class="table-wrap"><table class="wine-table wine-table--short"><thead><tr><th>N°</th><th class="th-name">Appellation</th><th class="qty">Coupe 12 cl</th><th class="qty">75 cl</th></tr></thead><tbody><tr><td data-label="N°" class="wine-no">1</td><td class="wine-name">Champagne H. Richard<span class="wine-producer"> — Cuvée Henri</span></td><td data-label="Coupe 12 cl">9,50</td><td data-label="75 cl">58,00</td></tr><tr><td data-label="N°" class="wine-no">2</td><td class="wine-name">Champagne Nicolas Feuillatte<span class="wine-producer"> — Brut Réserve Exclusive</span></td><td data-label="Coupe 12 cl">—</td><td data-label="75 cl">79,00</td></tr><tr><td data-label="N°" class="wine-no">3</td><td class="wine-name">Prosecco Spumante Il Poggio<span class="wine-producer"> — Blanc de Noirs Extra Dry</span></td><td data-label="Coupe 12 cl">4,90</td><td data-label="75 cl">28,90</td></tr></tbody></table></div></article></div></section>
 <section id="desserts" class="menu-section"><div class="tab-flow"><article class="panel"><div class="panel__head"><h4 class="panel__title">Desserts</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item" data-photo="assets/plats/creme-brulee.jpg"><div class="food-card__head"><h5>Crème brûlée</h5><strong>6,80</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/mousse-au-chocolat.jpg"><div class="food-card__head"><h5>Mousse au chocolat</h5><strong>6,50</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/panna-cotta.jpg"><div class="food-card__head"><h5>Panna cotta</h5><strong>6,90</strong></div><p class="food-card__note">Coulis de fruits rouges</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/tiramisu.jpg"><div class="food-card__head"><h5>Tiramisu</h5><strong>7,20</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/tarte-aux-pommes.jpg"><div class="food-card__head"><h5>Tarte aux pommes</h5><strong>7,50</strong></div><p class="food-card__note">Glace vanille</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/pain-perdu-de-la-colline.jpg"><div class="food-card__head"><h5>Pain perdu de la Colline</h5><strong>7,50</strong></div><p class="food-card__note">Glace vanille ou caramel beurre salé</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/moelleux-au-chocolat.jpg"><div class="food-card__head"><h5>Moelleux au chocolat</h5><strong>7,90</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/profiteroles.jpg"><div class="food-card__head"><h5>Profiteroles</h5><strong>7,20</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/cafe-gourmand.jpg"><div class="food-card__head"><h5>Café gourmand</h5><strong>8,20</strong></div><p class="food-card__note">Assortiment de mignardises — thé + 1 €</p></article></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Glaces</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item" data-photo="assets/plats/creme-glacee-3-boules.jpg"><div class="food-card__head"><h5>Crème glacée (3 boules)</h5><strong>8,10</strong></div><p class="food-card__note">Vanille, caramel beurre salé, chocolat, café, pistache, noisette</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/sorbet-3-boules.jpg"><div class="food-card__head"><h5>Sorbet (3 boules)</h5><strong>8,10</strong></div><p class="food-card__note">Citron vert, fraise, framboise</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/dame-blanche-aux-eclats-de-chocolat.jpg"><div class="food-card__head"><h5>Dame blanche aux éclats de chocolat</h5><strong>8,30</strong></div><p class="food-card__note">2 boules vanille, sauce chocolat, chantilly</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/chocolat-liegeois.jpg"><div class="food-card__head"><h5>Chocolat liégeois</h5><strong>8,30</strong></div><p class="food-card__note">2 boules chocolat, sauce chocolat, chantilly</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/cafe-liegeois.jpg"><div class="food-card__head"><h5>Café liégeois</h5><strong>8,30</strong></div><p class="food-card__note">2 boules café, expresso, chantilly</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/caramello.jpg"><div class="food-card__head"><h5>Caramello</h5><strong>8,30</strong></div><p class="food-card__note">2 boules caramel beurre salé, sauce caramel, chantilly</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/le-colonel-de-la-colline.jpg"><div class="food-card__head"><h5>Le Colonel de la Colline</h5><strong>8,30</strong></div><p class="food-card__note">2 boules citron vert arrosées de vodka (2 cl)</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/supplement-boule-de-glace-ou-sorbet.jpg"><div class="food-card__head"><h5>Supplément boule de glace ou sorbet</h5><strong>2,90</strong></div></article></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Fromages</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item" data-photo="assets/plats/pont-l-eveque.jpg"><div class="food-card__head"><h5>Pont-l’Évêque</h5><strong>5,90</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/fourme-d-ambert.jpg"><div class="food-card__head"><h5>Fourme d’Ambert</h5><strong>6,90</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/cantal.jpg"><div class="food-card__head"><h5>Cantal</h5><strong>6,90</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/chevre.jpg"><div class="food-card__head"><h5>Chèvre</h5><strong>5,90</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/assiette-mixte.jpg"><div class="food-card__head"><h5>Assiette mixte</h5><strong>8,50</strong></div></article></div></article></div></section>
     </div>
+    <!-- Gabarit de la mention légale des photos. Écrit en clair dans la
+         page (et non fabriqué en JS) pour que le moteur de traduction le
+         voie au chargement : chaque tiroir en clone le texte, déjà
+         traduit. Retiré du flux visuel et de la vocalisation, mais pas
+         en display:none, qui l'exclurait de la collecte. -->
+    <p id="photo-legal-tpl" class="sr-only" aria-hidden="true">Photographie non contractuelle — suggestion de présentation.</p>
+
     <footer class="footer">
       <div class="footer-note"><span class="star-gold">✦</span> Prix nets en euros • service compris <span class="star-gold">✦</span></div>
-      <div class="footer-legal">Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé</div>
+      <div class="footer-legal">Photographies non contractuelles, suggestions de présentation • Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé</div>
       
       <div class="footer-download-wrap"><a class="footer-download" href="Carte_LaCollineGambetta.pdf" download="Carte_LaCollineGambetta.pdf" title="Télécharger la carte au format PDF">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11.5"/><path d="M7.5 11.2 12 15.7l4.5-4.5"/><path d="M4.5 19.5h15"/></svg>
@@ -8705,6 +8768,19 @@ else sizeCoverMedallion();
 (function () {
   if (document.documentElement.classList.contains('carte-doc')) return;
 
+  /* La mention est CLONÉE depuis un gabarit écrit en clair dans la page :
+     le moteur de traduction photographie les textes au chargement, donc
+     une phrase fabriquée en JS resterait en français. Le gabarit, lui,
+     est traduit comme le reste et chaque copie en hérite. */
+  var legalTpl = document.getElementById('photo-legal-tpl');
+  function legalNote() {
+    var p = document.createElement('p');
+    p.className = 'photo-legal';
+    p.textContent = legalTpl ? legalTpl.textContent.trim()
+      : 'Photographie non contractuelle — suggestion de présentation.';
+    return p;
+  }
+
   function wrap(card) {
     var src = card.getAttribute('data-photo');
     if (!src || card.classList.contains('food-card--photo')) return;
@@ -8755,6 +8831,7 @@ else sizeCoverMedallion();
     });
     figure.appendChild(img);
     inner.appendChild(figure);
+    inner.appendChild(legalNote());
     drawer.appendChild(inner);
     card.appendChild(drawer);
 
@@ -8817,6 +8894,7 @@ else sizeCoverMedallion();
     });
     figure.appendChild(img);
     inner.appendChild(figure);
+    inner.appendChild(legalNote());
     drawer.appendChild(inner);
     line.appendChild(drawer);
 
@@ -8838,8 +8916,6 @@ else sizeCoverMedallion();
      son état suit ce qu'on voit : si l'on replie les fiches une à une,
      il repasse de lui-même en « tout déplier ». */
   function mountFoldAll(section) {
-    var flow = section.querySelector(':scope > .tab-flow');
-    if (!flow || flow.querySelector(':scope > .foldall')) return;
 
     function targets() {
       return Array.prototype.slice.call(
@@ -8847,6 +8923,15 @@ else sizeCoverMedallion();
       );
     }
     if (!targets().length) return;
+
+    /* Le bouton se pose DANS le premier panneau qui porte des dépliants,
+       à hauteur de sa pastille de titre — et non au-dessus du flux, où
+       il débordait de l'encart. */
+    var host = null;
+    var first = section.querySelector('.food-card--photo, .hh-line--photo');
+    if (first) host = first.closest('.panel');
+    if (!host) return;
+    if (host.querySelector(':scope > .foldall')) return;
 
     var bar = document.createElement('div');
     bar.className = 'foldall';
@@ -8861,7 +8946,7 @@ else sizeCoverMedallion();
     ico.setAttribute('aria-hidden', 'true');
     btn.appendChild(ico);
     bar.appendChild(btn);
-    flow.insertBefore(bar, flow.firstChild);
+    host.insertBefore(bar, host.firstChild);
 
     function sync() {
       var list = targets();

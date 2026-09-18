@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" crossorigin="">
 <style>
 /* =====================================================================
    Page de réservation.
@@ -530,14 +530,42 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   transform: none;
 }
 .lang-dock .lang-menu {
-  position: absolute;
+  /* Le menu est ancré à la FENÊTRE, pas au socle : le socle ne fait que
+     66 px de large, et un panneau en absolu dedans ne pouvait plus
+     s'étendre ni se centrer. C'est ce qui avait fait perdre au menu son
+     affichage pleine largeur sur petit écran. En `fixed`, il retrouve la
+     fenêtre pour cadre de référence, à l'identique sur les trois pages. */
+  position: fixed;
   top: 60px;
   right: 12px;
+  left: auto;
+  transform: none;
+}
+/* Petit écran : pleine largeur, comme avant le socle. */
+@media (max-width: 640px) {
+  .lang-dock .lang-menu {
+    top: 56px;
+    left: 10px;
+    right: 10px;
+    min-width: 0;
+    max-height: calc(100vh - 76px);
+  }
+}
+/* Fenêtre basse : le panneau s'élargit et se centre horizontalement
+   pour que les quinze langues tiennent sans défilement interne. */
+@media (min-width: 641px) and (max-height: 500px) {
+  .lang-dock .lang-menu {
+    top: 50%;
+    right: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: calc(100vh - 32px);
+  }
 }
 @media (max-width: 720px) {
 .lang-dock { width: 58px; height: 58px; }
 .lang-dock .lang-btn { right: 8px; top: 9px; }
-.lang-dock .lang-menu { top: 56px; right: 8px; }
+.lang-dock .lang-menu { top: 56px; }
 }
 
 .lang-btn {
@@ -865,31 +893,40 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   text-transform:uppercase; color:var(--violet-900); text-align:center;
 }
 .info-link--route { flex:0 0 auto; }
-/* Contrôles de zoom : mêmes codes que le bouton de recentrage — blanc,
-   discret, sans le bleu par défaut de Leaflet. */
-.leaflet-control-zoom { border:0 !important; box-shadow:0 2px 8px rgba(36,16,46,.16) !important; }
-.leaflet-control-zoom a {
+/* Commandes MapLibre : mêmes codes que le bouton de recentrage —
+   blanc, discret, sans le bleu par défaut. */
+.maplibregl-ctrl-group { border:0 !important; box-shadow:0 2px 8px rgba(36,16,46,.16) !important; border-radius:10px !important; overflow:hidden; }
+.maplibregl-ctrl-group button {
+  width:30px !important; height:30px !important;
   background:#fff !important; color:var(--violet-800) !important;
-  border-color:rgba(36,16,46,.1) !important; font-weight:600;
+  border-bottom:1px solid rgba(36,16,46,.10) !important;
 }
-.leaflet-control-zoom a:hover { background:#fffaea !important; color:var(--violet-950) !important; }
-.leaflet-container { font-family:'Montserrat',sans-serif; background:#f4f4f2; }
-.leaflet-control-attribution a { color:var(--violet-800) !important; }
-
-/* Infobulle Leaflet aux couleurs de la maison. */
-.leaflet-popup-content-wrap {
-  border-radius:14px !important; border:1px solid var(--gold-500);
-  background:#fffdf6;
+.maplibregl-ctrl-group button:hover { background:#fffaea !important; }
+.maplibregl-ctrl-group button:last-child { border-bottom:0 !important; }
+.maplibregl-canvas { outline:none; }
+.maplibregl-map { font-family:'Montserrat',sans-serif; background:#f4f4f2; }
+/* Attribution : obligatoire, donc lisible — mais discrète. */
+.maplibregl-ctrl-attrib {
+  background:rgba(255,255,255,.82) !important; font-size:9px !important;
+  border-radius:8px 0 0 0 !important;
 }
-.leaflet-popup-content {
-  margin:10px 14px !important; font-family:'Montserrat',sans-serif;
-  color:var(--violet-900); text-align:center; line-height:1.45;
+.maplibregl-ctrl-attrib a { color:var(--violet-800) !important; }
+.maplibregl-ctrl-attrib-button { background-color:rgba(255,255,255,.9) !important; }
+/* Infobulle aux couleurs de la maison. */
+.maplibregl-popup-content {
+  background:#fffdf6 !important; border:1px solid var(--gold-500);
+  border-radius:12px !important; box-shadow:0 10px 26px rgba(36,16,46,.18) !important;
+  padding:10px 14px !important; font-family:'Montserrat',sans-serif;
+  font-size:.78rem; line-height:1.5; color:var(--violet-900); text-align:center;
 }
-.leaflet-popup-content strong {
-  font-family:'Cinzel',serif; letter-spacing:.08em; color:#14060c;
+.maplibregl-popup-content strong {
+  font-family:'Cinzel',serif; letter-spacing:.08em; color:var(--violet-900);
 }
-.leaflet-popup-tip { background:#fffdf6 !important; border:1px solid var(--gold-500); }
-.leaflet-control-attribution { font-size:9px !important; }
+.maplibregl-popup-tip { border-top-color:#fffdf6 !important; border-bottom-color:#fffdf6 !important; }
+/* Le voile « Ctrl + molette pour zoomer » repris dans la même langue graphique. */
+.maplibregl-cooperative-gesture-screen {
+  background:rgba(36,16,46,.55) !important; font-family:'Montserrat',sans-serif !important;
+}
 
 /* Retour à la carte, en bas de page : la pilule des liens de contact. */
 .book-back-bottom { display:flex; justify-content:center; }
@@ -1162,7 +1199,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
         </div>
         <div class="map-foot">
           <span class="map-address">4 rue Belgrand, 75020 Paris — métro Gambetta</span>
-          <a class="info-link info-link--route" href="https://www.openstreetmap.org/directions?to=48.8647788%2C2.3993777" target="_blank" rel="noopener">
+          <a class="info-link info-link--route" id="route-link" href="https://www.openstreetmap.org/directions?to=48.8647788%2C2.3993777" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
             Itinéraire
           </a>
@@ -1187,7 +1224,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 
   <footer class="footer">
       <div class="footer-note"><span class="star-gold">✦</span> Prix nets en euros • service compris <span class="star-gold">✦</span></div>
-      <div class="footer-legal">Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé</div>
+      <div class="footer-legal">Photographies non contractuelles, suggestions de présentation • Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé</div>
       
       <div class="footer-download-wrap"><a class="footer-download" href="Carte_LaCollineGambetta.pdf" download="Carte_LaCollineGambetta.pdf" title="Télécharger la carte au format PDF">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11.5"/><path d="M7.5 11.2 12 15.7l4.5-4.5"/><path d="M4.5 19.5h15"/></svg>
@@ -1202,72 +1239,127 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
     </footer>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" crossorigin=""></script>
 <script>
 /* Plan du restaurant.
-   Fond OpenStreetMap, déplaçable et zoomable ; le bouton rond recentre
-   sur l'adresse exacte (relevé Nominatim du 4 rue Belgrand). Si Leaflet
-   ne se charge pas — hors ligne, blocage réseau — l'encart affiche
-   l'adresse en clair plutôt qu'un rectangle vide. */
+   Fond OpenFreeMap (style Positron), rendu en vectoriel par MapLibre.
+   CARTO impose depuis peu une clé pour ses tuiles matricielles et
+   estampille « API KEY REQUIRED » en travers de celles servies sans
+   clé : c'est ce filigrane qu'on voit apparaître. Plutôt que d'aller
+   chercher une clé — donc un compte, un quota et un secret à gérer dans
+   une page statique où il serait de toute façon public — on passe à
+   OpenFreeMap : aucune clé, aucune inscription, aucun quota, usage
+   commercial autorisé, et le même parti pris graphique (gris très
+   clair, la typographie seule porte l'information). Le vectoriel a en
+   prime l'avantage de rester net à tous les niveaux de zoom.
+   L'attribution est obligatoire : MapLibre l'affiche depuis le style.
+   Si MapLibre ne se charge pas — hors ligne, WebGL absent, blocage
+   réseau — l'encart affiche l'adresse en clair plutôt qu'un rectangle
+   vide. */
 (function () {
-  var LAT = 48.8647788, LON = 2.3993777, ZOOM = 17;
+  var LAT = 48.8647788, LON = 2.3993777, ZOOM = 16.4;
   var el = document.getElementById('book-map');
   var btn = document.getElementById('map-recenter');
   if (!el) return;
 
-  if (typeof L === 'undefined') {
+  function fallback() {
     el.innerHTML = '<p class="map-error">4 rue Belgrand, 75020 Paris — métro Gambetta</p>';
     if (btn) btn.hidden = true;
-    return;
   }
+  /* WebGL est indispensable au rendu vectoriel : on le vérifie avant de
+     tenter quoi que ce soit, sinon MapLibre lève une exception. */
+  function hasWebGL() {
+    try {
+      var c = document.createElement('canvas');
+      return !!(window.WebGLRenderingContext &&
+        (c.getContext('webgl') || c.getContext('experimental-webgl')));
+    } catch (e) { return false; }
+  }
+  if (typeof maplibregl === 'undefined' || !hasWebGL()) { fallback(); return; }
 
-  var map = L.map(el, {
-    center: [LAT, LON],
-    zoom: ZOOM,
-    scrollWheelZoom: false,   /* la molette fait défiler la PAGE, pas le plan */
-    zoomControl: true
+  var map;
+  try {
+    map = new maplibregl.Map({
+      container: el,
+      style: 'https://tiles.openfreemap.org/styles/positron',
+      center: [LON, LAT],
+      zoom: ZOOM,
+      attributionControl: false,
+      /* La molette fait défiler la PAGE : on ne piège pas le défilement
+         de quelqu'un qui ne fait que passer devant l'encart. Ctrl +
+         molette zoome, et MapLibre l'indique de lui-même. */
+      cooperativeGestures: true
+    });
+  } catch (e) { fallback(); return; }
+
+  map.on('error', function (e) {
+    /* Style injoignable : on ne laisse pas un cadre vide. */
+    if (e && e.error && !map.isStyleLoaded()) fallback();
   });
-  /* La molette ne zoome qu'une fois le plan touché : on ne piège pas le
-     défilement de quelqu'un qui ne fait que passer devant l'encart. */
-  map.on('focus', function () { map.scrollWheelZoom.enable(); });
-  map.on('blur', function () { map.scrollWheelZoom.disable(); });
-  el.addEventListener('mouseenter', function () { map.scrollWheelZoom.enable(); });
-  el.addEventListener('mouseleave', function () { map.scrollWheelZoom.disable(); });
 
-  /* Fond « Positron » de CARTO plutôt que la tuile OSM standard : gris
-     très clair, sans aplats de couleur ni pictogrammes commerciaux, la
-     typographie seule porte l'information. C'est le fond le plus sobre
-     disponible librement, et le seul qui s'accorde au crème et à l'or du
-     site — la tuile OSM, bariolée de vert et d'ocre, jurait dans
-     l'encart. Version @2x pour rester net sur écran Retina. */
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    subdomains: 'abcd',
-    maxZoom: 20,
-    detectRetina: true,
-    attribution: '© OpenStreetMap · © CARTO'
-  }).addTo(map);
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
+  map.addControl(new maplibregl.AttributionControl({
+    compact: true,
+    customAttribution: '<a href="https://openfreemap.org/" target="_blank" rel="noopener">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+  }));
 
-  var pin = L.divIcon({
-    className: '',
-    html: '<div class="map-pin"></div>',
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-    popupAnchor: [0, -14]
-  });
-  L.marker([LAT, LON], { icon: pin, title: 'La Colline Gambetta' })
-    .addTo(map)
-    .bindPopup('<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Métro Gambetta');
+  /* Épingle : le même disque violet cerclé de blanc qu'avant, en élément
+     HTML plutôt qu'en icône Leaflet. */
+  var dot = document.createElement('div');
+  dot.className = 'map-pin';
+  new maplibregl.Marker({ element: dot })
+    .setLngLat([LON, LAT])
+    .setPopup(new maplibregl.Popup({ offset: 16, closeButton: false }).setHTML(
+      '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Métro Gambetta'
+    ))
+    .addTo(map);
 
   if (btn) {
     btn.addEventListener('click', function () {
-      map.flyTo([LAT, LON], ZOOM, { duration: .6 });
+      map.flyTo({ center: [LON, LAT], zoom: ZOOM, duration: 600 });
     });
   }
   /* L'encart est dimensionné en clamp() : si sa hauteur change après le
-     premier rendu (rotation, changement de langue), Leaflet doit être
-     prévenu, sinon les tuiles restent grises sur une bande. */
-  window.addEventListener('resize', function () { map.invalidateSize(); });
-  setTimeout(function () { map.invalidateSize(); }, 300);
+     premier rendu (rotation, changement de langue), MapLibre doit être
+     prévenu, sinon la toile reste sur une bande grise. */
+  window.addEventListener('resize', function () { map.resize(); });
+  setTimeout(function () { map.resize(); }, 300);
+})();
+</script>
+
+<script>
+/* Bouton « Itinéraire » : ouvrir l'application de navigation de
+   l'appareil, pas un site tiers.
+
+   Sur iOS et macOS, le lien maps: est intercepté par Plans ; Google Maps
+   s'y substitue de lui-même s'il est installé et réglé par défaut. Sur
+   Android, le schéma geo: est le point d'entrée standard : le système
+   propose Google Maps, Waze ou Petal selon ce qui est installé, et
+   laisse l'utilisateur choisir — c'est bien à lui de décider, pas à
+   nous de présumer.
+   Partout ailleurs (ordinateur de bureau), on garde l'itinéraire
+   OpenStreetMap déjà écrit dans le HTML : il fonctionne sans compte et
+   sans application. Le lien reste donc valide même sans JavaScript. */
+(function () {
+  var a = document.getElementById('route-link');
+  if (!a) return;
+  var LAT = 48.8647788, LON = 2.3993777;
+  var LABEL = 'La Colline Gambetta, 4 rue Belgrand, 75020 Paris';
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isMac = /Macintosh/.test(ua) && !isIOS;
+  var isAndroid = /Android/.test(ua);
+
+  if (isIOS || isMac) {
+    /* daddr = destination, dirflg=d : itinéraire en voiture par défaut. */
+    a.href = 'maps://?daddr=' + LAT + ',' + LON + '&q=' + encodeURIComponent(LABEL);
+    a.removeAttribute('target');
+  } else if (isAndroid) {
+    a.href = 'geo:' + LAT + ',' + LON + '?q=' + LAT + ',' + LON +
+             '(' + encodeURIComponent(LABEL) + ')';
+    a.removeAttribute('target');
+  }
 })();
 </script>
 
