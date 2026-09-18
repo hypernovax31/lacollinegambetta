@@ -7293,6 +7293,89 @@ html:not(.carte-doc) .hh-line__photo::after {
   html:not(.carte-doc) .hh-line__photo img { transition:none; }
 }
 
+/* ===== Photo absente : la ligne reprend sa forme de carte simple =====
+   Quand une image manque (404, réseau coupé), le dépliant se retire. Il
+   restait alors un <button> nu au milieu de la fiche : display inline,
+   largeur au contenu — l'intitulé et le prix perdaient leur grille et
+   se décalaient à gauche. On redonne donc au bouton neutralisé la même
+   géométrie que la fiche d'origine, pour que texte et prix retombent
+   exactement où ils étaient. La transition douce évite le sursaut. */
+html:not(.carte-doc) .food-card--nophoto { padding:0; }
+html:not(.carte-doc) .food-card--nophoto > .food-card__toggle {
+  appearance:none; -webkit-appearance:none; background:transparent; border:0; margin:0;
+  width:100%; padding:12px; display:grid; gap:8px; text-align:inherit;
+  color:inherit; font:inherit; cursor:default; border-radius:18px;
+  transition:padding .3s ease;
+}
+html:not(.carte-doc) .food-card--nophoto > .food-card__toggle:focus-visible { outline:none; }
+html:not(.carte-doc) .food-card--nophoto .food-card__head { padding-right:0; }
+
+html:not(.carte-doc) .hh-line--nophoto > .hh-line__toggle {
+  appearance:none; -webkit-appearance:none; background:transparent; border:0; margin:0;
+  width:100%; padding:0; display:block; text-align:inherit;
+  color:inherit; font:inherit; cursor:default; border-radius:12px;
+  transition:padding .3s ease;
+}
+html:not(.carte-doc) .hh-line--nophoto > .hh-line__toggle:focus-visible { outline:none; }
+/* La colonne du nom récupère les 20 px qu'elle cédait au chevron. */
+html:not(.carte-doc) .hh-line--nophoto .hh-line__name {
+  padding-right:0; transition:padding-right .3s ease;
+}
+
+/* Pas de fond gris tant que l'image n'est pas là : le cadre reste
+   transparent et ne s'habille qu'une fois la photo chargée. */
+html:not(.carte-doc) .food-card__photo,
+html:not(.carte-doc) .hh-line__photo { background:none; border-color:transparent; }
+html:not(.carte-doc) .food-card__photo:has(img.is-loaded) {
+  background:linear-gradient(140deg,#f3ece2,#e8dcc9); border-color:rgba(216,178,87,.34);
+}
+html:not(.carte-doc) .hh-line__photo:has(img.is-loaded) {
+  background:linear-gradient(140deg,#2b1836,#4a2a5e); border-color:rgba(216,178,87,.34);
+}
+html:not(.carte-doc) .food-card__photo:not(:has(img.is-loaded))::after,
+html:not(.carte-doc) .hh-line__photo:not(:has(img.is-loaded))::after { box-shadow:none; }
+
+/* ===== Tout déplier / tout replier =====
+   Un double chevron doré posé en haut à droite de chaque onglet qui
+   contient des dépliants. Même or, même trait que les chevrons des
+   fiches : c'est le même geste, en grand. */
+html:not(.carte-doc) .foldall {
+  display:flex; justify-content:flex-end; margin:0 2px -6px;
+}
+html:not(.carte-doc) .foldall__btn {
+  appearance:none; -webkit-appearance:none; cursor:pointer;
+  width:38px; height:38px; padding:0; display:grid; place-items:center;
+  border:1px solid rgba(216,178,87,.42); border-radius:999px;
+  background:#fff; box-shadow:0 4px 12px rgba(36,16,46,.07);
+  transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+html:not(.carte-doc) .foldall__btn:hover {
+  border-color:rgba(216,178,87,.85); box-shadow:0 6px 16px rgba(36,16,46,.12);
+}
+html:not(.carte-doc) .foldall__btn:focus-visible {
+  outline:2px solid var(--gold-500); outline-offset:2px;
+}
+/* Les deux V empilés, dessinés en bordures comme les autres chevrons. */
+html:not(.carte-doc) .foldall__ico {
+  display:block; width:12px; height:12px; position:relative;
+  transition:transform .3s cubic-bezier(.4,.1,.2,1);
+}
+html:not(.carte-doc) .foldall__ico::before,
+html:not(.carte-doc) .foldall__ico::after {
+  content:''; position:absolute; left:50%; width:9px; height:9px;
+  border-right:1.7px solid var(--gold-700); border-bottom:1.7px solid var(--gold-700);
+  transform:translateX(-50%) rotate(45deg);
+}
+html:not(.carte-doc) .foldall__ico::before { top:-3px; }
+html:not(.carte-doc) .foldall__ico::after  { top:2px; }
+html:not(.carte-doc) .foldall__btn[aria-pressed="true"] .foldall__ico { transform:rotate(180deg); }
+@media print { .foldall { display:none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  html:not(.carte-doc) .foldall__ico,
+  html:not(.carte-doc) .food-card--nophoto > .food-card__toggle,
+  html:not(.carte-doc) .hh-line--nophoto > .hh-line__toggle { transition:none; }
+}
+
 /* ===== Bouton « Réserver ma table » =====
    Aucune forme, police ni taille propres : c'est un .contact-link sur la
    page de garde et un .footer-link en pied de carte, exactement comme
@@ -8657,13 +8740,17 @@ else sizeCoverMedallion();
     /* Photo absente (plat sans cliché) : le dépliant se retire de lui-même
        plutôt que d'ouvrir un cadre vide. */
     img.addEventListener('error', function () {
+      /* Le bouton n'est PAS désactivé ni démonté : on le neutralise en
+         gardant sa géométrie (classe --nophoto), sinon la fiche perd sa
+         grille et l'intitulé se décale sous le prix. */
       card.classList.remove('food-card--open');
       card.classList.remove('food-card--photo');
-      btn.setAttribute('aria-expanded', 'false');
-      btn.disabled = true;
+      card.classList.add('food-card--nophoto');
+      btn.removeAttribute('aria-expanded');
+      btn.removeAttribute('aria-controls');
+      btn.setAttribute('tabindex', '-1');
       chevron.remove();
       drawer.remove();
-      /* on rend son allure de fiche simple à la carte */
       card.style.padding = '';
     });
     figure.appendChild(img);
@@ -8721,8 +8808,10 @@ else sizeCoverMedallion();
     img.addEventListener('error', function () {
       line.classList.remove('hh-line--open');
       line.classList.remove('hh-line--photo');
-      btn.setAttribute('aria-expanded', 'false');
-      btn.disabled = true;
+      line.classList.add('hh-line--nophoto');
+      btn.removeAttribute('aria-expanded');
+      btn.removeAttribute('aria-controls');
+      btn.setAttribute('tabindex', '-1');
       chevron.remove();
       drawer.remove();
     });
@@ -8743,6 +8832,73 @@ else sizeCoverMedallion();
     });
   }
 
+  /* --- Double chevron : tout déplier / tout replier ---------------------
+     Un seul bouton par onglet, posé en haut à droite du flux, au-dessus
+     du premier panneau. Il n'apparaît que là où il y a des dépliants, et
+     son état suit ce qu'on voit : si l'on replie les fiches une à une,
+     il repasse de lui-même en « tout déplier ». */
+  function mountFoldAll(section) {
+    var flow = section.querySelector(':scope > .tab-flow');
+    if (!flow || flow.querySelector(':scope > .foldall')) return;
+
+    function targets() {
+      return Array.prototype.slice.call(
+        section.querySelectorAll('.food-card--photo, .hh-line--photo')
+      );
+    }
+    if (!targets().length) return;
+
+    var bar = document.createElement('div');
+    bar.className = 'foldall';
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'foldall__btn';
+    btn.setAttribute('aria-pressed', 'false');
+    btn.title = 'Tout déplier';
+    btn.setAttribute('aria-label', 'Tout déplier');
+    var ico = document.createElement('span');
+    ico.className = 'foldall__ico';
+    ico.setAttribute('aria-hidden', 'true');
+    btn.appendChild(ico);
+    bar.appendChild(btn);
+    flow.insertBefore(bar, flow.firstChild);
+
+    function sync() {
+      var list = targets();
+      var open = list.filter(function (el) {
+        return el.classList.contains('food-card--open') ||
+               el.classList.contains('hh-line--open');
+      }).length;
+      var all = list.length > 0 && open === list.length;
+      btn.setAttribute('aria-pressed', all ? 'true' : 'false');
+      btn.title = all ? 'Tout replier' : 'Tout déplier';
+      btn.setAttribute('aria-label', btn.title);
+    }
+
+    btn.addEventListener('click', function () {
+      var expand = btn.getAttribute('aria-pressed') !== 'true';
+      targets().forEach(function (el) {
+        var inner = el.querySelector(':scope > .food-card__toggle, :scope > .hh-line__toggle');
+        var isCard = el.classList.contains('food-card--photo');
+        var cls = isCard ? 'food-card--open' : 'hh-line--open';
+        if (el.classList.contains(cls) === expand) return;
+        el.classList.toggle(cls, expand);
+        if (inner) inner.setAttribute('aria-expanded', expand ? 'true' : 'false');
+        if (expand) {
+          var im = el.querySelector('img[data-src]');
+          if (im && !im.src) im.src = im.getAttribute('data-src');
+        }
+      });
+      sync();
+    });
+
+    /* Une fiche ouverte ou fermée à la main remet le bouton d'accord. */
+    section.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('.foldall')) return;
+      setTimeout(sync, 0);
+    });
+  }
+
   function init() {
     Array.prototype.forEach.call(
       document.querySelectorAll('.food-card[data-photo]'),
@@ -8751,6 +8907,10 @@ else sizeCoverMedallion();
     Array.prototype.forEach.call(
       document.querySelectorAll('.hh-line[data-photo]'),
       wrapLine
+    );
+    Array.prototype.forEach.call(
+      document.querySelectorAll('.menu-section'),
+      mountFoldAll
     );
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
