@@ -7432,93 +7432,6 @@ html:not(.carte-doc) .hh-line__photo:has(img.is-loaded) {
 html:not(.carte-doc) .food-card__photo:not(:has(img.is-loaded))::after,
 html:not(.carte-doc) .hh-line__photo:not(:has(img.is-loaded))::after { box-shadow:none; }
 
-/* ===== Recherche dans la carte =====
-   Même vocabulaire que le reste : pilule blanche, filet doré, Cinzel
-   pour les intitulés. Le dispositif doit se faire oublier tant qu'on ne
-   s'en sert pas — il ne prend la parole qu'une fois une requête tapée. */
-html:not(.carte-doc) .finder {
-  width:min(100%,1240px); margin:0 auto 18px; padding:0 16px;
-  display:flex; flex-direction:column; align-items:center; gap:10px;
-}
-html:not(.carte-doc) .finder__bar {
-  display:flex; align-items:center; gap:10px;
-  width:min(100%,520px); height:46px; padding:0 8px 0 14px;
-  background:#fff; border:1px solid rgba(216,178,87,.42);
-  border-radius:999px; box-shadow:0 4px 14px rgba(36,16,46,.07);
-  transition:border-color .2s ease, box-shadow .2s ease;
-}
-html:not(.carte-doc) .finder__bar:focus-within {
-  border-color:rgba(216,178,87,.9);
-  box-shadow:0 6px 18px rgba(36,16,46,.12);
-}
-html:not(.carte-doc) .finder__ico {
-  flex:0 0 auto; display:inline-flex; width:18px; height:18px; color:var(--gold-700);
-}
-html:not(.carte-doc) .finder__ico svg { width:100%; height:100%; fill:currentColor; }
-html:not(.carte-doc) .finder__input {
-  flex:1 1 auto; min-width:0; height:100%;
-  border:0; outline:0; background:transparent;
-  font-family:'Montserrat',sans-serif; font-size:.9rem; color:#24102e;
-}
-html:not(.carte-doc) .finder__input::placeholder { color:#9a8ca3; }
-/* La croix native des champs « search » varie d'un navigateur à l'autre :
-   on la masque au profit d'un bouton maîtrisé. */
-html:not(.carte-doc) .finder__input::-webkit-search-decoration,
-html:not(.carte-doc) .finder__input::-webkit-search-cancel-button {
-  -webkit-appearance:none; appearance:none;
-}
-html:not(.carte-doc) .finder__clear {
-  position:relative; flex:0 0 auto; cursor:pointer;
-  appearance:none; -webkit-appearance:none;
-  width:30px; height:30px; border-radius:999px;
-  border:1px solid rgba(216,178,87,.42); background:#fff;
-}
-html:not(.carte-doc) .finder__clear::before,
-html:not(.carte-doc) .finder__clear::after {
-  content:''; position:absolute; top:50%; left:50%;
-  width:11px; height:1.6px; background:var(--violet-900); border-radius:2px;
-}
-html:not(.carte-doc) .finder__clear::before { transform:translate(-50%,-50%) rotate(45deg); }
-html:not(.carte-doc) .finder__clear::after  { transform:translate(-50%,-50%) rotate(-45deg); }
-html:not(.carte-doc) .finder__clear:hover { border-color:rgba(216,178,87,.9); }
-html:not(.carte-doc) .finder__clear[hidden] { display:none; }
-html:not(.carte-doc) .finder__tags {
-  display:flex; flex-wrap:wrap; justify-content:center; gap:8px;
-}
-html:not(.carte-doc) .finder__tag {
-  appearance:none; -webkit-appearance:none; cursor:pointer;
-  min-height:32px; padding:0 14px; border-radius:999px;
-  border:1px solid rgba(216,178,87,.42); background:#fff; color:var(--violet-900);
-  font-family:'Cinzel',serif; font-size:11px; font-weight:700;
-  letter-spacing:.09em; text-transform:uppercase;
-  transition:background .2s ease, color .2s ease, border-color .2s ease;
-}
-html:not(.carte-doc) .finder__tag:hover { border-color:rgba(216,178,87,.9); }
-html:not(.carte-doc) .finder__tag:focus-visible { outline:2px solid var(--gold-500); outline-offset:2px; }
-html:not(.carte-doc) .finder__tag.is-on {
-  background:#592e6f; color:#fff; border-color:var(--gold-500);
-}
-html:not(.carte-doc) .finder__count {
-  margin:0; min-height:1em;
-  font-family:'Montserrat',sans-serif; font-size:.76rem; color:#6d5f76;
-}
-/* Pendant une recherche, les rubriques vidées de leur contenu et les
-   encarts décoratifs s'effacent : seul ce qui répond reste à l'écran. */
-html:not(.carte-doc) .finder-hit { display:none !important; }
-html:not(.carte-doc) .finder-on .menu-section { display:block !important; }
-html:not(.carte-doc) .finder-on .menu-nav-wrap,
-html:not(.carte-doc) .finder-on .panel--accent,
-html:not(.carte-doc) .finder-on .fm,
-html:not(.carte-doc) .finder-on .hh-banner { display:none !important; }
-/* La rubrique reprend son titre au-dessus des résultats : sans les
-   onglets, il faut bien savoir d'où sort chaque plat. */
-html:not(.carte-doc) .finder-on .menu-section > .tab-flow > .panel { margin-bottom:22px; }
-@media (max-width: 720px) {
-  html:not(.carte-doc) .finder { margin-bottom:14px; }
-  html:not(.carte-doc) .finder__tag { font-size:10px; padding:0 11px; min-height:30px; }
-}
-@media print { .finder { display:none !important; } }
-
 /* ===== Visionneuse : la photo en grand, sans bousculer la carte =====
    Sur écran large, ouvrir la photo DANS la fiche repoussait tout ce qui
    suivait : la page se réorganisait sous le curseur et la colonne d'en
@@ -8356,28 +8269,6 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.8 3.6 16.2 12l-8.4 8.4-2.1-2.1L13 12 6.7 5.7z"/></svg>
       </button>
     </div>
-    <!-- Recherche : la carte compte plus de deux cents lignes réparties
-         en sept onglets. Trouver tous les plats végétariens obligeait à
-         les parcourir un à un. Tout est déjà dans la page, le tri est
-         donc instantané et ne demande aucun réseau. -->
-    <div class="finder" id="finder">
-      <div class="finder__bar">
-        <span class="finder__ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M10.5 3a7.5 7.5 0 1 0 4.55 13.46l4.24 4.25 1.42-1.42-4.25-4.24A7.5 7.5 0 0 0 10.5 3Zm0 2a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11Z"/></svg>
-        </span>
-        <label class="sr-only" for="finder-input">Rechercher un plat</label>
-        <input type="search" id="finder-input" class="finder__input" autocomplete="off"
-               placeholder="Rechercher un plat, un ingrédient…">
-        <button type="button" class="finder__clear" id="finder-clear" aria-label="Effacer" hidden></button>
-      </div>
-      <div class="finder__tags" id="finder-tags">
-        <button type="button" class="finder__tag" data-diet="vegetarien">Végétarien</button>
-        <button type="button" class="finder__tag" data-diet="poisson">Poisson</button>
-        <button type="button" class="finder__tag" data-diet="viande">Viande</button>
-        <button type="button" class="finder__tag" data-kw="fruit">Fruit</button>
-      </div>
-      <p class="finder__count" id="finder-count" role="status" aria-live="polite"></p>
-    </div>
     <div class="container">
       <section id="entrees" class="menu-section active"><div class="tab-flow"><article class="panel"><div class="panel__head"><h4 class="panel__title">Entrées</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item" data-photo="assets/plats/assiette-de-foie-gras-du-sud-ouest.jpg"><div class="food-card__head"><h5>Assiette de foie gras du Sud-Ouest</h5><strong>17,90</strong></div><p class="food-card__note">Pain toasté, confiture d’abricots</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/oeuf-dur-mayonnaise.jpg"><div class="food-card__head"><h5>Œuf dur mayonnaise</h5><strong>6,20</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/6-escargots-au-roquefort.jpg"><div class="food-card__head"><h5>6 Escargots au Roquefort</h5><strong>7,90</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/assiette-de-saumon-fume.jpg"><div class="food-card__head"><h5>Assiette de saumon fumé</h5><strong>7,50</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/tartare-d-avocat-et-crevettes.jpg"><div class="food-card__head"><h5>Tartare d’avocat et crevettes</h5><strong>7,90</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/oeuf-cocotte-du-moment.jpg"><div class="food-card__head"><h5>Œuf cocotte du moment</h5><strong>7,90</strong></div></article></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Planches &amp; croques</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item" data-photo="assets/plats/la-cochonnaille.jpg"><div class="food-card__head"><h5>La Cochonnaille</h5><strong>17,50</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/la-fromagere.jpg"><div class="food-card__head"><h5>La Fromagère</h5><strong>15,90</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/la-paysanne.jpg"><div class="food-card__head"><h5>La Paysanne</h5><strong>19,90</strong></div><p class="food-card__note">Cochonnaille et fromagère</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/croque-monsieur.jpg"><div class="food-card__head"><h5>Croque-Monsieur</h5><strong>11,70</strong></div><p class="food-card__note">Sandwich grillé jambon-fromage, sauce béchamel</p><p class="food-card__note">Frites et salade</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/croque-madame.jpg"><div class="food-card__head"><h5>Croque-Madame</h5><strong>12,70</strong></div><p class="food-card__note">Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat</p><p class="food-card__note">Frites et salade</p></article></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Omelettes</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item" data-photo="assets/plats/oeufs-au-plat.jpg"><div class="food-card__head"><h5>Œufs au plat</h5><strong>9,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/omelette-nature.jpg"><div class="food-card__head"><h5>Omelette nature</h5><strong>9,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/omelette-au-fromage.jpg"><div class="food-card__head"><h5>Omelette au fromage</h5><strong>10,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/omelette-au-jambon.jpg"><div class="food-card__head"><h5>Omelette au jambon</h5><strong>10,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/omelette-mixte.jpg"><div class="food-card__head"><h5>Omelette mixte</h5><strong>13,90</strong></div><p class="food-card__note">Salade</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/omelette-aux-champignons.jpg"><div class="food-card__head"><h5>Omelette aux champignons</h5><strong>13,70</strong></div><p class="food-card__note">Salade</p></article></div></article></div></section>
 <section id="plats" class="menu-section"><div class="tab-flow"><article class="panel"><div class="panel__head"><h4 class="panel__title">Plats</h4></div><div class="food-card-grid food-card-grid--wide"><article class="food-card menu-card-grid__item" data-photo="assets/plats/entrecote-190-g.jpg"><div class="food-card__head"><h5>Entrecôte 190 g</h5><strong>19,90</strong></div><p class="food-card__note">Fleur de sel, sauce au choix</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/bavette-d-aloyau.jpg"><div class="food-card__head"><h5>Bavette d’aloyau</h5><strong>17,50</strong></div><p class="food-card__note">Sauce au choix</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/escalope-de-veau.jpg"><div class="food-card__head"><h5>Escalope de veau</h5><strong>19,90</strong></div><p class="food-card__note">Sauce champignons, pâtes</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/cuisse-de-canard-confite.jpg"><div class="food-card__head"><h5>Cuisse de canard confite</h5><strong>19,70</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/poisson.jpg"><div class="food-card__head"><h5>Poisson</h5><strong>17,90</strong></div><p class="food-card__note">Selon arrivage</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/tartare-de-boeuf.jpg"><div class="food-card__head"><h5>Tartare de bœuf</h5><strong>17,80</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/cuisse-de-poulet-rotie.jpg"><div class="food-card__head"><h5>Cuisse de poulet rôtie</h5><strong>15,20</strong></div><p class="food-card__note">Riz basmati</p></article></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Burgers</h4></div><div class="food-card-grid"><article class="food-card menu-card-grid__item" data-photo="assets/plats/burger-la-colline.jpg"><div class="food-card__head"><h5>Burger La Colline</h5><strong>17,90</strong></div><p class="food-card__note">Pain brioché, cheddar, steak haché, bacon, oignons caramélisés, salade, tomate, sauce burger.</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/le-royal-fishburger.jpg"><div class="food-card__head"><h5>Le Royal Fishburger</h5><strong>17,70</strong></div><p class="food-card__note">Pain brioché, cheddar, poisson pané, légumes grillés, salade, tomate, sauce burger.</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/burger-chicken-croustillant.jpg"><div class="food-card__head"><h5>Burger Chicken Croustillant</h5><strong>17,90</strong></div><p class="food-card__note">Pain brioché, cheddar, escalope de poulet pané croustillant, oignons caramélisés, salade, tomate, sauce burger.</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/burger-vegetarien.jpg"><div class="food-card__head"><h5>Burger Végétarien</h5><strong>17,70</strong></div><p class="food-card__note">Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger.</p></article></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Salades</h4></div><div class="food-card-grid"><article class="food-card menu-card-grid__item" data-photo="assets/plats/la-colline.jpg"><div class="food-card__head"><h5>La Colline</h5><strong>16,90</strong></div><p class="food-card__note">Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/chevre-chaud.jpg"><div class="food-card__head"><h5>Chèvre Chaud</h5><strong>16,50</strong></div><p class="food-card__note">Salade verte, tomate, jambon sec, toast de cabécou, noix, miel.</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/vegetarienne.jpg"><div class="food-card__head"><h5>Végétarienne</h5><strong>12,60</strong></div><p class="food-card__note">Salade verte, tomate, concombre, haricots verts, légumes grillés, avocat.</p></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/nordique.jpg"><div class="food-card__head"><h5>Nordique</h5><strong>17,20</strong></div><p class="food-card__note">Salade verte, saumon fumé, crevettes, avocat, concombre, tomate, feta, croûtons.</p></article></div></article><article class="panel"><div class="panel__head"><h4 class="panel__title">Pâtes</h4></div><div class="food-card-grid"><article class="food-card menu-card-grid__item" data-photo="assets/plats/tagliatelles-a-la-carbonara.jpg"><div class="food-card__head"><h5>Tagliatelles à la carbonara</h5><strong>15,90</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/tagliatelles-au-saumon.jpg"><div class="food-card__head"><h5>Tagliatelles au saumon</h5><strong>16,20</strong></div></article><article class="food-card menu-card-grid__item" data-photo="assets/plats/penne-au-poulet-et-champignons.jpg"><div class="food-card__head"><h5>Penne au poulet et champignons</h5><strong>16,50</strong></div></article></div></article><article class="panel panel--accent"><div class="accent-band"><img class="accent-band__motif" src="assets/menus/motif-80a.png" alt="" aria-hidden="true" loading="lazy"><div class="accent-band__title"><strong>Assiette de frites</strong><span>4,90</span></div><p>Accompagnement : frites, haricots verts, pâtes</p><p class="accent-band__sauce">Sauce au choix : poivre · champignons · roquefort — supplément sauce 2,00</p></div></article></div></section>
@@ -8500,9 +8391,6 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
     <p id="foldall-open-tpl" class="sr-only" aria-hidden="true">Tout voir</p>
     <p id="foldall-shut-tpl" class="sr-only" aria-hidden="true">Tout masquer</p>
     <p id="lb-hh-tpl" class="sr-only" aria-hidden="true">Happy Hour</p>
-    <p id="finder-one-tpl" class="sr-only" aria-hidden="true">proposition</p>
-    <p id="finder-many-tpl" class="sr-only" aria-hidden="true">propositions</p>
-    <p id="finder-none-tpl" class="sr-only" aria-hidden="true">Rien ne correspond — essayez un autre mot.</p>
 
     <footer class="footer">
       <div class="footer-note"><span class="star-gold">✦</span> Prix nets en euros • service compris <span class="star-gold">✦</span></div>
@@ -9510,7 +9398,7 @@ else sizeCoverMedallion();
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609190610" defer></script>
+<script src="assets/js/i18n.js?v=202609190740" defer></script>
 
 <!-- ============ Assiettes en photo : les fiches deviennent des dépliants ============ -->
 <script>
@@ -9924,200 +9812,6 @@ else sizeCoverMedallion();
     });
   }
 
-  /* --- Recherche dans la carte ----------------------------------------
-     Tout est déjà dans la page : le tri se fait en mémoire, sans requête.
-     On masque ce qui ne répond pas plutôt que de reconstruire le DOM, ce
-     qui préserve les dépliants, la galerie et les traductions en place.
-
-     Sur la classification : les régimes sont déduits des intitulés et des
-     descriptifs de la carte, seule source disponible. C'est fiable pour
-     trancher entre viande, poisson et sans-chair, mais ce sont des
-     PRÉFÉRENCES, pas des allergènes : la carte ne documente ni les
-     traces, ni les fonds de sauce, ni le présure des fromages. On ne
-     prétend donc rien au-delà de ce que le texte dit. */
-  var FINDER = (function () {
-    var VIANDE = ['boeuf','bœuf','entrecote','entrecôte','bavette','tartare','steak',
-      'veau','escalope','canard','poulet','chicken','jambon','bacon','lardon',
-      'charcuterie','cochonnaille','saucisson','magret','confit','foie gras',
-      'rillettes','pate','pâté','viande','carbonara','paysanne','burger la colline',
-      'andouillette','boudin','merguez','agneau','porc','escargot'];
-    var POISSON = ['poisson','saumon','thon','crevette','crabe','cabillaud',
-      'colin','morue','anchois','sardine','fruits de mer','fishburger','nordique',
-      'truite','dorade','moules','hareng'];
-    /* Le végétarien se DÉDUIT : ni viande ni poisson dans le texte. Une
-       liste positive raterait les plats décrits par leur garniture. */
-
-    /* Fruits : cherchés en mots entiers, sinon « cocotte » répondrait
-       pour coco et « pêcher » pour pêche. « Fruits de mer » est écarté
-       à part — c'en est l'exact contraire. */
-    var FRUIT_RE = new RegExp('\\b(' + [
-      'fruit','fruits','pomme','pommes','poire','poires','citron','citrons',
-      'citronnade','orange','oranges','orangina','pamplemousse','agrume','agrumes',
-      'fraise','fraises','strawberry','framboise','framboises','cassis','cerise',
-      'cerises','cherry','myrtille','myrtilles','abricot','abricots','peche',
-      'peches','prune','prunes','mirabelle','figue','raisin','melon','pasteque',
-      'ananas','mangue','banane','coco','colada','passion','kiwi','litchi','grenade'
-    ].sort(function (a, b) { return b.length - a.length; }).join('|') + ')\\b');
-    var FRUIT_NON = /fruits de mer/;
-
-    function isFruit(text) {
-      return FRUIT_RE.test(text.replace(FRUIT_NON, ''));
-    }
-
-    var items = [];        /* fiches indexées */
-    var groups = [];       /* panneaux, pour masquer ceux qui se vident */
-    var sections = [];
-    var input, clear, count, tagBox, box;
-    var diet = '', fruit = false, term = '';
-
-    function norm(t) {
-      /* Accents et ligatures écartés : « bœuf » doit répondre à « boeuf »,
-         « poêlée » à « poelee ».
-         Les textes relevés dans le DOM sont collés bout à bout, sans
-         séparateur : « Tarte aux pommes » suivie de son prix donnait
-         « pommes7,50 », où « pommes » n'est plus un mot entier faute de
-         frontière entre le s et le 7. On sépare donc chiffres et lettres
-         avant d'indexer. */
-      return (t || '').toLowerCase()
-        .replace(/œ/g, 'oe').replace(/æ/g, 'ae')
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/([a-z])(\d)/g, '$1 $2').replace(/(\d)([a-z])/g, '$1 $2');
-    }
-
-    function dietOf(text) {
-      var hasMeat = VIANDE.some(function (w) { return text.indexOf(w) > -1; });
-      var hasFish = POISSON.some(function (w) { return text.indexOf(w) > -1; });
-      /* « Burger végétarien », « steak végétarien » : la mention explicite
-         prime sur le mot « steak » qu'elle contient. */
-      if (/vegetarien|vegetarienne|vegan/.test(text)) return 'vegetarien';
-      if (hasFish) return 'poisson';
-      if (hasMeat) return 'viande';
-      return 'vegetarien';
-    }
-
-    function index() {
-      var host = document.getElementById('interior-menu');
-      if (!host) return;
-      /* Les vins sont des lignes de tableau, sans descriptif ni photo :
-         on les indexe aussi pour que la recherche par nom les trouve. */
-      var sel = '.food-card, .hh-line, .price-line, .beer-row, .wine-table tbody tr';
-      items = Array.prototype.map.call(host.querySelectorAll(sel), function (el) {
-        var txt = norm(el.textContent);
-        var sec = el.closest('.menu-section');
-        var id = sec ? sec.id : '';
-        return {
-          el: el, text: txt, diet: dietOf(txt),
-          fruit: isFruit(txt),
-          /* Seuls les onglets qui se mangent sont soumis aux régimes. */
-          food: id === 'entrees' || id === 'plats' || id === 'desserts'
-        };
-      });
-      groups = Array.prototype.slice.call(host.querySelectorAll('.panel'));
-      sections = Array.prototype.slice.call(host.querySelectorAll('.menu-section'));
-    }
-
-    function matches(it) {
-      if (term && it.text.indexOf(term) < 0) return false;
-      if (diet && (!it.food || it.diet !== diet)) return false;
-      /* Le fruit traverse toute la carte : une tarte aux pommes, un jus
-         d'orange et un Mojito y répondent tous. Il se cumule donc avec
-         un régime au lieu de l'exclure. */
-      if (fruit && !it.fruit) return false;
-      return true;
-    }
-
-    function apply() {
-      var active = !!(term || diet || fruit);
-      document.documentElement.classList.toggle('finder-on', active);
-
-      if (!active) {
-        items.forEach(function (it) { it.el.classList.remove('finder-hit'); });
-        groups.forEach(function (g) { g.classList.remove('finder-hit'); });
-        sections.forEach(function (s) { s.classList.remove('finder-hit'); });
-        count.textContent = '';
-        clear.hidden = !input.value;
-        return;
-      }
-
-      var n = 0;
-      items.forEach(function (it) {
-        var ok = matches(it);
-        it.el.classList.toggle('finder-hit', !ok);
-        if (ok) n++;
-      });
-      /* Un panneau sans réponse disparaît, son titre avec : laisser
-         « Omelettes » suivi du vide n'apprendrait rien. */
-      groups.forEach(function (g) {
-        g.classList.toggle('finder-hit', !g.querySelector(
-          '.food-card:not(.finder-hit), .hh-line:not(.finder-hit), ' +
-          '.price-line:not(.finder-hit), .beer-row:not(.finder-hit), ' +
-          '.wine-table tbody tr:not(.finder-hit)'
-        ));
-      });
-      sections.forEach(function (sec) {
-        sec.classList.toggle('finder-hit', !sec.querySelector('.panel:not(.finder-hit)'));
-      });
-
-      count.textContent = n ? n + ' ' + tpl(n > 1 ? 'many' : 'one') : tpl('none');
-      clear.hidden = !input.value;
-    }
-
-    /* Libellés relus dans le DOM à chaque affichage : écrits en dur, ils
-       seraient restés en français après un changement de langue. */
-    function tpl(which) {
-      var el = document.getElementById('finder-' + which + '-tpl');
-      return el ? el.textContent.trim() : '';
-    }
-
-    function setTag(btn) {
-      var d = btn.getAttribute('data-diet') || '';
-      var on = btn.classList.contains('is-on');
-      /* Les régimes s'excluent — on ne mange pas végétarien ET viande —
-         mais le fruit se cumule avec l'un d'eux. */
-      if (d) {
-        Array.prototype.forEach.call(tagBox.querySelectorAll('[data-diet]'),
-          function (b) { b.classList.remove('is-on'); b.setAttribute('aria-pressed', 'false'); });
-        diet = on ? '' : d;
-      } else if (btn.hasAttribute('data-kw')) {
-        fruit = !on;
-      }
-      if (!on) { btn.classList.add('is-on'); btn.setAttribute('aria-pressed', 'true'); }
-      else { btn.classList.remove('is-on'); btn.setAttribute('aria-pressed', 'false'); }
-      apply();
-    }
-
-    function mount() {
-      box = document.getElementById('finder');
-      input = document.getElementById('finder-input');
-      clear = document.getElementById('finder-clear');
-      count = document.getElementById('finder-count');
-      tagBox = document.getElementById('finder-tags');
-      if (!box || !input) return;
-
-      index();
-
-      var timer = 0;
-      input.addEventListener('input', function () {
-        /* Une frappe rapide ne relance pas le tri à chaque touche. */
-        clearTimeout(timer);
-        timer = setTimeout(function () { term = norm(input.value.trim()); apply(); }, 110);
-        clear.hidden = !input.value;
-      });
-      input.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') { input.value = ''; term = ''; apply(); }
-      });
-      clear.addEventListener('click', function () {
-        input.value = ''; term = ''; input.focus(); apply();
-      });
-      Array.prototype.forEach.call(tagBox.querySelectorAll('.finder__tag'), function (b) {
-        b.setAttribute('aria-pressed', 'false');
-        b.addEventListener('click', function () { setTag(b); });
-      });
-    }
-
-    return { mount: mount, reindex: index };
-  })();
-
   /* --- Visionneuse ----------------------------------------------------
      Au-dessus de 720 px, la photo s'ouvre par-dessus la carte plutôt que
      dans la fiche : la grille reste immobile, et le cliché s'affiche
@@ -10360,9 +10054,6 @@ else sizeCoverMedallion();
       document.querySelectorAll('.menu-section .panel'),
       mountFoldAll
     );
-    /* La recherche est montée APRÈS les dépliants : elle indexe le texte
-       des fiches telles qu'elles seront, boutons compris. */
-    FINDER.mount();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
