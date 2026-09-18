@@ -39,7 +39,7 @@ html { overflow-anchor:none; }
 body { margin:0; font-family:'Montserrat',sans-serif; background:linear-gradient(180deg,#24102e 0,#24102e 100vh,#fcfbf7 100vh,#fcfbf7 100%); color:var(--ink); overflow-x:hidden; }
 button,a { font:inherit; }
 .top-controls { background:#592e6f; border-bottom:1px solid rgba(216,178,87,.45); padding:10px 12px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; align-items:stretch; box-shadow:0 4px 15px rgba(0,0,0,.4); }
-.control-btn, .nav-btn, .contact-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:44px; width:100%; padding:10px 16px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; transition:.2s ease; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-align:center; }
+.control-btn, .nav-btn, .contact-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:44px; width:100%; padding:10px 16px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; transition:background-color .2s ease, color .2s ease, border-color .2s ease; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-align:center; }
 .control-btn:hover, .nav-btn:hover, .contact-link:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
 .control-btn.active, .nav-btn.active { background:linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%); color:var(--violet-950); border-color:#fcf6ba; }
 #cover-section { min-height:100svh; width:100%; display:flex; justify-content:center; align-items:center; padding:0; }
@@ -6747,15 +6747,29 @@ html:not(.carte-doc) #cover-section.cover-enter .cover-action::after {
 html:not(.carte-doc) #cover-section.cover-enter .cover-footer-address {
   animation: coverRiseSoft .6s cubic-bezier(.22,.8,.3,1) .95s both;
 }
-html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(1) {
-  animation: coverRiseSoft .55s cubic-bezier(.22,.8,.3,1) 1.05s both;
+/* Les quatre pilules montent l'une après l'autre. Le retard est calculé
+   à partir du rang plutôt qu'écrit règle par règle : les trois règles
+   nth-child d'origine dataient d'un pied à trois boutons, si bien que le
+   quatrième — « Réservation », ajouté depuis — n'était couvert par
+   aucune. Il n'héritait donc d'aucune animation, restait visible d'emblée
+   pendant que les autres montaient, et l'ensemble paraissait décalé.
+   Avec une variable de rang, ajouter un bouton ne demande plus rien. */
+html.cover-fonts-wait:not(.cover-fonts-ready):not(.carte-doc)
+  #cover-section.cover-enter .cover-links .contact-link {
+  /* Masquées tant que les polices ne sont pas prêtes, sinon la cascade
+     démarrerait sur la police de secours (voir cover-fonts-ready). */
+  opacity: 0;
 }
-html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(2) {
-  animation: coverRiseSoft .55s cubic-bezier(.22,.8,.3,1) 1.15s both;
+html.cover-fonts-ready:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link {
+  animation: coverRiseSoft .55s cubic-bezier(.22,.8,.3,1) both;
+  animation-delay: calc(1.05s + var(--i, 0) * .1s);
 }
-html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(3) {
-  animation: coverRiseSoft .55s cubic-bezier(.22,.8,.3,1) 1.25s both;
-}
+html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(1) { --i: 0; }
+html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(2) { --i: 1; }
+html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(3) { --i: 2; }
+html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(4) { --i: 3; }
+html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(5) { --i: 4; }
+html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(6) { --i: 5; }
 /* --- Nappes de lumiere derriere le contenu --- */
 html:not(.carte-doc) #cover-section .cover-ambient {
   position: absolute; inset: 0; z-index: 0;
@@ -8226,6 +8240,28 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
     
   </div>
 
+  <script>
+  /* Les pilules du pied attendent que les polices soient chargées avant
+     de monter. Cinzel arrive en « swap » : lancée trop tôt, la cascade
+     démarrait avec la police de secours, puis la substitution changeait
+     la largeur des libellés en pleine montée — les pilules du rang flex
+     se redistribuaient latéralement, d'où le décalage.
+     Ce bloc est placé AVANT la page de garde : posé plus bas, le
+     masquage serait arrivé après le début de l'animation. La classe
+     n'est demandée que si l'on est en mesure de la lever, pour ne pas
+     laisser un pied invisible sans JavaScript. */
+  (function () {
+    var root = document.documentElement;
+    function go() {
+      root.classList.add('cover-fonts-ready');
+      root.classList.remove('cover-fonts-wait');
+    }
+    if (!document.fonts || document.fonts.status === 'loaded') { go(); return; }
+    root.classList.add('cover-fonts-wait');
+    document.fonts.ready.then(go);
+    setTimeout(go, 1200);   /* police jamais arrivée : on montre quand même */
+  })();
+  </script>
   <section id="cover-section" class="cover-enter">
     <div class="cover-page">
       <div class="cover-ambient" aria-hidden="true"></div>
@@ -9027,6 +9063,7 @@ function syncTopControlsHeight() {
 
 window.addEventListener('resize', sizeCoverMedallion);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeCoverMedallion);
+
 if (window.ResizeObserver) {
   const coverPage = document.querySelector('#cover-section .cover-page');
   if (coverPage) new ResizeObserver(sizeCoverMedallion).observe(coverPage);
