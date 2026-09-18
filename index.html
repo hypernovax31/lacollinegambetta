@@ -7390,6 +7390,15 @@ html:not(.carte-doc) .hh-line__photo:not(:has(img.is-loaded))::after { box-shado
    Un double chevron doré posé en haut à droite de chaque onglet qui
    contient des dépliants. Même or, même trait que les chevrons des
    fiches : c'est le même geste, en grand. */
+/* Gabarits de libellés : présents dans le DOM pour que le moteur de
+   traduction les voie, mais retirés du flux visuel. Sans cette règle
+   (supprimée par mégarde avec le bloc de la mention légale), « Voir les
+   photos » et « Masquer les photos » s'affichaient en clair en bas de
+   page. Pas display:none, qui les exclurait de la collecte. */
+.sr-only {
+  position:absolute !important; width:1px; height:1px; overflow:hidden;
+  clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; border:0; padding:0; margin:-1px;
+}
 html:not(.carte-doc) .foldall {
   /* Posé DANS le premier panneau, centré sur la hauteur de la pastille
      de titre : le bouton s'aligne sur elle au lieu de flotter au-dessus
@@ -7509,18 +7518,33 @@ html:not(.carte-doc) #boissons .price-line--open,
 html:not(.carte-doc) #cocktails .hh-line--open {
   border-color:rgba(216,178,87,.75); box-shadow:0 10px 26px rgba(36,16,46,.10);
 }
-/* Les listes espacent les encarts au lieu de les empiler. */
-html:not(.carte-doc) #boissons .price-list,
-html:not(.carte-doc) #cocktails .hh-list { display:grid; gap:12px; }
+/* Les listes espacent les encarts au lieu de les empiler.
+   ATTENTION : ne jamais poser de `display` sur .price-list__col ni sur
+   .hh-list__col. En deux colonnes, la mise en page existante les met en
+   `display:contents` pour aplatir la grille et aligner les rangs ; une
+   règle d'identifiant l'emportait sur elle, la colonne redevenait une
+   boîte et les encarts s'étiraient sur toute sa largeur. On ne touche
+   donc qu'à l'ESPACEMENT, jamais à la structure. */
+html:not(.carte-doc) #boissons .price-list:not(.price-list--cols),
+html:not(.carte-doc) #cocktails .hh-list:not(.hh-list--cols) { display:grid; gap:12px; }
 html:not(.carte-doc) #boissons .price-list--cols,
-html:not(.carte-doc) #cocktails .hh-list--cols { align-items:start; }
-html:not(.carte-doc) #boissons .price-list__col,
-html:not(.carte-doc) #cocktails .hh-list__col { display:grid; gap:12px; align-content:start; }
+html:not(.carte-doc) #cocktails .hh-list--cols { gap:12px; align-items:start; }
+html:not(.carte-doc) #boissons .price-list--cols .price-list__col,
+html:not(.carte-doc) #cocktails .hh-list--cols .hh-list__col { gap:12px; }
+html:not(.carte-doc) #boissons .price-list:not(.price-list--cols) .price-list__col,
+html:not(.carte-doc) #cocktails .hh-list:not(.hh-list--cols) .hh-list__col {
+  display:grid; gap:12px; align-content:start;
+}
 /* Dans un encart, les pointillés de raccord n'ont plus lieu d'être :
    le cadre porte déjà le lien entre le nom et le prix. */
 html:not(.carte-doc) #boissons .price-line__dots,
 html:not(.carte-doc) #cocktails .price-line__dots { display:none; }
+/* Les pointillés retirés, le nom ne s'étirait plus : le chevron, posé à
+   droite DU NOM, se calait à la fin du texte et changeait donc de place
+   d'une ligne à l'autre selon sa longueur. Le nom reprend tout l'espace
+   libre, et les chevrons retombent sur une même verticale. */
 html:not(.carte-doc) #boissons .price-line__row { gap:12px; align-items:baseline; }
+html:not(.carte-doc) #boissons .price-line__name { flex:1 1 auto; }
 /* L'en-tête Prix / HH des cocktails reste aligné sur les colonnes des
    encarts : on lui rend le retrait que le cadre a introduit. */
 html:not(.carte-doc) #cocktails .hh-head { padding:0 12px 4px; }
