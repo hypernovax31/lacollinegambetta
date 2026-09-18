@@ -7399,15 +7399,26 @@ html:not(.carte-doc) .hh-line__photo:not(:has(img.is-loaded))::after { box-shado
   position:absolute !important; width:1px; height:1px; overflow:hidden;
   clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; border:0; padding:0; margin:-1px;
 }
-html:not(.carte-doc) .foldall {
-  /* Posé DANS le premier panneau, centré sur la hauteur de la pastille
-     de titre : le bouton s'aligne sur elle au lieu de flotter au-dessus
-     de l'encart. La barre ne capte pas les clics en dehors du bouton. */
-  position:absolute; top:16px; right:16px; z-index:3;
-  height:50px; display:flex; align-items:center;
-  max-width:calc(100% - 32px); pointer-events:none;
+/* Titre et bouton partagent une vraie rangée, en grille : le bouton se
+   pose à droite du titre sans se superposer à rien. L'absolu précédent
+   obligeait à réserver une gouttière au jugé dans le titre — une
+   estimation qui finissait toujours par se chevaucher avec un intitulé
+   long ou une langue plus verbeuse. Ici, c'est la grille qui répartit :
+   le titre prend la place restante, le bouton la sienne, jamais plus. */
+html:not(.carte-doc) .panel:has(> .foldall) {
+  display:grid; grid-template-columns:minmax(0,1fr) auto;
+  column-gap:12px; align-items:center;
 }
-html:not(.carte-doc) .panel:has(> .foldall) { position:relative; }
+html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { grid-column:1; }
+html:not(.carte-doc) .panel:has(> .foldall) > .foldall { grid-column:2; }
+/* Tout le reste du panneau occupe les deux colonnes, sous la rangée. */
+html:not(.carte-doc) .panel:has(> .foldall) > *:not(.panel__head):not(.foldall) {
+  grid-column:1 / -1; min-width:0;
+}
+html:not(.carte-doc) .foldall {
+  display:flex; align-items:center; justify-self:end;
+  margin-bottom:12px;   /* même respiration que le bandeau de titre */
+}
 html:not(.carte-doc) .foldall__btn {
   pointer-events:auto;
   appearance:none; -webkit-appearance:none; cursor:pointer;
@@ -7448,29 +7459,24 @@ html:not(.carte-doc) .foldall__ico::after  { top:3px; }
 html:not(.carte-doc) .foldall__btn[aria-pressed="true"] .foldall__ico { transform:rotate(180deg); }
 /* La pastille garde sa place au centre : gouttière symétrique, calculée
    sur la largeur réelle du bouton (libellé compris). */
-html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0 160px; }
-/* Le libellé reste visible : « tout voir » / « tout masquer » explique le
-   chevron, une pastille nue ne dit rien. Sur les écrans étroits, il
-   rétrécit et passe sous la pastille de titre plutôt que de disparaître. */
+
+/* Écrans moyens : le bouton se resserre avant de gêner le titre. */
 @media (max-width: 1100px) {
   html:not(.carte-doc) .foldall__btn { font-size:10px; padding:0 11px; gap:7px; }
-  html:not(.carte-doc) .foldall__label { max-width:110px; }
-  html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0 128px; }
+  html:not(.carte-doc) .foldall__label { max-width:104px; }
 }
-/* Sous 720 px, le bouton quitte l'angle : il se pose sous le titre, au
-   centre, où il a toute la largeur pour afficher son texte en entier. */
+/* Sous 720 px, deux mots à droite d'un titre centré ne tiennent plus :
+   la grille repasse en une seule colonne et le bouton se range sous le
+   titre, centré, avec toute la largeur pour son texte. L'ordre du
+   document — titre, bouton, contenu — fait le reste, sans `order`. */
 @media (max-width: 720px) {
-  html:not(.carte-doc) .foldall {
-    position:static; height:auto; max-width:none;
-    justify-content:center; margin:0 0 12px;
-  }
+  html:not(.carte-doc) .panel:has(> .foldall) { grid-template-columns:minmax(0,1fr); }
+  html:not(.carte-doc) .panel:has(> .foldall) > .panel__head,
+  html:not(.carte-doc) .panel:has(> .foldall) > .foldall { grid-column:1; }
+  html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { margin-bottom:10px; }
+  html:not(.carte-doc) .foldall { justify-self:center; margin-bottom:12px; }
   html:not(.carte-doc) .foldall__btn { height:34px; font-size:10px; }
   html:not(.carte-doc) .foldall__label { max-width:none; }
-  html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0; }
-  /* Aucun `order` ici : le bouton est désormais inséré après le titre
-     dans le DOM, donc l'ordre naturel est déjà « titre, bouton,
-     contenu ». Réordonner en CSS était la cause du défaut — les listes
-     restaient à `order:0` et remontaient devant le titre. */
 }
 @media print { .foldall { display:none !important; } }
 @media (prefers-reduced-motion: reduce) {
@@ -7517,6 +7523,28 @@ html:not(.carte-doc) #vins .wine-table tbody tr:hover td { border-color:rgba(216
    la description et le prix vivent dans le même encart, avec les mêmes
    rayons, la même bordure et les mêmes espacements. Rien n'est changé
    pour la carte imprimable, qui garde ses lignes serrées. */
+/* Les bières pression ne sont pas des .price-line mais des .beer-row :
+   une grille à trois colonnes de prix (25 cl / pinte / happy hour), née
+   du besoin d'aligner ces colonnes entre elles. Mes règles d'encart, qui
+   ne visaient que .price-line et .hh-line, les avaient donc laissées de
+   côté — d'où des lignes nues au milieu d'un onglet passé aux cartes.
+   Elles reçoivent le même cadre ; la grille interne, elle, ne bouge pas,
+   sans quoi les trois prix cesseraient d'être alignés. */
+html:not(.carte-doc) #boissons .beer-row {
+  padding:12px; margin:0; height:auto; min-height:0; align-self:start;
+  border:1px solid rgba(216,178,87,.34); border-radius:18px; background:#fff;
+  transition:border-color .22s ease, box-shadow .22s ease;
+}
+html:not(.carte-doc) #boissons .beer-row:hover { border-color:rgba(216,178,87,.6); }
+html:not(.carte-doc) #boissons .beer-table { gap:12px; }
+/* L'en-tête des colonnes garde l'aplomb des prix malgré le retrait
+   qu'ajoute le cadre. */
+html:not(.carte-doc) #boissons .beer-table__head { padding:0 12px 4px; }
+/* Le trait de conduite vers le prix fait doublon avec le cadre. */
+html:not(.carte-doc) #boissons .beer-row__name::after {
+  content:none !important; border-bottom:0 !important;
+}
+
 html:not(.carte-doc) #boissons .price-line,
 html:not(.carte-doc) #cocktails .hh-line {
   /* Exactement la géométrie d'une .food-card : mêmes marges intérieures,
