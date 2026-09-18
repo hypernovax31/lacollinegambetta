@@ -268,7 +268,7 @@ html:not(.carte-doc) .container {
 }
 @media (max-width: 640px) {
   .control-btn, .contact-link, .footer-link { width:100%; }
-  .cover-links, .footer-links { display:grid; grid-template-columns:1fr; width:100%; }
+  .cover-links, .footer-links { display:flex; flex-direction:column; align-items:stretch; width:100%; }
   .panel { padding:14px; }
   .food-card { padding:12px; }
   /* Intitulé + rigole + prix restent sur la même ligne à toutes les
@@ -3346,33 +3346,29 @@ html[lang="hi"][lang="hi"]:is(*, #lcg-hi-ls):is(*, #lcg-hi-ls2) * { letter-spaci
 #menus .fm svg.fmb-medal { height: auto; display: block; }
 
 /* Contact : Instagram, téléphone, mail — 3 boutons sans surcharge */
+/* Rang souple plutôt que grille : une grille impose à chaque pilule la
+   largeur de sa colonne, si bien qu'un libellé long — l'adresse de
+   courriel — débordait de la forme tandis que « Réservation » flottait
+   dans le vide. En flex, chaque pilule prend exactement la largeur de
+   son texte, et le rang se replie tout seul quand la place manque. */
 .cover-links,
 .footer-links {
-  display: grid !important;
-  /* Quatre boutons — réservation, Instagram, téléphone, courriel — pour
-     trois colonnes : le dernier retombait seul sur une seconde ligne,
-     désaligné. `auto-fit` les répartit sur une seule ligne tant que la
-     largeur le permet, et les replie d'elle-même quand elle manque. */
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  width: min(100%, 1180px);
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  width: min(100%, 1240px);
   gap: 10px;
-  justify-items: stretch;
-}
-.cover-links {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  width: min(100%, 1180px);
-  gap: 10px;
-  justify-items: stretch;
 }
 .cover-links .contact-link,
 .footer-links .footer-link {
-  width: 100%;
+  width: auto;
+  flex: 0 1 auto;
   min-width: 0;
   justify-content: center;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 @media (max-width: 720px) {
@@ -3405,7 +3401,8 @@ html[lang="hi"][lang="hi"]:is(*, #lcg-hi-ls):is(*, #lcg-hi-ls2) * { letter-spaci
 @media (max-width: 640px) {
   .cover-links,
   .footer-links {
-    grid-template-columns: 1fr !important;
+    flex-direction: column;
+    align-items: stretch;
     width: 100% !important;
   }
 }
@@ -3573,16 +3570,13 @@ html:not(.carte-doc) #menus .menus-duo__left .breakfast-card strong {
   font-weight: 600 !important;
   font-family: 'Montserrat', sans-serif !important;
 }
-.cover-links,
-/* Ancien gabarit à trois colonnes asymétriques : il datait d'un pied de
-   page à trois boutons. Le quatrième retombait seul en dessous. */
-.footer-links {
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-}
+/* Ancien gabarit à trois colonnes : il datait d'un pied de page à trois
+   boutons. Le rang souple rend la règle inutile. */
 @media (max-width: 780px) {
   .cover-links,
   .footer-links {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
   }
 }
 
@@ -3673,10 +3667,7 @@ html:not(.carte-doc) #menus .menus-duo__left .breakfast-card strong {
   flex: 0 0 auto;
   stroke: currentColor;
 }
-.cover-links,
-.footer-links {
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) !important;
-}
+
 .contact-link--mail,
 .footer-link--mail {
   font-weight: 400 !important;
@@ -3940,18 +3931,22 @@ html:not(.carte-doc) #menus .offer-card__price {
 /* Boutons IG / tél / mail : lisibles et tactiles */
 html:not(.carte-doc) .cover-links,
 html:not(.carte-doc) .footer-links {
-  display: grid !important;
-  /* 960 px ne laissait pas la place à quatre pilules : la quatrième
-     passait à la ligne. Élargi, et colonnes en auto-fit pour qu'elles
-     se répartissent sur une seule ligne tant que la largeur suffit. */
-  width: min(100%, 1180px);
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  width: min(100%, 1240px);
   margin-inline: auto;
   gap: 10px !important;
-  justify-items: stretch;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) !important;
 }
 html:not(.carte-doc) .cover-links .contact-link,
 html:not(.carte-doc) .footer-links .footer-link {
+  /* Largeur dictée par le texte, hauteur commune : les pilules restent
+     alignées sans qu'aucune n'étire ni ne rogne son libellé. Le retour
+     à la ligne est proscrit — c'est lui qui faisait sortir le texte de
+     la forme arrondie. */
+  width: auto !important;
+  flex: 0 1 auto !important;
   min-height: 44px !important;
   font-family: 'Montserrat', sans-serif !important;
   font-weight: 400 !important;
@@ -3959,19 +3954,15 @@ html:not(.carte-doc) .footer-links .footer-link {
   letter-spacing: 0.02em !important;
   text-transform: none !important;
   font-style: normal !important;
-  white-space: normal !important;
+  white-space: nowrap !important;
   overflow: visible !important;
-  text-overflow: unset !important;
+  text-overflow: clip !important;
   line-height: 1.3 !important;
-  padding: 10px 12px !important;
-  overflow-wrap: anywhere;
+  padding: 10px 18px !important;
 }
 @media (max-width: 1100px) {
   html:not(.carte-doc) .cover-links,
   html:not(.carte-doc) .footer-links {
-    /* Empiler en une seule colonne dès 1100 px était brutal : jusqu'à
-       640 px, deux ou quatre pilules tiennent encore côte à côte. */
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) !important;
     width: min(100%, 1100px);
   }
   html:not(.carte-doc) .cover-links .contact-link,
@@ -3984,7 +3975,6 @@ html:not(.carte-doc) .footer-links .footer-link {
 @media (orientation: landscape) and (max-height: 500px) and (min-width: 640px) {
   html:not(.carte-doc) .cover-links,
   html:not(.carte-doc) .footer-links {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
     width: min(100%, 1100px);
   }
   html:not(.carte-doc) .cover-links .contact-link,
@@ -4109,28 +4099,24 @@ html:not(.carte-doc) #menus .offer-card {
   html:not(.carte-doc) .hh-list--cols {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
-  /* Fiches de plats : colonnes COULANTES, pas une grille.
-     Une grille raisonne par rangées : même sans étirement, la fiche
-     placée sous « Bavette » attend que la rangée entière soit finie,
-     si bien que déplier « Entrecôte » creusait un vide blanc sous sa
-     voisine. Avec `columns`, chaque colonne coule indépendamment : une
-     fiche qui grandit ne repousse que celles de SA colonne, et le vide
-     disparaît. `break-inside:avoid` empêche une fiche d'être coupée en
-     deux entre les colonnes. */
-  html:not(.carte-doc) .food-card-grid,
-  html:not(.carte-doc) .food-card-grid--wide {
-    display: block !important;
-    columns: 2;
-    column-gap: 12px;
+  /* Fiches de plats : deux VRAIES colonnes, montées en JS.
+     Une grille raisonne par rangées : déplier « Entrecôte » creusait un
+     vide blanc sous « Bavette ». Les colonnes CSS (`columns`) règlent le
+     vide mais se rééquilibrent à chaque ouverture, si bien que les
+     fiches sautent d'une colonne à l'autre — pire encore.
+     Le script répartit donc les fiches dans deux conteneurs fixes, en
+     alternance, ce qui conserve l'ordre de lecture de gauche à droite.
+     Chaque colonne est une pile autonome : une fiche qui s'ouvre ne
+     pousse que celles du dessous, dans SA colonne, et rien ne bouge en
+     face. */
+  html:not(.carte-doc) .food-card-grid.is-split,
+  html:not(.carte-doc) .food-card-grid--wide.is-split {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    align-items: start !important;
   }
-  html:not(.carte-doc) .food-card-grid > .food-card,
-  html:not(.carte-doc) .food-card-grid--wide > .food-card {
-    break-inside: avoid;
-    -webkit-column-break-inside: avoid;
-    page-break-inside: avoid;
-    margin: 0 0 12px;
-    height: auto !important;
-    display: flex;
+  html:not(.carte-doc) .food-col {
+    display: flex; flex-direction: column; gap: 12px; min-width: 0;
   }
   /* Les autres grilles restent des grilles : leurs cartes ne se
      déplient pas, mais on leur retire l'étirement par cohérence. */
@@ -5023,7 +5009,8 @@ html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
 @media (orientation: landscape) and (max-height: 500px) and (max-width: 560px) {
   html:not(.carte-doc) #cover-section .cover-links,
   html:not(.carte-doc) .footer-links {
-    grid-template-columns: 1fr !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
     width: min(100%, 420px) !important;
   }
 }
@@ -5045,7 +5032,7 @@ html:not(.carte-doc) #cover-section .cover-footer {
   gap: clamp(8px, 1.2vh, 14px);
 }
 html:not(.carte-doc) #cover-section .cover-footer .cover-links {
-  width: min(100%, 920px);
+  width: min(100%, 1240px);
 }
 /* Écrans très bas : la typographie se réduit proportionnellement
    (le cadre doré est le premier à se réduire, jamais les textes). */
@@ -9617,35 +9604,23 @@ else sizeCoverMedallion();
        l'animer hors champ la gaspillerait. Une fois que l'utilisateur a
        actionné un dépliant — ici ou dans une fiche — le geste est
        acquis : l'indice ne se rejoue plus, pour toute la session. */
-    var HINT_KEY = 'lcg-foldall-hint';
-    function hintSeen() {
-      try { return sessionStorage.getItem(HINT_KEY) === '1'; } catch (e) { return false; }
-    }
-    /* Appelé UNIQUEMENT au clic sur un bouton dépliant. L'indice
-       s'éteint alors sur tous les boutons et pour toute la session. */
+    /* --- Indice d'amorce -------------------------------------------
+       L'indice bat en continu tant que l'utilisateur n'a pas cliqué sur
+       un bouton dépliant. Il repart à chaque chargement de page : la
+       mémorisation en sessionStorage l'éteignait définitivement dans
+       l'onglet, si bien qu'après un seul clic on ne le revoyait plus
+       jamais — d'où l'impression qu'il ne fonctionnait pas.
+       Pas d'IntersectionObserver non plus : les onglets inactifs sont en
+       display:none, l'observateur n'y voyait jamais entrer le bouton et
+       l'indice n'était donc jamais posé sur quatre onglets sur cinq. Une
+       animation CSS sur un élément masqué ne coûte rien. */
     function markSeen() {
-      try { sessionStorage.setItem(HINT_KEY, '1'); } catch (e) {}
       Array.prototype.forEach.call(
         document.querySelectorAll('.foldall--hint'),
         function (el) { el.classList.remove('foldall--hint'); }
       );
     }
-    if (!hintSeen()) {
-      if (typeof IntersectionObserver === 'function') {
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (en) {
-            if (!en.isIntersecting) return;
-            io.unobserve(en.target);
-            if (hintSeen()) return;
-            /* L'indice tourne sans fin : il ne s'arrête qu'au clic. */
-            bar.classList.add('foldall--hint');
-          });
-        }, { threshold: 0.9 });
-        io.observe(bar);
-      } else {
-        bar.classList.add('foldall--hint');
-      }
-    }
+    bar.classList.add('foldall--hint');
 
     btn.addEventListener('click', function () {
       markSeen();
@@ -9675,6 +9650,54 @@ else sizeCoverMedallion();
     });
   }
 
+  /* --- Deux colonnes indépendantes pour les fiches de plats ----------
+     Au-dessus de 720 px, les fiches sont réparties en alternance dans
+     deux piles distinctes : gauche, droite, gauche… L'ordre de lecture
+     est conservé, et chaque pile grandit pour son propre compte, donc
+     ouvrir une photo ne laisse plus de vide en face.
+     En dessous, on remet tout à plat : une seule colonne. */
+  var SPLIT_MQ = '(min-width: 720px)';
+
+  function splitGrid(grid) {
+    if (grid.classList.contains('is-split')) return;
+    var cards = Array.prototype.filter.call(grid.children, function (el) {
+      return el.classList && el.classList.contains('food-card');
+    });
+    if (cards.length < 2) return;
+    var colA = document.createElement('div');
+    var colB = document.createElement('div');
+    colA.className = 'food-col'; colB.className = 'food-col';
+    cards.forEach(function (card, n) {
+      (n % 2 === 0 ? colA : colB).appendChild(card);
+    });
+    grid.appendChild(colA);
+    grid.appendChild(colB);
+    grid.classList.add('is-split');
+  }
+
+  function unsplitGrid(grid) {
+    if (!grid.classList.contains('is-split')) return;
+    var cols = grid.querySelectorAll(':scope > .food-col');
+    if (cols.length !== 2) return;
+    /* On réentrelace pour restituer l'ordre d'origine. */
+    var a = Array.prototype.slice.call(cols[0].children);
+    var b = Array.prototype.slice.call(cols[1].children);
+    for (var i = 0; i < Math.max(a.length, b.length); i++) {
+      if (a[i]) grid.appendChild(a[i]);
+      if (b[i]) grid.appendChild(b[i]);
+    }
+    cols[0].remove(); cols[1].remove();
+    grid.classList.remove('is-split');
+  }
+
+  function applySplit() {
+    var wide = window.matchMedia && window.matchMedia(SPLIT_MQ).matches;
+    Array.prototype.forEach.call(
+      document.querySelectorAll('#interior-menu .food-card-grid'),
+      function (grid) { wide ? splitGrid(grid) : unsplitGrid(grid); }
+    );
+  }
+
   function init() {
     Array.prototype.forEach.call(
       document.querySelectorAll('.food-card[data-photo]'),
@@ -9692,6 +9715,16 @@ else sizeCoverMedallion();
       document.querySelectorAll('.beer-row[data-photo]'),
       wrapBeer
     );
+    /* Avant de monter les commandes : les fiches doivent déjà être dans
+       leur colonne, sinon le bouton chercherait ses cibles au mauvais
+       niveau. */
+    applySplit();
+    if (window.matchMedia) {
+      var mq = window.matchMedia(SPLIT_MQ);
+      var onChange = function () { applySplit(); };
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    }
     Array.prototype.forEach.call(
       document.querySelectorAll('.menu-section .panel'),
       mountFoldAll
