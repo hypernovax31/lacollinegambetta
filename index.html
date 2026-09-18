@@ -7577,6 +7577,14 @@ html:not(.carte-doc) .foldall {
   display:flex; align-items:center; justify-self:end;
   margin-bottom:12px;   /* même respiration que le bandeau de titre */
 }
+/* Au-dessus de 720 px la photo s'ouvre en surimpression : il n'y a plus
+   de tiroirs à déplier en bloc, donc plus rien à commander. Le bouton
+   « tout voir » disparaît et ne subsiste que sur la version à une
+   colonne, où les tiroirs sont bien le dispositif en place. */
+@media (min-width: 721px) {
+  html:not(.carte-doc) .foldall { display:none !important; }
+  html:not(.carte-doc) .panel:has(> .foldall) { display:block !important; }
+}
 html:not(.carte-doc) .foldall__btn {
   pointer-events:auto;
   appearance:none; -webkit-appearance:none; cursor:pointer;
@@ -9736,14 +9744,6 @@ else sizeCoverMedallion();
 
     btn.addEventListener('click', function () {
       markSeen();
-      /* Écran large : les tiroirs ne s'ouvrent plus, la commande lance
-         donc la galerie du panneau à la première assiette. Déplier des
-         tiroirs devenus invisibles n'aurait aucun effet perceptible. */
-      if (lbActive()) {
-        var first = targets()[0];
-        if (first) lbOpen(first);
-        return;
-      }
       var expand = btn.getAttribute('aria-pressed') !== 'true';
       targets().forEach(function (el) {
         var cls = el.classList.contains('food-card--photo') ? 'food-card--open'
