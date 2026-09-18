@@ -7679,9 +7679,52 @@ html.lightbox-open, html.lightbox-open body { overflow:hidden; }
   html:not(.carte-doc) .lightbox__img { max-height:calc(100vh - 170px); }
   html:not(.carte-doc) .lightbox__nav { width:38px; height:38px; }
 }
+/* -- Paysage sur téléphone : le bandeau passe À CÔTÉ de l'image -------
+   La visionneuse s'ouvre dès 721 px de large, ce qu'un téléphone en
+   paysage dépasse — mais il n'offre alors que ~390 px de haut. Empilés,
+   l'image et le bandeau ne tenaient pas : le cadre étant en
+   `overflow:hidden`, la description et les tarifs étaient pursement
+   coupés, sans moyen de les atteindre.
+
+   En paysage la ressource rare est la hauteur, l'abondante est la
+   largeur. Le cadre passe donc en deux colonnes : l'image à gauche, le
+   bandeau à droite sur toute la hauteur, avec son propre défilement si
+   le texte est long. Plus rien n'est rogné. */
 @media (orientation:landscape) and (max-height:560px) {
-  html:not(.carte-doc) .lightbox__img { max-height:calc(100vh - 120px); }
-  html:not(.carte-doc) .lightbox__bar { padding:8px 14px 10px; }
+  html:not(.carte-doc) .lightbox { padding:10px; }
+  html:not(.carte-doc) .lightbox__frame {
+    flex-direction:row; align-items:stretch;
+    max-height:100%; max-width:100%;
+  }
+  html:not(.carte-doc) .lightbox__img {
+    max-height:100%; max-width:62%;
+    align-self:center; flex:0 1 auto; object-fit:contain;
+  }
+  html:not(.carte-doc) .lightbox__bar {
+    flex:1 1 38%; min-width:min(260px,38%);
+    border-top:0; border-left:1px solid rgba(216,178,87,.34);
+    padding:12px 16px 14px;
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
+    justify-content:center;
+  }
+  /* Le bouton de fermeture reste au-dessus du bandeau défilant. */
+  html:not(.carte-doc) .lightbox__close { z-index:2; }
+}
+
+/* Très peu de hauteur ET peu de largeur : la colonne de texte ne tient
+   plus. On revient à l'empilement, mais le cadre entier défile au lieu
+   de rogner. */
+@media (orientation:landscape) and (max-height:560px) and (max-width:720px) {
+  html:not(.carte-doc) .lightbox__frame {
+    flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  html:not(.carte-doc) .lightbox__img {
+    max-width:100%; max-height:calc(100vh - 140px); flex:0 0 auto;
+  }
+  html:not(.carte-doc) .lightbox__bar {
+    flex:0 0 auto; border-left:0; border-top:1px solid rgba(216,178,87,.34);
+    padding:8px 14px 12px; overflow:visible;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   html:not(.carte-doc) .lightbox,
@@ -8019,6 +8062,34 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
   html:not(.carte-doc) #cocktails .hh-line,
   html:not(.carte-doc) #boissons .beer-row { padding:9px 12px; }
   html:not(.carte-doc) .foldall { margin-bottom:8px; }
+}
+
+/* -- Paysage : le tiroir déplié doit rester intégralement lisible -----
+   La photo est plafonnée à 42vh ; ajoutée à la description et aux
+   tarifs, elle pouvait pousser la fin de l'encart hors de l'écran sans
+   que rien n'indique qu'il restait du texte. L'encart ouvert se donne
+   donc une hauteur maximale et son propre défilement : la photo se
+   réduit d'abord, et le texte reste toujours atteignable. */
+@media (orientation:landscape) and (max-height:560px) {
+  html:not(.carte-doc) #boissons .price-line__photo,
+  html:not(.carte-doc) #boissons .beer-row__photo,
+  html:not(.carte-doc) #cocktails .hh-line__photo,
+  html:not(.carte-doc) .price-line__photo,
+  html:not(.carte-doc) .hh-line__photo,
+  html:not(.carte-doc) .beer-row__photo,
+  html:not(.carte-doc) .food-card__photo { height:min(34vh,150px); }
+
+  html:not(.carte-doc) #boissons .price-line--open .price-line__drawer > div,
+  html:not(.carte-doc) #cocktails .hh-line--open .hh-line__drawer > div,
+  html:not(.carte-doc) #boissons .beer-row--open .beer-row__drawer > div {
+    max-height:72vh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  /* La description et les tarifs sous la photo gardent de l'air : sans
+     cette marge, la dernière ligne collait au bord de l'encart. */
+  html:not(.carte-doc) #boissons .price-line__drawer .price-list__note:last-child,
+  html:not(.carte-doc) #cocktails .hh-line__drawer .price-list__note:last-child {
+    margin-bottom:2px;
+  }
 }
 
 /* -- Grands écrans : au-delà, l'encart ne doit pas s'étirer au point que
