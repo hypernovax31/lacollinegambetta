@@ -7463,14 +7463,29 @@ html:not(.carte-doc) .lightbox.is-open .lightbox__frame {
 }
 html:not(.carte-doc) .lightbox__img {
   display:block; width:auto; height:auto;
-  max-width:100%; max-height:calc(100vh - 210px);
+  max-width:100%; max-height:calc(100vh - 260px);
   object-fit:contain; background:linear-gradient(140deg,#f3ece2,#e8dcc9);
 }
 /* Bandeau : le plat et son prix, pour garder le contexte de la carte. */
 html:not(.carte-doc) .lightbox__bar {
-  display:flex; align-items:baseline; justify-content:space-between;
-  gap:16px; padding:12px 18px 14px;
+  position:relative;
+  display:flex; flex-direction:column; gap:5px;
+  padding:12px 18px 14px;
   border-top:1px solid rgba(216,178,87,.34); background:#fff;
+}
+/* Rubrique d'origine : d'un coup d'œil on sait si l'on regarde une
+   entrée, un burger ou un dessert — utile en parcourant la galerie. */
+html:not(.carte-doc) .lightbox__section {
+  margin:0; font-family:'Montserrat',sans-serif; font-size:.64rem;
+  font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--gold-700);
+}
+html:not(.carte-doc) .lightbox__section[hidden] { display:none; }
+/* L'intitulé et les tarifs partagent une ligne, le prix calé à droite.
+   La rigole de points de la carte n'a pas sa place ici : deux blocs
+   suffisent à relier le nom à son prix sur une largeur limitée. */
+html:not(.carte-doc) .lightbox__line {
+  display:flex; align-items:baseline; justify-content:space-between; gap:16px;
 }
 html:not(.carte-doc) .lightbox__title {
   margin:0; font-family:'Cinzel',serif; font-size:1rem; font-weight:700;
@@ -7478,9 +7493,41 @@ html:not(.carte-doc) .lightbox__title {
   line-height:1.25; min-width:0;
 }
 html:not(.carte-doc) .lightbox__price {
+  display:flex; align-items:baseline; gap:10px; flex:0 0 auto;
   font-family:'Cinzel',serif; font-size:1.05rem; font-weight:800;
-  color:var(--gold-700); white-space:nowrap; flex:0 0 auto;
+  color:var(--gold-700); white-space:nowrap;
 }
+html:not(.carte-doc) .lightbox__price[hidden] { display:none; }
+html:not(.carte-doc) .lightbox__tarif {
+  display:inline-flex; align-items:baseline; gap:5px;
+}
+/* Étiquette de contenance (25 cl, pinte) ou mention Happy Hour : en
+   petites capitales, pour ne pas concurrencer le chiffre. */
+html:not(.carte-doc) .lightbox__tarif-lab {
+  font-family:'Montserrat',sans-serif; font-style:normal;
+  font-size:.58rem; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--violet-900); opacity:.62;
+}
+/* Le tarif Happy Hour se détache sur une pastille violette, comme sur
+   la carte où il occupe une colonne distincte. */
+html:not(.carte-doc) .lightbox__tarif--hh {
+  padding:3px 9px; border-radius:999px;
+  background:rgba(89,46,111,.08); border:1px solid rgba(216,178,87,.34);
+  font-size:.95rem;
+}
+html:not(.carte-doc) .lightbox__note {
+  margin:0; padding-right:52px;
+  font-family:'Montserrat',sans-serif; font-size:.82rem;
+  line-height:1.5; color:#3b2a44; max-width:74ch;
+}
+html:not(.carte-doc) .lightbox__note[hidden] { display:none; }
+/* Position dans la série, discrète, calée dans l'angle du bandeau. */
+html:not(.carte-doc) .lightbox__count {
+  position:absolute; right:18px; bottom:11px;
+  font-family:'Montserrat',sans-serif; font-size:.62rem; font-weight:600;
+  letter-spacing:.1em; color:#8b7c94;
+}
+html:not(.carte-doc) .lightbox__count[hidden] { display:none; }
 html:not(.carte-doc) .lightbox__close {
   position:absolute; top:10px; right:10px; z-index:2;
   appearance:none; -webkit-appearance:none; cursor:pointer;
@@ -8349,6 +8396,7 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
          en JS resterait en français. -->
     <p id="foldall-open-tpl" class="sr-only" aria-hidden="true">Tout voir</p>
     <p id="foldall-shut-tpl" class="sr-only" aria-hidden="true">Tout masquer</p>
+    <p id="lb-hh-tpl" class="sr-only" aria-hidden="true">Happy Hour</p>
 
     <footer class="footer">
       <div class="footer-note"><span class="star-gold">✦</span> Prix nets en euros • service compris <span class="star-gold">✦</span></div>
@@ -9356,7 +9404,7 @@ else sizeCoverMedallion();
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609190130" defer></script>
+<script src="assets/js/i18n.js?v=202609190320" defer></script>
 
 <!-- ============ Assiettes en photo : les fiches deviennent des dépliants ============ -->
 <script>
@@ -9781,7 +9829,15 @@ else sizeCoverMedallion();
     return !!(window.matchMedia && window.matchMedia(LB_MQ).matches);
   }
 
-  var lb = null, lbImg, lbTitle, lbPrice, lbPrev, lbNext, lbLast, lbGroup, lbIndex;
+  var lb = null, lbImg, lbTitle, lbPrice, lbNote, lbSection, lbCount,
+      lbPrev, lbNext, lbLast, lbGroup, lbIndex;
+  /* Étiquette du tarif Happy Hour, relue à chaque affichage : figée au
+     chargement, elle serait restée en français après un changement de
+     langue, la galerie ne se reconstruisant pas. */
+  function hhLabel() {
+    var t = document.getElementById('lb-hh-tpl');
+    return t ? t.textContent.trim() : 'Happy Hour';
+  }
 
   function lbBuild() {
     if (lb) return lb;
@@ -9798,14 +9854,34 @@ else sizeCoverMedallion();
     lbImg.className = 'lightbox__img';
     lbImg.alt = '';
 
+    /* Bandeau : la rubrique, l'intitulé, le descriptif et les tarifs,
+       tels qu'ils figurent sur la carte. L'intitulé et le prix tiennent
+       une même ligne ; le descriptif court dessous, sur la largeur. */
     var bar = document.createElement('div');
     bar.className = 'lightbox__bar';
+
+    lbSection = document.createElement('p');
+    lbSection.className = 'lightbox__section';
+
+    var line = document.createElement('div');
+    line.className = 'lightbox__line';
     lbTitle = document.createElement('p');
     lbTitle.className = 'lightbox__title';
     lbPrice = document.createElement('span');
     lbPrice.className = 'lightbox__price';
-    bar.appendChild(lbTitle);
-    bar.appendChild(lbPrice);
+    line.appendChild(lbTitle);
+    line.appendChild(lbPrice);
+
+    lbNote = document.createElement('p');
+    lbNote.className = 'lightbox__note';
+
+    lbCount = document.createElement('span');
+    lbCount.className = 'lightbox__count';
+
+    bar.appendChild(lbSection);
+    bar.appendChild(line);
+    bar.appendChild(lbNote);
+    bar.appendChild(lbCount);
 
     var close = document.createElement('button');
     close.type = 'button';
@@ -9855,13 +9931,42 @@ else sizeCoverMedallion();
     );
   }
 
+  /* Tout ce que la carte dit de cette assiette, relevé dans la fiche
+     elle-même : intitulé, descriptif, prix, et la rubrique d'où elle
+     vient. Rien n'est réécrit ni dupliqué — la carte reste la source, la
+     galerie n'en est que l'affichage en grand. */
   function lbInfo(el) {
     var t = el.querySelector('.food-card__head h5, .hh-line__name, .price-line__name, .beer-row__name');
-    var p = el.querySelector('.food-card__head strong, .hh-line__price, .price-line__price, .beer-row__price');
+
+    /* Descriptifs : une fiche peut en aligner plusieurs (« Frites et
+       salade » sous la garniture d'un croque, la contenance sous une
+       bouteille). On les prend tous, dans l'ordre de la carte. */
+    var notes = Array.prototype.map.call(
+      el.querySelectorAll('.food-card__note, .price-list__note'),
+      function (n) { return n.textContent.trim(); }
+    ).filter(Boolean);
+
+    /* Prix. Les bières en pression en portent plusieurs, chacun étiqueté
+       par sa contenance (25 cl, pinte) ; le Happy Hour est un tarif à
+       part, signalé comme tel plutôt quenoyé parmi les autres. */
+    var prices = Array.prototype.map.call(
+      el.querySelectorAll('.food-card__head strong, .hh-line__price, .price-line__price, .beer-row__price'),
+      function (n) {
+        return { label: n.getAttribute('data-label') || '', value: n.textContent.trim() };
+      }
+    ).filter(function (x) { return x.value; });
+
+    var hhEl = el.querySelector('.hh-line__hh, .beer-row__hh');
+    var panel = el.closest('.panel');
+    var head = panel ? panel.querySelector('.panel__title') : null;
+
     return {
       src: el.getAttribute('data-photo'),
       title: t ? t.textContent.trim() : '',
-      price: p ? p.textContent.trim() : ''
+      notes: notes,
+      prices: prices,
+      hh: hhEl ? hhEl.textContent.trim() : '',
+      section: head ? head.textContent.trim() : ''
     };
   }
 
@@ -9869,11 +9974,49 @@ else sizeCoverMedallion();
     if (!lbGroup || !lbGroup.length) return;
     lbIndex = (i + lbGroup.length) % lbGroup.length;
     var info = lbInfo(lbGroup[lbIndex]);
+
     lbImg.src = info.src;
     lbImg.alt = info.title;
+    lbSection.textContent = info.section;
+    lbSection.hidden = !info.section;
     lbTitle.textContent = info.title;
-    lbPrice.textContent = info.price;
+
+    /* Descriptif : les lignes de la carte sont recollées par un point
+       médian, plus sobre qu'une liste à puces sous une photo. */
+    lbNote.textContent = info.notes.join(' · ');
+    lbNote.hidden = !info.notes.length;
+
+    lbPrice.textContent = '';
+    info.prices.forEach(function (pr) {
+      var span = document.createElement('span');
+      span.className = 'lightbox__tarif';
+      if (pr.label) {
+        var lab = document.createElement('em');
+        lab.className = 'lightbox__tarif-lab';
+        lab.textContent = pr.label;
+        span.appendChild(lab);
+      }
+      span.appendChild(document.createTextNode(pr.value));
+      lbPrice.appendChild(span);
+    });
+    if (info.hh) {
+      var hh = document.createElement('span');
+      hh.className = 'lightbox__tarif lightbox__tarif--hh';
+      var lab2 = document.createElement('em');
+      lab2.className = 'lightbox__tarif-lab';
+      /* Libellé traduit comme le reste : on le lit dans le gabarit prévu
+         à cet effet plutôt que de l'écrire en dur dans le script. */
+      lab2.textContent = hhLabel();
+      hh.appendChild(lab2);
+      hh.appendChild(document.createTextNode(info.hh));
+      lbPrice.appendChild(hh);
+    }
+    lbPrice.hidden = !lbPrice.childNodes.length;
+
+    /* Repère de position : « 3 / 7 » évite de tourner en rond. */
+    lbCount.textContent = (lbIndex + 1) + ' / ' + lbGroup.length;
     var solo = lbGroup.length < 2;
+    lbCount.hidden = solo;
     lbPrev.hidden = solo;
     lbNext.hidden = solo;
   }
