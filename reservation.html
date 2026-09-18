@@ -70,7 +70,30 @@ button, a { font:inherit; }
 .footer-link:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
 .footer-link .ig-dot { fill:#fff; }
 .footer-note { color:var(--gold-500); font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.14em; font-size:clamp(.56rem,1vw,.76rem); }
-.footer-legal { margin-top:6px; color:rgba(255,255,255,.86); font-size:.75rem; }
+/* Trois mentions distinctes plutôt qu'une phrase à puces : d'un bloc,
+   la ligne se lisait comme un paragraphe et on n'y distinguait rien. En
+   éléments séparés, chacune se lit d'un coup d'œil, et sur écran étroit
+   elles se rangent l'une sous l'autre au lieu de se couper n'importe où.
+   Le séparateur est dessiné en CSS : il disparaît de lui-même en
+   colonne, et n'est pas lu par les synthèses vocales. */
+.footer-legal {
+  margin-top:8px; color:rgba(255,255,255,.7);
+  display:flex; flex-wrap:wrap; justify-content:center;
+  align-items:center; gap:4px 18px;
+  font-size:clamp(.62rem,1.05vw,.72rem); line-height:1.5; letter-spacing:.02em;
+}
+.footer-legal .legal-item { position:relative; white-space:normal; }
+.footer-legal .legal-item + .legal-item::before {
+  content:''; position:absolute; left:-9px; top:50%;
+  width:3px; height:3px; margin-top:-1.5px; border-radius:50%;
+  background:var(--gold-500); opacity:.55;
+}
+/* La mention sur l'alcool est obligatoire : elle reste la plus lisible. */
+.footer-legal .legal-item--alcool { color:rgba(255,255,255,.9); }
+@media (max-width: 720px) {
+  .footer-legal { flex-direction:column; gap:3px; text-align:center; }
+  .footer-legal .legal-item + .legal-item::before { display:none; }
+}
 @media (max-width: 860px) {
 .container { width:min(100% - 16px, 1120px); }
 }
@@ -647,12 +670,28 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 }
 .lang-option:hover, .lang-option:focus-visible { background: rgba(243, 213, 106, .14); outline: none; }
 .lang-option:focus-visible { box-shadow: inset 0 0 0 2px rgba(243, 213, 106, .55); }
+/* Ces deux règles manquaient ici : le menu de la réservation n'avait
+   hérité que des styles du bouton et des options, pas de ceux du titre
+   ni de la LISTE — c'est pourquoi les quinze langues s'empilaient en une
+   seule colonne alors que la carte les présentait en deux. Reprises à
+   l'identique du fichier principal, le menu est le même partout. */
+.lang-menu__title {
+  margin: 2px 8px 8px;
+  font-family: 'Cinzel', serif;
+  font-size: .68rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold-100);
+}
+.lang-menu__list { display: grid; gap: 2px; }
 @media (max-height: 860px) {
 .lang-menu { min-width: 300px; padding: 8px 10px 10px; }
+.lang-menu__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .lang-option { min-height: 40px; padding: 6px 8px; font-size: .86rem; }
 }
 @media (max-height: 500px) {
 .lang-menu { min-width: 380px; max-height: calc(100vh - 70px); padding: 6px 8px 8px; }
+.lang-menu__list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; }
 .lang-option { min-height: 36px; padding: 5px 7px; font-size: .8rem; gap: 7px; }
 }
 .lang-flag {
@@ -1224,7 +1263,11 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 
   <footer class="footer">
       <div class="footer-note"><span class="star-gold">✦</span> Prix nets en euros • service compris <span class="star-gold">✦</span></div>
-      <div class="footer-legal">Photographies non contractuelles, suggestions de présentation • Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé</div>
+      <div class="footer-legal">
+        <span class="legal-item">Photographies non contractuelles, suggestions de présentation</span>
+        <span class="legal-item">Allergènes : informations sur demande</span>
+        <span class="legal-item legal-item--alcool">L’abus d’alcool est dangereux pour la santé</span>
+      </div>
       
       <div class="footer-download-wrap"><a class="footer-download" href="Carte_LaCollineGambetta.pdf" download="Carte_LaCollineGambetta.pdf" title="Télécharger la carte au format PDF">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11.5"/><path d="M7.5 11.2 12 15.7l4.5-4.5"/><path d="M4.5 19.5h15"/></svg>
