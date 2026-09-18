@@ -8199,6 +8199,75 @@ html:not(.carte-doc) #boissons .beer-row__photo img {
   html:not(.carte-doc) #boissons .beer-row__photo img { transition:none; }
 }
 
+/* -- Paysage sur téléphone : rendre à la photo toute la largeur de son
+      encart. ----------------------------------------------------------
+   La règle paysage plafonne la hauteur et remet `aspect-ratio:auto`,
+   mais elle est écrite PLUS HAUT dans la feuille que le bloc
+   `#boissons … { aspect-ratio:3/2 }` ci-dessus, à spécificité égale.
+   C'est donc le 3/2 qui l'emportait, et il se combinait à la hauteur
+   imposée : le navigateur en déduisait la LARGEUR (hauteur × 1,5),
+   soit 285 px au plus. La photo se retrouvait centrée dans un encart
+   bien plus large qu'elle. On rétablit ici, après coup, la largeur
+   pleine et le rapport libre. */
+@media (orientation:landscape) and (max-height:560px) {
+  html:not(.carte-doc) #boissons .price-line__photo,
+  html:not(.carte-doc) #boissons .beer-row__photo,
+  html:not(.carte-doc) #cocktails .hh-line__photo,
+  html:not(.carte-doc) .price-line__photo,
+  html:not(.carte-doc) .hh-line__photo,
+  html:not(.carte-doc) .beer-row__photo,
+  html:not(.carte-doc) .food-card__photo {
+    aspect-ratio:auto !important;
+    width:100%; display:block;
+    height:min(42vh,190px);
+  }
+  html:not(.carte-doc) #boissons .price-line__photo img,
+  html:not(.carte-doc) #boissons .beer-row__photo img,
+  html:not(.carte-doc) #cocktails .hh-line__photo img,
+  html:not(.carte-doc) .price-line__photo img,
+  html:not(.carte-doc) .hh-line__photo img,
+  html:not(.carte-doc) .beer-row__photo img,
+  html:not(.carte-doc) .food-card__photo img {
+    width:100%; height:100%; object-fit:cover;
+  }
+}
+
+/* -- Débordement du texte hors de l'encart ---------------------------
+   Deux causes cumulées. Le nom est une case de flex : par défaut sa
+   largeur minimale vaut celle de son contenu, il refusait donc de se
+   rétrécir et poussait le prix dehors. Et les prix portent
+   `white-space:nowrap` — indispensable pour ne pas couper « 3,90 » en
+   deux, mais dans une suite comme « 3,90 / 4,90 / 5,90 » cela rendait
+   la ligne entière insécable.
+
+   On autorise donc les cases à se rétrécir (`min-width:0`), les mots
+   longs à se rompre, et les suites de prix à passer à la ligne aux
+   séparateurs — la valeur elle-même restant insécable grâce à
+   `white-space:normal` posé sur le conteneur et non sur le nombre. */
+html:not(.carte-doc) #boissons .price-line,
+html:not(.carte-doc) #cocktails .hh-line { overflow-wrap:break-word; }
+html:not(.carte-doc) #boissons .price-line__row,
+html:not(.carte-doc) #cocktails .hh-line__row { min-width:0; }
+html:not(.carte-doc) #boissons .price-line__name,
+html:not(.carte-doc) #cocktails .hh-line__name {
+  min-width:0; overflow-wrap:break-word; word-break:break-word; hyphens:auto;
+}
+html:not(.carte-doc) #boissons .price-line__price {
+  min-width:0; white-space:normal; text-align:right;
+}
+/* La description et la ligne de contenance : mêmes libertés, et jamais
+   plus larges que l'encart. */
+html:not(.carte-doc) #boissons .price-list__note,
+html:not(.carte-doc) #cocktails .price-list__note,
+html:not(.carte-doc) #boissons .price-line__name .qty {
+  min-width:0; max-width:100%; overflow-wrap:break-word; word-break:break-word;
+}
+/* Le tiroir et la photo ne doivent pas non plus élargir l'encart. */
+html:not(.carte-doc) #boissons .price-line__drawer,
+html:not(.carte-doc) #cocktails .hh-line__drawer,
+html:not(.carte-doc) #boissons .price-line__drawer > div,
+html:not(.carte-doc) #cocktails .hh-line__drawer > div { min-width:0; max-width:100%; }
+
 /* Photo absente : la ligne reprend exactement sa forme d'origine. */
 html:not(.carte-doc) .price-line--nophoto > .price-line__toggle {
   appearance:none; -webkit-appearance:none; background:transparent; border:0; margin:0;
