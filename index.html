@@ -7467,11 +7467,10 @@ html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0 160px; }
   html:not(.carte-doc) .foldall__btn { height:34px; font-size:10px; }
   html:not(.carte-doc) .foldall__label { max-width:none; }
   html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0; }
-  /* Le bouton est le premier enfant du panneau : on le renvoie après le
-     titre pour lire « section » puis « action ». */
-  html:not(.carte-doc) .panel:has(> .foldall) { display:flex; flex-direction:column; }
-  html:not(.carte-doc) .panel:has(> .foldall) > .foldall { order:2; }
-  html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { order:1; }
+  /* Aucun `order` ici : le bouton est désormais inséré après le titre
+     dans le DOM, donc l'ordre naturel est déjà « titre, bouton,
+     contenu ». Réordonner en CSS était la cause du défaut — les listes
+     restaient à `order:0` et remontaient devant le titre. */
 }
 @media print { .foldall { display:none !important; } }
 @media (prefers-reduced-motion: reduce) {
@@ -9225,7 +9224,14 @@ else sizeCoverMedallion();
     btn.appendChild(lab);
     btn.appendChild(ico);
     bar.appendChild(btn);
-    host.insertBefore(bar, host.firstChild);
+    /* Après le bandeau de titre, pas en tête du panneau : l'ordre du
+       document devient « titre, bouton, contenu », ce qui est déjà le
+       bon ordre de lecture. Le CSS n'a donc plus à le rétablir avec
+       `order`, et rien ne peut passer devant le titre. */
+    var head = host.querySelector(':scope > .panel__head');
+    if (head && head.nextSibling) host.insertBefore(bar, head.nextSibling);
+    else if (head) host.appendChild(bar);
+    else host.insertBefore(bar, host.firstChild);
 
     function sync() {
       var list = targets();
