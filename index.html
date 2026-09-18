@@ -9456,23 +9456,24 @@ else sizeCoverMedallion();
      du premier panneau. Il n'apparaît que là où il y a des dépliants, et
      son état suit ce qu'on voit : si l'on replie les fiches une à une,
      il repasse de lui-même en « tout déplier ». */
-  function mountFoldAll(section) {
+  /* Un bouton par PANNEAU, et non un par onglet. « Boissons » compte six
+     panneaux (fraîches, chaudes, apéritifs, whiskies, digestifs, bières) :
+     avec une seule commande posée dans le premier, les cinq autres n'en
+     avaient aucune, et celle du haut agissait à distance sur des encarts
+     hors écran. Chaque panneau pilote désormais ses propres dépliants. */
+  function mountFoldAll(host) {
 
     function targets() {
       return Array.prototype.slice.call(
-        section.querySelectorAll('.food-card--photo, .hh-line--photo, .price-line--photo, .beer-row--photo')
+        host.querySelectorAll('.food-card--photo, .hh-line--photo, .price-line--photo, .beer-row--photo')
       );
     }
     if (!targets().length) return;
-
-    /* Le bouton se pose DANS le premier panneau qui porte des dépliants,
-       à hauteur de sa pastille de titre — et non au-dessus du flux, où
-       il débordait de l'encart. */
-    var host = null;
-    var first = section.querySelector('.food-card--photo, .hh-line--photo, .price-line--photo, .beer-row--photo');
-    if (first) host = first.closest('.panel');
-    if (!host) return;
     if (host.querySelector(':scope > .foldall')) return;
+    /* Un panneau imbriqué dans un autre laisserait deux boutons pour le
+       même contenu : seul le plus proche des dépliants le porte. */
+    var first = targets()[0];
+    if (first.closest('.panel') !== host) return;
 
     var bar = document.createElement('div');
     bar.className = 'foldall';
@@ -9537,7 +9538,7 @@ else sizeCoverMedallion();
     });
 
     /* Une fiche ouverte ou fermée à la main remet le bouton d'accord. */
-    section.addEventListener('click', function (e) {
+    host.addEventListener('click', function (e) {
       if (e.target.closest && e.target.closest('.foldall')) return;
       setTimeout(sync, 0);
     });
@@ -9561,7 +9562,7 @@ else sizeCoverMedallion();
       wrapBeer
     );
     Array.prototype.forEach.call(
-      document.querySelectorAll('.menu-section'),
+      document.querySelectorAll('.menu-section .panel'),
       mountFoldAll
     );
   }
