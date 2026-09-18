@@ -4099,24 +4099,12 @@ html:not(.carte-doc) #menus .offer-card {
   html:not(.carte-doc) .hh-list--cols {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
-  /* Fiches de plats : deux VRAIES colonnes, montées en JS.
-     Une grille raisonne par rangées : déplier « Entrecôte » creusait un
-     vide blanc sous « Bavette ». Les colonnes CSS (`columns`) règlent le
-     vide mais se rééquilibrent à chaque ouverture, si bien que les
-     fiches sautent d'une colonne à l'autre — pire encore.
-     Le script répartit donc les fiches dans deux conteneurs fixes, en
-     alternance, ce qui conserve l'ordre de lecture de gauche à droite.
-     Chaque colonne est une pile autonome : une fiche qui s'ouvre ne
-     pousse que celles du dessous, dans SA colonne, et rien ne bouge en
-     face. */
-  html:not(.carte-doc) .food-card-grid.is-split,
-  html:not(.carte-doc) .food-card-grid--wide.is-split {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  /* Les fiches reprennent une grille simple : la photo ne s'ouvre plus
+     dans la case mais en surimpression, donc rien ne pousse rien. */
+  html:not(.carte-doc) .food-card-grid,
+  html:not(.carte-doc) .food-card-grid--wide {
     align-items: start !important;
-  }
-  html:not(.carte-doc) .food-col {
-    display: flex; flex-direction: column; gap: 12px; min-width: 0;
+    grid-auto-rows: min-content !important;
   }
   /* Les autres grilles restent des grilles : leurs cartes ne se
      déplient pas, mais on leur retire l'étirement par cohérence. */
@@ -7444,6 +7432,118 @@ html:not(.carte-doc) .hh-line__photo:has(img.is-loaded) {
 html:not(.carte-doc) .food-card__photo:not(:has(img.is-loaded))::after,
 html:not(.carte-doc) .hh-line__photo:not(:has(img.is-loaded))::after { box-shadow:none; }
 
+/* ===== Visionneuse : la photo en grand, sans bousculer la carte =====
+   Sur écran large, ouvrir la photo DANS la fiche repoussait tout ce qui
+   suivait : la page se réorganisait sous le curseur et la colonne d'en
+   face se désalignait. La photo s'affiche donc par-dessus, centrée, et
+   la grille ne bouge plus d'un pixel. Sur mobile (≤ 720 px) le tiroir
+   vertical reste la bonne réponse : la lecture y est linéaire.
+   Fermeture : clic sur le fond, bouton, ou touche Échap. */
+html:not(.carte-doc) .lightbox {
+  position:fixed; inset:0; z-index:9500;
+  display:flex; align-items:center; justify-content:center;
+  padding:clamp(16px,4vw,48px);
+  background:rgba(24,12,32,.82);
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  opacity:0; visibility:hidden;
+  transition:opacity .28s ease, visibility .28s;
+}
+html:not(.carte-doc) .lightbox.is-open { opacity:1; visibility:visible; }
+html:not(.carte-doc) .lightbox__frame {
+  position:relative; display:flex; flex-direction:column;
+  max-width:min(1100px,100%); max-height:100%;
+  border-radius:20px; overflow:hidden; background:#fcfbf7;
+  border:1px solid rgba(216,178,87,.5);
+  box-shadow:0 30px 80px rgba(16,6,22,.5);
+  transform:scale(.965) translateY(8px);
+  transition:transform .28s cubic-bezier(.2,.8,.3,1);
+}
+html:not(.carte-doc) .lightbox.is-open .lightbox__frame {
+  transform:scale(1) translateY(0);
+}
+html:not(.carte-doc) .lightbox__img {
+  display:block; width:auto; height:auto;
+  max-width:100%; max-height:calc(100vh - 210px);
+  object-fit:contain; background:linear-gradient(140deg,#f3ece2,#e8dcc9);
+}
+/* Bandeau : le plat et son prix, pour garder le contexte de la carte. */
+html:not(.carte-doc) .lightbox__bar {
+  display:flex; align-items:baseline; justify-content:space-between;
+  gap:16px; padding:12px 18px 14px;
+  border-top:1px solid rgba(216,178,87,.34); background:#fff;
+}
+html:not(.carte-doc) .lightbox__title {
+  margin:0; font-family:'Cinzel',serif; font-size:1rem; font-weight:700;
+  color:var(--violet-900); text-transform:uppercase; letter-spacing:.03em;
+  line-height:1.25; min-width:0;
+}
+html:not(.carte-doc) .lightbox__price {
+  font-family:'Cinzel',serif; font-size:1.05rem; font-weight:800;
+  color:var(--gold-700); white-space:nowrap; flex:0 0 auto;
+}
+html:not(.carte-doc) .lightbox__close {
+  position:absolute; top:10px; right:10px; z-index:2;
+  appearance:none; -webkit-appearance:none; cursor:pointer;
+  width:40px; height:40px; border-radius:999px;
+  border:1px solid rgba(216,178,87,.5); background:rgba(255,255,255,.94);
+  display:inline-flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 14px rgba(36,16,46,.2);
+  transition:border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+html:not(.carte-doc) .lightbox__close::before,
+html:not(.carte-doc) .lightbox__close::after {
+  content:''; position:absolute; width:15px; height:1.8px;
+  background:var(--violet-900); border-radius:2px;
+}
+html:not(.carte-doc) .lightbox__close::before { transform:rotate(45deg); }
+html:not(.carte-doc) .lightbox__close::after  { transform:rotate(-45deg); }
+html:not(.carte-doc) .lightbox__close:hover {
+  border-color:rgba(216,178,87,.9); transform:scale(1.06);
+}
+html:not(.carte-doc) .lightbox__close:focus-visible {
+  outline:2px solid var(--gold-500); outline-offset:3px;
+}
+/* Navigation d'une assiette à l'autre sans repasser par la carte. */
+html:not(.carte-doc) .lightbox__nav {
+  position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+  appearance:none; -webkit-appearance:none; cursor:pointer;
+  width:44px; height:44px; border-radius:999px;
+  border:1px solid rgba(216,178,87,.5); background:rgba(255,255,255,.94);
+  display:inline-flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 14px rgba(36,16,46,.2);
+  transition:border-color .2s ease, transform .2s ease, opacity .2s ease;
+}
+html:not(.carte-doc) .lightbox__nav::before {
+  content:''; width:11px; height:11px;
+  border-right:2px solid var(--violet-900); border-bottom:2px solid var(--violet-900);
+}
+html:not(.carte-doc) .lightbox__nav--prev { left:10px; }
+html:not(.carte-doc) .lightbox__nav--next { right:10px; }
+html:not(.carte-doc) .lightbox__nav--prev::before { transform:rotate(135deg) translate(-2px,-2px); }
+html:not(.carte-doc) .lightbox__nav--next::before { transform:rotate(-45deg) translate(-2px,-2px); }
+html:not(.carte-doc) .lightbox__nav:hover {
+  border-color:rgba(216,178,87,.9); transform:translateY(-50%) scale(1.06);
+}
+html:not(.carte-doc) .lightbox__nav:focus-visible {
+  outline:2px solid var(--gold-500); outline-offset:3px;
+}
+html:not(.carte-doc) .lightbox__nav[hidden] { display:none; }
+/* Défilement de l'arrière-plan gelé pendant l'affichage. */
+html.lightbox-open, html.lightbox-open body { overflow:hidden; }
+@media (max-width:720px) {
+  html:not(.carte-doc) .lightbox { padding:12px; }
+  html:not(.carte-doc) .lightbox__img { max-height:calc(100vh - 170px); }
+  html:not(.carte-doc) .lightbox__nav { width:38px; height:38px; }
+}
+@media (orientation:landscape) and (max-height:560px) {
+  html:not(.carte-doc) .lightbox__img { max-height:calc(100vh - 120px); }
+  html:not(.carte-doc) .lightbox__bar { padding:8px 14px 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not(.carte-doc) .lightbox,
+  html:not(.carte-doc) .lightbox__frame { transition:none; }
+}
+
 /* ===== Tout déplier / tout replier =====
    Un double chevron doré posé en haut à droite de chaque onglet qui
    contient des dépliants. Même or, même trait que les chevrons des
@@ -9248,7 +9348,7 @@ else sizeCoverMedallion();
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609182240" defer></script>
+<script src="assets/js/i18n.js?v=202609190130" defer></script>
 
 <!-- ============ Assiettes en photo : les fiches deviennent des dépliants ============ -->
 <script>
@@ -9327,6 +9427,9 @@ else sizeCoverMedallion();
     card.classList.add('food-card--photo');
 
     btn.addEventListener('click', function () {
+      /* Écran large : la photo passe en surimpression, la grille ne
+         bouge pas. Écran étroit : tiroir, comme avant. */
+      if (lbActive()) { lbOpen(card); return; }
       var open = card.classList.toggle('food-card--open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (open && !img.src) img.src = img.getAttribute('data-src');
@@ -9392,6 +9495,9 @@ else sizeCoverMedallion();
     line.classList.add('hh-line--photo');
 
     btn.addEventListener('click', function () {
+      /* Écran large : la photo passe en surimpression, la grille ne
+         bouge pas. Écran étroit : tiroir, comme avant. */
+      if (lbActive()) { lbOpen(line); return; }
       var open = line.classList.toggle('hh-line--open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (open && !img.src) img.src = img.getAttribute('data-src');
@@ -9450,6 +9556,9 @@ else sizeCoverMedallion();
     line.classList.add('price-line--photo');
 
     btn.addEventListener('click', function () {
+      /* Écran large : la photo passe en surimpression, la grille ne
+         bouge pas. Écran étroit : tiroir, comme avant. */
+      if (lbActive()) { lbOpen(line); return; }
       var open = line.classList.toggle('price-line--open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (open && !img.src) img.src = img.getAttribute('data-src');
@@ -9524,6 +9633,9 @@ else sizeCoverMedallion();
     if (head) head.classList.add('beer-table__head--photo');
 
     btn.addEventListener('click', function () {
+      /* Écran large : la photo passe en surimpression, la grille ne
+         bouge pas. Écran étroit : tiroir, comme avant. */
+      if (lbActive()) { lbOpen(line); return; }
       var open = line.classList.toggle('beer-row--open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (open && !img.src) img.src = img.getAttribute('data-src');
@@ -9624,6 +9736,14 @@ else sizeCoverMedallion();
 
     btn.addEventListener('click', function () {
       markSeen();
+      /* Écran large : les tiroirs ne s'ouvrent plus, la commande lance
+         donc la galerie du panneau à la première assiette. Déplier des
+         tiroirs devenus invisibles n'aurait aucun effet perceptible. */
+      if (lbActive()) {
+        var first = targets()[0];
+        if (first) lbOpen(first);
+        return;
+      }
       var expand = btn.getAttribute('aria-pressed') !== 'true';
       targets().forEach(function (el) {
         var cls = el.classList.contains('food-card--photo') ? 'food-card--open'
@@ -9650,52 +9770,137 @@ else sizeCoverMedallion();
     });
   }
 
-  /* --- Deux colonnes indépendantes pour les fiches de plats ----------
-     Au-dessus de 720 px, les fiches sont réparties en alternance dans
-     deux piles distinctes : gauche, droite, gauche… L'ordre de lecture
-     est conservé, et chaque pile grandit pour son propre compte, donc
-     ouvrir une photo ne laisse plus de vide en face.
-     En dessous, on remet tout à plat : une seule colonne. */
-  var SPLIT_MQ = '(min-width: 720px)';
-
-  function splitGrid(grid) {
-    if (grid.classList.contains('is-split')) return;
-    var cards = Array.prototype.filter.call(grid.children, function (el) {
-      return el.classList && el.classList.contains('food-card');
-    });
-    if (cards.length < 2) return;
-    var colA = document.createElement('div');
-    var colB = document.createElement('div');
-    colA.className = 'food-col'; colB.className = 'food-col';
-    cards.forEach(function (card, n) {
-      (n % 2 === 0 ? colA : colB).appendChild(card);
-    });
-    grid.appendChild(colA);
-    grid.appendChild(colB);
-    grid.classList.add('is-split');
+  /* --- Visionneuse ----------------------------------------------------
+     Au-dessus de 720 px, la photo s'ouvre par-dessus la carte plutôt que
+     dans la fiche : la grille reste immobile, et le cliché s'affiche
+     enfin en grand. En dessous, on garde le tiroir : sur mobile la
+     lecture est linéaire et une surimpression serait pesante.
+     Le tiroir n'est jamais démonté — on choisit au moment du clic. */
+  var LB_MQ = '(min-width: 721px)';
+  function lbActive() {
+    return !!(window.matchMedia && window.matchMedia(LB_MQ).matches);
   }
 
-  function unsplitGrid(grid) {
-    if (!grid.classList.contains('is-split')) return;
-    var cols = grid.querySelectorAll(':scope > .food-col');
-    if (cols.length !== 2) return;
-    /* On réentrelace pour restituer l'ordre d'origine. */
-    var a = Array.prototype.slice.call(cols[0].children);
-    var b = Array.prototype.slice.call(cols[1].children);
-    for (var i = 0; i < Math.max(a.length, b.length); i++) {
-      if (a[i]) grid.appendChild(a[i]);
-      if (b[i]) grid.appendChild(b[i]);
-    }
-    cols[0].remove(); cols[1].remove();
-    grid.classList.remove('is-split');
+  var lb = null, lbImg, lbTitle, lbPrice, lbPrev, lbNext, lbLast, lbGroup, lbIndex;
+
+  function lbBuild() {
+    if (lb) return lb;
+    lb = document.createElement('div');
+    lb.className = 'lightbox';
+    lb.setAttribute('role', 'dialog');
+    lb.setAttribute('aria-modal', 'true');
+    lb.hidden = false;
+
+    var frame = document.createElement('div');
+    frame.className = 'lightbox__frame';
+
+    lbImg = document.createElement('img');
+    lbImg.className = 'lightbox__img';
+    lbImg.alt = '';
+
+    var bar = document.createElement('div');
+    bar.className = 'lightbox__bar';
+    lbTitle = document.createElement('p');
+    lbTitle.className = 'lightbox__title';
+    lbPrice = document.createElement('span');
+    lbPrice.className = 'lightbox__price';
+    bar.appendChild(lbTitle);
+    bar.appendChild(lbPrice);
+
+    var close = document.createElement('button');
+    close.type = 'button';
+    close.className = 'lightbox__close';
+    close.setAttribute('aria-label', 'Fermer');
+
+    lbPrev = document.createElement('button');
+    lbPrev.type = 'button';
+    lbPrev.className = 'lightbox__nav lightbox__nav--prev';
+    lbPrev.setAttribute('aria-label', 'Photo précédente');
+    lbNext = document.createElement('button');
+    lbNext.type = 'button';
+    lbNext.className = 'lightbox__nav lightbox__nav--next';
+    lbNext.setAttribute('aria-label', 'Photo suivante');
+
+    frame.appendChild(lbImg);
+    frame.appendChild(bar);
+    frame.appendChild(close);
+    frame.appendChild(lbPrev);
+    frame.appendChild(lbNext);
+    lb.appendChild(frame);
+    document.body.appendChild(lb);
+
+    close.addEventListener('click', lbClose);
+    /* Clic sur le fond — mais pas sur le cadre — referme. */
+    lb.addEventListener('click', function (e) {
+      if (!e.target.closest('.lightbox__frame')) lbClose();
+    });
+    lbPrev.addEventListener('click', function () { lbStep(-1); });
+    lbNext.addEventListener('click', function () { lbStep(1); });
+    document.addEventListener('keydown', function (e) {
+      if (!lb || !lb.classList.contains('is-open')) return;
+      if (e.key === 'Escape') { e.preventDefault(); lbClose(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); lbStep(-1); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); lbStep(1); }
+    });
+    return lb;
   }
 
-  function applySplit() {
-    var wide = window.matchMedia && window.matchMedia(SPLIT_MQ).matches;
-    Array.prototype.forEach.call(
-      document.querySelectorAll('#interior-menu .food-card-grid'),
-      function (grid) { wide ? splitGrid(grid) : unsplitGrid(grid); }
+  /* Les voisines du même panneau : on passe de l'une à l'autre sans
+     refermer. On ne garde que celles qui ont réellement une photo. */
+  function lbSiblings(el) {
+    var panel = el.closest('.panel') || document;
+    return Array.prototype.filter.call(
+      panel.querySelectorAll('[data-photo]'),
+      function (n) { return !n.classList.contains('food-card--nophoto'); }
     );
+  }
+
+  function lbInfo(el) {
+    var t = el.querySelector('.food-card__head h5, .hh-line__name, .price-line__name, .beer-row__name');
+    var p = el.querySelector('.food-card__head strong, .hh-line__price, .price-line__price, .beer-row__price');
+    return {
+      src: el.getAttribute('data-photo'),
+      title: t ? t.textContent.trim() : '',
+      price: p ? p.textContent.trim() : ''
+    };
+  }
+
+  function lbShow(i) {
+    if (!lbGroup || !lbGroup.length) return;
+    lbIndex = (i + lbGroup.length) % lbGroup.length;
+    var info = lbInfo(lbGroup[lbIndex]);
+    lbImg.src = info.src;
+    lbImg.alt = info.title;
+    lbTitle.textContent = info.title;
+    lbPrice.textContent = info.price;
+    var solo = lbGroup.length < 2;
+    lbPrev.hidden = solo;
+    lbNext.hidden = solo;
+  }
+
+  function lbStep(d) { lbShow(lbIndex + d); }
+
+  function lbOpen(el) {
+    lbBuild();
+    lbGroup = lbSiblings(el);
+    var at = lbGroup.indexOf(el);
+    lbShow(at < 0 ? 0 : at);
+    lbLast = document.activeElement;
+    document.documentElement.classList.add('lightbox-open');
+    lb.classList.add('is-open');
+    lb.querySelector('.lightbox__close').focus();
+  }
+
+  function lbClose() {
+    if (!lb) return;
+    lb.classList.remove('is-open');
+    document.documentElement.classList.remove('lightbox-open');
+    /* La photo est libérée après la transition, pour éviter un cadre
+       vide pendant la disparition. */
+    setTimeout(function () {
+      if (!lb.classList.contains('is-open')) lbImg.removeAttribute('src');
+    }, 300);
+    if (lbLast && lbLast.focus) lbLast.focus();
   }
 
   function init() {
@@ -9715,16 +9920,6 @@ else sizeCoverMedallion();
       document.querySelectorAll('.beer-row[data-photo]'),
       wrapBeer
     );
-    /* Avant de monter les commandes : les fiches doivent déjà être dans
-       leur colonne, sinon le bouton chercherait ses cibles au mauvais
-       niveau. */
-    applySplit();
-    if (window.matchMedia) {
-      var mq = window.matchMedia(SPLIT_MQ);
-      var onChange = function () { applySplit(); };
-      if (mq.addEventListener) mq.addEventListener('change', onChange);
-      else if (mq.addListener) mq.addListener(onChange);
-    }
     Array.prototype.forEach.call(
       document.querySelectorAll('.menu-section .panel'),
       mountFoldAll

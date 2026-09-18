@@ -25,6 +25,9 @@
   var STORE_KEY = 'lcg-lang';
   var DICTS = {
     en: {
+      "Fermer": "Close",
+      "Photo précédente": "Previous photo",
+      "Photo suivante": "Next photo",
       "Tous les jours": "Every day",
       "07h00 — 02h00 en continu": "7 AM — 2 AM non-stop",
       "12h00 — 00h00": "12 PM — 12 AM",
@@ -458,6 +461,9 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ NET PRICES IN EUROS • SERVICE INCLUDED ✦"
     },
     es: {
+      "Fermer": "Cerrar",
+      "Photo précédente": "Foto anterior",
+      "Photo suivante": "Foto siguiente",
       "Tous les jours": "Todos los días",
       "07h00 — 02h00 en continu": "07:00 — 02:00 sin interrupción",
       "12h00 — 00h00": "12:00 — 00:00",
@@ -891,6 +897,9 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     de: {
+      "Fermer": "Schließen",
+      "Photo précédente": "Vorheriges Foto",
+      "Photo suivante": "Nächstes Foto",
       "Tous les jours": "Täglich",
       "07h00 — 02h00 en continu": "07:00 — 02:00 durchgehend",
       "12h00 — 00h00": "12:00 — 00:00",
@@ -1324,6 +1333,9 @@
       "MÉTRO GAMBETTA": "U-Bahnhof Gambetta"
     },
     it: {
+      "Fermer": "Chiudi",
+      "Photo précédente": "Foto precedente",
+      "Photo suivante": "Foto successiva",
       "Tous les jours": "Tutti i giorni",
       "07h00 — 02h00 en continu": "07:00 — 02:00 orario continuato",
       "12h00 — 00h00": "12:00 — 00:00",
@@ -1757,6 +1769,9 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     pt: {
+      "Fermer": "Fechar",
+      "Photo précédente": "Foto anterior",
+      "Photo suivante": "Foto seguinte",
       "Tous les jours": "Todos os dias",
       "07h00 — 02h00 en continu": "07h00 — 02h00 sem interrupção",
       "12h00 — 00h00": "12h00 — 00h00",
@@ -2190,6 +2205,9 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     nl: {
+      "Fermer": "Sluiten",
+      "Photo précédente": "Vorige foto",
+      "Photo suivante": "Volgende foto",
       "Tous les jours": "Elke dag",
       "07h00 — 02h00 en continu": "07.00 — 02.00 doorlopend",
       "12h00 — 00h00": "12.00 — 00.00",
@@ -2624,6 +2642,9 @@
     },
   
     ar: {
+      "Fermer": "إغلاق",
+      "Photo précédente": "الصورة السابقة",
+      "Photo suivante": "الصورة التالية",
       "Tous les jours": "كل يوم",
       "07h00 — 02h00 en continu": "٧ ص — ٢ ص دون انقطاع",
       "12h00 — 00h00": "١٢ ظ — ١٢ ص",
@@ -3075,6 +3096,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ساندويتش جمبون وجبنة مع بيضة مقلية"
     },
     zh: {
+      "Fermer": "关闭",
+      "Photo précédente": "上一张",
+      "Photo suivante": "下一张",
       "Tous les jours": "每天",
       "07h00 — 02h00 en continu": "07:00 — 02:00 全天营业",
       "12h00 — 00h00": "12:00 — 00:00",
@@ -3526,6 +3550,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "烤火腿奶酪三明治，上加煎蛋"
     },
     uk: {
+      "Fermer": "Закрити",
+      "Photo précédente": "Попереднє фото",
+      "Photo suivante": "Наступне фото",
       "Tous les jours": "Щодня",
       "07h00 — 02h00 en continu": "07:00 — 02:00 без перерви",
       "12h00 — 00h00": "12:00 — 00:00",
@@ -3977,6 +4004,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "Підсмажений сендвіч із шинкою та сиром, зверху яєчня"
     },
     ja: {
+      "Fermer": "閉じる",
+      "Photo précédente": "前の写真",
+      "Photo suivante": "次の写真",
       "Tous les jours": "毎日",
       "07h00 — 02h00 en continu": "7時 — 翌2時 通し営業",
       "12h00 — 00h00": "12時 — 24時",
@@ -4428,6 +4458,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ハムとチーズのグリルサンド、ベシャメルソース、目玉焼きのせ",
     },
     ko: {
+      "Fermer": "닫기",
+      "Photo précédente": "이전 사진",
+      "Photo suivante": "다음 사진",
       "Tous les jours": "매일",
       "07h00 — 02h00 en continu": "07시 — 02시 연중무휴",
       "12h00 — 00h00": "12시 — 24시",
@@ -4879,6 +4912,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "구운 햄과 치즈 샌드위치, 베샤멜 소스, 맨 위에 프라이 에그",
     },
     pl: {
+      "Fermer": "Zamknij",
+      "Photo précédente": "Poprzednie zdjęcie",
+      "Photo suivante": "Następne zdjęcie",
       "Tous les jours": "Codziennie",
       "07h00 — 02h00 en continu": "07:00 — 02:00 bez przerwy",
       "12h00 — 00h00": "12:00 — 00:00",
@@ -5312,6 +5348,9 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ CENY W EURO • SERWIS WLICZONY ✦",
     },
     tr: {
+      "Fermer": "Kapat",
+      "Photo précédente": "Önceki fotoğraf",
+      "Photo suivante": "Sonraki fotoğraf",
       "Tous les jours": "Her gün",
       "07h00 — 02h00 en continu": "07.00 — 02.00 kesintisiz",
       "12h00 — 00h00": "12.00 — 00.00",
@@ -5745,6 +5784,9 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ EURO CİNSİNDEN NET FİYATLAR • SERVİS DAHİL ✦",
     },
     hi: {
+      "Fermer": "बंद करें",
+      "Photo précédente": "पिछली तस्वीर",
+      "Photo suivante": "अगली तस्वीर",
       "Tous les jours": "प्रतिदिन",
       "07h00 — 02h00 en continu": "सुबह 7 — रात 2 लगातार",
       "12h00 — 00h00": "दोपहर 12 — रात 12",
@@ -6198,6 +6240,11 @@
   };
   /* Attributs traduits (title, aria-label) : sélecteur, attribut, valeur française */
   var ATTRS = [
+    /* Visionneuse : construite par script, donc absente du DOM initial.
+       Ses libellés sont déclarés ici pour être traduits comme le reste. */
+    ['.lightbox__close', 'aria-label', 'Fermer'],
+    ['.lightbox__nav--prev', 'aria-label', 'Photo précédente'],
+    ['.lightbox__nav--next', 'aria-label', 'Photo suivante'],
     ['#cover-section .medallion-frame', 'title', 'Voir la carte'],
     ['#cover-section .cover-brand--menu-leader', 'title', 'Voir la carte'],
     ['#menu-nav-hint-start', 'aria-label', 'Sections précédentes'],
