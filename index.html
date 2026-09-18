@@ -7470,6 +7470,42 @@ html:not(.carte-doc) .foldall__ico::after {
 html:not(.carte-doc) .foldall__ico::before { top:-2px; }
 html:not(.carte-doc) .foldall__ico::after  { top:3px; }
 html:not(.carte-doc) .foldall__btn[aria-pressed="true"] .foldall__ico { transform:rotate(180deg); }
+
+/* ===== Indice d'amorce : montrer le geste attendu =====
+   Le bouton est discret par choix, mais rien n'indiquait qu'il fallait
+   le toucher. Le double chevron descend donc trois fois, doucement,
+   comme s'il tirait le contenu vers le bas — c'est exactement le geste
+   qu'il déclenche. Trois cycles puis arrêt définitif : une animation
+   perpétuelle deviendrait un clignotement agaçant sur une carte qu'on
+   parcourt longuement.
+   L'indice ne se joue que sur les boutons encore jamais utilisés
+   (.foldall--hint, retiré au premier clic) et jamais sur un panneau
+   déjà déplié. */
+@keyframes foldall-nudge {
+  0%, 62%, 100% { transform:translateY(0); }
+  74%           { transform:translateY(3px); }
+  86%           { transform:translateY(0); }
+}
+@keyframes foldall-glow {
+  0%, 62%, 100% { box-shadow:0 4px 12px rgba(36,16,46,.07);
+                  border-color:rgba(216,178,87,.42); }
+  74%           { box-shadow:0 6px 18px rgba(191,149,63,.28);
+                  border-color:rgba(216,178,87,.9); }
+}
+html:not(.carte-doc) .foldall--hint .foldall__btn {
+  animation:foldall-glow 2.6s ease-in-out 3;
+}
+html:not(.carte-doc) .foldall--hint .foldall__ico {
+  animation:foldall-nudge 2.6s ease-in-out 3;
+}
+/* Le survol, le focus ou un panneau ouvert coupent l'indice sur-le-champ :
+   l'utilisateur a trouvé, l'animation n'a plus d'objet. */
+html:not(.carte-doc) .foldall--hint .foldall__btn:hover,
+html:not(.carte-doc) .foldall--hint .foldall__btn:focus-visible,
+html:not(.carte-doc) .foldall--hint .foldall__btn:hover .foldall__ico,
+html:not(.carte-doc) .foldall--hint .foldall__btn:focus-visible .foldall__ico {
+  animation:none;
+}
 /* La pastille garde sa place au centre : gouttière symétrique, calculée
    sur la largeur réelle du bouton (libellé compris). */
 
@@ -7506,6 +7542,10 @@ html:not(.carte-doc) .foldall__btn[aria-pressed="true"] .foldall__ico { transfor
   html:not(.carte-doc) .foldall__ico,
   html:not(.carte-doc) .food-card--nophoto > .food-card__toggle,
   html:not(.carte-doc) .hh-line--nophoto > .hh-line__toggle { transition:none; }
+  /* Mouvement refusé : l'indice passe par la bordure, pas par le geste. */
+  html:not(.carte-doc) .foldall--hint .foldall__btn,
+  html:not(.carte-doc) .foldall--hint .foldall__ico { animation:none !important; }
+  html:not(.carte-doc) .foldall--hint .foldall__btn { border-color:rgba(216,178,87,.9); }
 }
 
 /* Vins : pas de photo pour l'instant, donc pas de dépliant — mais le
@@ -9520,7 +9560,48 @@ else sizeCoverMedallion();
       btn.setAttribute('aria-label', btn.title);
     }
 
+    /* --- Indice d'amorce -------------------------------------------
+       Le bouton se signale quand il entre à l'écran, et seulement là :
+       l'animer hors champ la gaspillerait. Une fois que l'utilisateur a
+       actionné un dépliant — ici ou dans une fiche — le geste est
+       acquis : l'indice ne se rejoue plus, pour toute la session. */
+    var HINT_KEY = 'lcg-foldall-hint';
+    function hintSeen() {
+      try { return sessionStorage.getItem(HINT_KEY) === '1'; } catch (e) { return false; }
+    }
+    function markSeen() {
+      try { sessionStorage.setItem(HINT_KEY, '1'); } catch (e) {}
+      document.querySelectorAll('.foldall--hint').forEach(function (el) {
+        el.classList.remove('foldall--hint');
+      });
+    }
+    if (!hintSeen()) {
+      if (typeof IntersectionObserver === 'function') {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            io.unobserve(en.target);
+            /* Un panneau déjà déplié n'a rien à expliquer. */
+            if (hintSeen() || targets().some(function (el) {
+              return el.classList.contains('food-card--open') ||
+                     el.classList.contains('hh-line--open') ||
+                     el.classList.contains('price-line--open') ||
+                     el.classList.contains('beer-row--open');
+            })) return;
+            bar.classList.add('foldall--hint');
+            /* L'indice s'éteint de lui-même après ses trois cycles. */
+            setTimeout(function () { bar.classList.remove('foldall--hint'); }, 8200);
+          });
+        }, { threshold: 0.9 });
+        io.observe(bar);
+      } else {
+        bar.classList.add('foldall--hint');
+        setTimeout(function () { bar.classList.remove('foldall--hint'); }, 8200);
+      }
+    }
+
     btn.addEventListener('click', function () {
+      markSeen();
       var expand = btn.getAttribute('aria-pressed') !== 'true';
       targets().forEach(function (el) {
         var cls = el.classList.contains('food-card--photo') ? 'food-card--open'
@@ -9537,9 +9618,11 @@ else sizeCoverMedallion();
       sync();
     });
 
-    /* Une fiche ouverte ou fermée à la main remet le bouton d'accord. */
+    /* Une fiche ouverte ou fermée à la main remet le bouton d'accord —
+       et prouve que le geste est compris : l'indice s'arrête partout. */
     host.addEventListener('click', function (e) {
       if (e.target.closest && e.target.closest('.foldall')) return;
+      markSeen();
       setTimeout(sync, 0);
     });
   }
