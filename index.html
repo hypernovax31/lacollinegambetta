@@ -3052,6 +3052,48 @@ html:not(.carte-doc) #menus .choice-card h5 em {
 }
 .lang-btn { cursor: pointer; }
 
+/* ===== Socle du sélecteur de langue =====
+   Le globe était posé en absolu DANS .top-controls, or ce bandeau est
+   masqué sur la page de garde : le choix de langue n'y était donc pas
+   accessible. Il vit désormais dans un socle fixe, au même endroit à
+   l'écran (en haut à droite) sur la page de garde, dans la carte et sur
+   la page de réservation. Le socle ne capte pas les clics ; seuls le
+   bouton et son menu le font. */
+.lang-dock {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1003;
+  width: 66px;
+  height: 62px;
+  pointer-events: none;
+}
+.lang-dock > * { pointer-events: auto; }
+.lang-dock .lang-btn {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  transform: none;
+}
+/* Sur la page de garde, le fond est sombre et sans bandeau : le globe
+   se pose sur un disque discret pour rester lisible par-dessus le
+   dégradé, sans faire tache. */
+body:has(#cover-section:not([style*="display: none"])) .lang-dock .lang-btn {
+  background: rgba(36, 16, 46, .38);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.lang-dock .lang-menu {
+  position: absolute;
+  top: 60px;
+  right: 12px;
+}
+@media (max-width: 720px) {
+  .lang-dock { width: 58px; height: 58px; }
+  .lang-dock .lang-btn { right: 8px; top: 9px; }
+  .lang-dock .lang-menu { top: 56px; right: 8px; }
+}
+
 /* ===== Écritures non latines : fontes dédiées, mappées dans les familles
    existantes du site — aucune règle à modifier. Chaque @font-face
    déclare la famille 'Cinzel' (ou 'Montserrat') avec un unicode-range
@@ -7269,13 +7311,11 @@ html:not(.carte-doc) .hh-line__photo::after {
 </style>
 </head>
 <body>
-  <canvas id="xmas-snow" aria-hidden="true"></canvas>
-  <div id="xmas-sleigh" aria-hidden="true"><span class="trail"></span><img src="assets/noel/sleigh.svg" alt="" draggable="false"></div>
-  <div class="top-controls" style="display:none">
-    <div class="top-controls__nav">
-      <button class="control-btn active" id="btn-show-cover" onclick="showView('cover')"><span class="star-gold">✦</span> Page de Garde</button>
-      <button class="control-btn" id="btn-show-menu" onclick="showView('menu')">📖 Menu & Carte</button>
-    </div>
+  <!-- Sélecteur de langue : un seul exemplaire pour tout le site, posé
+       en socle fixe pour rester accessible sur la page de garde comme
+       dans la carte (le bandeau .top-controls, lui, disparaît sur la
+       page de garde). -->
+  <div class="lang-dock">
     <button type="button" class="lang-btn" id="lang-btn" title="Langue / Language" aria-label="Langue / Language" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
         <circle cx="12" cy="12" r="8.7"/>
@@ -7348,6 +7388,15 @@ html:not(.carte-doc) .hh-line__photo::after {
         </button>
       </div>
     </div>
+  </div>
+  <canvas id="xmas-snow" aria-hidden="true"></canvas>
+  <div id="xmas-sleigh" aria-hidden="true"><span class="trail"></span><img src="assets/noel/sleigh.svg" alt="" draggable="false"></div>
+  <div class="top-controls" style="display:none">
+    <div class="top-controls__nav">
+      <button class="control-btn active" id="btn-show-cover" onclick="showView('cover')"><span class="star-gold">✦</span> Page de Garde</button>
+      <button class="control-btn" id="btn-show-menu" onclick="showView('menu')">📖 Menu & Carte</button>
+    </div>
+    
   </div>
 
   <section id="cover-section" class="cover-enter">

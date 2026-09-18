@@ -513,6 +513,33 @@ html[lang="ja"] .panel__subtitle.qty { font-family:'MontserratJP','Montserrat', 
 html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', system-ui, sans-serif; }
 
 /* ===== Sélecteur de langue (repris du site) ===== */
+.lang-dock {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1003;
+  width: 66px;
+  height: 62px;
+  pointer-events: none;
+}
+.lang-dock > * { pointer-events: auto; }
+.lang-dock .lang-btn {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  transform: none;
+}
+.lang-dock .lang-menu {
+  position: absolute;
+  top: 60px;
+  right: 12px;
+}
+@media (max-width: 720px) {
+.lang-dock { width: 58px; height: 58px; }
+.lang-dock .lang-btn { right: 8px; top: 9px; }
+.lang-dock .lang-menu { top: 56px; right: 8px; }
+}
+
 .lang-btn {
   position: absolute;
   right: 12px;
@@ -696,8 +723,36 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 .book-back { position:relative; padding:10px 64px; display:flex; justify-content:center; background:#592e6f; border-bottom:1px solid rgba(216,178,87,.45); box-shadow:0 4px 15px rgba(0,0,0,.4); }
 @media (max-width: 560px) { .book-back { padding:10px 56px; } }
 .book-back .contact-link { width:min(100%,360px); }
-.book-main { flex:1 0 auto; }
-.container { margin-bottom:24px; }
+/* ===== Rythme vertical =====
+   Le corps de page était une suite d'éléments aux marges chacune
+   réglée dans son coin : deux panneaux qui se touchaient, un bouton de
+   retour collé au dernier encart, et tout l'espace restant rejeté en bas
+   quand la fenêtre est haute. On pose ici UNE échelle d'espacement, et
+   on laisse la grille la distribuer.
+
+   --gap-bloc  : entre deux panneaux
+   --gap-inter : entre un panneau et un élément isolé (bouton de retour)
+   Les deux respirent avec la hauteur de la fenêtre (clamp sur vh) :
+   serrés sur un téléphone, généreux sur un grand écran, jamais
+   arbitraires. */
+:root { --gap-bloc: clamp(16px, 2.4vh, 26px); --gap-inter: clamp(14px, 2vh, 22px); }
+.book-main { flex:1 0 auto; display:flex; flex-direction:column; }
+/* La colonne occupe la hauteur disponible et centre son contenu quand il
+   y a du mou : sur une grande fenêtre, le formulaire n'est plus tassé en
+   haut avec un vide sous le pied de page. justify-content:center ne
+   déborde pas — au-delà, la page défile normalement. */
+#reservation-page .container {
+  display:flex;
+  flex-direction:column;
+  gap:var(--gap-bloc);
+  flex:1 0 auto;
+  justify-content:center;
+  margin:var(--gap-bloc) auto;
+}
+/* Le bouton de retour est un élément isolé : il se détache des panneaux
+   d'un cran plus serré que l'écart entre deux panneaux, pour qu'on lise
+   « fin de page » et non « troisième bloc ». */
+#reservation-page .book-back-bottom { margin:calc(var(--gap-inter) - var(--gap-bloc)) 0 0; }
 
 .form-grid { display:grid; grid-template-columns:1fr; gap:14px; }
 @media (min-width:680px) {
@@ -729,7 +784,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 
 /* Le bouton d'envoi est la pilule dorée des onglets actifs du site
    (.nav-btn.active) : même dégradé, même bordure, même casse. */
-.form-actions { margin-top:20px; display:grid; gap:10px; justify-items:center; }
+.form-actions { margin-top:clamp(16px, 2.2vh, 24px); display:grid; gap:10px; justify-items:center; }
 .btn-book {
   background:linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%);
   color:var(--violet-950); border:1px solid #fcf6ba; border-radius:999px;
@@ -770,11 +825,11 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
    ombre douce. On peut s'y déplacer et zoomer ; le bouton en haut à
    droite ramène la vue sur le restaurant. */
 .map-wrap {
-  position:relative; margin:4px 0 12px; border-radius:18px; overflow:hidden;
+  position:relative; margin:clamp(10px, 1.6vh, 16px) 0 clamp(10px, 1.6vh, 14px); border-radius:18px; overflow:hidden;
   border:1px solid rgba(216,178,87,.5); box-shadow:var(--shadow);
-  background:#efe9dd;
+  background:#f4f4f2;
 }
-#book-map { width:100%; height:clamp(240px, 42vw, 360px); background:#efe9dd; }
+#book-map { width:100%; height:clamp(240px, 42vw, 360px); background:#f4f4f2; }
 .map-fallback, .map-wrap .map-error {
   margin:0; padding:18px; text-align:center; color:var(--violet-900);
   font-family:'Cinzel',serif; letter-spacing:.06em;
@@ -782,26 +837,24 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 /* Pastille de recentrage : la pilule dorée du site, en rond. */
 .map-recenter {
   position:absolute; right:10px; top:10px; z-index:500;
-  width:42px; height:42px; padding:0; border-radius:999px; cursor:pointer;
+  width:40px; height:40px; padding:0; border-radius:999px; cursor:pointer;
   display:inline-flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg,#bf953f 0%,#fcf6ba 30%,#d8b257 60%,#fef9db 100%);
-  color:var(--violet-950); border:1px solid #fcf6ba;
-  box-shadow:0 6px 16px rgba(36,16,46,.28); transition:.2s ease;
+  background:#fff;
+  color:var(--violet-800); border:1px solid rgba(36,16,46,.12);
+  box-shadow:0 2px 8px rgba(36,16,46,.16); transition:.18s ease;
 }
-.map-recenter:hover { filter:brightness(1.06); }
+.map-recenter:hover { background:#fff; color:var(--violet-950); border-color:var(--gold-500); box-shadow:0 4px 12px rgba(36,16,46,.2); }
 .map-recenter:active { transform:translateY(1px); }
 .map-recenter svg { width:19px; height:19px; }
 /* Épingle du restaurant, dessinée plutôt qu'en image. */
+/* Épingle : un simple disque violet cerclé de blanc, avec un halo doux.
+   Sur un fond aussi clair, la goutte dorée faisait ornement ; un point
+   net se lit mieux et laisse la carte respirer. */
 .map-pin {
-  width:34px; height:34px; border-radius:50% 50% 50% 0;
-  background:linear-gradient(135deg,#7a3f96,#592e6f);
-  border:2px solid var(--gold-500); transform:rotate(-45deg);
-  box-shadow:0 6px 16px rgba(36,16,46,.4);
-  display:flex; align-items:center; justify-content:center;
-}
-.map-pin::after {
-  content:'✦'; transform:rotate(45deg); color:var(--gold-300);
-  font-size:15px; line-height:1;
+  width:20px; height:20px; border-radius:50%;
+  background:var(--violet-800);
+  border:3px solid #fff;
+  box-shadow:0 0 0 1px rgba(36,16,46,.18), 0 3px 10px rgba(36,16,46,.3);
 }
 .map-foot {
   display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
@@ -812,6 +865,17 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   text-transform:uppercase; color:var(--violet-900); text-align:center;
 }
 .info-link--route { flex:0 0 auto; }
+/* Contrôles de zoom : mêmes codes que le bouton de recentrage — blanc,
+   discret, sans le bleu par défaut de Leaflet. */
+.leaflet-control-zoom { border:0 !important; box-shadow:0 2px 8px rgba(36,16,46,.16) !important; }
+.leaflet-control-zoom a {
+  background:#fff !important; color:var(--violet-800) !important;
+  border-color:rgba(36,16,46,.1) !important; font-weight:600;
+}
+.leaflet-control-zoom a:hover { background:#fffaea !important; color:var(--violet-950) !important; }
+.leaflet-container { font-family:'Montserrat',sans-serif; background:#f4f4f2; }
+.leaflet-control-attribution a { color:var(--violet-800) !important; }
+
 /* Infobulle Leaflet aux couleurs de la maison. */
 .leaflet-popup-content-wrap {
   border-radius:14px !important; border:1px solid var(--gold-500);
@@ -828,7 +892,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 .leaflet-control-attribution { font-size:9px !important; }
 
 /* Retour à la carte, en bas de page : la pilule des liens de contact. */
-.book-back-bottom { display:flex; justify-content:center; margin:4px 0 8px; }
+.book-back-bottom { display:flex; justify-content:center; }
 .book-back-bottom .contact-link--back {
   width:min(100%,360px); color:var(--violet-900);
   border-color:rgba(216,178,87,.6); background:#fff;
@@ -839,7 +903,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   background:#fffaea; border-color:var(--gold-500); color:var(--violet-900);
 }
 
-.hours { margin:16px 0 0; display:grid; gap:2px; }
+.hours { margin:clamp(12px, 1.8vh, 18px) 0 0; display:grid; gap:2px; }
 .hours__row {
   display:flex; justify-content:space-between; align-items:baseline; gap:16px;
   padding:8px 4px; border-bottom:1px dotted rgba(156,122,45,.38);
@@ -850,13 +914,8 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 </style>
 </head>
 <body>
-
-<div class="book-back">
-  <a class="contact-link" href="index.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
-    Retour à la carte
-  </a>
-  <button type="button" class="lang-btn" id="lang-btn" title="Langue / Language" aria-label="Langue / Language" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
+<div class="lang-dock">
+    <button type="button" class="lang-btn" id="lang-btn" title="Langue / Language" aria-label="Langue / Language" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
         <circle cx="12" cy="12" r="8.7"/>
         <path d="M3.3 12h17.4"/>
@@ -928,6 +987,14 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
         </button>
       </div>
     </div>
+  </div>
+
+<div class="book-back">
+  <a class="contact-link" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    Retour à la carte
+  </a>
+  
 </div>
 
 <div id="reservation-page">
@@ -1167,17 +1234,25 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   el.addEventListener('mouseenter', function () { map.scrollWheelZoom.enable(); });
   el.addEventListener('mouseleave', function () { map.scrollWheelZoom.disable(); });
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
+  /* Fond « Positron » de CARTO plutôt que la tuile OSM standard : gris
+     très clair, sans aplats de couleur ni pictogrammes commerciaux, la
+     typographie seule porte l'information. C'est le fond le plus sobre
+     disponible librement, et le seul qui s'accorde au crème et à l'or du
+     site — la tuile OSM, bariolée de vert et d'ocre, jurait dans
+     l'encart. Version @2x pour rester net sur écran Retina. */
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd',
+    maxZoom: 20,
+    detectRetina: true,
+    attribution: '© OpenStreetMap · © CARTO'
   }).addTo(map);
 
   var pin = L.divIcon({
     className: '',
     html: '<div class="map-pin"></div>',
-    iconSize: [34, 34],
-    iconAnchor: [17, 34],
-    popupAnchor: [0, -32]
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+    popupAnchor: [0, -14]
   });
   L.marker([LAT, LON], { icon: pin, title: 'La Colline Gambetta' })
     .addTo(map)
