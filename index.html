@@ -87,8 +87,13 @@ html:not(.carte-doc) .container {
 .panel__title { margin:0; display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:50px; max-width:100%; padding:10px 22px; border-radius:999px; background:#592e6f; color:#fff; border:1px solid var(--gold-500); font-family:'Cinzel',serif; font-size:clamp(1rem,1.8vw,1.24rem); letter-spacing:.12em; text-transform:uppercase; white-space:normal; text-align:center; line-height:1.2; }
 .panel__title::before, .panel__title::after { content:'✦'; color:var(--gold-500); font-size:.72em; }
 .panel__subtitle { margin:0; color:var(--muted); font-style:italic; font-size:.9rem; }
-.food-card-grid { display:grid; grid-template-columns:1fr; gap:12px; }
-.food-card { display:flex; flex-direction:column; gap:8px; padding:12px; border:1px solid rgba(216,178,87,.34); border-radius:18px; background:#fff; min-height:auto; }
+.food-card-grid { display:grid; grid-template-columns:1fr; gap:12px;
+  /* Sans cela, les cases d'une même rangée s'étirent à la hauteur de la
+     plus haute (`stretch` par défaut) : déplier « Bavette » faisait
+     grandir « Entrecôte » en vis-à-vis, qui semblait s'ouvrir sur du
+     vide. Chaque carte garde désormais sa propre hauteur. */
+  align-items:start; align-content:start; grid-auto-rows:min-content; }
+.food-card { display:flex; flex-direction:column; gap:8px; padding:12px; border:1px solid rgba(216,178,87,.34); border-radius:18px; background:#fff; min-height:auto; align-self:start; height:auto; }
 .food-card__head { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; align-items:baseline; }
 .food-card__head h5 { margin:0; font-family:'Cinzel',serif; font-size:1rem; color:var(--violet-900); text-transform:uppercase; letter-spacing:.03em; line-height:1.25; }
 .food-card__head strong { font-family:'Cinzel',serif; font-size:1.36rem; color:var(--gold-700); white-space:nowrap; line-height:1; }
@@ -3342,8 +3347,19 @@ html[lang="hi"][lang="hi"]:is(*, #lcg-hi-ls):is(*, #lcg-hi-ls2) * { letter-spaci
 .cover-links,
 .footer-links {
   display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  width: min(100%, 920px);
+  /* Quatre boutons — réservation, Instagram, téléphone, courriel — pour
+     trois colonnes : le dernier retombait seul sur une seconde ligne,
+     désaligné. `auto-fit` les répartit sur une seule ligne tant que la
+     largeur le permet, et les replie d'elle-même quand elle manque. */
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  width: min(100%, 1180px);
+  gap: 10px;
+  justify-items: stretch;
+}
+.cover-links {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  width: min(100%, 1180px);
   gap: 10px;
   justify-items: stretch;
 }
@@ -3381,11 +3397,14 @@ html[lang="hi"][lang="hi"]:is(*, #lcg-hi-ls):is(*, #lcg-hi-ls2) * { letter-spaci
 }
 
 /* Boutons empilés dès que la largeur ne permet plus des textes lisibles. */
+/* Empilage sur petit écran. Ce bloc doit rester APRÈS la règle générale
+   ci-dessus : à spécificité égale, c'est le dernier qui l'emporte, et
+   l'ancien bloc @640px du haut de feuille se faisait écraser. */
 @media (max-width: 640px) {
   .cover-links,
   .footer-links {
-    grid-template-columns: 1fr;
-    width: 100%;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
   }
 }
 
@@ -4080,6 +4099,23 @@ html:not(.carte-doc) #menus .offer-card {
   html:not(.carte-doc) .price-list--cols,
   html:not(.carte-doc) .hh-list--cols {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  /* Deux colonnes : chaque case doit garder SA hauteur. Par défaut une
+     grille étire toutes les cases d'une rangée à la plus haute, si bien
+     que déplier une fiche faisait grandir sa voisine en vis-à-vis —
+     « Bavette » ouvrait « Entrecôte » sur du vide. Les colonnes de prix
+     sont en display:contents : ce sont les fiches elles-mêmes qui sont
+     les cases, d'où l'ancrage posé aussi sur elles. */
+  html:not(.carte-doc) .food-card-grid,
+  html:not(.carte-doc) .food-card-grid--wide,
+  html:not(.carte-doc) .offer-grid,
+  html:not(.carte-doc) .special-grid {
+    align-items: start !important; align-content: start !important;
+    grid-auto-rows: min-content !important;
+  }
+  html:not(.carte-doc) .food-card-grid > .food-card,
+  html:not(.carte-doc) .food-card-grid--wide > .food-card {
+    align-self: start !important; height: auto !important;
   }
   html:not(.carte-doc) .price-list--cols,
   html:not(.carte-doc) .hh-list--cols {
@@ -7493,18 +7529,16 @@ html:not(.carte-doc) .foldall__btn[aria-pressed="true"] .foldall__ico { transfor
                   border-color:rgba(216,178,87,.9); }
 }
 html:not(.carte-doc) .foldall--hint .foldall__btn {
-  animation:foldall-glow 2.6s ease-in-out 3;
+  animation:foldall-glow 2.6s ease-in-out infinite;
 }
 html:not(.carte-doc) .foldall--hint .foldall__ico {
-  animation:foldall-nudge 2.6s ease-in-out 3;
+  animation:foldall-nudge 2.6s ease-in-out infinite;
 }
-/* Le survol, le focus ou un panneau ouvert coupent l'indice sur-le-champ :
-   l'utilisateur a trouvé, l'animation n'a plus d'objet. */
+/* Le survol met l'indice en pause sans l'éteindre : la souris est
+   au-dessus, le geste reste à faire. Seul le clic y met fin. */
 html:not(.carte-doc) .foldall--hint .foldall__btn:hover,
-html:not(.carte-doc) .foldall--hint .foldall__btn:focus-visible,
-html:not(.carte-doc) .foldall--hint .foldall__btn:hover .foldall__ico,
-html:not(.carte-doc) .foldall--hint .foldall__btn:focus-visible .foldall__ico {
-  animation:none;
+html:not(.carte-doc) .foldall--hint .foldall__btn:hover .foldall__ico {
+  animation-play-state:paused;
 }
 /* La pastille garde sa place au centre : gouttière symétrique, calculée
    sur la largeur réelle du bouton (libellé compris). */
@@ -9588,15 +9622,13 @@ else sizeCoverMedallion();
                      el.classList.contains('price-line--open') ||
                      el.classList.contains('beer-row--open');
             })) return;
+            /* L'indice tourne sans fin : il ne s'arrête qu'au clic. */
             bar.classList.add('foldall--hint');
-            /* L'indice s'éteint de lui-même après ses trois cycles. */
-            setTimeout(function () { bar.classList.remove('foldall--hint'); }, 8200);
           });
         }, { threshold: 0.9 });
         io.observe(bar);
       } else {
         bar.classList.add('foldall--hint');
-        setTimeout(function () { bar.classList.remove('foldall--hint'); }, 8200);
       }
     }
 
