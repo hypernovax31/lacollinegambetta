@@ -7448,18 +7448,30 @@ html:not(.carte-doc) .foldall__ico::after  { top:3px; }
 html:not(.carte-doc) .foldall__btn[aria-pressed="true"] .foldall__ico { transform:rotate(180deg); }
 /* La pastille garde sa place au centre : gouttière symétrique, calculée
    sur la largeur réelle du bouton (libellé compris). */
-html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0 150px; }
-/* Les panneaux étroits (deux colonnes, tablette) n'ont pas la place du
-   libellé : la pastille redevient ronde et l'infobulle prend le relais. */
+html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0 160px; }
+/* Le libellé reste visible : « tout voir » / « tout masquer » explique le
+   chevron, une pastille nue ne dit rien. Sur les écrans étroits, il
+   rétrécit et passe sous la pastille de titre plutôt que de disparaître. */
 @media (max-width: 1100px) {
-  html:not(.carte-doc) .foldall__label { display:none; }
-  html:not(.carte-doc) .foldall__btn { padding:0; width:36px; }
-  html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0 44px; }
+  html:not(.carte-doc) .foldall__btn { font-size:10px; padding:0 11px; gap:7px; }
+  html:not(.carte-doc) .foldall__label { max-width:110px; }
+  html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0 128px; }
 }
-@media (max-width: 560px) {
-  html:not(.carte-doc) .foldall { top:12px; right:12px; height:42px; }
-  html:not(.carte-doc) .foldall__btn { width:32px; height:32px; }
-  html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0 38px; }
+/* Sous 720 px, le bouton quitte l'angle : il se pose sous le titre, au
+   centre, où il a toute la largeur pour afficher son texte en entier. */
+@media (max-width: 720px) {
+  html:not(.carte-doc) .foldall {
+    position:static; height:auto; max-width:none;
+    justify-content:center; margin:0 0 12px;
+  }
+  html:not(.carte-doc) .foldall__btn { height:34px; font-size:10px; }
+  html:not(.carte-doc) .foldall__label { max-width:none; }
+  html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { padding:0; }
+  /* Le bouton est le premier enfant du panneau : on le renvoie après le
+     titre pour lire « section » puis « action ». */
+  html:not(.carte-doc) .panel:has(> .foldall) { display:flex; flex-direction:column; }
+  html:not(.carte-doc) .panel:has(> .foldall) > .foldall { order:2; }
+  html:not(.carte-doc) .panel:has(> .foldall) > .panel__head { order:1; }
 }
 @media print { .foldall { display:none !important; } }
 @media (prefers-reduced-motion: reduce) {
@@ -7562,6 +7574,16 @@ html:not(.carte-doc) #cocktails .hh-list:not(.hh-list--cols) .hh-list__col {
    le cadre porte déjà le lien entre le nom et le prix. */
 html:not(.carte-doc) #boissons .price-line__dots,
 html:not(.carte-doc) #cocktails .price-line__dots { display:none; }
+/* Les cocktails ne passent pas par .price-line__dots : leur rigole est
+   dessinée par DEUX pseudo-éléments — ::after sur le nom et ::before sur
+   le prix. Masquer la classe ne suffisait donc pas, il faut neutraliser
+   les deux. Le `!important` est nécessaire : les règles d'origine sont
+   portées par `html #interior-menu #cocktails`, plus spécifique. */
+html:not(.carte-doc) #cocktails .hh-line__name::after,
+html:not(.carte-doc) #interior-menu #cocktails .hh-line__price::before {
+  content:none !important; border-bottom:0 !important; flex:0 0 0 !important;
+  margin:0 !important;
+}
 /* Les pointillés retirés, le nom ne s'étirait plus : le chevron, posé à
    droite DU NOM, se calait à la fin du texte et changeait donc de place
    d'une ligne à l'autre selon sa longueur. Le nom reprend tout l'espace
@@ -7941,8 +7963,8 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
     <!-- Libellés du bouton « toutes les photos ». Écrits en clair pour que
          le moteur de traduction les voie au chargement : un texte fabriqué
          en JS resterait en français. -->
-    <p id="foldall-open-tpl" class="sr-only" aria-hidden="true">Voir les photos</p>
-    <p id="foldall-shut-tpl" class="sr-only" aria-hidden="true">Masquer les photos</p>
+    <p id="foldall-open-tpl" class="sr-only" aria-hidden="true">Tout voir</p>
+    <p id="foldall-shut-tpl" class="sr-only" aria-hidden="true">Tout masquer</p>
 
     <footer class="footer">
       <div class="footer-note"><span class="star-gold">✦</span> Prix nets en euros • service compris <span class="star-gold">✦</span></div>
@@ -8950,7 +8972,7 @@ else sizeCoverMedallion();
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609180112" defer></script>
+<script src="assets/js/i18n.js?v=202609180143" defer></script>
 
 <!-- ============ Assiettes en photo : les fiches deviennent des dépliants ============ -->
 <script>
@@ -9185,8 +9207,8 @@ else sizeCoverMedallion();
     btn.setAttribute('aria-pressed', 'false');
     var tplOpen = document.getElementById('foldall-open-tpl');
     var tplShut = document.getElementById('foldall-shut-tpl');
-    var TXT_OPEN = tplOpen ? tplOpen.textContent.trim() : 'Voir les photos';
-    var TXT_SHUT = tplShut ? tplShut.textContent.trim() : 'Masquer les photos';
+    var TXT_OPEN = tplOpen ? tplOpen.textContent.trim() : 'Tout voir';
+    var TXT_SHUT = tplShut ? tplShut.textContent.trim() : 'Tout masquer';
     var lab = document.createElement('span');
     lab.className = 'foldall__label';
     lab.textContent = TXT_OPEN;
