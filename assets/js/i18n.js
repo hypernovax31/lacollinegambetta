@@ -25,6 +25,9 @@
   var STORE_KEY = 'lcg-lang';
   var DICTS = {
     en: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 5 PM → 11 PM ✦",
+      "✦ 17h → 23h ✦": "✦ 5 PM → 11 PM ✦",
+      "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Directions",
       "Recentrer sur le restaurant": "Recentre on the restaurant",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — Gambetta metro",
@@ -452,6 +455,9 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ NET PRICES IN EUROS • SERVICE INCLUDED ✦"
     },
     es: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17:00 → 23:00 ✦",
+      "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
+      "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Cómo llegar",
       "Recentrer sur le restaurant": "Centrar en el restaurante",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 París — metro Gambetta",
@@ -879,6 +885,9 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     de: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17 → 23 Uhr ✦",
+      "✦ 17h → 23h ✦": "✦ 17 → 23 Uhr ✦",
+      "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Route",
       "Recentrer sur le restaurant": "Auf das Restaurant zentrieren",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — Metro Gambetta",
@@ -1306,6 +1315,9 @@
       "MÉTRO GAMBETTA": "U-Bahnhof Gambetta"
     },
     it: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17:00 → 23:00 ✦",
+      "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
+      "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Itinerario",
       "Recentrer sur le restaurant": "Centra sul ristorante",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Parigi — metrò Gambetta",
@@ -1733,6 +1745,9 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     pt: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17h → 23h ✦",
+      "✦ 17h → 23h ✦": "✦ 17h → 23h ✦",
+      "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Como chegar",
       "Recentrer sur le restaurant": "Centrar no restaurante",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — metro Gambetta",
@@ -2160,6 +2175,9 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     nl: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17.00 → 23.00 uur ✦",
+      "✦ 17h → 23h ✦": "✦ 17.00 → 23.00 uur ✦",
+      "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Route",
       "Recentrer sur le restaurant": "Centreren op het restaurant",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Parijs — metro Gambetta",
@@ -2588,6 +2606,9 @@
     },
   
     ar: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ ساعة السعادة · ٥ م ← ١١ م ✦",
+      "✦ 17h → 23h ✦": "✦ ٥ م ← ١١ م ✦",
+      "HAPPY HOUR": "ساعة السعادة",
       "Itinéraire": "الاتجاهات",
       "Recentrer sur le restaurant": "التوسيط على المطعم",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 باريس — مترو Gambetta",
@@ -3033,6 +3054,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ساندويتش جمبون وجبنة مع بيضة مقلية"
     },
     zh: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ 欢乐时光 · 17:00 → 23:00 ✦",
+      "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
+      "HAPPY HOUR": "欢乐时光",
       "Itinéraire": "路线",
       "Recentrer sur le restaurant": "回到餐厅位置",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 巴黎 — Gambetta 地铁站",
@@ -3478,6 +3502,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "烤火腿奶酪三明治，上加煎蛋"
     },
     uk: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Щаслива година (HH) · 17:00 → 23:00 ✦",
+      "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
+      "HAPPY HOUR": "ЩАСЛИВА ГОДИНА",
       "Itinéraire": "Маршрут",
       "Recentrer sur le restaurant": "Центрувати на ресторані",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Париж — метро Gambetta",
@@ -3923,6 +3950,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "Підсмажений сендвіч із шинкою та сиром, зверху яєчня"
     },
     ja: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ ハッピーアワー · 17時 → 23時 ✦",
+      "✦ 17h → 23h ✦": "✦ 17時 → 23時 ✦",
+      "HAPPY HOUR": "ハッピーアワー",
       "Itinéraire": "経路",
       "Recentrer sur le restaurant": "レストランに戻す",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 パリ — メトロ Gambetta",
@@ -4368,6 +4398,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ハムとチーズのグリルサンド、ベシャメルソース、目玉焼きのせ",
     },
     ko: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ 해피아워 · 17시 → 23시 ✦",
+      "✦ 17h → 23h ✦": "✦ 17시 → 23시 ✦",
+      "HAPPY HOUR": "해피아워",
       "Itinéraire": "길찾기",
       "Recentrer sur le restaurant": "레스토랑으로 중심 이동",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 파리 — Gambetta 역",
@@ -4813,6 +4846,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "구운 햄과 치즈 샌드위치, 베샤멜 소스, 맨 위에 프라이 에그",
     },
     pl: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17:00 → 23:00 ✦",
+      "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
+      "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Trasa",
       "Recentrer sur le restaurant": "Wyśrodkuj na restauracji",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paryż — metro Gambetta",
@@ -5240,6 +5276,9 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ CENY W EURO • SERWIS WLICZONY ✦",
     },
     tr: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ Happy Hour (HH) · 17.00 → 23.00 ✦",
+      "✦ 17h → 23h ✦": "✦ 17.00 → 23.00 ✦",
+      "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Yol tarifi",
       "Recentrer sur le restaurant": "Restorana ortala",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — Gambetta metrosu",
@@ -5667,6 +5706,9 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ EURO CİNSİNDEN NET FİYATLAR • SERVİS DAHİL ✦",
     },
     hi: {
+      "✦ Happy Hour (HH) · 17h → 23h ✦": "✦ हैप्पी आवर · शाम 5 → रात 11 ✦",
+      "✦ 17h → 23h ✦": "✦ शाम 5 → रात 11 ✦",
+      "HAPPY HOUR": "हैप्पी आवर",
       "Itinéraire": "रास्ता",
       "Recentrer sur le restaurant": "रेस्तरां पर केंद्रित करें",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 पेरिस — Gambetta मेट्रो",
