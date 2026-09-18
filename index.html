@@ -257,8 +257,8 @@ html:not(.carte-doc) .container {
   .menu-nav { grid-template-columns:repeat(4, minmax(0, 1fr)); padding:8px 10px; }
   .container { width:min(100% - 16px, 1120px); }
   .price-list--cols, .hh-list--cols { grid-template-columns:1fr; }
-  .hh-head { grid-template-columns:minmax(0,1fr) repeat(2,minmax(max-content,68px)); gap:10px; }
-  .hh-line__row { grid-template-columns:minmax(0,1fr) repeat(2,minmax(max-content,68px)); gap:10px; }
+  .hh-head { grid-template-columns:minmax(0,1fr) repeat(2,minmax(max-content,68px)) 12px; gap:10px; }
+  .hh-line__row { grid-template-columns:minmax(0,1fr) repeat(2,minmax(max-content,68px)) 12px; gap:10px; }
   .beer-table__head, .beer-row { grid-template-columns:minmax(0,1fr) repeat(3,minmax(max-content,64px)); gap:10px; }
 }
 @media (max-width: 640px) {
@@ -2291,7 +2291,8 @@ html .hh-line__name::after {
 
 /* ===== Cocktails PC: colonnes Prix/HH légèrement resserrées ===== */
 @media (min-width: 861px) {
-  #cocktails .hh-head, #cocktails .hh-line__row { grid-template-columns: minmax(0, 1fr) repeat(2, minmax(max-content, 96px)); gap: 16px; }
+  #cocktails .hh-head { grid-template-columns: minmax(0, 1fr) repeat(2, minmax(max-content, 96px)) 14px; gap: 16px; }
+  #cocktails .hh-line__row { grid-template-columns: minmax(0, 1fr) repeat(2, minmax(max-content, 96px)) 14px; gap: 16px; }
 }
 /* ===== Vins: Bug Bulles corrigé (th Appellation masqué par l'ancienne règle N°) ===== */
 .wine-table th.th-name { display: block !important; }
@@ -7306,11 +7307,16 @@ html:not(.carte-doc) .hh-line--photo > .hh-line__toggle {
 html:not(.carte-doc) .hh-line--photo > .hh-line__toggle:focus-visible {
   outline:2px solid var(--gold-500); outline-offset:2px;
 }
-/* Le chevron prend sa place dans la grille des prix plutôt que de se
-   superposer : la colonne des noms lui cède 16 px, rien ne se chevauche. */
-html:not(.carte-doc) .hh-line--photo .hh-line__name { padding-right:20px; position:relative; }
+/* Le chevron occupe sa PROPRE colonne, après le dernier prix : il ne
+   flotte plus en absolu au bout du nom, donc il ne peut ni recouvrir un
+   intitulé long ni se déplacer selon la longueur du texte. La grille lui
+   réserve sa largeur, les prix gardent la leur. */
+/* La colonne du chevron est déclarée avec les autres grilles de la
+   rangée (voir les blocs 861px+ et 860px-) pour rester en phase avec
+   l'en-tête Prix / HH : une colonne ajoutée ici seulement décalerait
+   les titres de colonnes par rapport aux valeurs. */
 html:not(.carte-doc) .hh-line__chevron {
-  position:absolute; right:2px; top:.34em; width:10px; height:10px;
+  width:10px; height:10px; align-self:center; justify-self:end;
   border-right:1.6px solid var(--gold-500); border-bottom:1.6px solid var(--gold-500);
   transform:rotate(45deg) translate(-2px,-2px); transform-origin:center;
   transition:transform .26s cubic-bezier(.4,.1,.2,1), border-color .2s ease; opacity:.75;
@@ -7620,6 +7626,9 @@ html:not(.carte-doc) #boissons .price-line__name { flex:1 1 auto; }
 /* L'en-tête Prix / HH des cocktails reste aligné sur les colonnes des
    encarts : on lui rend le retrait que le cadre a introduit. */
 html:not(.carte-doc) #cocktails .hh-head { padding:0 12px 4px; }
+/* L'en-tête gagne une case vide en fin de rangée : sans elle, « Prix »
+   et « HH » ne tomberaient plus au-dessus de leurs chiffres. */
+html:not(.carte-doc) #cocktails .hh-head::after { content:''; display:block; }
 
 /* ===== Boissons en photo =====
    Même geste que les cocktails, appliqué à .price-line : la ligne
@@ -7634,9 +7643,10 @@ html:not(.carte-doc) .price-line--photo > .price-line__toggle {
 html:not(.carte-doc) .price-line--photo > .price-line__toggle:focus-visible {
   outline:2px solid var(--gold-500); outline-offset:2px;
 }
-html:not(.carte-doc) .price-line--photo .price-line__name { padding-right:18px; position:relative; }
+/* Même principe : le chevron est le dernier élément de la rangée, après
+   le prix, et non plus accroché au nom. */
 html:not(.carte-doc) .price-line__chevron {
-  position:absolute; right:2px; top:.34em; width:10px; height:10px;
+  flex:0 0 auto; width:10px; height:10px; margin-left:2px; align-self:center;
   border-right:1.6px solid var(--gold-500); border-bottom:1.6px solid var(--gold-500);
   transform:rotate(45deg) translate(-2px,-2px); transform-origin:center;
   transition:transform .26s cubic-bezier(.4,.1,.2,1), border-color .2s ease; opacity:.75;
@@ -9111,7 +9121,10 @@ else sizeCoverMedallion();
     var chevron = document.createElement('span');
     chevron.className = 'hh-line__chevron';
     chevron.setAttribute('aria-hidden', 'true');
-    nameEl.appendChild(chevron);
+    /* Après le DERNIER prix, comme sur les fiches de plats, et non collé
+       au nom : la rangée se lit « intitulé … prix … chevron ». */
+    var rowEl = line.querySelector('.hh-line__row');
+    if (rowEl) rowEl.appendChild(chevron); else nameEl.appendChild(chevron);
 
     var drawer = document.createElement('div');
     drawer.className = 'hh-line__drawer';
@@ -9168,7 +9181,8 @@ else sizeCoverMedallion();
     var chevron = document.createElement('span');
     chevron.className = 'price-line__chevron';
     chevron.setAttribute('aria-hidden', 'true');
-    nameEl.appendChild(chevron);
+    var rowEl = line.querySelector('.price-line__row');
+    if (rowEl) rowEl.appendChild(chevron); else nameEl.appendChild(chevron);
 
     var drawer = document.createElement('div');
     drawer.className = 'price-line__drawer';
