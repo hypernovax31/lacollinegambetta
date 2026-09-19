@@ -1864,6 +1864,15 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
      Desactivee, elle reste en place et traduite. */
   function refreshTimes() {
     var now = parisNow();
+    /* Une page laissee ouverte franchit minuit : le plancher du
+       calendrier doit suivre, sinon la veille reste selectionnable. */
+    if (dateEl.min !== now.date) {
+      dateEl.min = now.date;
+      var mx = new Date(now.date + 'T00:00:00');
+      mx.setMonth(mx.getMonth() + 3);
+      dateEl.max = iso(mx);
+    }
+    if (dateEl.value && dateEl.value < now.date) dateEl.value = now.date;
     var isToday = dateEl.value === now.date;
     var selectedGone = false;
     Array.prototype.forEach.call(timeEl.options, function (opt) {
@@ -1894,6 +1903,10 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   document.addEventListener('visibilitychange', function () {
     if (!document.hidden) refreshTimes();
   });
+
+  /* L'assistant WhatsApp travaille sur les memes bornes horaires : on
+     les lui expose plutot que de reecrire la regle une seconde fois. */
+  window.__lcgTime = { now: parisNow, iso: iso, maxDate: function () { return dateEl.max; } };
 
   function setError(input, on) {
     var field = input.closest('[data-field]');
@@ -2089,6 +2102,37 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
     });
   }
 
+  /* Le clonage fige l'etat grise calcule pour la date du formulaire.
+     Or l'assistant a sa propre date : les creneaux doivent etre
+     reevalues a chaque fois qu'elle change, faute de quoi un client
+     choisissant aujourd'hui se verrait offrir des heures deja passees. */
+  function waRefreshTimes() {
+    var T = window.__lcgTime;
+    if (!T) return;
+    var now = T.now();
+    if (dateEl.min !== now.date) dateEl.min = now.date;
+    if (dateEl.value && dateEl.value < now.date) dateEl.value = now.date;
+    var isToday = dateEl.value === now.date;
+    var lost = false;
+    Array.prototype.forEach.call(timeEl.options, function (opt) {
+      if (!opt.value) return;
+      var hm = opt.value.split(':');
+      var past = isToday && (parseInt(hm[0], 10) * 60 + parseInt(hm[1], 10)) <= now.minutes;
+      opt.disabled = past;
+      if (past && opt.selected) lost = true;
+    });
+    if (lost) timeEl.value = '';
+    /* Service du jour entierement ecoule : on propose le lendemain. */
+    if (isToday && !Array.prototype.some.call(timeEl.options, function (o) {
+      return o.value && !o.disabled;
+    })) {
+      var d = new Date(now.date + 'T00:00:00');
+      d.setDate(d.getDate() + 1);
+      var nx = T.iso(d);
+      if (nx <= dateEl.max) { dateEl.value = nx; waRefreshTimes(); }
+    }
+  }
+
   function show(n) {
     step = n;
     bubbles.forEach(function (b) {
@@ -2150,7 +2194,11 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 
   function step_ok() {
     if (step === 0) return !!guestEl.value;
-    if (step === 1) return !!dateEl.value;
+    if (step === 1) {
+      if (!dateEl.value) return false;
+      var T = window.__lcgTime;
+      return !T || dateEl.value >= T.now().date;
+    }
     if (step === 2) return !!timeEl.value && !timeEl.options[timeEl.selectedIndex].disabled;
     if (step === 3) return nameEl.value.trim().length > 1;
     return true;
@@ -2175,6 +2223,10 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   }
 
   function recap() {
+    /* Dernier controle avant l'envoi : entre la reponse et le clic, le
+       creneau a pu passer. */
+    waRefreshTimes();
+    if (!timeEl.value) { show(2); return; }
     var g = guestEl.options[guestEl.selectedIndex];
     var p = document.createElement('p');
     p.className = 'wa-bubble wa-bubble--in wa-bubble--recap';
@@ -2203,6 +2255,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
     if (step === 4) recap();
   });
 
+  dateEl.addEventListener('change', waRefreshTimes);
   [guestEl, dateEl, timeEl].forEach(function (el) {
     el.addEventListener('change', function () { if (step_ok()) nextBtn.click(); });
   });
@@ -2225,6 +2278,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
       dateEl.min = srcDate.min; dateEl.max = srcDate.max;
       if (!dateEl.value) dateEl.value = srcDate.value;
     }
+    waRefreshTimes();
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
     show(step >= 4 ? 4 : 0);
@@ -2234,6 +2288,13 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
     document.body.style.overflow = '';
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
+
+  /* Le dialogue peut rester ouvert : on reevalue chaque minute et au
+     retour sur l'onglet, exactement comme le formulaire. */
+  setInterval(function () { if (!modal.hidden) waRefreshTimes(); }, 60000);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && !modal.hidden) waRefreshTimes();
+  });
 
   Array.prototype.forEach.call(modal.querySelectorAll('[data-wa-close]'), function (el) {
     el.addEventListener('click', close_);
