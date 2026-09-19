@@ -8199,6 +8199,53 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
   }
 }
 
+/* -- Chaque pression porte ses propres etiquettes ---------------------
+   Une fois les deux tableaux cote a cote, la ligne d'en-tete « 25 cl /
+   PINTE / HH » se retrouve au-dessus d'une demi-largeur seulement : ses
+   trois libelles se serrent et, surtout, l'oeil doit faire l'aller-retour
+   entre l'en-tete et le prix pour savoir ce qu'il lit.
+
+   L'en-tete disparait donc et chaque prix annonce lui-meme sa contenance,
+   dans sa propre case. C'est le meme motif que les vins et que le repli
+   mobile des pressions : l'etiquette sort de `data-label`, deja presente
+   dans le HTML, donc rien a dupliquer ni a retraduire.
+
+   Le prix se pose SOUS son etiquette : en colonne, la ligne de pression
+   devient une petite fiche autonome ou nom, contenances et tarifs se
+   lisent d'un bloc. */
+@media (min-width:860px),
+       (orientation:landscape) and (max-height:600px) and (min-width:560px) {
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-table__head {
+    display:none !important;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__price,
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__hh {
+    display:flex; flex-direction:column; align-items:flex-end; gap:1px;
+    justify-self:end; text-align:right;
+  }
+  /* L'etiquette : petites capitales, discretes, pour ne pas concurrencer
+     le chiffre — meme traitement que les contenances ailleurs. */
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__price::before,
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__hh::before {
+    content:attr(data-label);
+    font-family:'Montserrat',sans-serif;
+    font-size:.54rem; font-weight:700; letter-spacing:.12em;
+    text-transform:uppercase; white-space:nowrap;
+    color:var(--violet-900); opacity:.62;
+  }
+  /* Le tarif Happy Hour garde sa couleur or : c'est elle qui le
+     distingue du prix courant, l'en-tete ne le fait plus. */
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__hh::before {
+    color:var(--gold-700); opacity:.85;
+  }
+  /* Les cases s'alignent en haut : les etiquettes forment une ligne
+     nette au-dessus des trois prix. */
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row,
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__row {
+    align-items:start;
+  }
+}
+
 
 /* -- Grands écrans : au-delà, l'encart ne doit pas s'étirer au point que
       le chevron s'éloigne du prix. La colonne reste fixe, l'espace
