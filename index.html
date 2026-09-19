@@ -8115,6 +8115,63 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
   }
 }
 
+/* ===== Bières : « Bouteille » et « Pression » côte à côte ============
+   L'encart Bières empile deux tableaux : les bouteilles, puis les
+   pressions. Sur un écran large — PC/Mac en 16/9 — comme sur un iPhone
+   Pro Max tenu en paysage (932 px de large pour 430 de haut), cet
+   empilement gâche la largeur disponible et allonge inutilement la
+   page : en paysage la hauteur est justement ce qui manque.
+
+   Les deux tableaux passent donc côte à côte, chacun sous son propre
+   intertitre. L'encart devient une grille de deux colonnes et chaque
+   bloc reçoit sa place explicite, par sa classe et non par son rang :
+   un nth-child se désynchroniserait au moindre ajout de bière.
+
+   `:has(> .beer-table)` vise le seul encart Bières sans toucher aux
+   autres rubriques ni exiger une nouvelle classe dans le HTML. */
+@media (min-width: 860px) {
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    column-gap:clamp(20px,3vw,40px);
+    align-items:start;
+  }
+  /* Le titre de l'encart et les mentions de bas de bloc gardent toute
+     la largeur : ils valent pour les deux tableaux. */
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .panel__head,
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .price-list__note,
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .hh-banner {
+    grid-column:1 / -1;
+  }
+  /* Colonne de gauche : les bouteilles. */
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .beer-note:not(.beer-note--second) {
+    grid-column:1; grid-row:2;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .price-list {
+    grid-column:1; grid-row:3;
+  }
+  /* Colonne de droite : les pressions. L'écart supérieur qui séparait
+     les deux tableaux empilés n'a plus lieu d'être — les intertitres
+     doivent s'aligner sur la même ligne. */
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .beer-note--second {
+    grid-column:2; grid-row:2; margin-top:0;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .beer-table {
+    grid-column:2; grid-row:3;
+  }
+  /* Le tableau des pressions n'a plus qu'une demi-largeur : ses trois
+     colonnes de prix se resserrent pour ne pas déborder. */
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) .beer-table__head,
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) .beer-row,
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) .beer-row__row {
+    column-gap:14px;
+  }
+}
+
+/* Repli pour les navigateurs sans `:has()` : les deux tableaux restent
+   empilés, comme aujourd'hui. Rien à écrire, l'absence de règle suffit. */
+
+
 /* -- Grands écrans : au-delà, l'encart ne doit pas s'étirer au point que
       le chevron s'éloigne du prix. La colonne reste fixe, l'espace
       supplémentaire va au nom. -- */
