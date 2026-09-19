@@ -8182,12 +8182,8 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
    tiennent tout juste. Corps du texte et gouttières réduits d'un cran,
    dans ce seul cas. */
 @media (orientation:landscape) and (max-height:600px) and (min-width:560px) and (max-width:1023.98px) {
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-table__head,
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row,
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__row {
-    grid-template-columns:minmax(0,1fr) repeat(3,minmax(max-content,50px)) !important;
-    column-gap:8px !important;
-  }
+  /* La grille des tarifs est fixee plus bas, par le bloc qui les range
+     sous l'intitule : on ne redefinit ici que le corps du texte. */
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__price,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__hh,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .price-line__price {
@@ -8199,50 +8195,70 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
   }
 }
 
-/* -- Chaque pression porte ses propres etiquettes ---------------------
-   Une fois les deux tableaux cote a cote, la ligne d'en-tete « 25 cl /
-   PINTE / HH » se retrouve au-dessus d'une demi-largeur seulement : ses
-   trois libelles se serrent et, surtout, l'oeil doit faire l'aller-retour
-   entre l'en-tete et le prix pour savoir ce qu'il lit.
+/* -- Les pressions se lisent comme les autres fiches ------------------
+   Les trois tarifs etaient alignes a droite de l'intitule, sous une
+   ligne d'en-tete commune : il fallait remonter en haut de colonne pour
+   savoir si l'on lisait un 25 cl, une pinte ou un tarif Happy Hour.
+   Partout ailleurs sur la carte, l'information se pose SOUS l'intitule.
 
-   L'en-tete disparait donc et chaque prix annonce lui-meme sa contenance,
-   dans sa propre case. C'est le meme motif que les vins et que le repli
-   mobile des pressions : l'etiquette sort de `data-label`, deja presente
-   dans le HTML, donc rien a dupliquer ni a retraduire.
+   La ligne de pression adopte donc la meme lecture : le nom occupe sa
+   propre ligne, les trois tarifs se rangent dessous, chacun coiffe de
+   son etiquette. L'en-tete de colonne disparait, devenu inutile.
 
-   Le prix se pose SOUS son etiquette : en colonne, la ligne de pression
-   devient une petite fiche autonome ou nom, contenances et tarifs se
-   lisent d'un bloc. */
+   C'est le motif deja employe par le repli mobile des pressions et par
+   les vins. L'etiquette sort de `data-label`, deja dans le HTML : rien a
+   dupliquer ni a retraduire dans les quinze langues. */
 @media (min-width:860px),
        (orientation:landscape) and (max-height:600px) and (min-width:560px) {
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-table__head {
     display:none !important;
   }
+  /* Trois parts egales pour les trois tarifs ; le nom passe au-dessus,
+     sur toute la largeur. Une pression illustree garde sa colonne de
+     chevron a droite du nom. */
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row:not(.beer-row--photo),
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__row {
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    column-gap:10px !important; row-gap:4px; align-items:start !important;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row:not(.beer-row--photo) .beer-row__name {
+    grid-column:1 / -1 !important;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row--photo .beer-row__row {
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row--photo .beer-row__name {
+    grid-column:1 / -1 !important;
+  }
+  /* Le chevron rejoint la ligne du nom, cale a sa droite. */
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__chevron {
+    grid-column:-2 / -1; grid-row:1; align-self:center; justify-self:end;
+  }
+  /* La rigole de points qui reliait le nom a un prix a sa droite n'a
+     plus d'objet : il n'y a plus rien a rejoindre sur cette ligne. */
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__name::after {
+    display:none !important;
+  }
+  /* Chaque tarif : son etiquette, puis son chiffre dessous. Cale a
+     gauche dans sa part, pour que les trois colonnes tombent d'aplomb
+     sous l'intitule. */
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__price,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__hh {
-    display:flex; flex-direction:column; align-items:flex-end; gap:1px;
-    justify-self:end; text-align:right;
+    display:flex; flex-direction:column; align-items:flex-start; gap:1px;
+    justify-self:stretch !important; text-align:left !important;
   }
-  /* L'etiquette : petites capitales, discretes, pour ne pas concurrencer
-     le chiffre — meme traitement que les contenances ailleurs. */
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__price::before,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__hh::before {
     content:attr(data-label);
     font-family:'Montserrat',sans-serif;
-    font-size:.54rem; font-weight:700; letter-spacing:.12em;
+    font-size:.56rem; font-weight:700; letter-spacing:.12em;
     text-transform:uppercase; white-space:nowrap;
     color:var(--violet-900); opacity:.62;
   }
-  /* Le tarif Happy Hour garde sa couleur or : c'est elle qui le
-     distingue du prix courant, l'en-tete ne le fait plus. */
+  /* Le tarif Happy Hour garde son or : c'est lui qui le distingue
+     maintenant que l'en-tete a disparu. */
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__hh::before {
     color:var(--gold-700); opacity:.85;
-  }
-  /* Les cases s'alignent en haut : les etiquettes forment une ligne
-     nette au-dessus des trois prix. */
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row,
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__row {
-    align-items:start;
   }
 }
 
