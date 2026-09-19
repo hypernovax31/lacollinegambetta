@@ -8171,6 +8171,57 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
 /* Repli pour les navigateurs sans `:has()` : les deux tableaux restent
    empilés, comme aujourd'hui. Rien à écrire, l'absence de règle suffit. */
 
+/* Téléphone en PAYSAGE : même mise en deux colonnes, sous le seuil des
+   860 px. Un iPhone couché fait 667 à 932 px de large pour 375 à 430 de
+   haut — largeur confortable, hauteur minuscule. C'est exactement le cas
+   où l'empilement coûte le plus cher en défilement. Le seuil de 640 px
+   écarte les rares téléphones trop étroits pour deux tableaux de prix.
+
+   Les intitulés de bière sont longs (« Triple d'Orgemont bio ») et les
+   colonnes de prix tomberaient à l'étroit : la taille du texte et les
+   gouttières sont donc réduites d'un cran dans ce seul cas. */
+@media (orientation:landscape) and (max-height:560px) and (min-width:640px) and (max-width:859.98px) {
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    column-gap:18px;
+    align-items:start;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .panel__head,
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .price-list__note,
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .hh-banner {
+    grid-column:1 / -1;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .beer-note:not(.beer-note--second) {
+    grid-column:1; grid-row:2;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .price-list {
+    grid-column:1; grid-row:3;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .beer-note--second {
+    grid-column:2; grid-row:2; margin-top:0;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) > .beer-table {
+    grid-column:2; grid-row:3;
+  }
+  /* Demi-largeur pour trois colonnes de prix : on resserre. */
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) .beer-table__head,
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) .beer-row,
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) .beer-row__row {
+    grid-template-columns:minmax(0,1fr) repeat(3,minmax(max-content,52px));
+    column-gap:8px;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) .beer-row__price,
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) .beer-row__hh,
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) .price-line__price {
+    font-size:.98rem;
+  }
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) .beer-row__name,
+  html:not(.carte-doc) #interior-menu #boissons .panel:has(> .beer-table) .price-line__name {
+    font-size:.92rem;
+  }
+}
+
 
 /* -- Grands écrans : au-delà, l'encart ne doit pas s'étirer au point que
       le chevron s'éloigne du prix. La colonne reste fixe, l'espace
