@@ -8118,51 +8118,58 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
 /* ===== Bières : « Bouteille » et « Pression » côte à côte ============
    L'encart Bières empile deux tableaux : les bouteilles, puis les
    pressions. Sur un écran large — PC/Mac en 16/9 — comme sur un iPhone
-   Pro Max tenu en paysage (932 px de large pour 430 de haut), cet
-   empilement gâche la largeur disponible et allonge inutilement la
-   page : en paysage la hauteur est justement ce qui manque.
+   tenu en paysage, cet empilement gâche la largeur disponible et
+   allonge la page : en paysage la hauteur est justement ce qui manque.
 
-   Les deux tableaux passent donc côte à côte, chacun sous son propre
-   intertitre. L'encart devient une grille de deux colonnes et chaque
-   bloc reçoit sa place explicite, par sa classe et non par son rang :
-   un nth-child se désynchroniserait au moindre ajout de bière.
+   Une seule règle couvre les deux cas, au lieu des deux blocs séparés
+   qui se partageaient la plage de largeurs de part et d'autre de
+   860 px. Ce découpage était fragile : un iPhone Pro Max couché mesure
+   932 px et relevait du bloc « bureau », un iPhone 15 couché 844 px et
+   relevait de l'autre — la moindre borne mal placée laissait un modèle
+   sans mise en page. La condition dit maintenant ce qu'on veut
+   vraiment : soit l'écran est large, soit il est couché et pas trop
+   étroit.
 
-   L'encart porte la classe `panel--beers` : un `:has()` aurait evite
-   de toucher au HTML, mais il est ignore par les Safari et Chrome
-   anterieurs a 2023, ou la mise en deux colonnes ne se serait jamais
-   appliquee. Une classe explicite fonctionne partout. */
-@media (min-width: 860px) {
+   `!important` sur les placements : l'encart est repris par plusieurs
+   feuilles de mise en page (grille des dépliants, repli mobile) et la
+   simple spécificité ne suffisait pas à tenir sur tous les appareils.
+
+   L'encart porte la classe `panel--beers` : un `:has()` aurait évité de
+   toucher au HTML, mais il est ignoré par les Safari et Chrome
+   antérieurs à 2023, où la règle entière aurait été rejetée. */
+@media (min-width:860px),
+       (orientation:landscape) and (max-height:600px) and (min-width:560px) {
   html:not(.carte-doc) #interior-menu #boissons .panel--beers {
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    column-gap:clamp(20px,3vw,40px);
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    column-gap:clamp(16px,3vw,40px);
     align-items:start;
   }
-  /* Le titre de l'encart et les mentions de bas de bloc gardent toute
-     la largeur : ils valent pour les deux tableaux. */
+  /* Le titre et les mentions de bas de bloc gardent toute la largeur :
+     ils valent pour les deux tableaux. */
   html:not(.carte-doc) #interior-menu #boissons .panel--beers > .panel__head,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers > .price-list__note,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers > .hh-banner {
-    grid-column:1 / -1;
+    grid-column:1 / -1 !important;
   }
-  /* Colonne de gauche : les bouteilles. */
+  /* Colonne de gauche : les bouteilles. Colonne de droite : les
+     pressions. Placement par classe et non par rang — un nth-child se
+     désynchroniserait au premier ajout de bière. */
   html:not(.carte-doc) #interior-menu #boissons .panel--beers > .beer-note:not(.beer-note--second) {
-    grid-column:1; grid-row:2;
+    grid-column:1 !important; grid-row:2 !important;
   }
   html:not(.carte-doc) #interior-menu #boissons .panel--beers > .price-list {
-    grid-column:1; grid-row:3;
+    grid-column:1 !important; grid-row:3 !important;
   }
-  /* Colonne de droite : les pressions. L'écart supérieur qui séparait
-     les deux tableaux empilés n'a plus lieu d'être — les intertitres
-     doivent s'aligner sur la même ligne. */
+  /* L'écart qui séparait les deux tableaux empilés n'a plus lieu
+     d'être : les intertitres doivent s'aligner sur la même ligne. */
   html:not(.carte-doc) #interior-menu #boissons .panel--beers > .beer-note--second {
-    grid-column:2; grid-row:2; margin-top:0;
+    grid-column:2 !important; grid-row:2 !important; margin-top:0 !important;
   }
   html:not(.carte-doc) #interior-menu #boissons .panel--beers > .beer-table {
-    grid-column:2; grid-row:3;
+    grid-column:2 !important; grid-row:3 !important;
   }
-  /* Le tableau des pressions n'a plus qu'une demi-largeur : ses trois
-     colonnes de prix se resserrent pour ne pas déborder. */
+  /* Demi-largeur pour trois colonnes de prix : on resserre. */
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-table__head,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__row {
@@ -8170,57 +8177,25 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
   }
 }
 
-/* Repli pour les navigateurs sans `:has()` : les deux tableaux restent
-   empilés, comme aujourd'hui. Rien à écrire, l'absence de règle suffit. */
-
-/* Téléphone en PAYSAGE : même mise en deux colonnes, sous le seuil des
-   860 px. Un iPhone couché fait 667 à 932 px de large pour 375 à 430 de
-   haut — largeur confortable, hauteur minuscule. C'est exactement le cas
-   où l'empilement coûte le plus cher en défilement. Le seuil de 640 px
-   écarte les rares téléphones trop étroits pour deux tableaux de prix.
-
-   Les intitulés de bière sont longs (« Triple d'Orgemont bio ») et les
-   colonnes de prix tomberaient à l'étroit : la taille du texte et les
-   gouttières sont donc réduites d'un cran dans ce seul cas. */
-@media (orientation:landscape) and (max-height:560px) and (min-width:560px) and (max-width:859.98px) {
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers {
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    column-gap:18px;
-    align-items:start;
-  }
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers > .panel__head,
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers > .price-list__note,
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers > .hh-banner {
-    grid-column:1 / -1;
-  }
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers > .beer-note:not(.beer-note--second) {
-    grid-column:1; grid-row:2;
-  }
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers > .price-list {
-    grid-column:1; grid-row:3;
-  }
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers > .beer-note--second {
-    grid-column:2; grid-row:2; margin-top:0;
-  }
-  html:not(.carte-doc) #interior-menu #boissons .panel--beers > .beer-table {
-    grid-column:2; grid-row:3;
-  }
-  /* Demi-largeur pour trois colonnes de prix : on resserre. */
+/* Paysage sur téléphone : les intitulés sont longs (« Triple d'Orgemont
+   bio ») et trois colonnes de prix dans une demi-largeur de téléphone
+   tiennent tout juste. Corps du texte et gouttières réduits d'un cran,
+   dans ce seul cas. */
+@media (orientation:landscape) and (max-height:600px) and (min-width:560px) and (max-width:1023.98px) {
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-table__head,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__row {
-    grid-template-columns:minmax(0,1fr) repeat(3,minmax(max-content,52px));
-    column-gap:8px;
+    grid-template-columns:minmax(0,1fr) repeat(3,minmax(max-content,50px)) !important;
+    column-gap:8px !important;
   }
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__price,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__hh,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .price-line__price {
-    font-size:.98rem;
+    font-size:.95rem;
   }
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__name,
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .price-line__name {
-    font-size:.92rem;
+    font-size:.9rem;
   }
 }
 
