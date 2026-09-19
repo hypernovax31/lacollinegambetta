@@ -3106,6 +3106,42 @@ html:not(.carte-doc) #menus .choice-card h5 em {
   top: 10px;
   transform: none;
 }
+
+/* -- Le globe ancre DANS le bandeau de titre --------------------------
+   Le socle reste un enfant du corps de page tant que la page de garde
+   est affichee : le bandeau de titre vit dans la carte, masquee a ce
+   moment-la, et le globe y deviendrait donc introuvable. Des l'entree
+   dans la carte, un script le deplace dans le bandeau, ou il se cale en
+   haut a droite ; il revient au corps de page si l'on ressort. Un seul
+   exemplaire de globe pour tout le site, comme avant.
+
+   Dans le bandeau, le socle n'est plus fixe a la fenetre mais pose dans
+   le coin du bandeau : il defile avec lui au lieu de flotter par-dessus
+   la carte. */
+.interior-header { position: relative; }
+.interior-header > .lang-dock {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: auto;
+  height: auto;
+}
+.interior-header > .lang-dock .lang-btn {
+  position: static;
+  margin: 10px 12px 0 0;
+}
+@media (max-width: 720px) {
+  .interior-header > .lang-dock .lang-btn { margin: 8px 8px 0 0; }
+}
+/* Le bandeau reserve la gouttiere du globe a droite ET a gauche : le
+   titre reste ainsi centre dans le bandeau, sans jamais passer sous le
+   bouton. Sans cette reserve symetrique, un titre long venait le
+   chevaucher. */
+.interior-header:has(> .lang-dock) { padding-left: 58px; padding-right: 58px; }
+@media (max-width: 720px) {
+  .interior-header:has(> .lang-dock) { padding-left: 50px; padding-right: 50px; }
+}
+
 /* Sur la page de garde, le fond est sombre et sans bandeau : le globe
    se pose sur un disque discret pour rester lisible par-dessus le
    dégradé, sans faire tache. */
@@ -8932,6 +8968,19 @@ function showView(view) {
   const menu = document.getElementById('interior-menu');
   const btnCover = document.getElementById('btn-show-cover');
   const btnMenu = document.getElementById('btn-show-menu');
+  /* Le globe des langues est ancre dans le bandeau de titre quand la
+     carte est affichee, et rendu au corps de page sur la page de garde,
+     ou ce bandeau n'existe pas a l'ecran. Un seul globe dans tout le
+     document : on le DEPLACE, on ne le duplique pas. */
+  function dockLang(view) {
+    const dock = document.querySelector('.lang-dock');
+    if (!dock) return;
+    const header = document.querySelector('#interior-menu .interior-header');
+    const target = (view === 'menu' && header) ? header : document.body;
+    if (dock.parentElement === target) return;
+    target.insertBefore(dock, target.firstChild);
+  }
+
   const top = document.querySelector('.top-controls');
   /* La page de garde est plein écran : le bandeau (📖 Menu & Carte)
      n'apparaît qu'une fois dans la vue menu. */
@@ -8945,6 +8994,7 @@ function showView(view) {
     menu.style.display = 'none';
     btnCover.classList.add('active');
     btnMenu.classList.remove('active');
+    dockLang('cover');
     animateScrollTo(0, 220);
     requestAnimationFrame(sizeCoverMedallion);
   } else {
@@ -8952,6 +9002,7 @@ function showView(view) {
     menu.style.display = 'block';
     btnCover.classList.remove('active');
     btnMenu.classList.add('active');
+    dockLang('menu');
     animateScrollTo(0, 220);
     requestAnimationFrame(() => {
       syncTopControlsHeight();

@@ -552,6 +552,36 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   top: 10px;
   transform: none;
 }
+
+/* -- Le globe ancre DANS le bandeau de titre --------------------------
+   Le socle n'est plus fixe a la fenetre : il est pose dans le coin haut
+   droit du bandeau et defile avec lui, au lieu de flotter par-dessus la
+   page. Le menu, lui, reste ancre a la fenetre pour pouvoir s'ouvrir en
+   grand. */
+.interior-header { position: relative; }
+.interior-header > .lang-dock {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: auto;
+  height: auto;
+}
+.interior-header > .lang-dock .lang-btn {
+  position: static;
+  margin: 10px 12px 0 0;
+}
+@media (max-width: 720px) {
+  .interior-header > .lang-dock .lang-btn { margin: 8px 8px 0 0; }
+}
+/* Le bandeau reserve la gouttiere du globe a droite ET a gauche : le
+   titre reste ainsi centre dans le bandeau, sans jamais passer sous le
+   bouton. Sans cette reserve symetrique, un titre long venait le
+   chevaucher. */
+.interior-header:has(> .lang-dock) { padding-left: 58px; padding-right: 58px; }
+@media (max-width: 720px) {
+  .interior-header:has(> .lang-dock) { padding-left: 50px; padding-right: 50px; }
+}
+
 .lang-dock .lang-menu {
   /* Le menu est ancré à la FENÊTRE, pas au socle : le socle ne fait que
      66 px de large, et un panneau en absolu dedans ne pouvait plus
@@ -1223,6 +1253,18 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 </style>
 </head>
 <body>
+
+
+<div class="book-back">
+  <a class="contact-link" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    Retour à la carte
+  </a>
+  
+</div>
+
+<div id="reservation-page">
+  <header class="interior-header">
 <div class="lang-dock">
     <button type="button" class="lang-btn" id="lang-btn" title="Langue / Language" aria-label="Langue / Language" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
@@ -1298,16 +1340,6 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
     </div>
   </div>
 
-<div class="book-back">
-  <a class="contact-link" href="index.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
-    Retour à la carte
-  </a>
-  
-</div>
-
-<div id="reservation-page">
-  <header class="interior-header">
       <div class="eyebrow"><span class="star-gold">✦</span> RÉSERVATION <span class="star-gold">✦</span></div>
       <h2>COLLINE <span>GAMBETTA</span></h2>
       <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
