@@ -1267,6 +1267,111 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   border-color:rgba(37,211,102,.62);
   box-shadow:0 0 0 3px rgba(37,211,102,.12);
 }
+
+/* ===== Assistant de pre-reservation WhatsApp =========================
+   Une conversation, pas un formulaire : bulles alternees, coin coupe
+   du cote de l'emetteur. On garde l'or et le violet de la maison —
+   le vert reste cantonne au bouton d'envoi, seul endroit ou il
+   designe vraiment le service. */
+.wa-modal { position:fixed; inset:0; z-index:9600; display:flex;
+  align-items:center; justify-content:center; padding:16px; }
+.wa-modal[hidden] { display:none; }
+.wa-modal__veil { position:absolute; inset:0; background:rgba(24,16,30,.72);
+  backdrop-filter:blur(3px); }
+.wa-chat { position:relative; width:min(430px, 100%); max-height:min(620px, 92vh);
+  display:flex; flex-direction:column; overflow:hidden;
+  background:var(--cream, #fcfbf7); border-radius:20px;
+  border:1px solid rgba(216,178,87,.42);
+  box-shadow:0 26px 70px rgba(24,16,30,.5);
+  animation:waIn .26s cubic-bezier(.2,.8,.3,1) both; }
+@keyframes waIn { from { opacity:0; transform:translateY(14px) scale(.97); }
+                  to   { opacity:1; transform:none; } }
+
+.wa-chat__head { display:flex; align-items:center; gap:11px; padding:13px 14px;
+  background:linear-gradient(180deg, #592e6f, #432155); color:#fcfbf7;
+  border-bottom:1px solid rgba(216,178,87,.34); }
+.wa-chat__dot { width:9px; height:9px; border-radius:50%; background:#25d366;
+  box-shadow:0 0 0 3px rgba(37,211,102,.22); flex:none; }
+.wa-chat__id { display:flex; flex-direction:column; line-height:1.25; min-width:0; }
+.wa-chat__id strong { font-family:'Cinzel', serif; font-size:.92rem;
+  letter-spacing:.04em; }
+.wa-chat__id span { font-size:.7rem; opacity:.72; letter-spacing:.03em; }
+.wa-chat__close { margin-left:auto; flex:none; width:30px; height:30px;
+  display:grid; place-items:center; border:0; border-radius:50%;
+  background:rgba(252,251,247,.12); color:#fcfbf7; cursor:pointer; }
+.wa-chat__close svg { width:15px; height:15px; }
+.wa-chat__close:hover { background:rgba(252,251,247,.22); }
+
+.wa-chat__body { flex:1 1 auto; overflow-y:auto; padding:16px 14px;
+  display:flex; flex-direction:column; gap:8px;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(216,178,87,.07), transparent 42%),
+    radial-gradient(circle at 82% 78%, rgba(89,46,111,.06), transparent 46%); }
+
+.wa-bubble { margin:0; max-width:84%; padding:9px 13px; font-size:.86rem;
+  line-height:1.5; color:#24102e; background:#fff;
+  border:1px solid rgba(216,178,87,.3); border-radius:15px;
+  animation:waBub .22s ease both; }
+@keyframes waBub { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:none; } }
+.wa-bubble--in  { align-self:flex-start; border-bottom-left-radius:5px; }
+.wa-bubble--out { align-self:flex-end;  border-bottom-right-radius:5px;
+  background:linear-gradient(180deg, #592e6f, #4b2660); color:#fcfbf7;
+  border-color:rgba(216,178,87,.5); font-weight:600; }
+.wa-bubble--hint { font-size:.75rem; font-style:italic; opacity:.78; }
+.wa-bubble--recap { align-self:stretch; max-width:100%; font-size:.83rem;
+  background:linear-gradient(180deg, #fffdf6, #fdf8ea);
+  border-color:rgba(216,178,87,.55); white-space:pre-line; }
+.wa-bubble[hidden] { display:none; }
+
+.wa-chat__ask { flex:none; padding:12px 14px 14px;
+  border-top:1px solid rgba(216,178,87,.3); background:#fffdf8;
+  display:flex; flex-wrap:wrap; gap:9px; align-items:center; }
+.wa-ask { flex:1 1 auto; min-width:0; }
+.wa-ask[hidden] { display:none; }
+.wa-ask select, .wa-ask input {
+  width:100%; height:46px; padding:0 13px; box-sizing:border-box;
+  font-family:'Montserrat', sans-serif; font-size:.87rem; color:#24102e;
+  background:#fff; border:1px solid rgba(216,178,87,.5); border-radius:13px;
+  -webkit-appearance:none; appearance:none; }
+.wa-ask select {
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239c7a2d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 11px center;
+  background-size:16px; padding-right:34px; }
+.wa-ask select:focus, .wa-ask input:focus {
+  outline:none; border-color:#bf953f; box-shadow:0 0 0 3px rgba(191,149,63,.16); }
+
+.wa-next { flex:none; height:46px; padding:0 20px; cursor:pointer;
+  font-family:'Cinzel', serif; font-size:.8rem; letter-spacing:.06em;
+  color:#fcfbf7; background:linear-gradient(180deg, #592e6f, #432155);
+  border:1px solid rgba(216,178,87,.5); border-radius:13px; }
+.wa-next:hover { filter:brightness(1.12); }
+.wa-next[hidden] { display:none; }
+
+.wa-ask--send { flex:1 1 100%; display:flex; flex-wrap:wrap; gap:9px; }
+.wa-send { flex:1 1 200px; height:48px; display:inline-flex; align-items:center;
+  justify-content:center; gap:9px; text-decoration:none;
+  font-family:'Cinzel', serif; font-size:.82rem; letter-spacing:.05em;
+  color:#fff; background:linear-gradient(180deg, #2bd96c, #1faa52);
+  border:1px solid rgba(31,170,82,.8); border-radius:13px;
+  box-shadow:0 6px 18px rgba(37,211,102,.28); }
+.wa-send:hover { filter:brightness(1.07); }
+.wa-send svg { width:19px; height:19px; flex:none; }
+.wa-restart { flex:0 0 auto; height:48px; padding:0 15px; cursor:pointer;
+  font-family:'Montserrat', sans-serif; font-size:.76rem; color:#7a5a20;
+  background:transparent; border:1px solid rgba(216,178,87,.5);
+  border-radius:13px; }
+.wa-restart:hover { background:rgba(216,178,87,.1); }
+
+/* Paysage bas de plafond : le fil se resserre pour laisser voir la
+   question en cours et le bouton. */
+@media (orientation:landscape) and (max-height:560px) {
+  .wa-chat { max-height:94vh; width:min(560px, 100%); }
+  .wa-chat__body { padding:11px 13px; gap:6px; }
+  .wa-bubble { font-size:.8rem; padding:7px 11px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .wa-chat, .wa-bubble { animation:none; }
+}
 </style>
 </head>
 <body>
@@ -1702,7 +1807,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609201700" defer></script>
+<script src="assets/js/i18n.js?v=202609201930" defer></script>
 
 <script>
 (function () {
@@ -1871,6 +1976,288 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
       'Vous préférez de vive voix ? Appelez le <a href="tel:+33143490593">01 43 49 05 93</a>.';
     status.hidden = false;
     window.location.href = href;
+  });
+})();
+</script>
+
+
+  <!-- ==================================================================
+       Assistant de pre-reservation WhatsApp.
+       Toutes les bulles sont ecrites en dur ici, masquees : le moteur
+       i18n photographie les textes AU CHARGEMENT, un texte fabrique
+       plus tard en JS ne serait jamais traduit. On les revele donc au
+       fil du dialogue plutot que de les creer.
+       Le message final part en francais : c'est le restaurateur qui le
+       lit, pas le client.
+  =================================================================== -->
+  <div class="wa-modal" id="wa-modal" hidden>
+    <div class="wa-modal__veil" data-wa-close></div>
+    <div class="wa-chat" role="dialog" aria-modal="true" aria-labelledby="wa-chat-title">
+      <div class="wa-chat__head">
+        <span class="wa-chat__dot" aria-hidden="true"></span>
+        <div class="wa-chat__id">
+          <strong id="wa-chat-title">La Colline Gambetta</strong>
+          <span>Réserver par WhatsApp</span>
+        </div>
+        <button type="button" class="wa-chat__close" data-wa-close aria-label="Fermer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+
+      <div class="wa-chat__body" id="wa-body">
+        <p class="wa-bubble wa-bubble--in" data-step="0">Bonsoir et bienvenue ! Je prépare votre demande de réservation en quelques secondes.</p>
+        <p class="wa-bubble wa-bubble--in" data-step="0">Pour combien serez-vous à table ?</p>
+        <p class="wa-bubble wa-bubble--in" data-step="1">Parfait. Pour quel jour souhaitez-vous venir ?</p>
+        <p class="wa-bubble wa-bubble--in" data-step="2">Très bien. Et à quelle heure vous attendons-nous ?</p>
+        <p class="wa-bubble wa-bubble--in" data-step="3">À quel nom dois-je noter la table ?</p>
+        <p class="wa-bubble wa-bubble--in" data-step="4">Merci ! Voici votre demande, prête à partir :</p>
+        <p class="wa-bubble wa-bubble--in wa-bubble--hint" data-step="4">Nous vous confirmons de vive voix, dans la journée.</p>
+      </div>
+
+      <div class="wa-chat__ask">
+        <div class="wa-ask" data-ask="0">
+          <label class="sr-only" for="wa-guests">Nombre de personnes</label>
+          <select id="wa-guests"></select>
+        </div>
+        <div class="wa-ask" data-ask="1" hidden>
+          <label class="sr-only" for="wa-date">Date</label>
+          <input id="wa-date" type="date">
+        </div>
+        <div class="wa-ask" data-ask="2" hidden>
+          <label class="sr-only" for="wa-time">Heure</label>
+          <select id="wa-time"></select>
+        </div>
+        <div class="wa-ask" data-ask="3" hidden>
+          <label class="sr-only" for="wa-name">Votre nom</label>
+          <input id="wa-name" type="text" autocomplete="name" placeholder="Votre nom">
+        </div>
+        <div class="wa-ask wa-ask--send" data-ask="4" hidden>
+          <a class="wa-send" id="wa-send" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.6a8.5 8.5 0 0 1-12.6 7.45L3.5 20.5l1.5-4.3A8.5 8.5 0 1 1 20.5 11.6z"/><path d="M9.1 8.2c.25-.02.5-.02.72.46.2.45.66 1.6.72 1.72.06.12.1.26.02.42-.08.16-.12.26-.24.4-.12.14-.25.31-.36.42-.12.12-.24.25-.1.49.14.24.62 1.02 1.33 1.65.91.81 1.68 1.06 1.92 1.18.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.54-.12.22.08 1.37.65 1.61.77.24.12.4.18.46.28.06.1.06.58-.14 1.14-.2.56-1.18 1.1-1.62 1.14-.44.04-.86.2-2.9-.6-2.45-.97-3.99-3.47-4.11-3.63-.12-.16-.98-1.3-.98-2.48s.62-1.76.84-2c.22-.24.48-.3.64-.3z"/></svg>
+            Envoyer sur WhatsApp
+          </a>
+          <button type="button" class="wa-restart" id="wa-restart">Recommencer</button>
+        </div>
+        <button type="button" class="wa-next" id="wa-next">Continuer</button>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+/* ===== Assistant de pre-reservation WhatsApp ==========================
+   Il ne repond pas tout seul : il guide le client en quatre questions,
+   puis ouvre WhatsApp avec une demande complete deja redigee. Cote
+   restaurant, on recoit « 4 personnes samedi 27 septembre a 20h00 au
+   nom de Martin » au lieu d'un « bonjour » a devoir relancer.
+
+   Les creneaux et le nombre de couverts sont CLONES depuis le
+   formulaire de la page : une seule source de verite, donc pas de
+   derive le jour ou les horaires changent. Le clonage recupere au
+   passage l'etat « grise » des creneaux deja passes.
+
+   Les bulles existent deja dans le HTML, masquees : le moteur i18n
+   photographie les textes au chargement, un texte fabrique ici ne
+   serait jamais traduit. On les revele, on ne les cree pas. */
+(function () {
+  var WA_NUMBER = '33768717341';
+  var modal = document.getElementById('wa-modal');
+  if (!modal) return;
+
+  var body    = document.getElementById('wa-body');
+  var nextBtn = document.getElementById('wa-next');
+  var sendEl  = document.getElementById('wa-send');
+  var guestEl = document.getElementById('wa-guests');
+  var dateEl  = document.getElementById('wa-date');
+  var timeEl  = document.getElementById('wa-time');
+  var nameEl  = document.getElementById('wa-name');
+  var srcTime = document.getElementById('bk-time');
+  var srcGuest= document.getElementById('bk-guests');
+  var srcDate = document.getElementById('bk-date');
+
+  var bubbles = Array.prototype.slice.call(body.querySelectorAll('[data-step]'));
+  var asks    = Array.prototype.slice.call(modal.querySelectorAll('[data-ask]'));
+  var step = 0, answers = {}, lastFocus = null;
+
+  /* Les <option> sont clonees plutot que recreees : elles emportent
+     ainsi le texte deja traduit par le moteur. */
+  function mirror(src, dst) {
+    if (!src) return;
+    dst.innerHTML = '';
+    Array.prototype.forEach.call(src.options, function (o) {
+      dst.appendChild(o.cloneNode(true));
+    });
+  }
+
+  function show(n) {
+    step = n;
+    bubbles.forEach(function (b) {
+      b.hidden = parseInt(b.getAttribute('data-step'), 10) > n;
+    });
+    asks.forEach(function (a) {
+      a.hidden = parseInt(a.getAttribute('data-ask'), 10) !== n;
+    });
+    nextBtn.hidden = (n >= 4);
+    body.scrollTop = body.scrollHeight;
+    var f = modal.querySelector('[data-ask]:not([hidden]) select, [data-ask]:not([hidden]) input');
+    if (f) { try { f.focus({ preventScroll: true }); } catch (e) { f.focus(); } }
+  }
+
+  /* La reponse du client s'affiche a droite. Le texte vient de l'option
+     choisie, donc deja dans sa langue. */
+  function reply(text, step_) {
+    var p = document.createElement('p');
+    p.className = 'wa-bubble wa-bubble--out';
+    p.setAttribute('data-step', step_);
+    p.setAttribute('data-wa-answer', '1');
+    p.textContent = text;
+    var after = body.querySelector('[data-step="' + (step_ + 1) + '"]');
+    if (after) body.insertBefore(p, after); else body.appendChild(p);
+  }
+
+  function clearFrom(n) {
+    Array.prototype.forEach.call(body.querySelectorAll('[data-wa-answer]'), function (p) {
+      if (parseInt(p.getAttribute('data-step'), 10) >= n) p.remove();
+    });
+    var r = body.querySelector('[data-wa-recap]');
+    if (r) r.remove();
+  }
+
+  /* L'heure suit la convention locale : « 19h30 » en francais, mais
+     « 19:30 » ailleurs — le h francais n'a pas cours dans les autres
+     langues. Le message envoye, lui, reste en francais. */
+  function prettyTime(hhmm) {
+    var lang = document.documentElement.getAttribute('lang') || 'fr';
+    if (lang === 'fr') return String(hhmm).replace(':', 'h');
+    var p = String(hhmm).split(':');
+    try {
+      var d = new Date(2000, 0, 1, parseInt(p[0], 10), parseInt(p[1], 10));
+      return d.toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
+    } catch (e) { return hhmm; }
+  }
+
+  /* Date en toutes lettres, dans la langue affichee. */
+  function prettyDate(iso) {
+    if (!iso) return '';
+    var lang = document.documentElement.getAttribute('lang') || 'fr';
+    var d = new Date(iso + 'T12:00:00');
+    try {
+      return d.toLocaleDateString(lang, {
+        weekday: 'long', day: 'numeric', month: 'long'
+      });
+    } catch (e) { return iso; }
+  }
+
+  function step_ok() {
+    if (step === 0) return !!guestEl.value;
+    if (step === 1) return !!dateEl.value;
+    if (step === 2) return !!timeEl.value && !timeEl.options[timeEl.selectedIndex].disabled;
+    if (step === 3) return nameEl.value.trim().length > 1;
+    return true;
+  }
+
+  /* Le message part EN FRANCAIS quelle que soit la langue du visiteur :
+     c'est le restaurateur qui le lit. Le recapitulatif affiche a
+     l'ecran, lui, reste dans la langue du client. */
+  function buildMessage() {
+    var g = guestEl.options[guestEl.selectedIndex];
+    var gn = g ? g.value : '';
+    var couverts = gn + (gn === '1' ? ' personne' : ' personnes');
+    var jour = '';
+    try {
+      jour = new Date(dateEl.value + 'T12:00:00')
+        .toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    } catch (e) { jour = dateEl.value; }
+    var heure = String(timeEl.value).replace(':', 'h');
+    return 'Bonjour La Colline Gambetta, je souhaite réserver une table pour '
+      + couverts + ' le ' + jour + ' à ' + heure
+      + '. Au nom de ' + nameEl.value.trim() + '. Merci !';
+  }
+
+  function recap() {
+    var g = guestEl.options[guestEl.selectedIndex];
+    var p = document.createElement('p');
+    p.className = 'wa-bubble wa-bubble--in wa-bubble--recap';
+    p.setAttribute('data-wa-recap', '1');
+    p.textContent = (g ? g.textContent.trim() : '') + '\n'
+      + prettyDate(dateEl.value) + ' · '
+      + prettyTime(timeEl.value) + '\n'
+      + nameEl.value.trim();
+    var hint = body.querySelector('.wa-bubble--hint');
+    if (hint) body.insertBefore(p, hint); else body.appendChild(p);
+    sendEl.href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(buildMessage());
+  }
+
+  nextBtn.addEventListener('click', function () {
+    if (!step_ok()) {
+      var f = modal.querySelector('[data-ask]:not([hidden]) select, [data-ask]:not([hidden]) input');
+      if (f) { f.focus(); f.style.borderColor = '#b3403a'; setTimeout(function () { f.style.borderColor = ''; }, 1200); }
+      return;
+    }
+    clearFrom(step);
+    if (step === 0) reply(guestEl.options[guestEl.selectedIndex].textContent.trim(), 0);
+    if (step === 1) reply(prettyDate(dateEl.value), 1);
+    if (step === 2) reply(prettyTime(timeEl.value), 2);
+    if (step === 3) reply(nameEl.value.trim(), 3);
+    show(step + 1);
+    if (step === 4) recap();
+  });
+
+  [guestEl, dateEl, timeEl].forEach(function (el) {
+    el.addEventListener('change', function () { if (step_ok()) nextBtn.click(); });
+  });
+  nameEl.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); nextBtn.click(); }
+  });
+
+  document.getElementById('wa-restart').addEventListener('click', function () {
+    clearFrom(0);
+    guestEl.selectedIndex = 0; timeEl.selectedIndex = 0; nameEl.value = '';
+    if (srcDate) dateEl.value = srcDate.value;
+    show(0);
+  });
+
+  function open_() {
+    lastFocus = document.activeElement;
+    mirror(srcGuest, guestEl);
+    mirror(srcTime, timeEl);
+    if (srcDate) {
+      dateEl.min = srcDate.min; dateEl.max = srcDate.max;
+      if (!dateEl.value) dateEl.value = srcDate.value;
+    }
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    show(step >= 4 ? 4 : 0);
+  }
+  function close_() {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  Array.prototype.forEach.call(modal.querySelectorAll('[data-wa-close]'), function (el) {
+    el.addEventListener('click', close_);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.hidden) close_();
+  });
+
+  /* Arrivee depuis la carte, qui n'heberge pas l'assistant : le lien
+     y pointe vers reservation.html#wa, on ouvre donc au chargement. */
+  if (location.hash === '#wa') {
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    open_();
+  }
+
+  /* Tous les liens wa.me de la page ouvrent l'assistant. Le lien reste
+     intact dans le HTML : sans JavaScript, il conduit directement a la
+     conversation WhatsApp. */
+  Array.prototype.forEach.call(document.querySelectorAll('a[href*="wa.me/"]'), function (a) {
+    a.addEventListener('click', function (e) {
+      if (a === sendEl) return;
+      e.preventDefault();
+      open_();
+    });
   });
 })();
 </script>
