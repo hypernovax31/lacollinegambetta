@@ -847,11 +847,19 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 @supports (grid-template-rows: subgrid) {
   @media (min-width:680px) {
     .form-grid { grid-auto-rows:auto; }
+    /* Chaque bloc occupe trois rangees communes — intitule, champ,
+       message — pour que les cases voisines s'alignent au pixel.
+       Les blocs pleine largeur DOIVENT couvrir le meme nombre de
+       rangees : avec `grid-row:auto` ils n'en occupaient qu'une, et le
+       placement automatique melangeait alors des elements de 3 rangees
+       et de 1 rangee. Le curseur de placement revenait en arriere et
+       posait le bloc suivant SUR un bloc deja place — d'ou les cases
+       qui se chevauchaient. */
     .field { grid-row:span 3; grid-template-rows:subgrid; gap:6px; }
-    /* Le bloc « Un mot pour nous » occupe la largeur entière : il garde
-       ses propres rangées, sinon sa zone de saisie haute imposerait sa
-       hauteur aux rangées partagées. */
-    .field--full { grid-row:auto; grid-template-rows:auto; }
+    .field--full { grid-row:span 3; grid-template-rows:subgrid; }
+    /* Un bloc sans message d'erreur laisserait sa 3e rangee vide et sa
+       zone de saisie s'etirerait pour la combler : on la cale en haut. */
+    .field > textarea, .field > input, .field > select { align-self:start; }
   }
 }
 .field { display:grid; gap:6px; min-width:0; align-content:start; }
@@ -1014,14 +1022,35 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   background:#fffaea; border-color:var(--gold-500); color:var(--violet-900);
 }
 
+/* Horaires : le libelle et l'heure se faisaient face, pousses aux deux
+   bords par `space-between`. Des que la largeur manquait — paysage
+   etroit, colonne reduite, langue plus verbeuse — les deux se
+   rejoignaient au milieu jusqu'a se toucher, et l'heure, insecable,
+   debordait.
+
+   Ils forment maintenant une paire qui se replie : tant qu'il y a la
+   place ils restent sur une ligne, sinon l'heure passe simplement
+   dessous, alignee a gauche sous son libelle. Plus de face-a-face force,
+   donc plus de collision possible, quelle que soit la largeur. */
 .hours { margin:clamp(12px, 1.8vh, 18px) 0 0; display:grid; gap:2px; }
 .hours__row {
-  display:flex; justify-content:space-between; align-items:baseline; gap:16px;
+  display:flex; flex-wrap:wrap; align-items:baseline;
+  column-gap:14px; row-gap:2px;
   padding:8px 4px; border-bottom:1px dotted rgba(156,122,45,.38);
 }
 .hours__row:last-child { border-bottom:0; }
-.hours__day { font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.1em; font-size:.8rem; color:var(--violet-900); }
-.hours__val { font-family:'Cinzel',serif; font-weight:700; color:var(--gold-700); white-space:nowrap; }
+.hours__day {
+  font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.1em;
+  font-size:.8rem; color:var(--violet-900);
+  flex:0 1 auto; min-width:0;
+}
+/* `margin-left:auto` cale l'heure a droite quand les deux tiennent sur
+   la ligne, et s'efface tout seul des qu'elle passe a la ligne suivante. */
+.hours__val {
+  font-family:'Cinzel',serif; font-weight:700; color:var(--gold-700);
+  flex:0 1 auto; min-width:0; margin-left:auto;
+  overflow-wrap:break-word;
+}
 
 /* ===== Scintillement des étoiles dorées (même dispositif qu'index) ====
    Les ✦ respirent chacune à leur rythme plutôt que de rester figées ou
