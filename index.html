@@ -8081,6 +8081,9 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
   html:not(.carte-doc) #boissons .beer-row__photo {
     aspect-ratio:auto; height:min(42vh,190px);
   }
+  /* L'encart Bieres n'est pas exclu ici : ses deux colonnes sont
+     egalisees plus bas par un bloc en `!important`, qui reprend la
+     main sur ce padding. */
   html:not(.carte-doc) #boissons .price-line,
   html:not(.carte-doc) #cocktails .hh-line,
   html:not(.carte-doc) #boissons .beer-row { padding:9px 12px; }
@@ -8259,6 +8262,55 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
      maintenant que l'en-tete a disparu. */
   html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__hh::before {
     color:var(--gold-700); opacity:.85;
+  }
+}
+
+/* -- Les deux colonnes doivent s'aligner ------------------------------
+   Une bouteille est une `.price-line`, une pression une `.beer-row` :
+   deux composants nes separement, qui ne partageaient ni la meme marge
+   interieure ni le meme pas vertical. Cote a cote, l'ecart se voyait —
+   les cadres ne demarraient pas a la meme hauteur et les intitules ne
+   tombaient pas sur la meme ligne de base.
+
+   On egalise ce qui doit l'etre : marge interieure identique en haut,
+   meme ecart entre les cartes, meme interligne pour les intitules. La
+   `.price-line` est une pile flex avec un `gap`, la `.beer-row` une
+   grille : le pas vertical est donc ramene a la meme valeur de part et
+   d'autre, sans quoi l'ecart entre le nom et ce qui suit differait. */
+@media (min-width:860px),
+       (orientation:landscape) and (max-height:600px) and (min-width:560px) {
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .price-line,
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row {
+    padding:12px !important;
+    margin:0 !important;
+    align-self:start !important;
+    box-sizing:border-box;
+  }
+  /* Meme gouttiere entre les cartes dans les deux colonnes. */
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .price-list,
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-table {
+    display:grid; gap:10px; align-content:start;
+  }
+  /* Meme ligne de base pour les intitules : c'est elle qui donne
+     l'impression d'alignement d'une colonne a l'autre. */
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .price-line__name,
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__name {
+    line-height:1.35; margin:0;
+  }
+  /* La premiere ligne de chaque carte demarre a la meme hauteur : la
+     pile flex des bouteilles ne doit pas ajouter d'ecart avant son
+     premier enfant. */
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .price-line > :first-child,
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row > :first-child,
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers .beer-row__row > :first-child {
+    margin-top:0 !important;
+  }
+  /* Les deux intertitres « Bouteille » et « Pression » coiffent chacun
+     leur colonne : meme hauteur, meme marge basse, sinon les deux
+     tableaux ne demarrent pas au meme niveau. */
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers > .beer-note,
+  html:not(.carte-doc) #interior-menu #boissons .panel--beers > .beer-note--second {
+    margin:0 0 10px !important; line-height:1.35;
   }
 }
 
