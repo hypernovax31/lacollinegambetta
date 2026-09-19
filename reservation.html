@@ -860,23 +860,52 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
     /* Un bloc sans message d'erreur laisserait sa 3e rangee vide et sa
        zone de saisie s'etirerait pour la combler : on la cale en haut. */
     .field > textarea, .field > input, .field > select { align-self:start; }
+    /* La rangee des messages garde la meme hauteur sur toute la ligne,
+       qu'un champ affiche une erreur, une precision ou rien : sans cela
+       le bas des blocs d'une meme rangee ne tombait pas au meme niveau. */
+    .field__error, .field__hint { min-height:1.05rem; }
+    .field__error[hidden] { display:block !important; visibility:hidden; }
   }
 }
 .field { display:grid; gap:6px; min-width:0; align-content:start; }
 /* Intitulés des champs (Nom, Téléphone, Courriel, Date, Heure…) en noir :
    ce sont les mots qu'on lit pour remplir, ils passent avant l'ornement.
    L'or est conservé pour les seules mentions accessoires. */
+/* Intitules : hauteur de ligne fixe pour que la rangee des libelles soit
+   identique d'un bloc a l'autre. */
 .field > label {
   font-family:'Cinzel',serif; font-size:.78rem; letter-spacing:.12em;
   text-transform:uppercase; color:#14060c; font-weight:700;
+  line-height:1.3; align-self:end;
 }
 .field > label .opt { text-transform:none; letter-spacing:0; font-weight:400; color:#5d5168; }
+/* Toutes les cases ont EXACTEMENT la meme hauteur. `min-height` seul ne
+   suffisait pas : un `select` se dimensionne sur sa police et ses marges
+   internes propres, differentes de celles d'un `input`, si bien que les
+   deux cases d'une meme ligne ne tombaient jamais tout a fait d'aplomb.
+   Une hauteur fixe, plus `box-sizing:border-box` pour que la bordure
+   soit comptee dedans, rend les cases rigoureusement identiques. */
 .field input, .field select, .field textarea {
   font:inherit; color:var(--ink); background:#fff;
   border:1px solid rgba(216,178,87,.5); border-radius:14px;
-  padding:11px 14px; min-height:46px; width:100%; transition:.18s ease;
+  padding:0 14px; height:52px; min-height:52px; width:100%;
+  box-sizing:border-box; transition:.18s ease;
+  appearance:none; -webkit-appearance:none;
 }
-.field textarea { min-height:96px; resize:vertical; line-height:1.5; }
+/* La zone de texte libre fait exactement deux cases de haut, plus
+   l'ecart qui les separerait : la symetrie reste lisible. */
+.field textarea {
+  height:110px; min-height:110px; padding:12px 14px;
+  resize:vertical; line-height:1.5;
+}
+/* Le chevron des listes deroulantes, retire par `appearance:none`. */
+.field select {
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%239c7a2d' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' d='M1 1.5 6 6.5l5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  background-size:12px 8px;
+  padding-right:38px;
+}
 .field input:focus, .field select:focus, .field textarea:focus {
   outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(216,178,87,.22);
 }
