@@ -1355,6 +1355,19 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
           <p class="panel__subtitle">Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.</p>
         </div>
 
+        <div class="hours">
+        <div class="hours__card">
+        <svg class="hours__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/></svg>
+        <span class="hours__day">Tous les jours</span>
+        <span class="hours__val"><span class="hours__t">07h00</span><span class="hours__sep" aria-hidden="true"></span><span class="hours__t">02h00</span></span>
+        </div>
+        <div class="hours__card">
+        <svg class="hours__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3v7a2.5 2.5 0 0 0 5 0V3"/><path d="M7.5 10v11"/><path d="M17.5 3c-1.6 1.3-2.5 3.4-2.5 5.6 0 1.7.9 2.9 2.5 3.1V21"/></svg>
+        <span class="hours__day">Cuisine</span>
+        <span class="hours__val"><span class="hours__t">12h00</span><span class="hours__sep" aria-hidden="true"></span><span class="hours__t">00h00</span></span>
+        </div>
+        </div>
+
         <form id="book-form" novalidate>
           <div class="form-grid">
             <div class="field" data-field>
@@ -1442,7 +1455,6 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
                 <option value="8">8 personnes</option>
                 <option value="9">9 personnes</option>
                 <option value="10">10 personnes</option>
-                <option value="10+">Plus de 10 personnes</option>
               </select>
               <p class="field__hint">Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.</p>
             </div>
@@ -1508,18 +1520,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
             Itinéraire
           </a>
         </div>
-        <div class="hours">
-          <div class="hours__card">
-            <svg class="hours__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/></svg>
-            <span class="hours__day">Tous les jours</span>
-            <span class="hours__val"><span class="hours__t">07h00</span><span class="hours__sep" aria-hidden="true"></span><span class="hours__t">02h00</span></span>
-          </div>
-          <div class="hours__card">
-            <svg class="hours__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3v7a2.5 2.5 0 0 0 5 0V3"/><path d="M7.5 10v11"/><path d="M17.5 3c-1.6 1.3-2.5 3.4-2.5 5.6 0 1.7.9 2.9 2.5 3.1V21"/></svg>
-            <span class="hours__day">Cuisine</span>
-            <span class="hours__val"><span class="hours__t">12h00</span><span class="hours__sep" aria-hidden="true"></span><span class="hours__t">00h00</span></span>
-          </div>
-        </div>
+        
       </article>
 
       <div class="book-back-bottom">
@@ -1677,7 +1678,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609201450" defer></script>
+<script src="assets/js/i18n.js?v=202609201700" defer></script>
 
 <script>
 (function () {
@@ -1694,18 +1695,76 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
      Écrites dans la page, elles suivent la langue choisie comme le
      reste. */
 
-  /* ---- Dates : aujourd'hui minimum, trois mois d'avance au plus ---- */
+  /* ---- Dates et heures : rien avant l'instant present, a PARIS ------
+     L'heure de reference est celle du restaurant, pas celle du visiteur :
+     un client a New York ou a Tokyo ne doit pas pouvoir reserver un
+     creneau deja passe a Paris, ni se voir refuser un creneau encore
+     valable. `Intl` donne l'heure de Paris sans table de fuseaux a
+     maintenir, et gere l'heure d'ete tout seul. */
+  function parisNow() {
+    var p = new Intl.DateTimeFormat('fr-FR', {
+      timeZone: 'Europe/Paris',
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hour12: false
+    }).formatToParts(new Date());
+    var v = {};
+    p.forEach(function (x) { v[x.type] = x.value; });
+    return {
+      date: v.year + '-' + v.month + '-' + v.day,
+      minutes: parseInt(v.hour, 10) * 60 + parseInt(v.minute, 10)
+    };
+  }
+
   function iso(d) {
     return d.getFullYear() + '-' +
       String(d.getMonth() + 1).padStart(2, '0') + '-' +
       String(d.getDate()).padStart(2, '0');
   }
-  var today = new Date();
-  dateEl.min = iso(today);
-  var max = new Date(today.getTime());
+  /* Le calendrier ne descend pas sous aujourd'hui a Paris, et ne monte
+     pas au-dela de trois mois. */
+  var nowP = parisNow();
+  dateEl.min = nowP.date;
+  var max = new Date(nowP.date + 'T00:00:00');
   max.setMonth(max.getMonth() + 3);
   dateEl.max = iso(max);
-  dateEl.value = iso(today);
+  dateEl.value = nowP.date;
+
+  /* Les creneaux deja passes sont grises DANS la liste plutot que
+     retires : une option supprimee puis reinserée perdrait sa
+     traduction, le moteur ayant photographie les textes au chargement.
+     Desactivee, elle reste en place et traduite. */
+  function refreshTimes() {
+    var now = parisNow();
+    var isToday = dateEl.value === now.date;
+    var selectedGone = false;
+    Array.prototype.forEach.call(timeEl.options, function (opt) {
+      if (!opt.value) return;
+      var hm = opt.value.split(':');
+      var mins = parseInt(hm[0], 10) * 60 + parseInt(hm[1], 10);
+      var past = isToday && mins <= now.minutes;
+      opt.disabled = past;
+      if (past && opt.selected) selectedGone = true;
+    });
+    /* Un creneau devenu invalide ne doit pas rester affiche. */
+    if (selectedGone) timeEl.value = '';
+    /* Aujourd'hui, si tout le service est passe, on pousse au lendemain
+       plutot que de laisser une liste entierement grisee. */
+    if (isToday && !Array.prototype.some.call(timeEl.options, function (o) {
+      return o.value && !o.disabled;
+    })) {
+      var d = new Date(now.date + 'T00:00:00');
+      d.setDate(d.getDate() + 1);
+      if (iso(d) <= dateEl.max) { dateEl.value = iso(d); refreshTimes(); }
+    }
+  }
+  dateEl.addEventListener('change', refreshTimes);
+  refreshTimes();
+  /* La page peut rester ouverte longtemps : on reevalue chaque minute,
+     et au retour sur l'onglet. */
+  setInterval(refreshTimes, 60000);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) refreshTimes();
+  });
 
   function setError(input, on) {
     var field = input.closest('[data-field]');
@@ -1734,8 +1793,16 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
     if (mail.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail.value.trim())) {
       setError(mail, true); bad = bad || mail;
     }
-    if (!dateEl.value || dateEl.value < iso(new Date())) { setError(dateEl, true); bad = bad || dateEl; }
+    /* Dernier controle a l'envoi : l'heure de Paris a pu avancer depuis
+       l'ouverture de la page. */
+    var nowChk = parisNow();
+    if (!dateEl.value || dateEl.value < nowChk.date) { setError(dateEl, true); bad = bad || dateEl; }
     if (!timeEl.value) { setError(timeEl, true); bad = bad || timeEl; }
+    else if (dateEl.value === nowChk.date) {
+      var hm2 = timeEl.value.split(':');
+      var m2 = parseInt(hm2[0], 10) * 60 + parseInt(hm2[1], 10);
+      if (m2 <= nowChk.minutes) { setError(timeEl, true); bad = bad || timeEl; }
+    }
     if (!guestsEl.value) { setError(guestsEl, true); bad = bad || guestsEl; }
 
     if (bad) {

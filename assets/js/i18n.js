@@ -50,7 +50,6 @@
       "8 personnes": "8 guests",
       "9 personnes": "9 guests",
       "10 personnes": "10 guests",
-      "Plus de 10 personnes": "More than 10 guests",
       /* --- Page de réservation --- */
       "Retour à la carte": "Back to the menu",
       "RÉSERVATION": "BOOKING",
@@ -488,7 +487,6 @@
       "8 personnes": "8 personas",
       "9 personnes": "9 personas",
       "10 personnes": "10 personas",
-      "Plus de 10 personnes": "Más de 10 personas",
       /* --- Page de réservation --- */
       "Retour à la carte": "Volver a la carta",
       "RÉSERVATION": "RESERVA",
@@ -926,7 +924,6 @@
       "8 personnes": "8 Personen",
       "9 personnes": "9 Personen",
       "10 personnes": "10 Personen",
-      "Plus de 10 personnes": "Mehr als 10 Personen",
       /* --- Page de réservation --- */
       "Retour à la carte": "Zurück zur Karte",
       "RÉSERVATION": "RESERVIERUNG",
@@ -1364,7 +1361,6 @@
       "8 personnes": "8 persone",
       "9 personnes": "9 persone",
       "10 personnes": "10 persone",
-      "Plus de 10 personnes": "Più di 10 persone",
       /* --- Page de réservation --- */
       "Retour à la carte": "Torna al menù",
       "RÉSERVATION": "PRENOTAZIONE",
@@ -1802,7 +1798,6 @@
       "8 personnes": "8 pessoas",
       "9 personnes": "9 pessoas",
       "10 personnes": "10 pessoas",
-      "Plus de 10 personnes": "Mais de 10 pessoas",
       /* --- Page de réservation --- */
       "Retour à la carte": "Voltar ao menu",
       "RÉSERVATION": "RESERVA",
@@ -2240,7 +2235,6 @@
       "8 personnes": "8 personen",
       "9 personnes": "9 personen",
       "10 personnes": "10 personen",
-      "Plus de 10 personnes": "Meer dan 10 personen",
       /* --- Page de réservation --- */
       "Retour à la carte": "Terug naar de kaart",
       "RÉSERVATION": "RESERVEREN",
@@ -2679,7 +2673,6 @@
       "8 personnes": "8 أشخاص",
       "9 personnes": "9 أشخاص",
       "10 personnes": "10 أشخاص",
-      "Plus de 10 personnes": "أكثر من 10 أشخاص",
       /* --- Page de réservation --- */
       "Retour à la carte": "العودة إلى القائمة",
       "RÉSERVATION": "الحجز",
@@ -3135,7 +3128,6 @@
       "8 personnes": "8 位",
       "9 personnes": "9 位",
       "10 personnes": "10 位",
-      "Plus de 10 personnes": "超过 10 位",
       /* --- Page de réservation --- */
       "Retour à la carte": "返回菜单",
       "RÉSERVATION": "预订",
@@ -3591,7 +3583,6 @@
       "8 personnes": "8 осіб",
       "9 personnes": "9 осіб",
       "10 personnes": "10 осіб",
-      "Plus de 10 personnes": "Більше 10 осіб",
       /* --- Page de réservation --- */
       "Retour à la carte": "Повернутися до меню",
       "RÉSERVATION": "БРОНЮВАННЯ",
@@ -4047,7 +4038,6 @@
       "8 personnes": "8名",
       "9 personnes": "9名",
       "10 personnes": "10名",
-      "Plus de 10 personnes": "10名以上",
       /* --- Page de réservation --- */
       "Retour à la carte": "メニューに戻る",
       "RÉSERVATION": "ご予約",
@@ -4503,7 +4493,6 @@
       "8 personnes": "8명",
       "9 personnes": "9명",
       "10 personnes": "10명",
-      "Plus de 10 personnes": "10명 초과",
       /* --- Page de réservation --- */
       "Retour à la carte": "메뉴로 돌아가기",
       "RÉSERVATION": "예약",
@@ -4959,7 +4948,6 @@
       "8 personnes": "8 osób",
       "9 personnes": "9 osób",
       "10 personnes": "10 osób",
-      "Plus de 10 personnes": "Więcej niż 10 osób",
       /* --- Page de réservation --- */
       "Retour à la carte": "Powrót do karty",
       "RÉSERVATION": "REZERWACJA",
@@ -5397,7 +5385,6 @@
       "8 personnes": "8 kişi",
       "9 personnes": "9 kişi",
       "10 personnes": "10 kişi",
-      "Plus de 10 personnes": "10 kişiden fazla",
       /* --- Page de réservation --- */
       "Retour à la carte": "Menüye dön",
       "RÉSERVATION": "REZERVASYON",
@@ -5835,7 +5822,6 @@
       "8 personnes": "8 व्यक्ति",
       "9 personnes": "9 व्यक्ति",
       "10 personnes": "10 व्यक्ति",
-      "Plus de 10 personnes": "10 से अधिक व्यक्ति",
       /* --- Page de réservation --- */
       "Retour à la carte": "मेन्यू पर वापस",
       "RÉSERVATION": "आरक्षण",
