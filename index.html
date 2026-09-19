@@ -3136,35 +3136,25 @@ body:has(#cover-section:not([style*="display: none"])) .lang-dock .lang-btn {
     max-height: calc(100vh - 76px);
   }
 }
-/* Fenêtre basse : le panneau s'élargit et se centre horizontalement
-   pour que les quinze langues tiennent sans défilement interne. */
+/* Fenêtre basse : le panneau reste cale A DROITE, sous l'en-tete, au
+   plus pres du bouton qui l'ouvre. Il etait auparavant centre au milieu
+   de l'ecran : le regard devait quitter le globe pour le retrouver au
+   centre, et l'ouverture sautait. Ancre a droite, il se deploie sous
+   son bouton, la ou on l'attend.
+
+   Il s'elargit quand meme pour que les quinze langues tiennent sans
+   defilement interne — mais vers la GAUCHE, puisque son bord droit est
+   fixe. `max-width` l'empeche de sortir de la fenetre sur les ecrans
+   etroits. */
 @media (min-width: 641px) and (max-height: 500px) {
   .lang-dock .lang-menu {
-    top: 50%;
-    right: auto;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-height: calc(100vh - 32px);
+    top: 52px;
+    right: 12px;
+    left: auto;
+    transform: none;
+    max-height: calc(100vh - 64px);
+    max-width: calc(100vw - 24px);
   }
-}
-/* -- Paysage : l'animation d'ouverture ne doit pas defaire le centrage --
-   Sur une fenetre basse, le panneau est centre par
-   `left:50% ; transform:translate(-50%,-50%)`. Or l'animation
-   d'ouverture anime elle aussi `transform` : elle part de
-   `translateY(6px)` et finit a `transform:none`, ce qui ECRASE le
-   translate de centrage pendant toute sa duree. Le panneau s'affichait
-   donc decale — son coin haut-gauche au centre de l'ecran — avant de
-   sauter a sa place a la fin de l'animation.
-
-   Une animation dediee reprend donc le decalage de centrage dans chacune
-   de ses etapes : seule l'opacite et un leger glissement varient, le
-   centrage, lui, ne bouge jamais. */
-@media (min-width: 641px) and (max-height: 500px) {
-  .lang-dock .lang-menu:not([hidden]) { animation: langMenuInCentered .18s ease-out; }
-}
-@keyframes langMenuInCentered {
-  from { opacity: 0; transform: translate(-50%, calc(-50% + 6px)); }
-  to   { opacity: 1; transform: translate(-50%, -50%); }
 }
 
 @media (max-width: 720px) {

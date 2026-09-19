@@ -576,28 +576,19 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 }
 /* Fenêtre basse : le panneau s'élargit et se centre horizontalement
    pour que les quinze langues tiennent sans défilement interne. */
-@media (min-width: 641px) and (max-height: 500px) {
-  .lang-dock .lang-menu {
-    top: 50%;
-    right: auto;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-height: calc(100vh - 32px);
-  }
-}
-/* -- Paysage : l'animation d'ouverture ne doit pas defaire le centrage --
-   Le panneau est centre par `left:50% ; transform:translate(-50%,-50%)`,
-   mais l'animation d'ouverture anime elle aussi `transform` : elle finit
-   a `transform:none`, ce qui ECRASE le translate de centrage pendant sa
-   duree. Le panneau s'affichait donc decale avant de sauter a sa place.
-   Cette animation dediee reprend le centrage dans chacune de ses etapes.
+/* Fenetre basse : le panneau reste cale A DROITE, sous l'en-tete, au
+   plus pres du bouton qui l'ouvre, plutot que centre au milieu de
+   l'ecran. Il s'elargit vers la GAUCHE, son bord droit etant fixe.
    `!important` : dans cette page, un correctif sans lui ne tient pas. */
 @media (min-width: 641px) and (max-height: 500px) {
-  .lang-dock .lang-menu:not([hidden]) { animation: langMenuInCentered .18s ease-out !important; }
-}
-@keyframes langMenuInCentered {
-  from { opacity: 0; transform: translate(-50%, calc(-50% + 6px)); }
-  to   { opacity: 1; transform: translate(-50%, -50%); }
+  .lang-dock .lang-menu {
+    top: 52px !important;
+    right: 12px !important;
+    left: auto !important;
+    transform: none !important;
+    max-height: calc(100vh - 64px) !important;
+    max-width: calc(100vw - 24px) !important;
+  }
 }
 
 @media (max-width: 720px) {
