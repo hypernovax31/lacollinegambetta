@@ -585,6 +585,21 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
     max-height: calc(100vh - 32px);
   }
 }
+/* -- Paysage : l'animation d'ouverture ne doit pas defaire le centrage --
+   Le panneau est centre par `left:50% ; transform:translate(-50%,-50%)`,
+   mais l'animation d'ouverture anime elle aussi `transform` : elle finit
+   a `transform:none`, ce qui ECRASE le translate de centrage pendant sa
+   duree. Le panneau s'affichait donc decale avant de sauter a sa place.
+   Cette animation dediee reprend le centrage dans chacune de ses etapes.
+   `!important` : dans cette page, un correctif sans lui ne tient pas. */
+@media (min-width: 641px) and (max-height: 500px) {
+  .lang-dock .lang-menu:not([hidden]) { animation: langMenuInCentered .18s ease-out !important; }
+}
+@keyframes langMenuInCentered {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 6px)); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
 @media (max-width: 720px) {
 .lang-dock { width: 58px; height: 58px; }
 .lang-dock .lang-btn { right: 8px; top: 9px; }
@@ -652,6 +667,9 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 }
 .lang-menu[hidden] { display: none; }
 .lang-menu:not([hidden]) { animation: langMenuIn .18s ease-out; }
+/* La definition manquait dans cette page : l'animation d'ouverture etait
+   donc inerte ici, le panneau apparaissait sans fondu. */
+@keyframes langMenuIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .lang-option {
   display: flex;
   align-items: center;
