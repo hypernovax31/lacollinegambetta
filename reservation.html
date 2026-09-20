@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Parisienne&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" crossorigin="">
 <style>
 /* =====================================================================
@@ -1265,6 +1265,90 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
     animation: none !important; opacity: 1 !important;
   }
 }
+
+/* ===== Remerciement apres envoi =====================================
+   Un petit mot de la maison plutot qu'un accuse de reception. Le cadre
+   du bandeau d'etat est conserve, mais il s'ouvre et respire, et se
+   termine par une signature manuscrite.
+
+   La signature est la seule ecriture cursive du site : elle doit le
+   rester, sinon elle perd sa valeur de signature. */
+.form-status--thanks {
+  padding: 22px 20px 18px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(216,178,87,.10), transparent 62%),
+    #fffdf4;
+  animation: thanksIn .5s cubic-bezier(.2,.8,.3,1) both;
+}
+@keyframes thanksIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.form-status--thanks p { margin: 0 0 9px; }
+.form-status--thanks p:last-child { margin-bottom: 0; }
+
+.thanks__hello {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.06rem, 3.2vw, 1.3rem);
+  letter-spacing: .05em;
+  color: var(--violet-900);
+}
+.thanks__line { font-size: .88rem; color: var(--violet-900); }
+
+/* La ligne qui reprend jour, heure et couverts : c'est l'information
+   que le client relit, on la detache du reste. */
+.thanks__when {
+  display: inline-block;
+  margin: 4px auto 12px !important;
+  padding: 9px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(216,178,87,.5);
+  background: #fff;
+  font-family: 'Cinzel', serif;
+  font-size: .9rem;
+  letter-spacing: .04em;
+  color: var(--violet-900);
+  font-variant-numeric: tabular-nums;
+}
+.thanks__warm { font-style: italic; color: #6b4a8a; }
+
+/* Signature manuscrite, precedee d'un filet dore qui l'isole du
+   message, comme au bas d'une carte. */
+.thanks__sign {
+  margin-top: 14px !important;
+  padding-top: 14px;
+  border-top: 1px solid rgba(216,178,87,.42);
+  font-family: 'Parisienne', 'Segoe Script', 'Brush Script MT', cursive;
+  /* Une cursive porte bien plus bas et bien plus petit qu'une capitale :
+     elle est agrandie pour retrouver une presence comparable. */
+  font-size: clamp(1.5rem, 5vw, 1.95rem);
+  line-height: 1.35;
+  letter-spacing: .01em;
+  color: var(--gold-700);
+  /* Les jambages descendants ne doivent pas etre rognes par le cadre. */
+  padding-bottom: 2px;
+}
+.thanks__tel { font-size: .8rem; color: var(--muted); }
+.thanks__tel a { color: var(--gold-700); font-weight: 700; white-space: nowrap; }
+
+/* Les ecritures non latines n'ont pas de cursive equivalente : la
+   signature y reprend la fonte de titre, en italique, plutot que de
+   tomber dans une fonte de secours illisible. */
+html[lang="ar"] .thanks__sign,
+html[lang="zh"] .thanks__sign,
+html[lang="ja"] .thanks__sign,
+html[lang="ko"] .thanks__sign,
+html[lang="hi"] .thanks__sign,
+html[lang="uk"] .thanks__sign {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1rem, 3.4vw, 1.2rem);
+  font-style: italic;
+  letter-spacing: .06em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .form-status--thanks { animation: none; }
+}
 </style>
 </head>
 <body>
@@ -1497,10 +1581,23 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6"/><path d="M8 3v4M16 3v4"/><path d="M8.6 14.4h6.8"/></svg>
               Envoyer ma demande
             </button>
-            <p class="form-note">Une demande n’est pas une confirmation : nous vous rappelons pour valider.</p>
           </div>
 
           <div class="form-status" id="bk-status" role="status" aria-live="polite" hidden></div>
+
+          <!-- Remerciement : les fragments sont ecrits ici, masques, pour
+               que le moteur i18n les photographie au chargement. Un texte
+               fabrique en JavaScript ne serait jamais traduit. Le script
+               les assemble autour du nom, de la date et de l'heure. -->
+          <div class="thanks-src" hidden aria-hidden="true">
+            <span data-th="hi">Merci infiniment</span>
+            <span data-th="l1">Votre demande de table vient de nous parvenir.</span>
+            <span data-th="l2">Nous vous attendons</span>
+            <span data-th="l3">Nous vous rappelons très vite pour confirmer tout cela de vive voix.</span>
+            <span data-th="l4">Au plaisir de vous recevoir sur la Colline,</span>
+            <span data-th="sign">L’équipe de La Colline Gambetta</span>
+            <span data-th="tel">Une question ? Appelez-nous au</span>
+          </div>
         </form>
       </article>
 
@@ -1697,7 +1794,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609202100" defer></script>
+<script src="assets/js/i18n.js?v=202609202230" defer></script>
 
 <script>
 (function () {
@@ -1870,10 +1967,85 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
     var sujet = 'Réservation — ' + name.value.trim() + ' — ' + jolie + ' à ' + timeEl.value.replace(':', 'h') + ' (' + couverts + ')';
     var href = 'mailto:lacollinegambetta@mailo.com?subject=' + encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
 
-    status.innerHTML = '<strong>Votre demande est prête.</strong><br>' +
-      'Votre messagerie s’ouvre avec le récapitulatif — il ne reste qu’à l’envoyer. ' +
-      'Vous préférez de vive voix ? Appelez le <a href="tel:+33143490593">01 43 49 05 93</a>.';
+    /* Remerciement personnalise. Les fragments viennent du DOM, donc
+       deja traduits par le moteur ; seuls le nom, la date et l'heure
+       sont injectes. Le nom passe par textContent, jamais par
+       innerHTML : c'est une saisie libre. */
+    function th(k) {
+      var el = document.querySelector('.thanks-src [data-th="' + k + '"]');
+      return el ? el.textContent.trim() : '';
+    }
+    /* La date suit la langue affichee : le client la relit dans la
+       sienne, meme si le courriel part en francais. */
+    var lang = document.documentElement.getAttribute('lang') || 'fr';
+    var jourLu;
+    try {
+      jourLu = d.toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' });
+    } catch (err) { jourLu = jolie; }
+    var heureLue = (lang === 'fr')
+      ? timeEl.value.replace(':', 'h')
+      : (function () {
+          try {
+            var hm = timeEl.value.split(':');
+            return new Date(2000, 0, 1, parseInt(hm[0], 10), parseInt(hm[1], 10))
+              .toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
+          } catch (err2) { return timeEl.value.replace(':', 'h'); }
+        })();
+    /* Prenom seul : plus chaleureux qu'un nom complet en tete de mot. */
+    var prenom = name.value.trim().split(/\s+/)[0];
+    /* La ponctuation n'est pas universelle : le chinois et le japonais
+       ont leurs propres virgule et point pleine chasse, l'arabe sa
+       virgule inversee. Coller « , » et « . » a du japonais trahirait
+       le soin apporte au reste du message.
+       La virgule pleine chasse du chinois et du japonais porte deja son
+       blanc : lui ajouter une espace creuse un trou. */
+    var PUNCT = {
+      ja: { comma: '\u3001', stop: '\u3002', sp: '' },
+      zh: { comma: '\uFF0C', stop: '\u3002', sp: '' },
+      ar: { comma: '\u060C', stop: '.', sp: ' ' }
+    };
+    var pc = PUNCT[lang] || { comma: ',', stop: '.', sp: ' ' };
+
+    status.textContent = '';
+    status.classList.add('form-status--thanks');
+
+    var h = document.createElement('p');
+    h.className = 'thanks__hello';
+    h.textContent = th('hi') + pc.comma + pc.sp + prenom + pc.stop;
+
+    var p1 = document.createElement('p');
+    p1.className = 'thanks__line';
+    p1.textContent = th('l1');
+
+    var p2 = document.createElement('p');
+    p2.className = 'thanks__when';
+    p2.textContent = th('l2') + ' ' + jourLu + ' \u00b7 ' + heureLue + ' \u00b7 ' + couverts + pc.stop;
+
+    var p3 = document.createElement('p');
+    p3.className = 'thanks__line';
+    p3.textContent = th('l3');
+
+    var p4 = document.createElement('p');
+    p4.className = 'thanks__line thanks__warm';
+    p4.textContent = th('l4');
+
+    var sg = document.createElement('p');
+    sg.className = 'thanks__sign';
+    sg.textContent = th('sign');
+
+    var tel = document.createElement('p');
+    tel.className = 'thanks__tel';
+    tel.appendChild(document.createTextNode(th('tel') + ' '));
+    var a = document.createElement('a');
+    a.href = 'tel:+33143490593';
+    a.textContent = '01 43 49 05 93';
+    tel.appendChild(a);
+
+    [h, p1, p2, p3, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
     status.hidden = false;
+    /* Le remerciement s'affiche sous le formulaire : on l'amene a
+       l'ecran, sinon il passe inapercu sur un petit ecran. */
+    try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (err3) {}
     window.location.href = href;
   });
 })();
