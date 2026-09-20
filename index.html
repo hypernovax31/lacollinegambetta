@@ -8544,6 +8544,34 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
 /* Sous 640 px, une reserve de 52 px existe deja plus haut dans la
    feuille (regle « les trois boutons ne se chevauchent jamais ») : on
    ne la contredit pas. */
+
+/* ===== Globe ancre dans le bandeau des deux boutons ==================
+   Dans la carte, le socle devient un enfant du bandeau : il cesse
+   d'etre fixe a la fenetre pour se poser dans son coin droit, et
+   defile donc avec lui. Sur la page de garde, ou ce bandeau est
+   masque, il reste fixe en haut a droite (regle de base plus haut). */
+.top-controls { position: relative; }
+.top-controls > .lang-dock {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 54px;
+  height: auto;
+}
+/* Centre verticalement sur la hauteur reelle du bandeau, quelle que
+   soit celle des boutons (un libelle long peut les faire grandir). */
+.top-controls > .lang-dock .lang-btn {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  margin: 0;
+}
+@media (max-width: 720px) {
+  .top-controls > .lang-dock { width: 50px; }
+  .top-controls > .lang-dock .lang-btn { right: 8px; }
+}
 </style>
 </head>
 <body>
@@ -8972,11 +9000,18 @@ function showView(view) {
      rester enfant du corps de page, sinon un parent masque (le bandeau
      de titre vit dans la carte, cachee sur la page de garde) le rendrait
      introuvable. */
-  function dockLang() {
+  function dockLang(view) {
     const dock = document.querySelector('.lang-dock');
-    if (dock && dock.parentElement !== document.body) {
-      document.body.insertBefore(dock, document.body.firstChild);
-    }
+    if (!dock) return;
+    /* Dans la carte, le globe est ANCRE dans le bandeau des deux
+       boutons : il defile avec lui et se cale dans son coin droit. Sur
+       la page de garde ce bandeau est masque — un globe place dedans
+       serait invisible — il retourne donc au corps de page, ou il reste
+       fixe en haut a droite. Un seul globe : on le DEPLACE. */
+    const bar = document.querySelector('.top-controls');
+    const target = (view === 'menu' && bar) ? bar : document.body;
+    if (dock.parentElement === target) return;
+    target.insertBefore(dock, target.firstChild);
   }
 
   const top = document.querySelector('.top-controls');
@@ -8992,7 +9027,7 @@ function showView(view) {
     menu.style.display = 'none';
     btnCover.classList.add('active');
     btnMenu.classList.remove('active');
-    dockLang();
+    dockLang('cover');
     animateScrollTo(0, 220);
     requestAnimationFrame(sizeCoverMedallion);
   } else {
@@ -9000,7 +9035,7 @@ function showView(view) {
     menu.style.display = 'block';
     btnCover.classList.remove('active');
     btnMenu.classList.add('active');
-    dockLang();
+    dockLang('menu');
     animateScrollTo(0, 220);
     requestAnimationFrame(() => {
       syncTopControlsHeight();
@@ -9886,7 +9921,7 @@ else sizeCoverMedallion();
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609202230" defer></script>
+<script src="assets/js/i18n.js?v=202609210030" defer></script>
 
 <!-- ============ Assiettes en photo : les fiches deviennent des dépliants ============ -->
 <script>

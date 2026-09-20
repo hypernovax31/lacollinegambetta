@@ -1349,6 +1349,46 @@ html[lang="uk"] .thanks__sign {
 @media (prefers-reduced-motion: reduce) {
   .form-status--thanks { animation: none; }
 }
+
+/* ===== Barre d'envoi =================================================
+   Cinq secondes pendant lesquelles le client voit sa reservation
+   partir. La duree est volontairement pleine, meme si le relais
+   repond avant : une barre qui saute a 100 % en une demi-seconde
+   n'inspire pas le meme soin qu'une progression tenue. */
+.sending { margin: 16px 0 0; text-align: center; }
+.sending[hidden] { display: none; }
+.sending__label {
+  margin: 0 0 9px;
+  font-family: 'Cinzel', serif;
+  font-size: .84rem;
+  letter-spacing: .06em;
+  color: var(--violet-900);
+}
+.sending__track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(89, 46, 111, .12);
+  border: 1px solid rgba(216, 178, 87, .42);
+  overflow: hidden;
+}
+.sending__bar {
+  width: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #bf953f, #fcf6ba, #d8b257, #fef9db);
+  background-size: 200% 100%;
+  transition: width 5s linear;
+  animation: sendingShine 1.6s linear infinite;
+}
+@keyframes sendingShine {
+  from { background-position: 0% 0; }
+  to   { background-position: 200% 0; }
+}
+/* Bouton neutralise pendant l'envoi : pas de double reservation. */
+.btn-book:disabled { opacity: .55; cursor: progress; }
+@media (prefers-reduced-motion: reduce) {
+  .sending__bar { animation: none; }
+}
 </style>
 </head>
 <body>
@@ -1579,8 +1619,17 @@ html[lang="uk"] .thanks__sign {
           <div class="form-actions">
             <button class="btn-book" type="submit">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6"/><path d="M8 3v4M16 3v4"/><path d="M8.6 14.4h6.8"/></svg>
-              Envoyer ma demande
+              Envoyer ma réservation
             </button>
+          </div>
+
+          <!-- Barre de progression : le client voit sa reservation
+               partir, au lieu d'un ecran qui ne bouge pas. -->
+          <div class="sending" id="bk-sending" hidden>
+            <p class="sending__label">Envoi de votre réservation…</p>
+            <div class="sending__track" role="progressbar" aria-labelledby="bk-sending">
+              <div class="sending__bar" id="bk-bar"></div>
+            </div>
           </div>
 
           <div class="form-status" id="bk-status" role="status" aria-live="polite" hidden></div>
@@ -1597,6 +1646,7 @@ html[lang="uk"] .thanks__sign {
             <span data-th="l4">Au plaisir de vous recevoir sur la Colline,</span>
             <span data-th="sign">L’équipe de La Colline Gambetta</span>
             <span data-th="tel">Une question ? Appelez-nous au</span>
+            <span data-th="fail">L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.</span>
           </div>
         </form>
       </article>
@@ -1794,7 +1844,7 @@ html[lang="uk"] .thanks__sign {
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609202230" defer></script>
+<script src="assets/js/i18n.js?v=202609210030" defer></script>
 
 <script>
 (function () {
@@ -1941,7 +1991,13 @@ html[lang="uk"] .thanks__sign {
        message reste affiché à l'écran pour qu'il puisse aussi appeler. */
     var d = new Date(dateEl.value + 'T12:00:00');
     var jolie = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    /* Deux versions du nombre de couverts : celle affichee suit la
+       langue du client, celle du courriel reste en francais — c'est le
+       restaurateur qui le lit. La valeur de l'option est un chiffre nu,
+       jamais traduit, donc sure. */
     var couverts = guestsEl.options[guestsEl.selectedIndex].textContent;
+    var nb = guestsEl.value;
+    var couvertsFr = nb + (nb === '1' ? ' personne' : ' personnes');
     var pref = document.getElementById('bk-place').value;
     var msg = document.getElementById('bk-msg').value.trim();
 
@@ -1955,7 +2011,7 @@ html[lang="uk"] .thanks__sign {
       mail.value.trim() ? 'Mail : ' + mail.value.trim() : null,
       'Date : ' + jolie,
       'Heure : ' + timeEl.value.replace(':', 'h'),
-      'Couverts : ' + couverts,
+      'Couverts : ' + couvertsFr,
       'Préférence : ' + pref,
       msg ? '' : null,
       msg ? 'Message : ' + msg : null,
@@ -1964,8 +2020,7 @@ html[lang="uk"] .thanks__sign {
       name.value.trim()
     ].filter(function (l) { return l !== null; }).join('\n');
 
-    var sujet = 'Réservation — ' + name.value.trim() + ' — ' + jolie + ' à ' + timeEl.value.replace(':', 'h') + ' (' + couverts + ')';
-    var href = 'mailto:lacollinegambetta@mailo.com?subject=' + encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+    var sujet = 'Réservation — ' + name.value.trim() + ' — ' + jolie + ' à ' + timeEl.value.replace(':', 'h') + ' (' + couvertsFr + ')';
 
     /* Remerciement personnalise. Les fragments viennent du DOM, donc
        deja traduits par le moteur ; seuls le nom, la date et l'heure
@@ -2042,11 +2097,99 @@ html[lang="uk"] .thanks__sign {
     tel.appendChild(a);
 
     [h, p1, p2, p3, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
-    status.hidden = false;
-    /* Le remerciement s'affiche sous le formulaire : on l'amene a
-       l'ecran, sinon il passe inapercu sur un petit ecran. */
-    try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (err3) {}
-    window.location.href = href;
+
+    /* --- Envoi direct vers la boite du restaurant ---------------------
+       Le site est statique : sans service tiers, un navigateur ne peut
+       pas remettre un courriel. La demande part donc par FormSubmit,
+       une passerelle qui relaie le formulaire vers l'adresse du
+       restaurant. Aucun compte, aucune cle : le premier envoi declenche
+       un courriel de confirmation a activer une seule fois.
+
+       L'adresse est encodee en base64 dans l'attribut du formulaire
+       plutot qu'ecrite en clair, pour ne pas l'offrir aux aspirateurs
+       d'adresses qui parcourent les pages. */
+    var payload = new FormData();
+    payload.append('_subject', sujet);
+    payload.append('_template', 'box');
+    payload.append('_captcha', 'false');
+    payload.append('Nom', name.value.trim());
+    payload.append('Téléphone', phone.value.trim());
+    payload.append('Mail', mail.value.trim() || '—');
+    payload.append('Date', jolie);
+    payload.append('Heure', timeEl.value.replace(':', 'h'));
+    payload.append('Couverts', couvertsFr);
+    payload.append('Préférence', pref);
+    payload.append('Message', msg || '—');
+    payload.append('Récapitulatif', corps);
+    /* Repondre directement au client depuis la boite du restaurant. */
+    if (mail.value.trim()) payload.append('_replyto', mail.value.trim());
+
+    var btn = form.querySelector('.btn-book');
+    var sending = document.getElementById('bk-sending');
+    var bar = document.getElementById('bk-bar');
+
+    status.hidden = true;
+    sending.hidden = false;
+    btn.disabled = true;
+    /* La barre est lancee a la frame suivante : posee a 100 % dans le
+       meme cycle, la transition ne demarrerait pas. */
+    bar.style.width = '0%';
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { bar.style.width = '100%'; });
+    });
+    try { sending.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e0) {}
+
+    var ENDPOINT = 'https://formsubmit.co/ajax/' +
+      atob('bGFjb2xsaW5lZ2FtYmV0dGFAbWFpbG8uY29t');
+    /* La barre dure cinq secondes pleines : la reponse arrive souvent
+       avant, mais on ne coupe pas l'animation en cours de route. */
+    var started = Date.now();
+    var MIN_MS = 5000;
+
+    function finish(ok) {
+      var rest = Math.max(0, MIN_MS - (Date.now() - started));
+      setTimeout(function () {
+        sending.hidden = true;
+        btn.disabled = false;
+        bar.style.width = '0%';
+        if (ok) {
+          status.hidden = false;
+          try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e1) {}
+          form.reset();
+          refreshTimes();
+        } else {
+          /* Echec du relais : plutot que de laisser croire a un envoi,
+             on bascule sur la messagerie du client, pre-remplie. */
+          status.textContent = '';
+          status.classList.remove('form-status--thanks');
+          var w = document.createElement('p');
+          w.className = 'thanks__line';
+          w.textContent = th('fail');
+          var w2 = document.createElement('p');
+          w2.className = 'thanks__tel';
+          w2.appendChild(document.createTextNode(th('tel') + ' '));
+          var wa2 = document.createElement('a');
+          wa2.href = 'tel:+33143490593';
+          wa2.textContent = '01 43 49 05 93';
+          w2.appendChild(wa2);
+          status.appendChild(w);
+          status.appendChild(w2);
+          status.hidden = false;
+          try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e2) {}
+          window.location.href = 'mailto:lacollinegambetta@mailo.com?subject=' +
+            encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+        }
+      }, rest);
+    }
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      body: payload,
+      headers: { 'Accept': 'application/json' }
+    })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function () { finish(true); })
+      .catch(function () { finish(false); });
   });
 })();
 </script>
