@@ -3107,39 +3107,24 @@ html:not(.carte-doc) #menus .choice-card h5 em {
   transform: none;
 }
 
-/* -- Le globe ancre DANS le bandeau de titre --------------------------
-   Le socle reste un enfant du corps de page tant que la page de garde
-   est affichee : le bandeau de titre vit dans la carte, masquee a ce
-   moment-la, et le globe y deviendrait donc introuvable. Des l'entree
-   dans la carte, un script le deplace dans le bandeau, ou il se cale en
-   haut a droite ; il revient au corps de page si l'on ressort. Un seul
-   exemplaire de globe pour tout le site, comme avant.
+/* -- Le globe, toujours fixe en haut a droite -------------------------
+   Il ne s'ancre plus dans le bandeau de titre : il reste colle au coin
+   de la FENETRE sur toutes les pages et dans toutes les vues, y compris
+   au-dessus du bandeau « Page de Garde / Menu & Carte ». Le socle est
+   donc pose au-dessus de tout (z-index superieur au bandeau, qui monte
+   a 1002 quand il colle en haut).
 
-   Dans le bandeau, le socle n'est plus fixe a la fenetre mais pose dans
-   le coin du bandeau : il defile avec lui au lieu de flotter par-dessus
-   la carte. */
+   Contrepartie : le globe recouvre le coin haut droit. Chaque bandeau
+   qui passe dessous doit donc lui reserver sa gouttiere, sinon un
+   bouton ou un titre long vient se glisser dessous. */
+.lang-dock { z-index: 1600; }
 .interior-header { position: relative; }
-.interior-header > .lang-dock {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: auto;
-  height: auto;
-}
-.interior-header > .lang-dock .lang-btn {
-  position: static;
-  margin: 10px 12px 0 0;
-}
+/* Gouttiere symetrique : le titre reste centre sans passer sous le
+   globe. Symetrique, car un padding d'un seul cote decalerait le
+   titre. */
+.interior-header { padding-left: 58px; padding-right: 58px; }
 @media (max-width: 720px) {
-  .interior-header > .lang-dock .lang-btn { margin: 8px 8px 0 0; }
-}
-/* Le bandeau reserve la gouttiere du globe a droite ET a gauche : le
-   titre reste ainsi centre dans le bandeau, sans jamais passer sous le
-   bouton. Sans cette reserve symetrique, un titre long venait le
-   chevaucher. */
-.interior-header:has(> .lang-dock) { padding-left: 58px; padding-right: 58px; }
-@media (max-width: 720px) {
-  .interior-header:has(> .lang-dock) { padding-left: 50px; padding-right: 50px; }
+  .interior-header { padding-left: 54px; padding-right: 54px; }
 }
 
 /* Sur la page de garde, le fond est sombre et sans bandeau : le globe
@@ -8545,6 +8530,20 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
   background:rgba(216,178,87,.28);
   border-color:#fcf6ba;
 }
+
+/* ===== Gouttiere du globe fixe ======================================
+   Le globe est colle au coin haut droit de la FENETRE : tout bandeau
+   qui passe sous lui doit lui reserver la place, sinon un bouton vient
+   se glisser dessous. La reserve est appliquee a droite seulement pour
+   le bandeau a deux boutons — une grille, dont on decale la derniere
+   colonne — et symetriquement pour les bandeaux centres. */
+.top-controls { padding-right: 62px; }
+@media (max-width: 720px) {
+  .top-controls { padding-right: 54px; }
+}
+/* Sous 640 px, une reserve de 52 px existe deja plus haut dans la
+   feuille (regle « les trois boutons ne se chevauchent jamais ») : on
+   ne la contredit pas. */
 </style>
 </head>
 <body>
@@ -8968,17 +8967,16 @@ function showView(view) {
   const menu = document.getElementById('interior-menu');
   const btnCover = document.getElementById('btn-show-cover');
   const btnMenu = document.getElementById('btn-show-menu');
-  /* Le globe des langues est ancre dans le bandeau de titre quand la
-     carte est affichee, et rendu au corps de page sur la page de garde,
-     ou ce bandeau n'existe pas a l'ecran. Un seul globe dans tout le
-     document : on le DEPLACE, on ne le duplique pas. */
-  function dockLang(view) {
+  /* Le globe reste desormais fixe au coin de la fenetre dans les deux
+     vues : plus rien a deplacer d'une vue a l'autre. Il doit seulement
+     rester enfant du corps de page, sinon un parent masque (le bandeau
+     de titre vit dans la carte, cachee sur la page de garde) le rendrait
+     introuvable. */
+  function dockLang() {
     const dock = document.querySelector('.lang-dock');
-    if (!dock) return;
-    const header = document.querySelector('#interior-menu .interior-header');
-    const target = (view === 'menu' && header) ? header : document.body;
-    if (dock.parentElement === target) return;
-    target.insertBefore(dock, target.firstChild);
+    if (dock && dock.parentElement !== document.body) {
+      document.body.insertBefore(dock, document.body.firstChild);
+    }
   }
 
   const top = document.querySelector('.top-controls');
@@ -8994,7 +8992,7 @@ function showView(view) {
     menu.style.display = 'none';
     btnCover.classList.add('active');
     btnMenu.classList.remove('active');
-    dockLang('cover');
+    dockLang();
     animateScrollTo(0, 220);
     requestAnimationFrame(sizeCoverMedallion);
   } else {
@@ -9002,7 +9000,7 @@ function showView(view) {
     menu.style.display = 'block';
     btnCover.classList.remove('active');
     btnMenu.classList.add('active');
-    dockLang('menu');
+    dockLang();
     animateScrollTo(0, 220);
     requestAnimationFrame(() => {
       syncTopControlsHeight();
