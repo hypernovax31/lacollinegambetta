@@ -222,19 +222,22 @@ _ARTICLE_RE = re.compile(r'<article class="price-line"[^>]*>.*?</article>', re.S
 
 def _inline_note_in_article(article: str) -> str:
     """Les notes (.price-list__note) d'un article remontent dans sa ligne,
-    juste après le nom — l'article ne tient plus qu'une ligne. La classe
+    juste après le nom en <strong>. La classe
     note-cl (contenance) est conservée : la CSS lui garde son corps propre
     (--qty-size), distinct du corps des notes descriptives."""
-    notes = re.findall(r'<p class="price-list__note([^"]*)">(.*?)</p>', article, re.S)
-    if not notes:
-        return article
     name = re.search(r'(<div class="(?:price-line__name|hh-line__name)">)(.*?)(</div>)', article, re.S)
     if not name:
         return article
+    notes = re.findall(r'<p class="price-list__note([^"]*)">(.*?)</p>', article, re.S)
+    title_text = name.group(2).strip()
+    if not title_text.startswith("<strong>"):
+        title_text = f"<strong>{title_text}</strong>"
+    if not notes:
+        return article.replace(name.group(0), name.group(1) + title_text + name.group(3), 1)
     article = re.sub(r'<p class="price-list__note[^"]*">.*?</p>', '', article, flags=re.S)
     inline = "".join(f'<span class="carte-inline-note{cls}">{n}</span>' for cls, n in notes)
     return article.replace(
-        name.group(0), name.group(1) + name.group(2) + inline + name.group(3), 1)
+        name.group(0), name.group(1) + title_text + inline + name.group(3), 1)
 
 
 def inline_notes(block: str) -> str:
@@ -1426,27 +1429,28 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
    Toutes les catégories de boissons (fraîches, chaudes, apéritifs, whiskies,
    digestifs, bières et bandeau HH) tiennent sur UNE SEULE feuille (8 pages au total
    pour la carte A4). Les 6 panneaux passent en deux colonnes de lignes (carte-2col).
-   Les LIGNES gardent leurs corps uniformes de la carte — noms, notes et prix
-   sont exactement ceux des autres feuilles : le nom et le prix sont sur la même
-   ligne reliés par la rigole en pointillé, et les informations / notes sont sur
-   la ligne du dessous. */
+   Les titres des boissons sont en gras (<strong>), suivis immédiatement de leurs
+   informations (notes, contenances, parfums) en italique. La rigole en pointillé
+   relie le texte au prix à droite sans chevaucher les prix ; si les informations
+   sont longues, elles s'enroulent sur la ligne du dessous et la rigole continue
+   jusqu'au prix. */
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] {
-  padding: 2.5px 14px;
+  padding: 3px 14px;
 }
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__title {
-  min-height: 24px;
+  min-height: 25px;
   padding: 2px 14px;
   font-size: 0.88rem !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__head {
-  margin-bottom: 1.5px;
+  margin-bottom: 2px;
 }
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__subtitle {
-  margin: 0 0 1.5px !important;
+  margin: 0 0 2px !important;
   font-size: 0.80rem !important;
 }
 #print-document .carte-flow[data-sec="boissons"].carte-aerate .panel[data-merge="1"] > .panel__head {
-  margin-bottom: calc(1.5px + var(--carte-air-title, 0px)) !important;
+  margin-bottom: calc(2px + var(--carte-air-title, 0px)) !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .tab-flow {
   row-gap: 1px !important;
@@ -1455,24 +1459,52 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   display: flex !important;
   flex-direction: column !important;
   gap: 0 !important;
-  padding: 1px 0 !important;
+  padding: 1.5px 0 !important;
 }
 #print-document .carte-flow[data-sec="boissons"].carte-aerate [data-merge="1"] .price-line {
-  padding-top: calc(1px + var(--carte-air-side, 0px)) !important;
-  padding-bottom: calc(1px + var(--carte-air-side, 0px)) !important;
+  padding-top: calc(1.5px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(1.5px + var(--carte-air-side, 0px)) !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .price-line__row {
   display: flex !important;
   align-items: baseline !important;
   gap: 6px !important;
   width: 100% !important;
+  min-width: 0 !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .price-line__name {
-  white-space: nowrap !important;
-  font-weight: 700 !important;
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  white-space: normal !important;
   line-height: 1.25 !important;
+  color: var(--violet-900) !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .price-line__name strong {
+  font-weight: 700 !important;
   font-size: 1.12rem !important;
-  flex: 0 0 auto !important;
+  color: var(--violet-900) !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .carte-inline-note {
+  display: inline !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 0.85rem !important;
+  font-weight: 400 !important;
+  font-style: italic !important;
+  color: var(--muted) !important;
+  margin-left: 0.45em !important;
+  white-space: normal !important;
+  text-transform: none !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .carte-inline-note.note-cl {
+  font-size: 0.80rem !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .carte-inline-note + .carte-inline-note {
+  margin-left: 0 !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .carte-inline-note + .carte-inline-note::before {
+  content: " · ";
+  margin-left: 0.35em;
+  margin-right: 0.35em;
 }
 #print-document .carte-flow[data-sec="boissons"] .price-line__dots {
   display: block !important;
@@ -1490,17 +1522,6 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   flex: 0 0 auto !important;
   line-height: 1.25 !important;
   text-align: right !important;
-}
-#print-document .carte-flow[data-sec="boissons"] .price-list__note {
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: 1.2 !important;
-  font-size: 0.85rem !important;
-  color: var(--muted) !important;
-  font-style: italic !important;
-}
-#print-document .carte-flow[data-sec="boissons"] .price-list__note.note-cl {
-  font-size: 0.80rem !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .beer-note {
   margin: 1px 0 2px !important;
@@ -2384,6 +2405,9 @@ def main() -> None:
             for i in group:
                 flows[sid][i] = re.sub(r"^<(\w+)", r'<\1 data-merge="1"',
                                        flows[sid][i], count=1)
+                # notes remontées à la suite du titre de chaque article pour boissons
+                if sid in ("boissons", "cocktails"):
+                    flows[sid][i] = inline_notes(flows[sid][i])
     # vins : le producteur après le tiret passe en sans gras (comme les notes)
     for sid in SECTIONS:
         flows[sid] = [wine_producer_light(b) for b in flows[sid]]
