@@ -797,7 +797,7 @@ html.carte-doc .print-page--cover .cover-brand {
   width: 100%;
   max-width: 178mm;
   margin: auto 0 !important; /* centrage vertical parfait au-dessus du médaillon */
-  gap: 2mm !important;
+  gap: 0 !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -807,13 +807,13 @@ html.carte-doc .print-page--cover .titre-principal .eyebrow,
 html.carte-doc .print-page--cover .cover-brand .eyebrow,
 html.carte-doc .print-page--cover .cover-brand .leader-title {
   font-family: 'Cinzel', serif !important;
-  font-size: 22pt !important;
+  font-size: 20pt !important;
   font-weight: 700 !important;
-  letter-spacing: .32em !important;
+  letter-spacing: .38em !important;
   color: #ffffff !important;
   line-height: 1 !important;
   text-transform: uppercase !important;
-  margin: 0 !important;
+  margin: 0 0 2mm 0 !important;
 }
 html.carte-doc .print-page--cover .titre-principal h2,
 html.carte-doc .print-page--cover .cover-brand h2 {
@@ -822,51 +822,53 @@ html.carte-doc .print-page--cover .cover-brand h2 {
   font-weight: 700 !important;
   letter-spacing: .22em !important;
   color: #ffffff !important;
-  line-height: 0.9 !important;
+  line-height: 0.92 !important;
   text-transform: uppercase !important;
-  margin: 2.5mm 0 1mm !important;
+  margin: 0 0 1mm 0 !important;
   text-align: center !important;
   display: block !important;
 }
 html.carte-doc .print-page--cover .titre-principal h2 span,
 html.carte-doc .print-page--cover .cover-brand h2 span {
   display: block !important;
-  font-size: 19pt !important;
+  font-size: 18.5pt !important;
   font-weight: 600 !important;
-  letter-spacing: .32em !important;
+  letter-spacing: .34em !important;
   color: #ffe88f !important;
   line-height: 1.1 !important;
-  margin-top: 1.5mm !important;
+  margin-top: 1.8mm !important;
   text-transform: uppercase !important;
 }
 html.carte-doc .print-page--cover .titre-principal .leader-meta,
 html.carte-doc .print-page--cover .cover-brand .leader-meta {
   font-family: 'Cinzel', serif !important;
-  font-size: 14.5pt !important;
-  letter-spacing: .2em !important;
+  font-size: 13.5pt !important;
+  font-weight: 500 !important;
+  letter-spacing: .22em !important;
   color: #ffffff !important;
-  line-height: 1.2 !important;
+  line-height: 1.25 !important;
   text-transform: uppercase !important;
-  margin: 1.5mm 0 0 !important;
+  margin: 2.2mm 0 0 0 !important;
 }
 html.carte-doc .print-page--cover .titre-principal .menu-leader-subline,
 html.carte-doc .print-page--cover .titre-principal .leader-meta--sub,
 html.carte-doc .print-page--cover .cover-brand .menu-leader-subline,
 html.carte-doc .print-page--cover .cover-brand .leader-meta--sub {
   font-family: 'Cinzel', serif !important;
-  font-size: 13.5pt !important;
+  font-size: 12pt !important;
+  font-weight: 500 !important;
   letter-spacing: .16em !important;
   color: #ffe88f !important;
-  line-height: 1.2 !important;
+  line-height: 1.25 !important;
   text-transform: uppercase !important;
-  margin: 1.5mm 0 0 !important;
+  margin: 1.6mm 0 0 0 !important;
 }
 html.carte-doc .print-page--cover .titre-principal .star-gold,
 html.carte-doc .print-page--cover .cover-brand .star-gold {
   display: inline-block !important;
-  width: 7.5px;
-  height: 7.5px;
-  margin: 0 6px;
+  width: 7px;
+  height: 7px;
+  margin: 0 7px;
   vertical-align: 1.5px;
   background: #fcf6ba;
   clip-path: @@ETOILE@@;
@@ -876,8 +878,8 @@ html.carte-doc .print-page--cover .cover-brand .star-gold {
   text-shadow: none !important;
 }
 html.carte-doc .print-page--cover .menu-leader-subline .star-gold {
-  width: 6.5px;
-  height: 6.5px;
+  width: 5.8px;
+  height: 5.8px;
   margin: 0 5px;
   vertical-align: 1px;
 }

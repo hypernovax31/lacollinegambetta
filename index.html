@@ -9407,7 +9407,7 @@ if (document.readyState === 'loading') {
   buildPrintDocument();
 }
 function openInteractiveMenuIfHashed() {
-  if (location.hash === '#menu-nav-anchor') {
+  if (location.hash === '#menu-nav-anchor' || location.hash === '#interior-menu' || location.hash === '#menu') {
     /* Effacer le hash AVANT showView pour empêcher le navigateur de scroller
        nativement vers l'ancre (ce qui court-circuiterait l'animation). */
     history.replaceState(null, '', location.pathname + location.search);
