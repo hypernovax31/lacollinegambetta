@@ -1267,7 +1267,7 @@ CARD_OVERRIDES = """
    colonne de droite, exactement comme le site les montre côte à côte à
    l'écran (les prix de chaque colonne gardent leur titre au-dessus). */
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-head--ghost {
-  display: grid !important;
+  display: flex !important;
   visibility: visible !important;
 }
 /* Sur la feuille cocktails seulement, le placement par moitiés (chaque
@@ -1524,8 +1524,15 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   margin-left: auto !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .beer-note {
-  margin: 1px 0 2px !important;
-  font-size: 0.85rem !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+  margin: 0 0 3px !important;
+  padding: 0 !important;
+  line-height: 1.25 !important;
 }
 #print-document .carte-flow [data-merge="1"].carte-2col.panel--beers {
   display: grid !important;
@@ -1584,6 +1591,57 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
 #print-document .carte-flow[data-sec="cocktails"] .tab-flow {
   row-gap: 1px !important;
 }
+#print-document .carte-flow[data-sec="cocktails"] .hh-head,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: baseline !important;
+  gap: 12px !important;
+  width: 100% !important;
+  padding: 0 0 2px !important;
+  margin: 0 !important;
+  visibility: visible !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-head > span:first-child,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost > span:first-child {
+  display: none !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-head > span:nth-child(2),
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost > span:nth-child(2),
+#print-document .carte-flow[data-sec="cocktails"] .hh-head .hh-head__col:first-child,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost .hh-head__col:first-child {
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  text-align: right !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-head > span:last-child,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost > span:last-child,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head .hh-head__col:last-child,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost .hh-head__col:last-child,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head .hh-col--hh,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost .hh-col--hh {
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  text-align: right !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
 #print-document .carte-flow[data-sec="cocktails"] [data-merge="1"] .hh-line,
 #print-document .carte-flow[data-sec="cocktails"] [data-merge="1"] .price-line {
   padding: 1.5px 0 !important;
@@ -1621,10 +1679,14 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   text-align: right !important;
 }
 #print-document .carte-flow[data-sec="cocktails"] .hh-line__price {
+  width: 40px !important;
   min-width: 40px !important;
+  max-width: 40px !important;
 }
 #print-document .carte-flow[data-sec="cocktails"] .hh-line__hh {
+  width: 40px !important;
   min-width: 40px !important;
+  max-width: 40px !important;
 }
 #print-document .carte-flow[data-sec="cocktails"] .hh-line .price-list__note,
 #print-document .carte-flow[data-sec="cocktails"] .price-line .price-list__note {
