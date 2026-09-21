@@ -15,8 +15,9 @@ choisie. La limite est calculée sur les réservations qui se chevauchent :
 
 - maximum **15 tables simultanées** dans une fenêtre glissante de 60 min ;
 - maximum **30 couverts simultanés** dans cette même fenêtre ;
-- une table accueille au maximum **2 adultes** ; une demande de 3 ou 4 adultes
-  consomme donc 2 tables, une demande de 5 ou 6 adultes en consomme 3, etc. ;
+- une table accueille au maximum **2 adultes** : **1 personne = 1 table**,
+  **2 personnes = 1 table**, **3 personnes = 2 tables** et **4 personnes = 2
+  tables** ; une demande de 5 ou 6 adultes en consomme 3, etc. ;
 - le formulaire ne séparant pas encore adultes et enfants, chaque personne
   renseignée est comptée comme un adulte, ce qui évite de dépasser la capacité ;
 - une nouvelle demande est refusée si l'une des deux limites est dépassée ;

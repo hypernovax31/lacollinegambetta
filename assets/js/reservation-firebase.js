@@ -82,6 +82,13 @@ function timeMinutes(value) {
   return minutes;
 }
 
+/* Une réservation est comptée en tables, pas seulement en demandes :
+ * 1 personne = 1 table ; 2 personnes = 1 table ; 3 ou 4 personnes = 2 tables.
+ * Le calcul général est le plafond du nombre de personnes divisé par deux. */
+function tablesForGuests(guests) {
+  return Math.ceil(Number(guests) / POLICY.adultsPerTable);
+}
+
 function evaluateCapacity(rows, candidate) {
   const active = rows
     .filter((row) => ['PENDING', 'CONFIRMED'].includes(String(row.status || '').toUpperCase()))
@@ -91,7 +98,7 @@ function evaluateCapacity(rows, candidate) {
 
   const events = [];
   active.forEach((reservation) => {
-    const tables = Math.ceil(reservation.guests / POLICY.adultsPerTable);
+    const tables = tablesForGuests(reservation.guests);
     events.push({ minute: reservation.startMinutes, tableDelta: tables, coverDelta: reservation.guests });
     events.push({
       minute: reservation.startMinutes + POLICY.durationMinutes,
@@ -204,6 +211,6 @@ async function availability(date, guests = 1) {
   return { date, durationMinutes: POLICY.durationMinutes, slots };
 }
 
-const api = { reserve, availability, POLICY };
+const api = { reserve, availability, tablesForGuests, POLICY };
 window.LCGFirebaseReservation = api;
 window.dispatchEvent(new CustomEvent('lcg-firebase-ready'));
