@@ -1430,53 +1430,54 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
    digestifs, bières et bandeau HH) tiennent sur UNE SEULE feuille (8 pages au total
    pour la carte A4). Les 6 panneaux passent en deux colonnes de lignes (carte-2col).
    Les titres des boissons sont en gras (<strong>), suivis immédiatement de leurs
-   informations (notes, contenances, parfums) en italique. La rigole en pointillé
-   relie le texte au prix à droite sans chevaucher les prix ; si les informations
-   sont longues, elles s'enroulent sur la ligne du dessous et la rigole continue
-   jusqu'au prix. */
+   informations (notes, contenances, parfums) en italique. Les points de suspension
+   sont supprimés : le texte et le prix sont séparés par un espace aéré sans
+   aucun chevauchement ; si les informations sont longues, elles s'enroulent
+   sur la ligne du dessous sans toucher le prix. */
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] {
-  padding: 3px 14px;
+  padding: 4px 16px;
 }
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__title {
-  min-height: 25px;
-  padding: 2px 14px;
+  min-height: 26px;
+  padding: 3px 16px;
   font-size: 0.88rem !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__head {
-  margin-bottom: 2px;
+  margin-bottom: 3px;
 }
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__subtitle {
-  margin: 0 0 2px !important;
-  font-size: 0.80rem !important;
+  margin: 0 0 3px !important;
+  font-size: 0.82rem !important;
 }
 #print-document .carte-flow[data-sec="boissons"].carte-aerate .panel[data-merge="1"] > .panel__head {
-  margin-bottom: calc(2px + var(--carte-air-title, 0px)) !important;
+  margin-bottom: calc(3px + var(--carte-air-title, 0px)) !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .tab-flow {
-  row-gap: 1px !important;
+  row-gap: 2px !important;
 }
 #print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-line {
   display: flex !important;
   flex-direction: column !important;
   gap: 0 !important;
-  padding: 1.5px 0 !important;
+  padding: 2px 0 !important;
 }
 #print-document .carte-flow[data-sec="boissons"].carte-aerate [data-merge="1"] .price-line {
-  padding-top: calc(1.5px + var(--carte-air-side, 0px)) !important;
-  padding-bottom: calc(1.5px + var(--carte-air-side, 0px)) !important;
+  padding-top: calc(2px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(2px + var(--carte-air-side, 0px)) !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .price-line__row {
   display: flex !important;
+  justify-content: space-between !important;
   align-items: baseline !important;
-  gap: 6px !important;
+  gap: 10px !important;
   width: 100% !important;
   min-width: 0 !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .price-line__name {
-  flex: 0 1 auto !important;
+  flex: 1 1 auto !important;
   min-width: 0 !important;
   white-space: normal !important;
-  line-height: 1.25 !important;
+  line-height: 1.28 !important;
   color: var(--violet-900) !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .price-line__name strong {
@@ -1506,12 +1507,10 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   margin-left: 0.35em;
   margin-right: 0.35em;
 }
-#print-document .carte-flow[data-sec="boissons"] .price-line__dots {
-  display: block !important;
-  flex: 1 1 auto !important;
-  min-width: 6px !important;
-  border-bottom: 1px dotted rgba(156, 122, 45, .58) !important;
-  transform: translateY(-.18em) !important;
+#print-document .price-line__dots,
+#print-document .carte-flow .price-line__dots {
+  display: none !important;
+  border: none !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .price-line__price {
   white-space: nowrap !important;
@@ -1520,11 +1519,12 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   font-weight: 800 !important;
   color: var(--violet-900) !important;
   flex: 0 0 auto !important;
-  line-height: 1.25 !important;
+  line-height: 1.28 !important;
   text-align: right !important;
+  margin-left: auto !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .beer-note {
-  margin: 1px 0 2px !important;
+  margin: 2px 0 3px !important;
   font-size: 0.85rem !important;
 }
 #print-document .carte-flow [data-merge="1"].carte-2col.panel--beers {
@@ -1553,33 +1553,30 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   grid-row: 3;
 }
 #print-document .carte-flow[data-sec="boissons"] .hh-banner {
-  margin-top: 2px !important;
+  margin-top: 3px !important;
   margin-bottom: 0 !important;
-  padding: 3px 10px !important;
+  padding: 4px 12px !important;
 }
-/* --- Feuille cocktails : une seule page, pleine, sans chevauchement --------
+/* --- Feuille cocktails : une seule page, pleine, aérée sans chevauchement ---
    L'onglet entier (36 cocktails, classiques → mocktails) tient sur une seule
    feuille parce que ses cinq panneaux passent en deux colonnes de lignes
-   (carte-2col) ET que l'air de cette feuille seulement se serre : padding
-   vertical des panneaux (16 → 5 px), pilules de titre (min-height 50 →
-   32 px) et marge sous les têtes (12 → 3 px, gardant la variable
-   d'aération). Les LIGNES gardent leurs corps uniformes de la carte — noms,
-   notes et prix sont exactement ceux des autres feuilles, à leur échelle
-   commune (0,5759). La contenance des lignes est resserrée (padding 3 →
-   1 px, note sans marge haute, interligne de note 1,3 → 1,25) et le
-   générateur (attentes d'aération « cocktails ») est aligné sur cette base 1.
-   Si la feuille respire encore, la passe d'aération rend cet air aux lignes
-   (calc(1px + var(--carte-air-side))). Rien ici ne touche au site : tout est
-   sous #print-document. */
+   (carte-2col). Les titres sont en gras, les prix PRIX et HH sont alignés en haut
+   de chaque colonne, et les ingrédients respirent sous le titre avec un padding
+   aéré et propre sans aucun chevauchement. */
 #print-document .carte-flow[data-sec="cocktails"] .panel[data-merge="1"] {
   padding: 5px 16px;
 }
 #print-document .carte-flow[data-sec="cocktails"] .panel[data-merge="1"] .panel__title {
-  min-height: 32px;
-  padding: 4px 18px;
+  min-height: 30px;
+  padding: 3px 18px;
+  font-size: 0.88rem !important;
 }
 #print-document .carte-flow[data-sec="cocktails"] .panel[data-merge="1"] .panel__head {
   margin-bottom: 3px;
+}
+#print-document .carte-flow[data-sec="cocktails"] .panel[data-merge="1"] .panel__subtitle {
+  margin: 0 0 2px !important;
+  font-size: 0.80rem !important;
 }
 #print-document .carte-flow[data-sec="cocktails"].carte-aerate .panel[data-merge="1"] > .panel__head {
   margin-bottom: calc(3px + var(--carte-air-title, 0px)) !important;
@@ -1589,17 +1586,53 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
 }
 #print-document .carte-flow[data-sec="cocktails"] [data-merge="1"] .hh-line,
 #print-document .carte-flow[data-sec="cocktails"] [data-merge="1"] .price-line {
-  padding: 1px 0 !important;
+  padding: 2px 0 !important;
 }
 #print-document .carte-flow[data-sec="cocktails"].carte-aerate [data-merge="1"] .hh-line,
 #print-document .carte-flow[data-sec="cocktails"].carte-aerate [data-merge="1"] .price-line {
-  padding-top: calc(1px + var(--carte-air-side, 0px)) !important;
-  padding-bottom: calc(1px + var(--carte-air-side, 0px)) !important;
+  padding-top: calc(2px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(2px + var(--carte-air-side, 0px)) !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__name {
+  font-weight: 700 !important;
+  font-size: 1.12rem !important;
+  color: var(--violet-900) !important;
+  flex: 1 1 auto !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__prices {
+  display: flex !important;
+  gap: 14px !important;
+  flex: 0 0 auto !important;
+  margin-left: auto !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__price,
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__hh {
+  font-family: 'Cinzel', serif !important;
+  font-size: 1.28rem !important;
+  font-weight: 800 !important;
+  color: var(--violet-900) !important;
+  text-align: right !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__price {
+  min-width: 42px !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__hh {
+  min-width: 42px !important;
 }
 #print-document .carte-flow[data-sec="cocktails"] .hh-line .price-list__note,
 #print-document .carte-flow[data-sec="cocktails"] .price-line .price-list__note {
-  margin-top: 0 !important;
-  line-height: 1.25 !important;
+  margin-top: 1px !important;
+  font-size: 0.92rem !important;
+  font-style: italic !important;
+  line-height: 1.26 !important;
+  color: var(--muted) !important;
 }
 /* Cellules de prix du tableau des vins : la règle « prix unifiés » ≥1100 px
    ne couvre pas .wine-table td (clamp 0,85-1,08 rem) — les prix des
@@ -2343,7 +2376,7 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
     except json.JSONDecodeError as exc:
         raise SystemExit(f"aerate_carte.mjs : sortie illisible ({exc})")
     attentes = {"entrees": 12, "plats": 12, "desserts": 12,
-                "boissons": 1, "cocktails": 1, "vins": 5}
+                "boissons": 2, "cocktails": 2, "vins": 5}
     airs: dict[int, tuple[float, float, int, int, float]] = {}
     for n, info in infos.items():
         m = meas.get(n)
