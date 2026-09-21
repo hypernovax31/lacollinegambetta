@@ -572,10 +572,10 @@ def extract_cover(src: str) -> str:
 
 
 HEADER = """<header class="print-page__header">
-<div class="print-page__kicker"><span class="star-gold">✦</span> LA CARTE <span class="star-gold">✦</span></div>
-<div class="print-page__brand">LA COLLINE <span>GAMBETTA</span></div>
-<div class="print-page__meta">BAR • RESTAURANT • PARIS 20ᵉ</div>
-<div class="print-page__meta print-page__meta--sub"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></div>
+<div class="print-page__eyebrow"><span class="star-gold">✦</span> LA CARTE <span class="star-gold">✦</span></div>
+<h2 class="print-page__brand">COLLINE <span>GAMBETTA</span></h2>
+<p class="print-page__meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+<p class="print-page__meta print-page__meta--sub"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
 </header>"""
 
 FOOTER = """<footer class="print-page__footer">
@@ -655,7 +655,7 @@ html.carte-doc .carte-toolbar { display: none !important; }
 html.carte-doc .download-card,
 html.carte-doc .download-btn { display: none !important; }
 
-/* En-tête : pro, classe, minimaliste en typographie Cinzel (comme le web). */
+/* En-tête : pro, classe, minimaliste en typographie Cinzel (exactement comme le web). */
 html.carte-doc .print-page:not(.print-page--cover) .print-page__header {
   height: 39mm !important;
   padding: 2.2mm 7mm 2mm !important;
@@ -663,54 +663,67 @@ html.carte-doc .print-page:not(.print-page--cover) .print-page__header {
   flex-direction: column !important;
   justify-content: center !important;
   align-items: center !important;
-  gap: 1.1mm !important;
+  gap: 0.8mm !important;
   text-align: center !important;
+  background: linear-gradient(145deg, #6b3c87 0%, #592e6f 62%, #432155 100%) !important;
+  border-bottom: 1.5px solid rgba(216, 178, 87, .85) !important;
+  box-sizing: border-box !important;
 }
 html.carte-doc .print-page__header * {
   font-family: 'Cinzel', serif !important;
   text-align: center !important;
 }
-html.carte-doc .print-page__kicker {
-  font-size: 8.5pt !important;
+html.carte-doc .print-page__eyebrow {
+  font-size: 7.5pt !important;
   font-weight: 600 !important;
-  letter-spacing: .24em !important;
+  letter-spacing: .26em !important;
   color: #ffffff !important;
-  line-height: 1.1 !important;
+  line-height: 1 !important;
   text-transform: uppercase !important;
+  margin: 0 !important;
 }
 html.carte-doc .print-page__brand {
-  font-size: 19.5pt !important;
+  font-size: 21pt !important;
   font-weight: 700 !important;
+  letter-spacing: .22em !important;
+  color: #ffffff !important;
+  line-height: 0.95 !important;
+  text-transform: uppercase !important;
+  margin: 0.8mm 0 0.4mm !important;
+  text-align: center !important;
+}
+html.carte-doc .print-page__brand span {
+  display: block !important;
+  font-size: 9.8pt !important;
+  font-weight: 600 !important;
+  letter-spacing: .32em !important;
+  color: #ffe88f !important;
+  line-height: 1.1 !important;
+  margin-top: 0.8mm !important;
+  text-transform: uppercase !important;
+}
+html.carte-doc .print-page__meta {
+  font-size: 7.2pt !important;
   letter-spacing: .18em !important;
   color: #ffffff !important;
   line-height: 1.1 !important;
   text-transform: uppercase !important;
-  white-space: nowrap !important;
-}
-html.carte-doc .print-page__brand span {
-  color: #ffe88f !important;
-  margin-left: 0.22em !important;
-}
-html.carte-doc .print-page__meta {
-  font-size: 8.8pt !important;
-  letter-spacing: .18em !important;
-  color: #ffffff !important;
-  line-height: 1.2 !important;
-  text-transform: uppercase !important;
+  margin: 0.4mm 0 0 !important;
 }
 html.carte-doc .print-page__meta--sub {
-  font-size: 7.8pt !important;
+  font-size: 6.6pt !important;
   letter-spacing: .14em !important;
   color: #ffe88f !important;
-  line-height: 1.2 !important;
+  line-height: 1.1 !important;
   text-transform: uppercase !important;
+  margin: 0.3mm 0 0 !important;
 }
 html.carte-doc .print-page__header .star-gold {
   display: inline-block !important;
-  width: 6.5px;
-  height: 6.5px;
-  margin: 0 5px;
-  vertical-align: 1px;
+  width: 5px;
+  height: 5px;
+  margin: 0 4px;
+  vertical-align: 0.5px;
   background: #fcf6ba;
   clip-path: @@ETOILE@@;
   color: transparent !important;
@@ -719,9 +732,9 @@ html.carte-doc .print-page__header .star-gold {
   text-shadow: none !important;
 }
 html.carte-doc .print-page__meta--sub .star-gold {
-  width: 5px;
-  height: 5px;
-  margin: 0 4px;
+  width: 4.2px;
+  height: 4.2px;
+  margin: 0 3px;
 }
 
 /* Pied : logo IG, e-mail en toutes lettres, allergènes avant l’alcool. */
