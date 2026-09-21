@@ -6,8 +6,10 @@ Carte web interactive et carte imprimable A4 portrait.
 
 La réservation est conservée directement dans **Firebase Cloud Firestore**,
 avec le projet gratuit déjà utilisé par Mission Nautilus. Chaque demande
-occupe 60 minutes dans une **fenêtre glissante** : maximum **15 réservations
-ou 30 couverts simultanés**, sans créneaux à créer manuellement. La
+occupe 60 minutes dans une **fenêtre glissante** : maximum **15 tables ou
+30 couverts simultanés**. Une table accueille au maximum **2 adultes** ; le
+nombre de tables nécessaires est calculé automatiquement, sans créneaux à
+créer manuellement. La
 configuration GitHub → Firebase est décrite dans
 [`docs/reservation-capacity.md`](docs/reservation-capacity.md).
 

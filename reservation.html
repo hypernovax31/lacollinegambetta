@@ -1885,7 +1885,7 @@ html[lang="uk"] .thanks__sign {
   var timeEl = document.getElementById('bk-time');
   var guestsEl = document.getElementById('bk-guests');
   /* L'API relative est configurée dans reservation-config.js. L'envoi passe
-     par le contrôle centralisé (15 réservations ou 30 couverts simultanés
+     par le contrôle centralisé (15 tables ou 30 couverts simultanés
      dans une fenêtre glissante de 60 minutes). Une panne de cet endpoint ne
      retombe volontairement pas sur FormSubmit : sinon un client pourrait
      contourner la limite. */
@@ -2211,63 +2211,63 @@ html[lang="uk"] .thanks__sign {
       var langNow = (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
       var copy = {
         fr: {
-          full: 'Ce créneau est complet (15 réservations ou 30 couverts). Choisissez une autre heure ou appelez-nous au 01 43 49 05 93.',
+          full: 'Ce créneau est complet (15 tables ou 30 couverts). Choisissez une autre heure ou appelez-nous au 01 43 49 05 93.',
           error: 'La disponibilité de ce créneau ne peut pas être vérifiée pour le moment. Appelez-nous au 01 43 49 05 93 pour réserver.'
         },
         en: {
-          full: 'This time slot is full (15 bookings or 30 guests). Please choose another time or call us on 01 43 49 05 93.',
+          full: 'This time slot is full (15 tables or 30 guests). Please choose another time or call us on 01 43 49 05 93.',
           error: 'This time slot could not be checked. Please call 01 43 49 05 93 to book.'
         },
         es: {
-          full: 'Este horario está completo (15 reservas o 30 comensales). Elija otra hora o llámenos al 01 43 49 05 93.',
+          full: 'Este horario está completo (15 mesas o 30 comensales). Elija otra hora o llámenos al 01 43 49 05 93.',
           error: 'No se puede comprobar este horario. Llámenos al 01 43 49 05 93 para reservar.'
         },
         de: {
-          full: 'Dieser Zeitraum ist voll (15 Reservierungen oder 30 Gäste). Bitte wählen Sie eine andere Uhrzeit oder rufen Sie uns unter 01 43 49 05 93 an.',
+          full: 'Dieser Zeitraum ist voll (15 Tische oder 30 Gäste). Bitte wählen Sie eine andere Uhrzeit oder rufen Sie uns unter 01 43 49 05 93 an.',
           error: 'Die Verfügbarkeit konnte nicht geprüft werden. Bitte rufen Sie für eine Reservierung 01 43 49 05 93 an.'
         },
         it: {
-          full: 'Questa fascia oraria è completa (15 prenotazioni o 30 coperti). Scelga un altro orario o chiami lo 01 43 49 05 93.',
+          full: 'Questa fascia oraria è completa (15 tavoli o 30 coperti). Scelga un altro orario o chiami lo 01 43 49 05 93.',
           error: 'Impossibile verificare la disponibilità. Chiami lo 01 43 49 05 93 per prenotare.'
         },
         pt: {
-          full: 'Este horário está completo (15 reservas ou 30 pessoas). Escolha outra hora ou ligue para 01 43 49 05 93.',
+          full: 'Este horário está completo (15 mesas ou 30 pessoas). Escolha outra hora ou ligue para 01 43 49 05 93.',
           error: 'Não foi possível verificar a disponibilidade. Ligue para 01 43 49 05 93 para reservar.'
         },
         nl: {
-          full: 'Dit tijdslot is vol (15 reserveringen of 30 gasten). Kies een ander tijdstip of bel 01 43 49 05 93.',
+          full: 'Dit tijdslot is vol (15 tafels of 30 gasten). Kies een ander tijdstip of bel 01 43 49 05 93.',
           error: 'De beschikbaarheid kon niet worden gecontroleerd. Bel 01 43 49 05 93 om te reserveren.'
         },
         ar: {
-          full: 'هذا الموعد ممتلئ (15 حجزاً أو 30 شخصاً). اختر وقتاً آخر أو اتصل بنا على 01 43 49 05 93.',
+          full: 'هذا الموعد ممتلئ (15 طاولة أو 30 شخصاً). اختر وقتاً آخر أو اتصل بنا على 01 43 49 05 93.',
           error: 'تعذر التحقق من توفر هذا الموعد. اتصل بنا على 01 43 49 05 93 للحجز.'
         },
         zh: {
-          full: '该时段已满（15 个预订或 30 位客人）。请选择其他时间，或致电 01 43 49 05 93。',
+          full: '该时段已满（15 张桌子或 30 位客人）。请选择其他时间，或致电 01 43 49 05 93。',
           error: '暂时无法确认该时段的可用性。请致电 01 43 49 05 93 预订。'
         },
         ja: {
-          full: 'この時間帯は満席です（予約15件または30名）。別の時間を選ぶか、01 43 49 05 93までお電話ください。',
+          full: 'この時間帯は満席です（15卓または30名）。別の時間を選ぶか、01 43 49 05 93までお電話ください。',
           error: '空席状況を確認できません。ご予約は01 43 49 05 93までお電話ください。'
         },
         ko: {
-          full: '이 시간대는 마감되었습니다(예약 15건 또는 30명). 다른 시간을 선택하거나 01 43 49 05 93으로 전화해 주세요.',
+          full: '이 시간대는 마감되었습니다(테이블 15개 또는 30명). 다른 시간을 선택하거나 01 43 49 05 93으로 전화해 주세요.',
           error: '이 시간대의 예약 가능 여부를 확인할 수 없습니다. 예약은 01 43 49 05 93으로 전화해 주세요.'
         },
         pl: {
-          full: 'Ten przedział jest pełny (15 rezerwacji lub 30 osób). Wybierz inną godzinę albo zadzwoń pod numer 01 43 49 05 93.',
+          full: 'Ten przedział jest pełny (15 stolików lub 30 osób). Wybierz inną godzinę albo zadzwoń pod numer 01 43 49 05 93.',
           error: 'Nie można sprawdzić dostępności. Aby zarezerwować, zadzwoń pod numer 01 43 49 05 93.'
         },
         tr: {
-          full: 'Bu saat aralığı dolu (15 rezervasyon veya 30 kişi). Başka bir saat seçin ya da 01 43 49 05 93 numarasını arayın.',
+          full: 'Bu saat aralığı dolu (15 masa veya 30 kişi). Başka bir saat seçin ya da 01 43 49 05 93 numarasını arayın.',
           error: 'Bu saat aralığının uygunluğu kontrol edilemedi. Rezervasyon için 01 43 49 05 93 numarasını arayın.'
         },
         uk: {
-          full: 'Цей час уже заповнений (15 бронювань або 30 гостей). Виберіть інший час або зателефонуйте за номером 01 43 49 05 93.',
+          full: 'Цей час уже заповнений (15 столів або 30 гостей). Виберіть інший час або зателефонуйте за номером 01 43 49 05 93.',
           error: 'Не вдалося перевірити доступність. Для бронювання зателефонуйте за номером 01 43 49 05 93.'
         },
         hi: {
-          full: 'यह समय पूरी तरह बुक है (15 बुकिंग या 30 मेहमान)। कोई दूसरा समय चुनें या 01 43 49 05 93 पर कॉल करें।',
+          full: 'यह समय पूरी तरह बुक है (15 टेबल या 30 मेहमान)। कोई दूसरा समय चुनें या 01 43 49 05 93 पर कॉल करें।',
           error: 'इस समय की उपलब्धता की जाँच नहीं हो सकी। बुकिंग के लिए 01 43 49 05 93 पर कॉल करें।'
         }
       };

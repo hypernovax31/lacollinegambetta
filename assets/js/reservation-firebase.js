@@ -44,7 +44,8 @@ const POLICY = Object.freeze({
   lastSlotMinutes: 22 * 60 + 45,
   stepMinutes: 15,
   durationMinutes: 60,
-  maxReservations: 15,
+  adultsPerTable: 2,
+  maxTables: 15,
   maxCovers: 30
 });
 
@@ -90,31 +91,32 @@ function evaluateCapacity(rows, candidate) {
 
   const events = [];
   active.forEach((reservation) => {
-    events.push({ minute: reservation.startMinutes, reservationDelta: 1, coverDelta: reservation.guests });
+    const tables = Math.ceil(reservation.guests / POLICY.adultsPerTable);
+    events.push({ minute: reservation.startMinutes, tableDelta: tables, coverDelta: reservation.guests });
     events.push({
       minute: reservation.startMinutes + POLICY.durationMinutes,
-      reservationDelta: -1,
+      tableDelta: -tables,
       coverDelta: -reservation.guests
     });
   });
-  events.sort((a, b) => a.minute - b.minute || a.reservationDelta - b.reservationDelta);
+  events.sort((a, b) => a.minute - b.minute || a.tableDelta - b.tableDelta);
 
-  let reservations = 0;
+  let tables = 0;
   let covers = 0;
-  let peakReservations = 0;
+  let peakTables = 0;
   let peakCovers = 0;
   events.forEach((event) => {
-    reservations += event.reservationDelta;
+    tables += event.tableDelta;
     covers += event.coverDelta;
-    peakReservations = Math.max(peakReservations, reservations);
+    peakTables = Math.max(peakTables, tables);
     peakCovers = Math.max(peakCovers, covers);
   });
 
   return {
-    available: peakReservations <= POLICY.maxReservations && peakCovers <= POLICY.maxCovers,
-    reservations: peakReservations,
+    available: peakTables <= POLICY.maxTables && peakCovers <= POLICY.maxCovers,
+    tables: peakTables,
     covers: peakCovers,
-    remainingReservations: Math.max(0, POLICY.maxReservations - peakReservations),
+    remainingTables: Math.max(0, POLICY.maxTables - peakTables),
     remainingCovers: Math.max(0, POLICY.maxCovers - peakCovers)
   };
 }

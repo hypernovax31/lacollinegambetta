@@ -13,8 +13,12 @@ par Nautilus.
 Chaque réservation occupe une durée de **60 minutes** à partir de l'heure
 choisie. La limite est calculée sur les réservations qui se chevauchent :
 
-- maximum **15 réservations simultanées** dans une fenêtre glissante de 60 min ;
+- maximum **15 tables simultanées** dans une fenêtre glissante de 60 min ;
 - maximum **30 couverts simultanés** dans cette même fenêtre ;
+- une table accueille au maximum **2 adultes** ; une demande de 3 ou 4 adultes
+  consomme donc 2 tables, une demande de 5 ou 6 adultes en consomme 3, etc. ;
+- le formulaire ne séparant pas encore adultes et enfants, chaque personne
+  renseignée est comptée comme un adulte, ce qui évite de dépasser la capacité ;
 - une nouvelle demande est refusée si l'une des deux limites est dépassée ;
 - les heures sont générées automatiquement de 15 en 15 minutes, de 12h00 à
   22h45.
