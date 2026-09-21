@@ -296,14 +296,14 @@
  {
   "section": "boissons",
   "panel": "Whiskies",
-  "name": "Jack Daniel’s",
+  "name": "Jack Daniels",
   "slug": "jack-daniels",
   "photo": true
  },
  {
   "section": "boissons",
   "panel": "Whiskies",
-  "name": "Johnnie Walker",
+  "name": "Johnny Walker",
   "slug": "johnny-walker",
   "photo": true
  },
@@ -317,7 +317,7 @@
  {
   "section": "boissons",
   "panel": "Digestifs",
-  "name": "Bas-Armagnac VSOP",
+  "name": "Bas Armagnac VSOP",
   "slug": "bas-armagnac-vsop",
   "photo": true
  },
@@ -338,7 +338,7 @@
  {
   "section": "boissons",
   "panel": "Digestifs",
-  "name": "Get 27 / 31, Baileys, Malibu",
+  "name": "Get 27 / 31, Bailey’s, Malibu",
   "slug": "get-27-31-baileys-malibu",
   "photo": true
  },
@@ -373,7 +373,7 @@
  {
   "section": "boissons",
   "panel": "Digestifs",
-  "name": "Amaretto, Fernet-Branca",
+  "name": "Amaretto, Fernet Branca",
   "slug": "amaretto-fernet-branca",
   "photo": true
  },

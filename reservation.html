@@ -1951,7 +1951,6 @@ html[lang="uk"] .thanks__sign {
     if (dateEl.value && dateEl.value < now.date) dateEl.value = now.date;
     var isToday = dateEl.value === now.date;
     var selectedGone = false;
-    var firstAvailable = null;
     Array.prototype.forEach.call(timeEl.options, function (opt) {
       if (!opt.value) return;
       var hm = opt.value.split(':');
@@ -1959,16 +1958,14 @@ html[lang="uk"] .thanks__sign {
       var past = isToday && mins <= now.minutes;
       opt.disabled = past;
       if (past && opt.selected) selectedGone = true;
-      if (!past && !firstAvailable) firstAvailable = opt.value;
     });
-    /* Un créneau devenu invalide ne doit pas rester affiché.
-       On présélectionne le prochain quart d'heure disponible. */
-    if (!timeEl.value || selectedGone) {
-      timeEl.value = firstAvailable || '';
-    }
-    /* Aujourd'hui, si tout le service est passé, on pousse au lendemain
-       plutôt que de laisser une liste entièrement grisée. */
-    if (isToday && !firstAvailable) {
+    /* Un creneau devenu invalide ne doit pas rester affiche. */
+    if (selectedGone) timeEl.value = '';
+    /* Aujourd'hui, si tout le service est passe, on pousse au lendemain
+       plutot que de laisser une liste entierement grisee. */
+    if (isToday && !Array.prototype.some.call(timeEl.options, function (o) {
+      return o.value && !o.disabled;
+    })) {
       var d = new Date(now.date + 'T00:00:00');
       d.setDate(d.getDate() + 1);
       if (iso(d) <= dateEl.max) { dateEl.value = iso(d); refreshTimes(); }

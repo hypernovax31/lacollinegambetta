@@ -23,18 +23,14 @@ largeur qui remplit la feuille**, puis réduit d'un facteur lié à cette largeu
 
 ```bash
 python3 tools/build_carte.py      # mesure, met en page, écrit carte.html
-npm run build:carte-pdf           # les 8 JPEG, puis carte-a4.pdf (livré sous Carte_LaCollineGambetta.pdf)
+npm run build:carte-pdf           # les 9 JPEG, puis carte-a4.pdf (livré sous Carte_LaCollineGambetta.pdf)
 ```
 
 - Une feuille par onglet, dans l'ordre des onglets du site (`entrees, plats, menus,
-  boissons, cocktails, vins, desserts`) : chacun tient désormais sur une seule page
-  (8 pages au total avec la couverture). Le nombre de pages et la
+  boissons, cocktails, vins, desserts`) ; l'onglet dense Boissons en occupe
+  deux, chacun des autres tient sur la sienne. Le nombre de pages et la
   répartition viennent de `tools/measure_carte.mjs`, qui mesure le rendu réel
   (Chromium, fontes du site) — pas d'à-peu-près.
-- **Boissons : toutes sur une seule feuille, en double colonne.** Les 6 panneaux
-  (Fraîches, Chaudes, Apéritifs, Whiskies, Digestifs, Bières + bandeau HH)
-  s'organisent en deux colonnes internes (`carte-2col`) tout en conservant les
-  corps et la hiérarchie du site.
 - **Cocktails : tous sur une seule feuille, pleine, sans chevauchement.** Les
   cinq panneaux de l'onglet (Classiques, Spritz & fraîcheur, Mules & fizz,
   Élégance & saveurs, Mocktails — 35 boissons) forment une unité insécable
@@ -44,8 +40,8 @@ npm run build:carte-pdf           # les 8 JPEG, puis carte-a4.pdf (livré sous C
   colonne (le fantôme de la seconde moitié reprend sa place). L'air de cette
   feuille seulement se serre — panneaux 5 px, pilules de titre 32 px, lignes
   1 px, notes sans marge — pour que les corps restent **ceux de toute la
-  carte** (× 0,5759, intitulés à 7,7 pt). Le document passe à 8 feuilles
-  (7 de contenu) : vins et desserts suivent sans encombre.
+  carte** (× 0,5759, intitulés à 7,7 pt). Le document passe de 10 à 9 feuilles
+  (8 de contenu) : vins et desserts suivent sans encombre.
 - **La zone utile se déduit du cadre doré.** Le filet est posé à 8 mm des bords,
   43 mm du haut, 25,5 mm du bas : la zone utile vaut donc 188,8 × 223,3 mm, à
   **2,6 mm** du filet — jamais dessus, parce que ces six nombres ne sont pas libres
@@ -177,9 +173,9 @@ Voir [PDF A4 téléchargeable](#pdf-a4-téléchargeable-cartelacollinegambettapd
 ## PDF A4 téléchargeable (`Carte_LaCollineGambetta.pdf`)
 
 L'icône de téléchargement du header de `index.html` ouvre **`Carte_LaCollineGambetta.pdf`** :
-le rendu intégral de la **carte A4** (8 pages, une par onglet, couverture comprise) — chaque
+le rendu intégral de la **carte A4** (9 pages, une par onglet, couverture comprise) — chaque
 feuille est le rendu exact de `carte.html`, jamais un document tiers. Les feuilles JPEG de
-**`carte-a4-pages/`** (`page-01.jpg` … `page-08.jpg`) sont les mêmes images, prêtes à envoyer
+**`carte-a4-pages/`** (`page-01.jpg` … `page-09.jpg`) sont les mêmes images, prêtes à envoyer
 telles quelles à un imprimeur.
 
 **Règle : à chaque modification de la carte A4, régénérer le PDF téléchargeable et le
