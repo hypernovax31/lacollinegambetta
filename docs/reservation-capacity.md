@@ -1,55 +1,121 @@
-# Réservations autonomes et fenêtre glissante
+# Réservations autonomes avec Firebase
 
-La réservation fonctionne maintenant avec une petite API Node intégrée au
-projet et une base SQLite locale. Il n'y a pas de Google Sheet, pas de créneaux
-à remplir à la main et pas de service de réservation externe à administrer.
+La réservation est conservée dans **Cloud Firestore** et contrôlée par une
+**Cloud Function Firebase**. Il n'y a pas de Google Sheet, pas de créneaux à
+remplir à la main et pas de base SQLite locale en production.
 
-Le serveur crée sa base et ses créneaux au démarrage. Il suffit de lancer :
+Le dépôt contient déjà :
 
-```bash
-npm start
-```
-
-La page est alors disponible sur `http://localhost:4173`.
+- `functions/index.js` : API sécurisée et transactionnelle ;
+- `functions/reservation-policy.mjs` : politique de fenêtre glissante ;
+- `firebase.json` : hébergement du site et réécriture de `/api/reservations` ;
+- `firestore.rules` : accès direct au Firestore bloqué ;
+- `assets/js/reservation-config.js` : endpoint relatif au même domaine.
 
 ## Règle de capacité
 
 Chaque réservation occupe une durée de **60 minutes** à partir de l'heure
-choisie. La limite est calculée sur les réservations qui se chevauchent, quelle
-que soit leur heure de début :
+choisie. La limite est calculée sur les réservations qui se chevauchent :
 
 - maximum **15 réservations simultanées** dans une fenêtre glissante de 60 min ;
 - maximum **30 couverts simultanés** dans cette même fenêtre ;
 - une nouvelle demande est refusée si l'une des deux limites est dépassée ;
-- les heures proposées sont générées automatiquement de 15 en 15 minutes,
-  de 12h00 à 22h45, tous les jours comme dans le formulaire actuel.
+- les heures sont générées automatiquement de 15 en 15 minutes, de 12h00 à
+  22h45, tous les jours comme dans le formulaire actuel.
 
 Exemple : une réservation à 12h45 chevauche celle de 12h00 jusqu'à 13h00.
 Une réservation à 13h00 ne chevauche plus celle de 12h00, mais chevauche une
 réservation commencée à 12h15. Il n'existe aucune séparation artificielle entre
 12h59 et 13h00.
 
-Le contrôle se fait dans une transaction SQLite (`BEGIN IMMEDIATE`) : deux
-clients qui envoient leur demande au même instant ne peuvent pas prendre la
-dernière place simultanément.
+La capacité est vérifiée dans une transaction Firestore sur un document de
+registre par date. Deux demandes simultanées ne peuvent donc pas prendre la
+dernière place en même temps. Chaque réservation est également conservée dans
+la collection `reservations` pour pouvoir être consultée et administrée plus
+tard.
 
-## Ce qui est géré automatiquement
+## Connexion du dépôt GitHub à Firebase
 
-- création de la base `data/reservations.sqlite` ;
-- création des créneaux disponibles à partir de la politique du serveur ;
-- validation du fuseau `Europe/Paris` ;
-- refus des heures passées ;
-- refus atomique lorsque les 15 réservations ou les 30 couverts sont atteints ;
-- conservation des demandes dans la base ;
-- notification du restaurant par le relais e-mail déjà utilisé par le site,
-  uniquement **après** l'acceptation par l'API.
+Une seule configuration initiale est nécessaire : créer ou utiliser un projet
+Firebase, puis le relier au dépôt. Aucun fichier de secret Firebase ne doit
+être commité.
 
-La base SQLite est ignorée par Git : les données de clients ne sont jamais
-commitées dans le dépôt.
+1. Installer la CLI Firebase :
 
-## Paramètres
+   ```bash
+   npm install -g firebase-tools
+   firebase login
+   ```
 
-Ils se trouvent dans `server/reservation-policy.mjs` :
+2. Créer un projet Firebase dans la console Firebase et activer :
+   - **Firestore Database** ;
+   - **Firebase Hosting** ;
+   - **Cloud Functions**.
+
+3. Dans le dépôt, associer le projet local à l'identifiant Firebase :
+
+   ```bash
+   firebase use --add
+   ```
+
+   Choisir le projet, puis conserver le fichier `.firebaserc` créé localement.
+   Ce fichier contient uniquement l'identifiant public du projet ; il n'est pas
+   nécessaire d'y mettre un mot de passe ou une clé privée.
+
+4. Déployer depuis la racine du dépôt :
+
+   ```bash
+   npm ci
+   npm run firebase:deploy
+   ```
+
+Firebase déploie alors le site et la fonction `reservationApi`. La réécriture
+présente dans `firebase.json` fait correspondre :
+
+```text
+https://VOTRE_PROJET.web.app/api/reservations
+```
+
+à la Cloud Function qui écrit dans Firestore.
+
+## Déploiement automatique depuis GitHub
+
+Dans Firebase App Hosting ou dans une GitHub Action, utiliser la commande :
+
+```bash
+npx firebase-tools deploy --token "$FIREBASE_TOKEN" \
+  --only hosting,functions,firestore
+```
+
+Le projet doit être indiqué par le secret ou la variable GitHub
+`FIREBASE_PROJECT_ID`, et le token doit être conservé uniquement comme secret
+GitHub Actions nommé `FIREBASE_TOKEN`, jamais dans le dépôt. Une alternative
+sans token permanent est de lancer le déploiement depuis une machine déjà
+connectée avec `firebase login`.
+
+Pour une action GitHub, le principe est :
+
+```yaml
+name: Deploy Firebase
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npx firebase-tools deploy --project "${{ secrets.FIREBASE_PROJECT_ID }}" --only hosting,functions,firestore --token "${{ secrets.FIREBASE_TOKEN }}"
+```
+
+La gestion courante ne demande pas de créer des créneaux : la fonction les
+déduit de la politique. Les valeurs sont dans
+`functions/reservation-policy.mjs` :
 
 ```js
 maxReservations: 15,
@@ -60,32 +126,10 @@ lastSlotMinutes: 22 * 60 + 45,
 slotStepMinutes: 15
 ```
 
-Il n'est pas nécessaire de créer chaque créneau : le serveur les déduit de ces
-valeurs à chaque demande.
+## Important
 
-## Mise en ligne
-
-Le dépôt était jusqu'ici un site purement statique. Pour que la limite soit
-réelle entre plusieurs visiteurs, le site doit désormais être servi par un
-hébergement capable d'exécuter Node 22 ou supérieur et de conserver le fichier
-SQLite, par exemple un serveur Node avec disque persistant.
-
-Commande de production minimale :
-
-```bash
-npm ci
-npm start
-```
-
-Le serveur écoute sur `0.0.0.0` et respecte la variable `PORT` fournie par la
-plupart des hébergeurs. Pour déplacer la base sans modifier le code :
-
-```bash
-RESERVATION_DB=/chemin/persistant/reservations.sqlite npm start
-```
-
-Un hébergement statique de type GitHub Pages ne peut pas appliquer cette limite
-à lui seul : il ne peut ni exécuter `server.mjs`, ni conserver les réservations.
-Il faudrait alors un hébergement Node ou une API hébergée séparément. Je n'ai
-pas changé automatiquement le dépôt en un hébergement externe, car cela
-nécessiterait l'accès au compte et au domaine de publication.
+Le code est prêt côté dépôt, mais je ne peux pas créer le projet Firebase ni
+l'associer à un compte GitHub sans accès à ce compte. Cette étape est
+inévitable : Firebase doit posséder le projet Firestore et les quotas de
+Cloud Functions. Aucun mot de passe ou token ne doit être partagé dans le
+chat ; il suffit de connecter Firebase CLI ou GitHub Actions de votre côté.

@@ -4,15 +4,11 @@ Carte web interactive et carte imprimable A4 portrait.
 
 ## Limite des réservations
 
-La réservation est servie par `server.mjs` et crée automatiquement une base
-SQLite locale. Chaque demande occupe 60 minutes dans une **fenêtre glissante** :
-maximum **15 réservations ou 30 couverts simultanés**, sans créneaux à créer
-manuellement. L'installation et la politique sont décrites dans
-[`docs/reservation-capacity.md`](docs/reservation-capacity.md).
-
-```bash
-npm start
-```
+La réservation est conservée dans **Firebase Cloud Firestore** et contrôlée
+par une Cloud Function. Chaque demande occupe 60 minutes dans une **fenêtre
+glissante** : maximum **15 réservations ou 30 couverts simultanés**, sans
+créneaux à créer manuellement. L'installation GitHub → Firebase est décrite
+dans [`docs/reservation-capacity.md`](docs/reservation-capacity.md).
 
 ## Carte imprimable (`carte.html`)
 
