@@ -541,6 +541,16 @@ def extract_cover(src: str) -> str:
         a = node.find('<a class="download-card"')
         frag, rest = take_element(node[a:], "a")
         node = node[:a] + rest
+    while 'reservation.html' in node:
+        a = node.find('<a')
+        while a >= 0:
+            frag, rest = take_element(node[a:], "a")
+            if 'reservation.html' in frag or 'contact-link--book' in frag:
+                node = node[:a] + rest
+                break
+            a = node.find('<a', a + 1)
+        else:
+            break
     inner_start = node.find('<svg class="relief-inner-svg"')
     if inner_start < 0:
         raise SystemExit("cover inner medallion missing")
@@ -868,34 +878,48 @@ html.carte-doc .print-page--cover .relief-inner-svg {
 html.carte-doc .print-page--cover .cover-footer {
   flex: 0 0 auto;
   width: 100%;
-  max-width: 168mm;
+  max-width: 172mm;
   gap: 3.5mm !important;
   margin: 14px 0 0 !important; /* pied collé sous le bouton */
 }
-html.carte-doc .print-page--cover .cover-links {
-  width: 168mm !important;
-  max-width: 100%;
-  gap: 2.4mm !important;
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+html.carte-doc .print-page--cover .cover-footer-address {
+  font-size: 8.5pt !important;
+  letter-spacing: .12em !important;
+  line-height: 1.4 !important;
+  max-width: 100% !important;
 }
 html.carte-doc .print-page--cover .cover-links {
+  width: 172mm !important;
+  max-width: 100%;
+  gap: 2.8mm !important;
+  display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
 }
 html.carte-doc .print-page--cover .cover-links .contact-link {
-  min-height: 9mm !important;
-  padding: 0 2.6mm !important;
-  box-sizing: border-box;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2.2mm !important;
+  min-height: 10.5mm !important;
+  padding: 0 3mm !important;
+  box-sizing: border-box !important;
   font-family: 'Montserrat', sans-serif !important;
-  font-weight: 400 !important;
-  font-size: 6.2pt !important;
+  font-weight: 500 !important;
+  font-size: 8pt !important;
   letter-spacing: .02em !important;
   text-transform: none !important;
   font-style: normal !important;
+  white-space: nowrap !important;
+  border-radius: 9999px !important;
 }
 html.carte-doc .print-page--cover .cover-links .contact-link svg {
-  width: 3.4mm !important;
-  height: 3.4mm !important;
+  width: 4.2mm !important;
+  height: 4.2mm !important;
+  flex: 0 0 auto !important;
+}
+html.carte-doc .print-page--cover .contact-link--book {
+  display: none !important;
 }
 html.carte-doc .print-page--cover a.contact-link.cover-action {
   position: relative;
