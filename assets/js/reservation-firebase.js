@@ -1,9 +1,8 @@
 /* Réservations La Colline — Firebase Spark / Firestore
  *
- * Ce module utilise le même projet Firebase que Mission Nautilus. La
- * configuration Firebase est publique par conception ; la protection vient
- * de l'authentification anonyme et des règles Firestore, pas d'un secret dans
- * le navigateur.
+ * La configuration publique est isolée dans firebase-config.js. La
+ * protection vient de l'authentification anonyme et des règles Firestore,
+ * pas d'un secret dans le navigateur.
  */
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { connectAuthEmulator, getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
@@ -17,14 +16,10 @@ import {
   serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyB5ivqXO1W9fZqqhwJ0uDnLgVgvWSfQz50',
-  authDomain: 'mission-nautilus.firebaseapp.com',
-  projectId: 'mission-nautilus',
-  storageBucket: 'mission-nautilus.firebasestorage.app',
-  messagingSenderId: '444670686419',
-  appId: '1:444670686419:web:00d186940a2fb8c8c29026'
-};
+const firebaseConfig = window.LCG_FIREBASE_CONFIG;
+if (!firebaseConfig || firebaseConfig.projectId !== 'la-colline-gambetta') {
+  throw new Error('Configuration Firebase La Colline absente ou incorrecte.');
+}
 
 const app = initializeApp(firebaseConfig, 'lacolline-gambetta-reservations');
 const auth = getAuth(app);

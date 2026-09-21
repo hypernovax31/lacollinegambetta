@@ -1,12 +1,12 @@
 # Réservations autonomes avec Firebase gratuit
 
 La réservation utilise directement **Cloud Firestore** du projet Firebase déjà
-utilisé par `mission-nautilus`. Il n'y a pas de Google Sheet, pas de Cloud
+dédié `la-colline-gambetta`. Il n'y a pas de Google Sheet, pas de Cloud
 Function payante et pas de créneaux à remplir à la main.
 
 Le navigateur s'authentifie anonymement puis réalise une transaction Firestore
 atomique. Le projet reste compatible avec l'offre gratuite Firebase utilisée
-par Nautilus.
+par La Colline Gambetta.
 
 ## Règle de capacité
 
@@ -55,36 +55,34 @@ contre ce scénario nécessiterait une fonction serveur et donc l'offre Blaze.
 
 ## Projet utilisé
 
-La configuration reprend le projet déjà présent dans le dépôt GitHub
-`hypernovax31/mission-nautilus` :
+La configuration utilise le projet Firebase dédié `la-colline-gambetta` :
 
 ```text
-projectId: mission-nautilus
-authDomain: mission-nautilus.firebaseapp.com
+projectId: la-colline-gambetta
+authDomain: la-colline-gambetta.firebaseapp.com
 ```
 
 L'authentification anonyme doit rester activée dans Firebase Authentication,
-comme elle l'est déjà pour Nautilus.
+pour le site La Colline Gambetta.
 
 ## Déployer les règles depuis GitHub
 
-Les règles Nautilus sont conservées dans `firestore.rules` et les chemins de
-réservation ont été ajoutés sans supprimer les collections existantes du jeu.
-Le dépôt ne déploie que les règles Firestore : il ne remplace pas le Hosting de
-Nautilus.
+Le fichier `firestore.rules` contient uniquement les règles des réservations
+La Colline Gambetta. Le dépôt ne déploie que Firestore : GitHub reste
+l'hébergeur du site.
 
 Pour un déploiement manuel :
 
 ```bash
 npm install -g firebase-tools
 firebase login
-firebase deploy --project mission-nautilus --only firestore
+firebase deploy --project la-colline-gambetta --only firestore
 ```
 
 Pour le déploiement automatique, ajouter dans les secrets GitHub Actions :
 
 ```text
-FIREBASE_PROJECT_ID=mission-nautilus
+FIREBASE_PROJECT_ID=la-colline-gambetta
 FIREBASE_TOKEN=votre_token_firebase
 ```
 
@@ -94,14 +92,14 @@ dépôt ou partagé dans le chat.
 
 ## Activation à vérifier dans Firebase
 
-Dans la console du projet `mission-nautilus` :
+Dans la console du projet `la-colline-gambetta` :
 
 1. ouvrir **Authentication → Sign-in method** ;
 2. vérifier que **Anonymous** est activé ;
 3. dans **Authentication → Settings → Authorized domains**, ajouter le domaine
    qui sert la page de réservation (par exemple le domaine GitHub Pages ou le
    domaine personnalisé) ;
-4. vérifier que **Firestore Database** est bien la base utilisée par Nautilus ;
+4. vérifier que **Firestore Database** est bien la base utilisée par La Colline Gambetta ;
 5. déployer les règles du dépôt.
 
 La page de réservation utilisera alors directement Firestore. Il n'y a pas de
