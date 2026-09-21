@@ -81,7 +81,7 @@ ZONE_H_PX = (SHEET_H_MM - ZONE_TOP_MM - ZONE_BOTTOM_MM) * PX_PER_MM  # 842,86 px
 # feuille, 7,6 pt, devient la taille de toute la carte. `--per-onglet` rend la
 # main au réglage individuel (chaque feuille au plus grand corps qui tient).
 UNIFORME = "--per-onglet" not in sys.argv
-UNIFORME_EXCEPT = {"menus"}
+UNIFORME_EXCEPT = {"menus", "boissons"}
 # Largeurs de composition essayées, en fractions de celle du site. Au-dessus de 1,
 # le bloc est étiré (le site compose à 1 140 px mais rien ne l'oblige à rester à sa
 # largeur de conteneur quand on le pose sur papier) ; en dessous, il se resserre et
@@ -1432,38 +1432,38 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
    aucun chevauchement ; si les informations sont longues, elles s'enroulent
    sur la ligne du dessous sans toucher le prix. */
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] {
-  padding: 3.5px 14px;
+  padding: 2.5px 14px;
 }
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__title {
-  min-height: 25px;
-  padding: 2.5px 16px;
-  font-size: 0.90rem !important;
+  min-height: 24px;
+  padding: 2px 14px;
+  font-size: 0.88rem !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__head {
-  margin-bottom: 2.5px;
+  margin-bottom: 2px;
 }
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__subtitle {
   margin: 0 0 2px !important;
   font-size: 0.80rem !important;
 }
 #print-document .carte-flow[data-sec="boissons"].carte-aerate .panel[data-merge="1"] > .panel__head {
-  margin-bottom: calc(2.5px + var(--carte-air-title, 0px)) !important;
+  margin-bottom: calc(2px + var(--carte-air-title, 0px)) !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .tab-flow {
-  row-gap: 3px !important;
+  row-gap: 2px !important;
 }
 #print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-line {
   display: flex !important;
   flex-direction: column !important;
   gap: 0 !important;
-  padding: 1.5px 10px !important;
+  padding: 1px 8px !important;
   box-sizing: border-box !important;
 }
 #print-document .carte-flow[data-sec="boissons"].carte-aerate [data-merge="1"] .price-line {
-  padding-top: calc(1.5px + var(--carte-air-side, 0px)) !important;
-  padding-bottom: calc(1.5px + var(--carte-air-side, 0px)) !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
+  padding-top: calc(1px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(1px + var(--carte-air-side, 0px)) !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .price-line__row {
   display: flex !important;
@@ -1482,13 +1482,13 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
 }
 #print-document .carte-flow[data-sec="boissons"] .price-line__name strong {
   font-weight: 700 !important;
-  font-size: 1.15rem !important;
+  font-size: 1.12rem !important;
   color: var(--violet-900) !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .carte-inline-note {
   display: inline !important;
   font-family: 'Montserrat', sans-serif !important;
-  font-size: 0.88rem !important;
+  font-size: 0.85rem !important;
   font-weight: 400 !important;
   font-style: italic !important;
   color: var(--muted) !important;
@@ -1497,7 +1497,7 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   text-transform: none !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .carte-inline-note.note-cl {
-  font-size: 0.84rem !important;
+  font-size: 0.80rem !important;
   font-style: normal !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .carte-inline-note + .carte-inline-note {
@@ -1516,7 +1516,7 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
 #print-document .carte-flow[data-sec="boissons"] .price-line__price {
   white-space: nowrap !important;
   font-family: 'Cinzel', serif !important;
-  font-size: 1.30rem !important;
+  font-size: 1.28rem !important;
   font-weight: 800 !important;
   color: var(--violet-900) !important;
   flex: 0 0 auto !important;
@@ -1526,12 +1526,12 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
 }
 #print-document .carte-flow[data-sec="boissons"] .beer-note {
   font-family: 'Cinzel', serif !important;
-  font-size: 0.80rem !important;
+  font-size: 0.78rem !important;
   font-weight: 700 !important;
   letter-spacing: .12em !important;
   text-transform: uppercase !important;
   color: var(--muted) !important;
-  margin: 0 0 2px !important;
+  margin: 0 0 3px !important;
   padding: 0 10px !important;
   line-height: 1.25 !important;
 }
