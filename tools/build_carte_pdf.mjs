@@ -179,6 +179,7 @@ async function main() {
   mkdirSync(imagesDir, { recursive: true });
 
   const shots = [];
+  const annotations = [];
   const { server, url } = await startStaticServer();
   let browser;
   try {
@@ -272,6 +273,29 @@ async function main() {
         animations: 'disabled',
       });
     }
+    const pillLink = await page.evaluate(() => {
+      const cover = document.querySelector('#print-document .print-page--cover');
+      if (!cover) return null;
+      const pill = cover.querySelector('a.cover-action');
+      if (!pill) return null;
+      const cRect = cover.getBoundingClientRect();
+      const pRect = pill.getBoundingClientRect();
+      const W_PT = 595.2756;
+      const H_PT = 841.8898;
+      const scaleX = W_PT / cRect.width;
+      const scaleY = H_PT / cRect.height;
+      const llx = (pRect.left - cRect.left) * scaleX;
+      const urx = (pRect.right - cRect.left) * scaleX;
+      const lly = (cRect.bottom - pRect.bottom) * scaleY;
+      const ury = (cRect.bottom - pRect.top) * scaleY;
+      return {
+        page: 1,
+        rect: [llx, lly, urx, ury],
+        url: pill.href || 'https://lacollinegambetta.fr/#menu-nav-anchor',
+      };
+    });
+    if (pillLink) annotations.push(pillLink);
+
     await context.close();
 
     const normalisees = normalizeJpgs(STAGE, pages);
@@ -299,7 +323,7 @@ async function main() {
     return;
   }
 
-  const built = imagesToPdf({ images: jpgs, out: join(ROOT, OUT_NAME), tolerate: 0.005 });
+  const built = imagesToPdf({ images: jpgs, out: join(ROOT, OUT_NAME), tolerate: 0.005, annotations });
   rmSync(STAGE, { recursive: true, force: true });
   const ko = (n) => Math.round(n / 1024).toLocaleString('fr-FR');   // n en octets
   const total = shots.reduce((a, s) => a + s.ko, 0);   // déjà en Ko

@@ -539,7 +539,8 @@ def extract_cover(src: str) -> str:
     start = src.find('<div class="cover-page">')
     node, _ = take_element(src[start:], "div")
     node = node.replace(' onclick="showView(\'menu\')"', "")
-    node = node.replace('href="#menu-nav-anchor"', 'href="index.html#menu-nav-anchor"')
+    node = node.replace('href="#menu-nav-anchor"', 'href="https://lacollinegambetta.fr/#menu-nav-anchor"')
+    node = node.replace('href="index.html#menu-nav-anchor"', 'href="https://lacollinegambetta.fr/#menu-nav-anchor"')
     while '<a class="download-card"' in node:
         a = node.find('<a class="download-card"')
         frag, rest = take_element(node[a:], "a")
@@ -803,8 +804,8 @@ html.carte-doc .print-page--cover .cover-brand {
 html.carte-doc .print-page--cover .cover-brand .eyebrow,
 html.carte-doc .print-page--cover .cover-brand .leader-title {
   font-family: 'Cinzel', serif !important;
-  font-size: 10.5pt !important;
-  font-weight: 600 !important;
+  font-size: 21pt !important;
+  font-weight: 700 !important;
   letter-spacing: .28em !important;
   color: #ffffff !important;
   line-height: 1.1 !important;

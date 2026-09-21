@@ -1199,10 +1199,12 @@ html:not(.carte-doc) #menus .menu-points li {
 }
 .cover-brand--menu-leader .eyebrow {
   font-family: 'Cinzel', serif;
-  letter-spacing: .24em;
+  font-weight: 700;
+  letter-spacing: .28em;
   color: var(--gold-100);
   text-transform: uppercase;
-  font-size: .72rem;
+  font-size: clamp(1.45rem, 3.5vw, 1.7rem);
+  line-height: 1.1;
 }
 .cover-brand--menu-leader h2 {
   margin: 6px 0 8px;
@@ -1229,8 +1231,8 @@ html:not(.carte-doc) #menus .menu-points li {
 }
 @media (max-width: 640px) {
   .cover-brand--menu-leader .eyebrow {
-    font-size: .72rem;
-    letter-spacing: .18em;
+    font-size: clamp(1.2rem, 5.5vw, 1.45rem);
+    letter-spacing: .22em;
   }
   .cover-brand--menu-leader h2 {
     font-size: clamp(1.6rem, 7vw, 2.2rem);
@@ -6771,8 +6773,8 @@ html:not(.carte-doc) #cover-section.cover-enter .cover-brand .menu-leader-sublin
   animation: coverRise .6s cubic-bezier(.22,.8,.3,1) .24s both;
 }
 html:not(.carte-doc) #cover-section.cover-enter .medallion-frame {
-  animation: coverMedalIn .9s cubic-bezier(.2,.8,.25,1) .3s both,
-             coverFloat 6s ease-in-out 1.5s infinite;
+  animation: none !important;
+  transform: none !important;
 }
 html:not(.carte-doc) #cover-section.cover-enter .cover-action {
   animation: coverRiseSoft .6s cubic-bezier(.22,.8,.3,1) .75s both,
@@ -6871,7 +6873,7 @@ html:not(.carte-doc) #cover-section .medallion-frame .medallion-halo {
              coverHaloBreathe 4.5s ease-in-out infinite;
 }
 html:not(.carte-doc) #cover-section .medallion-frame .relief-inner-svg {
-  animation: coverInnerZoom 9s ease-in-out infinite;
+  animation: none !important;
 }
 html:not(.carte-doc) #cover-section .medallion-frame {
   transition: filter .3s ease;
@@ -8696,7 +8698,7 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
     <div class="cover-page">
       <div class="cover-ambient" aria-hidden="true"></div>
       <div class="cover-brand cover-brand--menu-leader" onclick="showView('menu')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('menu');}" role="link" tabindex="0" title="Voir la carte">
-        <div class="eyebrow leader-title"><span class="star-gold">✦</span> LA CARTE <span class="star-gold">✦</span></div>
+        <div class="eyebrow leader-title"><span class="star-gold">✦</span> LA <span class="star-gold">✦</span></div>
         <h2>COLLINE <span>GAMBETTA</span></h2>
         <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
         <p class="leader-meta leader-meta--sub menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
