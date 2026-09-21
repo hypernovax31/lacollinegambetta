@@ -1246,11 +1246,11 @@ CARD_OVERRIDES = """
 }
 #print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols .price-list__col:nth-child(1) > *,
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(1) > * {
-  grid-column: 1;
+  grid-column: 1 !important;
 }
 #print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols .price-list__col:nth-child(2) > *,
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(2) > * {
-  grid-column: 2;
+  grid-column: 2 !important;
 }
 /* Listes HH simples (Spritz, Mules, Mocktails) : l'en-tête traverse les deux
    colonnes, les lignes se répartissent en rangées. */
@@ -1563,6 +1563,12 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   margin-top: 2px !important;
   margin-bottom: 0 !important;
   padding: 3px 10px !important;
+  color: var(--gold-700) !important;
+}
+#print-document .price-hh,
+#print-document .carte-flow .price-hh,
+#print-document .carte-flow[data-sec="boissons"] .price-hh {
+  color: var(--gold-700) !important;
 }
 /* --- Feuille cocktails : une seule page, pleine, aérée sans chevauchement ---
    L'onglet entier (36 cocktails, classiques → mocktails) tient sur une seule
@@ -1639,7 +1645,7 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   font-weight: 700 !important;
   letter-spacing: .08em !important;
   text-transform: uppercase !important;
-  color: var(--muted) !important;
+  color: var(--gold-700) !important;
   margin: 0 !important;
   padding: 0 !important;
 }
@@ -1674,20 +1680,22 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   flex: 0 0 auto !important;
   margin-left: auto !important;
 }
-#print-document .carte-flow[data-sec="cocktails"] .hh-line__price,
-#print-document .carte-flow[data-sec="cocktails"] .hh-line__hh {
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__price {
   font-family: 'Cinzel', serif !important;
   font-size: 1.28rem !important;
   font-weight: 800 !important;
   color: var(--violet-900) !important;
   text-align: right !important;
-}
-#print-document .carte-flow[data-sec="cocktails"] .hh-line__price {
   width: 40px !important;
   min-width: 40px !important;
   max-width: 40px !important;
 }
 #print-document .carte-flow[data-sec="cocktails"] .hh-line__hh {
+  font-family: 'Cinzel', serif !important;
+  font-size: 1.28rem !important;
+  font-weight: 800 !important;
+  color: var(--gold-700) !important;
+  text-align: right !important;
   width: 40px !important;
   min-width: 40px !important;
   max-width: 40px !important;
