@@ -740,6 +740,10 @@ html.carte-doc .print-page__content {
   top: 47mm !important;
   bottom: 27mm !important;
 }
+html.carte-doc .print-page--boissons .print-page__content {
+  top: 44mm !important;
+  bottom: 26mm !important;
+}
 
 /* Ornements ✦ du bandeau et du pied de page : losanges dessinés, jamais un
    glyphe — Cinzel ne le contient pas, et une police système absente du poste
@@ -1432,36 +1436,36 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
    aucun chevauchement ; si les informations sont longues, elles s'enroulent
    sur la ligne du dessous sans toucher le prix. */
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] {
-  padding: 2.5px 14px;
+  padding: 3px 14px;
 }
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__title {
-  min-height: 24px;
-  padding: 2px 14px;
+  min-height: 25px;
+  padding: 2.5px 14px;
   font-size: 0.88rem !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__head {
-  margin-bottom: 2px;
+  margin-bottom: 2.5px;
 }
 #print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__subtitle {
   margin: 0 0 2px !important;
   font-size: 0.80rem !important;
 }
 #print-document .carte-flow[data-sec="boissons"].carte-aerate .panel[data-merge="1"] > .panel__head {
-  margin-bottom: calc(2px + var(--carte-air-title, 0px)) !important;
+  margin-bottom: calc(2.5px + var(--carte-air-title, 0px)) !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .tab-flow {
-  row-gap: 2px !important;
+  row-gap: 3.5px !important;
 }
 #print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-line {
   display: flex !important;
   flex-direction: column !important;
   gap: 0 !important;
-  padding: 1px 8px !important;
+  padding: 1.3px 8px !important;
   box-sizing: border-box !important;
 }
 #print-document .carte-flow[data-sec="boissons"].carte-aerate [data-merge="1"] .price-line {
-  padding-top: calc(1px + var(--carte-air-side, 0px)) !important;
-  padding-bottom: calc(1px + var(--carte-air-side, 0px)) !important;
+  padding-top: calc(1.3px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(1.3px + var(--carte-air-side, 0px)) !important;
   padding-left: 8px !important;
   padding-right: 8px !important;
 }
@@ -1575,9 +1579,9 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   min-width: 0 !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .hh-banner {
-  margin-top: 2px !important;
+  margin-top: 8px !important;
   margin-bottom: 0 !important;
-  padding: 3px 10px !important;
+  padding: 4px 10px !important;
   color: var(--gold-700) !important;
 }
 #print-document .price-hh,
@@ -2111,7 +2115,14 @@ def section_variants(metrics: dict, sid: str, w0: float) -> list[dict]:
     return out
 
 
-def plan_variants(variants: list[dict], merge=(), twoc=()):
+def zone_h_for(sid: str = "") -> float:
+    """Hauteur utile de la zone de contenu selon l'onglet."""
+    if sid == "boissons":
+        return 858.0
+    return ZONE_H_PX
+
+
+def plan_variants(variants: list[dict], merge=(), twoc=(), sid: str = "") -> list[dict]:
     """Pour chaque largeur : nombre de feuilles, facteur, et le remplissage obtenu.
 
     Le facteur est lié à la largeur par construction (f = zone / largeur) : border le
@@ -2127,9 +2138,10 @@ def plan_variants(variants: list[dict], merge=(), twoc=()):
     passées en deux colonnes de lignes si la hauteur manque (stack_or_2col).
     """
     out = []
+    zone_h = zone_h_for(sid)
     for v in variants:
         gap_pack = min(v["gap"], GAP_PACK)
-        cap = ZONE_H_PX * SAFETY / v["fit"]
+        cap = zone_h * SAFETY / v["fit"]
         twocol_totals, modes = {}, {}
         hs2 = v.get("heights2col")
         if hs2:
@@ -2143,7 +2155,7 @@ def plan_variants(variants: list[dict], merge=(), twoc=()):
         for idx in sheets:
             in_sheet = [uh for uidx, uh in units if uidx[0] in idx]
             loads.append(sum(in_sheet) + gap_pack * (len(in_sheet) - 1))
-        fill = min(load * v["fit"] / ZONE_H_PX for load in loads)
+        fill = min(load * v["fit"] / zone_h for load in loads)
         out.append({"v": v, "sheets": sheets, "loads": loads,
                     "count": len(sheets), "fill": fill, "twocol_mode": modes})
     return out
@@ -2152,7 +2164,7 @@ def plan_variants(variants: list[dict], merge=(), twoc=()):
 def choose_section(metrics: dict, sid: str, w0: float, f_uniform: float | None = None,
                    merge=(), twoc=()):
     """Meilleure (largeur de composition, facteur, découpage) pour un onglet."""
-    plans = plan_variants(section_variants(metrics, sid, w0), merge, twoc)
+    plans = plan_variants(section_variants(metrics, sid, w0), merge, twoc, sid=sid)
     if f_uniform is not None:
         cible = min(plans, key=lambda p: abs(p["v"]["fit"] - f_uniform))
         plans = [cible]
@@ -2170,6 +2182,7 @@ def choose_section(metrics: dict, sid: str, w0: float, f_uniform: float | None =
         largeur surestime alors la typo réalisable."""
         v = plan["v"]
         fits = []
+        zone_h = zone_h_for(sid)
         for idx, load in zip(plan["sheets"], plan["loads"]):
             is_twocol = tuple(idx) in twoc
             mode = plan.get("twocol_mode", {}).get(tuple(idx), []) if is_twocol else []
@@ -2178,7 +2191,7 @@ def choose_section(metrics: dict, sid: str, w0: float, f_uniform: float | None =
             gap = justify_gaps(load, k, v["gap"], v["fit"]) if justify \
                 else min(v["gap"], GAP_PACK)
             total = load + (0 if not justify else max(0, len(idx) - 1) * (gap - GAP_PACK))
-            cap = ZONE_H_PX * SAFETY
+            cap = zone_h * (0.988 if sid == "boissons" else SAFETY)
             if total * v["fit"] > cap:
                 fits.append(cap / total)   # la garde haute recadre (débordement)
             else:
@@ -2265,7 +2278,7 @@ def _rewiden_width(metrics: dict, sid: str, idx, mode, k: int, var: dict,
     tient toujours) ; sinon la plus étroite largeur mesurée ≥ celle du plan où
     la feuille borde le cadre et tient (le plus gros caractère). None si rien
     ne tient : la feuille garde la largeur du plan, centrée, sans rognage."""
-    cap = ZONE_H_PX * SAFETY
+    cap = zone_h_for(sid) * (0.988 if sid == "boissons" else SAFETY)
     max_w = max(WIDTH_RATIOS) * metrics["base_width"]
     fit_h = cap / total
     base_w = min(ZONE_W_PX / fit_h, max_w)
@@ -2314,7 +2327,7 @@ def layout(metrics: dict, uniforme: bool = False):
         raise SystemExit(f"largeur de composition mesurée à {w0} px : la mesure est fausse "
                          "(onglets non rendus ?) — relancer `node tools/measure_carte.mjs`.")
     par_section = {sid: plan_variants(section_variants(metrics, sid, w0),
-                                   MERGE.get(sid, ()), TWOC.get(sid, ()))
+                                   MERGE.get(sid, ()), TWOC.get(sid, ()), sid=sid)
                    for sid in SECTIONS}
     f_uniform = None
     if uniforme:
@@ -2387,7 +2400,9 @@ def compose_pages(src: str, metrics: dict, flows: dict, chosen: dict, w0: float,
             total = load + (0 if not justify else max(0, len(idx) - 1) * (gap - GAP_PACK))
             base_w = var["w"]
             non_bordée = False
-            if total * fit > ZONE_H_PX * SAFETY:
+            zone_h = zone_h_for(sid)
+            cap = zone_h * (0.988 if sid == "boissons" else SAFETY)
+            if total * fit > cap:
                 # La hauteur plafonne : à la largeur du plan le flux est trop
                 # haut pour border le cadre en largeur. Sans rien faire de
                 # plus, la page réduirait en laissant un blanc de chaque côté ;
@@ -2411,7 +2426,7 @@ def compose_pages(src: str, metrics: dict, flows: dict, chosen: dict, w0: float,
                     # Rien ne tient élargi : on garde la largeur du plan, la
                     # page se centre — le blanc reste dans la feuille, jamais
                     # de rognage.
-                    fit = ZONE_H_PX * SAFETY / total
+                    fit = cap / total
                     non_bordée = True
             air_side = air_title = None
             air_rows = air_titles = 0
@@ -2517,7 +2532,8 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
                     f"aération {m['kind']} (page {n}) : base de ligne {base} px, "
                     f"{attendu} px attendu — la CSS des lignes a changé, revoir "
                     f"le bloc « Aération » de CARD_OVERRIDES.")
-        free = ZONE_H_PX * SAFETY - m["flowH"]
+        zone_h = m.get("zone", ZONE_H_PX)
+        free = zone_h * SAFETY - m["flowH"]
         rows, titles = m["rows"], m["titles"]
         if free > 0.5 and rows + titles > 0:
             air_side = free / (2 * info["fit"] * (rows + titles))
@@ -2534,15 +2550,16 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
         res = subprocess.run(["node", str(AERATE)], cwd=ROOT, capture_output=True, text=True)
         meas2 = {m["page"]: m for m in json.loads(res.stdout)} if res.returncode == 0 else {}
         mauvaises = [n for n in airs
-                     if meas2.get(n, {}).get("flowH", 0) > ZONE_H_PX * SAFETY + 2]
+                     if meas2.get(n, {}).get("flowH", 0) > meas2.get(n, {}).get("zone", ZONE_H_PX) * SAFETY + 2]
         if not mauvaises:
             break
         for n in mauvaises:
             A, T, rows, titles, free, flowH0 = airs[n]
             m1 = meas.get(n, {}).get("flowH", 0)
             m2 = meas2.get(n, {}).get("flowH", 0)
+            zone_target = meas2.get(n, {}).get("zone", ZONE_H_PX) * SAFETY
             croissance = max(m2 - m1, 0.01)
-            garde = max(0.0, (ZONE_H_PX * SAFETY - m1) / croissance)
+            garde = max(0.0, (zone_target - m1) / croissance)
             airs[n] = (round(A * garde, 2), round(T * garde, 2), rows, titles, free, flowH0)
         pages2, labels2, _, infos2 = compose_pages(src, metrics, flows, chosen, w0, airs)
         OUT.write_text(remplacer_glyphes_a_risque(assemble_html(metrics, w0, css, pages2)),

@@ -93,10 +93,12 @@ async function main() {
             bases[probe.tagName.toLowerCase()] = parseFloat(cs.paddingTop) || 0;
           }
         }
+        const contentEl = p.querySelector('.print-page__content');
+        const zoneH = contentEl ? contentEl.getBoundingClientRect().height : ZONE;
         res.push({
           page: +p.dataset.page, kind, fit: +fit.toFixed(4),
           flowH: +flow.getBoundingClientRect().height.toFixed(2),
-          zone: ZONE, rows, titles, bases,
+          zone: +zoneH.toFixed(2), rows, titles, bases,
         });
       }
       return res;
