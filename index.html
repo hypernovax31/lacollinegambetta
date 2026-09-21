@@ -4198,16 +4198,20 @@ html:not(.carte-doc) #cover-section .cover-brand {
   min-height: 0;
   max-width: 100%;
   padding: 2px 4px 0 !important;
-  margin: 0 0 100px !important; /* 100px entre le titre et le médaillon */
-  gap: clamp(4px, 0.7vh, 8px) !important;
+  margin: 0 0 clamp(16px, 3vh, 36px) !important;
+  gap: clamp(3px, 0.6vh, 6px) !important;
   z-index: 3;
   flex: 0 0 auto;
 }
-html:not(.carte-doc) #cover-section .cover-brand--menu-leader-lite .eyebrow,
+html:not(.carte-doc) #cover-section .cover-brand .eyebrow,
 html:not(.carte-doc) #cover-section .leader-meta,
 html:not(.carte-doc) #cover-section .menu-leader-subline {
   max-width: 100%;
   overflow-wrap: anywhere;
+}
+html:not(.carte-doc) #cover-section .cover-brand h2 {
+  display: block !important;
+  margin: 4px 0 6px !important;
 }
 html:not(.carte-doc) #cover-section .leader-meta,
 html:not(.carte-doc) #cover-section .menu-leader-subline {
@@ -6757,6 +6761,9 @@ html:not(.carte-doc) #cover-section.cover-enter .cover-page::after {
 html:not(.carte-doc) #cover-section.cover-enter .cover-brand .eyebrow {
   animation: coverRise .65s cubic-bezier(.22,.8,.3,1) 0s both;
 }
+html:not(.carte-doc) #cover-section.cover-enter .cover-brand h2 {
+  animation: coverRise .65s cubic-bezier(.22,.8,.3,1) .06s both;
+}
 html:not(.carte-doc) #cover-section.cover-enter .cover-brand .leader-meta {
   animation: coverRise .6s cubic-bezier(.22,.8,.3,1) .12s both;
 }
@@ -8688,8 +8695,9 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
   <section id="cover-section" class="cover-enter">
     <div class="cover-page">
       <div class="cover-ambient" aria-hidden="true"></div>
-      <div class="cover-brand cover-brand--menu-leader cover-brand--menu-leader-lite" onclick="showView('menu')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('menu');}" role="link" tabindex="0" title="Voir la carte">
+      <div class="cover-brand cover-brand--menu-leader" onclick="showView('menu')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('menu');}" role="link" tabindex="0" title="Voir la carte">
         <div class="eyebrow leader-title"><span class="star-gold">✦</span> LA CARTE <span class="star-gold">✦</span></div>
+        <h2>COLLINE <span>GAMBETTA</span></h2>
         <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
         <p class="leader-meta leader-meta--sub menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
       </div>

@@ -793,36 +793,71 @@ html.carte-doc .print-page--cover .cover-brand {
   flex: 0 0 auto;
   width: 100%;
   max-width: 170mm;
-  margin: 0 0 100px !important; /* 100px entre le titre et le médaillon */
-  gap: 3mm !important;
+  margin: 0 0 35px !important;
+  gap: 1.5mm !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
 }
-html.carte-doc .print-page--cover .cover-brand--menu-leader-lite .eyebrow,
-html.carte-doc .print-page--cover .leader-title {
-  font-family: 'Cinzel', serif !important;
-  font-size: 26pt !important;
-  letter-spacing: .14em !important;
-  overflow: visible !important;
-  line-height: 1.15 !important;
-}
-html.carte-doc .print-page--cover .leader-meta {
-  font-family: 'Cinzel', serif !important;
-  font-size: 11.5pt !important;
-  letter-spacing: .14em !important;
-  line-height: 1.25 !important;
-}
-html.carte-doc .print-page--cover .menu-leader-subline,
-html.carte-doc .print-page--cover .leader-meta--sub {
+html.carte-doc .print-page--cover .cover-brand .eyebrow,
+html.carte-doc .print-page--cover .cover-brand .leader-title {
   font-family: 'Cinzel', serif !important;
   font-size: 10.5pt !important;
-  letter-spacing: .12em !important;
-  line-height: 1.3 !important;
+  font-weight: 600 !important;
+  letter-spacing: .28em !important;
+  color: #ffffff !important;
+  line-height: 1.1 !important;
+  text-transform: uppercase !important;
+  margin: 0 !important;
+}
+html.carte-doc .print-page--cover .cover-brand h2 {
+  font-family: 'Cinzel', serif !important;
+  font-size: 28pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .18em !important;
+  color: #ffffff !important;
+  line-height: 0.95 !important;
+  text-transform: uppercase !important;
+  margin: 1.5mm 0 1mm !important;
+  text-align: center !important;
+  display: block !important;
+}
+html.carte-doc .print-page--cover .cover-brand h2 span {
+  display: block !important;
+  font-size: 13.5pt !important;
+  font-weight: 600 !important;
+  letter-spacing: .28em !important;
+  color: #ffe88f !important;
+  line-height: 1.1 !important;
+  margin-top: 1mm !important;
+  text-transform: uppercase !important;
+}
+html.carte-doc .print-page--cover .cover-brand .leader-meta {
+  font-family: 'Cinzel', serif !important;
+  font-size: 9.6pt !important;
+  letter-spacing: .16em !important;
+  color: #ffffff !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase !important;
+  margin: 0.4mm 0 0 !important;
+}
+html.carte-doc .print-page--cover .cover-brand .menu-leader-subline,
+html.carte-doc .print-page--cover .cover-brand .leader-meta--sub {
+  font-family: 'Cinzel', serif !important;
+  font-size: 8.8pt !important;
+  letter-spacing: .14em !important;
+  color: #ffe88f !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase !important;
+  margin: 0.4mm 0 0 !important;
 }
 html.carte-doc .print-page--cover .cover-brand .star-gold {
   display: inline-block !important;
-  width: 10px;
-  height: 10px;
-  margin: 0 8px;
-  vertical-align: 2px;
+  width: 5.5px;
+  height: 5.5px;
+  margin: 0 5px;
+  vertical-align: 0.5px;
   background: #fcf6ba;
   clip-path: @@ETOILE@@;
   color: transparent !important;
@@ -831,9 +866,9 @@ html.carte-doc .print-page--cover .cover-brand .star-gold {
   text-shadow: none !important;
 }
 html.carte-doc .print-page--cover .menu-leader-subline .star-gold {
-  width: 7px;
-  height: 7px;
-  margin: 0 6px;
+  width: 4.8px;
+  height: 4.8px;
+  margin: 0 4px;
 }
 /* Le bouton « Menu & Carte » de la couverture : il reprend la pilule dorée
    « sélectionnée » de la version web (dégradé or #bf953f→#fef9db, liseré
@@ -866,9 +901,9 @@ html.carte-doc .print-page--cover .medallion-container {
   aspect-ratio: auto !important;
 }
 html.carte-doc .print-page--cover .medallion-container .medallion-frame {
-  width: 520px !important;
-  height: 520px !important;
-  margin-bottom: 100px !important; /* 100px entre le médaillon et le bouton */
+  width: 490px !important;
+  height: 490px !important;
+  margin-bottom: 45px !important; /* 45px entre le médaillon et le bouton */
 }
 html.carte-doc .print-page--cover .medallion-container .cover-action {
   margin: 0 !important;
