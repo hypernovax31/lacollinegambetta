@@ -93,8 +93,11 @@ Dans la console du projet `mission-nautilus` :
 
 1. ouvrir **Authentication → Sign-in method** ;
 2. vérifier que **Anonymous** est activé ;
-3. vérifier que **Firestore Database** est bien la base utilisée par Nautilus ;
-4. déployer les règles du dépôt.
+3. dans **Authentication → Settings → Authorized domains**, ajouter le domaine
+   qui sert la page de réservation (par exemple le domaine GitHub Pages ou le
+   domaine personnalisé) ;
+4. vérifier que **Firestore Database** est bien la base utilisée par Nautilus ;
+5. déployer les règles du dépôt.
 
 La page de réservation utilisera alors directement Firestore. Il n'y a pas de
 URL d'API supplémentaire à renseigner : `assets/js/reservation-config.js`

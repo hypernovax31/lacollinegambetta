@@ -6,9 +6,10 @@
  * le navigateur.
  */
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
-import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+import { connectAuthEmulator, getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import {
   collection,
+  connectFirestoreEmulator,
   doc,
   getDoc,
   getFirestore,
@@ -28,7 +29,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig, 'lacolline-gambetta-reservations');
 const auth = getAuth(app);
 const db = getFirestore(app);
+if (['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+  connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+  connectFirestoreEmulator(db, '127.0.0.1', 8080);
+}
 const authReady = signInAnonymously(auth);
+/* Évite un « Unhandled promise rejection » lorsque l'authentification
+ * anonyme n'est pas encore activée dans le projet : reserve() reprend la
+ * même promesse et remontera l'erreur à l'interface. */
+authReady.catch((error) => console.error('[réservation Firebase]', error));
 
 const POLICY = Object.freeze({
   firstSlotMinutes: 12 * 60,
@@ -193,4 +202,6 @@ async function availability(date, guests = 1) {
   return { date, durationMinutes: POLICY.durationMinutes, slots };
 }
 
-window.LCGFirebaseReservation = { reserve, availability, POLICY };
+const api = { reserve, availability, POLICY };
+window.LCGFirebaseReservation = api;
+window.dispatchEvent(new CustomEvent('lcg-firebase-ready'));

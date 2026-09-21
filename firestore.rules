@@ -34,7 +34,9 @@ service cloud.firestore {
        les règles empêchent au minimum les écritures totalement anonymes et
        les documents manifestement hors format. */
     match /reservationCapacity/{date} {
-      allow read, write: if request.auth != null;
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null;
+      allow delete: if false;
     }
 
     match /reservations/{reservationId} {
@@ -42,6 +44,10 @@ service cloud.firestore {
       allow create: if request.auth != null
         && request.resource.data.date is string
         && request.resource.data.time is string
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() > 0
         && request.resource.data.guests is int
         && request.resource.data.guests >= 1
         && request.resource.data.guests <= 10
