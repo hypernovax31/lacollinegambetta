@@ -1873,6 +1873,7 @@ html[lang="uk"] .thanks__sign {
 })();
 </script>
 
+<script src="assets/js/reservation-config.js?v=202609210330"></script>
 <script src="assets/js/i18n.js?v=202609210330" defer></script>
 
 <script>
@@ -1882,6 +1883,12 @@ html[lang="uk"] .thanks__sign {
   var dateEl = document.getElementById('bk-date');
   var timeEl = document.getElementById('bk-time');
   var guestsEl = document.getElementById('bk-guests');
+  /* Vide par défaut pour préserver le mode statique historique. Dès qu'une
+     URL Apps Script est renseignée dans reservation-config.js, l'envoi passe
+     par le contrôle centralisé (15 réservations ou 30 couverts par heure).
+     Une panne de cet endpoint ne retombe volontairement pas sur FormSubmit :
+     sinon un client pourrait contourner la limite. */
+  var CAPACITY_ENDPOINT = String(window.LCG_RESERVATION_ENDPOINT || '').trim();
 
   /* Les heures et les nombres de couverts sont écrits en clair dans le
      HTML, et non fabriqués ici : le moteur de traduction photographie
@@ -2161,6 +2168,7 @@ html[lang="uk"] .thanks__sign {
        plutot qu'ecrite en clair, pour ne pas l'offrir aux aspirateurs
        d'adresses qui parcourent les pages. */
     var payload = new FormData();
+    payload.append('action', 'reserve');
     payload.append('_subject', sujet);
     payload.append('_template', 'box');
     payload.append('_captcha', 'false');
@@ -2191,14 +2199,106 @@ html[lang="uk"] .thanks__sign {
     });
     try { sending.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e0) {}
 
-    var ENDPOINT = 'https://formsubmit.co/ajax/' +
+    var FALLBACK_ENDPOINT = 'https://formsubmit.co/ajax/' +
       atob('bGFjb2xsaW5lZ2FtYmV0dGFAbWFpbG8uY29t');
+    var ENDPOINT = CAPACITY_ENDPOINT || FALLBACK_ENDPOINT;
+    var CENTRAL_CAPACITY = !!CAPACITY_ENDPOINT;
     /* La barre dure cinq secondes pleines : la reponse arrive souvent
        avant, mais on ne coupe pas l'animation en cours de route. */
     var started = Date.now();
     var MIN_MS = 5000;
 
-    function finish(ok) {
+    function capacityCopy(kind) {
+      var langNow = (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
+      var copy = {
+        fr: {
+          full: 'Ce créneau est complet (15 réservations ou 30 couverts). Choisissez une autre heure ou appelez-nous au 01 43 49 05 93.',
+          error: 'La disponibilité de ce créneau ne peut pas être vérifiée pour le moment. Appelez-nous au 01 43 49 05 93 pour réserver.'
+        },
+        en: {
+          full: 'This time slot is full (15 bookings or 30 guests). Please choose another time or call us on 01 43 49 05 93.',
+          error: 'This time slot could not be checked. Please call 01 43 49 05 93 to book.'
+        },
+        es: {
+          full: 'Este horario está completo (15 reservas o 30 comensales). Elija otra hora o llámenos al 01 43 49 05 93.',
+          error: 'No se puede comprobar este horario. Llámenos al 01 43 49 05 93 para reservar.'
+        },
+        de: {
+          full: 'Dieser Zeitraum ist voll (15 Reservierungen oder 30 Gäste). Bitte wählen Sie eine andere Uhrzeit oder rufen Sie uns unter 01 43 49 05 93 an.',
+          error: 'Die Verfügbarkeit konnte nicht geprüft werden. Bitte rufen Sie für eine Reservierung 01 43 49 05 93 an.'
+        },
+        it: {
+          full: 'Questa fascia oraria è completa (15 prenotazioni o 30 coperti). Scelga un altro orario o chiami lo 01 43 49 05 93.',
+          error: 'Impossibile verificare la disponibilità. Chiami lo 01 43 49 05 93 per prenotare.'
+        },
+        pt: {
+          full: 'Este horário está completo (15 reservas ou 30 pessoas). Escolha outra hora ou ligue para 01 43 49 05 93.',
+          error: 'Não foi possível verificar a disponibilidade. Ligue para 01 43 49 05 93 para reservar.'
+        },
+        nl: {
+          full: 'Dit tijdslot is vol (15 reserveringen of 30 gasten). Kies een ander tijdstip of bel 01 43 49 05 93.',
+          error: 'De beschikbaarheid kon niet worden gecontroleerd. Bel 01 43 49 05 93 om te reserveren.'
+        },
+        ar: {
+          full: 'هذا الموعد ممتلئ (15 حجزاً أو 30 شخصاً). اختر وقتاً آخر أو اتصل بنا على 01 43 49 05 93.',
+          error: 'تعذر التحقق من توفر هذا الموعد. اتصل بنا على 01 43 49 05 93 للحجز.'
+        },
+        zh: {
+          full: '该时段已满（15 个预订或 30 位客人）。请选择其他时间，或致电 01 43 49 05 93。',
+          error: '暂时无法确认该时段的可用性。请致电 01 43 49 05 93 预订。'
+        },
+        ja: {
+          full: 'この時間帯は満席です（予約15件または30名）。別の時間を選ぶか、01 43 49 05 93までお電話ください。',
+          error: '空席状況を確認できません。ご予約は01 43 49 05 93までお電話ください。'
+        },
+        ko: {
+          full: '이 시간대는 마감되었습니다(예약 15건 또는 30명). 다른 시간을 선택하거나 01 43 49 05 93으로 전화해 주세요.',
+          error: '이 시간대의 예약 가능 여부를 확인할 수 없습니다. 예약은 01 43 49 05 93으로 전화해 주세요.'
+        },
+        pl: {
+          full: 'Ten przedział jest pełny (15 rezerwacji lub 30 osób). Wybierz inną godzinę albo zadzwoń pod numer 01 43 49 05 93.',
+          error: 'Nie można sprawdzić dostępności. Aby zarezerwować, zadzwoń pod numer 01 43 49 05 93.'
+        },
+        tr: {
+          full: 'Bu saat aralığı dolu (15 rezervasyon veya 30 kişi). Başka bir saat seçin ya da 01 43 49 05 93 numarasını arayın.',
+          error: 'Bu saat aralığının uygunluğu kontrol edilemedi. Rezervasyon için 01 43 49 05 93 numarasını arayın.'
+        },
+        uk: {
+          full: 'Цей час уже заповнений (15 бронювань або 30 гостей). Виберіть інший час або зателефонуйте за номером 01 43 49 05 93.',
+          error: 'Не вдалося перевірити доступність. Для бронювання зателефонуйте за номером 01 43 49 05 93.'
+        },
+        hi: {
+          full: 'यह समय पूरी तरह बुक है (15 बुकिंग या 30 मेहमान)। कोई दूसरा समय चुनें या 01 43 49 05 93 पर कॉल करें।',
+          error: 'इस समय की उपलब्धता की जाँच नहीं हो सकी। बुकिंग के लिए 01 43 49 05 93 पर कॉल करें।'
+        }
+      };
+      return (copy[langNow] || copy.fr)[kind];
+    }
+
+    function showCapacityError(message, openMail) {
+      status.textContent = '';
+      status.classList.remove('form-status--thanks');
+      var w = document.createElement('p');
+      w.className = 'thanks__line';
+      w.textContent = message;
+      var w2 = document.createElement('p');
+      w2.className = 'thanks__tel';
+      w2.appendChild(document.createTextNode(th('tel') + ' '));
+      var wa2 = document.createElement('a');
+      wa2.href = 'tel:+33143490593';
+      wa2.textContent = '01 43 49 05 93';
+      w2.appendChild(wa2);
+      status.appendChild(w);
+      status.appendChild(w2);
+      status.hidden = false;
+      try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e2) {}
+      if (openMail) {
+        window.location.href = 'mailto:lacollinegambetta@mailo.com?subject=' +
+          encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+      }
+    }
+
+    function finish(ok, failure) {
       var rest = Math.max(0, MIN_MS - (Date.now() - started));
       setTimeout(function () {
         sending.hidden = true;
@@ -2209,39 +2309,97 @@ html[lang="uk"] .thanks__sign {
           try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e1) {}
           form.reset();
           refreshTimes();
+        } else if (CENTRAL_CAPACITY) {
+          /* En mode capacité, ne jamais ouvrir un mail de secours : il ne
+             serait pas compté et contournerait la limite. */
+          showCapacityError(
+            failure && failure.capacityFull ? capacityCopy('full') : capacityCopy('error'),
+            false
+          );
         } else {
-          /* Echec du relais : plutot que de laisser croire a un envoi,
-             on bascule sur la messagerie du client, pre-remplie. */
-          status.textContent = '';
-          status.classList.remove('form-status--thanks');
-          var w = document.createElement('p');
-          w.className = 'thanks__line';
-          w.textContent = th('fail');
-          var w2 = document.createElement('p');
-          w2.className = 'thanks__tel';
-          w2.appendChild(document.createTextNode(th('tel') + ' '));
-          var wa2 = document.createElement('a');
-          wa2.href = 'tel:+33143490593';
-          wa2.textContent = '01 43 49 05 93';
-          w2.appendChild(wa2);
-          status.appendChild(w);
-          status.appendChild(w2);
-          status.hidden = false;
-          try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e2) {}
-          window.location.href = 'mailto:lacollinegambetta@mailo.com?subject=' +
-            encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+          /* Mode statique historique : le relais peut échouer, on bascule
+             sur la messagerie du client, pré-remplie. */
+          showCapacityError(th('fail'), true);
         }
       }, rest);
     }
 
-    fetch(ENDPOINT, {
-      method: 'POST',
-      body: payload,
-      headers: { 'Accept': 'application/json' }
-    })
-      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-      .then(function () { finish(true); })
-      .catch(function () { finish(false); });
+    if (CENTRAL_CAPACITY) {
+      /* Apps Script ne permet pas de compter sur des en-têtes CORS
+         configurables. Le POST est donc chargé dans une iframe cachée ;
+         Code.gs renvoie un postMessage après le contrôle atomique. */
+      var responseFrame = document.createElement('iframe');
+      var responseName = 'lcg-reservation-response-' + Date.now();
+      responseFrame.name = responseName;
+      responseFrame.title = 'Réponse de réservation';
+      responseFrame.setAttribute('aria-hidden', 'true');
+      responseFrame.style.cssText = 'position:absolute;width:1px;height:1px;border:0;opacity:0;pointer-events:none;';
+      document.body.appendChild(responseFrame);
+
+      var transport = document.createElement('form');
+      transport.method = 'POST';
+      transport.action = ENDPOINT;
+      transport.target = responseName;
+      transport.style.display = 'none';
+      payload.forEach(function (value, key) {
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value;
+        transport.appendChild(input);
+      });
+      document.body.appendChild(transport);
+
+      var received = false;
+      function cleanTransport() {
+        window.removeEventListener('message', receiveCapacityMessage);
+        if (transport.parentNode) transport.parentNode.removeChild(transport);
+        if (responseFrame.parentNode) responseFrame.parentNode.removeChild(responseFrame);
+      }
+      function receiveCapacityMessage(event) {
+        var data = event.data || {};
+        if (event.source !== responseFrame.contentWindow ||
+            data.source !== 'lcg-reservation-capacity' || !data.payload) return;
+        received = true;
+        cleanTransport();
+        var result = data.payload;
+        if (result.ok === true) {
+          finish(true);
+        } else {
+          var err = new Error(result.message || 'reservation failed');
+          err.capacityFull = result.code === 'CAPACITY_FULL';
+          finish(false, err);
+        }
+      }
+      window.addEventListener('message', receiveCapacityMessage);
+      transport.submit();
+
+      /* Une réponse bloquée ne doit pas laisser la barre indéfiniment en
+         mouvement. Surtout, aucun fallback courriel ne contourne alors la
+         capacité centrale. */
+      setTimeout(function () {
+        if (received) return;
+        cleanTransport();
+        finish(false, new Error('capacity endpoint timeout'));
+      }, 15000);
+    } else {
+      fetch(ENDPOINT, {
+        method: 'POST',
+        body: payload,
+        headers: { 'Accept': 'application/json' }
+      })
+        .then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (data) {
+            if (!r.ok) {
+              var err = new Error(data.message || 'reservation failed');
+              throw err;
+            }
+            return data;
+          });
+        })
+        .then(function () { finish(true); })
+        .catch(function (err) { finish(false, err); });
+    }
   });
 })();
 </script>

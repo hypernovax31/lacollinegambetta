@@ -2,6 +2,17 @@
 
 Carte web interactive et carte imprimable A4 portrait.
 
+## Limite des réservations
+
+La page `reservation.html` peut appliquer une limite centralisée de **15
+réservations ou 30 couverts par créneau fixe d'une heure** avec Google Sheets +
+Apps Script, sans serveur à maintenir. Le script et la procédure de mise en
+service sont dans [`docs/reservation-capacity.md`](docs/reservation-capacity.md).
+Tant que l'URL Apps Script n'est pas renseignée dans
+`assets/js/reservation-config.js`, le site conserve son mode historique de
+demande par courriel : il ne faut alors pas le présenter comme une limite
+bloquante.
+
 ## Carte imprimable (`carte.html`)
 
 `carte.html` **recopie la mise en page du site** : mêmes textes, mêmes fontes,
