@@ -1,10 +1,8 @@
-/* Configuration de la réservation.
+/* L'API locale crée et contrôle les créneaux automatiquement.
  *
- * Le site reste utilisable tel quel tant que l'URL est vide : les demandes
- * passent alors par le relais de courriel historique. Pour activer le
- * contrôle centralisé de capacité, déployez tools/reservation-capacity/Code.gs
- * comme application web Google Apps Script, puis collez son URL ci-dessous.
- *
- * Ne mettez jamais une clé privée ici : ce fichier est public par nature.
+ * Le serveur Node (`npm start`) utilise une base SQLite locale : aucune
+ * feuille Google ou configuration de créneaux n'est nécessaire. Si le site
+ * et l'API sont hébergés sur deux domaines, remplacer cette valeur par l'URL
+ * publique de l'API.
  */
-window.LCG_RESERVATION_ENDPOINT = '';
+window.LCG_RESERVATION_ENDPOINT = '/api/reservations';

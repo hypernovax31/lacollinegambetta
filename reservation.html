@@ -1883,11 +1883,11 @@ html[lang="uk"] .thanks__sign {
   var dateEl = document.getElementById('bk-date');
   var timeEl = document.getElementById('bk-time');
   var guestsEl = document.getElementById('bk-guests');
-  /* Vide par défaut pour préserver le mode statique historique. Dès qu'une
-     URL Apps Script est renseignée dans reservation-config.js, l'envoi passe
-     par le contrôle centralisé (15 réservations ou 30 couverts par heure).
-     Une panne de cet endpoint ne retombe volontairement pas sur FormSubmit :
-     sinon un client pourrait contourner la limite. */
+  /* L'API relative est configurée dans reservation-config.js. L'envoi passe
+     par le contrôle centralisé (15 réservations ou 30 couverts simultanés
+     dans une fenêtre glissante de 60 minutes). Une panne de cet endpoint ne
+     retombe volontairement pas sur FormSubmit : sinon un client pourrait
+     contourner la limite. */
   var CAPACITY_ENDPOINT = String(window.LCG_RESERVATION_ENDPOINT || '').trim();
 
   /* Les heures et les nombres de couverts sont écrits en clair dans le
@@ -2157,16 +2157,13 @@ html[lang="uk"] .thanks__sign {
 
     [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
 
-    /* --- Envoi direct vers la boite du restaurant ---------------------
-       Le site est statique : sans service tiers, un navigateur ne peut
-       pas remettre un courriel. La demande part donc par FormSubmit,
-       une passerelle qui relaie le formulaire vers l'adresse du
-       restaurant. Aucun compte, aucune cle : le premier envoi declenche
-       un courriel de confirmation a activer une seule fois.
+    /* --- Notification du restaurant -----------------------------------
+       La capacité est décidée par l'API locale. Le relais FormSubmit ne
+       sert plus qu'à notifier le restaurant après acceptation ; il ne peut
+       donc jamais créer une réservation qui contourne le compteur.
 
-       L'adresse est encodee en base64 dans l'attribut du formulaire
-       plutot qu'ecrite en clair, pour ne pas l'offrir aux aspirateurs
-       d'adresses qui parcourent les pages. */
+       L'adresse est encodée en base64 dans l'attribut du formulaire plutôt
+       qu'écrite en clair, pour ne pas l'offrir aux aspirateurs d'adresses. */
     var payload = new FormData();
     payload.append('action', 'reserve');
     payload.append('_subject', sujet);
@@ -2324,10 +2321,23 @@ html[lang="uk"] .thanks__sign {
       }, rest);
     }
 
+    function notifyRestaurant() {
+      /* Cette notification est volontairement découplée de la capacité :
+         l'API a déjà enregistré la demande avant cet appel. */
+      try {
+        fetch(FALLBACK_ENDPOINT, {
+          method: 'POST',
+          body: payload,
+          headers: { 'Accept': 'application/json' },
+          keepalive: true
+        }).catch(function () {});
+      } catch (notifyError) {}
+    }
+
     if (CENTRAL_CAPACITY) {
-      /* Apps Script ne permet pas de compter sur des en-têtes CORS
-         configurables. Le POST est donc chargé dans une iframe cachée ;
-         Code.gs renvoie un postMessage après le contrôle atomique. */
+      /* L'API répond dans une iframe cachée ; elle renvoie un postMessage
+         après le contrôle atomique. Cette technique reste fonctionnelle
+         même si le site et l'API ne partagent pas d'en-têtes CORS. */
       var responseFrame = document.createElement('iframe');
       var responseName = 'lcg-reservation-response-' + Date.now();
       responseFrame.name = responseName;
@@ -2364,6 +2374,7 @@ html[lang="uk"] .thanks__sign {
         cleanTransport();
         var result = data.payload;
         if (result.ok === true) {
+          notifyRestaurant();
           finish(true);
         } else {
           var err = new Error(result.message || 'reservation failed');
