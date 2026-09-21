@@ -4350,29 +4350,78 @@ html:not(.carte-doc) #cover-section .cover-footer {
     padding: 8px 10px !important;
   }
 }
-@media (orientation: landscape) and (max-height: 500px) {
+@media (orientation: landscape) and (max-height: 560px) {
   html:not(.carte-doc) #cover-section .cover-page {
-    padding: 4px 18px 6px !important;
+    padding: 6px 14px 8px !important;
     gap: 0 !important;
+    overflow-y: auto !important;
   }
-  html:not(.carte-doc) #cover-section .cover-brand {
-    padding: 0 8px !important;
+  html:not(.carte-doc) #cover-section .cover-page::after {
+    inset: 6px !important;
   }
-  html:not(.carte-doc) #cover-section .cover-brand--menu-leader-lite .eyebrow {
-    font-size: clamp(1rem, 3.2vh, 1.35rem) !important;
+  html:not(.carte-doc) #cover-section .cover-brand,
+  html:not(.carte-doc) #cover-section .titre-principal {
+    padding: 0 6px !important;
+    margin-bottom: 8px !important;
+    gap: 1.5px !important;
+    max-width: min(100%, 640px) !important;
   }
-  html:not(.carte-doc) #cover-section .leader-meta,
-  html:not(.carte-doc) #cover-section .menu-leader-subline {
-    font-size: clamp(.5rem, 2.4vh, .68rem) !important;
+  html:not(.carte-doc) #cover-section .titre-principal .eyebrow,
+  html:not(.carte-doc) #cover-section .cover-brand .eyebrow {
+    font-size: clamp(0.65rem, 2.5vh, 0.85rem) !important;
+    letter-spacing: .16em !important;
+    line-height: 1.1 !important;
+  }
+  html:not(.carte-doc) #cover-section .titre-principal h2,
+  html:not(.carte-doc) #cover-section .cover-brand h2 {
+    font-size: clamp(0.95rem, 3.8vh, 1.35rem) !important;
+    letter-spacing: .12em !important;
+    margin: 1px 0 !important;
+    line-height: 0.95 !important;
+  }
+  html:not(.carte-doc) #cover-section .titre-principal h2 span,
+  html:not(.carte-doc) #cover-section .cover-brand h2 span {
+    font-size: .5em !important;
+    letter-spacing: .18em !important;
+    margin-top: 1px !important;
+  }
+  html:not(.carte-doc) #cover-section .titre-principal .leader-meta,
+  html:not(.carte-doc) #cover-section .cover-brand .leader-meta {
+    font-size: clamp(0.48rem, 1.8vh, 0.6rem) !important;
+    letter-spacing: .08em !important;
+    line-height: 1.15 !important;
+  }
+  html:not(.carte-doc) #cover-section .titre-principal .menu-leader-subline,
+  html:not(.carte-doc) #cover-section .cover-brand .menu-leader-subline {
+    font-size: clamp(0.44rem, 1.6vh, 0.56rem) !important;
+    letter-spacing: .08em !important;
+    line-height: 1.15 !important;
+  }
+  html:not(.carte-doc) #cover-section .titre-principal .star-gold,
+  html:not(.carte-doc) #cover-section .cover-brand .star-gold {
+    width: 3.5px !important;
+    height: 3.5px !important;
+    margin: 0 3px !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-container {
+    margin-top: 4px !important;
+  }
+  html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
+    margin-bottom: 8px !important;
   }
   html:not(.carte-doc) #cover-section .cover-action {
     margin: 0 8px !important;
-    min-height: 34px !important;
-    padding: 6px 12px !important;
+    min-height: 30px !important;
+    padding: 4px 12px !important;
+    font-size: 0.72rem !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-footer {
+    margin-top: 6px !important;
+    gap: 4px !important;
   }
   html:not(.carte-doc) #cover-section .cover-footer-address {
-    font-size: 0.58rem !important;
-    line-height: 1.25 !important;
+    font-size: 0.56rem !important;
+    line-height: 1.2 !important;
   }
   html:not(.carte-doc) #cover-section .cover-links {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
@@ -4380,9 +4429,9 @@ html:not(.carte-doc) #cover-section .cover-footer {
     gap: 6px !important;
   }
   html:not(.carte-doc) #cover-section .cover-links .contact-link {
-    min-height: 34px !important;
-    padding: 4px 6px !important;
-    font-size: 0.62rem !important;
+    min-height: 28px !important;
+    padding: 2px 6px !important;
+    font-size: 0.58rem !important;
   }
 }
 
@@ -8697,7 +8746,7 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
   <section id="cover-section" class="cover-enter">
     <div class="cover-page">
       <div class="cover-ambient" aria-hidden="true"></div>
-      <div class="cover-brand cover-brand--menu-leader" onclick="showView('menu')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('menu');}" role="link" tabindex="0" title="Voir la carte">
+      <div class="cover-brand cover-brand--menu-leader titre-principal" id="titre-principal" onclick="showView('menu')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('menu');}" role="link" tabindex="0" title="Voir la carte" aria-label="Titre principal">
         <div class="eyebrow leader-title"><span class="star-gold">✦</span> LA <span class="star-gold">✦</span></div>
         <h2>COLLINE <span>GAMBETTA</span></h2>
         <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
