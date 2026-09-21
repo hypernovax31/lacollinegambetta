@@ -1498,6 +1498,7 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
 }
 #print-document .carte-flow[data-sec="boissons"] .carte-inline-note.note-cl {
   font-size: 0.80rem !important;
+  font-style: normal !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .carte-inline-note + .carte-inline-note {
   margin-left: 0 !important;
@@ -1558,6 +1559,20 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
 #print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .price-list--pressions {
   grid-column: 2;
   grid-row: 3;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .price-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  row-gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .price-line {
+  width: 100% !important;
+  min-width: 0 !important;
 }
 #print-document .carte-flow[data-sec="boissons"] .hh-banner {
   margin-top: 2px !important;
