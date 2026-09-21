@@ -1301,15 +1301,29 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 .thanks__when {
   display: inline-block;
   margin: 4px auto 12px !important;
-  padding: 9px 16px;
+  padding: 10px 18px;
   border-radius: 14px;
   border: 1px solid rgba(216,178,87,.5);
   background: #fff;
   font-family: 'Cinzel', serif;
-  font-size: .9rem;
   letter-spacing: .04em;
   color: var(--violet-900);
   font-variant-numeric: tabular-nums;
+}
+/* L'annonce, en retrait : elle introduit sans voler la vedette. */
+.thanks__when-intro {
+  display: block;
+  font-size: .78rem;
+  font-weight: 400;
+  opacity: .78;
+  margin-bottom: 5px;
+}
+/* La ligne que le client retient : detachee et en gras. */
+.thanks__when-detail {
+  display: block;
+  font-size: clamp(.92rem, 2.8vw, 1.04rem);
+  font-weight: 700;
+  line-height: 1.45;
 }
 .thanks__warm { font-style: italic; color: #6b4a8a; }
 
@@ -1642,8 +1656,7 @@ html[lang="uk"] .thanks__sign {
             <span data-th="hi">Merci infiniment</span>
             <span data-th="l1">Votre demande de table vient de nous parvenir.</span>
             <span data-th="l2">Nous vous attendons</span>
-            <span data-th="l3">Nous vous rappelons très vite pour confirmer tout cela de vive voix.</span>
-            <span data-th="l4">Au plaisir de vous recevoir sur la Colline,</span>
+            <span data-th="l4">Au plaisir de vous recevoir très prochainement,</span>
             <span data-th="sign">L’équipe de La Colline Gambetta</span>
             <span data-th="tel">Une question ? Appelez-nous au</span>
             <span data-th="fail">L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.</span>
@@ -1844,7 +1857,7 @@ html[lang="uk"] .thanks__sign {
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609210030" defer></script>
+<script src="assets/js/i18n.js?v=202609210200" defer></script>
 
 <script>
 (function () {
@@ -2072,13 +2085,20 @@ html[lang="uk"] .thanks__sign {
     p1.className = 'thanks__line';
     p1.textContent = th('l1');
 
+    /* L'encart : l'annonce reste en texte courant, puis la date,
+       l'heure et le nombre de personnes sont detaches sur leur propre
+       ligne, en gras. C'est la ligne que le client relit et retient ;
+       noyee dans la phrase, elle se cherchait. */
     var p2 = document.createElement('p');
     p2.className = 'thanks__when';
-    p2.textContent = th('l2') + ' ' + jourLu + ' \u00b7 ' + heureLue + ' \u00b7 ' + couverts + pc.stop;
-
-    var p3 = document.createElement('p');
-    p3.className = 'thanks__line';
-    p3.textContent = th('l3');
+    var intro = document.createElement('span');
+    intro.className = 'thanks__when-intro';
+    intro.textContent = th('l2') + pc.stop;
+    var detail = document.createElement('strong');
+    detail.className = 'thanks__when-detail';
+    detail.textContent = jourLu + ' \u00b7 ' + heureLue + ' \u00b7 ' + couverts;
+    p2.appendChild(intro);
+    p2.appendChild(detail);
 
     var p4 = document.createElement('p');
     p4.className = 'thanks__line thanks__warm';
@@ -2096,7 +2116,7 @@ html[lang="uk"] .thanks__sign {
     a.textContent = '01 43 49 05 93';
     tel.appendChild(a);
 
-    [h, p1, p2, p3, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
+    [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
 
     /* --- Envoi direct vers la boite du restaurant ---------------------
        Le site est statique : sans service tiers, un navigateur ne peut
