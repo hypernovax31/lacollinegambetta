@@ -2,6 +2,18 @@
 
 Carte web interactive et carte imprimable A4 portrait.
 
+## Limite des réservations
+
+La réservation est conservée directement dans **Firebase Cloud Firestore**,
+dans le projet Firebase dédié de La Colline Gambetta. Chaque demande
+occupe 60 minutes dans une **fenêtre glissante** : maximum **15 tables ou
+30 couverts simultanés**. Une table accueille au maximum **2 adultes** :
+1 personne = 1 table, 2 personnes = 1 table, 3 personnes = 2 tables et 4
+personnes = 2 tables. Le nombre de tables est calculé automatiquement, sans
+créneaux à créer manuellement. La
+configuration GitHub → Firebase est décrite dans
+[`docs/reservation-capacity.md`](docs/reservation-capacity.md).
+
 ## Carte imprimable (`carte.html`)
 
 `carte.html` **recopie la mise en page du site** : mêmes textes, mêmes fontes,

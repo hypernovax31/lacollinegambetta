@@ -1,0 +1,558 @@
+[
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Vittel",
+  "slug": "vittel",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "San Pellegrino",
+  "slug": "san-pellegrino",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Badoit",
+  "slug": "badoit",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Perrier",
+  "slug": "perrier",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Coca / Zéro / Cherry",
+  "slug": "coca-zero-cherry",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Fanta / Sprite / Fuze Tea",
+  "slug": "fanta-sprite-fuze-tea",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Orangina / Citronnade / Ginger Beer",
+  "slug": "orangina-citronnade-ginger-beer",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Diabolo / Limonade",
+  "slug": "diabolo-limonade",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Schweppes Tonic / Agrumes",
+  "slug": "schweppes-tonic-agrumes",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Jus / Nectar de fruits",
+  "slug": "jus-nectar-de-fruits",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Sirop à l’eau",
+  "slug": "sirop-a-leau",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Supplément sirop  2 cl",
+  "slug": "supplement-sirop-2-cl",
+  "photo": false
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Orange pressée / Citron pressé",
+  "slug": "orange-pressee-citron-presse",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Milkshake",
+  "slug": "milkshake",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Café frappé",
+  "slug": "cafe-frappe",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons fraîches",
+  "name": "Latte frappé",
+  "slug": "latte-frappe",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Café",
+  "slug": "cafe",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Décaféiné",
+  "slug": "decafeine",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Café noisette / allongé",
+  "slug": "cafe-noisette-allonge",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Double café / décaféiné",
+  "slug": "double-cafe-decafeine",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Café crème / chocolat chaud",
+  "slug": "cafe-creme-chocolat-chaud",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Cappuccino",
+  "slug": "cappuccino",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Crème / chocolat viennois",
+  "slug": "creme-chocolat-viennois",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Café viennois",
+  "slug": "cafe-viennois",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Infusion / thé parfumé",
+  "slug": "infusion-the-parfume",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Grog",
+  "slug": "grog",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Vin chaud aux épices",
+  "slug": "vin-chaud-aux-epices",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Irish coffee",
+  "slug": "irish-coffee",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Café allongé",
+  "slug": "cafe-allonge",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Boissons chaudes",
+  "name": "Lait chaud",
+  "slug": "lait-chaud",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Apéritifs",
+  "name": "Martini",
+  "slug": "martini",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Apéritifs",
+  "name": "Ricard / Pastis",
+  "slug": "ricard-pastis",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Apéritifs",
+  "name": "Kir",
+  "slug": "kir",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Apéritifs",
+  "name": "Kir Royal",
+  "slug": "kir-royal",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Apéritifs",
+  "name": "Americano",
+  "slug": "americano",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Apéritifs",
+  "name": "Negroni",
+  "slug": "negroni",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Apéritifs",
+  "name": "Porto",
+  "slug": "porto",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Apéritifs",
+  "name": "Suze / Campari",
+  "slug": "suze-campari",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Apéritifs",
+  "name": "Muscat / Salers",
+  "slug": "muscat-salers",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Apéritifs",
+  "name": "Cidre brut",
+  "slug": "cidre-brut",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Whiskies",
+  "name": "Clan Campbell",
+  "slug": "clan-campbell",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Whiskies",
+  "name": "Jameson",
+  "slug": "jameson",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Whiskies",
+  "name": "Jack Daniels",
+  "slug": "jack-daniels",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Whiskies",
+  "name": "Johnny Walker",
+  "slug": "johnny-walker",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Whiskies",
+  "name": "Chivas Regal",
+  "slug": "chivas-regal",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Digestifs",
+  "name": "Bas Armagnac VSOP",
+  "slug": "bas-armagnac-vsop",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Digestifs",
+  "name": "Rhum des Îles, Calvados",
+  "slug": "rhum-des-iles-calvados",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Digestifs",
+  "name": "Vodka",
+  "slug": "vodka",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Digestifs",
+  "name": "Get 27 / 31, Bailey’s, Malibu",
+  "slug": "get-27-31-baileys-malibu",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Digestifs",
+  "name": "Cognac VSOP",
+  "slug": "cognac-vsop",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Digestifs",
+  "name": "Manzana Verde",
+  "slug": "manzana-verde",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Digestifs",
+  "name": "Vieille Prune de Souillac",
+  "slug": "vieille-prune-de-souillac",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Digestifs",
+  "name": "Poire, Mirabelle, Framboise",
+  "slug": "poire-mirabelle-framboise",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Digestifs",
+  "name": "Amaretto, Fernet Branca",
+  "slug": "amaretto-fernet-branca",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Digestifs",
+  "name": "Grand Marnier, Cointreau",
+  "slug": "grand-marnier-cointreau",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Bières",
+  "name": "Heineken",
+  "slug": "heineken",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Bières",
+  "name": "1664 Blanc",
+  "slug": "1664-blanc",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Bières",
+  "name": "Desperados",
+  "slug": "desperados",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Bières",
+  "name": "Corona",
+  "slug": "corona",
+  "photo": true
+ },
+ {
+  "section": "boissons",
+  "panel": "Bières",
+  "name": "Bière sans alcool",
+  "slug": "biere-sans-alcool",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin rouge",
+  "name": "Bordeaux AOP — Château la Gabarre",
+  "appellation": "Bordeaux AOP",
+  "slug": "bordeaux-aop",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin rouge",
+  "name": "Côtes du Rhône AOP Bio — Les 3 Garçons",
+  "appellation": "Côtes du Rhône AOP Bio",
+  "slug": "cotes-du-rhone-aop-bio",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin rouge",
+  "name": "Brouilly AOP — Réserve de Beauvoisie",
+  "appellation": "Brouilly AOP",
+  "slug": "brouilly-aop",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin rouge",
+  "name": "IGP Pays d’Oc Bio — Le Titi, Pinot Noir",
+  "appellation": "IGP Pays d’Oc Bio",
+  "slug": "igp-pays-doc-bio",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin rouge",
+  "name": "Saint-Pourçain AOP — La Ficelle",
+  "appellation": "Saint-Pourçain AOP",
+  "slug": "saint-pourcain-aop",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin rouge",
+  "name": "Pic Saint-Loup AOP — Puech de Fourques",
+  "appellation": "Pic Saint-Loup AOP",
+  "slug": "pic-saint-loup-aop",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin rouge",
+  "name": "Crozes-Hermitage AOP — Chante Passo",
+  "appellation": "Crozes-Hermitage AOP",
+  "slug": "crozes-hermitage-aop",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin rouge",
+  "name": "Gigondas AOP Bio — Pierre Amadieu, Romane Machotte",
+  "appellation": "Gigondas AOP Bio",
+  "slug": "gigondas-aop-bio",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin blanc",
+  "name": "Petit Chablis AOP — La Revire",
+  "appellation": "Petit Chablis AOP",
+  "slug": "petit-chablis-aop",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin blanc",
+  "name": "IGP Pays d’Oc — Le Sudiste Chardonnay",
+  "appellation": "IGP Pays d’Oc",
+  "slug": "igp-pays-doc",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin blanc",
+  "name": "IGT Terre Siciliane Bio — Vinisella Pinot Grigio La Passione",
+  "appellation": "IGT Terre Siciliane Bio",
+  "slug": "igt-terre-siciliane-bio",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin blanc",
+  "name": "IGP Côtes de Gascogne Bio — Domaine de Maouries, les fruits",
+  "appellation": "IGP Côtes de Gascogne Bio",
+  "slug": "igp-cotes-de-gascogne-bio",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin rosé",
+  "name": "Côtes de Provence AOP Bio — Romain Desbastides",
+  "appellation": "Côtes de Provence AOP Bio",
+  "slug": "cotes-de-provence-aop-bio",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Vin rosé",
+  "name": "IGP Méditerranée Bio — La Demoiselle sans Gêne",
+  "appellation": "IGP Méditerranée Bio",
+  "slug": "igp-mediterranee-bio",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Bulles",
+  "name": "Champagne H. Richard — Cuvée Henri",
+  "appellation": "Champagne H. Richard",
+  "slug": "champagne-h-richard",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Bulles",
+  "name": "Champagne Nicolas Feuillatte — Brut Réserve Exclusive",
+  "appellation": "Champagne Nicolas Feuillatte",
+  "slug": "champagne-nicolas-feuillatte",
+  "photo": true
+ },
+ {
+  "section": "vins",
+  "panel": "Bulles",
+  "name": "Prosecco Spumante Il Poggio — Blanc de Noirs Extra Dry",
+  "appellation": "Prosecco Spumante Il Poggio",
+  "slug": "prosecco-spumante-il-poggio",
+  "photo": true
+ }
+]

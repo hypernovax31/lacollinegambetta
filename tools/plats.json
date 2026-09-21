@@ -1,0 +1,414 @@
+{
+  "entrees": [
+    {
+      "name": "Assiette de foie gras du Sud-Ouest",
+      "price": "17,90",
+      "notes": [
+        "Pain toasté, confiture d’abricots"
+      ],
+      "slug": "assiette-de-foie-gras-du-sud-ouest"
+    },
+    {
+      "name": "Œuf dur mayonnaise",
+      "price": "6,20",
+      "notes": [],
+      "slug": "oeuf-dur-mayonnaise"
+    },
+    {
+      "name": "6 Escargots au Roquefort",
+      "price": "7,90",
+      "notes": [],
+      "slug": "6-escargots-au-roquefort"
+    },
+    {
+      "name": "Assiette de saumon fumé",
+      "price": "7,50",
+      "notes": [],
+      "slug": "assiette-de-saumon-fume"
+    },
+    {
+      "name": "Tartare d’avocat et crevettes",
+      "price": "7,90",
+      "notes": [],
+      "slug": "tartare-d-avocat-et-crevettes"
+    },
+    {
+      "name": "Œuf cocotte du moment",
+      "price": "7,90",
+      "notes": [],
+      "slug": "oeuf-cocotte-du-moment"
+    },
+    {
+      "name": "La Cochonnaille",
+      "price": "17,50",
+      "notes": [],
+      "slug": "la-cochonnaille"
+    },
+    {
+      "name": "La Fromagère",
+      "price": "15,90",
+      "notes": [],
+      "slug": "la-fromagere"
+    },
+    {
+      "name": "La Paysanne",
+      "price": "19,90",
+      "notes": [
+        "Cochonnaille et fromagère"
+      ],
+      "slug": "la-paysanne"
+    },
+    {
+      "name": "Croque-Monsieur",
+      "price": "11,70",
+      "notes": [
+        "Sandwich grillé jambon-fromage, sauce béchamel",
+        "Frites et salade"
+      ],
+      "slug": "croque-monsieur"
+    },
+    {
+      "name": "Croque-Madame",
+      "price": "12,70",
+      "notes": [
+        "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat",
+        "Frites et salade"
+      ],
+      "slug": "croque-madame"
+    },
+    {
+      "name": "Œufs au plat",
+      "price": "9,90",
+      "notes": [
+        "Salade"
+      ],
+      "slug": "oeufs-au-plat"
+    },
+    {
+      "name": "Omelette nature",
+      "price": "9,90",
+      "notes": [
+        "Salade"
+      ],
+      "slug": "omelette-nature"
+    },
+    {
+      "name": "Omelette au fromage",
+      "price": "10,90",
+      "notes": [
+        "Salade"
+      ],
+      "slug": "omelette-au-fromage"
+    },
+    {
+      "name": "Omelette au jambon",
+      "price": "10,90",
+      "notes": [
+        "Salade"
+      ],
+      "slug": "omelette-au-jambon"
+    },
+    {
+      "name": "Omelette mixte",
+      "price": "13,90",
+      "notes": [
+        "Salade"
+      ],
+      "slug": "omelette-mixte"
+    },
+    {
+      "name": "Omelette aux champignons",
+      "price": "13,70",
+      "notes": [
+        "Salade"
+      ],
+      "slug": "omelette-aux-champignons"
+    }
+  ],
+  "plats": [
+    {
+      "name": "Entrecôte 190 g",
+      "price": "19,90",
+      "notes": [
+        "Fleur de sel, sauce au choix"
+      ],
+      "slug": "entrecote-190-g"
+    },
+    {
+      "name": "Bavette d’aloyau",
+      "price": "17,50",
+      "notes": [
+        "Sauce au choix"
+      ],
+      "slug": "bavette-d-aloyau"
+    },
+    {
+      "name": "Escalope de veau",
+      "price": "19,90",
+      "notes": [
+        "Sauce champignons, pâtes"
+      ],
+      "slug": "escalope-de-veau"
+    },
+    {
+      "name": "Cuisse de canard confite",
+      "price": "19,70",
+      "notes": [],
+      "slug": "cuisse-de-canard-confite"
+    },
+    {
+      "name": "Poisson",
+      "price": "17,90",
+      "notes": [
+        "Selon arrivage"
+      ],
+      "slug": "poisson"
+    },
+    {
+      "name": "Tartare de bœuf",
+      "price": "17,80",
+      "notes": [],
+      "slug": "tartare-de-boeuf"
+    },
+    {
+      "name": "Cuisse de poulet rôtie",
+      "price": "15,20",
+      "notes": [
+        "Riz basmati"
+      ],
+      "slug": "cuisse-de-poulet-rotie"
+    },
+    {
+      "name": "Burger La Colline",
+      "price": "17,90",
+      "notes": [
+        "Pain brioché, cheddar, steak haché, bacon, oignons caramélisés, salade, tomate, sauce burger."
+      ],
+      "slug": "burger-la-colline"
+    },
+    {
+      "name": "Le Royal Fishburger",
+      "price": "17,70",
+      "notes": [
+        "Pain brioché, cheddar, poisson pané, légumes grillés, salade, tomate, sauce burger."
+      ],
+      "slug": "le-royal-fishburger"
+    },
+    {
+      "name": "Burger Chicken Croustillant",
+      "price": "17,90",
+      "notes": [
+        "Pain brioché, cheddar, escalope de poulet pané croustillant, oignons caramélisés, salade, tomate, sauce burger."
+      ],
+      "slug": "burger-chicken-croustillant"
+    },
+    {
+      "name": "Burger Végétarien",
+      "price": "17,70",
+      "notes": [
+        "Pain brioché, cheddar, steak végétarien, légumes grillés, salade, tomate, sauce burger."
+      ],
+      "slug": "burger-vegetarien"
+    },
+    {
+      "name": "La Colline",
+      "price": "16,90",
+      "notes": [
+        "Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre."
+      ],
+      "slug": "la-colline"
+    },
+    {
+      "name": "Chèvre Chaud",
+      "price": "16,50",
+      "notes": [
+        "Salade verte, tomate, jambon sec, toast de cabécou, noix, miel."
+      ],
+      "slug": "chevre-chaud"
+    },
+    {
+      "name": "Végétarienne",
+      "price": "12,60",
+      "notes": [
+        "Salade verte, tomate, concombre, haricots verts, légumes grillés, avocat."
+      ],
+      "slug": "vegetarienne"
+    },
+    {
+      "name": "Nordique",
+      "price": "17,20",
+      "notes": [
+        "Salade verte, saumon fumé, crevettes, avocat, concombre, tomate, feta, croûtons."
+      ],
+      "slug": "nordique"
+    },
+    {
+      "name": "Tagliatelles à la carbonara",
+      "price": "15,90",
+      "notes": [],
+      "slug": "tagliatelles-a-la-carbonara"
+    },
+    {
+      "name": "Tagliatelles au saumon",
+      "price": "16,20",
+      "notes": [],
+      "slug": "tagliatelles-au-saumon"
+    },
+    {
+      "name": "Penne au poulet et champignons",
+      "price": "16,50",
+      "notes": [],
+      "slug": "penne-au-poulet-et-champignons"
+    }
+  ],
+  "desserts": [
+    {
+      "name": "Crème brûlée",
+      "price": "6,80",
+      "notes": [],
+      "slug": "creme-brulee"
+    },
+    {
+      "name": "Mousse au chocolat",
+      "price": "6,50",
+      "notes": [],
+      "slug": "mousse-au-chocolat"
+    },
+    {
+      "name": "Panna cotta",
+      "price": "6,90",
+      "notes": [
+        "Coulis de fruits rouges"
+      ],
+      "slug": "panna-cotta"
+    },
+    {
+      "name": "Tiramisu",
+      "price": "7,20",
+      "notes": [],
+      "slug": "tiramisu"
+    },
+    {
+      "name": "Tarte aux pommes",
+      "price": "7,50",
+      "notes": [
+        "Glace vanille"
+      ],
+      "slug": "tarte-aux-pommes"
+    },
+    {
+      "name": "Pain perdu de la Colline",
+      "price": "7,50",
+      "notes": [
+        "Glace vanille ou caramel beurre salé"
+      ],
+      "slug": "pain-perdu-de-la-colline"
+    },
+    {
+      "name": "Moelleux au chocolat",
+      "price": "7,90",
+      "notes": [],
+      "slug": "moelleux-au-chocolat"
+    },
+    {
+      "name": "Profiteroles",
+      "price": "7,20",
+      "notes": [],
+      "slug": "profiteroles"
+    },
+    {
+      "name": "Café gourmand",
+      "price": "8,20",
+      "notes": [
+        "Assortiment de mignardises — thé + 1 €"
+      ],
+      "slug": "cafe-gourmand"
+    },
+    {
+      "name": "Crème glacée (3 boules)",
+      "price": "8,10",
+      "notes": [
+        "Vanille, caramel beurre salé, chocolat, café, pistache, noisette"
+      ],
+      "slug": "creme-glacee-3-boules"
+    },
+    {
+      "name": "Sorbet (3 boules)",
+      "price": "8,10",
+      "notes": [
+        "Citron vert, fraise, framboise"
+      ],
+      "slug": "sorbet-3-boules"
+    },
+    {
+      "name": "Dame blanche aux éclats de chocolat",
+      "price": "8,30",
+      "notes": [
+        "2 boules vanille, sauce chocolat, chantilly"
+      ],
+      "slug": "dame-blanche-aux-eclats-de-chocolat"
+    },
+    {
+      "name": "Chocolat liégeois",
+      "price": "8,30",
+      "notes": [
+        "2 boules chocolat, sauce chocolat, chantilly"
+      ],
+      "slug": "chocolat-liegeois"
+    },
+    {
+      "name": "Café liégeois",
+      "price": "8,30",
+      "notes": [
+        "2 boules café, expresso, chantilly"
+      ],
+      "slug": "cafe-liegeois"
+    },
+    {
+      "name": "Caramello",
+      "price": "8,30",
+      "notes": [
+        "2 boules caramel beurre salé, sauce caramel, chantilly"
+      ],
+      "slug": "caramello"
+    },
+    {
+      "name": "Le Colonel de la Colline",
+      "price": "8,30",
+      "notes": [
+        "2 boules citron vert arrosées de vodka (2 cl)"
+      ],
+      "slug": "le-colonel-de-la-colline"
+    },
+    {
+      "name": "Pont-l’Évêque",
+      "price": "5,90",
+      "notes": [],
+      "slug": "pont-l-eveque"
+    },
+    {
+      "name": "Fourme d’Ambert",
+      "price": "6,90",
+      "notes": [],
+      "slug": "fourme-d-ambert"
+    },
+    {
+      "name": "Cantal",
+      "price": "6,90",
+      "notes": [],
+      "slug": "cantal"
+    },
+    {
+      "name": "Chèvre",
+      "price": "5,90",
+      "notes": [],
+      "slug": "chevre"
+    },
+    {
+      "name": "Assiette mixte",
+      "price": "8,50",
+      "notes": [],
+      "slug": "assiette-mixte"
+    }
+  ]
+}

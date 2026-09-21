@@ -1,0 +1,2462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Colline Gambetta — Réserver ma table</title>
+<meta name="description" content="Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Parisienne&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" crossorigin="">
+<style>
+/* =====================================================================
+   Page de réservation.
+
+   Les règles ci-dessous ne sont PAS réécrites : elles sont extraites
+   telles quelles de index.html (en-tête, pied de page, pilules de
+   contact, panneaux, titres à pastille violette liseré or, y compris
+   leurs points de rupture). Le seul ajout propre à cette page est le
+   formulaire, plus bas, qui reprend les mêmes variables de couleur,
+   les mêmes rayons et les mêmes fontes.
+   ===================================================================== */
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0; font-family:'Montserrat',sans-serif; color:var(--ink);
+  background:var(--cream); min-height:100svh; display:flex; flex-direction:column;
+}
+button, a { font:inherit; }
+
+:root {
+  --violet-950:#24102e;
+  --violet-900:#432155;
+  --violet-800:#592e6f;
+  --violet-700:#6b3c87;
+  --gold-100:#fef9db;
+  --gold-300:#f0d78f;
+  --gold-500:#d8b257;
+  --gold-700:#9c7a2d;
+  --cream:#fcfbf7;
+  --ink:#24102e;
+  --muted:#7b6a88;
+  --line:rgba(216,178,87,.28);
+  --shadow:0 12px 30px rgba(36,16,46,.08);
+}
+.top-controls { background:#592e6f; border-bottom:1px solid rgba(216,178,87,.45); padding:10px 12px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; align-items:stretch; box-shadow:0 4px 15px rgba(0,0,0,.4); }
+.control-btn, .nav-btn, .contact-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:44px; width:100%; padding:10px 16px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; transition:.2s ease; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-align:center; }
+.control-btn:hover, .nav-btn:hover, .contact-link:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
+.control-btn.active, .nav-btn.active { background:linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%); color:var(--violet-950); border-color:#fcf6ba; }
+.footer-links { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+.contact-link svg, .footer-link svg { width:15px; height:15px; flex:0 0 auto; stroke:#fff; }
+.interior-header { background:#592e6f; color:#fff; padding:24px 16px 20px; text-align:center; border-bottom:2px solid rgba(216,178,87,.42); }
+.interior-header .eyebrow { font-family:'Cinzel',serif; letter-spacing:.3em; color:var(--gold-100); text-transform:uppercase; font-size:.78rem; }
+.interior-header h2 { margin:8px 0 10px; font-family:'Cinzel',serif; font-size:clamp(2.2rem,6vw,3.4rem); letter-spacing:.18em; text-transform:uppercase; line-height:1; }
+.interior-header h2 span { display:block; color:var(--gold-500); font-size:.48em; letter-spacing:.28em; margin-top:.28rem; }
+.interior-header p { margin:0; font-family:'Cinzel',serif; letter-spacing:.12em; text-transform:uppercase; font-size:clamp(.74rem,2vw,.98rem); }
+.nav-btn { width:100%; min-width:0; white-space:normal; text-align:center; line-height:1.2; }
+.container { width:min(100% - 24px, 1120px); margin:20px auto 0; }
+.panel { background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(252,251,247,.98)); border:1px solid rgba(216,178,87,.38); border-radius:22px; box-shadow:var(--shadow); padding:16px; }
+.panel__head { display:grid; gap:6px; justify-items:center; text-align:center; margin-bottom:12px; }
+.panel__title { margin:0; display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:50px; max-width:100%; padding:10px 22px; border-radius:999px; background:#592e6f; color:#fff; border:1px solid var(--gold-500); font-family:'Cinzel',serif; font-size:clamp(1rem,1.8vw,1.24rem); letter-spacing:.12em; text-transform:uppercase; white-space:normal; text-align:center; line-height:1.2; }
+.panel__title::before, .panel__title::after { content:'✦'; color:var(--gold-500); font-size:.72em; }
+.panel__subtitle { margin:0; color:var(--muted); font-style:italic; font-size:.9rem; }
+.footer { background:#592e6f; border-top:2px solid var(--gold-500); color:#fff; padding:16px 12px calc(18px + env(safe-area-inset-bottom)); text-align:center; margin-top:24px; }
+.footer-details { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px 20px; color:var(--gold-100); font-family:'Cinzel',serif; font-size:clamp(.62rem,1.2vw,.84rem); letter-spacing:.08em; text-transform:uppercase; }
+.footer-links { margin:10px 0; }
+.footer-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:42px; padding:8px 14px; text-decoration:none; display:inline-flex; gap:8px; align-items:center; justify-content:center; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+.footer-link:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
+.footer-link .ig-dot { fill:#fff; }
+.footer-note { color:var(--gold-500); font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.14em; font-size:clamp(.56rem,1vw,.76rem); }
+/* Trois mentions distinctes plutôt qu'une phrase à puces : d'un bloc,
+   la ligne se lisait comme un paragraphe et on n'y distinguait rien. En
+   éléments séparés, chacune se lit d'un coup d'œil, et sur écran étroit
+   elles se rangent l'une sous l'autre au lieu de se couper n'importe où.
+   Le séparateur est dessiné en CSS : il disparaît de lui-même en
+   colonne, et n'est pas lu par les synthèses vocales. */
+.footer-legal {
+  margin-top:8px; color:rgba(255,255,255,.7);
+  display:flex; flex-wrap:wrap; justify-content:center;
+  align-items:center; gap:4px 18px;
+  font-size:clamp(.62rem,1.05vw,.72rem); line-height:1.5; letter-spacing:.02em;
+}
+.footer-legal .legal-item { position:relative; white-space:normal; }
+.footer-legal .legal-item + .legal-item::before {
+  content:''; position:absolute; left:-9px; top:50%;
+  width:3px; height:3px; margin-top:-1.5px; border-radius:50%;
+  background:var(--gold-500); opacity:.55;
+}
+/* La mention sur l'alcool est obligatoire : elle reste la plus lisible. */
+.footer-legal .legal-item--alcool { color:rgba(255,255,255,.9); }
+@media (max-width: 720px) {
+  .footer-legal { flex-direction:column; gap:3px; text-align:center; }
+  .footer-legal .legal-item + .legal-item::before { display:none; }
+}
+@media (max-width: 860px) {
+.container { width:min(100% - 16px, 1120px); }
+}
+@media (max-width: 640px) {
+.control-btn, .contact-link, .footer-link { width:100%; }
+.footer-links { display:grid; grid-template-columns:1fr; width:100%; }
+.panel { padding:14px; }
+.footer-details { gap:4px 12px; }
+}
+@media (max-width: 640px) {
+.nav-btn {
+    min-height: 42px;
+    font-size: .72rem;
+    padding: 9px 10px;
+  }
+}
+@media (max-width: 420px) {
+.nav-btn {
+    width: 100%;
+  }
+}
+.footer {
+  background: linear-gradient(180deg, #6b3c87 0%, #592e6f 55%, #432155 100%) !important;
+  border-top: 1px solid rgba(216,178,87,.45) !important;
+  color: #fff;
+  box-shadow: 0 -10px 26px rgba(36,16,46,.12) inset !important;
+}
+.footer-details {
+  color: var(--gold-100);
+}
+.footer-note {
+  color: var(--gold-300);
+}
+.footer-legal {
+  color: rgba(255,255,255,.88);
+}
+@media (max-height: 760px) {
+.contact-link {
+    min-height: 40px;
+    padding: 8px 12px;
+  }
+}
+.top-controls .control-btn {
+  white-space: nowrap;
+  line-height: 1.15;
+}
+@media (max-width: 480px) {
+.top-controls .control-btn {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 640px) {
+.top-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+.top-controls .control-btn {
+    flex: none !important;
+    min-width: 0;
+    padding: 9px 8px;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+  }
+}
+@media (max-width: 420px) {
+.top-controls {
+    padding: 8px;
+    gap: 6px;
+  }
+.top-controls .control-btn {
+    font-size: 0.66rem;
+    padding: 8px 6px;
+  }
+}
+.top-controls {
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+.top-controls .control-btn {
+  min-width: 0;
+  width: min(100%, 360px);
+  justify-self: center;
+}
+@media (max-width: 640px) {
+.top-controls {
+    width: 100vw;
+  }
+.top-controls .control-btn {
+    width: 100%;
+  }
+.top-controls .control-btn {
+    font-size: 0.68rem;
+    padding: 8px 6px;
+    letter-spacing: 0.01em;
+  }
+}
+@media (max-width: 420px) {
+.top-controls .control-btn {
+    font-size: 0.62rem;
+    padding: 8px 4px;
+  }
+}
+.interior-header {
+  padding: 18px 14px 16px;
+}
+.interior-header .eyebrow {
+  font-size: .72rem;
+  letter-spacing: .24em;
+}
+.interior-header h2 {
+  margin: 6px 0 8px;
+  font-size: clamp(1.8rem, 4.8vw, 2.8rem);
+  letter-spacing: .14em;
+}
+.interior-header h2 span {
+  font-size: .46em;
+  letter-spacing: .22em;
+  margin-top: .18rem;
+}
+.interior-header p {
+  font-size: clamp(.66rem, 1.6vw, .86rem);
+  letter-spacing: .09em;
+}
+@media (max-width: 640px) {
+.interior-header {
+    padding: 16px 12px 14px;
+  }
+.interior-header h2 {
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+  }
+}
+@media (max-width: 640px) {
+.control-btn, .nav-btn, .contact-link, .footer-link {
+    font-size: 0.78rem !important;
+    letter-spacing: 0.02em !important;
+    min-height: 42px !important;
+  }
+.panel__title {
+    font-size: 1rem !important;
+  }
+.footer-legal {
+    font-size: 0.8rem !important;
+    line-height: 1.45 !important;
+  }
+.interior-header .eyebrow, .interior-header p {
+    font-size: 0.9rem !important;
+    line-height: 1.35 !important;
+  }
+}
+@media (max-width: 420px) {
+.control-btn, .nav-btn, .contact-link, .footer-link {
+    font-size: 0.74rem !important;
+  }
+}
+.interior-header, .top-controls, .footer {
+  color: #ffffff;
+}
+.interior-header .eyebrow, .interior-header h2, .interior-header h2 span, .interior-header p, .footer-details, .footer-note, .footer-legal, .top-controls .control-btn, .menu-nav .nav-btn {
+  color: #ffffff !important;
+}
+.top-controls .control-btn.active, .menu-nav .nav-btn.active {
+  color: var(--violet-950) !important;
+}
+.interior-header .eyebrow, .interior-header p, .footer-note {
+  text-shadow: 0 1px 2px rgba(0,0,0,.14);
+}
+.menu-leader-subline {
+  margin-top: 8px;
+  color: var(--gold-100) !important;
+}
+.interior-header h2 span {
+  color: var(--gold-700) !important;
+}
+.panel__title {
+  color: #ffffff !important;
+}
+.star-gold {
+  color: var(--gold-bright) !important;
+  text-shadow: 0 0 0.5px rgba(36,16,46,.75), 0 0 10px rgba(255,216,106,.22);
+}
+.panel__title::before, .panel__title::after {
+  color: var(--gold-bright) !important;
+}
+.star-gold, .panel__title::before, .panel__title::after {
+  font-size: 0.78rem !important;
+  line-height: 1 !important;
+}
+.star-gold {
+  display: inline-block;
+  vertical-align: middle;
+  transform: translateY(-0.02em);
+}
+.interior-header h2 span {
+  color: var(--gold-bright) !important;
+  text-shadow: 0 0 10px rgba(255,232,143,0.18);
+}
+.star-gold, .panel__title::before, .panel__title::after {
+  color: var(--gold-bright) !important;
+  text-shadow: 0 0 12px rgba(255,232,143,0.28), 0 0 1px rgba(36,16,46,0.65);
+}
+.interior-header .eyebrow {
+  font-family: 'Cinzel', serif !important;
+  font-size: clamp(1.8rem, 4.8vw, 2.8rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: .14em !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
+  color: #ffffff !important;
+  text-shadow: 0 4px 18px rgba(0,0,0,.35);
+}
+@media (max-width: 640px) {
+.interior-header .eyebrow {
+    font-size: clamp(1.45rem, 7vw, 2.1rem) !important;
+    letter-spacing: .1em !important;
+    line-height: 1.05 !important;
+  }
+}
+.top-controls, .interior-header, .panel__title, .footer {
+  color: #ffffff !important;
+}
+.top-controls *, .interior-header *, .panel__title *, .footer * {
+  color: inherit;
+}
+.interior-header h2, .interior-header p, .interior-header .eyebrow, .panel__title, .footer-details, .footer-note, .footer-legal, .footer-link, .top-controls .control-btn, .menu-nav .nav-btn {
+  color: #ffffff !important;
+}
+.top-controls .control-btn.active, .menu-nav .nav-btn.active {
+  color: var(--violet-950) !important;
+}
+.interior-header .eyebrow {
+  font-family: 'Cinzel', serif !important;
+  font-size: .72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .24em !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase !important;
+  color: var(--gold-100) !important;
+  text-shadow: none !important;
+}
+@media (max-width: 640px) {
+.interior-header .eyebrow {
+    font-size: .72rem !important;
+    letter-spacing: .18em !important;
+  }
+}
+.interior-header, .interior-header .eyebrow, .interior-header h2, .interior-header p, .top-controls, .top-controls .control-btn, .menu-nav .nav-btn, .panel__title, .panel__title *, .footer, .footer-details, .footer-note, .footer-legal, .footer-link {
+  color: #ffffff !important;
+}
+.top-controls .control-btn.active, .menu-nav .nav-btn.active {
+  color: var(--violet-950) !important;
+}
+.interior-header h2 span, .star-gold, .panel__title::before, .panel__title::after, .footer-note .star-gold {
+  color: var(--gold-bright) !important;
+}
+.top-controls, .top-controls .control-btn, .menu-nav .nav-btn, .interior-header, .interior-header .eyebrow, .interior-header h2, .interior-header p, .panel__title, .footer, .footer-details, .footer-note, .footer-legal, .footer-link {
+  color: #ffffff !important;
+}
+.top-controls .control-btn.active, .menu-nav .nav-btn.active {
+  color: var(--violet-950) !important;
+}
+.top-controls .control-btn.active svg, .menu-nav .nav-btn.active svg {
+  stroke: var(--violet-950) !important;
+}
+.top-controls .control-btn.active .star-gold, .menu-nav .nav-btn.active .star-gold {
+  color: var(--violet-950) !important;
+  text-shadow: none !important;
+}
+.interior-header h2 span, .star-gold, .panel__title::before, .panel__title::after, .footer-note .star-gold {
+  color: var(--gold-bright) !important;
+}
+@media (max-width: 480px) {
+.menu-nav .nav-btn:last-child {
+    grid-column: span 2;
+  }
+.nav-btn {
+    font-size: 1rem !important;
+    line-height: 1.25 !important;
+    padding: 10px 12px !important;
+    min-height: 46px !important;
+  }
+}
+.panel__subtitle {
+  font-size: clamp(0.76rem, 0.28vw + 0.68rem, 0.92rem) !important;
+  line-height: 1.35 !important;
+}
+.panel__title {
+  font-size: clamp(0.88rem, 1.6vw, 1.24rem) !important;
+}
+.control-btn {
+  font-size: clamp(0.72rem, 0.22vw + 0.64rem, 0.85rem) !important;
+}
+.top-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px !important;
+}
+.top-controls .control-btn {
+  width: auto !important;
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+  padding: 9px 18px !important;
+}
+@media print {
+.top-controls { display:none !important; }
+}
+.top-controls {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px !important;
+  padding-left: 58px !important;
+  padding-right: 58px !important;
+}
+.top-controls__nav .control-btn {
+  width: auto !important;
+  flex: 0 0 auto !important;
+}
+.footer-links {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: min(100%, 920px);
+  gap: 10px;
+  justify-items: stretch;
+}
+.footer-links .footer-link {
+  width: 100%;
+  min-width: 0;
+  justify-content: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 720px) {
+.top-controls {
+    padding-left: 50px !important;
+    padding-right: 50px !important;
+    gap: 8px !important;
+  }
+.footer-links { gap: 8px; }
+.footer-links .footer-link {
+    font-size: 0.68rem !important;
+    padding: 8px 8px !important;
+    letter-spacing: 0.02em !important;
+  }
+}
+@media (max-width: 640px) {
+.footer-links {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
+.footer-links {
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr) minmax(0, 1.35fr);
+}
+@media (max-width: 780px) {
+.footer-links {
+    grid-template-columns: 1fr;
+  }
+}
+.panel__title {
+  font-size: 1.08rem !important;
+  letter-spacing: .12em !important;
+  padding: 10px 22px !important;
+}
+@media (max-width: 640px) {
+.panel__title { font-size: 0.96rem !important; }
+}
+.footer-links .footer-link {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
+  font-style: normal !important;
+}
+.footer-links .footer-link svg {
+  width: 15px !important;
+  height: 15px !important;
+  flex: 0 0 auto;
+  stroke: currentColor;
+}
+.footer-links {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+@media (max-width: 780px) {
+.footer-links .footer-link {
+    font-size: 0.78rem !important;
+    letter-spacing: 0.02em !important;
+  }
+}
+html .panel__subtitle.qty {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  font-size: var(--qty-size) !important;
+  line-height: 1.4 !important;
+  letter-spacing: .02em !important;
+  text-transform: none !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--qty-ink) !important;
+}
+.footer-download-wrap { margin: 8px auto 4px; }
+.footer-download {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 7px; width: auto;
+  padding: 6px 14px; border-radius: 999px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .24);
+  color: rgba(255, 255, 255, .78);
+  text-decoration: none;
+  font-family: 'Montserrat', system-ui, sans-serif; font-weight: 500;
+  font-size: .64rem; letter-spacing: .18em; text-transform: uppercase;
+  transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+  cursor: pointer;
+}
+.footer-download svg { width: 12px; height: 12px; flex: 0 0 auto; opacity: .85; }
+.footer-download:hover {
+  color: #fff; border-color: rgba(216, 178, 87, .7);
+  background: rgba(255, 255, 255, .05);
+}
+.footer-download:active { transform: translateY(1px); }
+@media (max-width: 640px) {
+.footer-download { font-size: .6rem; letter-spacing: .14em; padding: 5px 12px; }
+}
+html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel',serif; }
+html[lang="ja"] .interior-header h2 { font-family:'CinzelJP','Cinzel',serif; }
+html[lang="ja"] .interior-header p { font-family:'CinzelJP','Cinzel',serif; }
+html[lang="ja"] .panel__title { font-family:'CinzelJP','Cinzel',serif; }
+html[lang="ja"] .footer-details { font-family:'CinzelJP','Cinzel',serif; }
+html[lang="ja"] .footer-note { font-family:'CinzelJP','Cinzel',serif; }
+html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel', serif !important; }
+html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel', serif !important; }
+html[lang="ja"] .footer-links .footer-link { font-family:'MontserratJP','Montserrat', sans-serif !important; }
+html[lang="ja"] .panel__subtitle.qty { font-family:'MontserratJP','Montserrat', sans-serif !important; }
+html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', system-ui, sans-serif; }
+
+/* ===== Sélecteur de langue (repris du site) ===== */
+.lang-dock {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1003;
+  width: 66px;
+  height: 62px;
+  pointer-events: none;
+}
+.lang-dock > * { pointer-events: auto; }
+.lang-dock .lang-btn {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  transform: none;
+}
+
+/* -- Le globe, toujours fixe en haut a droite -------------------------
+   Il ne s'ancre plus dans le bandeau de titre : il reste colle au coin
+   de la FENETRE sur toutes les pages et dans toutes les vues, y compris
+   au-dessus du bandeau « Page de Garde / Menu & Carte ». Le socle est
+   donc pose au-dessus de tout (z-index superieur au bandeau, qui monte
+   a 1002 quand il colle en haut).
+
+   Contrepartie : le globe recouvre le coin haut droit. Chaque bandeau
+   qui passe dessous doit donc lui reserver sa gouttiere, sinon un
+   bouton ou un titre long vient se glisser dessous. */
+.lang-dock { z-index: 1600; }
+.interior-header { position: relative; }
+/* Gouttiere symetrique : le titre reste centre sans passer sous le
+   globe. Symetrique, car un padding d'un seul cote decalerait le
+   titre. */
+.interior-header { padding-left: 58px; padding-right: 58px; }
+@media (max-width: 720px) {
+  .interior-header { padding-left: 54px; padding-right: 54px; }
+}
+
+.lang-dock .lang-menu {
+  /* Le menu est ancré à la FENÊTRE, pas au socle : le socle ne fait que
+     66 px de large, et un panneau en absolu dedans ne pouvait plus
+     s'étendre ni se centrer. C'est ce qui avait fait perdre au menu son
+     affichage pleine largeur sur petit écran. En `fixed`, il retrouve la
+     fenêtre pour cadre de référence, à l'identique sur les trois pages. */
+  position: fixed;
+  top: 60px;
+  right: 12px;
+  left: auto;
+  transform: none;
+}
+/* Petit écran : pleine largeur, comme avant le socle. */
+@media (max-width: 640px) {
+  .lang-dock .lang-menu {
+    top: 56px;
+    left: 10px;
+    right: 10px;
+    min-width: 0;
+    max-height: calc(100vh - 76px);
+  }
+}
+/* Fenêtre basse : le panneau s'élargit et se centre horizontalement
+   pour que les quinze langues tiennent sans défilement interne. */
+/* Fenetre basse : le panneau reste cale A DROITE, sous l'en-tete, au
+   plus pres du bouton qui l'ouvre, plutot que centre au milieu de
+   l'ecran. Il s'elargit vers la GAUCHE, son bord droit etant fixe.
+   `!important` : dans cette page, un correctif sans lui ne tient pas. */
+@media (min-width: 641px) and (max-height: 500px) {
+  .lang-dock .lang-menu {
+    top: 52px !important;
+    right: 12px !important;
+    left: auto !important;
+    transform: none !important;
+    max-height: calc(100vh - 64px) !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+}
+
+@media (max-width: 720px) {
+.lang-dock { width: 58px; height: 58px; }
+.lang-dock .lang-btn { right: 8px; top: 9px; }
+.lang-dock .lang-menu { top: 56px; }
+}
+
+.lang-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(216, 178, 87, .45);
+  background: transparent;
+  color: #fff;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: .2s ease;
+}
+.lang-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: #fff;
+}
+.lang-btn:hover {
+  background: rgba(255, 255, 255, .08);
+  border-color: #fcf6ba;
+  color: var(--gold-100);
+}
+.lang-btn:hover svg {
+  stroke: var(--gold-100);
+}
+.lang-btn:focus-visible {
+  outline: 2px solid #fcf6ba;
+  outline-offset: 2px;
+}
+.lang-btn { cursor: pointer; }
+.lang-menu {
+  
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 12px;
+  z-index: 1002;
+  min-width: 232px;
+  max-width: calc(100vw - 24px);
+  
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-sizing: border-box;
+  padding: 10px 10px 12px;
+  border: 1px solid rgba(216, 178, 87, .45);
+  border-radius: 14px;
+  background: rgba(56, 27, 71, .97);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.lang-menu[hidden] { display: none; }
+.lang-menu:not([hidden]) { animation: langMenuIn .18s ease-out; }
+/* La definition manquait dans cette page : l'animation d'ouverture etait
+   donc inerte ici, le panneau apparaissait sans fondu. */
+@keyframes langMenuIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: .9rem;
+  text-align: left;
+  cursor: pointer;
+}
+.lang-option:hover, .lang-option:focus-visible { background: rgba(243, 213, 106, .14); outline: none; }
+.lang-option:focus-visible { box-shadow: inset 0 0 0 2px rgba(243, 213, 106, .55); }
+/* Ces deux règles manquaient ici : le menu de la réservation n'avait
+   hérité que des styles du bouton et des options, pas de ceux du titre
+   ni de la LISTE — c'est pourquoi les quinze langues s'empilaient en une
+   seule colonne alors que la carte les présentait en deux. Reprises à
+   l'identique du fichier principal, le menu est le même partout. */
+.lang-menu__title {
+  margin: 2px 8px 8px;
+  font-family: 'Cinzel', serif;
+  font-size: .68rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold-100);
+}
+.lang-menu__list { display: grid; gap: 2px; }
+@media (max-height: 860px) {
+.lang-menu { min-width: 300px; padding: 8px 10px 10px; }
+.lang-menu__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.lang-option { min-height: 40px; padding: 6px 8px; font-size: .86rem; }
+}
+@media (max-height: 500px) {
+.lang-menu { min-width: 380px; max-height: calc(100vh - 70px); padding: 6px 8px 8px; }
+.lang-menu__list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; }
+.lang-option { min-height: 36px; padding: 5px 7px; font-size: .8rem; gap: 7px; }
+}
+.lang-flag {
+  display: block;
+  width: 26px;
+  height: 17.5px;
+  flex: 0 0 26px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .25);
+}
+.lang-check { margin-left: auto; color: var(--gold-500); font-size: .9rem; opacity: 0; }
+.lang-option[aria-checked="true"] { background: rgba(243, 213, 106, .1); }
+.lang-option[aria-checked="true"] .lang-check { opacity: 1; }
+@media (max-width: 640px) {
+.lang-menu {
+    top: calc(100% + 8px);
+    left: 10px;
+    right: 10px;
+    bottom: auto;
+    min-width: 0;
+    max-height: calc(100vh - 130px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+.lang-menu:not([hidden]) { animation: none; }
+}
+@media print {
+.lang-menu { display: none !important; }
+}
+@media (max-width: 720px) {
+.lang-btn {
+    right: 8px;
+    width: 40px;
+    height: 40px;
+  }
+.lang-btn svg { width: 16px; height: 16px; }
+}
+@media print {
+.lang-btn { display: none !important; }
+}
+
+/* ===== Propre à cette page ===== */
+
+/* Titres de section : la pastille violette du site, sans exception.
+   (J'avais éclairci ces deux pastilles pour gagner du contraste ; c'était
+   rompre l'unité de la carte, où tous les titres de panneau sont violets.
+   On garde donc le violet et le texte blanc du site — le contraste du
+   blanc sur #592e6f reste confortable — et c'est aux LIBELLÉS de champs,
+   traités plus bas, de passer en noir.) */
+#reservation-page .panel__head .panel__subtitle { color:#4a3d55 !important; }
+
+/* Pied de page : les pilules s'adaptent enfin à leur texte.
+   Le site impose aux .footer-link une grille de trois colonnes égales
+   avec white-space:nowrap et text-overflow:ellipsis — l'adresse de
+   courriel, bien plus longue que les deux autres, s'y trouvait coupée.
+   On rend la rangée fluide : chaque pilule prend la largeur de son
+   contenu, la ligne se replie toute seule quand la place manque, et le
+   texte n'est plus jamais tronqué (il passe à la ligne s'il le faut).
+   Aucune taille de police n'est réduite : c'est la mise en page qui
+   cède, pas la lisibilité. */
+#reservation-page .footer-links,
+#reservation-page .footer-links:where(*) {
+  display:flex !important;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:stretch;
+  gap:10px;
+  width:min(100%, 920px);
+  margin:10px auto;
+  grid-template-columns:none !important;
+}
+#reservation-page .footer-links .footer-link {
+  width:auto !important;
+  max-width:100%;
+  flex:0 1 auto;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  overflow-wrap:anywhere;
+  text-align:center;
+  line-height:1.35;
+  min-height:44px;
+  padding:9px 16px;
+  font-size:.78rem !important;
+}
+/* Écrans étroits : une pilule par ligne, pleine largeur, texte entier. */
+@media (max-width: 560px) {
+  #reservation-page .footer-links { flex-direction:column; align-items:stretch; }
+  #reservation-page .footer-links .footer-link { width:100% !important; }
+}
+
+#reservation-page { background:var(--cream); flex:1 0 auto; display:flex; flex-direction:column; }
+/* Le globe est posé en absolu (comme dans le bandeau du site) : la barre
+   doit donc être son repère, et réserver la place à droite pour qu'il ne
+   recouvre jamais le bouton de retour. */
+.book-back {
+  position: sticky; top: 0; z-index: 1002;
+  padding: 10px 64px; display: flex; justify-content: center;
+  background: #592e6f; border-bottom: 1px solid rgba(216,178,87,.45);
+  box-shadow: 0 4px 15px rgba(0,0,0,.4);
+}
+/* La gouttiere de droite est celle du globe, qui flotte au-dessus de la
+   barre : sans elle, le bouton passerait dessous. Elle est repetee a
+   gauche pour que le bouton reste centre. */
+@media (max-width: 560px) { .book-back { padding: 10px 56px; } }
+.book-back .contact-link {
+  width: min(100%, 360px);
+  /* Meme or que les boutons actifs du bandeau (« Page de Garde »
+     selectionne) : le retour a la carte est l'onglet en cours. */
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%);
+  color: var(--violet-950);
+  border-color: #fcf6ba;
+  font-weight: 600;
+}
+.book-back .contact-link svg { stroke: var(--violet-950); }
+.book-back .contact-link:hover {
+  filter: brightness(1.06);
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%);
+  color: var(--violet-950);
+}
+/* ===== Rythme vertical =====
+   Le corps de page était une suite d'éléments aux marges chacune
+   réglée dans son coin : deux panneaux qui se touchaient, un bouton de
+   retour collé au dernier encart, et tout l'espace restant rejeté en bas
+   quand la fenêtre est haute. On pose ici UNE échelle d'espacement, et
+   on laisse la grille la distribuer.
+
+   --gap-bloc  : entre deux panneaux
+   --gap-inter : entre un panneau et un élément isolé (bouton de retour)
+   Les deux respirent avec la hauteur de la fenêtre (clamp sur vh) :
+   serrés sur un téléphone, généreux sur un grand écran, jamais
+   arbitraires. */
+:root { --gap-bloc: clamp(16px, 2.4vh, 26px); --gap-inter: clamp(14px, 2vh, 22px); }
+.book-main { flex:1 0 auto; display:flex; flex-direction:column; }
+/* La colonne occupe la hauteur disponible et centre son contenu quand il
+   y a du mou : sur une grande fenêtre, le formulaire n'est plus tassé en
+   haut avec un vide sous le pied de page. justify-content:center ne
+   déborde pas — au-delà, la page défile normalement. */
+#reservation-page .container {
+  display:flex;
+  flex-direction:column;
+  gap:var(--gap-bloc);
+  flex:1 0 auto;
+  justify-content:center;
+  margin:var(--gap-bloc) auto;
+}
+/* Le bouton de retour est un élément isolé : il se détache des panneaux
+   d'un cran plus serré que l'écart entre deux panneaux, pour qu'on lise
+   « fin de page » et non « troisième bloc ». */
+#reservation-page .book-back-bottom { margin:calc(var(--gap-inter) - var(--gap-bloc)) 0 0; }
+
+.form-grid { display:grid; grid-template-columns:1fr; gap:14px; }
+@media (min-width:680px) {
+  .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .field--full { grid-column:1 / -1; }
+  /* Alignement horizontal des champs, écran large.
+     Chaque bloc empile intitulé, champ et message d'erreur. Sans
+     coordination, un intitulé sur deux lignes — « Nombre de personnes »
+     à l'étroit — ou une erreur affichée d'un seul côté décalait le
+     champ voisin. Avec `subgrid`, les trois rangées sont communes à
+     toute la ligne : les intitulés partagent une rangée, les champs une
+     autre, les erreurs une troisième. Les cases s'alignent donc au
+     pixel, quels que soient la longueur des libellés et la langue. */
+  .form-grid { align-items:start; }
+}
+@supports (grid-template-rows: subgrid) {
+  @media (min-width:680px) {
+    .form-grid { grid-auto-rows:auto; }
+    /* Chaque bloc occupe trois rangees communes — intitule, champ,
+       message — pour que les cases voisines s'alignent au pixel.
+       Les blocs pleine largeur DOIVENT couvrir le meme nombre de
+       rangees : avec `grid-row:auto` ils n'en occupaient qu'une, et le
+       placement automatique melangeait alors des elements de 3 rangees
+       et de 1 rangee. Le curseur de placement revenait en arriere et
+       posait le bloc suivant SUR un bloc deja place — d'ou les cases
+       qui se chevauchaient. */
+    .field { grid-row:span 3; grid-template-rows:subgrid; gap:6px; }
+    .field--full { grid-row:span 3; grid-template-rows:subgrid; }
+    /* Un bloc sans message d'erreur laisserait sa 3e rangee vide et sa
+       zone de saisie s'etirerait pour la combler : on la cale en haut. */
+    .field > textarea, .field > input, .field > select { align-self:start; }
+    /* La rangee des messages garde la meme hauteur sur toute la ligne,
+       qu'un champ affiche une erreur, une precision ou rien : sans cela
+       le bas des blocs d'une meme rangee ne tombait pas au meme niveau. */
+    .field__error, .field__hint { min-height:1.05rem; }
+    .field__error[hidden] { display:block !important; visibility:hidden; }
+  }
+}
+.field { display:grid; gap:6px; min-width:0; align-content:start; }
+/* Intitulés des champs (Nom, Téléphone, Mail, Date, Heure…) en noir :
+   ce sont les mots qu'on lit pour remplir, ils passent avant l'ornement.
+   L'or est conservé pour les seules mentions accessoires. */
+/* Intitules : hauteur de ligne fixe pour que la rangee des libelles soit
+   identique d'un bloc a l'autre. */
+.field > label {
+  font-family:'Cinzel',serif; font-size:.78rem; letter-spacing:.12em;
+  text-transform:uppercase; color:#14060c; font-weight:700;
+  line-height:1.3; align-self:end;
+}
+.field > label .opt { text-transform:none; letter-spacing:0; font-weight:400; color:#5d5168; }
+/* Toutes les cases ont EXACTEMENT la meme hauteur. `min-height` seul ne
+   suffisait pas : un `select` se dimensionne sur sa police et ses marges
+   internes propres, differentes de celles d'un `input`, si bien que les
+   deux cases d'une meme ligne ne tombaient jamais tout a fait d'aplomb.
+   Une hauteur fixe, plus `box-sizing:border-box` pour que la bordure
+   soit comptee dedans, rend les cases rigoureusement identiques. */
+.field input, .field select, .field textarea {
+  font:inherit; color:var(--ink); background:#fff;
+  border:1px solid rgba(216,178,87,.5); border-radius:14px;
+  padding:0 14px; height:52px; min-height:52px; width:100%;
+  box-sizing:border-box; transition:.18s ease;
+  appearance:none; -webkit-appearance:none;
+}
+/* La zone de texte libre fait exactement deux cases de haut, plus
+   l'ecart qui les separerait : la symetrie reste lisible. */
+.field textarea {
+  height:110px; min-height:110px; padding:12px 14px;
+  resize:vertical; line-height:1.5;
+}
+/* -- Date et heure : les deux seules cases au contenu natif -----------
+   Un `input[type=date]` et un `select` n'affichent pas du texte simple
+   mais des sous-elements dessines par le navigateur. Sur iOS et Safari,
+   ces sous-elements portent leurs propres marges et une hauteur de ligne
+   qui ignorent celles de la case : le contenu depassait donc du cadre et
+   la case voisine paraissait plus basse. C'est ce qui donnait le
+   chevauchement entre Date et Heure, et la dissymetrie des deux cases.
+
+   On remet ces sous-elements a plat : aucune marge propre, hauteur de
+   ligne alignee sur celle de la case, contenu centre verticalement.
+   La case ne peut alors plus etre dimensionnee par son contenu natif. */
+.field input[type="date"],
+.field input[type="time"] {
+  display:flex; align-items:center;
+  line-height:normal; text-align:left;
+}
+.field input[type="date"]::-webkit-date-and-time-value,
+.field input[type="time"]::-webkit-date-and-time-value {
+  margin:0; padding:0; text-align:left; line-height:normal;
+}
+.field input[type="date"]::-webkit-datetime-edit,
+.field input[type="time"]::-webkit-datetime-edit {
+  padding:0; line-height:normal;
+}
+.field input[type="date"]::-webkit-calendar-picker-indicator {
+  margin:0; padding:0; opacity:.55; cursor:pointer;
+}
+/* Safari ajoute une marge interne propre aux champs date : elle
+   s'additionnait a la notre et decalait le texte vers le bas. */
+.field input[type="date"]::-webkit-inner-spin-button { display:none; }
+
+/* Le chevron des listes deroulantes, retire par `appearance:none`. */
+.field select {
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%239c7a2d' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' d='M1 1.5 6 6.5l5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  background-size:12px 8px;
+  padding-right:38px;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(216,178,87,.22);
+}
+.field__hint { margin:0; font-size:.76rem; color:var(--muted); font-style:italic; }
+.field--error input, .field--error select { border-color:#b0304a; box-shadow:0 0 0 3px rgba(176,48,74,.14); }
+.field__error { margin:0; font-size:.76rem; color:#b0304a; font-weight:600; }
+.field__error[hidden] { display:none; }
+/* Navigateurs sans `subgrid` — dont Safari iOS jusqu'a recemment.
+   Sans rangees partagees, chaque bloc se dimensionne seul : un intitule
+   qui passe sur deux lignes ou un message d'erreur affiche d'un seul
+   cote suffisait a decaler la case voisine, et les blocs finissaient par
+   se chevaucher. A defaut de rangees communes, on fige la hauteur de
+   chaque partie pour que tous les blocs fassent la meme hauteur par
+   construction. */
+@supports not (grid-template-rows: subgrid) {
+  @media (min-width:680px) {
+    .field > label {
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      height:1.3em; line-height:1.3;
+    }
+    .field__error, .field__hint {
+      min-height:1.05rem; overflow:hidden;
+    }
+    .field__error[hidden] { display:block !important; visibility:hidden; }
+    /* Meme hauteur totale pour tous les blocs d'une meme rangee. */
+    .field:not(.field--full) { min-height:calc(1.3em + 6px + 52px + 6px + 1.05rem); }
+  }
+}
+
+/* Le bouton d'envoi est la pilule dorée des onglets actifs du site
+   (.nav-btn.active) : même dégradé, même bordure, même casse. */
+.form-actions { margin-top:clamp(16px, 2.2vh, 24px); display:grid; gap:10px; justify-items:center; }
+.btn-book {
+  background:linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%);
+  color:var(--violet-950); border:1px solid #fcf6ba; border-radius:999px;
+  min-height:48px; width:min(100%,380px); padding:10px 24px;
+  font-weight:700; letter-spacing:.04em; text-transform:uppercase; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  transition:.2s ease;
+}
+.btn-book:hover { filter:brightness(1.05); }
+.btn-book:active { transform:translateY(1px); }
+.btn-book svg { width:16px; height:16px; flex:0 0 auto; }
+.form-note { margin:0; text-align:center; font-size:.8rem; color:var(--muted); font-style:italic; }
+
+.form-status {
+  margin:16px 0 0; padding:14px 16px; border-radius:16px; text-align:center;
+  border:1px solid var(--gold-500); background:#fffdf4; color:var(--violet-900);
+  line-height:1.55;
+}
+.form-status[hidden] { display:none; }
+.form-status strong { font-family:'Cinzel',serif; letter-spacing:.06em; }
+.form-status a { color:var(--gold-700); font-weight:700; }
+
+/* Les coordonnées reprennent les pilules du pied de page, sur fond clair. */
+.info-grid { display:grid; grid-template-columns:1fr; gap:10px; }
+@media (min-width:680px) { .info-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.info-link {
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:44px; padding:8px 14px; border-radius:999px; text-decoration:none;
+  border:1px solid rgba(216,178,87,.45); color:var(--violet-900); background:#fff;
+  font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+  font-size:.8rem; transition:.2s ease; text-align:center;
+}
+.info-link:hover { background:#fffaea; border-color:var(--gold-500); }
+.info-link svg { width:15px; height:15px; flex:0 0 auto; stroke:var(--violet-900); }
+
+/* ===== Plan interactif =====
+   Encart aux mêmes codes que le reste : coins arrondis, liseré or,
+   ombre douce. On peut s'y déplacer et zoomer ; le bouton en haut à
+   droite ramène la vue sur le restaurant. */
+.map-wrap {
+  position:relative; margin:clamp(10px, 1.6vh, 16px) 0 clamp(10px, 1.6vh, 14px); border-radius:18px; overflow:hidden;
+  border:1px solid rgba(216,178,87,.5); box-shadow:var(--shadow);
+  background:#f4f4f2;
+}
+#book-map { width:100%; height:clamp(240px, 42vw, 360px); background:#f4f4f2; }
+.map-fallback, .map-wrap .map-error {
+  margin:0; padding:18px; text-align:center; color:var(--violet-900);
+  font-family:'Cinzel',serif; letter-spacing:.06em;
+}
+/* Pastille de recentrage : la pilule dorée du site, en rond. */
+.map-recenter {
+  position:absolute; right:10px; top:10px; z-index:500;
+  width:40px; height:40px; padding:0; border-radius:999px; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:#fff;
+  color:var(--violet-800); border:1px solid rgba(36,16,46,.12);
+  box-shadow:0 2px 8px rgba(36,16,46,.16); transition:.18s ease;
+}
+.map-recenter:hover { background:#fff; color:var(--violet-950); border-color:var(--gold-500); box-shadow:0 4px 12px rgba(36,16,46,.2); }
+.map-recenter:active { transform:translateY(1px); }
+.map-recenter svg { width:19px; height:19px; }
+/* Épingle du restaurant, dessinée plutôt qu'en image. */
+/* Épingle : un simple disque violet cerclé de blanc, avec un halo doux.
+   Sur un fond aussi clair, la goutte dorée faisait ornement ; un point
+   net se lit mieux et laisse la carte respirer. */
+.map-pin {
+  width:20px; height:20px; border-radius:50%;
+  background:var(--violet-800);
+  border:3px solid #fff;
+  box-shadow:0 0 0 1px rgba(36,16,46,.18), 0 3px 10px rgba(36,16,46,.3);
+}
+.map-foot {
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:10px; margin-bottom:4px;
+}
+.map-address {
+  font-family:'Cinzel',serif; font-size:.82rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--violet-900); text-align:center;
+}
+.info-link--route { flex:0 0 auto; }
+/* Commandes MapLibre : mêmes codes que le bouton de recentrage —
+   blanc, discret, sans le bleu par défaut. */
+.maplibregl-ctrl-group { border:0 !important; box-shadow:0 2px 8px rgba(36,16,46,.16) !important; border-radius:10px !important; overflow:hidden; }
+.maplibregl-ctrl-group button {
+  width:30px !important; height:30px !important;
+  background:#fff !important; color:var(--violet-800) !important;
+  border-bottom:1px solid rgba(36,16,46,.10) !important;
+}
+.maplibregl-ctrl-group button:hover { background:#fffaea !important; }
+.maplibregl-ctrl-group button:last-child { border-bottom:0 !important; }
+.maplibregl-canvas { outline:none; }
+.maplibregl-map { font-family:'Montserrat',sans-serif; background:#f4f4f2; }
+/* Attribution : obligatoire, donc lisible — mais discrète. */
+.maplibregl-ctrl-attrib {
+  background:rgba(255,255,255,.82) !important; font-size:9px !important;
+  border-radius:8px 0 0 0 !important;
+}
+.maplibregl-ctrl-attrib a { color:var(--violet-800) !important; }
+.maplibregl-ctrl-attrib-button { background-color:rgba(255,255,255,.9) !important; }
+/* Infobulle aux couleurs de la maison. */
+.maplibregl-popup-content {
+  background:#fffdf6 !important; border:1px solid var(--gold-500);
+  border-radius:12px !important; box-shadow:0 10px 26px rgba(36,16,46,.18) !important;
+  padding:10px 14px !important; font-family:'Montserrat',sans-serif;
+  font-size:.78rem; line-height:1.5; color:var(--violet-900); text-align:center;
+}
+.maplibregl-popup-content strong {
+  font-family:'Cinzel',serif; letter-spacing:.08em; color:var(--violet-900);
+}
+.maplibregl-popup-tip { border-top-color:#fffdf6 !important; border-bottom-color:#fffdf6 !important; }
+/* Le voile « Ctrl + molette pour zoomer » repris dans la même langue graphique. */
+.maplibregl-cooperative-gesture-screen {
+  background:rgba(36,16,46,.55) !important; font-family:'Montserrat',sans-serif !important;
+}
+
+/* Retour à la carte, en bas de page : la pilule des liens de contact. */
+.book-back-bottom { display:flex; justify-content:center; }
+.book-back-bottom .contact-link--back {
+  width:min(100%,360px); color:var(--violet-900);
+  border-color:rgba(216,178,87,.6); background:#fff;
+  font-family:'Cinzel',serif; letter-spacing:.1em;
+}
+.book-back-bottom .contact-link--back svg { stroke:var(--violet-900); }
+.book-back-bottom .contact-link--back:hover {
+  background:#fffaea; border-color:var(--gold-500); color:var(--violet-900);
+}
+
+/* ===== Horaires : deux cartouches plutot qu'un releve ================
+   Les horaires etaient deux lignes de releve, libelle a gauche et heure
+   a droite, qui se percutaient des que la largeur manquait. Ils
+   deviennent deux cartouches autonomes : un pictogramme, l'intitule,
+   puis l'amplitude ou les deux heures sont reliees par un trait.
+
+   Le trait remplace le tiret et la mention « en continu » : il DIT la
+   continuite au lieu de l'ecrire, dans toutes les langues a la fois. Il
+   se dilate pour occuper l'espace disponible, ce qui donne aux deux
+   cartouches des heures parfaitement alignees quelle que soit la
+   largeur, sans jamais de collision : chaque partie a sa place propre. */
+/* En tete de page : la marge passe EN DESSOUS, les cartouches ouvrant
+   desormais le contenu au lieu de clore un bloc. */
+.hours {
+  margin:0 0 clamp(14px, 2vh, 20px);
+  display:grid; gap:10px;
+}
+.hours__card {
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  align-items:center;
+  gap:2px 12px;
+  padding:12px 16px;
+  border:1px solid rgba(216,178,87,.42);
+  border-radius:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(252,251,247,.96));
+  transition:border-color .22s ease;
+}
+.hours__card:hover { border-color:rgba(216,178,87,.72); }
+.hours__ico {
+  grid-row:1 / span 2; width:26px; height:26px;
+  color:var(--gold-700); opacity:.9;
+}
+.hours__day {
+  font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.12em;
+  font-size:.72rem; color:var(--violet-900); opacity:.78;
+  min-width:0; overflow-wrap:break-word;
+}
+/* Les deux heures aux extremites, le trait au milieu : c'est lui qui
+   absorbe la largeur, donc les heures ne se rencontrent jamais. */
+.hours__val {
+  display:flex; align-items:center; gap:10px;
+  font-family:'Cinzel',serif; font-weight:700; color:var(--gold-700);
+  font-size:1.12rem; line-height:1.2; min-width:0;
+}
+.hours__t { flex:0 0 auto; font-variant-numeric:tabular-nums; }
+.hours__sep {
+  flex:1 1 auto; min-width:18px; height:1px;
+  background:linear-gradient(90deg,
+    rgba(216,178,87,.15), rgba(216,178,87,.75), rgba(216,178,87,.15));
+  position:relative;
+}
+/* Deux pastilles aux extremites du trait : le geste se lit comme une
+   plage, pas comme une simple ligne. */
+.hours__sep::before,
+.hours__sep::after {
+  content:''; position:absolute; top:50%;
+  width:3px; height:3px; border-radius:50%;
+  background:var(--gold-500); transform:translateY(-50%);
+}
+.hours__sep::before { left:0; }
+.hours__sep::after  { right:0; }
+
+/* Grand ecran et paysage : la hauteur est comptee ou la largeur
+   abondante — les deux cartouches se rangent cote a cote. */
+@media (min-width:900px), (orientation:landscape) and (max-height:600px) {
+  .hours { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+}
+/* Paysage sur telephone : on resserre sans rien empiler. */
+@media (orientation:landscape) and (max-height:600px) {
+  .hours { margin-top:10px; gap:10px; }
+  .hours__card { padding:9px 12px; gap:1px 10px; }
+  .hours__ico { width:22px; height:22px; }
+  .hours__val { font-size:1rem; }
+  .hours__day { font-size:.66rem; }
+}
+/* Ecran etroit : le pictogramme cede la place, le texte prime. */
+@media (max-width:420px) {
+  .hours__card { padding:10px 13px; }
+  .hours__ico { display:none; }
+  .hours__card { grid-template-columns:minmax(0,1fr); }
+}
+
+/* ===== Scintillement des étoiles dorées (même dispositif qu'index) ====
+   Les ✦ respirent chacune à leur rythme plutôt que de rester figées ou
+   de battre à l'unisson. Opacité seule — propriété composée, animée par
+   le GPU, sans recalcul de mise en page. Cycles longs et premiers entre
+   eux, retards négatifs pour que les étoiles soient déjà en cours de
+   cycle au chargement. */
+@keyframes starBreath {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .62; }
+}
+.star-gold,
+.panel__title::before,
+.panel__title::after {
+  animation: starBreath 4.3s ease-in-out infinite !important;
+  will-change: opacity;
+}
+/* Les deux étoiles d'un même libellé ne battent jamais ensemble. */
+.star-gold:last-child:not(:first-child) {
+  animation-duration: 5.7s !important;
+  animation-delay: -2.4s !important;
+}
+.star-gold:first-child { animation-delay: -.7s !important; }
+.panel__title::before {
+  animation-duration: 6.9s !important; animation-delay: -1.9s !important;
+}
+.panel__title::after {
+  animation-duration: 5.1s !important; animation-delay: -3.6s !important;
+}
+.panel:nth-of-type(2n) .panel__title::before { animation-delay: -3.1s !important; }
+.panel:nth-of-type(2n) .panel__title::after  { animation-delay: -1.2s !important; }
+/* La coche du menu de langue signale une sélection : une information,
+   pas un ornement. */
+.lang-check { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .star-gold, .panel__title::before, .panel__title::after {
+    animation: none !important; opacity: 1 !important;
+  }
+}
+@media print {
+  .star-gold, .panel__title::before, .panel__title::after {
+    animation: none !important; opacity: 1 !important;
+  }
+}
+
+/* ===== Remerciement apres envoi =====================================
+   Un petit mot de la maison plutot qu'un accuse de reception. Le cadre
+   du bandeau d'etat est conserve, mais il s'ouvre et respire, et se
+   termine par une signature manuscrite.
+
+   La signature est la seule ecriture cursive du site : elle doit le
+   rester, sinon elle perd sa valeur de signature. */
+.form-status--thanks {
+  padding: 22px 20px 18px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(216,178,87,.10), transparent 62%),
+    #fffdf4;
+  animation: thanksIn .5s cubic-bezier(.2,.8,.3,1) both;
+}
+@keyframes thanksIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.form-status--thanks p { margin: 0 0 9px; }
+.form-status--thanks p:last-child { margin-bottom: 0; }
+
+.thanks__hello {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.06rem, 3.2vw, 1.3rem);
+  letter-spacing: .05em;
+  color: var(--violet-900);
+}
+.thanks__line { font-size: .88rem; color: var(--violet-900); }
+
+/* La ligne qui reprend jour, heure et couverts : c'est l'information
+   que le client relit, on la detache du reste. */
+.thanks__when {
+  display: inline-block;
+  margin: 4px auto 12px !important;
+  padding: 10px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(216,178,87,.5);
+  background: #fff;
+  font-family: 'Cinzel', serif;
+  letter-spacing: .04em;
+  color: var(--violet-900);
+  font-variant-numeric: tabular-nums;
+}
+/* L'annonce, en retrait : elle introduit sans voler la vedette. */
+.thanks__when-intro {
+  display: block;
+  text-align: center;
+  font-size: .78rem;
+  font-weight: 400;
+  opacity: .78;
+  margin-bottom: 5px;
+}
+/* La ligne que le client retient : detachee et centree dans
+   l'encart. Les deux groupes en gras et leur mot de liaison forment
+   UNE ligne — d'ou l'inline-block, un display:block les empilerait —
+   qui se replie proprement si la largeur manque. */
+.thanks__when-line {
+  display: block;
+  text-align: center;
+  text-wrap: balance;
+  line-height: 1.5;
+}
+.thanks__when-detail {
+  display: inline-block;
+  font-size: clamp(.92rem, 2.8vw, 1.04rem);
+  font-weight: 700;
+}
+/* Le mot de liaison reste en texte courant : c'est ce contraste qui
+   fait ressortir les deux groupes. */
+.thanks__when-for {
+  font-weight: 400;
+  opacity: .8;
+}
+.thanks__warm { font-style: italic; color: #6b4a8a; }
+
+/* Signature manuscrite, precedee d'un filet dore qui l'isole du
+   message, comme au bas d'une carte. */
+.thanks__sign {
+  margin-top: 14px !important;
+  padding-top: 14px;
+  border-top: 1px solid rgba(216,178,87,.42);
+  font-family: 'Parisienne', 'Segoe Script', 'Brush Script MT', cursive;
+  /* Une cursive porte bien plus bas et bien plus petit qu'une capitale :
+     elle est agrandie pour retrouver une presence comparable. */
+  font-size: clamp(1.5rem, 5vw, 1.95rem);
+  line-height: 1.35;
+  letter-spacing: .01em;
+  color: var(--gold-700);
+  /* Les jambages descendants ne doivent pas etre rognes par le cadre. */
+  padding-bottom: 2px;
+}
+.thanks__tel { font-size: .8rem; color: var(--muted); }
+.thanks__tel a { color: var(--gold-700); font-weight: 700; white-space: nowrap; }
+
+/* Les ecritures non latines n'ont pas de cursive equivalente : la
+   signature y reprend la fonte de titre, en italique, plutot que de
+   tomber dans une fonte de secours illisible. */
+html[lang="ar"] .thanks__sign,
+html[lang="zh"] .thanks__sign,
+html[lang="ja"] .thanks__sign,
+html[lang="ko"] .thanks__sign,
+html[lang="hi"] .thanks__sign,
+html[lang="uk"] .thanks__sign {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1rem, 3.4vw, 1.2rem);
+  font-style: italic;
+  letter-spacing: .06em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .form-status--thanks { animation: none; }
+}
+
+/* ===== Barre d'envoi =================================================
+   Cinq secondes pendant lesquelles le client voit sa reservation
+   partir. La duree est volontairement pleine, meme si le relais
+   repond avant : une barre qui saute a 100 % en une demi-seconde
+   n'inspire pas le meme soin qu'une progression tenue. */
+.sending { margin: 16px 0 0; text-align: center; }
+.sending[hidden] { display: none; }
+.sending__label {
+  margin: 0 0 9px;
+  font-family: 'Cinzel', serif;
+  font-size: .84rem;
+  letter-spacing: .06em;
+  color: var(--violet-900);
+}
+.sending__track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(89, 46, 111, .12);
+  border: 1px solid rgba(216, 178, 87, .42);
+  overflow: hidden;
+}
+.sending__bar {
+  width: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #bf953f, #fcf6ba, #d8b257, #fef9db);
+  background-size: 200% 100%;
+  transition: width 5s linear;
+  animation: sendingShine 1.6s linear infinite;
+}
+@keyframes sendingShine {
+  from { background-position: 0% 0; }
+  to   { background-position: 200% 0; }
+}
+/* Bouton neutralise pendant l'envoi : pas de double reservation. */
+.btn-book:disabled { opacity: .55; cursor: progress; }
+@media (prefers-reduced-motion: reduce) {
+  .sending__bar { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="lang-dock">
+    <button type="button" class="lang-btn" id="lang-btn" title="Langue / Language" aria-label="Langue / Language" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.7"/>
+        <path d="M3.3 12h17.4"/>
+        <path d="M12 3.3c2.7 2.4 4.05 5.4 4.05 8.7S14.7 18.3 12 20.7C9.3 18.3 7.95 15.3 7.95 12S9.3 5.7 12 3.3z"/>
+      </svg>
+    </button>
+    <div class="lang-menu" id="lang-menu" role="menu" aria-label="Langue / Language" hidden>
+      <p class="lang-menu__title">Langue / Language</p>
+      <div class="lang-menu__list" role="group">
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="fr" aria-checked="true">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="10" height="20" fill="#0055A4"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#EF4135"/></svg>
+          <span>Français</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="en" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#012169"/><path d="M0 0 30 20M30 0 0 20" stroke="#fff" stroke-width="4"/><path d="M0 0 30 20M30 0 0 20" stroke="#C8102E" stroke-width="1.8"/><path d="M15 0v20M0 10h30" stroke="#fff" stroke-width="6.5"/><path d="M15 0v20M0 10h30" stroke="#C8102E" stroke-width="3.6"/></svg>
+          <span>English</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="es" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#AA151B"/><rect y="5" width="30" height="10" fill="#F1BF00"/></svg>
+          <span>Español</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="de" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#000"/><rect y="6.7" width="30" height="6.6" fill="#DD0000"/><rect y="13.3" width="30" height="6.7" fill="#FFCE00"/></svg>
+          <span>Deutsch</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="it" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="10" height="20" fill="#009246"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#CE2B37"/></svg>
+          <span>Italiano</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="pt" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="12" height="20" fill="#046A38"/><rect x="12" width="18" height="20" fill="#DA291C"/><circle cx="12" cy="10" r="4.6" fill="#FFE900"/></svg>
+          <span>Português</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="nl" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#AE1C28"/><rect y="6.7" width="30" height="6.6" fill="#fff"/><rect y="13.3" width="30" height="6.7" fill="#21468B"/></svg>
+          <span>Nederlands</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="pl" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#DC143C"/></svg>
+          <span>Polski</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="zh" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#DE2910"/><g fill="#FFDE00"><path transform="translate(5.6,5.2) scale(3.1)" d="M 1.000,-0.000 L 0.309,0.225 L 0.309,0.951 L -0.118,0.363 L -0.809,0.588 L -0.382,0.000 L -0.809,-0.588 L -0.118,-0.363 L 0.309,-0.951 L 0.309,-0.225 Z"/><path transform="translate(11.2,2.1) scale(1.05)" d="M 1.000,-0.000 L 0.309,0.225 L 0.309,0.951 L -0.118,0.363 L -0.809,0.588 L -0.382,0.000 L -0.809,-0.588 L -0.118,-0.363 L 0.309,-0.951 L 0.309,-0.225 Z"/><path transform="translate(13.6,4.6) scale(1.05)" d="M 1.000,-0.000 L 0.309,0.225 L 0.309,0.951 L -0.118,0.363 L -0.809,0.588 L -0.382,0.000 L -0.809,-0.588 L -0.118,-0.363 L 0.309,-0.951 L 0.309,-0.225 Z"/><path transform="translate(13.6,8.1) scale(1.05)" d="M 1.000,-0.000 L 0.309,0.225 L 0.309,0.951 L -0.118,0.363 L -0.809,0.588 L -0.382,0.000 L -0.809,-0.588 L -0.118,-0.363 L 0.309,-0.951 L 0.309,-0.225 Z"/><path transform="translate(11.2,10.4) scale(1.05)" d="M 1.000,-0.000 L 0.309,0.225 L 0.309,0.951 L -0.118,0.363 L -0.809,0.588 L -0.382,0.000 L -0.809,-0.588 L -0.118,-0.363 L 0.309,-0.951 L 0.309,-0.225 Z"/></g></svg>
+          <span>中文</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="uk" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="10" fill="#005BBB"/><rect y="10" width="30" height="10" fill="#FFD500"/></svg>
+          <span>Українська</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="ja" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#BC002D"/></svg>
+          <span>日本語</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="ko" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="5.2" fill="#0047A0"/><path d="M9.8,10 A5.2,5.2 0 0 1 20.2,10 A2.6,2.6 0 0 1 15,10 A2.6,2.6 0 0 0 9.8,10 Z" fill="#CD2E3A"/><g transform="translate(5.00,4.60) rotate(-45)"><rect x="-3.1" y="-2.32" width="6.2" height="0.85" fill="#000"/><rect x="-3.1" y="-0.42" width="6.2" height="0.85" fill="#000"/><rect x="-3.1" y="1.48" width="6.2" height="0.85" fill="#000"/></g><g transform="translate(25.00,4.60) rotate(45)"><rect x="-3.1" y="-2.32" width="6.2" height="0.85" fill="#000"/><rect x="-3.1" y="-0.42" width="2.55" height="0.85" fill="#000"/><rect x="0.55" y="-0.42" width="2.55" height="0.85" fill="#000"/><rect x="-3.1" y="1.48" width="6.2" height="0.85" fill="#000"/></g><g transform="translate(5.00,15.40) rotate(-45)"><rect x="-3.1" y="-2.32" width="2.55" height="0.85" fill="#000"/><rect x="0.55" y="-2.32" width="2.55" height="0.85" fill="#000"/><rect x="-3.1" y="-0.42" width="6.2" height="0.85" fill="#000"/><rect x="-3.1" y="1.48" width="2.55" height="0.85" fill="#000"/><rect x="0.55" y="1.48" width="2.55" height="0.85" fill="#000"/></g><g transform="translate(25.00,15.40) rotate(45)"><rect x="-3.1" y="-2.32" width="2.55" height="0.85" fill="#000"/><rect x="0.55" y="-2.32" width="2.55" height="0.85" fill="#000"/><rect x="-3.1" y="-0.42" width="2.55" height="0.85" fill="#000"/><rect x="0.55" y="-0.42" width="2.55" height="0.85" fill="#000"/><rect x="-3.1" y="1.48" width="2.55" height="0.85" fill="#000"/><rect x="0.55" y="1.48" width="2.55" height="0.85" fill="#000"/></g></svg>
+          <span>한국어</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="ar" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#165D31"/><rect x="6" y="7.4" width="18" height="1.6" rx="0.8" fill="#fff"/><rect x="8" y="11.2" width="14" height="1.1" rx="0.55" fill="#fff" opacity=".92"/></svg>
+          <span>العربية</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="tr" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#E30A17"/><circle cx="11.2" cy="10" r="4.1" fill="#fff"/><circle cx="12.7" cy="10" r="3.3" fill="#E30A17"/><polygon points="19.40,7.90 21.40,9.35 20.63,11.70 18.17,11.70 17.40,9.35" fill="#fff"/></svg>
+          <span>Türkçe</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+        <button type="button" class="lang-option" role="menuitemradio" data-lang="hi" aria-checked="false">
+          <svg class="lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="6.67" fill="#FF9933"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#138808"/><circle cx="15" cy="10" r="2.55" fill="none" stroke="#000080" stroke-width="0.62"/><line x1="12.45" y1="10.00" x2="17.55" y2="10.00" stroke="#000080" stroke-width="0.34"/><line x1="12.54" y1="9.34" x2="17.46" y2="10.66" stroke="#000080" stroke-width="0.34"/><line x1="12.79" y1="8.72" x2="17.21" y2="11.28" stroke="#000080" stroke-width="0.34"/><line x1="13.20" y1="8.20" x2="16.80" y2="11.80" stroke="#000080" stroke-width="0.34"/><line x1="13.72" y1="7.79" x2="16.27" y2="12.21" stroke="#000080" stroke-width="0.34"/><line x1="14.34" y1="7.54" x2="15.66" y2="12.46" stroke="#000080" stroke-width="0.34"/><line x1="15.00" y1="7.45" x2="15.00" y2="12.55" stroke="#000080" stroke-width="0.34"/><line x1="15.66" y1="7.54" x2="14.34" y2="12.46" stroke="#000080" stroke-width="0.34"/><line x1="16.27" y1="7.79" x2="13.73" y2="12.21" stroke="#000080" stroke-width="0.34"/><line x1="16.80" y1="8.20" x2="13.20" y2="11.80" stroke="#000080" stroke-width="0.34"/><line x1="17.21" y1="8.72" x2="12.79" y2="11.28" stroke="#000080" stroke-width="0.34"/><line x1="17.46" y1="9.34" x2="12.54" y2="10.66" stroke="#000080" stroke-width="0.34"/><circle cx="15" cy="10" r="0.5" fill="#000080"/></svg>
+          <span>हिन्दी</span><span class="lang-check" aria-hidden="true">✦</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+<div class="book-back">
+  <a class="contact-link" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    Retour à la carte
+  </a>
+  
+</div>
+
+<div id="reservation-page">
+  <header class="interior-header">
+
+
+      <div class="eyebrow"><span class="star-gold">✦</span> RÉSERVATION <span class="star-gold">✦</span></div>
+      <h2>COLLINE <span>GAMBETTA</span></h2>
+      <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
+      <p class="menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
+    </header>
+
+  <main class="book-main">
+    <div class="container">
+
+      <div class="hours">
+      <div class="hours__card">
+      <svg class="hours__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/></svg>
+      <span class="hours__day">Tous les jours</span>
+      <span class="hours__val"><span class="hours__t">07h00</span><span class="hours__sep" aria-hidden="true"></span><span class="hours__t">02h00</span></span>
+      </div>
+      <div class="hours__card">
+      <svg class="hours__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10.2"/><circle cx="12" cy="12" r="7.4"/><path d="M9.1 4.5c-.62 0-1.12.5-1.12 1.12v5.26c0 .62.5 1.12 1.12 1.12s1.12-.5 1.12-1.12V5.62c0-.62-.5-1.12-1.12-1.12z"/><path d="M9.1 12v7.5"/><path d="M14.1 4.6v3.2M15.9 4.6v3.2M17.7 4.6v3.2"/><path d="M14.1 7.8c0 1.25.8 2.1 1.8 2.1s1.8-.85 1.8-2.1"/><path d="M15.9 9.9v9.6"/></svg>
+      <span class="hours__day">Cuisine</span>
+      <span class="hours__val"><span class="hours__t">12h00</span><span class="hours__sep" aria-hidden="true"></span><span class="hours__t">00h00</span></span>
+      </div>
+      </div>
+
+      <article class="panel">
+        <div class="panel__head">
+          <h4 class="panel__title">Réserver ma table</h4>
+          <p class="panel__subtitle">Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.</p>
+        </div>
+
+        
+
+        <form id="book-form" novalidate>
+          <div class="form-grid">
+            <div class="field" data-field>
+              <label for="bk-name">Nom</label>
+              <input id="bk-name" name="nom" type="text" autocomplete="name" required placeholder="Votre nom">
+              <p class="field__error" data-error hidden>Merci d’indiquer votre nom.</p>
+            </div>
+            <div class="field" data-field>
+              <label for="bk-phone">Téléphone</label>
+              <input id="bk-phone" name="telephone" type="tel" autocomplete="tel" required placeholder="06 12 34 56 78">
+              <p class="field__error" data-error hidden>Merci d’indiquer un numéro où vous joindre.</p>
+            </div>
+            <div class="field field--full" data-field>
+              <label for="bk-mail">Mail <span class="opt">(facultatif)</span></label>
+              <input id="bk-mail" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr">
+              <p class="field__error" data-error hidden>Cette adresse ne semble pas valide.</p>
+            </div>
+            <div class="field" data-field>
+              <label for="bk-date">Date</label>
+              <input id="bk-date" name="date" type="date" required>
+              <p class="field__error" data-error hidden>Merci de choisir une date à venir.</p>
+            </div>
+            <div class="field" data-field>
+              <label for="bk-time">Heure</label>
+              <select id="bk-time" name="heure" required>
+                <option value="">Choisir…</option>
+                <option value="12:00">12h00</option>
+                <option value="12:15">12h15</option>
+                <option value="12:30">12h30</option>
+                <option value="12:45">12h45</option>
+                <option value="13:00">13h00</option>
+                <option value="13:15">13h15</option>
+                <option value="13:30">13h30</option>
+                <option value="13:45">13h45</option>
+                <option value="14:00">14h00</option>
+                <option value="14:15">14h15</option>
+                <option value="14:30">14h30</option>
+                <option value="14:45">14h45</option>
+                <option value="15:00">15h00</option>
+                <option value="15:15">15h15</option>
+                <option value="15:30">15h30</option>
+                <option value="15:45">15h45</option>
+                <option value="16:00">16h00</option>
+                <option value="16:15">16h15</option>
+                <option value="16:30">16h30</option>
+                <option value="16:45">16h45</option>
+                <option value="17:00">17h00</option>
+                <option value="17:15">17h15</option>
+                <option value="17:30">17h30</option>
+                <option value="17:45">17h45</option>
+                <option value="18:00">18h00</option>
+                <option value="18:15">18h15</option>
+                <option value="18:30">18h30</option>
+                <option value="18:45">18h45</option>
+                <option value="19:00">19h00</option>
+                <option value="19:15">19h15</option>
+                <option value="19:30">19h30</option>
+                <option value="19:45">19h45</option>
+                <option value="20:00">20h00</option>
+                <option value="20:15">20h15</option>
+                <option value="20:30">20h30</option>
+                <option value="20:45">20h45</option>
+                <option value="21:00">21h00</option>
+                <option value="21:15">21h15</option>
+                <option value="21:30">21h30</option>
+                <option value="21:45">21h45</option>
+                <option value="22:00">22h00</option>
+                <option value="22:15">22h15</option>
+                <option value="22:30">22h30</option>
+                <option value="22:45">22h45</option>
+              </select>
+              <p class="field__error" data-error hidden>Merci de choisir une heure.</p>
+            </div>
+            <div class="field" data-field>
+              <label for="bk-guests">Nombre de personnes</label>
+              <select id="bk-guests" name="couverts" required>
+                <option value="">Choisir…</option>
+                <option value="1">1 personne</option>
+                <option value="2">2 personnes</option>
+                <option value="3">3 personnes</option>
+                <option value="4">4 personnes</option>
+                <option value="5">5 personnes</option>
+                <option value="6">6 personnes</option>
+                <option value="7">7 personnes</option>
+                <option value="8">8 personnes</option>
+                <option value="9">9 personnes</option>
+                <option value="10">10 personnes</option>
+              </select>
+              <p class="field__hint">1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.</p>
+            </div>
+            <div class="field" data-field>
+              <label for="bk-place">Préférence</label>
+              <select id="bk-place" name="preference">
+                <option value="Sans préférence">Sans préférence</option>
+                <option value="En terrasse">En terrasse</option>
+                <option value="En salle">En salle</option>
+                <option value="Au comptoir">Au comptoir</option>
+              </select>
+            </div>
+            <div class="field field--full">
+              <label for="bk-msg">Un mot pour nous <span class="opt">(facultatif)</span></label>
+              <textarea id="bk-msg" name="message" placeholder="Anniversaire, allergie, poussette, ami à quatre pattes…"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-book" type="submit">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6"/><path d="M8 3v4M16 3v4"/><path d="M8.6 14.4h6.8"/></svg>
+              Envoyer ma réservation
+            </button>
+          </div>
+
+          <!-- Barre de progression : le client voit sa reservation
+               partir, au lieu d'un ecran qui ne bouge pas. -->
+          <div class="sending" id="bk-sending" hidden>
+            <p class="sending__label">Envoi de votre réservation…</p>
+            <div class="sending__track" role="progressbar" aria-labelledby="bk-sending">
+              <div class="sending__bar" id="bk-bar"></div>
+            </div>
+          </div>
+
+          <div class="form-status" id="bk-status" role="status" aria-live="polite" hidden></div>
+
+          <!-- Remerciement : les fragments sont ecrits ici, masques, pour
+               que le moteur i18n les photographie au chargement. Un texte
+               fabrique en JavaScript ne serait jamais traduit. Le script
+               les assemble autour du nom, de la date et de l'heure. -->
+          <div class="thanks-src" hidden aria-hidden="true">
+            <span data-th="hi">Merci infiniment</span>
+            <span data-th="l1">Votre demande de table vient de nous parvenir.</span>
+            <span data-th="l2">Nous vous attendons</span>
+            <span data-th="for">pour</span>
+            <span data-th="l4">Au plaisir de vous recevoir très prochainement,</span>
+            <span data-th="sign">L’équipe de La Colline Gambetta</span>
+            <span data-th="tel">Une question ? Appelez-nous au</span>
+            <span data-th="fail">L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.</span>
+          </div>
+        </form>
+      </article>
+
+      <article class="panel">
+        <div class="panel__head">
+          <h4 class="panel__title">Nous joindre</h4>
+          <p class="panel__subtitle">Pour le jour même, le téléphone reste le plus sûr.</p>
+        </div>
+        <div class="info-grid">
+          <a class="info-link" href="tel:+33143490593">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
+            01 43 49 05 93
+          </a>
+          <a class="info-link" href="mailto:lacollinegambetta@mailo.com">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>
+            lacollinegambetta@mailo.com
+          </a>
+          <a class="info-link" href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>
+            lacolline.gambetta
+          </a>
+        </div>
+
+        <!-- Plan : on peut s'y déplacer, et le bouton ✦ ramène au restaurant. -->
+        <div class="map-wrap">
+          <div id="book-map" role="application" aria-label="Plan : 4 rue Belgrand, Paris 20ᵉ"></div>
+          <button type="button" class="map-recenter" id="map-recenter" title="Recentrer sur le restaurant" aria-label="Recentrer sur le restaurant">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 1.6v3.2M12 19.2v3.2M22.4 12h-3.2M4.8 12H1.6"/><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"/></svg>
+          </button>
+          <noscript><p class="map-fallback">4 rue Belgrand, 75020 Paris — métro Gambetta</p></noscript>
+        </div>
+        <div class="map-foot">
+          <span class="map-address">4 rue Belgrand, 75020 Paris — métro Gambetta</span>
+          <a class="info-link info-link--route" id="route-link" href="https://www.openstreetmap.org/directions?to=48.8647788%2C2.3993777" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            Itinéraire
+          </a>
+        </div>
+        
+      </article>
+
+      <div class="book-back-bottom">
+        <a class="contact-link contact-link--back" href="index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+          Retour à la carte
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+      <div class="footer-note"><span class="star-gold">✦</span> Prix nets en euros • service compris <span class="star-gold">✦</span></div>
+      <div class="footer-legal">
+        <span class="legal-item">Photographies non contractuelles, suggestions de présentation</span>
+        <span class="legal-item">Allergènes : informations sur demande</span>
+        <span class="legal-item legal-item--alcool">L’abus d’alcool est dangereux pour la santé</span>
+      </div>
+      
+      <div class="footer-download-wrap"><a class="footer-download" href="Carte_LaCollineGambetta.pdf" download="Carte_LaCollineGambetta.pdf" title="Télécharger la carte au format PDF">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11.5"/><path d="M7.5 11.2 12 15.7l4.5-4.5"/><path d="M4.5 19.5h15"/></svg>
+        <span>Télécharger la carte (PDF)</span>
+      </a></div>
+<div class="footer-links">
+        <a href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener" class="footer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle class="ig-dot" cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>lacolline.gambetta</a>
+        <a href="tel:+33143490593" class="footer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</a>
+        <a href="mailto:lacollinegambetta@mailo.com" class="footer-link footer-link--mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>lacollinegambetta@mailo.com</a>
+      </div>
+      <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><span>4 RUE BELGRAND, 75020 PARIS</span><span>•</span><span>MÉTRO GAMBETTA</span></div>
+    </footer>
+</div>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" crossorigin=""></script>
+<script>
+/* Plan du restaurant.
+   Fond OpenFreeMap (style Positron), rendu en vectoriel par MapLibre.
+   CARTO impose depuis peu une clé pour ses tuiles matricielles et
+   estampille « API KEY REQUIRED » en travers de celles servies sans
+   clé : c'est ce filigrane qu'on voit apparaître. Plutôt que d'aller
+   chercher une clé — donc un compte, un quota et un secret à gérer dans
+   une page statique où il serait de toute façon public — on passe à
+   OpenFreeMap : aucune clé, aucune inscription, aucun quota, usage
+   commercial autorisé, et le même parti pris graphique (gris très
+   clair, la typographie seule porte l'information). Le vectoriel a en
+   prime l'avantage de rester net à tous les niveaux de zoom.
+   L'attribution est obligatoire : MapLibre l'affiche depuis le style.
+   Si MapLibre ne se charge pas — hors ligne, WebGL absent, blocage
+   réseau — l'encart affiche l'adresse en clair plutôt qu'un rectangle
+   vide. */
+(function () {
+  var LAT = 48.8647788, LON = 2.3993777, ZOOM = 16.4;
+  var el = document.getElementById('book-map');
+  var btn = document.getElementById('map-recenter');
+  if (!el) return;
+
+  function fallback() {
+    el.innerHTML = '<p class="map-error">4 rue Belgrand, 75020 Paris — métro Gambetta</p>';
+    if (btn) btn.hidden = true;
+  }
+  /* WebGL est indispensable au rendu vectoriel : on le vérifie avant de
+     tenter quoi que ce soit, sinon MapLibre lève une exception. */
+  function hasWebGL() {
+    try {
+      var c = document.createElement('canvas');
+      return !!(window.WebGLRenderingContext &&
+        (c.getContext('webgl') || c.getContext('experimental-webgl')));
+    } catch (e) { return false; }
+  }
+  if (typeof maplibregl === 'undefined' || !hasWebGL()) { fallback(); return; }
+
+  var map;
+  try {
+    map = new maplibregl.Map({
+      container: el,
+      style: 'https://tiles.openfreemap.org/styles/positron',
+      center: [LON, LAT],
+      zoom: ZOOM,
+      attributionControl: false,
+      /* La molette fait défiler la PAGE : on ne piège pas le défilement
+         de quelqu'un qui ne fait que passer devant l'encart. Ctrl +
+         molette zoome, et MapLibre l'indique de lui-même. */
+      cooperativeGestures: true
+    });
+  } catch (e) { fallback(); return; }
+
+  map.on('error', function (e) {
+    /* Style injoignable : on ne laisse pas un cadre vide. */
+    if (e && e.error && !map.isStyleLoaded()) fallback();
+  });
+
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
+  map.addControl(new maplibregl.AttributionControl({
+    compact: true,
+    customAttribution: '<a href="https://openfreemap.org/" target="_blank" rel="noopener">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+  }));
+
+  /* Épingle : le même disque violet cerclé de blanc qu'avant, en élément
+     HTML plutôt qu'en icône Leaflet. */
+  var dot = document.createElement('div');
+  dot.className = 'map-pin';
+  new maplibregl.Marker({ element: dot })
+    .setLngLat([LON, LAT])
+    .setPopup(new maplibregl.Popup({ offset: 16, closeButton: false }).setHTML(
+      '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Métro Gambetta'
+    ))
+    .addTo(map);
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      map.flyTo({ center: [LON, LAT], zoom: ZOOM, duration: 600 });
+    });
+  }
+  /* L'encart est dimensionné en clamp() : si sa hauteur change après le
+     premier rendu (rotation, changement de langue), MapLibre doit être
+     prévenu, sinon la toile reste sur une bande grise. */
+  window.addEventListener('resize', function () { map.resize(); });
+  setTimeout(function () { map.resize(); }, 300);
+})();
+</script>
+
+<script>
+/* Bouton « Itinéraire » : ouvrir l'application de navigation de
+   l'appareil, pas un site tiers.
+
+   Sur iOS et macOS, le lien maps: est intercepté par Plans ; Google Maps
+   s'y substitue de lui-même s'il est installé et réglé par défaut. Sur
+   Android, le schéma geo: est le point d'entrée standard : le système
+   propose Google Maps, Waze ou Petal selon ce qui est installé, et
+   laisse l'utilisateur choisir — c'est bien à lui de décider, pas à
+   nous de présumer.
+   Partout ailleurs (ordinateur de bureau), on garde l'itinéraire
+   OpenStreetMap déjà écrit dans le HTML : il fonctionne sans compte et
+   sans application. Le lien reste donc valide même sans JavaScript. */
+(function () {
+  var a = document.getElementById('route-link');
+  if (!a) return;
+  var LAT = 48.8647788, LON = 2.3993777;
+  var LABEL = 'La Colline Gambetta, 4 rue Belgrand, 75020 Paris';
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isMac = /Macintosh/.test(ua) && !isIOS;
+  var isAndroid = /Android/.test(ua);
+
+  if (isIOS || isMac) {
+    /* daddr = destination, dirflg=d : itinéraire en voiture par défaut. */
+    a.href = 'maps://?daddr=' + LAT + ',' + LON + '&q=' + encodeURIComponent(LABEL);
+    a.removeAttribute('target');
+  } else if (isAndroid) {
+    a.href = 'geo:' + LAT + ',' + LON + '?q=' + LAT + ',' + LON +
+             '(' + encodeURIComponent(LABEL) + ')';
+    a.removeAttribute('target');
+  }
+})();
+</script>
+
+<script src="assets/js/reservation-config.js?v=202609211530"></script>
+<script src="assets/js/firebase-config.js?v=202609211530"></script>
+<script type="module" src="assets/js/reservation-firebase.js?v=202609211530"></script>
+<script src="assets/js/i18n.js?v=202609210330" defer></script>
+
+<script>
+(function () {
+  var form = document.getElementById('book-form');
+  var status = document.getElementById('bk-status');
+  var dateEl = document.getElementById('bk-date');
+  var timeEl = document.getElementById('bk-time');
+  var guestsEl = document.getElementById('bk-guests');
+  /* L'API relative est configurée dans reservation-config.js. L'envoi passe
+     par le contrôle centralisé (15 tables ou 30 couverts simultanés
+     dans une fenêtre glissante de 60 minutes). Une panne de cet endpoint ne
+     retombe volontairement pas sur FormSubmit : sinon un client pourrait
+     contourner la limite. */
+  var CAPACITY_ENDPOINT = String(window.LCG_RESERVATION_ENDPOINT || '').trim();
+  var FIREBASE_CAPACITY = CAPACITY_ENDPOINT === 'firebase';
+
+  /* Les heures et les nombres de couverts sont écrits en clair dans le
+     HTML, et non fabriqués ici : le moteur de traduction photographie
+     les textes de la page au chargement (avant que ce script ne tourne),
+     donc des options créées en JS resteraient éternellement en français.
+     Écrites dans la page, elles suivent la langue choisie comme le
+     reste. */
+
+  /* ---- Dates et heures : rien avant l'instant present, a PARIS ------
+     L'heure de reference est celle du restaurant, pas celle du visiteur :
+     un client a New York ou a Tokyo ne doit pas pouvoir reserver un
+     creneau deja passe a Paris, ni se voir refuser un creneau encore
+     valable. `Intl` donne l'heure de Paris sans table de fuseaux a
+     maintenir, et gere l'heure d'ete tout seul. */
+  function parisNow() {
+    var p = new Intl.DateTimeFormat('fr-FR', {
+      timeZone: 'Europe/Paris',
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hour12: false
+    }).formatToParts(new Date());
+    var v = {};
+    p.forEach(function (x) { v[x.type] = x.value; });
+    return {
+      date: v.year + '-' + v.month + '-' + v.day,
+      minutes: parseInt(v.hour, 10) * 60 + parseInt(v.minute, 10)
+    };
+  }
+
+  function iso(d) {
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+  /* Le calendrier ne descend pas sous aujourd'hui a Paris, et ne monte
+     pas au-dela de trois mois. */
+  var nowP = parisNow();
+  dateEl.min = nowP.date;
+  var max = new Date(nowP.date + 'T00:00:00');
+  max.setMonth(max.getMonth() + 3);
+  dateEl.max = iso(max);
+  dateEl.value = nowP.date;
+
+  /* Les creneaux deja passes sont grises DANS la liste plutot que
+     retires : une option supprimee puis reinserée perdrait sa
+     traduction, le moteur ayant photographie les textes au chargement.
+     Desactivee, elle reste en place et traduite. */
+  function refreshTimes() {
+    var now = parisNow();
+    /* Une page laissee ouverte franchit minuit : le plancher du
+       calendrier doit suivre, sinon la veille reste selectionnable. */
+    if (dateEl.min !== now.date) {
+      dateEl.min = now.date;
+      var mx = new Date(now.date + 'T00:00:00');
+      mx.setMonth(mx.getMonth() + 3);
+      dateEl.max = iso(mx);
+    }
+    if (dateEl.value && dateEl.value < now.date) dateEl.value = now.date;
+    var isToday = dateEl.value === now.date;
+    var selectedGone = false;
+    Array.prototype.forEach.call(timeEl.options, function (opt) {
+      if (!opt.value) return;
+      var hm = opt.value.split(':');
+      var mins = parseInt(hm[0], 10) * 60 + parseInt(hm[1], 10);
+      var past = isToday && mins <= now.minutes;
+      opt.disabled = past;
+      if (past && opt.selected) selectedGone = true;
+    });
+    /* Un creneau devenu invalide ne doit pas rester affiche. */
+    if (selectedGone) timeEl.value = '';
+    /* Aujourd'hui, si tout le service est passe, on pousse au lendemain
+       plutot que de laisser une liste entierement grisee. */
+    if (isToday && !Array.prototype.some.call(timeEl.options, function (o) {
+      return o.value && !o.disabled;
+    })) {
+      var d = new Date(now.date + 'T00:00:00');
+      d.setDate(d.getDate() + 1);
+      if (iso(d) <= dateEl.max) { dateEl.value = iso(d); refreshTimes(); }
+    }
+  }
+  dateEl.addEventListener('change', refreshTimes);
+  refreshTimes();
+  /* La page peut rester ouverte longtemps : on reevalue chaque minute,
+     et au retour sur l'onglet. */
+  setInterval(refreshTimes, 60000);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) refreshTimes();
+  });
+
+  function setError(input, on) {
+    var field = input.closest('[data-field]');
+    if (!field) return;
+    field.classList.toggle('field--error', !!on);
+    var msg = field.querySelector('[data-error]');
+    if (msg) msg.hidden = !on;
+  }
+  ['input', 'change'].forEach(function (ev) {
+    form.addEventListener(ev, function (e) {
+      if (e.target && e.target.closest('[data-field]')) setError(e.target, false);
+    });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var bad = null;
+
+    var name = document.getElementById('bk-name');
+    var phone = document.getElementById('bk-phone');
+    var mail = document.getElementById('bk-mail');
+
+    if (!name.value.trim()) { setError(name, true); bad = bad || name; }
+    /* Un numéro français, écrit comme on veut : au moins 8 chiffres. */
+    if ((phone.value.match(/\d/g) || []).length < 8) { setError(phone, true); bad = bad || phone; }
+    if (mail.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail.value.trim())) {
+      setError(mail, true); bad = bad || mail;
+    }
+    /* Dernier controle a l'envoi : l'heure de Paris a pu avancer depuis
+       l'ouverture de la page. */
+    var nowChk = parisNow();
+    if (!dateEl.value || dateEl.value < nowChk.date) { setError(dateEl, true); bad = bad || dateEl; }
+    if (!timeEl.value) { setError(timeEl, true); bad = bad || timeEl; }
+    else if (dateEl.value === nowChk.date) {
+      var hm2 = timeEl.value.split(':');
+      var m2 = parseInt(hm2[0], 10) * 60 + parseInt(hm2[1], 10);
+      if (m2 <= nowChk.minutes) { setError(timeEl, true); bad = bad || timeEl; }
+    }
+    if (!guestsEl.value) { setError(guestsEl, true); bad = bad || guestsEl; }
+
+    if (bad) {
+      status.hidden = true;
+      bad.focus();
+      return;
+    }
+
+    /* Pas de serveur derrière ce site : la demande part par courriel, dans
+       le client de messagerie du visiteur, entièrement pré-remplie. Le
+       message reste affiché à l'écran pour qu'il puisse aussi appeler. */
+    var d = new Date(dateEl.value + 'T12:00:00');
+    var jolie = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    /* Deux versions du nombre de couverts : celle affichee suit la
+       langue du client, celle du courriel reste en francais — c'est le
+       restaurateur qui le lit. La valeur de l'option est un chiffre nu,
+       jamais traduit, donc sure. */
+    var couverts = guestsEl.options[guestsEl.selectedIndex].textContent;
+    var nb = guestsEl.value;
+    var couvertsFr = nb + (nb === '1' ? ' personne' : ' personnes');
+    var pref = document.getElementById('bk-place').value;
+    var msg = document.getElementById('bk-msg').value.trim();
+
+    var corps = [
+      'Bonjour,',
+      '',
+      'Je souhaite réserver une table à La Colline Gambetta.',
+      '',
+      'Nom : ' + name.value.trim(),
+      'Téléphone : ' + phone.value.trim(),
+      mail.value.trim() ? 'Mail : ' + mail.value.trim() : null,
+      'Date : ' + jolie,
+      'Heure : ' + timeEl.value.replace(':', 'h'),
+      'Couverts : ' + couvertsFr,
+      'Préférence : ' + pref,
+      msg ? '' : null,
+      msg ? 'Message : ' + msg : null,
+      '',
+      'Merci beaucoup,',
+      name.value.trim()
+    ].filter(function (l) { return l !== null; }).join('\n');
+
+    var sujet = 'Réservation — ' + name.value.trim() + ' — ' + jolie + ' à ' + timeEl.value.replace(':', 'h') + ' (' + couvertsFr + ')';
+
+    /* Remerciement personnalise. Les fragments viennent du DOM, donc
+       deja traduits par le moteur ; seuls le nom, la date et l'heure
+       sont injectes. Le nom passe par textContent, jamais par
+       innerHTML : c'est une saisie libre. */
+    function th(k) {
+      var el = document.querySelector('.thanks-src [data-th="' + k + '"]');
+      return el ? el.textContent.trim() : '';
+    }
+    /* La date suit la langue affichee : le client la relit dans la
+       sienne, meme si le courriel part en francais. */
+    var lang = document.documentElement.getAttribute('lang') || 'fr';
+    var jourLu;
+    try {
+      jourLu = d.toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' });
+    } catch (err) { jourLu = jolie; }
+    var heureLue = (lang === 'fr')
+      ? timeEl.value.replace(':', 'h')
+      : (function () {
+          try {
+            var hm = timeEl.value.split(':');
+            return new Date(2000, 0, 1, parseInt(hm[0], 10), parseInt(hm[1], 10))
+              .toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
+          } catch (err2) { return timeEl.value.replace(':', 'h'); }
+        })();
+    /* Prenom seul : plus chaleureux qu'un nom complet en tete de mot. */
+    var prenom = name.value.trim().split(/\s+/)[0];
+    /* La ponctuation n'est pas universelle : le chinois et le japonais
+       ont leurs propres virgule et point pleine chasse, l'arabe sa
+       virgule inversee. Coller « , » et « . » a du japonais trahirait
+       le soin apporte au reste du message.
+       La virgule pleine chasse du chinois et du japonais porte deja son
+       blanc : lui ajouter une espace creuse un trou. */
+    var PUNCT = {
+      ja: { comma: '\u3001', stop: '\u3002', sp: '' },
+      zh: { comma: '\uFF0C', stop: '\u3002', sp: '' },
+      ar: { comma: '\u060C', stop: '.', sp: ' ' }
+    };
+    var pc = PUNCT[lang] || { comma: ',', stop: '.', sp: ' ' };
+
+    status.textContent = '';
+    status.classList.add('form-status--thanks');
+
+    var h = document.createElement('p');
+    h.className = 'thanks__hello';
+    h.textContent = th('hi') + pc.comma + pc.sp + prenom + pc.stop;
+
+    var p1 = document.createElement('p');
+    p1.className = 'thanks__line';
+    p1.textContent = th('l1');
+
+    /* L'encart : l'annonce reste en texte courant, puis la date,
+       l'heure et le nombre de personnes sont detaches sur leur propre
+       ligne, en gras. C'est la ligne que le client relit et retient ;
+       noyee dans la phrase, elle se cherchait. */
+    var p2 = document.createElement('p');
+    p2.className = 'thanks__when';
+    var intro = document.createElement('span');
+    intro.className = 'thanks__when-intro';
+    intro.textContent = th('l2') + pc.stop;
+    /* Deux groupes en gras — le moment, puis le nombre de personnes —
+       relies par un mot de liaison en texte courant. Le contraste rend
+       la ligne lisible d'un coup d'oeil, sans la surcharger. */
+    var quand = document.createElement('strong');
+    quand.className = 'thanks__when-detail';
+    quand.textContent = jourLu + ' \u00b7 ' + heureLue;
+    var lien = document.createElement('span');
+    lien.className = 'thanks__when-for';
+    lien.textContent = ' ' + th('for') + ' ';
+    var qui = document.createElement('strong');
+    qui.className = 'thanks__when-detail';
+    qui.textContent = couverts;
+    /* Les trois morceaux sont groupes dans une ligne propre : c'est
+       elle qui porte le centrage et le repli equilibre. */
+    var ligne = document.createElement('span');
+    ligne.className = 'thanks__when-line';
+    ligne.appendChild(quand);
+    ligne.appendChild(lien);
+    ligne.appendChild(qui);
+    p2.appendChild(intro);
+    p2.appendChild(ligne);
+
+    var p4 = document.createElement('p');
+    p4.className = 'thanks__line thanks__warm';
+    p4.textContent = th('l4');
+
+    var sg = document.createElement('p');
+    sg.className = 'thanks__sign';
+    sg.textContent = th('sign');
+
+    var tel = document.createElement('p');
+    tel.className = 'thanks__tel';
+    tel.appendChild(document.createTextNode(th('tel') + ' '));
+    var a = document.createElement('a');
+    a.href = 'tel:+33143490593';
+    a.textContent = '01 43 49 05 93';
+    tel.appendChild(a);
+
+    [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
+
+    /* --- Notification du restaurant -----------------------------------
+       La capacité est décidée par l'API locale. Le relais FormSubmit ne
+       sert plus qu'à notifier le restaurant après acceptation ; il ne peut
+       donc jamais créer une réservation qui contourne le compteur.
+
+       L'adresse est encodée en base64 dans l'attribut du formulaire plutôt
+       qu'écrite en clair, pour ne pas l'offrir aux aspirateurs d'adresses. */
+    var payload = new FormData();
+    payload.append('action', 'reserve');
+    payload.append('_subject', sujet);
+    payload.append('_template', 'box');
+    payload.append('_captcha', 'false');
+    payload.append('Nom', name.value.trim());
+    payload.append('Téléphone', phone.value.trim());
+    payload.append('Mail', mail.value.trim() || '—');
+    payload.append('Date', jolie);
+    payload.append('Heure', timeEl.value.replace(':', 'h'));
+    payload.append('Couverts', couvertsFr);
+    payload.append('Préférence', pref);
+    payload.append('Message', msg || '—');
+    payload.append('Récapitulatif', corps);
+    /* Repondre directement au client depuis la boite du restaurant. */
+    if (mail.value.trim()) payload.append('_replyto', mail.value.trim());
+
+    var btn = form.querySelector('.btn-book');
+    var sending = document.getElementById('bk-sending');
+    var bar = document.getElementById('bk-bar');
+
+    status.hidden = true;
+    sending.hidden = false;
+    btn.disabled = true;
+    /* La barre est lancee a la frame suivante : posee a 100 % dans le
+       meme cycle, la transition ne demarrerait pas. */
+    bar.style.width = '0%';
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { bar.style.width = '100%'; });
+    });
+    try { sending.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e0) {}
+
+    var FALLBACK_ENDPOINT = 'https://formsubmit.co/ajax/' +
+      atob('bGFjb2xsaW5lZ2FtYmV0dGFAbWFpbG8uY29t');
+    var ENDPOINT = CAPACITY_ENDPOINT || FALLBACK_ENDPOINT;
+    var CENTRAL_CAPACITY = !!CAPACITY_ENDPOINT;
+    /* La barre dure cinq secondes pleines : la reponse arrive souvent
+       avant, mais on ne coupe pas l'animation en cours de route. */
+    var started = Date.now();
+    var MIN_MS = 5000;
+
+    function capacityCopy(kind) {
+      var langNow = (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
+      var copy = {
+        fr: {
+          full: 'Ce créneau est complet (15 tables ou 30 couverts). Choisissez une autre heure ou appelez-nous au 01 43 49 05 93.',
+          error: 'La disponibilité de ce créneau ne peut pas être vérifiée pour le moment. Appelez-nous au 01 43 49 05 93 pour réserver.'
+        },
+        en: {
+          full: 'This time slot is full (15 tables or 30 guests). Please choose another time or call us on 01 43 49 05 93.',
+          error: 'This time slot could not be checked. Please call 01 43 49 05 93 to book.'
+        },
+        es: {
+          full: 'Este horario está completo (15 mesas o 30 comensales). Elija otra hora o llámenos al 01 43 49 05 93.',
+          error: 'No se puede comprobar este horario. Llámenos al 01 43 49 05 93 para reservar.'
+        },
+        de: {
+          full: 'Dieser Zeitraum ist voll (15 Tische oder 30 Gäste). Bitte wählen Sie eine andere Uhrzeit oder rufen Sie uns unter 01 43 49 05 93 an.',
+          error: 'Die Verfügbarkeit konnte nicht geprüft werden. Bitte rufen Sie für eine Reservierung 01 43 49 05 93 an.'
+        },
+        it: {
+          full: 'Questa fascia oraria è completa (15 tavoli o 30 coperti). Scelga un altro orario o chiami lo 01 43 49 05 93.',
+          error: 'Impossibile verificare la disponibilità. Chiami lo 01 43 49 05 93 per prenotare.'
+        },
+        pt: {
+          full: 'Este horário está completo (15 mesas ou 30 pessoas). Escolha outra hora ou ligue para 01 43 49 05 93.',
+          error: 'Não foi possível verificar a disponibilidade. Ligue para 01 43 49 05 93 para reservar.'
+        },
+        nl: {
+          full: 'Dit tijdslot is vol (15 tafels of 30 gasten). Kies een ander tijdstip of bel 01 43 49 05 93.',
+          error: 'De beschikbaarheid kon niet worden gecontroleerd. Bel 01 43 49 05 93 om te reserveren.'
+        },
+        ar: {
+          full: 'هذا الموعد ممتلئ (15 طاولة أو 30 شخصاً). اختر وقتاً آخر أو اتصل بنا على 01 43 49 05 93.',
+          error: 'تعذر التحقق من توفر هذا الموعد. اتصل بنا على 01 43 49 05 93 للحجز.'
+        },
+        zh: {
+          full: '该时段已满（15 张桌子或 30 位客人）。请选择其他时间，或致电 01 43 49 05 93。',
+          error: '暂时无法确认该时段的可用性。请致电 01 43 49 05 93 预订。'
+        },
+        ja: {
+          full: 'この時間帯は満席です（15卓または30名）。別の時間を選ぶか、01 43 49 05 93までお電話ください。',
+          error: '空席状況を確認できません。ご予約は01 43 49 05 93までお電話ください。'
+        },
+        ko: {
+          full: '이 시간대는 마감되었습니다(테이블 15개 또는 30명). 다른 시간을 선택하거나 01 43 49 05 93으로 전화해 주세요.',
+          error: '이 시간대의 예약 가능 여부를 확인할 수 없습니다. 예약은 01 43 49 05 93으로 전화해 주세요.'
+        },
+        pl: {
+          full: 'Ten przedział jest pełny (15 stolików lub 30 osób). Wybierz inną godzinę albo zadzwoń pod numer 01 43 49 05 93.',
+          error: 'Nie można sprawdzić dostępności. Aby zarezerwować, zadzwoń pod numer 01 43 49 05 93.'
+        },
+        tr: {
+          full: 'Bu saat aralığı dolu (15 masa veya 30 kişi). Başka bir saat seçin ya da 01 43 49 05 93 numarasını arayın.',
+          error: 'Bu saat aralığının uygunluğu kontrol edilemedi. Rezervasyon için 01 43 49 05 93 numarasını arayın.'
+        },
+        uk: {
+          full: 'Цей час уже заповнений (15 столів або 30 гостей). Виберіть інший час або зателефонуйте за номером 01 43 49 05 93.',
+          error: 'Не вдалося перевірити доступність. Для бронювання зателефонуйте за номером 01 43 49 05 93.'
+        },
+        hi: {
+          full: 'यह समय पूरी तरह बुक है (15 टेबल या 30 मेहमान)। कोई दूसरा समय चुनें या 01 43 49 05 93 पर कॉल करें।',
+          error: 'इस समय की उपलब्धता की जाँच नहीं हो सकी। बुकिंग के लिए 01 43 49 05 93 पर कॉल करें।'
+        }
+      };
+      return (copy[langNow] || copy.fr)[kind];
+    }
+
+    function showCapacityError(message, openMail) {
+      status.textContent = '';
+      status.classList.remove('form-status--thanks');
+      var w = document.createElement('p');
+      w.className = 'thanks__line';
+      w.textContent = message;
+      var w2 = document.createElement('p');
+      w2.className = 'thanks__tel';
+      w2.appendChild(document.createTextNode(th('tel') + ' '));
+      var wa2 = document.createElement('a');
+      wa2.href = 'tel:+33143490593';
+      wa2.textContent = '01 43 49 05 93';
+      w2.appendChild(wa2);
+      status.appendChild(w);
+      status.appendChild(w2);
+      status.hidden = false;
+      try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e2) {}
+      if (openMail) {
+        window.location.href = 'mailto:lacollinegambetta@mailo.com?subject=' +
+          encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
+      }
+    }
+
+    function finish(ok, failure) {
+      var rest = Math.max(0, MIN_MS - (Date.now() - started));
+      setTimeout(function () {
+        sending.hidden = true;
+        btn.disabled = false;
+        bar.style.width = '0%';
+        if (ok) {
+          status.hidden = false;
+          try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e1) {}
+          form.reset();
+          refreshTimes();
+        } else if (CENTRAL_CAPACITY) {
+          /* En mode capacité, ne jamais ouvrir un mail de secours : il ne
+             serait pas compté et contournerait la limite. */
+          showCapacityError(
+            failure && failure.capacityFull ? capacityCopy('full') : capacityCopy('error'),
+            false
+          );
+        } else {
+          /* Mode statique historique : le relais peut échouer, on bascule
+             sur la messagerie du client, pré-remplie. */
+          showCapacityError(th('fail'), true);
+        }
+      }, rest);
+    }
+
+    function notifyRestaurant() {
+      /* Cette notification est volontairement découplée de la capacité :
+         l'API a déjà enregistré la demande avant cet appel. */
+      try {
+        fetch(FALLBACK_ENDPOINT, {
+          method: 'POST',
+          body: payload,
+          headers: { 'Accept': 'application/json' },
+          keepalive: true
+        }).catch(function () {});
+      } catch (notifyError) {}
+    }
+
+    if (FIREBASE_CAPACITY) {
+      /* Firebase Spark ne nécessite pas de Cloud Function : le SDK du
+         navigateur réalise une transaction Firestore atomique. */
+      function waitForFirebaseApi() {
+        if (window.LCGFirebaseReservation) return Promise.resolve(window.LCGFirebaseReservation);
+        return new Promise(function (resolve, reject) {
+          var timer = setTimeout(function () {
+            window.removeEventListener('lcg-firebase-ready', ready);
+            reject(new Error('Firebase is not ready'));
+          }, 10000);
+          function ready() {
+            clearTimeout(timer);
+            window.removeEventListener('lcg-firebase-ready', ready);
+            if (window.LCGFirebaseReservation) resolve(window.LCGFirebaseReservation);
+            else reject(new Error('Firebase is not ready'));
+          }
+          window.addEventListener('lcg-firebase-ready', ready);
+        });
+      }
+      waitForFirebaseApi()
+        .then(function (firebaseApi) {
+          return firebaseApi.reserve({
+            date: dateEl.value,
+            heure: timeEl.value,
+            couverts: guestsEl.value,
+            nom: name.value.trim(),
+            telephone: phone.value.trim(),
+            email: mail.value.trim(),
+            preference: pref,
+            message: msg
+          });
+        })
+        .then(function () {
+          notifyRestaurant();
+          finish(true);
+        })
+        .catch(function (err) {
+          err.capacityFull = err.capacityFull || err.code === 'CAPACITY_FULL';
+          console.error('[réservation]', err);
+          finish(false, err);
+        });
+    } else if (CENTRAL_CAPACITY) {
+      /* Mode API HTTP optionnel : réponse dans une iframe cachée. */
+      var responseFrame = document.createElement('iframe');
+      var responseName = 'lcg-reservation-response-' + Date.now();
+      responseFrame.name = responseName;
+      responseFrame.title = 'Réponse de réservation';
+      responseFrame.setAttribute('aria-hidden', 'true');
+      responseFrame.style.cssText = 'position:absolute;width:1px;height:1px;border:0;opacity:0;pointer-events:none;';
+      document.body.appendChild(responseFrame);
+
+      var transport = document.createElement('form');
+      transport.method = 'POST';
+      transport.action = ENDPOINT;
+      transport.target = responseName;
+      transport.style.display = 'none';
+      payload.forEach(function (value, key) {
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value;
+        transport.appendChild(input);
+      });
+      document.body.appendChild(transport);
+
+      var received = false;
+      function cleanTransport() {
+        window.removeEventListener('message', receiveCapacityMessage);
+        if (transport.parentNode) transport.parentNode.removeChild(transport);
+        if (responseFrame.parentNode) responseFrame.parentNode.removeChild(responseFrame);
+      }
+      function receiveCapacityMessage(event) {
+        var data = event.data || {};
+        if (event.source !== responseFrame.contentWindow ||
+            data.source !== 'lcg-reservation-capacity' || !data.payload) return;
+        received = true;
+        cleanTransport();
+        var result = data.payload;
+        if (result.ok === true) {
+          notifyRestaurant();
+          finish(true);
+        } else {
+          var err = new Error(result.message || 'reservation failed');
+          err.capacityFull = result.code === 'CAPACITY_FULL';
+          finish(false, err);
+        }
+      }
+      window.addEventListener('message', receiveCapacityMessage);
+      transport.submit();
+
+      /* Une réponse bloquée ne doit pas laisser la barre indéfiniment en
+         mouvement. Surtout, aucun fallback courriel ne contourne alors la
+         capacité centrale. */
+      setTimeout(function () {
+        if (received) return;
+        cleanTransport();
+        finish(false, new Error('capacity endpoint timeout'));
+      }, 15000);
+    } else {
+      fetch(ENDPOINT, {
+        method: 'POST',
+        body: payload,
+        headers: { 'Accept': 'application/json' }
+      })
+        .then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (data) {
+            if (!r.ok) {
+              var err = new Error(data.message || 'reservation failed');
+              throw err;
+            }
+            return data;
+          });
+        })
+        .then(function () { finish(true); })
+        .catch(function (err) { finish(false, err); });
+    }
+  });
+})();
+</script>
+
+
+</body>
+</html>

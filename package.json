@@ -1,7 +1,13 @@
 {
   "name": "lacollinegambetta",
   "private": true,
+  "engines": {
+    "node": ">=22.5"
+  },
   "scripts": {
+    "start": "npx firebase-tools emulators:start --project la-colline-gambetta --only hosting,firestore",
+    "dev": "npx firebase-tools emulators:start --project la-colline-gambetta --only hosting,firestore",
+    "firebase:deploy": "npx firebase-tools deploy --project la-colline-gambetta --only firestore",
     "build:print": "node tools/build_browser_print.mjs",
     "build:carte-pdf": "node tools/build_carte_pdf.mjs",
     "pdf:from-jpg": "node tools/jpeg-pdf.mjs",

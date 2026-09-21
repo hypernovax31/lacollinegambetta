@@ -1,0 +1,212 @@
+[
+ {
+  "panel": "Cocktails classiques",
+  "name": "Mojito",
+  "note": "Rhum, menthe fraîche, citron vert, sucre de canne, eau gazeuse",
+  "slug": "mojito"
+ },
+ {
+  "panel": "Cocktails classiques",
+  "name": "Caïpirinha",
+  "note": "Cachaça, citron vert, sucre de canne",
+  "slug": "caipirinha"
+ },
+ {
+  "panel": "Cocktails classiques",
+  "name": "Caïpiroska",
+  "note": "Vodka, citron vert, sucre de canne",
+  "slug": "caipiroska"
+ },
+ {
+  "panel": "Cocktails classiques",
+  "name": "Ti-Punch",
+  "note": "Rhum, citron vert, sucre de canne",
+  "slug": "ti-punch"
+ },
+ {
+  "panel": "Cocktails classiques",
+  "name": "Mai Tai",
+  "note": "Rhum blanc, rhum ambré, jus de citron vert, Cointreau, sirop d’orgeat",
+  "slug": "mai-tai"
+ },
+ {
+  "panel": "Cocktails classiques",
+  "name": "Piña Colada",
+  "note": "Rhum, jus d’ananas, crème de coco",
+  "slug": "pina-colada"
+ },
+ {
+  "panel": "Cocktails classiques",
+  "name": "Strawberry Colada",
+  "note": "Rhum, jus d’ananas, sirop de fraise, crème de coco",
+  "slug": "strawberry-colada"
+ },
+ {
+  "panel": "Cocktails classiques",
+  "name": "Cuba Libre",
+  "note": "Rhum, Coca-Cola, jus de citron",
+  "slug": "cuba-libre"
+ },
+ {
+  "panel": "Cocktails classiques",
+  "name": "Tequila Sunrise",
+  "note": "Tequila, jus d’orange, sirop de grenadine",
+  "slug": "tequila-sunrise"
+ },
+ {
+  "panel": "Spritz &amp; fraîcheur",
+  "name": "Spritz",
+  "note": "Apérol, Prosecco, orange, eau gazeuse",
+  "slug": "spritz"
+ },
+ {
+  "panel": "Spritz &amp; fraîcheur",
+  "name": "St-Germain Spritz",
+  "note": "Liqueur de fleurs de sureau, Prosecco, orange, eau gazeuse",
+  "slug": "st-germain-spritz"
+ },
+ {
+  "panel": "Spritz &amp; fraîcheur",
+  "name": "Suze Tonic",
+  "note": "Suze, Schweppes Tonic, citron",
+  "slug": "suze-tonic"
+ },
+ {
+  "panel": "Spritz &amp; fraîcheur",
+  "name": "La Colline",
+  "note": "Tequila, jus de citron vert, sirop de cassis, Schweppes Tonic",
+  "slug": "la-colline"
+ },
+ {
+  "panel": "Mules &amp; fizz",
+  "name": "Moscow Mule",
+  "note": "Vodka, jus de citron vert, ginger beer",
+  "slug": "moscow-mule"
+ },
+ {
+  "panel": "Mules &amp; fizz",
+  "name": "Jamaïcan Mule",
+  "note": "Rhum, jus de citron vert, ginger beer",
+  "slug": "jamaican-mule"
+ },
+ {
+  "panel": "Mules &amp; fizz",
+  "name": "London Mule",
+  "note": "Gin, jus de citron vert, ginger beer",
+  "slug": "london-mule"
+ },
+ {
+  "panel": "Mules &amp; fizz",
+  "name": "Gin Fizz",
+  "note": "Gin, jus de citron vert, sucre de canne, limonade",
+  "slug": "gin-fizz"
+ },
+ {
+  "panel": "Élégance &amp; saveurs",
+  "name": "Cosmopolitan",
+  "note": "Vodka, Cointreau, jus de cranberry, jus de citron vert",
+  "slug": "cosmopolitan"
+ },
+ {
+  "panel": "Élégance &amp; saveurs",
+  "name": "Sex on the Beach",
+  "note": "Vodka, Cointreau, crème de pêche, jus d’orange, jus de cranberry",
+  "slug": "sex-on-the-beach"
+ },
+ {
+  "panel": "Élégance &amp; saveurs",
+  "name": "Bloody Mary",
+  "note": "Vodka, tomate, citron et épices",
+  "slug": "bloody-mary"
+ },
+ {
+  "panel": "Élégance &amp; saveurs",
+  "name": "Violette Royale",
+  "note": "Crème de violette, champagne, cerise",
+  "slug": "violette-royale"
+ },
+ {
+  "panel": "Élégance &amp; saveurs",
+  "name": "Spritz Violette",
+  "note": "Prosecco, crème de violette, eau gazeuse, myrtilles",
+  "slug": "spritz-violette"
+ },
+ {
+  "panel": "Élégance &amp; saveurs",
+  "name": "Aviation",
+  "note": "Gin, crème de violette, jus de citron jaune",
+  "slug": "aviation"
+ },
+ {
+  "panel": "Élégance &amp; saveurs",
+  "name": "Havane Passion",
+  "note": "Rhum, sirop de fruit de la passion, jus de citron",
+  "slug": "havane-passion"
+ },
+ {
+  "panel": "Élégance &amp; saveurs",
+  "name": "Passion Royal",
+  "note": "Prosecco, vodka, sirop de fruit de la passion, citron vert",
+  "slug": "passion-royal"
+ },
+ {
+  "panel": "Élégance &amp; saveurs",
+  "name": "Margarita",
+  "note": "Tequila, Cointreau, jus de citron vert",
+  "slug": "margarita"
+ },
+ {
+  "panel": "Élégance &amp; saveurs",
+  "name": "Black Russian",
+  "note": "Vodka, liqueur de café, cerise",
+  "slug": "black-russian"
+ },
+ {
+  "panel": "Élégance &amp; saveurs",
+  "name": "Madeleine",
+  "note": "Cointreau, amaretto, jus d’ananas",
+  "slug": "madeleine"
+ },
+ {
+  "panel": "Élégance &amp; saveurs",
+  "name": "Expresso Martini",
+  "note": "Vodka, liqueur de café, expresso, sucre de canne",
+  "slug": "expresso-martini"
+ },
+ {
+  "panel": "Mocktails",
+  "name": "St Valentin",
+  "note": "Sirop de violette, jus de citron vert, Schweppes Tonic",
+  "slug": "st-valentin"
+ },
+ {
+  "panel": "Mocktails",
+  "name": "Bora Bora",
+  "note": "Jus d’ananas, jus d’orange, sirop de grenadine",
+  "slug": "bora-bora"
+ },
+ {
+  "panel": "Mocktails",
+  "name": "Virgin Colline",
+  "note": "Jus d’orange, jus d’ananas, jus de citron, sirop de cassis",
+  "slug": "virgin-colline"
+ },
+ {
+  "panel": "Mocktails",
+  "name": "Virgin Mojito",
+  "note": "Citron vert, menthe, sucre de canne, eau gazeuse",
+  "slug": "virgin-mojito"
+ },
+ {
+  "panel": "Mocktails",
+  "name": "Virgin Colada",
+  "note": "Jus d’ananas, crème de coco",
+  "slug": "virgin-colada"
+ },
+ {
+  "panel": "Mocktails",
+  "name": "Virgin Bloody Mary",
+  "note": "Jus de tomate, jus de citron, épices",
+  "slug": "virgin-bloody-mary"
+ }
+]
