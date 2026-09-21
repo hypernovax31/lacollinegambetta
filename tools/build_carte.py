@@ -792,34 +792,67 @@ html.carte-doc .print-page--cover .cover-page::after {
 html.carte-doc .print-page--cover .cover-brand {
   flex: 0 0 auto;
   width: 100%;
-  max-width: 170mm;
-  margin: 0 0 100px !important; /* 100px entre le titre et le médaillon */
-  gap: 3mm !important;
+  max-width: 178mm;
+  margin: 0 0 24px !important;
+  gap: 2.2mm !important;
+  text-align: center;
 }
-html.carte-doc .print-page--cover .cover-brand--menu-leader-lite .eyebrow,
-html.carte-doc .print-page--cover .leader-title {
-  font-size: 26pt !important;
-  letter-spacing: .14em !important;
+html.carte-doc .print-page--cover .cover-brand .eyebrow,
+html.carte-doc .print-page--cover .cover-brand .leader-title {
+  font-family: 'Cinzel', serif !important;
+  font-size: 21pt !important;
+  letter-spacing: .24em !important;
+  color: #ffffff !important;
   overflow: visible !important;
   line-height: 1.15 !important;
+  text-transform: uppercase !important;
+  margin: 0 !important;
 }
-html.carte-doc .print-page--cover .leader-meta {
-  font-size: 11.5pt !important;
-  letter-spacing: .14em !important;
+html.carte-doc .print-page--cover .cover-brand-title {
+  display: block !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 25pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .16em !important;
+  color: #ffffff !important;
+  line-height: 1.15 !important;
+  margin: 1.2mm 0 !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+}
+html.carte-doc .print-page--cover .cover-brand-title span {
+  display: inline !important;
+  font-size: 1em !important;
+  font-weight: inherit !important;
+  letter-spacing: inherit !important;
+  color: #ffe88f !important;
+  margin-left: 0.22em !important;
+}
+html.carte-doc .print-page--cover .cover-brand .leader-meta {
+  font-family: 'Cinzel', serif !important;
+  font-size: 12.5pt !important;
+  letter-spacing: .18em !important;
+  color: #ffffff !important;
   line-height: 1.25 !important;
+  text-transform: uppercase !important;
+  margin: 0 !important;
 }
-html.carte-doc .print-page--cover .menu-leader-subline,
-html.carte-doc .print-page--cover .leader-meta--sub {
-  font-size: 10.5pt !important;
-  letter-spacing: .12em !important;
+html.carte-doc .print-page--cover .cover-brand .menu-leader-subline,
+html.carte-doc .print-page--cover .cover-brand .leader-meta--sub {
+  font-family: 'Cinzel', serif !important;
+  font-size: 11pt !important;
+  letter-spacing: .15em !important;
+  color: #ffe88f !important;
   line-height: 1.3 !important;
+  text-transform: uppercase !important;
+  margin: 0 !important;
 }
 html.carte-doc .print-page--cover .cover-brand .star-gold {
   display: inline-block !important;
-  width: 10px;
-  height: 10px;
-  margin: 0 8px;
-  vertical-align: 2px;
+  width: 9px;
+  height: 9px;
+  margin: 0 7px;
+  vertical-align: 1.5px;
   background: #fcf6ba;
   clip-path: @@ETOILE@@;
   color: transparent !important;
@@ -828,8 +861,8 @@ html.carte-doc .print-page--cover .cover-brand .star-gold {
   text-shadow: none !important;
 }
 html.carte-doc .print-page--cover .menu-leader-subline .star-gold {
-  width: 7px;
-  height: 7px;
+  width: 7.5px;
+  height: 7.5px;
   margin: 0 6px;
 }
 /* Le bouton « Menu & Carte » de la couverture : il reprend la pilule dorée
@@ -863,9 +896,9 @@ html.carte-doc .print-page--cover .medallion-container {
   aspect-ratio: auto !important;
 }
 html.carte-doc .print-page--cover .medallion-container .medallion-frame {
-  width: 520px !important;
-  height: 520px !important;
-  margin-bottom: 100px !important; /* 100px entre le médaillon et le bouton */
+  width: 480px !important;
+  height: 480px !important;
+  margin-bottom: 35px !important; /* 35px entre le médaillon et le bouton */
 }
 html.carte-doc .print-page--cover .medallion-container .cover-action {
   margin: 0 !important;
