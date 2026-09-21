@@ -1,4 +1,4 @@
-name: Déployer Firebase
+name: Mettre à jour les règles Firestore
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
+  deploy-firestore-rules:
     runs-on: ubuntu-latest
     steps:
       - name: Récupérer le dépôt
@@ -24,5 +24,5 @@ jobs:
       - name: Installer les dépendances
         run: npm ci
 
-      - name: Déployer Hosting, Cloud Functions et Firestore
-        run: npx firebase-tools deploy --project "${{ secrets.FIREBASE_PROJECT_ID }}" --only hosting,functions,firestore --token "${{ secrets.FIREBASE_TOKEN }}"
+      - name: Déployer les règles Firestore du projet partagé
+        run: npx firebase-tools deploy --project "${{ secrets.FIREBASE_PROJECT_ID }}" --only firestore --token "${{ secrets.FIREBASE_TOKEN }}"

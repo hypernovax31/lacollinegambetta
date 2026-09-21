@@ -1874,6 +1874,7 @@ html[lang="uk"] .thanks__sign {
 </script>
 
 <script src="assets/js/reservation-config.js?v=202609210330"></script>
+<script type="module" src="assets/js/reservation-firebase.js?v=202609210921"></script>
 <script src="assets/js/i18n.js?v=202609210330" defer></script>
 
 <script>
@@ -1889,6 +1890,7 @@ html[lang="uk"] .thanks__sign {
      retombe volontairement pas sur FormSubmit : sinon un client pourrait
      contourner la limite. */
   var CAPACITY_ENDPOINT = String(window.LCG_RESERVATION_ENDPOINT || '').trim();
+  var FIREBASE_CAPACITY = CAPACITY_ENDPOINT === 'firebase';
 
   /* Les heures et les nombres de couverts sont écrits en clair dans le
      HTML, et non fabriqués ici : le moteur de traduction photographie
@@ -2334,10 +2336,34 @@ html[lang="uk"] .thanks__sign {
       } catch (notifyError) {}
     }
 
-    if (CENTRAL_CAPACITY) {
-      /* L'API répond dans une iframe cachée ; elle renvoie un postMessage
-         après le contrôle atomique. Cette technique reste fonctionnelle
-         même si le site et l'API ne partagent pas d'en-têtes CORS. */
+    if (FIREBASE_CAPACITY) {
+      /* Firebase Spark ne nécessite pas de Cloud Function : le SDK du
+         navigateur réalise une transaction Firestore atomique. */
+      var firebaseApi = window.LCGFirebaseReservation;
+      if (!firebaseApi) {
+        finish(false, new Error('Firebase is not ready'));
+      } else {
+        firebaseApi.reserve({
+          date: dateEl.value,
+          heure: timeEl.value,
+          couverts: guestsEl.value,
+          nom: name.value.trim(),
+          telephone: phone.value.trim(),
+          email: mail.value.trim(),
+          preference: pref,
+          message: msg
+        })
+          .then(function () {
+            notifyRestaurant();
+            finish(true);
+          })
+          .catch(function (err) {
+            err.capacityFull = err.capacityFull || err.code === 'CAPACITY_FULL';
+            finish(false, err);
+          });
+      }
+    } else if (CENTRAL_CAPACITY) {
+      /* Mode API HTTP optionnel : réponse dans une iframe cachée. */
       var responseFrame = document.createElement('iframe');
       var responseName = 'lcg-reservation-response-' + Date.now();
       responseFrame.name = responseName;

@@ -1,31 +1,4 @@
 {
-  "functions": {
-    "source": "functions",
-    "runtime": "nodejs22"
-  },
-  "hosting": {
-    "public": ".",
-    "ignore": [
-      "firebase.json",
-      "firestore.rules",
-      "firestore.indexes.json",
-      "functions/**",
-      "tools/**",
-      "docs/**",
-      "data/**",
-      "**/node_modules/**",
-      "**/.*"
-    ],
-    "rewrites": [
-      {
-        "source": "/api/reservations",
-        "function": {
-          "functionId": "reservationApi",
-          "region": "europe-west1"
-        }
-      }
-    ]
-  },
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
