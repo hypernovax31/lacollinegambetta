@@ -45,37 +45,16 @@ BASE_VIEWPORT = 1180        # largeur d'écran à laquelle le site est composé
 # Boissons garde ses deux feuilles, les autres tiennent sur la leur.
 SECTIONS = ["entrees", "plats", "menus", "boissons", "cocktails", "vins", "desserts"]
 
-# Blocs qui ne doivent jamais être séparés entre deux feuilles : « Boissons
-# fraîches » + « Boissons chaudes » se partagent une seule page, et tous les
-# panneaux de l'onglet Cocktails — classiques, Spritz & fraîcheur, Mules & fizz,
-# Élégance & saveurs, Mocktails — se partagent l'autre (demandes expresses), le
-# packeur les traite donc comme des unités insécables. Les indices sont ceux
-# des blocs de .tab-flow, dans l'ordre du document. Ces blocs sont marqués
-# data-merge="1" dans la carte comme dans le document de mesure : la CSS de la
-# carte (CARD_OVERRIDES) les reconnaît par ce marqueur — et pas par leur
-# position de frère, qui change quand le découpage en pages les isole.
-MERGE = {"boissons": [(0, 1), (2, 3, 4, 5, 6)],
-        # cocktails : le duo-grid du site (Spritz + Mules) est séparé en deux
-        # blocs par split_duo_grids — les indices ci-dessous sont ceux du flux
-        # APRÈS cette séparation : 0 Cocktails classiques, 1 Spritz & fraîcheur,
-        # 2 Mules & fizz, 3 Élégance & saveurs, 4 Mocktails. Demande expresse :
-        # TOUS les cocktails tiennent sur une seule feuille, l'onglet entier est
-        # donc une unité insécable unique.
+# Blocs qui ne doivent jamais être séparés entre deux feuilles :
+# Demande expresse : toutes les boissons tiennent sur une seule feuille (8 pages au total),
+# et tous les cocktails sur une autre feuille.
+MERGE = {"boissons": [(0, 1, 2, 3, 4, 5, 6)],
         "cocktails": [(0, 1, 2, 3, 4)]}
 
 # Groupes de MERGE autorisés à passer en DEUX colonnes de lignes sur leur
-# feuille quand la hauteur manque (les quatre catégories boissons + bandeau
-# HH, et les cinq panneaux de cocktails) : par défaut les catégories
-# s'empilent pleine largeur, comme « Boissons fraîches + chaudes » ; si leur
-# hauteur cumulée dépasse la feuille, le plan de mise en page bascule en deux
-# colonnes de lignes les sections les plus grandes (mesurées par le probe
-# .carte-twocolsec-probe) jusqu'à ce que tout tienne. Le bandeau HH
-# (hh-banner) n'est jamais basculé : sa hauteur ne change pas, la bascule ne
-# l'atteint donc pas. La hauteur de l'unité est la somme des hauteurs de ses
-# blocs dans leur mode + les gaps, pas la hauteur d'une disposition côte à
-# côte. C'est ce basculement qui permet aux 36 cocktails de la carte de tenir
-# sur une seule feuille pleine, sans chevauchement ni blanc perdu.
-TWOC = {"boissons": [(2, 3, 4, 5, 6)],
+# feuille quand la hauteur manque (les 6 catégories boissons + bandeau
+# HH, et les 5 panneaux de cocktails) :
+TWOC = {"boissons": [(0, 1, 2, 3, 4, 5, 6)],
         "cocktails": [(0, 1, 2, 3, 4)]}
 
 # Géométrie de la feuille, en accord avec les règles « contenant » plus bas.
@@ -1220,9 +1199,11 @@ CARD_OVERRIDES = """
    traversant). La spécificité est plus forte que la neutralisation 1fr posée
    plus haut (1,4,0 contre 1,3,0), donc la levée l'emporte sur les blocs
    marqués seulement. */
+#print-document .carte-flow [data-merge="1"].carte-2col:not(.panel--beers) .price-list,
 #print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols,
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols,
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list {
+  display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   /* !important : la neutralisation 1-col pose gap: 0 !important (shorthand),
      qui écraserait ces longhands sans !important — la gouttière doit gagner.
@@ -1362,7 +1343,10 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table tbody tr:nth-child(even)
 }
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table td {
   border-bottom: 1px dotted rgba(156, 122, 45, .38) !important;  /* pointillé du site, pas trait plein */
-  padding: 5px 0;                              /* l'air vient du filet, pas de la cellule */
+  padding: 5px 0 !important;                                     /* l'air vient du filet, pas de la cellule */
+}
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table tbody td {
+  padding: 5px 0 !important;
 }
 /* Le corps d'une carte des vins suit la taille uniforme de la carte (1,12 rem
    pour le nom, 1,28 rem pour les prix — les corps de la page des plats) : le
@@ -1406,13 +1390,81 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
 #print-document .carte-flow[data-sec="desserts"] .food-card__head strong {
   font-size: 1.28rem !important;
 }
-/* Notes des cocktails : la base 0,84 rem du site porte une variante
+/* Notes des boissons & cocktails : la base 0,84 rem du site porte une variante
    :is(#cocktails, …) (spécificité d'id) que la règle ≥1100 px (0,98 rem) n'a
    pas — les notes sous les libellés sortiraient plus petites que celles des
    plats. La carte rétablit le corps commun des informations (0,98 rem). */
+#print-document .carte-flow[data-sec="boissons"] .price-list__note,
 #print-document .carte-flow[data-sec="cocktails"] .price-list__note,
 #print-document .carte-flow[data-sec="cocktails"] .hh-list__note {
   font-size: 0.98rem !important;
+}
+/* --- Feuille boissons : une seule page, en double colonne ------------------
+   Toutes les catégories de boissons (fraîches, chaudes, apéritifs, whiskies,
+   digestifs, bières et bandeau HH) tiennent sur UNE SEULE feuille (8 pages au total
+   pour la carte A4). Les 6 panneaux passent en deux colonnes de lignes (carte-2col).
+   Les LIGNES gardent leurs corps uniformes de la carte — noms, notes et prix
+   sont exactement ceux des autres feuilles. */
+#print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] {
+  padding: 4px 16px;
+}
+#print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__title {
+  min-height: 28px;
+  padding: 3px 16px;
+}
+#print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__head {
+  margin-bottom: 2px;
+}
+#print-document .carte-flow[data-sec="boissons"].carte-aerate .panel[data-merge="1"] > .panel__head {
+  margin-bottom: calc(2px + var(--carte-air-title, 0px)) !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .tab-flow {
+  row-gap: 1px !important;
+}
+#print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-line {
+  padding: 1px 0 !important;
+}
+#print-document .carte-flow[data-sec="boissons"].carte-aerate [data-merge="1"] .price-line {
+  padding-top: calc(1px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(1px + var(--carte-air-side, 0px)) !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .price-line .price-list__note {
+  margin-top: 0 !important;
+  line-height: 1.25 !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .beer-note {
+  margin: 1px 0 2px !important;
+  font-size: 0.85rem !important;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  column-gap: 40px !important;
+  row-gap: 0 !important;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .panel__head {
+  grid-column: 1 / -1;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .beer-note:not(.beer-note--second) {
+  grid-column: 1;
+  grid-row: 2;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .price-list:not(.price-list--pressions) {
+  grid-column: 1;
+  grid-row: 3;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .beer-note--second {
+  grid-column: 2;
+  grid-row: 2;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .price-list--pressions {
+  grid-column: 2;
+  grid-row: 3;
+}
+#print-document .carte-flow[data-sec="boissons"] .hh-banner {
+  margin-top: 2px !important;
+  margin-bottom: 0 !important;
+  padding: 4px 10px !important;
 }
 /* --- Feuille cocktails : une seule page, pleine, sans chevauchement --------
    L'onglet entier (36 cocktails, classiques → mocktails) tient sur une seule
@@ -2200,7 +2252,7 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
     except json.JSONDecodeError as exc:
         raise SystemExit(f"aerate_carte.mjs : sortie illisible ({exc})")
     attentes = {"entrees": 12, "plats": 12, "desserts": 12,
-                "boissons": 3, "cocktails": 1, "vins": 5}
+                "boissons": 1, "cocktails": 1, "vins": 5}
     airs: dict[int, tuple[float, float, int, int, float]] = {}
     for n, info in infos.items():
         m = meas.get(n)
