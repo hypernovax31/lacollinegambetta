@@ -85,7 +85,7 @@
 <link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Serif+KR:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+JP:wght@400;500;700;800&family=Noto+Serif+JP:wght@600;700;900&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&family=Noto+Sans+Arabic:wght@400;500;700;800&family=Noto+Sans+Devanagari:wght@400;500;700;800&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
   --violet-950:#24102e;
@@ -3401,16 +3401,59 @@ body:has(#cover-section:not([style*="display: none"])) .lang-dock .lang-btn {
    (au plus un ID) ne peut l'emporter. */
 html[lang="ar"][lang="ar"]:is(*, #lcg-ar-ls):is(*, #lcg-ar-ls2),
 html[lang="ar"][lang="ar"]:is(*, #lcg-ar-ls):is(*, #lcg-ar-ls2) * { letter-spacing: 0 !important; }
-/* Japonais, coréen, hindi : mêmes lettres non espacées. Le devanagari
+/* Japonais, coréen, chinois, hindi : mêmes lettres non espacées. Le devanagari
    (hindi) forme ses conjointes par ligatures continues : tout
-   interlettrage casserait la graphie ; le japonais et le coréen se
+   interlettrage casserait la graphie ; le japonais, le coréen et le chinois se
    composent sans approach décoratif, comme l'arabe. */
 html[lang="ja"][lang="ja"]:is(*, #lcg-ja-ls):is(*, #lcg-ja-ls2),
 html[lang="ja"][lang="ja"]:is(*, #lcg-ja-ls):is(*, #lcg-ja-ls2) *,
 html[lang="ko"][lang="ko"]:is(*, #lcg-ko-ls):is(*, #lcg-ko-ls2),
 html[lang="ko"][lang="ko"]:is(*, #lcg-ko-ls):is(*, #lcg-ko-ls2) *,
+html[lang="zh"][lang="zh"]:is(*, #lcg-zh-ls):is(*, #lcg-zh-ls2),
+html[lang="zh"][lang="zh"]:is(*, #lcg-zh-ls):is(*, #lcg-zh-ls2) *,
 html[lang="hi"][lang="hi"]:is(*, #lcg-hi-ls):is(*, #lcg-hi-ls2),
 html[lang="hi"][lang="hi"]:is(*, #lcg-hi-ls):is(*, #lcg-hi-ls2) * { letter-spacing: 0 !important; }
+
+/* Typographies dédiées pour les écritures non latines */
+html[lang="ko"] { font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Montserrat', sans-serif; }
+html[lang="ko"] .cover-brand .eyebrow, html[lang="ko"] .cover-brand h1, html[lang="ko"] .cover-brand p,
+html[lang="ko"] .interior-header h2, html[lang="ko"] .interior-header p, html[lang="ko"] .panel__title,
+html[lang="ko"] .food-card__head h5, html[lang="ko"] .special-card h5, html[lang="ko"] .breakfast-card h5,
+html[lang="ko"] .footer-details, html[lang="ko"] .footer-note, html[lang="ko"] .cover-footer-address {
+  font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif !important; text-transform: none !important;
+}
+
+html[lang="zh"] { font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Montserrat', sans-serif; }
+html[lang="zh"] .cover-brand .eyebrow, html[lang="zh"] .cover-brand h1, html[lang="zh"] .cover-brand p,
+html[lang="zh"] .interior-header h2, html[lang="zh"] .interior-header p, html[lang="zh"] .panel__title,
+html[lang="zh"] .food-card__head h5, html[lang="zh"] .special-card h5, html[lang="zh"] .breakfast-card h5,
+html[lang="zh"] .footer-details, html[lang="zh"] .footer-note, html[lang="zh"] .cover-footer-address {
+  font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif !important; text-transform: none !important;
+}
+
+html[lang="uk"] { font-family: 'Montserrat', 'Roboto', 'Helvetica Neue', sans-serif; }
+html[lang="uk"] .cover-brand .eyebrow, html[lang="uk"] .cover-brand h1, html[lang="uk"] .cover-brand p,
+html[lang="uk"] .interior-header h2, html[lang="uk"] .interior-header p, html[lang="uk"] .panel__title,
+html[lang="uk"] .food-card__head h5, html[lang="uk"] .special-card h5, html[lang="uk"] .breakfast-card h5,
+html[lang="uk"] .footer-details, html[lang="uk"] .footer-note, html[lang="uk"] .cover-footer-address {
+  font-family: 'Playfair Display', 'Georgia', serif !important; text-transform: none;
+}
+
+html[lang="ar"] { font-family: 'Tajawal', 'Noto Sans Arabic', 'Geeza Pro', 'Segoe UI', sans-serif; }
+html[lang="ar"] .cover-brand .eyebrow, html[lang="ar"] .cover-brand h1, html[lang="ar"] .cover-brand p,
+html[lang="ar"] .interior-header h2, html[lang="ar"] .interior-header p, html[lang="ar"] .panel__title,
+html[lang="ar"] .food-card__head h5, html[lang="ar"] .special-card h5, html[lang="ar"] .breakfast-card h5,
+html[lang="ar"] .footer-details, html[lang="ar"] .footer-note, html[lang="ar"] .cover-footer-address {
+  font-family: 'Amiri', 'Traditional Arabic', serif !important; text-transform: none !important;
+}
+
+html[lang="hi"] { font-family: 'Noto Sans Devanagari', 'Montserrat', sans-serif; }
+html[lang="hi"] .cover-brand .eyebrow, html[lang="hi"] .cover-brand h1, html[lang="hi"] .cover-brand p,
+html[lang="hi"] .interior-header h2, html[lang="hi"] .interior-header p, html[lang="hi"] .panel__title,
+html[lang="hi"] .food-card__head h5, html[lang="hi"] .special-card h5, html[lang="hi"] .breakfast-card h5,
+html[lang="hi"] .footer-details, html[lang="hi"] .footer-note, html[lang="hi"] .cover-footer-address {
+  font-family: 'Noto Serif Devanagari', serif !important; text-transform: none !important;
+}
 
 /* ===== Menu des langues (bouton globe du bandeau) ===== */
 .lang-menu {

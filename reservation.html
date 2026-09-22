@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Parisienne&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Parisienne&family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Serif+KR:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+JP:wght@400;500;700;800&family=Noto+Serif+JP:wght@600;700;900&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&family=Noto+Sans+Arabic:wght@400;500;700;800&family=Noto+Sans+Devanagari:wght@400;500;700;800&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" crossorigin="">
 <style>
 /* =====================================================================
@@ -523,17 +523,259 @@ html .panel__subtitle.qty {
 @media (max-width: 640px) {
 .footer-download { font-size: .6rem; letter-spacing: .14em; padding: 5px 12px; }
 }
-html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel',serif; }
-html[lang="ja"] .interior-header h2 { font-family:'CinzelJP','Cinzel',serif; }
-html[lang="ja"] .interior-header p { font-family:'CinzelJP','Cinzel',serif; }
-html[lang="ja"] .panel__title { font-family:'CinzelJP','Cinzel',serif; }
-html[lang="ja"] .footer-details { font-family:'CinzelJP','Cinzel',serif; }
-html[lang="ja"] .footer-note { font-family:'CinzelJP','Cinzel',serif; }
-html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel', serif !important; }
-html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel', serif !important; }
-html[lang="ja"] .footer-links .footer-link { font-family:'MontserratJP','Montserrat', sans-serif !important; }
-html[lang="ja"] .panel__subtitle.qty { font-family:'MontserratJP','Montserrat', sans-serif !important; }
-html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', system-ui, sans-serif; }
+/* ===== Écritures non latines : fontes dédiées & mappages ===== */
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/amiri-arabic-400.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/amiri-arabic-700.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/playfair-cyrillic-500.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 700; font-display:swap; src:url('assets/fonts/playfair-cyrillic-600.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:800 900; font-display:swap; src:url('assets/fonts/playfair-cyrillic-700.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/montserrat-cyrillic-400.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/montserrat-cyrillic-700.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/sc-serif-600.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/sc-serif-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/tajawal-arabic-400.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/tajawal-arabic-500.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/tajawal-arabic-700.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/sc-sans-400.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/sc-sans-500.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/sc-sans-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'CinzelJP'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/ja-serif-600.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'CinzelJP'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/ja-serif-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'MontserratJP'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/ja-sans-400.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'MontserratJP'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/ja-sans-500.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'MontserratJP'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/ja-sans-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/ko-serif-600.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/ko-serif-700.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/ko-sans-400.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/ko-sans-500.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/ko-sans-700.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/hi-serif-600.woff2') format('woff2'); unicode-range:U+0900-097F; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/hi-serif-700.woff2') format('woff2'); unicode-range:U+0900-097F; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/hi-sans-400.woff2') format('woff2'); unicode-range:U+0900-097F; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/hi-sans-500.woff2') format('woff2'); unicode-range:U+0900-097F; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/hi-sans-700.woff2') format('woff2'); unicode-range:U+0900-097F; }
+
+/* Réinitialisation de l'interlettrage et de la casse pour les écritures non latines */
+html[lang="ar"], html[lang="ar"] *,
+html[lang="ja"], html[lang="ja"] *,
+html[lang="ko"], html[lang="ko"] *,
+html[lang="zh"], html[lang="zh"] *,
+html[lang="hi"], html[lang="hi"] * {
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* Coréen (Korean) */
+html[lang="ko"] {
+  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Montserrat', sans-serif;
+}
+html[lang="ko"] .interior-header .eyebrow,
+html[lang="ko"] .interior-header h2,
+html[lang="ko"] .interior-header p,
+html[lang="ko"] .panel__title,
+html[lang="ko"] .footer-details,
+html[lang="ko"] .footer-note,
+html[lang="ko"] .hours__val,
+html[lang="ko"] .hours__t,
+html[lang="ko"] .hours__day,
+html[lang="ko"] .form-status strong,
+html[lang="ko"] .thanks__hello,
+html[lang="ko"] .thanks__when-detail,
+html[lang="ko"] .thanks__when-intro,
+html[lang="ko"] .thanks__sign,
+html[lang="ko"] .sending__label {
+  font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif !important;
+}
+html[lang="ko"] .field input,
+html[lang="ko"] .field select,
+html[lang="ko"] .field textarea,
+html[lang="ko"] .field label,
+html[lang="ko"] .thanks__line,
+html[lang="ko"] .thanks__tel,
+html[lang="ko"] .control-btn,
+html[lang="ko"] .nav-btn,
+html[lang="ko"] .contact-link,
+html[lang="ko"] .footer-link,
+html[lang="ko"] .footer-download {
+  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif !important;
+}
+
+/* Chinois (Chinese) */
+html[lang="zh"] {
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Montserrat', sans-serif;
+}
+html[lang="zh"] .interior-header .eyebrow,
+html[lang="zh"] .interior-header h2,
+html[lang="zh"] .interior-header p,
+html[lang="zh"] .panel__title,
+html[lang="zh"] .footer-details,
+html[lang="zh"] .footer-note,
+html[lang="zh"] .hours__val,
+html[lang="zh"] .hours__t,
+html[lang="zh"] .hours__day,
+html[lang="zh"] .form-status strong,
+html[lang="zh"] .thanks__hello,
+html[lang="zh"] .thanks__when-detail,
+html[lang="zh"] .thanks__when-intro,
+html[lang="zh"] .thanks__sign,
+html[lang="zh"] .sending__label {
+  font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif !important;
+}
+html[lang="zh"] .field input,
+html[lang="zh"] .field select,
+html[lang="zh"] .field textarea,
+html[lang="zh"] .field label,
+html[lang="zh"] .thanks__line,
+html[lang="zh"] .thanks__tel,
+html[lang="zh"] .control-btn,
+html[lang="zh"] .nav-btn,
+html[lang="zh"] .contact-link,
+html[lang="zh"] .footer-link,
+html[lang="zh"] .footer-download {
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif !important;
+}
+
+/* Japonais (Japanese) */
+html[lang="ja"] {
+  font-family: 'MontserratJP', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
+}
+html[lang="ja"] .interior-header .eyebrow,
+html[lang="ja"] .interior-header h2,
+html[lang="ja"] .interior-header p,
+html[lang="ja"] .panel__title,
+html[lang="ja"] .footer-details,
+html[lang="ja"] .footer-note,
+html[lang="ja"] .hours__val,
+html[lang="ja"] .hours__t,
+html[lang="ja"] .hours__day,
+html[lang="ja"] .form-status strong,
+html[lang="ja"] .thanks__hello,
+html[lang="ja"] .thanks__when-detail,
+html[lang="ja"] .thanks__when-intro,
+html[lang="ja"] .thanks__sign,
+html[lang="ja"] .sending__label {
+  font-family: 'CinzelJP', 'Noto Serif JP', 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', serif !important;
+}
+html[lang="ja"] .field input,
+html[lang="ja"] .field select,
+html[lang="ja"] .field textarea,
+html[lang="ja"] .field label,
+html[lang="ja"] .thanks__line,
+html[lang="ja"] .thanks__tel,
+html[lang="ja"] .control-btn,
+html[lang="ja"] .nav-btn,
+html[lang="ja"] .contact-link,
+html[lang="ja"] .footer-link,
+html[lang="ja"] .footer-download {
+  font-family: 'MontserratJP', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif !important;
+}
+
+/* Ukrainien (Ukrainian / Cyrillic) */
+html[lang="uk"] {
+  font-family: 'Montserrat', 'Roboto', 'Helvetica Neue', sans-serif;
+}
+html[lang="uk"] .interior-header .eyebrow,
+html[lang="uk"] .interior-header h2,
+html[lang="uk"] .interior-header p,
+html[lang="uk"] .panel__title,
+html[lang="uk"] .footer-details,
+html[lang="uk"] .footer-note,
+html[lang="uk"] .hours__val,
+html[lang="uk"] .hours__t,
+html[lang="uk"] .hours__day,
+html[lang="uk"] .form-status strong,
+html[lang="uk"] .thanks__hello,
+html[lang="uk"] .thanks__when-detail,
+html[lang="uk"] .thanks__when-intro,
+html[lang="uk"] .thanks__sign,
+html[lang="uk"] .sending__label {
+  font-family: 'Playfair Display', 'Georgia', serif !important;
+  text-transform: none;
+}
+html[lang="uk"] .field input,
+html[lang="uk"] .field select,
+html[lang="uk"] .field textarea,
+html[lang="uk"] .field label,
+html[lang="uk"] .thanks__line,
+html[lang="uk"] .thanks__tel,
+html[lang="uk"] .control-btn,
+html[lang="uk"] .nav-btn,
+html[lang="uk"] .contact-link,
+html[lang="uk"] .footer-link,
+html[lang="uk"] .footer-download {
+  font-family: 'Montserrat', 'Roboto', 'Helvetica Neue', sans-serif !important;
+}
+
+/* Arabe (Arabic) */
+html[lang="ar"] {
+  font-family: 'Tajawal', 'Noto Sans Arabic', 'Geeza Pro', 'Segoe UI', sans-serif;
+  direction: rtl;
+}
+html[lang="ar"] .interior-header .eyebrow,
+html[lang="ar"] .interior-header h2,
+html[lang="ar"] .interior-header p,
+html[lang="ar"] .panel__title,
+html[lang="ar"] .footer-details,
+html[lang="ar"] .footer-note,
+html[lang="ar"] .hours__val,
+html[lang="ar"] .hours__t,
+html[lang="ar"] .hours__day,
+html[lang="ar"] .form-status strong,
+html[lang="ar"] .thanks__hello,
+html[lang="ar"] .thanks__when-detail,
+html[lang="ar"] .thanks__when-intro,
+html[lang="ar"] .thanks__sign,
+html[lang="ar"] .sending__label {
+  font-family: 'Amiri', 'Traditional Arabic', serif !important;
+}
+html[lang="ar"] .field input,
+html[lang="ar"] .field select,
+html[lang="ar"] .field textarea,
+html[lang="ar"] .field label,
+html[lang="ar"] .thanks__line,
+html[lang="ar"] .thanks__tel,
+html[lang="ar"] .control-btn,
+html[lang="ar"] .nav-btn,
+html[lang="ar"] .contact-link,
+html[lang="ar"] .footer-link,
+html[lang="ar"] .footer-download {
+  font-family: 'Tajawal', 'Noto Sans Arabic', 'Geeza Pro', 'Segoe UI', sans-serif !important;
+}
+
+/* Hindi */
+html[lang="hi"] {
+  font-family: 'Noto Sans Devanagari', 'Montserrat', sans-serif;
+}
+html[lang="hi"] .interior-header .eyebrow,
+html[lang="hi"] .interior-header h2,
+html[lang="hi"] .interior-header p,
+html[lang="hi"] .panel__title,
+html[lang="hi"] .footer-details,
+html[lang="hi"] .footer-note,
+html[lang="hi"] .hours__val,
+html[lang="hi"] .hours__t,
+html[lang="hi"] .hours__day,
+html[lang="hi"] .form-status strong,
+html[lang="hi"] .thanks__hello,
+html[lang="hi"] .thanks__when-detail,
+html[lang="hi"] .thanks__when-intro,
+html[lang="hi"] .thanks__sign,
+html[lang="hi"] .sending__label {
+  font-family: 'Noto Serif Devanagari', serif !important;
+}
+html[lang="hi"] .field input,
+html[lang="hi"] .field select,
+html[lang="hi"] .field textarea,
+html[lang="hi"] .field label,
+html[lang="hi"] .thanks__line,
+html[lang="hi"] .thanks__tel,
+html[lang="hi"] .control-btn,
+html[lang="hi"] .nav-btn,
+html[lang="hi"] .contact-link,
+html[lang="hi"] .footer-link,
+html[lang="hi"] .footer-download {
+  font-family: 'Noto Sans Devanagari', 'Montserrat', sans-serif !important;
+}
 
 /* ===== Sélecteur de langue (repris du site) ===== */
 .lang-dock {
@@ -1366,19 +1608,21 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 .thanks__tel { font-size: .8rem; color: var(--muted); }
 .thanks__tel a { color: var(--gold-700); font-weight: 700; white-space: nowrap; }
 
-/* Les ecritures non latines n'ont pas de cursive equivalente : la
-   signature y reprend la fonte de titre, en italique, plutot que de
-   tomber dans une fonte de secours illisible. */
+/* Les écritures non latines n'ont pas de cursive équivalente : la
+   signature y reprend la fonte de titre de la langue. */
 html[lang="ar"] .thanks__sign,
 html[lang="zh"] .thanks__sign,
 html[lang="ja"] .thanks__sign,
 html[lang="ko"] .thanks__sign,
-html[lang="hi"] .thanks__sign,
+html[lang="hi"] .thanks__sign {
+  font-size: clamp(1rem, 3.4vw, 1.2rem);
+  font-style: normal;
+  letter-spacing: 0 !important;
+}
 html[lang="uk"] .thanks__sign {
-  font-family: 'Cinzel', serif;
+  font-family: 'Playfair Display', serif;
   font-size: clamp(1rem, 3.4vw, 1.2rem);
   font-style: italic;
-  letter-spacing: .06em;
 }
 @media (prefers-reduced-motion: reduce) {
   .form-status--thanks { animation: none; }
@@ -2143,6 +2387,15 @@ html[lang="uk"] .thanks__sign {
   var currentRequestId = 0;
   var lastKnownSlots = null;
 
+  function formatTimeOption(val, lang) {
+    if (!val) return "";
+    var hm = val.split(":");
+    if (lang === "fr") {
+      return hm[0] + "h" + hm[1];
+    }
+    return val;
+  }
+
   function applySlotsToSelect(slotsMap) {
     var now = parisNow();
     var isToday = (dateEl.value === now.date);
@@ -2153,7 +2406,7 @@ html[lang="uk"] .thanks__sign {
 
     Array.prototype.forEach.call(timeEl.options, function (opt) {
       if (!opt.value) return;
-      var base = opt.dataset.base || opt.textContent.trim().replace(/\s*\([^)]*\)$/, '');
+      var base = formatTimeOption(opt.value, lang);
       opt.dataset.base = base;
 
       var hm = opt.value.split(':');
@@ -2292,6 +2545,39 @@ html[lang="uk"] .thanks__sign {
     return el ? el.textContent.trim() : "";
   }
 
+  var LOCALE_MAP = {
+    fr: "fr-FR", en: "en-GB", es: "es-ES", de: "de-DE", it: "it-IT",
+    pt: "pt-PT", nl: "nl-NL", pl: "pl-PL", tr: "tr-TR",
+    ko: "ko-KR", zh: "zh-CN", ja: "ja-JP", uk: "uk-UA", ar: "ar-EG", hi: "hi-IN"
+  };
+
+  function formatLocalizedDate(isoDateStr, lang) {
+    if (!isoDateStr) return "";
+    var d = new Date(isoDateStr + "T12:00:00");
+    var loc = LOCALE_MAP[lang] || lang || "fr-FR";
+    try {
+      return d.toLocaleDateString(loc, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    } catch (e) {
+      return d.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    }
+  }
+
+  function formatLocalizedTime(timeStr, lang) {
+    if (!timeStr) return "";
+    var hm = timeStr.split(":");
+    var h = parseInt(hm[0], 10);
+    var m = parseInt(hm[1], 10);
+    if (lang === "fr") {
+      return (m === 0) ? (h + "h00") : (h + "h" + String(m).padStart(2, "0"));
+    }
+    return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+  }
+
+  function getDateSep(lang) {
+    if (lang === "ja") return " \u30FB ";
+    return " \u00B7 ";
+  }
+
   function renderStatusCard(data) {
     if (!data || !status) return;
     var lang = getDocLang();
@@ -2301,23 +2587,9 @@ html[lang="uk"] .thanks__sign {
     status.className = "form-status form-status--thanks";
 
     if (data.type === "success") {
-      var d = new Date(data.date + "T12:00:00");
-      var jourLu;
-      try {
-        jourLu = d.toLocaleDateString(lang, { weekday: "long", day: "numeric", month: "long" });
-      } catch (err) {
-        jourLu = d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
-      }
-
-      var heureLue = (lang === "fr")
-        ? data.time.replace(":", "h")
-        : (function () {
-            try {
-              var hm = data.time.split(":");
-              return new Date(2000, 0, 1, parseInt(hm[0], 10), parseInt(hm[1], 10))
-                .toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit" });
-            } catch (err2) { return data.time.replace(":", "h"); }
-          })();
+      var jourLu = formatLocalizedDate(data.date, lang);
+      var heureLue = formatLocalizedTime(data.time, lang);
+      var dateSep = getDateSep(lang);
 
       var guestLabels = {
         fr: "personnes", en: "guests", es: "comensales", de: "Gäste",
@@ -2348,7 +2620,7 @@ html[lang="uk"] .thanks__sign {
 
       var quand = document.createElement("strong");
       quand.className = "thanks__when-detail";
-      quand.textContent = jourLu + " \u00b7 " + heureLue;
+      quand.textContent = jourLu + dateSep + heureLue;
 
       var ligne = document.createElement("span");
       ligne.className = "thanks__when-line";
@@ -2494,32 +2766,20 @@ html[lang="uk"] .thanks__sign {
 
     var nomComplet = formatFullName(name.value);
     var d = new Date(dateEl.value + "T12:00:00");
-    var jolie = d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
     var couverts = guestsEl.options[guestsEl.selectedIndex].textContent;
     var nb = guestsEl.value;
     var placeEl = document.getElementById("bk-place");
-    var pref = placeEl ? placeEl.options[placeEl.selectedIndex].textContent : "Sans préférence";
     var msg = document.getElementById("bk-msg").value.trim();
 
-    var jourLu;
-    try {
-      jourLu = d.toLocaleDateString(lang, { weekday: "long", day: "numeric", month: "long" });
-    } catch (err) { jourLu = jolie; }
-    var heureLue = (lang === "fr")
-      ? timeEl.value.replace(":", "h")
-      : (function () {
-          try {
-            var hm = timeEl.value.split(":");
-            return new Date(2000, 0, 1, parseInt(hm[0], 10), parseInt(hm[1], 10))
-              .toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit" });
-          } catch (err2) { return timeEl.value.replace(":", "h"); }
-        })();
+    var jourLu = formatLocalizedDate(dateEl.value, lang);
+    var heureLue = formatLocalizedTime(timeEl.value, lang);
+    var dateSep = getDateSep(lang);
 
     var autoresponseBody = [
       (th("hi") || "Merci infiniment") + pc.comma + pc.sp + nomComplet + pc.stop,
       "",
       th("l1") || "Votre demande de table vient de nous parvenir.",
-      (th("l2") || "Nous vous attendons") + " : " + jourLu + " · " + heureLue + (String(nb) !== "1" ? " " + (th("for") || "pour") + " " + couverts : "") + pc.stop,
+      (th("l2") || "Nous vous attendons") + " : " + jourLu + dateSep + heureLue + (String(nb) !== "1" ? " " + (th("for") || "pour") + " " + couverts : "") + pc.stop,
       "",
       th("l4") || "Au plaisir de vous recevoir très prochainement,",
       "",
@@ -2529,8 +2789,8 @@ html[lang="uk"] .thanks__sign {
     ].join("\n");
 
     /* Formatage 100 % en français pour l'email envoyé au restaurant sur Mailo */
-    var dateFr = d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-    var heureFr = timeEl.value.replace(":", "h");
+    var dateFr = formatLocalizedDate(dateEl.value, "fr");
+    var heureFr = formatLocalizedTime(timeEl.value, "fr");
     var couvertsFr = nb + (nb === "1" ? " personne" : " personnes");
     var prefFr = placeEl ? placeEl.value : "Sans préférence";
 
