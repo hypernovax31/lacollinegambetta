@@ -775,37 +775,36 @@ html.carte-doc .print-page--cover > .cover-page {
   width: 210mm !important;
   height: 297mm !important;
   min-height: 297mm !important;
-  padding: 14mm 16mm 14mm !important;
-  display: flex !important;
-  flex-flow: column nowrap !important;
-  justify-content: flex-start !important;
-  align-items: center !important;
-  gap: 0 !important;
+  padding: 0 !important;
   overflow: hidden !important;
   box-sizing: border-box;
   border: 0 !important;
+  display: block !important;
 }
 html.carte-doc .print-page--cover .cover-page::after {
-  inset: 0 !important;
+  inset: 14mm 16mm !important;
   border: 0.45mm solid rgba(216,178,87,.55) !important;
   border-radius: 0 !important;
   pointer-events: none;
 }
-/* Titre principal : calque parfait de la typographie CINZEL du site web */
+/* Titre principal : centré verticalement et horizontalement dans l'espace haut (du filet doré au haut du médaillon) */
 html.carte-doc #print-document .print-page--cover .titre-principal,
 html.carte-doc #print-document .print-page--cover .cover-brand {
-  flex: 0 0 auto !important;
+  position: absolute !important;
+  top: 14mm !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: calc(50% - 255px - 14mm) !important;
   width: 100% !important;
-  max-width: 178mm !important;
-  margin-top: auto !important;
-  margin-bottom: auto !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 16mm !important;
+  box-sizing: border-box !important;
   gap: 0 !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
+  justify-content: center !important;
   text-align: center !important;
 }
 html.carte-doc #print-document .print-page--cover .titre-principal .eyebrow,
@@ -818,7 +817,7 @@ html.carte-doc #print-document .print-page--cover .cover-brand .leader-title {
   color: #ffffff !important;
   line-height: 1.1 !important;
   text-transform: uppercase !important;
-  margin: 0 0 2mm 0 !important;
+  margin: 0 0 1.5mm 0 !important;
 }
 html.carte-doc #print-document .print-page--cover .titre-principal h2,
 html.carte-doc #print-document .print-page--cover .cover-brand h2 {
@@ -827,9 +826,9 @@ html.carte-doc #print-document .print-page--cover .cover-brand h2 {
   font-weight: 700 !important;
   letter-spacing: .14em !important;
   color: #ffffff !important;
-  line-height: 0.95 !important;
+  line-height: 0.92 !important;
   text-transform: uppercase !important;
-  margin: 0 0 1mm 0 !important;
+  margin: 0 !important;
   text-align: center !important;
   display: block !important;
 }
@@ -841,8 +840,9 @@ html.carte-doc #print-document .print-page--cover .cover-brand h2 span {
   font-weight: 700 !important;
   letter-spacing: .22em !important;
   color: var(--gold-bright, #ffe88f) !important;
-  line-height: 1.1 !important;
-  margin-top: 1.8mm !important;
+  line-height: 1.05 !important;
+  margin-top: 1.2mm !important;
+  margin-bottom: 1.5mm !important;
   text-transform: uppercase !important;
 }
 html.carte-doc #print-document .print-page--cover .titre-principal .leader-meta,
@@ -852,9 +852,9 @@ html.carte-doc #print-document .print-page--cover .cover-brand .leader-meta {
   font-weight: 700 !important;
   letter-spacing: .12em !important;
   color: #ffffff !important;
-  line-height: 1.3 !important;
+  line-height: 1.2 !important;
   text-transform: uppercase !important;
-  margin: 2.2mm 0 0 0 !important;
+  margin: 0 0 1.2mm 0 !important;
 }
 html.carte-doc #print-document .print-page--cover .titre-principal .menu-leader-subline,
 html.carte-doc #print-document .print-page--cover .titre-principal .leader-meta--sub,
@@ -865,9 +865,9 @@ html.carte-doc #print-document .print-page--cover .cover-brand .leader-meta--sub
   font-weight: 700 !important;
   letter-spacing: .10em !important;
   color: var(--gold-bright, #ffe88f) !important;
-  line-height: 1.3 !important;
+  line-height: 1.2 !important;
   text-transform: uppercase !important;
-  margin: 1.8mm 0 0 0 !important;
+  margin: 0 !important;
 }
 html.carte-doc #print-document .print-page--cover .titre-principal .star-gold,
 html.carte-doc #print-document .print-page--cover .cover-brand .star-gold {
@@ -897,6 +897,10 @@ html.carte-doc #print-document .print-page--cover .menu-leader-subline .star-gol
    rendu qu'au document imprimé (la couverture web garde son propre style et
    ses animations). */
 html.carte-doc #print-document .print-page--cover a.contact-link.cover-action {
+  position: absolute !important;
+  top: calc(50% + 255px + 20px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
   display: inline-flex !important;
   background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%) !important;
   background-image: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%) !important;
@@ -905,33 +909,40 @@ html.carte-doc #print-document .print-page--cover a.contact-link.cover-action {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .65),
               inset 0 -2px 6px rgba(156, 122, 45, .40),
               0 10px 22px rgba(36, 16, 46, .45);   /* ombre portée : effet 3D */
+  z-index: 5 !important;
+  margin: 0 !important;
 }
 html.carte-doc #print-document .print-page--cover a.contact-link.cover-action,
 html.carte-doc #print-document .print-page--cover a.contact-link.cover-action * {
   color: #24102e !important;
 }
+/* Médaillon : centrage vertical et horizontal parfait au milieu exact de la page */
 html.carte-doc #print-document .print-page--cover .medallion-container {
-  flex: 0 0 auto !important;
-  width: 100% !important;
-  height: auto !important;
-  min-height: 0 !important;
-  max-height: none !important;
-  margin: 0 auto !important;
-  padding: 0 !important;
-  aspect-ratio: auto !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-}
-html.carte-doc #print-document .print-page--cover .medallion-container .medallion-frame {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
   width: 510px !important;
   height: 510px !important;
-  margin-bottom: 20px !important; /* espace équilibré entre le médaillon et le bouton */
-}
-html.carte-doc #print-document .print-page--cover .medallion-container .cover-action {
+  min-height: 510px !important;
+  max-height: 510px !important;
   margin: 0 !important;
-  align-self: center !important;
+  padding: 0 !important;
+  aspect-ratio: 1 / 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  z-index: 2 !important;
+}
+html.carte-doc #print-document .print-page--cover .medallion-container .medallion-frame {
+  position: relative !important;
+  width: 510px !important;
+  height: 510px !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 html.carte-doc #print-document .print-page--cover .relief-inner-svg {
   background: #fcfbf7 !important;
@@ -945,11 +956,18 @@ html.carte-doc #print-document .print-page--cover .relief-inner-svg {
   -webkit-clip-path: circle(50% at 50% 50%);
 }
 html.carte-doc #print-document .print-page--cover .cover-footer {
-  flex: 0 0 auto !important;
-  width: 100%;
-  max-width: 172mm;
+  position: absolute !important;
+  bottom: 14mm !important;
+  left: 16mm !important;
+  right: 16mm !important;
+  width: auto !important;
+  max-width: none !important;
   gap: 3.5mm !important;
-  margin: 5mm auto 0 auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
 }
 html.carte-doc .print-page--cover .cover-footer-address {
   font-size: 8.5pt !important;
