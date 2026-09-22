@@ -765,9 +765,24 @@ html.carte-doc .print-page i.carte-star {
 html.carte-doc .print-page--cover {
   background: #24102e !important;
 }
-html.carte-doc .print-page--cover::before,
+/* Double encadrement doré de la page 1 : identique aux pages intérieures (ligne principale + filet intérieur à 2 mm) */
+html.carte-doc .print-page--cover::before {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  z-index: 20 !important;
+  inset: 6mm !important;
+  border: 0.38mm solid #d8b257 !important;
+  pointer-events: none !important;
+}
 html.carte-doc .print-page--cover::after {
-  display: none !important;
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  z-index: 20 !important;
+  inset: 8mm !important;
+  border: 0.16mm solid rgba(216,178,87,.58) !important;
+  pointer-events: none !important;
 }
 html.carte-doc .print-page--cover > .cover-page {
   position: absolute !important;
@@ -782,19 +797,16 @@ html.carte-doc .print-page--cover > .cover-page {
   display: block !important;
 }
 html.carte-doc .print-page--cover .cover-page::after {
-  inset: 14mm 16mm !important;
-  border: 0.45mm solid rgba(216,178,87,.55) !important;
-  border-radius: 0 !important;
-  pointer-events: none;
+  display: none !important;
 }
 /* Titre principal : centré verticalement et horizontalement dans l'espace haut (du filet doré au haut du médaillon) */
 html.carte-doc #print-document .print-page--cover .titre-principal,
 html.carte-doc #print-document .print-page--cover .cover-brand {
   position: absolute !important;
-  top: 14mm !important;
+  top: 8mm !important;
   left: 0 !important;
   right: 0 !important;
-  height: calc(50% - 255px - 14mm) !important;
+  height: calc(50% - 255px - 8mm) !important;
   width: 100% !important;
   max-width: none !important;
   margin: 0 !important;
@@ -957,9 +969,9 @@ html.carte-doc #print-document .print-page--cover .relief-inner-svg {
 }
 html.carte-doc #print-document .print-page--cover .cover-footer {
   position: absolute !important;
-  bottom: 14mm !important;
-  left: 16mm !important;
-  right: 16mm !important;
+  bottom: 10mm !important;
+  left: 12mm !important;
+  right: 12mm !important;
   width: auto !important;
   max-width: none !important;
   gap: 3.5mm !important;
