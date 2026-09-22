@@ -2562,12 +2562,17 @@ html[lang="uk"] .thanks__sign {
       "Demande enregistrée depuis le site web."
     ].filter(function (l) { return l !== null; }).join("\n");
 
+    var savedNomComplet = nomComplet;
+    var savedDate = dateEl.value;
+    var savedTime = timeEl.value;
+    var savedNb = guestsEl.value;
+
     activeStatusState = {
       type: "success",
-      name: nomComplet,
-      date: dateEl.value,
-      time: timeEl.value,
-      nb: nb
+      name: savedNomComplet,
+      date: savedDate,
+      time: savedTime,
+      nb: savedNb
     };
     renderStatusCard(activeStatusState);
 
@@ -2576,7 +2581,7 @@ html[lang="uk"] .thanks__sign {
     payload.append("_subject", sujetMailo);
     payload.append("_template", "box");
     payload.append("_captcha", "false");
-    payload.append("Nom", nomComplet);
+    payload.append("Nom", savedNomComplet);
     payload.append("Téléphone", phone.value.trim());
     payload.append("Mail", mail.value.trim() || "—");
     payload.append("Date", dateFr);
@@ -2619,10 +2624,10 @@ html[lang="uk"] .thanks__sign {
         if (ok) {
           activeStatusState = {
             type: "success",
-            name: nomComplet,
-            date: dateEl.value,
-            time: timeEl.value,
-            nb: nb
+            name: savedNomComplet,
+            date: savedDate,
+            time: savedTime,
+            nb: savedNb
           };
           renderStatusCard(activeStatusState);
           status.hidden = false;
@@ -2632,7 +2637,7 @@ html[lang="uk"] .thanks__sign {
         } else if (failure && (failure.capacityFull || failure.code === "CAPACITY_FULL")) {
           activeStatusState = {
             type: "capacity",
-            name: nomComplet
+            name: savedNomComplet
           };
           renderStatusCard(activeStatusState);
           status.hidden = false;
@@ -2641,14 +2646,12 @@ html[lang="uk"] .thanks__sign {
         } else {
           activeStatusState = {
             type: "error",
-            name: nomComplet
+            name: savedNomComplet
           };
           renderStatusCard(activeStatusState);
           status.hidden = false;
           try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e2) {}
           updateAvailability();
-          window.location.href = "mailto:lacollinegambetta@mailo.com?subject=" +
-            encodeURIComponent(sujetMailo) + "&body=" + encodeURIComponent(corpsMailo);
         }
       }, rest);
     }
@@ -2703,13 +2706,13 @@ html[lang="uk"] .thanks__sign {
       waitForFirebaseApi()
         .then(function (firebaseApi) {
           return firebaseApi.reserve({
-            date: dateEl.value,
-            heure: timeEl.value,
-            couverts: guestsEl.value,
-            nom: nomComplet,
+            date: savedDate,
+            heure: savedTime,
+            couverts: savedNb,
+            nom: savedNomComplet,
             telephone: phone.value.trim(),
             email: mail.value.trim(),
-            preference: pref,
+            preference: prefFr,
             message: msg
           });
         })
@@ -2722,8 +2725,8 @@ html[lang="uk"] .thanks__sign {
             err.capacityFull = true;
             finish(false, err);
           } else {
-            console.warn('[réservation] erreur Firebase:', err);
-            finish(false, err);
+            console.warn('[réservation] Firebase indisponible, repli envoi direct:', err);
+            sendDirect();
           }
         });
     } else {
