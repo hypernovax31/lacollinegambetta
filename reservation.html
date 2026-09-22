@@ -2528,25 +2528,38 @@ html[lang="uk"] .thanks__sign {
       "01 43 49 05 93 · lacollinegambetta@mailo.com"
     ].join("\n");
 
-    var sujet = mDict.subject + " — " + nomComplet + " — " + jourLu + " " + mDict.at + " " + heureLue + " (" + couverts + ")";
+    /* Formatage 100 % en français pour l'email envoyé au restaurant sur Mailo */
+    var dateFr = d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    var heureFr = timeEl.value.replace(":", "h");
+    var couvertsFr = nb + (nb === "1" ? " personne" : " personnes");
+    var prefFr = placeEl ? placeEl.value : "Sans préférence";
 
-    var corps = [
-      mDict.greeting,
+    var LANG_NAMES = {
+      fr: "Français", en: "Anglais", es: "Espagnol", de: "Allemand",
+      it: "Italien", pt: "Portugais", nl: "Néerlandais", ar: "Arabe",
+      zh: "Chinois", ja: "Japonais", ko: "Coréen", pl: "Polonais",
+      tr: "Turc", uk: "Ukrainien", hi: "Hindi"
+    };
+    var langueClient = LANG_NAMES[lang] || lang.toUpperCase();
+
+    var sujetMailo = "Réservation — " + nomComplet + " — " + dateFr + " à " + heureFr + " (" + couvertsFr + ")";
+
+    var corpsMailo = [
+      "Bonjour,",
       "",
-      mDict.request,
+      "Nouvelle demande de réservation pour La Colline Gambetta :",
       "",
-      mDict.name + " : " + nomComplet,
-      mDict.phone + " : " + phone.value.trim(),
-      mail.value.trim() ? (mDict.mail + " : " + mail.value.trim()) : null,
-      mDict.date + " : " + jourLu,
-      mDict.time + " : " + heureLue,
-      mDict.guests + " : " + couverts,
-      mDict.preference + " : " + pref,
-      msg ? "" : null,
-      msg ? (mDict.message + " : " + msg) : null,
+      "• Nom : " + nomComplet,
+      "• Téléphone : " + phone.value.trim(),
+      mail.value.trim() ? ("• Mail : " + mail.value.trim()) : "• Mail : Non renseigné",
+      "• Date : " + dateFr,
+      "• Heure : " + heureFr,
+      "• Couverts : " + couvertsFr,
+      "• Préférence : " + prefFr,
+      msg ? ("• Message : " + msg) : null,
+      "• Langue utilisée par le client : " + langueClient,
       "",
-      mDict.thanks,
-      nomComplet
+      "Demande enregistrée depuis le site web."
     ].filter(function (l) { return l !== null; }).join("\n");
 
     activeStatusState = {
@@ -2560,19 +2573,19 @@ html[lang="uk"] .thanks__sign {
 
     var payload = new FormData();
     payload.append("action", "reserve");
-    payload.append("_subject", sujet);
+    payload.append("_subject", sujetMailo);
     payload.append("_template", "box");
     payload.append("_captcha", "false");
     payload.append("Nom", nomComplet);
     payload.append("Téléphone", phone.value.trim());
     payload.append("Mail", mail.value.trim() || "—");
-    payload.append("Date", jourLu);
-    payload.append("Heure", heureLue);
-    payload.append("Couverts", couverts);
-    payload.append("Préférence", pref);
-    payload.append("Message", msg || "—");
-    payload.append("Langue", lang.toUpperCase());
-    payload.append("Récapitulatif", corps);
+    payload.append("Date", dateFr);
+    payload.append("Heure", heureFr);
+    payload.append("Couverts", couvertsFr);
+    payload.append("Préférence", prefFr);
+    if (msg) payload.append("Message", msg);
+    payload.append("Langue du client", langueClient);
+    payload.append("Récapitulatif", corpsMailo);
     if (mail.value.trim()) {
       payload.append("_replyto", mail.value.trim());
       payload.append("_autoresponse", autoresponseBody);
@@ -2635,7 +2648,7 @@ html[lang="uk"] .thanks__sign {
           try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e2) {}
           updateAvailability();
           window.location.href = "mailto:lacollinegambetta@mailo.com?subject=" +
-            encodeURIComponent(sujet) + "&body=" + encodeURIComponent(corps);
+            encodeURIComponent(sujetMailo) + "&body=" + encodeURIComponent(corpsMailo);
         }
       }, rest);
     }
