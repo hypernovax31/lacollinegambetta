@@ -1234,52 +1234,66 @@ html[lang="ar"] .field select {
 .field input:focus, .field select:focus, .field textarea:focus {
   outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(216,178,87,.22);
 }
-/* Date Picker & Calendrier interactif */
-.date-picker {
+/* Sélecteur de date avec Calendrier natif de l'appareil & affichage jour/date complet */
+.field__date-box {
   position: relative;
-  width: 100%;
-}
-.date-picker__trigger {
   width: 100%;
   height: 52px;
   min-height: 52px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.field__date-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.field__date-text {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background: #ffffff;
   border: 1px solid rgba(216,178,87,.5);
   border-radius: 14px;
   padding: 0 42px 0 14px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   font: inherit;
   font-size: 1rem;
   font-weight: 500;
   color: var(--ink);
-  cursor: pointer;
-  text-align: left;
   box-sizing: border-box;
-  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+  pointer-events: none;
+  z-index: 1;
+  transition: border-color .18s ease, box-shadow .18s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.date-picker__trigger:hover {
+.field__date-box:hover .field__date-text {
   border-color: var(--gold-500, #d8b257);
 }
-.date-picker__trigger:focus,
-.date-picker--open .date-picker__trigger {
+.field__date-input:focus ~ .field__date-text {
   outline: none;
   border-color: var(--gold-500, #d8b257);
   box-shadow: 0 0 0 3px rgba(216,178,87,.22);
 }
-.field--error .date-picker__trigger {
-  border-color: #b0304a;
-  box-shadow: 0 0 0 3px rgba(176,48,74,.14);
+.field--error .field__date-text {
+  border-color: #b0304a !important;
+  box-shadow: 0 0 0 3px rgba(176,48,74,.14) !important;
 }
-.date-picker__text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 600;
-  color: var(--violet-950, #1f1235);
-}
-.date-picker__icon {
+.field__date-icon {
   position: absolute;
   right: 14px;
   top: 50%;
@@ -1288,149 +1302,22 @@ html[lang="ar"] .field select {
   height: 19px;
   color: var(--gold-700, #9c7a2d);
   pointer-events: none;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.date-picker__icon svg {
+.field__date-icon svg {
   width: 100%;
   height: 100%;
 }
-html[lang="ar"] .date-picker__trigger {
+html[lang="ar"] .field__date-text {
   padding: 0 14px 0 42px;
   text-align: right;
 }
-html[lang="ar"] .date-picker__icon {
+html[lang="ar"] .field__date-icon {
   right: auto;
   left: 14px;
-}
-.calendar-popover {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  width: 100%;
-  min-width: 290px;
-  max-width: 360px;
-  z-index: 100;
-  background: #ffffff;
-  border: 1px solid rgba(216,178,87,.45);
-  border-radius: 16px;
-  box-shadow: 0 14px 40px rgba(31,18,53,0.18), 0 3px 10px rgba(31,18,53,0.08);
-  padding: 14px 14px 12px;
-  box-sizing: border-box;
-  animation: calPopIn .18s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.calendar-popover[hidden] {
-  display: none !important;
-}
-@keyframes calPopIn {
-  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.calendar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  padding: 0 2px;
-}
-.calendar-title {
-  font-weight: 700;
-  font-size: 0.98rem;
-  color: var(--violet-950, #1f1235);
-  text-transform: capitalize;
-  user-select: none;
-}
-.calendar-nav {
-  width: 32px;
-  height: 32px;
-  border-radius: 9px;
-  border: 1px solid rgba(216,178,87,.35);
-  background: #fdfaf3;
-  color: var(--gold-800, #85641f);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all .15s ease;
-  padding: 0;
-}
-.calendar-nav:hover:not(:disabled) {
-  background: var(--gold-500, #d8b257);
-  color: #ffffff;
-  border-color: var(--gold-500, #d8b257);
-}
-.calendar-nav:disabled {
-  opacity: .28;
-  cursor: not-allowed;
-  background: #f5f5f5;
-  border-color: #e0e0e0;
-}
-.calendar-nav svg {
-  width: 16px;
-  height: 16px;
-}
-.calendar-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  text-align: center;
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--muted, #6c637a);
-  margin-bottom: 8px;
-  user-select: none;
-}
-.calendar-weekdays span {
-  text-transform: capitalize;
-}
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-}
-.calendar-day {
-  aspect-ratio: 1;
-  min-height: 34px;
-  border-radius: 9px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--ink, #1f1235);
-  font: inherit;
-  font-size: 0.88rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all .14s ease;
-  padding: 0;
-  box-sizing: border-box;
-}
-.calendar-day:hover:not(:disabled):not(.calendar-day--selected) {
-  background: rgba(216,178,87,.2);
-  border-color: rgba(216,178,87,.5);
-}
-.calendar-day--today {
-  border-color: var(--gold-500, #d8b257);
-  font-weight: 800;
-}
-.calendar-day--selected {
-  background: linear-gradient(135deg, #7c1332, #4a0c1e) !important;
-  color: #ffffff !important;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(124,19,50,.35);
-  border-color: transparent !important;
-}
-.calendar-day--disabled {
-  color: #c4bfc9;
-  cursor: not-allowed !important;
-  pointer-events: none;
-  opacity: 0.4;
-}
-.calendar-day--empty {
-  pointer-events: none;
-  cursor: default;
 }
 .field__hint { margin:0; font-size:.76rem; color:var(--muted); font-style:italic; }
 .field__hint--warn { color:#b0304a !important; font-style:normal !important; font-weight:600 !important; }
@@ -2009,33 +1896,18 @@ html[lang="uk"] .thanks__sign {
               <p class="field__error" data-error hidden>Cette adresse ne semble pas valide.</p>
             </div>
             <div class="field" data-field>
-              <label for="bk-date-btn">Date</label>
-              <div class="date-picker" id="bk-datepicker-wrapper">
-                <button type="button" class="date-picker__trigger" id="bk-date-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="bk-calendar-popover">
-                  <span class="date-picker__text" id="bk-date-text"></span>
-                  <span class="date-picker__icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                  </span>
-                </button>
-                <input type="hidden" id="bk-date" name="date" required>
-                <div class="calendar-popover" id="bk-calendar-popover" role="dialog" aria-label="Calendrier de réservation" hidden>
-                  <div class="calendar-header">
-                    <button type="button" class="calendar-nav calendar-nav--prev" id="bk-cal-prev" aria-label="Mois précédent">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    </button>
-                    <span class="calendar-title" id="bk-cal-month-title"></span>
-                    <button type="button" class="calendar-nav calendar-nav--next" id="bk-cal-next" aria-label="Mois suivant">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </button>
-                  </div>
-                  <div class="calendar-weekdays" id="bk-cal-weekdays" aria-hidden="true"></div>
-                  <div class="calendar-grid" id="bk-cal-grid" role="grid"></div>
-                </div>
+              <label for="bk-date">Date</label>
+              <div class="field__date-box" id="bk-date-box">
+                <input id="bk-date" name="date" type="date" required class="field__date-input">
+                <div class="field__date-text" id="bk-date-text" aria-hidden="true"></div>
+                <span class="field__date-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </span>
               </div>
               <p class="field__error" data-error hidden>Merci de choisir une date à venir.</p>
             </div>
@@ -2717,211 +2589,40 @@ html[lang="uk"] .thanks__sign {
     return PUNCT[lang] || { comma: ",", stop: ".", sp: " " };
   }
 
-  /* --- Sélecteur de date avec Calendrier interactif --- */
-  var dateInputEl = document.getElementById('bk-date');
-  var dateBtnEl = document.getElementById('bk-date-btn');
+  /* --- Sélecteur de date avec Calendrier natif de l'appareil --- */
   var dateTextEl = document.getElementById('bk-date-text');
-  var datepickerWrapper = document.getElementById('bk-datepicker-wrapper');
-  var calendarPopover = document.getElementById('bk-calendar-popover');
-  var monthTitleEl = document.getElementById('bk-cal-month-title');
-  var prevBtnEl = document.getElementById('bk-cal-prev');
-  var nextBtnEl = document.getElementById('bk-cal-next');
-  var weekdaysEl = document.getElementById('bk-cal-weekdays');
-  var gridEl = document.getElementById('bk-cal-grid');
+  var dateBoxEl = document.getElementById('bk-date-box');
 
-  var viewYear = null;
-  var viewMonth = null;
-  var minBookingIso = null;
-  var maxBookingIso = null;
-
-  function setSelectedDate(isoStr) {
-    if (!isoStr) return;
-    if (dateInputEl) dateInputEl.value = isoStr;
+  function updateDateDisplay() {
+    if (!dateEl || !dateTextEl) return;
+    if (!dateEl.value) {
+      dateTextEl.textContent = "";
+      return;
+    }
     var lang = getDocLang();
-    var prettyDate = formatLocalizedDate(isoStr, lang);
-    if (dateTextEl) {
-      dateTextEl.textContent = prettyDate;
-    }
-    var d = new Date(isoStr + 'T12:00:00');
-    viewYear = d.getFullYear();
-    viewMonth = d.getMonth();
-    renderCalendar();
+    var prettyDate = formatLocalizedDate(dateEl.value, lang);
+    dateTextEl.textContent = prettyDate;
   }
 
-  function renderCalendar() {
-    if (!gridEl || viewYear === null || viewMonth === null) return;
-    var lang = getDocLang();
-    var loc = LOCALE_MAP[lang] || lang || 'fr-FR';
-
-    // Titre du mois et de l'année (ex : Septembre 2026)
-    var viewDateObj = new Date(viewYear, viewMonth, 1, 12, 0, 0);
-    var monthName = '';
-    try {
-      monthName = viewDateObj.toLocaleDateString(loc, { month: 'long', year: 'numeric' });
-    } catch (e) {
-      monthName = viewDateObj.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-    }
-    if (monthName && typeof monthName === 'string') {
-      monthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
-    }
-    if (lang === 'ar' || lang === 'hi') {
-      monthName = toLocalizedDigits(monthName, lang);
-    }
-    if (monthTitleEl) monthTitleEl.textContent = monthName;
-
-    // Jours de la semaine (Lundi à Dimanche)
-    if (weekdaysEl) {
-      weekdaysEl.innerHTML = '';
-      var baseMonday = new Date(2026, 8, 21, 12, 0, 0); // 21 sept 2026 = Lundi
-      for (var w = 0; w < 7; w++) {
-        var wdDate = new Date(baseMonday.getTime() + w * 86400000);
-        var wdName = '';
-        try {
-          wdName = wdDate.toLocaleDateString(loc, { weekday: 'short' });
-        } catch (e) {
-          wdName = wdDate.toLocaleDateString('fr-FR', { weekday: 'short' });
+  if (dateBoxEl && dateEl) {
+    dateBoxEl.addEventListener('click', function () {
+      try {
+        if (typeof dateEl.showPicker === 'function') {
+          dateEl.showPicker();
         }
-        var sp = document.createElement('span');
-        sp.textContent = wdName;
-        weekdaysEl.appendChild(sp);
-      }
-    }
-
-    // Grille des jours
-    gridEl.innerHTML = '';
-    var firstDayOfWeek = (new Date(viewYear, viewMonth, 1, 12, 0, 0).getDay() + 6) % 7; // 0 = Lundi, 6 = Dimanche
-    var daysInMonth = new Date(viewYear, viewMonth + 1, 0, 12, 0, 0).getDate();
-
-    // Cases vides avant le 1er du mois
-    for (var pad = 0; pad < firstDayOfWeek; pad++) {
-      var emptyCell = document.createElement('span');
-      emptyCell.className = 'calendar-day calendar-day--empty';
-      emptyCell.setAttribute('aria-hidden', 'true');
-      gridEl.appendChild(emptyCell);
-    }
-
-    var selectedIso = dateInputEl ? dateInputEl.value : '';
-    var nowP = parisNow();
-    var todayIso = nowP.date;
-
-    for (var day = 1; day <= daysInMonth; day++) {
-      var curIso = viewYear + '-' + String(viewMonth + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
-      var dayBtn = document.createElement('button');
-      dayBtn.type = 'button';
-      dayBtn.className = 'calendar-day';
-      dayBtn.textContent = toLocalizedDigits(day, lang);
-      dayBtn.setAttribute('data-date', curIso);
-
-      var isBeforeMin = minBookingIso ? (curIso < minBookingIso) : false;
-      var isAfterMax = maxBookingIso ? (curIso > maxBookingIso) : false;
-
-      if (isBeforeMin || isAfterMax) {
-        dayBtn.disabled = true;
-        dayBtn.classList.add('calendar-day--disabled');
-        dayBtn.setAttribute('aria-disabled', 'true');
-      } else {
-        if (curIso === selectedIso) {
-          dayBtn.classList.add('calendar-day--selected');
-          dayBtn.setAttribute('aria-selected', 'true');
-        }
-        if (curIso === todayIso) {
-          dayBtn.classList.add('calendar-day--today');
-        }
-        dayBtn.addEventListener('click', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          var chosenIso = this.getAttribute('data-date');
-          setSelectedDate(chosenIso);
-          closeCalendar();
-          setError(dateBtnEl, false);
-          lastKnownSlots = null;
-          updateAvailability();
-        });
-      }
-      gridEl.appendChild(dayBtn);
-    }
-
-    // Gestion de l'état des boutons Précédent / Suivant
-    if (prevBtnEl && minBookingIso) {
-      var prevMonthLastDay = new Date(viewYear, viewMonth, 0, 12, 0, 0);
-      var prevMonthIso = iso(prevMonthLastDay);
-      prevBtnEl.disabled = (prevMonthIso < minBookingIso);
-    }
-    if (nextBtnEl && maxBookingIso) {
-      var nextMonthFirstDay = new Date(viewYear, viewMonth + 1, 1, 12, 0, 0);
-      var nextMonthIso = iso(nextMonthFirstDay);
-      nextBtnEl.disabled = (nextMonthIso > maxBookingIso);
-    }
-  }
-
-  function openCalendar() {
-    if (!calendarPopover) return;
-    calendarPopover.hidden = false;
-    if (dateBtnEl) dateBtnEl.setAttribute('aria-expanded', 'true');
-    if (datepickerWrapper) datepickerWrapper.classList.add('date-picker--open');
-    renderCalendar();
-  }
-
-  function closeCalendar() {
-    if (!calendarPopover) return;
-    calendarPopover.hidden = true;
-    if (dateBtnEl) dateBtnEl.setAttribute('aria-expanded', 'false');
-    if (datepickerWrapper) datepickerWrapper.classList.remove('date-picker--open');
-  }
-
-  function toggleCalendar() {
-    if (calendarPopover && !calendarPopover.hidden) {
-      closeCalendar();
-    } else {
-      openCalendar();
-    }
-  }
-
-  if (dateBtnEl) {
-    dateBtnEl.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleCalendar();
+      } catch (ePick) {}
     });
   }
 
-  if (prevBtnEl) {
-    prevBtnEl.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      viewMonth--;
-      if (viewMonth < 0) {
-        viewMonth = 11;
-        viewYear--;
-      }
-      renderCalendar();
-    });
-  }
-
-  if (nextBtnEl) {
-    nextBtnEl.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      viewMonth++;
-      if (viewMonth > 11) {
-        viewMonth = 0;
-        viewYear++;
-      }
-      renderCalendar();
-    });
-  }
-
-  document.addEventListener('click', function (e) {
-    if (datepickerWrapper && !datepickerWrapper.contains(e.target)) {
-      closeCalendar();
-    }
+  dateEl.addEventListener('change', function () {
+    updateDateDisplay();
+    setError(dateEl, false);
+    lastKnownSlots = null;
+    updateAvailability();
   });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && calendarPopover && !calendarPopover.hidden) {
-      closeCalendar();
-      if (dateBtnEl) dateBtnEl.focus();
-    }
+  dateEl.addEventListener('input', function () {
+    updateDateDisplay();
+    setError(dateEl, false);
   });
 
   function updateGuestsOptions(lang) {
@@ -3028,18 +2729,18 @@ html[lang="uk"] .thanks__sign {
     var next = calculateNextSlot(now);
     var startIso = next.isTomorrow ? next.date : now.date;
 
-    minBookingIso = startIso;
-    var maxD = new Date(startIso + 'T00:00:00');
-    maxD.setDate(maxD.getDate() + 90);
-    maxBookingIso = iso(maxD);
-
-    if (!dateEl.value || dateEl.value < startIso) {
-      setSelectedDate(startIso);
+    if (dateEl) {
+      if (dateEl.min !== now.date) dateEl.min = now.date;
+      dateEl.removeAttribute('max');
+      if (!dateEl.value || dateEl.value < startIso) {
+        dateEl.value = startIso;
+        updateDateDisplay();
+      }
     }
 
     applySlotsToSelect(lastKnownSlots);
 
-    var targetDate = dateEl.value;
+    var targetDate = dateEl ? dateEl.value : startIso;
     var guests = guestsEl.value || 2;
     var reqId = ++currentRequestId;
 
@@ -3210,11 +2911,12 @@ html[lang="uk"] .thanks__sign {
 
   var nowP = parisNow();
   var initialSlot = calculateNextSlot(nowP);
-  minBookingIso = initialSlot.date;
-  var maxD = new Date(nowP.date + 'T00:00:00');
-  maxD.setDate(maxD.getDate() + 90);
-  maxBookingIso = iso(maxD);
-  setSelectedDate(initialSlot.date);
+  if (dateEl) {
+    dateEl.min = nowP.date;
+    dateEl.removeAttribute('max');
+    dateEl.value = initialSlot.date;
+    updateDateDisplay();
+  }
   updateGuestsOptions(getDocLang());
 
   guestsEl.addEventListener('change', function () {
@@ -3230,9 +2932,7 @@ html[lang="uk"] .thanks__sign {
 
   var langObserver = new MutationObserver(function () {
     var langNow = getDocLang();
-    if (dateEl && dateEl.value) {
-      setSelectedDate(dateEl.value);
-    }
+    updateDateDisplay();
     updateGuestsOptions(langNow);
     applySlotsToSelect(lastKnownSlots);
     if (activeStatusState && !status.hidden) {
@@ -3277,8 +2977,8 @@ html[lang="uk"] .thanks__sign {
 
     var nowChk = parisNow();
     if (!dateEl.value || dateEl.value < nowChk.date) {
-      setError(dateBtnEl || dateEl, true);
-      bad = bad || dateBtnEl || dateEl;
+      setError(dateEl, true);
+      bad = bad || dateEl;
     }
 
     var selectedOpt = timeEl.options[timeEl.selectedIndex];
@@ -3447,7 +3147,12 @@ html[lang="uk"] .thanks__sign {
           form.reset();
           var nowAfter = parisNow();
           var nextAfter = calculateNextSlot(nowAfter);
-          setSelectedDate(nextAfter.date);
+          if (dateEl) {
+            dateEl.min = nowAfter.date;
+            dateEl.removeAttribute('max');
+            dateEl.value = nextAfter.date;
+            updateDateDisplay();
+          }
           updateAvailability();
         } else if (failure && (failure.capacityFull || failure.code === "CAPACITY_FULL")) {
           activeStatusState = {
