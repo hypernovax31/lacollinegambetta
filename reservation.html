@@ -1229,6 +1229,14 @@ html[lang="hi"] .footer-download {
 .field input:focus, .field select:focus, .field textarea:focus {
   outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(216,178,87,.22);
 }
+.field__date-preview {
+  margin-top:4px;
+  font-size:.84rem;
+  color:var(--violet-900);
+  font-weight:700;
+  min-height:1.2em;
+  display:block;
+}
 .field__hint { margin:0; font-size:.76rem; color:var(--muted); font-style:italic; }
 .field__hint--warn { color:#b0304a !important; font-style:normal !important; font-weight:600 !important; }
 .field--error input, .field--error select { border-color:#b0304a; box-shadow:0 0 0 3px rgba(176,48,74,.14); }
@@ -1808,6 +1816,7 @@ html[lang="uk"] .thanks__sign {
             <div class="field" data-field>
               <label for="bk-date">Date</label>
               <input id="bk-date" name="date" type="date" required>
+              <div id="bk-date-preview" class="field__date-preview" aria-live="polite"></div>
               <p class="field__error" data-error hidden>Merci de choisir une date à venir.</p>
             </div>
             <div class="field" data-field>
@@ -2551,15 +2560,53 @@ html[lang="uk"] .thanks__sign {
     ko: "ko-KR", zh: "zh-CN", ja: "ja-JP", uk: "uk-UA", ar: "ar-EG", hi: "hi-IN"
   };
 
+  function toLocalizedDigits(numStr, lang) {
+    if (numStr === null || numStr === undefined) return "";
+    var s = String(numStr);
+    if (lang === "ar") {
+      var arDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+      return s.replace(/[0-9]/g, function (d) { return arDigits[parseInt(d, 10)]; });
+    }
+    if (lang === "hi") {
+      var hiDigits = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
+      return s.replace(/[0-9]/g, function (d) { return hiDigits[parseInt(d, 10)]; });
+    }
+    return s;
+  }
+
+  function normalizeToAsciiDigits(str) {
+    if (!str) return "";
+    var arMap = {"٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9"};
+    var hiMap = {"०":"0","१":"1","२":"2","३":"3","४":"4","५":"5","६":"6","७":"7","८":"8","९":"9"};
+    var fullMap = {"０":"0","１":"1","２":"2","３":"3","４":"4","５":"5","６":"6","７":"7","８":"8","９":"9"};
+    return str.replace(/[٠-٩]/g, function (c) { return arMap[c] || c; })
+              .replace(/[०-९]/g, function (c) { return hiMap[c] || c; })
+              .replace(/[０-９]/g, function (c) { return fullMap[c] || c; });
+  }
+
+  function formatFullName(str) {
+    if (!str) return "";
+    return str.trim().split(/\s+/).map(function (w) {
+      return w.split("-").map(function (part) {
+        return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+      }).join("-");
+    }).join(" ");
+  }
+
   function formatLocalizedDate(isoDateStr, lang) {
     if (!isoDateStr) return "";
     var d = new Date(isoDateStr + "T12:00:00");
     var loc = LOCALE_MAP[lang] || lang || "fr-FR";
+    var resStr;
     try {
-      return d.toLocaleDateString(loc, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+      resStr = d.toLocaleDateString(loc, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
     } catch (e) {
-      return d.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+      resStr = d.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
     }
+    if (lang === "ar" || lang === "hi") {
+      return toLocalizedDigits(resStr, lang);
+    }
+    return resStr;
   }
 
   function formatLocalizedTime(timeStr, lang) {
@@ -2570,7 +2617,73 @@ html[lang="uk"] .thanks__sign {
     if (lang === "fr") {
       return (m === 0) ? (h + "h00") : (h + "h" + String(m).padStart(2, "0"));
     }
-    return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+    var base = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+    if (lang === "ar" || lang === "hi") {
+      return toLocalizedDigits(base, lang);
+    }
+    return base;
+  }
+
+  function formatTimeOption(val, lang) {
+    if (!val) return "";
+    var hm = val.split(":");
+    var h = hm[0];
+    var m = hm[1];
+    if (lang === "fr") {
+      return h + "h" + m;
+    }
+    if (lang === "ar" || lang === "hi") {
+      return toLocalizedDigits(h + ":" + m, lang);
+    }
+    return h + ":" + m;
+  }
+
+  function updateGuestsOptions(lang) {
+    if (!guestsEl) return;
+    Array.prototype.forEach.call(guestsEl.options, function (opt) {
+      var val = parseInt(opt.value, 10);
+      if (!val) return;
+      var numDisplay = toLocalizedDigits(val, lang);
+      if (lang === "fr") {
+        opt.textContent = val + (val === 1 ? " personne" : " personnes");
+      } else if (lang === "en") {
+        opt.textContent = val + (val === 1 ? " guest" : " guests");
+      } else if (lang === "es") {
+        opt.textContent = val + (val === 1 ? " persona" : " personas");
+      } else if (lang === "de") {
+        opt.textContent = val + (val === 1 ? " Person" : " Personen");
+      } else if (lang === "it") {
+        opt.textContent = val + (val === 1 ? " persona" : " persone");
+      } else if (lang === "pt") {
+        opt.textContent = val + (val === 1 ? " pessoa" : " pessoas");
+      } else if (lang === "nl") {
+        opt.textContent = val + (val === 1 ? " persoon" : " personen");
+      } else if (lang === "ar") {
+        opt.textContent = (val === 1) ? "شخص واحد" : ((val === 2) ? "شخصان (٢)" : (numDisplay + " أشخاص"));
+      } else if (lang === "zh") {
+        opt.textContent = val + " 位";
+      } else if (lang === "ja") {
+        opt.textContent = val + "名";
+      } else if (lang === "ko") {
+        opt.textContent = val + "명";
+      } else if (lang === "pl") {
+        opt.textContent = val + (val === 1 ? " osoba" : (val < 5 ? " osoby" : " osób"));
+      } else if (lang === "tr") {
+        opt.textContent = val + " kişi";
+      } else if (lang === "uk") {
+        opt.textContent = val + (val === 1 ? " особа" : (val < 5 ? " особи" : " осіб"));
+      } else if (lang === "hi") {
+        opt.textContent = numDisplay + " व्यक्ति";
+      }
+    });
+  }
+
+  function updateDatePreview() {
+    var prev = document.getElementById("bk-date-preview");
+    if (!prev || !dateEl.value) return;
+    var lang = getDocLang();
+    var joliDate = formatLocalizedDate(dateEl.value, lang);
+    prev.textContent = "📅 " + joliDate;
   }
 
   function getDateSep(lang) {
@@ -2700,12 +2813,19 @@ html[lang="uk"] .thanks__sign {
   }
 
   var langObserver = new MutationObserver(function () {
+    var langNow = getDocLang();
+    updateGuestsOptions(langNow);
     applySlotsToSelect(lastKnownSlots);
+    updateDatePreview();
     if (activeStatusState && !status.hidden) {
       renderStatusCard(activeStatusState);
     }
   });
   langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+
+  updateGuestsOptions(getDocLang());
+  updateDatePreview();
+  dateEl.addEventListener("change", updateDatePreview);
 
   updateAvailability();
   setInterval(updateAvailability, 60000);
@@ -2735,7 +2855,8 @@ html[lang="uk"] .thanks__sign {
     var mail = document.getElementById("bk-mail");
 
     if (!name.value.trim()) { setError(name, true); bad = bad || name; }
-    if ((phone.value.match(/\d/g) || []).length < 8) { setError(phone, true); bad = bad || phone; }
+    var rawPhone = normalizeToAsciiDigits(phone.value.trim());
+    if ((rawPhone.match(/\d/g) || []).length < 8) { setError(phone, true); bad = bad || phone; }
     if (mail.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail.value.trim())) {
       setError(mail, true); bad = bad || mail;
     }
@@ -2761,7 +2882,6 @@ html[lang="uk"] .thanks__sign {
     }
 
     var lang = getDocLang();
-    var mDict = MAIL_I18N[lang] || MAIL_I18N.fr;
     var pc = getPunctuation(lang);
 
     var nomComplet = formatFullName(name.value);
