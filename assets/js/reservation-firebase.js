@@ -272,7 +272,7 @@ async function reserve(data) {
   const currentLocal = getRowsForDate(candidate.date);
   const localCapacity = evaluateCapacity(currentLocal, candidate, policy);
   if (!localCapacity.available) {
-    const error = new Error('Ce créneau est complet (15 tables ou 30 couverts).');
+    const error = new Error('Ce créneau est complet.');
     error.code = 'CAPACITY_FULL';
     error.capacity = localCapacity;
     error.capacityFull = true;
@@ -307,7 +307,7 @@ async function reserve(data) {
       const capacity = evaluateCapacity(mergedRows, candidate, policy);
 
       if (!capacity.available) {
-        const error = new Error('Ce créneau est complet (15 tables ou 30 couverts).');
+        const error = new Error('Ce créneau est complet.');
         error.code = 'CAPACITY_FULL';
         error.capacity = capacity;
         error.capacityFull = true;

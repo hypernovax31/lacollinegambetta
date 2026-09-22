@@ -1681,6 +1681,11 @@ html[lang="uk"] .thanks__sign {
             <span data-th="sign">L’équipe de La Colline Gambetta</span>
             <span data-th="tel">Une question ? Appelez-nous au</span>
             <span data-th="fail">L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.</span>
+            <span data-th="apology-hi">Toutes nos excuses</span>
+            <span data-th="apology-l1">Toutes nos tables sont déjà retenues pour ce créneau.</span>
+            <span data-th="apology-l2">Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !</span>
+            <span data-th="apology-l4">N’hésitez pas à choisir un autre créneau ou à nous contacter.</span>
+            <span data-th="apology-call">Une envie de réserver de vive voix ou une question ? Appelez-nous au</span>
           </div>
         </form>
       </article>
@@ -1928,82 +1933,158 @@ html[lang="uk"] .thanks__sign {
     var langNow = getDocLang();
     var copy = {
       fr: {
-        full: 'Ce créneau est complet (15 tables ou 30 couverts). Choisissez une autre heure ou appelez-nous au 01 43 49 05 93.',
-        allFull: 'Tous les créneaux en ligne sont complets pour cette date. Appelez-nous au 01 43 49 05 93.',
-        error: 'La disponibilité de ce créneau ne peut pas être vérifiée pour le moment. Appelez-nous au 01 43 49 05 93 pour réserver.'
+        apologyTitle: 'Toutes nos excuses',
+        apologyLine1: 'Toutes nos tables sont déjà retenues pour ce créneau.',
+        apologyLine2: 'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !',
+        apologyLine4: 'N’hésitez pas à choisir un autre créneau ou à nous contacter.',
+        apologyCall: 'Une envie de réserver de vive voix ou une question ? Appelez-nous au',
+        apologySign: 'L’équipe de La Colline Gambetta',
+        allFull: 'Tous les créneaux en ligne sont complets pour cette date. N’hésitez pas à nous appeler au 01 43 49 05 93.',
+        error: 'La disponibilité n’a pas pu être vérifiée en ligne. N’hésitez pas à nous appeler au 01 43 49 05 93 pour réserver.'
       },
       en: {
-        full: 'This time slot is full (15 tables or 30 guests). Please choose another time or call us on 01 43 49 05 93.',
+        apologyTitle: 'Our sincere apologies',
+        apologyLine1: 'All our tables are already fully booked for this time slot.',
+        apologyLine2: 'We would be delighted to welcome you a little earlier, a little later, or on another date!',
+        apologyLine4: 'Feel free to choose another time slot or reach out to us directly.',
+        apologyCall: 'Prefer to book by phone or have a question? Call us on',
+        apologySign: 'The team at La Colline Gambetta',
         allFull: 'All online slots are fully booked for this date. Please call us on 01 43 49 05 93.',
-        error: 'This time slot could not be checked. Please call 01 43 49 05 93 to book.'
+        error: 'Availability could not be verified online. Please call us on 01 43 49 05 93 to book.'
       },
       es: {
-        full: 'Este horario está completo (15 mesas o 30 comensales). Elija otra hora o llámenos al 01 43 49 05 93.',
+        apologyTitle: 'Nuestras más sinceras disculpas',
+        apologyLine1: 'Todas nuestras mesas ya están reservadas para este horario.',
+        apologyLine2: '¡Estaremos encantados de recibirle un poco antes, un poco más tarde o en otra fecha!',
+        apologyLine4: 'No dude en elegir otro horario o ponerse en contacto con nosotros.',
+        apologyCall: '¿Desea reservar por teléfono o tiene alguna consulta? Llámenos al',
+        apologySign: 'El equipo de La Colline Gambetta',
         allFull: 'Todos los turnos online están completos para esta fecha. Llámenos al 01 43 49 05 93.',
-        error: 'No se puede comprobar este horario. Llámenos al 01 43 49 05 93 para reservar.'
+        error: 'No se pudo verificar la disponibilidad en línea. Llámenos al 01 43 49 05 93 para reservar.'
       },
       de: {
-        full: 'Dieser Zeitraum ist voll (15 Tische oder 30 Gäste). Bitte wählen Sie eine andere Uhrzeit oder rufen Sie uns unter 01 43 49 05 93 an.',
+        apologyTitle: 'Bitte entschuldigen Sie',
+        apologyLine1: 'Für diesen Zeitraum sind bereits alle Tische reserviert.',
+        apologyLine2: 'Wir würden uns sehr freuen, Sie etwas früher, etwas später oder an einem anderen Wunschtermin zu begrüßen!',
+        apologyLine4: 'Wählen Sie gerne einen anderen Zeitraum oder kontaktieren Sie uns direkt.',
+        apologyCall: 'Möchten Sie telefonisch reservieren oder haben Sie Fragen? Rufen Sie uns an unter',
+        apologySign: 'Das Team von La Colline Gambetta',
         allFull: 'Alle Online-Termine für dieses Datum sind ausgebucht. Rufen Sie uns unter 01 43 49 05 93 an.',
-        error: 'Die Verfügbarkeit konnte nicht geprüft werden. Bitte rufen Sie für eine Reservierung 01 43 49 05 93 an.'
+        error: 'Die Verfügbarkeit konnte online nicht geprüft werden. Rufen Sie uns bitte unter 01 43 49 05 93 an.'
       },
       it: {
-        full: 'Questa fascia oraria è completa (15 tavoli o 30 coperti). Scelga un altro orario o chiami lo 01 43 49 05 93.',
+        apologyTitle: 'Le nostre più sincere scuse',
+        apologyLine1: 'Tutti i nostri tavoli sono già occupati per questa fascia oraria.',
+        apologyLine2: 'Saremo felicissimi di accogliervi un po’ prima, un po’ più tardi o in un’altra data!',
+        apologyLine4: 'Non esiti a scegliere un altro orario o a contattarci direttamente.',
+        apologyCall: 'Desidera prenotare telefonicamente o ha una domanda? Ci chiami al',
+        apologySign: 'Il team de La Colline Gambetta',
         allFull: 'Tutti i posti online sono al completo per questa data. Chiami lo 01 43 49 05 93.',
-        error: 'Impossibile verificare la disponibilità. Chiami lo 01 43 49 05 93 per prenotare.'
+        error: 'Impossibile verificare la disponibilità online. Chiami lo 01 43 49 05 93 per prenotare.'
       },
       pt: {
-        full: 'Este horário está completo (15 mesas ou 30 pessoas). Escolha outra hora ou ligue para 01 43 49 05 93.',
+        apologyTitle: 'As nossas sinceras desculpas',
+        apologyLine1: 'Todas as nossas mesas já se encontram reservadas para este horário.',
+        apologyLine2: 'Teremos todo o prazer em recebê-lo um pouco mais cedo, mais tarde ou noutra data!',
+        apologyLine4: 'Não hesite em escolher outro horário ou em contactar-nos.',
+        apologyCall: 'Prefere reservar por telefone ou tem alguma dúvida? Ligue-nos para',
+        apologySign: 'A equipa de La Colline Gambetta',
         allFull: 'Todos os horários online estão esgotados para esta data. Ligue para 01 43 49 05 93.',
-        error: 'Não foi possível verificar a disponibilidade. Ligue para 01 43 49 05 93 para reservar.'
+        error: 'Não foi possível verificar a disponibilidade online. Ligue para 01 43 49 05 93.'
       },
       nl: {
-        full: 'Dit tijdslot is vol (15 tafels of 30 gasten). Kies een ander tijdstip of bel 01 43 49 05 93.',
+        apologyTitle: 'Onze welgemeende excuses',
+        apologyLine1: 'Al onze tafels zijn al gereserveerd voor dit tijdslot.',
+        apologyLine2: 'We verwelkomen u heel graag iets eerder, iets later of op een andere datum!',
+        apologyLine4: 'Kies gerust een ander tijdstip of neem rechtstreeks contact met ons op.',
+        apologyCall: 'Wilt u telefonisch reserveren of heeft u een vraag? Bel ons op',
+        apologySign: 'Het team van La Colline Gambetta',
         allFull: 'Alle online tijdsloten zijn volgeboekt voor deze datum. Bel 01 43 49 05 93.',
-        error: 'De beschikbaarheid kon niet worden gecontroleerd. Bel 01 43 49 05 93 om te reserveren.'
+        error: 'Beschikbaarheid kon online niet worden gecontroleerd. Bel 01 43 49 05 93.'
       },
       ar: {
-        full: 'هذا الموعد ممتلئ (15 طاولة أو 30 شخصاً). اختر وقتاً آخر أو اتصل بنا على 01 43 49 05 93.',
+        apologyTitle: 'نعتذر منكم بشدة',
+        apologyLine1: 'جميع طاولاتنا محجوزة بالكامل في هذا الموعد.',
+        apologyLine2: 'يسعدنا جداً استقبالكم في وقت أبكر قليلاً أو لاحقاً، أو في أي يوم آخر يناسبكم!',
+        apologyLine4: 'لا تترددوا في اختيار موعد آخر أو التواصل معنا مباشرة.',
+        apologyCall: 'هل ترغبون في الحجز هاتفياً أو لديكم أي استفسار؟ اتصلوا بنا على',
+        apologySign: 'فريق لا كولين غامبيتا',
         allFull: 'جميع المواعيد عبر الإنترنت محجوزة لهذا اليوم. اتصل بنا على 01 43 49 05 93.',
-        error: 'تعذر التحقق من توفر هذا الموعد. اتصل بنا على 01 43 49 05 93 للحجز.'
+        error: 'تعذر التحقق من التوفر عبر الإنترنت. اتصل بنا على 01 43 49 05 93 للحجز.'
       },
       zh: {
-        full: '该时段已满（15 张桌子或 30 位客人）。请选择其他时间，或致电 01 43 49 05 93。',
+        apologyTitle: '非常抱歉',
+        apologyLine1: '该时段的所有餐桌均已被预订满。',
+        apologyLine2: '我们非常期待稍早、稍晚或在其他方便的日期欢迎您的光临！',
+        apologyLine4: '欢迎选择其他时段或直接与我们联系。',
+        apologyCall: '想直接电话预订或有疑问？欢迎致电',
+        apologySign: 'La Colline Gambetta 團隊',
         allFull: '该日期的在线预订已全部约满。请致电 01 43 49 05 93。',
-        error: '暂时无法确认该时段的可用性。请致电 01 43 49 05 93 预订。'
+        error: '暂时无法在线确认可用性。请致电 01 43 49 05 93 预订。'
       },
       ja: {
-        full: 'この時間帯は満席です（15卓または30名）。別の時間を選ぶか、01 43 49 05 93までお電話ください。',
+        apologyTitle: '誠に申し訳ございません',
+        apologyLine1: 'この時間帯はすべてのテーブルがすでにご予約済みとなっております。',
+        apologyLine2: '少し早めのお時間やお遅めのお時間、または別の日程でお迎えできれば大変嬉しく存じます！',
+        apologyLine4: '別のお時間をお選びいただくか、直接お問い合わせください。',
+        apologyCall: 'お電話でのご予約やご質問がございましたら、お気軽にどうぞ：',
+        apologySign: 'ラ・コリーヌ・ガンベッタ一同',
         allFull: 'この日のオンライン予約枠はすべて満席です。01 43 49 05 93までお電話ください。',
-        error: '空席状況を確認できません。ご予約は01 43 49 05 93までお電話ください。'
+        error: 'オンラインで空席状況を確認できませんでした。01 43 49 05 93までお電話ください。'
       },
       ko: {
-        full: '이 시간대는 마감되었습니다(테이블 15개 또는 30명). 다른 시간을 선택하거나 01 43 49 05 93으로 전화해 주세요.',
+        apologyTitle: '대단히 죄송합니다',
+        apologyLine1: '이 시간대의 모든 테이블이 이미 예약되었습니다.',
+        apologyLine2: '조금 더 이르거나 늦은 시간, 또는 편하신 다른 날짜에 모실 수 있기를 진심으로 바랍니다!',
+        apologyLine4: '다른 시간을 선택하시거나 편하게 문의해 주세요.',
+        apologyCall: '전화로 직접 예약하시거나 문의 사항이 있으신가요? 전화해 주세요:',
+        apologySign: '라 콜린 감베타 팀',
         allFull: '해당 날짜의 모든 온라인 예약이 마감되었습니다. 01 43 49 05 93으로 전화해 주세요.',
-        error: '이 시간대의 예약 가능 여부를 확인할 수 없습니다. 예약은 01 43 49 05 93으로 전화해 주세요.'
+        error: '온라인으로 예약 가능 여부를 확인할 수 없습니다. 01 43 49 05 93으로 전화해 주세요.'
       },
       pl: {
-        full: 'Ten przedział jest pełny (15 stolików lub 30 osób). Wybierz inną godzinę albo zadzwoń pod numer 01 43 49 05 93.',
+        apologyTitle: 'Bardzo przepraszamy',
+        apologyLine1: 'Wszystkie stoliki na tę godzinę są już zajęte.',
+        apologyLine2: 'Z przyjemnością ugościmy Państwa nieco wcześniej, później lub w innym dogodnym terminie!',
+        apologyLine4: 'Zachęcamy do wyboru innej godziny lub bezpośredniego kontaktu.',
+        apologyCall: 'Chcą Państwo zarezerwować telefonicznie lub mają pytania? Zadzwońcie pod numer',
+        apologySign: 'Zespół La Colline Gambetta',
         allFull: 'Wszystkie rezerwacje online na ten dzień są zajęte. Zadzwoń pod numer 01 43 49 05 93.',
-        error: 'Nie można sprawdzić dostępności. Aby zarezerwować, zadzwoń pod numer 01 43 49 05 93.'
+        error: 'Nie można sprawdzić dostępności online. Aby zarezerwować, zadzwoń pod numer 01 43 49 05 93.'
       },
       tr: {
-        full: 'Bu saat aralığı dolu (15 masa veya 30 kişi). Başka bir saat seçin ya da 01 43 49 05 93 numarasını arayın.',
+        apologyTitle: 'Çok özür dileriz',
+        apologyLine1: 'Bu saat dilimindeki tüm masalarımız dolmuştur.',
+        apologyLine2: 'Sizi biraz daha erken, biraz daha geç veya başka bir tarihte ağırlamaktan mutluluk duyarız!',
+        apologyLine4: 'Farklı bir saat seçebilir veya doğrudan bizimle iletişime geçebilirsiniz.',
+        apologyCall: 'Doğrudan telefonla rezervasyon yapmak veya soru sormak için bizi arayın:',
+        apologySign: 'La Colline Gambetta ekibi',
         allFull: 'Bu tarih için tüm çevrimiçi saatler doludur. 01 43 49 05 93 numarasını arayın.',
-        error: 'Bu saat aralığının uygunluğu kontrol edilemedi. Rezervasyon için 01 43 49 05 93 numarasını arayın.'
+        error: 'Çevrimiçi uygunluk kontrol edilemedi. Rezervasyon için 01 43 49 05 93 numarasını arayın.'
       },
       uk: {
-        full: 'Цей час уже заповнений (15 столів або 30 гостей). Виберіть інший час або зателефонуйте за номером 01 43 49 05 93.',
+        apologyTitle: 'Щиро перепрошуємо',
+        apologyLine1: 'Усі наші столики на цей час уже заброньовано.',
+        apologyLine2: 'Ми з радістю зустрінемо вас трохи раніше, трохи пізніше або в інший день!',
+        apologyLine4: 'Будь ласка, оберіть інший час або зв’яжіться з нами напряму.',
+        apologyCall: 'Бажаєте забронювати телефоном або маєте запитання? Зателефонуйте нам:',
+        apologySign: 'Команда La Colline Gambetta',
         allFull: 'Усі онлайн-слоти на цю дату заповнені. Зателефонуйте за номером 01 43 49 05 93.',
-        error: 'Не вдалося перевірити доступність. Для бронювання зателефонуйте за номером 01 43 49 05 93.'
+        error: 'Не вдалося перевірити доступність онлайн. Для бронювання зателефонуйте за номером 01 43 49 05 93.'
       },
       hi: {
-        full: 'यह समय पूरी तरह बुक है (15 टेबल या 30 मेहमान)। कोई दूसरा समय चुनें या 01 43 49 05 93 पर कॉल करें।',
+        apologyTitle: 'हमें खेद है',
+        apologyLine1: 'इस समय के लिए हमारे सभी टेबल पहले से बुक हैं।',
+        apologyLine2: 'हम थोड़ा पहले, थोड़ा बाद में या किसी अन्य तिथि पर आपका स्वागत करने में खुशी महसूस करेंगे!',
+        apologyLine4: 'कृपया कोई अन्य समय चुनें या हमसे सीधे संपर्क करें।',
+        apologyCall: 'सीधे फोन पर बुक करना चाहते हैं या कोई प्रश्न है? हमें कॉल करें:',
+        apologySign: 'ला कोलीन गंबेटा की टीम',
         allFull: 'इस तारीख के लिए सभी ऑनलाइन स्लॉट भर चुके हैं। 01 43 49 05 93 पर कॉल करें।',
-        error: 'इस समय की उपलब्धता की जाँच नहीं हो सकी। बुकिंग के लिए 01 43 49 05 93 पर कॉल करें।'
+        error: 'ऑनलाइन उपलब्धता की जाँच नहीं हो सकी। बुकिंग के लिए 01 43 49 05 93 पर कॉल करें।'
       }
     };
-    return (copy[langNow] || copy.fr)[kind];
+    var currentDict = copy[langNow] || copy.fr;
+    return currentDict[kind] !== undefined ? currentDict[kind] : (currentDict.apologyLine1 || '');
   }
 
   function parisNow() {
@@ -2412,21 +2493,47 @@ html[lang="uk"] .thanks__sign {
     var started = Date.now();
     var MIN_MS = 5000;
 
-    function showCapacityError(message, openMail) {
+    function showCapacityError(openMail) {
       status.textContent = '';
-      status.classList.remove('form-status--thanks');
-      var w = document.createElement('p');
-      w.className = 'thanks__line';
-      w.textContent = message;
-      var w2 = document.createElement('p');
-      w2.className = 'thanks__tel';
-      w2.appendChild(document.createTextNode(th('tel') + ' '));
-      var wa2 = document.createElement('a');
-      wa2.href = 'tel:+33143490593';
-      wa2.textContent = '01 43 49 05 93';
-      w2.appendChild(wa2);
-      status.appendChild(w);
-      status.appendChild(w2);
+      status.className = 'form-status form-status--thanks';
+
+      var h = document.createElement('p');
+      h.className = 'thanks__hello';
+      var title = th('apology-hi') || capacityCopy('apologyTitle');
+      h.textContent = title + (nomComplet ? pc.comma + pc.sp + nomComplet : '') + pc.stop;
+
+      var p1 = document.createElement('p');
+      p1.className = 'thanks__line';
+      p1.textContent = th('apology-l1') || capacityCopy('apologyLine1');
+
+      var p2 = document.createElement('p');
+      p2.className = 'thanks__when';
+      var ligne = document.createElement('span');
+      ligne.className = 'thanks__when-line';
+      var detail = document.createElement('strong');
+      detail.className = 'thanks__when-detail';
+      detail.textContent = th('apology-l2') || capacityCopy('apologyLine2');
+      ligne.appendChild(detail);
+      p2.appendChild(ligne);
+
+      var p4 = document.createElement('p');
+      p4.className = 'thanks__line thanks__warm';
+      p4.textContent = th('apology-l4') || capacityCopy('apologyLine4');
+
+      var sg = document.createElement('p');
+      sg.className = 'thanks__sign';
+      sg.textContent = th('sign') || capacityCopy('apologySign');
+
+      var tel = document.createElement('p');
+      tel.className = 'thanks__tel';
+      var telTxt = th('apology-call') || capacityCopy('apologyCall');
+      tel.appendChild(document.createTextNode(telTxt + ' '));
+      var a = document.createElement('a');
+      a.href = 'tel:+33143490593';
+      a.textContent = '01 43 49 05 93';
+      tel.appendChild(a);
+
+      [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
       status.hidden = false;
       try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e2) {}
       if (openMail) {
@@ -2447,10 +2554,10 @@ html[lang="uk"] .thanks__sign {
           form.reset();
           updateAvailability();
         } else if (failure && (failure.capacityFull || failure.code === 'CAPACITY_FULL')) {
-          showCapacityError(capacityCopy('full'), false);
+          showCapacityError(false);
           updateAvailability();
         } else {
-          showCapacityError(capacityCopy('error'), true);
+          showCapacityError(true);
           updateAvailability();
         }
       }, rest);
