@@ -566,8 +566,8 @@ def extract_cover(src: str) -> str:
     facade = (
         '<svg class="relief-inner-svg" viewBox="0 0 280 280" '
         'xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
-        '<image href="medallion-facade.png" width="280" height="280" '
-        'preserveAspectRatio="xMidYMid slice"/>'
+        '<image href="logo-gambetta.png" x="-66" y="-16" width="412" height="312" '
+        'preserveAspectRatio="none"/>'
         "</svg>"
     )
     return node[:inner_start] + facade + node[inner_end:]
@@ -919,21 +919,21 @@ html.carte-doc .print-page--cover .medallion-container {
   align-items: center !important;
 }
 html.carte-doc .print-page--cover .medallion-container .medallion-frame {
-  width: 440px !important;
-  height: 440px !important;
-  margin-bottom: 24px !important; /* 24px entre le médaillon et le bouton */
+  width: 510px !important;
+  height: 510px !important;
+  margin-bottom: 20px !important; /* espace équilibré entre le médaillon et le bouton */
 }
 html.carte-doc .print-page--cover .medallion-container .cover-action {
   margin: 0 !important;
   align-self: center !important;
 }
 html.carte-doc .print-page--cover .relief-inner-svg {
-  background: transparent !important;
+  background: #fcfbf7 !important;
   border: 0 !important;
   box-shadow: none !important;
   overflow: visible !important;
-  width: 66% !important;
-  height: 66% !important;
+  width: 66.5% !important;
+  height: 66.5% !important;
   border-radius: 50%;
   clip-path: circle(50% at 50% 50%);
   -webkit-clip-path: circle(50% at 50% 50%);
