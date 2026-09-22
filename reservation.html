@@ -1234,6 +1234,19 @@ html[lang="ar"] .field select {
 .field input:focus, .field select:focus, .field textarea:focus {
   outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(216,178,87,.22);
 }
+.field__day-tag {
+  font-size: .84rem;
+  font-weight: 700;
+  color: var(--gold-700, #9c7a2d);
+  text-transform: capitalize;
+  margin-left: 6px;
+  display: inline-block;
+}
+html[lang="ar"] .field__day-tag {
+  margin-left: 0;
+  margin-right: 6px;
+  font-family: 'Tajawal', sans-serif !important;
+}
 .field__hint { margin:0; font-size:.76rem; color:var(--muted); font-style:italic; }
 .field__hint--warn { color:#b0304a !important; font-style:normal !important; font-weight:600 !important; }
 .field--error input, .field--error select { border-color:#b0304a; box-shadow:0 0 0 3px rgba(176,48,74,.14); }
@@ -1811,8 +1824,8 @@ html[lang="uk"] .thanks__sign {
               <p class="field__error" data-error hidden>Cette adresse ne semble pas valide.</p>
             </div>
             <div class="field" data-field>
-              <label for="bk-date">Date</label>
-              <select id="bk-date" name="date" required></select>
+              <label for="bk-date">Date<span id="bk-date-day" class="field__day-tag" aria-live="polite"></span></label>
+              <input id="bk-date" name="date" type="date" required>
               <p class="field__error" data-error hidden>Merci de choisir une date à venir.</p>
             </div>
             <div class="field" data-field>
@@ -2475,35 +2488,26 @@ html[lang="uk"] .thanks__sign {
     return " \u00B7 ";
   }
 
-  function populateDateOptions(targetIsoDate, lang) {
-    if (!dateEl) return;
-    var nowP = parisNow();
-    var next = calculateNextSlot(nowP);
-    var startIso = next.isTomorrow ? next.date : nowP.date;
-    var currentVal = targetIsoDate || dateEl.value || startIso;
-    if (currentVal < startIso) {
-      currentVal = startIso;
+  function updateDateDayBadge() {
+    var tag = document.getElementById("bk-date-day");
+    if (!tag) return;
+    if (!dateEl.value) {
+      tag.textContent = "";
+      return;
     }
-
-    var startDate = new Date(startIso + "T00:00:00");
-    var totalDays = 90;
-
-    var frag = document.createDocumentFragment();
-    for (var i = 0; i < totalDays; i++) {
-      var d = new Date(startDate.getTime());
-      d.setDate(d.getDate() + i);
-      var isoStr = iso(d);
-      var opt = document.createElement("option");
-      opt.value = isoStr;
-      opt.textContent = formatLocalizedDate(isoStr, lang);
-      if (isoStr === currentVal) {
-        opt.selected = true;
-      }
-      frag.appendChild(opt);
+    var lang = getDocLang();
+    var d = new Date(dateEl.value + "T12:00:00");
+    var loc = LOCALE_MAP[lang] || lang || "fr-FR";
+    var dayName = "";
+    try {
+      dayName = d.toLocaleDateString(loc, { weekday: "long" });
+    } catch (e) {
+      dayName = d.toLocaleDateString("fr-FR", { weekday: "long" });
     }
-    dateEl.innerHTML = "";
-    dateEl.appendChild(frag);
-    dateEl.value = currentVal;
+    if (dayName && typeof dayName === "string") {
+      dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+    }
+    tag.textContent = " (" + dayName + ")";
   }
 
   function updateGuestsOptions(lang) {
@@ -2607,11 +2611,21 @@ html[lang="uk"] .thanks__sign {
 
   function updateAvailability() {
     var now = parisNow();
-    var next = calculateNextSlot(now);
-    var startIso = next.isTomorrow ? next.date : now.date;
+    if (dateEl.min !== now.date) {
+      dateEl.min = now.date;
+    }
+    if (dateEl.value && dateEl.value < now.date) {
+      dateEl.value = now.date;
+      updateDateDayBadge();
+    }
 
-    if (!dateEl.value || dateEl.value < startIso || (dateEl.options.length > 0 && dateEl.options[0].value !== startIso)) {
-      populateDateOptions(dateEl.value && dateEl.value >= startIso ? dateEl.value : startIso, getDocLang());
+    var isToday = (dateEl.value === now.date);
+    var next = calculateNextSlot(now);
+    if (isToday && next.isTomorrow) {
+      dateEl.value = next.date;
+      updateDateDayBadge();
+      updateAvailability();
+      return;
     }
 
     applySlotsToSelect(lastKnownSlots);
@@ -2787,12 +2801,18 @@ html[lang="uk"] .thanks__sign {
 
   var nowP = parisNow();
   var initialSlot = calculateNextSlot(nowP);
-  populateDateOptions(initialSlot.date, getDocLang());
+  dateEl.min = nowP.date;
+  dateEl.value = initialSlot.date;
+  updateDateDayBadge();
   updateGuestsOptions(getDocLang());
 
   dateEl.addEventListener('change', function () {
+    updateDateDayBadge();
     lastKnownSlots = null;
     updateAvailability();
+  });
+  dateEl.addEventListener('input', function () {
+    updateDateDayBadge();
   });
   guestsEl.addEventListener('change', function () {
     updateAvailability();
@@ -2807,7 +2827,7 @@ html[lang="uk"] .thanks__sign {
 
   var langObserver = new MutationObserver(function () {
     var langNow = getDocLang();
-    populateDateOptions(dateEl.value, langNow);
+    updateDateDayBadge();
     updateGuestsOptions(langNow);
     applySlotsToSelect(lastKnownSlots);
     if (activeStatusState && !status.hidden) {
@@ -2866,7 +2886,19 @@ html[lang="uk"] .thanks__sign {
 
     if (bad) {
       status.hidden = true;
-      bad.focus();
+      var fieldBox = bad.closest("[data-field]") || bad;
+      try {
+        fieldBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      } catch (eScroll) {
+        bad.scrollIntoView();
+      }
+      setTimeout(function () {
+        try {
+          bad.focus({ preventScroll: true });
+        } catch (eFocus) {
+          bad.focus();
+        }
+      }, 250);
       return;
     }
 
@@ -2973,10 +3005,12 @@ html[lang="uk"] .thanks__sign {
     sending.hidden = false;
     btn.disabled = true;
 
-    bar.style.width = "0%";
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { bar.style.width = "100%"; });
-    });
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    void bar.offsetWidth;
+    bar.style.transition = 'width 4.8s linear';
+    bar.style.width = '100%';
+
     try { sending.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e0) {}
 
     var FALLBACK_ENDPOINT = "https://formsubmit.co/ajax/" +
@@ -2989,7 +3023,8 @@ html[lang="uk"] .thanks__sign {
       setTimeout(function () {
         sending.hidden = true;
         btn.disabled = false;
-        bar.style.width = "0%";
+        bar.style.transition = 'none';
+        bar.style.width = '0%';
         if (ok) {
           activeStatusState = {
             type: "success",
@@ -3002,6 +3037,10 @@ html[lang="uk"] .thanks__sign {
           status.hidden = false;
           try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e1) {}
           form.reset();
+          var nowAfter = parisNow();
+          var nextAfter = calculateNextSlot(nowAfter);
+          dateEl.value = nextAfter.date;
+          updateDateDayBadge();
           updateAvailability();
         } else if (failure && (failure.capacityFull || failure.code === "CAPACITY_FULL")) {
           activeStatusState = {
