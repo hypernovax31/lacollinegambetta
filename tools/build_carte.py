@@ -539,8 +539,9 @@ def extract_cover(src: str) -> str:
     start = src.find('<div class="cover-page">')
     node, _ = take_element(src[start:], "div")
     node = node.replace(' onclick="showView(\'menu\')"', "")
-    node = node.replace('href="#menu-nav-anchor"', 'href="https://lacollinegambetta.fr/#menu-nav-anchor"')
-    node = node.replace('href="index.html#menu-nav-anchor"', 'href="https://lacollinegambetta.fr/#menu-nav-anchor"')
+    node = node.replace('href="#menu-nav-anchor"', 'href="https://hypernovax31.github.io/lacollinegambetta/#menu-nav-anchor"')
+    node = node.replace('href="index.html#menu-nav-anchor"', 'href="https://hypernovax31.github.io/lacollinegambetta/#menu-nav-anchor"')
+    node = node.replace('href="https://lacollinegambetta.fr/#menu-nav-anchor"', 'href="https://hypernovax31.github.io/lacollinegambetta/#menu-nav-anchor"')
     while '<a class="download-card"' in node:
         a = node.find('<a class="download-card"')
         frag, rest = take_element(node[a:], "a")
@@ -790,7 +791,7 @@ html.carte-doc .print-page--cover .cover-page::after {
   border-radius: 0 !important;
   pointer-events: none;
 }
-/* Titre principal : ratio x2 sur tous les textes et centrage vertical entre haut de page et médaillon */
+/* Titre principal : calque parfait de la typographie CINZEL du site web */
 html.carte-doc .print-page--cover .titre-principal,
 html.carte-doc .print-page--cover .cover-brand {
   flex: 0 0 auto;
@@ -809,9 +810,9 @@ html.carte-doc .print-page--cover .cover-brand .leader-title {
   font-family: 'Cinzel', serif !important;
   font-size: 18pt !important;
   font-weight: 700 !important;
-  letter-spacing: .35em !important;
+  letter-spacing: .28em !important;
   color: #ffffff !important;
-  line-height: 1 !important;
+  line-height: 1.1 !important;
   text-transform: uppercase !important;
   margin: 0 0 2mm 0 !important;
 }
@@ -820,9 +821,9 @@ html.carte-doc .print-page--cover .cover-brand h2 {
   font-family: 'Cinzel', serif !important;
   font-size: 38pt !important;
   font-weight: 700 !important;
-  letter-spacing: .20em !important;
+  letter-spacing: .14em !important;
   color: #ffffff !important;
-  line-height: 0.92 !important;
+  line-height: 0.95 !important;
   text-transform: uppercase !important;
   margin: 0 0 1mm 0 !important;
   text-align: center !important;
@@ -831,9 +832,10 @@ html.carte-doc .print-page--cover .cover-brand h2 {
 html.carte-doc .print-page--cover .titre-principal h2 span,
 html.carte-doc .print-page--cover .cover-brand h2 span {
   display: block !important;
+  font-family: 'Cinzel', serif !important;
   font-size: 20pt !important;
   font-weight: 700 !important;
-  letter-spacing: .30em !important;
+  letter-spacing: .22em !important;
   color: #ffe88f !important;
   line-height: 1.1 !important;
   margin-top: 1.8mm !important;
@@ -842,11 +844,11 @@ html.carte-doc .print-page--cover .cover-brand h2 span {
 html.carte-doc .print-page--cover .titre-principal .leader-meta,
 html.carte-doc .print-page--cover .cover-brand .leader-meta {
   font-family: 'Cinzel', serif !important;
-  font-size: 14pt !important;
+  font-size: 18pt !important;
   font-weight: 700 !important;
-  letter-spacing: .18em !important;
+  letter-spacing: .12em !important;
   color: #ffffff !important;
-  line-height: 1.25 !important;
+  line-height: 1.3 !important;
   text-transform: uppercase !important;
   margin: 2.2mm 0 0 0 !important;
 }
@@ -855,11 +857,11 @@ html.carte-doc .print-page--cover .titre-principal .leader-meta--sub,
 html.carte-doc .print-page--cover .cover-brand .menu-leader-subline,
 html.carte-doc .print-page--cover .cover-brand .leader-meta--sub {
   font-family: 'Cinzel', serif !important;
-  font-size: 13pt !important;
+  font-size: 18pt !important;
   font-weight: 700 !important;
-  letter-spacing: .14em !important;
+  letter-spacing: .10em !important;
   color: #ffe88f !important;
-  line-height: 1.25 !important;
+  line-height: 1.3 !important;
   text-transform: uppercase !important;
   margin: 1.8mm 0 0 0 !important;
 }
@@ -869,8 +871,8 @@ html.carte-doc .print-page--cover .cover-brand .star-gold {
   width: 7px;
   height: 7px;
   margin: 0 7px;
-  vertical-align: 1.5px;
-  background: #fcf6ba;
+  vertical-align: 2px;
+  background: #ffe88f;
   clip-path: @@ETOILE@@;
   color: transparent !important;
   font-size: 0 !important;
@@ -878,10 +880,10 @@ html.carte-doc .print-page--cover .cover-brand .star-gold {
   text-shadow: none !important;
 }
 html.carte-doc .print-page--cover .menu-leader-subline .star-gold {
-  width: 5.8px;
-  height: 5.8px;
-  margin: 0 5px;
-  vertical-align: 1px;
+  width: 6.5px;
+  height: 6.5px;
+  margin: 0 6px;
+  vertical-align: 2px;
 }
 /* Le bouton « Menu & Carte » de la couverture : il reprend la pilule dorée
    « sélectionnée » de la version web (dégradé or #bf953f→#fef9db, liseré

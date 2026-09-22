@@ -291,7 +291,7 @@ async function main() {
       return {
         page: 1,
         rect: [llx, lly, urx, ury],
-        url: pill.href || 'https://lacollinegambetta.fr/#menu-nav-anchor',
+        url: pill.href || 'https://hypernovax31.github.io/lacollinegambetta/#menu-nav-anchor',
       };
     });
     if (pillLink) annotations.push(pillLink);
