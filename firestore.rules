@@ -2,14 +2,20 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    /* Registre de capacité : une transaction du navigateur lit puis met à
-       jour le document de la date. La session Firebase anonyme est requise. */
+    /* Paramètres globaux de limitation (modifiables depuis la console Firebase) */
+    match /reservationSettings/{document} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    /* Registre de capacité journalier : une transaction lit puis met à jour */
     match /reservationCapacity/{date} {
       allow read: if request.auth != null;
       allow create, update: if request.auth != null;
       allow delete: if false;
     }
 
+    /* Fiches individuelles de réservation */
     match /reservations/{reservationId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null
@@ -18,7 +24,7 @@ service cloud.firestore {
         && request.resource.data.name is string
         && request.resource.data.name.size() > 0
         && request.resource.data.phone is string
-        && request.resource.data.phone.size() > 0
+        && request.resource.data.phone.size() >= 8
         && request.resource.data.guests is int
         && request.resource.data.guests >= 1
         && request.resource.data.guests <= 10

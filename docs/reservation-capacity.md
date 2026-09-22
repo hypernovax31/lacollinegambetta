@@ -1,107 +1,72 @@
-# Réservations autonomes avec Firebase gratuit
+# Réservations autonomes et limitation avec Firebase
 
-La réservation utilise directement **Cloud Firestore** du projet Firebase déjà
-dédié `la-colline-gambetta`. Il n'y a pas de Google Sheet, pas de Cloud
-Function payante et pas de créneaux à remplir à la main.
+La réservation utilise directement **Cloud Firestore** du projet Firebase dédié
+`la-colline-gambetta`. Il n'y a pas de Google Sheet, pas de Cloud Function
+payante et pas de créneaux à remplir manuellement.
 
 Le navigateur s'authentifie anonymement puis réalise une transaction Firestore
-atomique. Le projet reste compatible avec l'offre gratuite Firebase utilisée
-par La Colline Gambetta.
+atomique. Le projet reste 100 % compatible avec l'offre gratuite Firebase Spark.
 
-## Règle de capacité
+---
+
+## 1. Règles de capacité et limitation
 
 Chaque réservation occupe une durée de **60 minutes** à partir de l'heure
 choisie. La limite est calculée sur les réservations qui se chevauchent :
 
-- maximum **15 tables simultanées** dans une fenêtre glissante de 60 min ;
-- maximum **30 couverts simultanés** dans cette même fenêtre ;
-- une table accueille au maximum **2 adultes** : **1 personne = 1 table**,
-  **2 personnes = 1 table**, **3 personnes = 2 tables** et **4 personnes = 2
-  tables** ; une demande de 5 ou 6 adultes en consomme 3, etc. ;
-- le formulaire ne séparant pas encore adultes et enfants, chaque personne
-  renseignée est comptée comme un adulte, ce qui évite de dépasser la capacité ;
-- une nouvelle demande est refusée si l'une des deux limites est dépassée ;
-- les heures sont générées automatiquement de 15 en 15 minutes, de 12h00 à
-  22h45.
+- **15 tables simultanées** maximum dans une fenêtre glissante de 60 min (par défaut) ;
+- **30 personnes/couverts simultanés** maximum dans cette même fenêtre (par défaut) ;
+- **Règle d'attribution des tables** : 1 à 2 personnes = 1 table, 3 à 4 personnes = 2 tables, 5 à 6 personnes = 3 tables, etc. ;
+- Les créneaux sont générés de 15 en 15 minutes, de 12h00 à 22h45 ;
+- Tout créneau complet est immédiatement grisé et annoté `(Complet)`.
 
-Exemple : une réservation à 12h45 chevauche celle de 12h00 jusqu'à 13h00.
-Une réservation à 13h00 ne chevauche plus celle de 12h00, mais chevauche une
-réservation commencée à 12h15.
+---
 
-Les écritures sont réparties dans deux endroits :
+## 2. Personnalisation des limites via la console Firebase
 
-```text
-reservationCapacity/{YYYY-MM-DD}
-reservations/{id}
-```
+Vous pouvez modifier les règles de limitation en direct sans toucher au code,
+en créant ou modifiant le document suivant dans **Cloud Firestore** :
 
-Le document par date contient le registre utilisé par la transaction de
-capacité ; la collection `reservations` conserve les détails de chaque demande.
+* **Collection** : `reservationSettings`
+* **Document** : `config`
 
-## Pourquoi cela reste gratuit
+### Champs disponibles :
 
-Il n'y a pas de Cloud Function : la page utilise le SDK Firebase Web et la
-transaction Firestore directement. L'authentification anonyme permet de
-refuser les écritures totalement anonymes. La configuration Firebase visible
-dans le navigateur n'est pas un secret ; la protection repose sur les règles
-Firestore.
+| Champ | Type | Description | Valeur par défaut |
+|---|---|---|---|
+| `maxTables` | `number` | Nombre maximum de tables simultanées | `15` |
+| `maxCovers` | `number` | Nombre maximum de couverts simultanés | `30` |
+| `durationMinutes` | `number` | Durée moyenne d'occupation d'une table (min) | `60` |
+| `minNoticeMinutes` | `number` | Délai minimum avant le créneau pour le jour même | `15` |
+| `maxDaysInAdvance` | `number` | Nombre maximum de jours ouvrables à l'avance | `90` |
+| `maxGuestsPerBooking` | `number` | Nombre max de personnes par réservation en ligne | `10` |
+| `onlineBookingEnabled` | `boolean` | Activer ou suspendre les réservations en ligne | `true` |
+| `closedDates` | `array` | Dates d'indisponibilité (ex: `["2026-12-25"]`) | `[]` |
+| `closedSlots` | `map` | Créneaux fermés par date (ex: `{"2026-10-15": ["12:00"]}`) | `{}` |
 
-La limite est fiable pour les utilisateurs normaux et les envois simultanés,
-car Firestore sérialise les transactions qui modifient le même document de
-capacité. Comme toute solution purement client gratuite, un développeur qui
-voudrait contourner volontairement la page pourrait appeler Firebase avec une
-session anonyme et tenter une écriture autorisée. Une protection absolue
-contre ce scénario nécessiterait une fonction serveur et donc l'offre Blaze.
+---
 
-## Projet utilisé
-
-La configuration utilise le projet Firebase dédié `la-colline-gambetta` :
+## 3. Structure des données Firestore
 
 ```text
-projectId: la-colline-gambetta
-authDomain: la-colline-gambetta.firebaseapp.com
+reservationSettings/config         --> Paramètres globaux de limitation
+reservationCapacity/{YYYY-MM-DD}   --> Registre journalier des réservations
+reservations/{id}                  --> Fiche détaillée de la réservation
 ```
 
-L'authentification anonyme doit rester activée dans Firebase Authentication,
-pour le site La Colline Gambetta.
+---
 
-## Déployer les règles depuis GitHub
+## 4. Déploiement des règles Firestore
 
-Le fichier `firestore.rules` contient uniquement les règles des réservations
-La Colline Gambetta. Le dépôt ne déploie que Firestore : GitHub reste
-l'hébergeur du site.
+Le fichier `firestore.rules` protège la base :
+- Les paramètres (`reservationSettings`) sont en lecture seule pour les clients.
+- Les capacités (`reservationCapacity`) sont modifiées uniquement par transaction atomique.
+- Les réservations (`reservations`) sont créées après validation stricte des champs.
 
-Pour un déploiement manuel :
+Pour déployer manuellement les règles :
 
 ```bash
 npm install -g firebase-tools
 firebase login
 firebase deploy --project la-colline-gambetta --only firestore
 ```
-
-Pour le déploiement automatique, ajouter dans les secrets GitHub Actions :
-
-```text
-FIREBASE_PROJECT_ID=la-colline-gambetta
-FIREBASE_TOKEN=votre_token_firebase
-```
-
-Le workflow `.github/workflows/firebase-deploy.yml` se déclenche sur `main` et
-met à jour uniquement les règles Firestore. Aucun token ne doit être ajouté au
-dépôt ou partagé dans le chat.
-
-## Activation à vérifier dans Firebase
-
-Dans la console du projet `la-colline-gambetta` :
-
-1. ouvrir **Authentication → Sign-in method** ;
-2. vérifier que **Anonymous** est activé ;
-3. dans **Authentication → Settings → Authorized domains**, ajouter le domaine
-   qui sert la page de réservation (par exemple le domaine GitHub Pages ou le
-   domaine personnalisé) ;
-4. vérifier que **Firestore Database** est bien la base utilisée par La Colline Gambetta ;
-5. déployer les règles du dépôt.
-
-La page de réservation utilisera alors directement Firestore. Il n'y a pas de
-URL d'API supplémentaire à renseigner : `assets/js/reservation-config.js`
-contient simplement le marqueur `firebase`.

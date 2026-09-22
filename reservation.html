@@ -2191,6 +2191,9 @@ html[lang="uk"] .thanks__sign {
   window.addEventListener('lcg-firebase-ready', function () {
     updateAvailability();
   });
+  window.addEventListener('lcg-policy-updated', function () {
+    updateAvailability();
+  });
 
   var langObserver = new MutationObserver(function () {
     applySlotsToSelect(lastKnownSlots);
