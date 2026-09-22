@@ -582,6 +582,8 @@ html[lang="ko"] .form-status strong,
 html[lang="ko"] .thanks__hello,
 html[lang="ko"] .thanks__when-detail,
 html[lang="ko"] .thanks__when-intro,
+html[lang="ko"] .thanks__when-slot,
+html[lang="ko"] .thanks__when-guests,
 html[lang="ko"] .thanks__sign,
 html[lang="ko"] .sending__label {
   font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif !important;
@@ -617,6 +619,8 @@ html[lang="zh"] .form-status strong,
 html[lang="zh"] .thanks__hello,
 html[lang="zh"] .thanks__when-detail,
 html[lang="zh"] .thanks__when-intro,
+html[lang="zh"] .thanks__when-slot,
+html[lang="zh"] .thanks__when-guests,
 html[lang="zh"] .thanks__sign,
 html[lang="zh"] .sending__label {
   font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif !important;
@@ -652,6 +656,8 @@ html[lang="ja"] .form-status strong,
 html[lang="ja"] .thanks__hello,
 html[lang="ja"] .thanks__when-detail,
 html[lang="ja"] .thanks__when-intro,
+html[lang="ja"] .thanks__when-slot,
+html[lang="ja"] .thanks__when-guests,
 html[lang="ja"] .thanks__sign,
 html[lang="ja"] .sending__label {
   font-family: 'CinzelJP', 'Noto Serif JP', 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', serif !important;
@@ -687,6 +693,8 @@ html[lang="uk"] .form-status strong,
 html[lang="uk"] .thanks__hello,
 html[lang="uk"] .thanks__when-detail,
 html[lang="uk"] .thanks__when-intro,
+html[lang="uk"] .thanks__when-slot,
+html[lang="uk"] .thanks__when-guests,
 html[lang="uk"] .thanks__sign,
 html[lang="uk"] .sending__label {
   font-family: 'Playfair Display', 'Georgia', serif !important;
@@ -724,6 +732,8 @@ html[lang="ar"] .form-status strong,
 html[lang="ar"] .thanks__hello,
 html[lang="ar"] .thanks__when-detail,
 html[lang="ar"] .thanks__when-intro,
+html[lang="ar"] .thanks__when-slot,
+html[lang="ar"] .thanks__when-guests,
 html[lang="ar"] .thanks__sign,
 html[lang="ar"] .sending__label {
   font-family: 'Amiri', 'Traditional Arabic', serif !important;
@@ -759,6 +769,8 @@ html[lang="hi"] .form-status strong,
 html[lang="hi"] .thanks__hello,
 html[lang="hi"] .thanks__when-detail,
 html[lang="hi"] .thanks__when-intro,
+html[lang="hi"] .thanks__when-slot,
+html[lang="hi"] .thanks__when-guests,
 html[lang="hi"] .thanks__sign,
 html[lang="hi"] .sending__label {
   font-family: 'Noto Serif Devanagari', serif !important;
@@ -1633,49 +1645,62 @@ html[lang="ar"] .field__date-icon {
 }
 .thanks__line { font-size: .88rem; color: var(--violet-900); }
 
-/* La ligne qui reprend jour, heure et couverts : c'est l'information
-   que le client relit, on la detache du reste. */
+/* La section qui reprend jour, heure et couverts, parfaitement centrée */
 .thanks__when {
-  display: inline-block;
-  margin: 4px auto 12px !important;
-  padding: 10px 18px;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 10px auto 14px !important;
+  padding: 14px 24px 12px;
   border-radius: 14px;
   border: 1px solid rgba(216,178,87,.5);
-  background: #fff;
+  background: #ffffff;
   font-family: 'Cinzel', serif;
-  letter-spacing: .04em;
+  letter-spacing: .03em;
   color: var(--violet-900);
   font-variant-numeric: tabular-nums;
+  text-align: center;
+  box-sizing: border-box;
 }
-/* L'annonce, en retrait : elle introduit sans voler la vedette. */
+/* L'annonce : introduite clairement et centrée */
 .thanks__when-intro {
   display: block;
   text-align: center;
-  font-size: .78rem;
-  font-weight: 400;
-  opacity: .78;
-  margin-bottom: 5px;
+  font-size: clamp(.84rem, 2.5vw, .96rem);
+  font-weight: 500;
+  color: var(--gold-800, #85641f);
+  margin: 0 0 8px !important;
+  letter-spacing: .04em;
 }
-/* La ligne que le client retient : detachee et centree dans
-   l'encart. Les deux groupes en gras et leur mot de liaison forment
-   UNE ligne — d'ou l'inline-block, un display:block les empilerait —
-   qui se replie proprement si la largeur manque. */
-.thanks__when-line {
+/* La ligne date et heure : centrée avec date et heure en gras */
+.thanks__when-slot {
   display: block;
   text-align: center;
-  text-wrap: balance;
-  line-height: 1.5;
+  font-size: clamp(.96rem, 2.9vw, 1.12rem);
+  line-height: 1.45;
+  margin: 0 0 6px !important;
+  color: var(--violet-950, #1f1235);
+}
+/* La ligne du nombre de personnes : centrée */
+.thanks__when-guests {
+  display: block;
+  text-align: center;
+  font-size: clamp(.92rem, 2.7vw, 1.05rem);
+  line-height: 1.4;
+  margin: 0 !important;
+  color: var(--violet-950, #1f1235);
 }
 .thanks__when-detail {
-  display: inline-block;
-  font-size: clamp(.92rem, 2.8vw, 1.04rem);
+  display: inline;
   font-weight: 700;
+  color: var(--violet-950, #1f1235);
 }
-/* Le mot de liaison reste en texte courant : c'est ce contraste qui
-   fait ressortir les deux groupes. */
+/* Les mots de liaison en texte courant pour faire ressortir les informations clés */
+.thanks__when-at,
 .thanks__when-for {
   font-weight: 400;
-  opacity: .8;
+  color: var(--ink, #2c2538);
+  opacity: .88;
 }
 .thanks__warm { font-style: italic; color: #6b4a8a; }
 
@@ -2589,6 +2614,48 @@ html[lang="uk"] .thanks__sign {
     return PUNCT[lang] || { comma: ",", stop: ".", sp: " " };
   }
 
+  function getTimePreposition(lang) {
+    var AT_MAP = {
+      fr: "à",
+      en: "at",
+      es: "a las",
+      de: "um",
+      it: "alle",
+      pt: "às",
+      nl: "om",
+      ar: "في",
+      zh: "",
+      ja: "",
+      ko: "",
+      pl: "o",
+      tr: "saat",
+      uk: "о",
+      hi: "को"
+    };
+    return (AT_MAP[lang] !== undefined) ? AT_MAP[lang] : "à";
+  }
+
+  function getForWord(lang) {
+    var FOR_MAP = {
+      fr: "pour",
+      en: "for",
+      es: "para",
+      de: "für",
+      it: "per",
+      pt: "para",
+      nl: "voor",
+      ar: "لـ",
+      zh: "共",
+      ja: "ご予約：",
+      ko: "인원:",
+      pl: "dla",
+      tr: "kişi sayısı:",
+      uk: "для",
+      hi: "के लिए"
+    };
+    return FOR_MAP[lang] || "pour";
+  }
+
   /* --- Sélecteur de date avec Calendrier natif de l'appareil --- */
   var dateTextEl = document.getElementById('bk-date-text');
   var dateBoxEl = document.getElementById('bk-date-box');
@@ -2799,7 +2866,8 @@ html[lang="uk"] .thanks__sign {
     if (data.type === "success") {
       var jourLu = formatLocalizedDate(data.date, lang);
       var heureLue = formatLocalizedTime(data.time, lang);
-      var dateSep = getDateSep(lang);
+      var prepAt = getTimePreposition(lang);
+      var forWord = getForWord(lang);
 
       var guestLabels = {
         fr: "personnes", en: "guests", es: "comensales", de: "Gäste",
@@ -2812,7 +2880,8 @@ html[lang="uk"] .thanks__sign {
         zh: "位客人", ja: "名", ko: "명", pl: "osoba", tr: "kişi", uk: "гість", hi: "मेहमान"
       };
       var lbl = (String(data.nb) === "1") ? (guestLabel1[lang] || "personne") : (guestLabels[lang] || "personnes");
-      var couvertsStr = data.nb + " " + lbl;
+      var nbStr = (lang === "ar" || lang === "hi") ? toLocalizedDigits(data.nb, lang) : data.nb;
+      var couvertsStr = nbStr + " " + lbl;
 
       var h = document.createElement("p");
       h.className = "thanks__hello";
@@ -2822,33 +2891,54 @@ html[lang="uk"] .thanks__sign {
       p1.className = "thanks__line";
       p1.textContent = th("l1") || "Votre demande de table vient de nous parvenir.";
 
-      var p2 = document.createElement("p");
+      var p2 = document.createElement("div");
       p2.className = "thanks__when";
-      var intro = document.createElement("span");
+
+      var intro = document.createElement("p");
       intro.className = "thanks__when-intro";
-      intro.textContent = (th("l2") || "Nous vous attendons") + pc.stop;
+      intro.textContent = th("l2") || "Nous vous attendons";
 
-      var quand = document.createElement("strong");
-      quand.className = "thanks__when-detail";
-      quand.textContent = jourLu + dateSep + heureLue;
+      var slotP = document.createElement("p");
+      slotP.className = "thanks__when-slot";
 
-      var ligne = document.createElement("span");
-      ligne.className = "thanks__when-line";
-      ligne.appendChild(quand);
+      var dateElStrong = document.createElement("strong");
+      dateElStrong.className = "thanks__when-detail";
+      dateElStrong.textContent = jourLu;
 
-      if (String(data.nb) !== "1") {
-        var lien = document.createElement("span");
-        lien.className = "thanks__when-for";
-        lien.textContent = " " + (th("for") || "pour") + " ";
-        var qui = document.createElement("strong");
-        qui.className = "thanks__when-detail";
-        qui.textContent = couvertsStr;
-        ligne.appendChild(lien);
-        ligne.appendChild(qui);
+      var timeElStrong = document.createElement("strong");
+      timeElStrong.className = "thanks__when-detail";
+      timeElStrong.textContent = heureLue;
+
+      slotP.appendChild(dateElStrong);
+      if (prepAt) {
+        var atSpan = document.createElement("span");
+        atSpan.className = "thanks__when-at";
+        atSpan.textContent = " " + prepAt + " ";
+        slotP.appendChild(atSpan);
+      } else {
+        slotP.appendChild(document.createTextNode(" "));
       }
+      slotP.appendChild(timeElStrong);
 
       p2.appendChild(intro);
-      p2.appendChild(ligne);
+      p2.appendChild(slotP);
+
+      if (String(data.nb) !== "1") {
+        var guestsP = document.createElement("p");
+        guestsP.className = "thanks__when-guests";
+
+        var forSpan = document.createElement("span");
+        forSpan.className = "thanks__when-for";
+        forSpan.textContent = forWord + " ";
+
+        var guestsStrong = document.createElement("strong");
+        guestsStrong.className = "thanks__when-detail";
+        guestsStrong.textContent = couvertsStr;
+
+        guestsP.appendChild(forSpan);
+        guestsP.appendChild(guestsStrong);
+        p2.appendChild(guestsP);
+      }
 
       var p4 = document.createElement("p");
       p4.className = "thanks__line thanks__warm";
@@ -2878,15 +2968,12 @@ html[lang="uk"] .thanks__sign {
       p1.className = "thanks__line";
       p1.textContent = th("apology-l1") || capacityCopy("apologyLine1");
 
-      var p2 = document.createElement("p");
+      var p2 = document.createElement("div");
       p2.className = "thanks__when";
-      var ligne = document.createElement("span");
-      ligne.className = "thanks__when-line";
-      var detail = document.createElement("strong");
-      detail.className = "thanks__when-detail";
+      var detail = document.createElement("p");
+      detail.className = "thanks__when-slot thanks__when-detail";
       detail.textContent = th("apology-l2") || capacityCopy("apologyLine2");
-      ligne.appendChild(detail);
-      p2.appendChild(ligne);
+      p2.appendChild(detail);
 
       var p4 = document.createElement("p");
       p4.className = "thanks__line thanks__warm";
@@ -3024,18 +3111,30 @@ html[lang="uk"] .thanks__sign {
     var heureLue = formatLocalizedTime(timeEl.value, lang);
     var dateSep = getDateSep(lang);
 
-    var autoresponseBody = [
+    var prepAt = getTimePreposition(lang);
+    var forWord = getForWord(lang);
+    var slotLineText = prepAt ? (jourLu + " " + prepAt + " " + heureLue) : (jourLu + " " + heureLue);
+
+    var autoresponseLines = [
       (th("hi") || "Merci infiniment") + pc.comma + pc.sp + nomComplet + pc.stop,
       "",
       th("l1") || "Votre demande de table vient de nous parvenir.",
-      (th("l2") || "Nous vous attendons") + " : " + jourLu + dateSep + heureLue + (String(nb) !== "1" ? " " + (th("for") || "pour") + " " + couverts : "") + pc.stop,
+      "",
+      th("l2") || "Nous vous attendons",
+      slotLineText
+    ];
+    if (String(nb) !== "1") {
+      autoresponseLines.push(forWord + " " + couverts);
+    }
+    autoresponseLines.push(
       "",
       th("l4") || "Au plaisir de vous recevoir très prochainement,",
       "",
       th("sign") || "L’équipe de La Colline Gambetta",
       "4 rue Belgrand, 75020 Paris (Métro Gambetta)",
       "01 43 49 05 93 · lacollinegambetta@mailo.com"
-    ].join("\n");
+    );
+    var autoresponseBody = autoresponseLines.join("\n");
 
     /* Formatage 100 % en français pour l'email envoyé au restaurant sur Mailo */
     var dateFr = formatLocalizedDate(dateEl.value, "fr");
