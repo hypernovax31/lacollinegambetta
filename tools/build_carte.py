@@ -566,7 +566,7 @@ def extract_cover(src: str) -> str:
     facade = (
         '<svg class="relief-inner-svg" viewBox="0 0 280 280" '
         'xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
-        '<image href="logo-gambetta.png" x="-66" y="-16" width="412" height="312" '
+        '<image href="Logo_LaColline_Gambetta.png" x="-69" y="-16" width="418" height="312" '
         'preserveAspectRatio="none"/>'
         "</svg>"
     )
