@@ -1234,83 +1234,6 @@ html[lang="ar"] .field select {
 .field input:focus, .field select:focus, .field textarea:focus {
   outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(216,178,87,.22);
 }
-.field__date-wrapper {
-  position: relative;
-  width: 100%;
-  height: 52px;
-  min-height: 52px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-.field__date-native {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-  z-index: 2;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-.field__date-display {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  border: 1px solid rgba(216,178,87,.5);
-  border-radius: 14px;
-  padding: 0 42px 0 14px;
-  display: flex;
-  align-items: center;
-  font: inherit;
-  color: var(--ink);
-  font-size: 1rem;
-  font-weight: 500;
-  box-sizing: border-box;
-  pointer-events: none;
-  transition: border-color .18s ease, box-shadow .18s ease;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.field__date-native:focus ~ .field__date-display {
-  outline: none;
-  border-color: var(--gold-500);
-  box-shadow: 0 0 0 3px rgba(216,178,87,.22);
-}
-.field--error .field__date-display {
-  border-color: #b0304a;
-  box-shadow: 0 0 0 3px rgba(176,48,74,.14);
-}
-.field__date-icon {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
-  color: var(--gold-700, #9c7a2d);
-  pointer-events: none;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.field__date-icon svg {
-  width: 100%;
-  height: 100%;
-}
-html[lang="ar"] .field__date-display {
-  padding: 0 14px 0 42px;
-}
-html[lang="ar"] .field__date-icon {
-  right: auto;
-  left: 14px;
-}
 .field__hint { margin:0; font-size:.76rem; color:var(--muted); font-style:italic; }
 .field__hint--warn { color:#b0304a !important; font-style:normal !important; font-weight:600 !important; }
 .field--error input, .field--error select { border-color:#b0304a; box-shadow:0 0 0 3px rgba(176,48,74,.14); }
@@ -1889,18 +1812,7 @@ html[lang="uk"] .thanks__sign {
             </div>
             <div class="field" data-field>
               <label for="bk-date">Date</label>
-              <div class="field__date-wrapper" id="bk-date-wrapper">
-                <input id="bk-date" name="date" type="date" required class="field__date-native">
-                <div class="field__date-display" id="bk-date-display" aria-hidden="true"></div>
-                <span class="field__date-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                  </svg>
-                </span>
-              </div>
+              <select id="bk-date" name="date" required></select>
               <p class="field__error" data-error hidden>Merci de choisir une date à venir.</p>
             </div>
             <div class="field" data-field>
@@ -2572,16 +2484,44 @@ html[lang="uk"] .thanks__sign {
     return " \u00B7 ";
   }
 
-  function updateDateDisplay() {
-    var disp = document.getElementById("bk-date-display");
-    if (!disp) return;
-    if (!dateEl.value) {
-      disp.textContent = "";
-      return;
+  function getPunctuation(lang) {
+    var PUNCT = {
+      ja: { comma: "\u3001", stop: "\u3002", sp: "" },
+      zh: { comma: "\uFF0C", stop: "\u3002", sp: "" },
+      ar: { comma: "\u060C", stop: ".", sp: " " }
+    };
+    return PUNCT[lang] || { comma: ",", stop: ".", sp: " " };
+  }
+
+  function populateDateOptions(targetIsoDate, lang) {
+    if (!dateEl) return;
+    var nowP = parisNow();
+    var next = calculateNextSlot(nowP);
+    var startIso = next.isTomorrow ? next.date : nowP.date;
+    var currentVal = targetIsoDate || dateEl.value || startIso;
+    if (currentVal < startIso) {
+      currentVal = startIso;
     }
-    var lang = getDocLang();
-    var prettyDate = formatLocalizedDate(dateEl.value, lang);
-    disp.textContent = prettyDate;
+
+    var startDate = new Date(startIso + "T00:00:00");
+    var totalDays = 90;
+
+    var frag = document.createDocumentFragment();
+    for (var i = 0; i < totalDays; i++) {
+      var d = new Date(startDate.getTime());
+      d.setDate(d.getDate() + i);
+      var isoStr = iso(d);
+      var opt = document.createElement("option");
+      opt.value = isoStr;
+      opt.textContent = formatLocalizedDate(isoStr, lang);
+      if (isoStr === currentVal) {
+        opt.selected = true;
+      }
+      frag.appendChild(opt);
+    }
+    dateEl.innerHTML = "";
+    dateEl.appendChild(frag);
+    dateEl.value = currentVal;
   }
 
   function updateGuestsOptions(lang) {
@@ -2685,21 +2625,11 @@ html[lang="uk"] .thanks__sign {
 
   function updateAvailability() {
     var now = parisNow();
-    if (dateEl.min !== now.date) {
-      dateEl.min = now.date;
-    }
-    if (dateEl.value && dateEl.value < now.date) {
-      dateEl.value = now.date;
-      updateDateDisplay();
-    }
-
-    var isToday = (dateEl.value === now.date);
     var next = calculateNextSlot(now);
-    if (isToday && next.isTomorrow) {
-      dateEl.value = next.date;
-      updateDateDisplay();
-      updateAvailability();
-      return;
+    var startIso = next.isTomorrow ? next.date : now.date;
+
+    if (!dateEl.value || dateEl.value < startIso || (dateEl.options.length > 0 && dateEl.options[0].value !== startIso)) {
+      populateDateOptions(dateEl.value && dateEl.value >= startIso ? dateEl.value : startIso, getDocLang());
     }
 
     applySlotsToSelect(lastKnownSlots);
@@ -2875,29 +2805,12 @@ html[lang="uk"] .thanks__sign {
 
   var nowP = parisNow();
   var initialSlot = calculateNextSlot(nowP);
-  dateEl.min = nowP.date;
-  dateEl.value = initialSlot.date;
-  updateDateDisplay();
+  populateDateOptions(initialSlot.date, getDocLang());
   updateGuestsOptions(getDocLang());
 
-  var dateWrapper = document.getElementById("bk-date-wrapper");
-  if (dateWrapper) {
-    dateWrapper.addEventListener("click", function () {
-      try {
-        if (typeof dateEl.showPicker === "function") {
-          dateEl.showPicker();
-        }
-      } catch (ePick) {}
-    });
-  }
-
   dateEl.addEventListener('change', function () {
-    updateDateDisplay();
     lastKnownSlots = null;
     updateAvailability();
-  });
-  dateEl.addEventListener('input', function () {
-    updateDateDisplay();
   });
   guestsEl.addEventListener('change', function () {
     updateAvailability();
@@ -2912,7 +2825,7 @@ html[lang="uk"] .thanks__sign {
 
   var langObserver = new MutationObserver(function () {
     var langNow = getDocLang();
-    updateDateDisplay();
+    populateDateOptions(dateEl.value, langNow);
     updateGuestsOptions(langNow);
     applySlotsToSelect(lastKnownSlots);
     if (activeStatusState && !status.hidden) {
@@ -3124,8 +3037,7 @@ html[lang="uk"] .thanks__sign {
           form.reset();
           var nowAfter = parisNow();
           var nextAfter = calculateNextSlot(nowAfter);
-          dateEl.value = nextAfter.date;
-          updateDateDisplay();
+          populateDateOptions(nextAfter.date, getDocLang());
           updateAvailability();
         } else if (failure && (failure.capacityFull || failure.code === "CAPACITY_FULL")) {
           activeStatusState = {
