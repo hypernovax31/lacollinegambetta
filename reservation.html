@@ -2334,14 +2334,286 @@ html[lang="uk"] .thanks__sign {
       return;
     }
 
-    function formatFullName(raw) {
-      var str = String(raw || '').trim().replace(/\s+/g, ' ');
-      if (!str) return '';
-      return str
-        .toLowerCase()
-        .replace(/(?:^|[\s\-\x27\u2019])\p{L}/gu, function (match) {
-          return match.toUpperCase();
-        });
+    if (bad) {
+      status.hidden = true;
+      bad.focus();
+      return;
+    }
+
+  var MAIL_I18N = {
+    fr: {
+      subject: 'Réservation',
+      at: 'à',
+      greeting: 'Bonjour,',
+      request: 'Je souhaite réserver une table à La Colline Gambetta.',
+      name: 'Nom',
+      phone: 'Téléphone',
+      mail: 'Mail',
+      date: 'Date',
+      time: 'Heure',
+      guests: 'Couverts',
+      preference: 'Préférence',
+      message: 'Message',
+      summary: 'Récapitulatif',
+      thanks: 'Merci beaucoup,',
+      telLabel: 'Tél'
+    },
+    en: {
+      subject: 'Reservation',
+      at: 'at',
+      greeting: 'Hello,',
+      request: 'I would like to book a table at La Colline Gambetta.',
+      name: 'Reservation name',
+      phone: 'Phone',
+      mail: 'Email',
+      date: 'Date',
+      time: 'Time',
+      guests: 'Guests',
+      preference: 'Preference',
+      message: 'Message',
+      summary: 'Summary',
+      thanks: 'Thank you very much,',
+      telLabel: 'Tel'
+    },
+    es: {
+      subject: 'Reserva',
+      at: 'a las',
+      greeting: 'Hola,',
+      request: 'Deseo reservar una mesa en La Colline Gambetta.',
+      name: 'Nombre de la reserva',
+      phone: 'Teléfono',
+      mail: 'Correo electrónico',
+      date: 'Fecha',
+      time: 'Hora',
+      guests: 'Comensales',
+      preference: 'Preferencia',
+      message: 'Mensaje',
+      summary: 'Resumen',
+      thanks: 'Muchas gracias,',
+      telLabel: 'Tel'
+    },
+    de: {
+      subject: 'Reservierung',
+      at: 'um',
+      greeting: 'Guten Tag,',
+      request: 'Ich möchte einen Tisch im La Colline Gambetta reservieren.',
+      name: 'Name der Reservierung',
+      phone: 'Telefon',
+      mail: 'E-Mail',
+      date: 'Datum',
+      time: 'Uhrzeit',
+      guests: 'Gäste',
+      preference: 'Präferenz',
+      message: 'Nachricht',
+      summary: 'Zusammenfassung',
+      thanks: 'Vielen Dank,',
+      telLabel: 'Tel'
+    },
+    it: {
+      subject: 'Prenotazione',
+      at: 'alle',
+      greeting: 'Buongiorno,',
+      request: 'Desidero prenotare un tavolo a La Colline Gambetta.',
+      name: 'Nome della prenotazione',
+      phone: 'Telefono',
+      mail: 'Email',
+      date: 'Data',
+      time: 'Orario',
+      guests: 'Coperti',
+      preference: 'Preferenza',
+      message: 'Messaggio',
+      summary: 'Riepilogo',
+      thanks: 'Grazie mille,',
+      telLabel: 'Tel'
+    },
+    pt: {
+      subject: 'Reserva',
+      at: 'às',
+      greeting: 'Olá,',
+      request: 'Gostaria de reservar uma mesa no La Colline Gambetta.',
+      name: 'Nome da reserva',
+      phone: 'Telefone',
+      mail: 'Email',
+      date: 'Data',
+      time: 'Hora',
+      guests: 'Pessoas',
+      preference: 'Preferência',
+      message: 'Mensagem',
+      summary: 'Resumo',
+      thanks: 'Muito obrigado,',
+      telLabel: 'Tel'
+    },
+    nl: {
+      subject: 'Reservering',
+      at: 'om',
+      greeting: 'Hallo,',
+      request: 'Ik wil graag een tafel reserveren bij La Colline Gambetta.',
+      name: 'Naam van de reservering',
+      phone: 'Telefoon',
+      mail: 'E-mail',
+      date: 'Datum',
+      time: 'Tijd',
+      guests: 'Gasten',
+      preference: 'Voorkeur',
+      message: 'Bericht',
+      summary: 'Overzicht',
+      thanks: 'Hartelijk dank,',
+      telLabel: 'Tel'
+    },
+    ar: {
+      subject: 'حجز',
+      at: 'في',
+      greeting: 'مرحباً،',
+      request: 'أود حجز طاولة في La Colline Gambetta.',
+      name: 'اسم الحجز',
+      phone: 'الهاتف',
+      mail: 'البريد الإلكتروني',
+      date: 'التاريخ',
+      time: 'الوقت',
+      guests: 'عدد الأشخاص',
+      preference: 'التفضيل',
+      message: 'الرسالة',
+      summary: 'ملخص الحجز',
+      thanks: 'شكراً جزيلاً،',
+      telLabel: 'هاتف'
+    },
+    zh: {
+      subject: '预订',
+      at: '在',
+      greeting: '您好，',
+      request: '我想在 La Colline Gambetta 预订一张餐桌。',
+      name: '预订人姓名',
+      phone: '电话',
+      mail: '电子邮箱',
+      date: '日期',
+      time: '时间',
+      guests: '人数',
+      preference: '座位偏好',
+      message: '留言',
+      summary: '预订摘要',
+      thanks: '非常感谢，',
+      telLabel: '电话'
+    },
+    ja: {
+      subject: 'ご予約',
+      at: '·',
+      greeting: 'こんにちは、',
+      request: 'La Colline Gambetta のお席を予約したく存じます。',
+      name: 'ご予約のお名前',
+      phone: 'お電話番号',
+      mail: 'メールアドレス',
+      date: '日付',
+      time: '時間',
+      guests: '人数',
+      preference: 'ご希望の席',
+      message: 'ご要望・メッセージ',
+      summary: 'ご予約内容',
+      thanks: 'どうぞよろしくお願いいたします。',
+      telLabel: '電話'
+    },
+    ko: {
+      subject: '예약',
+      at: '·',
+      greeting: '안녕하세요,',
+      request: 'La Colline Gambetta 에 테이블을 예약하고자 합니다.',
+      name: '예약자 성함',
+      phone: '전화번호',
+      mail: '이메일',
+      date: '날짜',
+      time: '시간',
+      guests: '인원',
+      preference: '선호 좌석',
+      message: '요청 사항',
+      summary: '예약 요약',
+      thanks: '감사합니다,',
+      telLabel: '전화'
+    },
+    pl: {
+      subject: 'Rezerwacja',
+      at: 'o',
+      greeting: 'Dzień dobry,',
+      request: 'Chciałbym zarezerwować stolik w La Colline Gambetta.',
+      name: 'Nazwisko do rezerwacji',
+      phone: 'Telefon',
+      mail: 'Email',
+      date: 'Data',
+      time: 'Godzina',
+      guests: 'Liczba osób',
+      preference: 'Preferencja',
+      message: 'Wiadomość',
+      summary: 'Podsumowanie',
+      thanks: 'Dziękuję bardzo,',
+      telLabel: 'Tel'
+    },
+    tr: {
+      subject: 'Rezervasyon',
+      at: 'saat',
+      greeting: 'Merhaba,',
+      request: 'La Colline Gambetta restoranında masa rezervasyonu yapmak istiyorum.',
+      name: 'Rezervasyon adı',
+      phone: 'Telefon',
+      mail: 'E-posta',
+      date: 'Tarih',
+      time: 'Saat',
+      guests: 'Kişi sayısı',
+      preference: 'Tercih',
+      message: 'Mesaj',
+      summary: 'Özet',
+      thanks: 'Çok teşekkürler,',
+      telLabel: 'Tel'
+    },
+    uk: {
+      subject: 'Бронювання',
+      at: 'о',
+      greeting: 'Доброго дня,',
+      request: 'Я бажаю забронювати столик у ресторані La Colline Gambetta.',
+      name: 'Ім’я для бронювання',
+      phone: 'Телефон',
+      mail: 'Електронна пошта',
+      date: 'Дата',
+      time: 'Час',
+      guests: 'Кількість гостей',
+      preference: 'Побажання щодо місця',
+      message: 'Повідомлення',
+      summary: 'Підсумок бронювання',
+      thanks: 'Щиро дякую,',
+      telLabel: 'Тел'
+    },
+    hi: {
+      subject: 'आरक्षण',
+      at: 'को',
+      greeting: 'नमस्ते,',
+      request: 'मैं La Colline Gambetta में एक टेबल बुक करना चाहता हूँ।',
+      name: 'बुकिंग का नाम',
+      phone: 'फोन',
+      mail: 'ईमेल',
+      date: 'तिथि',
+      time: 'समय',
+      guests: 'अतिथियों की संख्या',
+      preference: 'प्राथमिकता',
+      message: 'संदेश',
+      summary: 'आरक्षण सारांश',
+      thanks: 'बहुत-बहुत धन्यवाद,',
+      telLabel: 'फोन'
+    }
+  };
+
+  function formatFullName(raw) {
+    var str = String(raw || '').trim().replace(/\s+/g, ' ');
+    if (!str) return '';
+    return str
+      .toLowerCase()
+      .replace(/(?:^|[\s\-\x27\u2019])\p{L}/gu, function (match) {
+        return match.toUpperCase();
+      });
+  }
+
+    var lang = document.documentElement.getAttribute('lang') || 'fr';
+    var mDict = MAIL_I18N[lang] || MAIL_I18N.fr;
+
+    function th(k) {
+      var el = document.querySelector('.thanks-src [data-th="' + k + '"]');
+      return el ? el.textContent.trim() : '';
     }
 
     var nomComplet = formatFullName(name.value);
@@ -2349,37 +2621,10 @@ html[lang="uk"] .thanks__sign {
     var jolie = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     var couverts = guestsEl.options[guestsEl.selectedIndex].textContent;
     var nb = guestsEl.value;
-    var couvertsFr = nb + (nb === '1' ? ' personne' : ' personnes');
-    var pref = document.getElementById('bk-place').value;
+    var placeEl = document.getElementById('bk-place');
+    var pref = placeEl ? placeEl.options[placeEl.selectedIndex].textContent : 'Sans préférence';
     var msg = document.getElementById('bk-msg').value.trim();
 
-    var corps = [
-      'Bonjour,',
-      '',
-      'Je souhaite réserver une table à La Colline Gambetta.',
-      '',
-      'Nom : ' + nomComplet,
-      'Téléphone : ' + phone.value.trim(),
-      mail.value.trim() ? 'Mail : ' + mail.value.trim() : null,
-      'Date : ' + jolie,
-      'Heure : ' + timeEl.value.replace(':', 'h'),
-      'Couverts : ' + couvertsFr,
-      'Préférence : ' + pref,
-      msg ? '' : null,
-      msg ? 'Message : ' + msg : null,
-      '',
-      'Merci beaucoup,',
-      nomComplet
-    ].filter(function (l) { return l !== null; }).join('\n');
-
-    var sujet = 'Réservation — ' + nomComplet + ' — ' + jolie + ' à ' + timeEl.value.replace(':', 'h') + ' (' + couvertsFr + ')';
-
-    function th(k) {
-      var el = document.querySelector('.thanks-src [data-th="' + k + '"]');
-      return el ? el.textContent.trim() : '';
-    }
-
-    var lang = document.documentElement.getAttribute('lang') || 'fr';
     var jourLu;
     try {
       jourLu = d.toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' });
@@ -2400,6 +2645,94 @@ html[lang="uk"] .thanks__sign {
       ar: { comma: '\u060C', stop: '.', sp: ' ' }
     };
     var pc = PUNCT[lang] || { comma: ',', stop: '.', sp: ' ' };
+
+    var autoresponseBody = [
+      (th('hi') || 'Merci infiniment') + pc.comma + pc.sp + nomComplet + pc.stop,
+      '',
+      th('l1') || 'Votre demande de table vient de nous parvenir.',
+      (th('l2') || 'Nous vous attendons') + ' : ' + jourLu + ' · ' + heureLue + (String(nb) !== '1' ? ' ' + (th('for') || 'pour') + ' ' + couverts : '') + pc.stop,
+      '',
+      th('l4') || 'Au plaisir de vous recevoir très prochainement,',
+      '',
+      th('sign') || 'L’équipe de La Colline Gambetta',
+      '4 rue Belgrand, 75020 Paris (Métro Gambetta)',
+      '01 43 49 05 93 · lacollinegambetta@mailo.com'
+    ].join('\n');
+
+    var sujet = mDict.subject + ' — ' + nomComplet + ' — ' + jourLu + ' ' + mDict.at + ' ' + heureLue + ' (' + couverts + ')';
+
+    var corps = [
+      mDict.greeting,
+      '',
+      mDict.request,
+      '',
+      mDict.name + ' : ' + nomComplet,
+      mDict.phone + ' : ' + phone.value.trim(),
+      mail.value.trim() ? (mDict.mail + ' : ' + mail.value.trim()) : null,
+      mDict.date + ' : ' + jourLu,
+      mDict.time + ' : ' + heureLue,
+      mDict.guests + ' : ' + couverts,
+      mDict.preference + ' : ' + pref,
+      msg ? '' : null,
+      msg ? (mDict.message + ' : ' + msg) : null,
+      '',
+      mDict.thanks,
+      nomComplet
+    ].filter(function (l) { return l !== null; }).join('\n');
+    var jourLu;
+    try {
+      jourLu = d.toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' });
+    } catch (err) { jourLu = jolie; }
+    var heureLue = (lang === 'fr')
+      ? timeEl.value.replace(':', 'h')
+      : (function () {
+          try {
+            var hm = timeEl.value.split(':');
+            return new Date(2000, 0, 1, parseInt(hm[0], 10), parseInt(hm[1], 10))
+              .toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
+          } catch (err2) { return timeEl.value.replace(':', 'h'); }
+        })();
+
+    var PUNCT = {
+      ja: { comma: '\u3001', stop: '\u3002', sp: '' },
+      zh: { comma: '\uFF0C', stop: '\u3002', sp: '' },
+      ar: { comma: '\u060C', stop: '.', sp: ' ' }
+    };
+    var pc = PUNCT[lang] || { comma: ',', stop: '.', sp: ' ' };
+
+    var autoresponseBody = [
+      (th('hi') || 'Merci infiniment') + pc.comma + pc.sp + nomComplet + pc.stop,
+      '',
+      th('l1') || 'Votre demande de table vient de nous parvenir.',
+      (th('l2') || 'Nous vous attendons') + ' : ' + jourLu + ' · ' + heureLue + (String(nb) !== '1' ? ' ' + (th('for') || 'pour') + ' ' + couverts : '') + pc.stop,
+      '',
+      th('l4') || 'Au plaisir de vous recevoir très prochainement,',
+      '',
+      th('sign') || 'L’équipe de La Colline Gambetta',
+      '4 rue Belgrand, 75020 Paris (Métro Gambetta)',
+      '01 43 49 05 93 · lacollinegambetta@mailo.com'
+    ].join('\n');
+
+    var sujet = mDict.subject + ' — ' + nomComplet + ' — ' + jourLu + ' ' + mDict.at + ' ' + heureLue + ' (' + couverts + ')';
+
+    var corps = [
+      mDict.greeting,
+      '',
+      mDict.request,
+      '',
+      mDict.name + ' : ' + nomComplet,
+      mDict.phone + ' : ' + phone.value.trim(),
+      mail.value.trim() ? (mDict.mail + ' : ' + mail.value.trim()) : null,
+      mDict.date + ' : ' + jourLu,
+      mDict.time + ' : ' + heureLue,
+      mDict.guests + ' : ' + couverts,
+      mDict.preference + ' : ' + pref,
+      msg ? '' : null,
+      msg ? (mDict.message + ' : ' + msg) : null,
+      '',
+      mDict.thanks,
+      nomComplet
+    ].filter(function (l) { return l !== null; }).join('\n');
 
     status.textContent = '';
     status.classList.add('form-status--thanks');
@@ -2466,13 +2799,17 @@ html[lang="uk"] .thanks__sign {
     payload.append('Nom', nomComplet);
     payload.append('Téléphone', phone.value.trim());
     payload.append('Mail', mail.value.trim() || '—');
-    payload.append('Date', jolie);
-    payload.append('Heure', timeEl.value.replace(':', 'h'));
-    payload.append('Couverts', couvertsFr);
+    payload.append('Date', jourLu);
+    payload.append('Heure', heureLue);
+    payload.append('Couverts', couverts);
     payload.append('Préférence', pref);
     payload.append('Message', msg || '—');
+    payload.append('Langue', lang.toUpperCase());
     payload.append('Récapitulatif', corps);
-    if (mail.value.trim()) payload.append('_replyto', mail.value.trim());
+    if (mail.value.trim()) {
+      payload.append('_replyto', mail.value.trim());
+      payload.append('_autoresponse', autoresponseBody);
+    }
 
     var btn = form.querySelector('.btn-book');
     var sending = document.getElementById('bk-sending');
