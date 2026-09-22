@@ -1234,18 +1234,82 @@ html[lang="ar"] .field select {
 .field input:focus, .field select:focus, .field textarea:focus {
   outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(216,178,87,.22);
 }
-.field__day-tag {
-  font-size: .84rem;
-  font-weight: 700;
-  color: var(--gold-700, #9c7a2d);
-  text-transform: capitalize;
-  margin-left: 6px;
-  display: inline-block;
+.field__date-wrapper {
+  position: relative;
+  width: 100%;
+  height: 52px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
-html[lang="ar"] .field__day-tag {
-  margin-left: 0;
-  margin-right: 6px;
-  font-family: 'Tajawal', sans-serif !important;
+.field__date-native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.field__date-display {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border: 1px solid rgba(216,178,87,.5);
+  border-radius: 14px;
+  padding: 0 42px 0 14px;
+  display: flex;
+  align-items: center;
+  font: inherit;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 500;
+  box-sizing: border-box;
+  pointer-events: none;
+  transition: border-color .18s ease, box-shadow .18s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.field__date-native:focus ~ .field__date-display {
+  outline: none;
+  border-color: var(--gold-500);
+  box-shadow: 0 0 0 3px rgba(216,178,87,.22);
+}
+.field--error .field__date-display {
+  border-color: #b0304a;
+  box-shadow: 0 0 0 3px rgba(176,48,74,.14);
+}
+.field__date-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--gold-700, #9c7a2d);
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.field__date-icon svg {
+  width: 100%;
+  height: 100%;
+}
+html[lang="ar"] .field__date-display {
+  padding: 0 14px 0 42px;
+}
+html[lang="ar"] .field__date-icon {
+  right: auto;
+  left: 14px;
 }
 .field__hint { margin:0; font-size:.76rem; color:var(--muted); font-style:italic; }
 .field__hint--warn { color:#b0304a !important; font-style:normal !important; font-weight:600 !important; }
@@ -1819,13 +1883,24 @@ html[lang="uk"] .thanks__sign {
               <p class="field__error" data-error hidden>Merci d’indiquer un numéro où vous joindre.</p>
             </div>
             <div class="field field--full" data-field>
-              <label for="bk-mail">Mail <span class="opt">(facultatif)</span></label>
+              <label for="bk-mail">E-mail <span class="opt">(facultatif)</span></label>
               <input id="bk-mail" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr">
               <p class="field__error" data-error hidden>Cette adresse ne semble pas valide.</p>
             </div>
             <div class="field" data-field>
-              <label for="bk-date">Date<span id="bk-date-day" class="field__day-tag" aria-live="polite"></span></label>
-              <input id="bk-date" name="date" type="date" required>
+              <label for="bk-date">Date</label>
+              <div class="field__date-wrapper" id="bk-date-wrapper">
+                <input id="bk-date" name="date" type="date" required class="field__date-native">
+                <div class="field__date-display" id="bk-date-display" aria-hidden="true"></div>
+                <span class="field__date-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </span>
+              </div>
               <p class="field__error" data-error hidden>Merci de choisir une date à venir.</p>
             </div>
             <div class="field" data-field>
@@ -2428,11 +2503,10 @@ html[lang="uk"] .thanks__sign {
 
   function formatFullName(str) {
     if (!str) return "";
-    return str.trim().split(/\s+/).map(function (w) {
-      return w.split("-").map(function (part) {
-        return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
-      }).join("-");
-    }).join(" ");
+    var clean = str.trim().replace(/\s+/g, " ");
+    return clean.replace(/[^\s\-_—–·'’\/\\+]+/g, function (word) {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    });
   }
 
   function formatLocalizedDate(isoDateStr, lang) {
@@ -2441,7 +2515,17 @@ html[lang="uk"] .thanks__sign {
     var loc = LOCALE_MAP[lang] || lang || "fr-FR";
     var resStr;
     try {
-      resStr = d.toLocaleDateString(loc, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+      if (lang === "tr") {
+        var w = d.toLocaleDateString(loc, { weekday: "long" });
+        var dt = d.toLocaleDateString(loc, { year: "numeric", month: "long", day: "numeric" });
+        resStr = w + ", " + dt;
+      } else if (lang === "ja" || lang === "zh" || lang === "ko") {
+        var w2 = d.toLocaleDateString(loc, { weekday: "long" });
+        var dt2 = d.toLocaleDateString(loc, { year: "numeric", month: "long", day: "numeric" });
+        resStr = w2 + " " + dt2;
+      } else {
+        resStr = d.toLocaleDateString(loc, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+      }
     } catch (e) {
       resStr = d.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
     }
@@ -2488,26 +2572,16 @@ html[lang="uk"] .thanks__sign {
     return " \u00B7 ";
   }
 
-  function updateDateDayBadge() {
-    var tag = document.getElementById("bk-date-day");
-    if (!tag) return;
+  function updateDateDisplay() {
+    var disp = document.getElementById("bk-date-display");
+    if (!disp) return;
     if (!dateEl.value) {
-      tag.textContent = "";
+      disp.textContent = "";
       return;
     }
     var lang = getDocLang();
-    var d = new Date(dateEl.value + "T12:00:00");
-    var loc = LOCALE_MAP[lang] || lang || "fr-FR";
-    var dayName = "";
-    try {
-      dayName = d.toLocaleDateString(loc, { weekday: "long" });
-    } catch (e) {
-      dayName = d.toLocaleDateString("fr-FR", { weekday: "long" });
-    }
-    if (dayName && typeof dayName === "string") {
-      dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
-    }
-    tag.textContent = " (" + dayName + ")";
+    var prettyDate = formatLocalizedDate(dateEl.value, lang);
+    disp.textContent = prettyDate;
   }
 
   function updateGuestsOptions(lang) {
@@ -2616,14 +2690,14 @@ html[lang="uk"] .thanks__sign {
     }
     if (dateEl.value && dateEl.value < now.date) {
       dateEl.value = now.date;
-      updateDateDayBadge();
+      updateDateDisplay();
     }
 
     var isToday = (dateEl.value === now.date);
     var next = calculateNextSlot(now);
     if (isToday && next.isTomorrow) {
       dateEl.value = next.date;
-      updateDateDayBadge();
+      updateDateDisplay();
       updateAvailability();
       return;
     }
@@ -2803,16 +2877,27 @@ html[lang="uk"] .thanks__sign {
   var initialSlot = calculateNextSlot(nowP);
   dateEl.min = nowP.date;
   dateEl.value = initialSlot.date;
-  updateDateDayBadge();
+  updateDateDisplay();
   updateGuestsOptions(getDocLang());
 
+  var dateWrapper = document.getElementById("bk-date-wrapper");
+  if (dateWrapper) {
+    dateWrapper.addEventListener("click", function () {
+      try {
+        if (typeof dateEl.showPicker === "function") {
+          dateEl.showPicker();
+        }
+      } catch (ePick) {}
+    });
+  }
+
   dateEl.addEventListener('change', function () {
-    updateDateDayBadge();
+    updateDateDisplay();
     lastKnownSlots = null;
     updateAvailability();
   });
   dateEl.addEventListener('input', function () {
-    updateDateDayBadge();
+    updateDateDisplay();
   });
   guestsEl.addEventListener('change', function () {
     updateAvailability();
@@ -2827,7 +2912,7 @@ html[lang="uk"] .thanks__sign {
 
   var langObserver = new MutationObserver(function () {
     var langNow = getDocLang();
-    updateDateDayBadge();
+    updateDateDisplay();
     updateGuestsOptions(langNow);
     applySlotsToSelect(lastKnownSlots);
     if (activeStatusState && !status.hidden) {
@@ -3040,7 +3125,7 @@ html[lang="uk"] .thanks__sign {
           var nowAfter = parisNow();
           var nextAfter = calculateNextSlot(nowAfter);
           dateEl.value = nextAfter.date;
-          updateDateDayBadge();
+          updateDateDisplay();
           updateAvailability();
         } else if (failure && (failure.capacityFull || failure.code === "CAPACITY_FULL")) {
           activeStatusState = {
