@@ -3229,6 +3229,187 @@ html[lang="uk"] .thanks__sign {
       payload.append("_autoresponse", autoresponseBody);
     }
 
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function buildRestaurantEmailHtml(data) {
+      var rows = [
+        '<tr><td style="padding:9px 12px;font-weight:bold;color:#1f1235;width:38%;">Nom :</td><td style="padding:9px 12px;color:#1f1235;font-size:1.05rem;font-weight:bold;">' + escapeHtml(data.nomComplet) + '</td></tr>',
+        '<tr><td style="padding:9px 12px;font-weight:bold;color:#1f1235;">Téléphone :</td><td style="padding:9px 12px;color:#1f1235;"><a href="tel:' + escapeHtml(data.telephone) + '" style="color:#9c7a2d;font-weight:bold;text-decoration:none;">' + escapeHtml(data.telephone) + '</a></td></tr>',
+        '<tr><td style="padding:9px 12px;font-weight:bold;color:#1f1235;">E-mail :</td><td style="padding:9px 12px;color:#1f1235;">' + (data.email ? ('<a href="mailto:' + escapeHtml(data.email) + '" style="color:#9c7a2d;text-decoration:none;">' + escapeHtml(data.email) + '</a>') : 'Non renseigné') + '</td></tr>',
+        '<tr><td style="padding:9px 12px;font-weight:bold;color:#1f1235;">Date :</td><td style="padding:9px 12px;color:#1f1235;font-weight:bold;">' + escapeHtml(data.dateFr) + '</td></tr>',
+        '<tr><td style="padding:9px 12px;font-weight:bold;color:#1f1235;">Heure :</td><td style="padding:9px 12px;color:#1f1235;font-weight:bold;">' + escapeHtml(data.heureFr) + '</td></tr>',
+        '<tr><td style="padding:9px 12px;font-weight:bold;color:#1f1235;">Couverts :</td><td style="padding:9px 12px;color:#1f1235;font-weight:bold;">' + escapeHtml(data.couvertsFr) + '</td></tr>',
+        '<tr><td style="padding:9px 12px;font-weight:bold;color:#1f1235;">Préférence :</td><td style="padding:9px 12px;color:#1f1235;">' + escapeHtml(data.prefFr) + '</td></tr>'
+      ];
+      if (data.msg) {
+        rows.push('<tr><td style="padding:9px 12px;font-weight:bold;color:#1f1235;">Message :</td><td style="padding:9px 12px;color:#1f1235;font-style:italic;">' + escapeHtml(data.msg) + '</td></tr>');
+      }
+      rows.push('<tr><td style="padding:9px 12px;font-weight:bold;color:#1f1235;">Langue client :</td><td style="padding:9px 12px;color:#6b6277;">' + escapeHtml(data.langueClient) + '</td></tr>');
+
+      return '<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;background-color:#f8f6f0;margin:0;padding:24px;">' +
+        '<div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #d8b257;border-radius:14px;padding:28px 24px;box-shadow:0 4px 16px rgba(31,18,53,0.08);">' +
+        '<h2 style="color:#7c1332;margin-top:0;font-size:1.3rem;text-align:center;border-bottom:1px solid #eadbb6;padding-bottom:12px;">🍽️ Nouvelle demande de réservation</h2>' +
+        '<table style="width:100%;border-collapse:collapse;margin:18px 0;">' + rows.join('') + '</table>' +
+        '<div style="text-align:center;margin-top:24px;padding-top:16px;border-top:1px solid #eadbb6;">' +
+        '<a href="tel:' + escapeHtml(data.telephone) + '" style="display:inline-block;background:#7c1332;color:#ffffff;text-decoration:none;padding:10px 18px;border-radius:20px;font-weight:bold;margin:4px;">📞 Appeler le client</a>' +
+        (data.email ? (' <a href="mailto:' + escapeHtml(data.email) + '" style="display:inline-block;background:#d8b257;color:#1f1235;text-decoration:none;padding:10px 18px;border-radius:20px;font-weight:bold;margin:4px;">✉️ Répondre par email</a>') : '') +
+        '</div>' +
+        '<p style="font-size:0.75rem;color:#857d91;text-align:center;margin-top:20px;">La Colline Gambetta · 4 rue Belgrand, 75020 Paris · 01 43 49 05 93</p>' +
+        '</div></body></html>';
+    }
+
+    function buildClientEmailHtml(data) {
+      var forLine = (String(data.savedNb) !== "1") ? ('<p style="margin:0;font-size:1.02rem;color:#1f1235;">' + escapeHtml(data.forWord) + ' <strong style="font-weight:bold;">' + escapeHtml(data.couvertsText) + '</strong></p>') : '';
+
+      return '<!DOCTYPE html><html><body style="font-family:Georgia,serif;background-color:#f8f6f0;margin:0;padding:24px;">' +
+        '<div style="max-width:540px;margin:0 auto;background:#fffdf4;border:1px solid #d8b257;border-radius:16px;padding:32px 24px;text-align:center;box-shadow:0 4px 20px rgba(31,18,53,0.06);">' +
+        '<h1 style="font-family:Cinzel,Georgia,serif;color:#7c1332;font-size:1.4rem;letter-spacing:0.06em;margin-top:0;margin-bottom:18px;">LA COLLINE GAMBETTA</h1>' +
+        '<p style="font-size:1.15rem;font-weight:bold;color:#1f1235;margin-bottom:12px;">' + (escapeHtml(data.thHi) || 'Merci infiniment') + data.pcComma + ' ' + escapeHtml(data.nomComplet) + data.pcStop + '</p>' +
+        '<p style="font-size:0.95rem;color:#4a3f55;line-height:1.5;margin-bottom:20px;">' + (escapeHtml(data.thL1) || 'Votre demande de table vient de nous parvenir.') + '</p>' +
+        '<div style="background:#ffffff;border:1px solid rgba(216,178,87,0.6);border-radius:14px;padding:18px 20px;margin:20px auto;max-width:440px;box-sizing:border-box;">' +
+        '<p style="margin:0 0 8px;font-size:0.92rem;color:#85641f;letter-spacing:0.04em;">' + (escapeHtml(data.thL2) || 'Nous vous attendons') + '</p>' +
+        '<p style="margin:0 0 6px;font-size:1.1rem;color:#1f1235;"><strong style="font-weight:bold;">' + escapeHtml(data.jourLu) + '</strong>' + (data.prepAt ? (' <span style="font-weight:normal;opacity:0.85;">' + escapeHtml(data.prepAt) + '</span> ') : ' ') + '<strong style="font-weight:bold;">' + escapeHtml(data.heureLue) + '</strong></p>' +
+        forLine +
+        '</div>' +
+        '<p style="font-style:italic;color:#6b4a8a;font-size:0.95rem;margin-top:24px;margin-bottom:14px;">' + (escapeHtml(data.thL4) || 'Au plaisir de vous recevoir très prochainement,') + '</p>' +
+        '<p style="font-size:1.25rem;color:#9c7a2d;margin-bottom:20px;font-weight:bold;">' + (escapeHtml(data.thSign) || 'L’équipe de La Colline Gambetta') + '</p>' +
+        '<div style="border-top:1px solid #eadbb6;padding-top:16px;font-size:0.82rem;color:#6b6277;line-height:1.5;">' +
+        '4 rue Belgrand, 75020 Paris (Métro Gambetta)<br>' +
+        '📞 <a href="tel:+33143490593" style="color:#9c7a2d;font-weight:bold;text-decoration:none;">01 43 49 05 93</a> · ✉️ <a href="mailto:lacollinegambetta@mailo.com" style="color:#9c7a2d;text-decoration:none;">lacollinegambetta@mailo.com</a>' +
+        '</div>' +
+        '</div></body></html>';
+    }
+
+    var bookingContext = {
+      nomComplet: savedNomComplet,
+      telephone: phone.value.trim(),
+      email: mail.value.trim(),
+      dateFr: dateFr,
+      heureFr: heureFr,
+      couvertsFr: couvertsFr,
+      prefFr: prefFr,
+      msg: msg,
+      langueClient: langueClient,
+      savedNb: savedNb,
+      forWord: forWord,
+      couvertsText: couverts,
+      thHi: th("hi"),
+      pcComma: pc.comma,
+      pcStop: pc.stop,
+      thL1: th("l1"),
+      thL2: th("l2"),
+      jourLu: jourLu,
+      prepAt: prepAt,
+      heureLue: heureLue,
+      thL4: th("l4"),
+      thSign: th("sign"),
+      corpsMailo: corpsMailo,
+      autoresponseBody: autoresponseBody,
+      payload: payload
+    };
+
+    function notifyViaBrevoOrFallback() {
+      var brevoConfig = window.LCG_BREVO_CONFIG;
+      var hasBrevoKey = brevoConfig && brevoConfig.apiKey && typeof brevoConfig.apiKey === "string" && brevoConfig.apiKey.trim().length > 0;
+
+      if (hasBrevoKey) {
+        console.log('[Email] Envoi transactionnel via Brevo API...');
+        var sender = {
+          name: brevoConfig.senderName || "La Colline Gambetta",
+          email: brevoConfig.senderEmail || "lacollinegambetta@mailo.com"
+        };
+
+        var restSubject = "Réservation — " + bookingContext.nomComplet + " — " + bookingContext.dateFr + " à " + bookingContext.heureFr + " (" + bookingContext.couvertsFr + ")";
+        var restHtml = buildRestaurantEmailHtml(bookingContext);
+        var restPayload = {
+          sender: sender,
+          to: [{ email: brevoConfig.restaurantEmail || "lacollinegambetta@mailo.com", name: "La Colline Gambetta" }],
+          replyTo: bookingContext.email ? { email: bookingContext.email, name: bookingContext.nomComplet } : sender,
+          subject: restSubject,
+          htmlContent: restHtml,
+          textContent: bookingContext.corpsMailo
+        };
+
+        var requests = [
+          fetch("https://api.brevo.com/v3/smtp/email", {
+            method: "POST",
+            headers: {
+              "Accept": "application/json",
+              "Content-Type": "application/json",
+              "api-key": brevoConfig.apiKey.trim()
+            },
+            body: JSON.stringify(restPayload)
+          }).then(function (r) { return r.json(); })
+        ];
+
+        if (bookingContext.email) {
+          var clientSubject = "Confirmation de votre demande de réservation — La Colline Gambetta";
+          var clientHtml = buildClientEmailHtml(bookingContext);
+          var clientPayload = {
+            sender: sender,
+            to: [{ email: bookingContext.email, name: bookingContext.nomComplet }],
+            replyTo: sender,
+            subject: clientSubject,
+            htmlContent: clientHtml,
+            textContent: bookingContext.autoresponseBody
+          };
+
+          requests.push(
+            fetch("https://api.brevo.com/v3/smtp/email", {
+              method: "POST",
+              headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "api-key": brevoConfig.apiKey.trim()
+              },
+              body: JSON.stringify(clientPayload)
+            }).then(function (r) { return r.json(); })
+          );
+        }
+
+        return Promise.all(requests)
+          .then(function (results) {
+            console.log('[Email Brevo] Succès :', results);
+            return results;
+          })
+          .catch(function (err) {
+            console.warn('[Email Brevo] Erreur, repli FormSubmit :', err);
+            notifyRestaurantFormSubmit();
+          });
+      } else {
+        console.log('[Email] FormSubmit en cours (Clé Brevo non renseignée)...');
+        notifyRestaurantFormSubmit();
+      }
+    }
+
+    function notifyRestaurantFormSubmit() {
+      try {
+        fetch(FALLBACK_ENDPOINT, {
+          method: 'POST',
+          body: payload,
+          headers: { 'Accept': 'application/json' },
+          keepalive: true
+        })
+          .then(function (r) { return r.json().catch(function () { return {}; }); })
+          .then(function (data) {
+            console.log('[FormSubmit Notify]', data);
+          })
+          .catch(function (err) {
+            console.warn('[FormSubmit Notify error]', err);
+          });
+      } catch (notifyError) {
+        console.warn('[FormSubmit Notify exception]', notifyError);
+      }
+    }
+
     var btn = form.querySelector(".btn-book");
     var sending = document.getElementById("bk-sending");
     var bar = document.getElementById("bk-bar");
@@ -3301,43 +3482,12 @@ html[lang="uk"] .thanks__sign {
     }
 
     function sendDirect() {
-      fetch(FALLBACK_ENDPOINT, {
-        method: 'POST',
-        body: payload,
-        headers: { 'Accept': 'application/json' },
-        keepalive: true
-      })
-        .then(function (r) {
-          return r.json().catch(function () { return {}; });
-        })
-        .then(function (data) {
-          console.log('[FormSubmit Direct]', data);
-          finish(true);
-        })
-        .catch(function (err) {
-          console.warn('[FormSubmit Direct error]', err);
-          finish(true);
-        });
+      notifyViaBrevoOrFallback();
+      finish(true);
     }
 
     function notifyRestaurant() {
-      try {
-        fetch(FALLBACK_ENDPOINT, {
-          method: 'POST',
-          body: payload,
-          headers: { 'Accept': 'application/json' },
-          keepalive: true
-        })
-          .then(function (r) { return r.json().catch(function () { return {}; }); })
-          .then(function (data) {
-            console.log('[FormSubmit Notify]', data);
-          })
-          .catch(function (err) {
-            console.warn('[FormSubmit Notify error]', err);
-          });
-      } catch (notifyError) {
-        console.warn('[FormSubmit Notify exception]', notifyError);
-      }
+      notifyViaBrevoOrFallback();
     }
 
     if (FIREBASE_CAPACITY) {
