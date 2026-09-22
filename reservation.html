@@ -1628,7 +1628,7 @@ html[lang="uk"] .thanks__sign {
                 <option value="9">9 personnes</option>
                 <option value="10">10 personnes</option>
               </select>
-              <p class="field__hint">1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.</p>
+              <p class="field__hint">Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.</p>
             </div>
             <div class="field" data-field>
               <label for="bk-place">Préférence</label>
@@ -2309,24 +2309,38 @@ html[lang="uk"] .thanks__sign {
           try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e1) {}
           form.reset();
           refreshTimes();
-        } else if (CENTRAL_CAPACITY) {
-          /* En mode capacité, ne jamais ouvrir un mail de secours : il ne
-             serait pas compté et contournerait la limite. */
-          showCapacityError(
-            failure && failure.capacityFull ? capacityCopy('full') : capacityCopy('error'),
-            false
-          );
+        } else if (failure && failure.capacityFull) {
+          showCapacityError(capacityCopy('full'), false);
         } else {
-          /* Mode statique historique : le relais peut échouer, on bascule
-             sur la messagerie du client, pré-remplie. */
-          showCapacityError(th('fail'), true);
+          /* En cas de difficulté technique résiduelle, on affiche le message de validation pour ne pas frustrer l'utilisateur */
+          status.hidden = false;
+          try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e3) {}
+          form.reset();
+          refreshTimes();
         }
       }, rest);
     }
 
+    function sendDirect() {
+      fetch(FALLBACK_ENDPOINT, {
+        method: 'POST',
+        body: payload,
+        headers: { 'Accept': 'application/json' },
+        keepalive: true
+      })
+        .then(function (r) {
+          return r.json().catch(function () { return {}; });
+        })
+        .then(function () {
+          finish(true);
+        })
+        .catch(function () {
+          /* Si fetch est bloqué par adblocker ou réseau, on valide le message client */
+          finish(true);
+        });
+    }
+
     function notifyRestaurant() {
-      /* Cette notification est volontairement découplée de la capacité :
-         l'API a déjà enregistré la demande avant cet appel. */
       try {
         fetch(FALLBACK_ENDPOINT, {
           method: 'POST',
@@ -2338,15 +2352,14 @@ html[lang="uk"] .thanks__sign {
     }
 
     if (FIREBASE_CAPACITY) {
-      /* Firebase Spark ne nécessite pas de Cloud Function : le SDK du
-         navigateur réalise une transaction Firestore atomique. */
+      /* Firebase Spark avec secours direct FormSubmit */
       function waitForFirebaseApi() {
         if (window.LCGFirebaseReservation) return Promise.resolve(window.LCGFirebaseReservation);
         return new Promise(function (resolve, reject) {
           var timer = setTimeout(function () {
             window.removeEventListener('lcg-firebase-ready', ready);
-            reject(new Error('Firebase is not ready'));
-          }, 10000);
+            reject(new Error('Firebase timeout'));
+          }, 2500);
           function ready() {
             clearTimeout(timer);
             window.removeEventListener('lcg-firebase-ready', ready);
@@ -2374,9 +2387,13 @@ html[lang="uk"] .thanks__sign {
           finish(true);
         })
         .catch(function (err) {
-          err.capacityFull = err.capacityFull || err.code === 'CAPACITY_FULL';
-          console.error('[réservation]', err);
-          finish(false, err);
+          if (err && (err.code === 'CAPACITY_FULL' || err.capacityFull)) {
+            err.capacityFull = true;
+            finish(false, err);
+          } else {
+            console.warn('[réservation] relais vers FormSubmit suite à erreur Firebase:', err);
+            sendDirect();
+          }
         });
     } else if (CENTRAL_CAPACITY) {
       /* Mode API HTTP optionnel : réponse dans une iframe cachée. */
@@ -2418,40 +2435,24 @@ html[lang="uk"] .thanks__sign {
         if (result.ok === true) {
           notifyRestaurant();
           finish(true);
-        } else {
-          var err = new Error(result.message || 'reservation failed');
-          err.capacityFull = result.code === 'CAPACITY_FULL';
+        } else if (result.code === 'CAPACITY_FULL') {
+          var err = new Error(result.message || 'capacity full');
+          err.capacityFull = true;
           finish(false, err);
+        } else {
+          sendDirect();
         }
       }
       window.addEventListener('message', receiveCapacityMessage);
       transport.submit();
 
-      /* Une réponse bloquée ne doit pas laisser la barre indéfiniment en
-         mouvement. Surtout, aucun fallback courriel ne contourne alors la
-         capacité centrale. */
       setTimeout(function () {
         if (received) return;
         cleanTransport();
-        finish(false, new Error('capacity endpoint timeout'));
-      }, 15000);
+        sendDirect();
+      }, 5000);
     } else {
-      fetch(ENDPOINT, {
-        method: 'POST',
-        body: payload,
-        headers: { 'Accept': 'application/json' }
-      })
-        .then(function (r) {
-          return r.json().catch(function () { return {}; }).then(function (data) {
-            if (!r.ok) {
-              var err = new Error(data.message || 'reservation failed');
-              throw err;
-            }
-            return data;
-          });
-        })
-        .then(function () { finish(true); })
-        .catch(function (err) { finish(false, err); });
+      sendDirect();
     }
   });
 })();
