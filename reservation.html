@@ -2276,37 +2276,191 @@ html[lang="uk"] .thanks__sign {
     updateAvailability();
   });
 
+  var activeStatusState = null;
+
+  function getPunctuation(lang) {
+    var PUNCT = {
+      ja: { comma: "\u3001", stop: "\u3002", sp: "" },
+      zh: { comma: "\uFF0C", stop: "\u3002", sp: "" },
+      ar: { comma: "\u060C", stop: ".", sp: " " }
+    };
+    return PUNCT[lang] || { comma: ",", stop: ".", sp: " " };
+  }
+
+  function th(k) {
+    var el = document.querySelector(".thanks-src [data-th=\"" + k + "\"]");
+    return el ? el.textContent.trim() : "";
+  }
+
+  function renderStatusCard(data) {
+    if (!data || !status) return;
+    var lang = getDocLang();
+    var pc = getPunctuation(lang);
+
+    status.textContent = "";
+    status.className = "form-status form-status--thanks";
+
+    if (data.type === "success") {
+      var d = new Date(data.date + "T12:00:00");
+      var jourLu;
+      try {
+        jourLu = d.toLocaleDateString(lang, { weekday: "long", day: "numeric", month: "long" });
+      } catch (err) {
+        jourLu = d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+      }
+
+      var heureLue = (lang === "fr")
+        ? data.time.replace(":", "h")
+        : (function () {
+            try {
+              var hm = data.time.split(":");
+              return new Date(2000, 0, 1, parseInt(hm[0], 10), parseInt(hm[1], 10))
+                .toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit" });
+            } catch (err2) { return data.time.replace(":", "h"); }
+          })();
+
+      var guestLabels = {
+        fr: "personnes", en: "guests", es: "comensales", de: "Gäste",
+        it: "coperti", pt: "pessoas", nl: "gasten", ar: "أشخاص",
+        zh: "位客人", ja: "名", ko: "명", pl: "osób", tr: "kişi", uk: "гостей", hi: "मेहमान"
+      };
+      var guestLabel1 = {
+        fr: "personne", en: "guest", es: "comensal", de: "Gast",
+        it: "coperto", pt: "pessoa", nl: "gast", ar: "شخص",
+        zh: "位客人", ja: "名", ko: "명", pl: "osoba", tr: "kişi", uk: "гість", hi: "मेहमान"
+      };
+      var lbl = (String(data.nb) === "1") ? (guestLabel1[lang] || "personne") : (guestLabels[lang] || "personnes");
+      var couvertsStr = data.nb + " " + lbl;
+
+      var h = document.createElement("p");
+      h.className = "thanks__hello";
+      h.textContent = (th("hi") || "Merci infiniment") + pc.comma + pc.sp + data.name + pc.stop;
+
+      var p1 = document.createElement("p");
+      p1.className = "thanks__line";
+      p1.textContent = th("l1") || "Votre demande de table vient de nous parvenir.";
+
+      var p2 = document.createElement("p");
+      p2.className = "thanks__when";
+      var intro = document.createElement("span");
+      intro.className = "thanks__when-intro";
+      intro.textContent = (th("l2") || "Nous vous attendons") + pc.stop;
+
+      var quand = document.createElement("strong");
+      quand.className = "thanks__when-detail";
+      quand.textContent = jourLu + " \u00b7 " + heureLue;
+
+      var ligne = document.createElement("span");
+      ligne.className = "thanks__when-line";
+      ligne.appendChild(quand);
+
+      if (String(data.nb) !== "1") {
+        var lien = document.createElement("span");
+        lien.className = "thanks__when-for";
+        lien.textContent = " " + (th("for") || "pour") + " ";
+        var qui = document.createElement("strong");
+        qui.className = "thanks__when-detail";
+        qui.textContent = couvertsStr;
+        ligne.appendChild(lien);
+        ligne.appendChild(qui);
+      }
+
+      p2.appendChild(intro);
+      p2.appendChild(ligne);
+
+      var p4 = document.createElement("p");
+      p4.className = "thanks__line thanks__warm";
+      p4.textContent = th("l4") || "Au plaisir de vous recevoir très prochainement,";
+
+      var sg = document.createElement("p");
+      sg.className = "thanks__sign";
+      sg.textContent = th("sign") || "L’équipe de La Colline Gambetta";
+
+      var tel = document.createElement("p");
+      tel.className = "thanks__tel";
+      tel.appendChild(document.createTextNode((th("tel") || "Une question ? Appelez-nous au") + " "));
+      var a = document.createElement("a");
+      a.href = "tel:+33143490593";
+      a.textContent = "01 43 49 05 93";
+      tel.appendChild(a);
+
+      [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
+    } else {
+      // Apology card
+      var h = document.createElement("p");
+      h.className = "thanks__hello";
+      var title = th("apology-hi") || capacityCopy("apologyTitle");
+      h.textContent = title + (data.name ? pc.comma + pc.sp + data.name : "") + pc.stop;
+
+      var p1 = document.createElement("p");
+      p1.className = "thanks__line";
+      p1.textContent = th("apology-l1") || capacityCopy("apologyLine1");
+
+      var p2 = document.createElement("p");
+      p2.className = "thanks__when";
+      var ligne = document.createElement("span");
+      ligne.className = "thanks__when-line";
+      var detail = document.createElement("strong");
+      detail.className = "thanks__when-detail";
+      detail.textContent = th("apology-l2") || capacityCopy("apologyLine2");
+      ligne.appendChild(detail);
+      p2.appendChild(ligne);
+
+      var p4 = document.createElement("p");
+      p4.className = "thanks__line thanks__warm";
+      p4.textContent = th("apology-l4") || capacityCopy("apologyLine4");
+
+      var sg = document.createElement("p");
+      sg.className = "thanks__sign";
+      sg.textContent = th("sign") || capacityCopy("apologySign");
+
+      var tel = document.createElement("p");
+      tel.className = "thanks__tel";
+      var telTxt = th("apology-call") || capacityCopy("apologyCall");
+      tel.appendChild(document.createTextNode(telTxt + " "));
+      var a = document.createElement("a");
+      a.href = "tel:+33143490593";
+      a.textContent = "01 43 49 05 93";
+      tel.appendChild(a);
+
+      [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
+    }
+  }
+
   var langObserver = new MutationObserver(function () {
     applySlotsToSelect(lastKnownSlots);
+    if (activeStatusState && !status.hidden) {
+      renderStatusCard(activeStatusState);
+    }
   });
-  langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
 
   updateAvailability();
   setInterval(updateAvailability, 60000);
-  document.addEventListener('visibilitychange', function () {
+  document.addEventListener("visibilitychange", function () {
     if (!document.hidden) updateAvailability();
   });
 
   function setError(input, on) {
-    var field = input.closest('[data-field]');
+    var field = input.closest("[data-field]");
     if (!field) return;
-    field.classList.toggle('field--error', !!on);
-    var msg = field.querySelector('[data-error]');
+    field.classList.toggle("field--error", !!on);
+    var msg = field.querySelector("[data-error]");
     if (msg) msg.hidden = !on;
   }
-  ['input', 'change'].forEach(function (ev) {
+  ["input", "change"].forEach(function (ev) {
     form.addEventListener(ev, function (e) {
-      if (e.target && e.target.closest('[data-field]')) setError(e.target, false);
+      if (e.target && e.target.closest("[data-field]")) setError(e.target, false);
     });
   });
 
-  form.addEventListener('submit', function (e) {
+  form.addEventListener("submit", function (e) {
     e.preventDefault();
     var bad = null;
 
-    var name = document.getElementById('bk-name');
-    var phone = document.getElementById('bk-phone');
-    var mail = document.getElementById('bk-mail');
+    var name = document.getElementById("bk-name");
+    var phone = document.getElementById("bk-phone");
+    var mail = document.getElementById("bk-mail");
 
     if (!name.value.trim()) { setError(name, true); bad = bad || name; }
     if ((phone.value.match(/\d/g) || []).length < 8) { setError(phone, true); bad = bad || phone; }
@@ -2321,7 +2475,7 @@ html[lang="uk"] .thanks__sign {
     if (!timeEl.value || (selectedOpt && selectedOpt.disabled)) {
       setError(timeEl, true); bad = bad || timeEl;
     } else if (dateEl.value === nowChk.date) {
-      var hm2 = timeEl.value.split(':');
+      var hm2 = timeEl.value.split(":");
       var m2 = parseInt(hm2[0], 10) * 60 + parseInt(hm2[1], 10);
       if (m2 <= nowChk.minutes) { setError(timeEl, true); bad = bad || timeEl; }
     }
@@ -2334,568 +2488,154 @@ html[lang="uk"] .thanks__sign {
       return;
     }
 
-    if (bad) {
-      status.hidden = true;
-      bad.focus();
-      return;
-    }
-
-  var MAIL_I18N = {
-    fr: {
-      subject: 'Réservation',
-      at: 'à',
-      greeting: 'Bonjour,',
-      request: 'Je souhaite réserver une table à La Colline Gambetta.',
-      name: 'Nom',
-      phone: 'Téléphone',
-      mail: 'Mail',
-      date: 'Date',
-      time: 'Heure',
-      guests: 'Couverts',
-      preference: 'Préférence',
-      message: 'Message',
-      summary: 'Récapitulatif',
-      thanks: 'Merci beaucoup,',
-      telLabel: 'Tél'
-    },
-    en: {
-      subject: 'Reservation',
-      at: 'at',
-      greeting: 'Hello,',
-      request: 'I would like to book a table at La Colline Gambetta.',
-      name: 'Reservation name',
-      phone: 'Phone',
-      mail: 'Email',
-      date: 'Date',
-      time: 'Time',
-      guests: 'Guests',
-      preference: 'Preference',
-      message: 'Message',
-      summary: 'Summary',
-      thanks: 'Thank you very much,',
-      telLabel: 'Tel'
-    },
-    es: {
-      subject: 'Reserva',
-      at: 'a las',
-      greeting: 'Hola,',
-      request: 'Deseo reservar una mesa en La Colline Gambetta.',
-      name: 'Nombre de la reserva',
-      phone: 'Teléfono',
-      mail: 'Correo electrónico',
-      date: 'Fecha',
-      time: 'Hora',
-      guests: 'Comensales',
-      preference: 'Preferencia',
-      message: 'Mensaje',
-      summary: 'Resumen',
-      thanks: 'Muchas gracias,',
-      telLabel: 'Tel'
-    },
-    de: {
-      subject: 'Reservierung',
-      at: 'um',
-      greeting: 'Guten Tag,',
-      request: 'Ich möchte einen Tisch im La Colline Gambetta reservieren.',
-      name: 'Name der Reservierung',
-      phone: 'Telefon',
-      mail: 'E-Mail',
-      date: 'Datum',
-      time: 'Uhrzeit',
-      guests: 'Gäste',
-      preference: 'Präferenz',
-      message: 'Nachricht',
-      summary: 'Zusammenfassung',
-      thanks: 'Vielen Dank,',
-      telLabel: 'Tel'
-    },
-    it: {
-      subject: 'Prenotazione',
-      at: 'alle',
-      greeting: 'Buongiorno,',
-      request: 'Desidero prenotare un tavolo a La Colline Gambetta.',
-      name: 'Nome della prenotazione',
-      phone: 'Telefono',
-      mail: 'Email',
-      date: 'Data',
-      time: 'Orario',
-      guests: 'Coperti',
-      preference: 'Preferenza',
-      message: 'Messaggio',
-      summary: 'Riepilogo',
-      thanks: 'Grazie mille,',
-      telLabel: 'Tel'
-    },
-    pt: {
-      subject: 'Reserva',
-      at: 'às',
-      greeting: 'Olá,',
-      request: 'Gostaria de reservar uma mesa no La Colline Gambetta.',
-      name: 'Nome da reserva',
-      phone: 'Telefone',
-      mail: 'Email',
-      date: 'Data',
-      time: 'Hora',
-      guests: 'Pessoas',
-      preference: 'Preferência',
-      message: 'Mensagem',
-      summary: 'Resumo',
-      thanks: 'Muito obrigado,',
-      telLabel: 'Tel'
-    },
-    nl: {
-      subject: 'Reservering',
-      at: 'om',
-      greeting: 'Hallo,',
-      request: 'Ik wil graag een tafel reserveren bij La Colline Gambetta.',
-      name: 'Naam van de reservering',
-      phone: 'Telefoon',
-      mail: 'E-mail',
-      date: 'Datum',
-      time: 'Tijd',
-      guests: 'Gasten',
-      preference: 'Voorkeur',
-      message: 'Bericht',
-      summary: 'Overzicht',
-      thanks: 'Hartelijk dank,',
-      telLabel: 'Tel'
-    },
-    ar: {
-      subject: 'حجز',
-      at: 'في',
-      greeting: 'مرحباً،',
-      request: 'أود حجز طاولة في La Colline Gambetta.',
-      name: 'اسم الحجز',
-      phone: 'الهاتف',
-      mail: 'البريد الإلكتروني',
-      date: 'التاريخ',
-      time: 'الوقت',
-      guests: 'عدد الأشخاص',
-      preference: 'التفضيل',
-      message: 'الرسالة',
-      summary: 'ملخص الحجز',
-      thanks: 'شكراً جزيلاً،',
-      telLabel: 'هاتف'
-    },
-    zh: {
-      subject: '预订',
-      at: '在',
-      greeting: '您好，',
-      request: '我想在 La Colline Gambetta 预订一张餐桌。',
-      name: '预订人姓名',
-      phone: '电话',
-      mail: '电子邮箱',
-      date: '日期',
-      time: '时间',
-      guests: '人数',
-      preference: '座位偏好',
-      message: '留言',
-      summary: '预订摘要',
-      thanks: '非常感谢，',
-      telLabel: '电话'
-    },
-    ja: {
-      subject: 'ご予約',
-      at: '·',
-      greeting: 'こんにちは、',
-      request: 'La Colline Gambetta のお席を予約したく存じます。',
-      name: 'ご予約のお名前',
-      phone: 'お電話番号',
-      mail: 'メールアドレス',
-      date: '日付',
-      time: '時間',
-      guests: '人数',
-      preference: 'ご希望の席',
-      message: 'ご要望・メッセージ',
-      summary: 'ご予約内容',
-      thanks: 'どうぞよろしくお願いいたします。',
-      telLabel: '電話'
-    },
-    ko: {
-      subject: '예약',
-      at: '·',
-      greeting: '안녕하세요,',
-      request: 'La Colline Gambetta 에 테이블을 예약하고자 합니다.',
-      name: '예약자 성함',
-      phone: '전화번호',
-      mail: '이메일',
-      date: '날짜',
-      time: '시간',
-      guests: '인원',
-      preference: '선호 좌석',
-      message: '요청 사항',
-      summary: '예약 요약',
-      thanks: '감사합니다,',
-      telLabel: '전화'
-    },
-    pl: {
-      subject: 'Rezerwacja',
-      at: 'o',
-      greeting: 'Dzień dobry,',
-      request: 'Chciałbym zarezerwować stolik w La Colline Gambetta.',
-      name: 'Nazwisko do rezerwacji',
-      phone: 'Telefon',
-      mail: 'Email',
-      date: 'Data',
-      time: 'Godzina',
-      guests: 'Liczba osób',
-      preference: 'Preferencja',
-      message: 'Wiadomość',
-      summary: 'Podsumowanie',
-      thanks: 'Dziękuję bardzo,',
-      telLabel: 'Tel'
-    },
-    tr: {
-      subject: 'Rezervasyon',
-      at: 'saat',
-      greeting: 'Merhaba,',
-      request: 'La Colline Gambetta restoranında masa rezervasyonu yapmak istiyorum.',
-      name: 'Rezervasyon adı',
-      phone: 'Telefon',
-      mail: 'E-posta',
-      date: 'Tarih',
-      time: 'Saat',
-      guests: 'Kişi sayısı',
-      preference: 'Tercih',
-      message: 'Mesaj',
-      summary: 'Özet',
-      thanks: 'Çok teşekkürler,',
-      telLabel: 'Tel'
-    },
-    uk: {
-      subject: 'Бронювання',
-      at: 'о',
-      greeting: 'Доброго дня,',
-      request: 'Я бажаю забронювати столик у ресторані La Colline Gambetta.',
-      name: 'Ім’я для бронювання',
-      phone: 'Телефон',
-      mail: 'Електронна пошта',
-      date: 'Дата',
-      time: 'Час',
-      guests: 'Кількість гостей',
-      preference: 'Побажання щодо місця',
-      message: 'Повідомлення',
-      summary: 'Підсумок бронювання',
-      thanks: 'Щиро дякую,',
-      telLabel: 'Тел'
-    },
-    hi: {
-      subject: 'आरक्षण',
-      at: 'को',
-      greeting: 'नमस्ते,',
-      request: 'मैं La Colline Gambetta में एक टेबल बुक करना चाहता हूँ।',
-      name: 'बुकिंग का नाम',
-      phone: 'फोन',
-      mail: 'ईमेल',
-      date: 'तिथि',
-      time: 'समय',
-      guests: 'अतिथियों की संख्या',
-      preference: 'प्राथमिकता',
-      message: 'संदेश',
-      summary: 'आरक्षण सारांश',
-      thanks: 'बहुत-बहुत धन्यवाद,',
-      telLabel: 'फोन'
-    }
-  };
-
-  function formatFullName(raw) {
-    var str = String(raw || '').trim().replace(/\s+/g, ' ');
-    if (!str) return '';
-    return str
-      .toLowerCase()
-      .replace(/(?:^|[\s\-\x27\u2019])\p{L}/gu, function (match) {
-        return match.toUpperCase();
-      });
-  }
-
-    var lang = document.documentElement.getAttribute('lang') || 'fr';
+    var lang = getDocLang();
     var mDict = MAIL_I18N[lang] || MAIL_I18N.fr;
-
-    function th(k) {
-      var el = document.querySelector('.thanks-src [data-th="' + k + '"]');
-      return el ? el.textContent.trim() : '';
-    }
+    var pc = getPunctuation(lang);
 
     var nomComplet = formatFullName(name.value);
-    var d = new Date(dateEl.value + 'T12:00:00');
-    var jolie = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    var d = new Date(dateEl.value + "T12:00:00");
+    var jolie = d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
     var couverts = guestsEl.options[guestsEl.selectedIndex].textContent;
     var nb = guestsEl.value;
-    var placeEl = document.getElementById('bk-place');
-    var pref = placeEl ? placeEl.options[placeEl.selectedIndex].textContent : 'Sans préférence';
-    var msg = document.getElementById('bk-msg').value.trim();
+    var placeEl = document.getElementById("bk-place");
+    var pref = placeEl ? placeEl.options[placeEl.selectedIndex].textContent : "Sans préférence";
+    var msg = document.getElementById("bk-msg").value.trim();
 
     var jourLu;
     try {
-      jourLu = d.toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' });
+      jourLu = d.toLocaleDateString(lang, { weekday: "long", day: "numeric", month: "long" });
     } catch (err) { jourLu = jolie; }
-    var heureLue = (lang === 'fr')
-      ? timeEl.value.replace(':', 'h')
+    var heureLue = (lang === "fr")
+      ? timeEl.value.replace(":", "h")
       : (function () {
           try {
-            var hm = timeEl.value.split(':');
+            var hm = timeEl.value.split(":");
             return new Date(2000, 0, 1, parseInt(hm[0], 10), parseInt(hm[1], 10))
-              .toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
-          } catch (err2) { return timeEl.value.replace(':', 'h'); }
+              .toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit" });
+          } catch (err2) { return timeEl.value.replace(":", "h"); }
         })();
 
-    var PUNCT = {
-      ja: { comma: '\u3001', stop: '\u3002', sp: '' },
-      zh: { comma: '\uFF0C', stop: '\u3002', sp: '' },
-      ar: { comma: '\u060C', stop: '.', sp: ' ' }
-    };
-    var pc = PUNCT[lang] || { comma: ',', stop: '.', sp: ' ' };
-
     var autoresponseBody = [
-      (th('hi') || 'Merci infiniment') + pc.comma + pc.sp + nomComplet + pc.stop,
-      '',
-      th('l1') || 'Votre demande de table vient de nous parvenir.',
-      (th('l2') || 'Nous vous attendons') + ' : ' + jourLu + ' · ' + heureLue + (String(nb) !== '1' ? ' ' + (th('for') || 'pour') + ' ' + couverts : '') + pc.stop,
-      '',
-      th('l4') || 'Au plaisir de vous recevoir très prochainement,',
-      '',
-      th('sign') || 'L’équipe de La Colline Gambetta',
-      '4 rue Belgrand, 75020 Paris (Métro Gambetta)',
-      '01 43 49 05 93 · lacollinegambetta@mailo.com'
-    ].join('\n');
+      (th("hi") || "Merci infiniment") + pc.comma + pc.sp + nomComplet + pc.stop,
+      "",
+      th("l1") || "Votre demande de table vient de nous parvenir.",
+      (th("l2") || "Nous vous attendons") + " : " + jourLu + " · " + heureLue + (String(nb) !== "1" ? " " + (th("for") || "pour") + " " + couverts : "") + pc.stop,
+      "",
+      th("l4") || "Au plaisir de vous recevoir très prochainement,",
+      "",
+      th("sign") || "L’équipe de La Colline Gambetta",
+      "4 rue Belgrand, 75020 Paris (Métro Gambetta)",
+      "01 43 49 05 93 · lacollinegambetta@mailo.com"
+    ].join("\n");
 
-    var sujet = mDict.subject + ' — ' + nomComplet + ' — ' + jourLu + ' ' + mDict.at + ' ' + heureLue + ' (' + couverts + ')';
+    var sujet = mDict.subject + " — " + nomComplet + " — " + jourLu + " " + mDict.at + " " + heureLue + " (" + couverts + ")";
 
     var corps = [
       mDict.greeting,
-      '',
+      "",
       mDict.request,
-      '',
-      mDict.name + ' : ' + nomComplet,
-      mDict.phone + ' : ' + phone.value.trim(),
-      mail.value.trim() ? (mDict.mail + ' : ' + mail.value.trim()) : null,
-      mDict.date + ' : ' + jourLu,
-      mDict.time + ' : ' + heureLue,
-      mDict.guests + ' : ' + couverts,
-      mDict.preference + ' : ' + pref,
-      msg ? '' : null,
-      msg ? (mDict.message + ' : ' + msg) : null,
-      '',
+      "",
+      mDict.name + " : " + nomComplet,
+      mDict.phone + " : " + phone.value.trim(),
+      mail.value.trim() ? (mDict.mail + " : " + mail.value.trim()) : null,
+      mDict.date + " : " + jourLu,
+      mDict.time + " : " + heureLue,
+      mDict.guests + " : " + couverts,
+      mDict.preference + " : " + pref,
+      msg ? "" : null,
+      msg ? (mDict.message + " : " + msg) : null,
+      "",
       mDict.thanks,
       nomComplet
-    ].filter(function (l) { return l !== null; }).join('\n');
-    var jourLu;
-    try {
-      jourLu = d.toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' });
-    } catch (err) { jourLu = jolie; }
-    var heureLue = (lang === 'fr')
-      ? timeEl.value.replace(':', 'h')
-      : (function () {
-          try {
-            var hm = timeEl.value.split(':');
-            return new Date(2000, 0, 1, parseInt(hm[0], 10), parseInt(hm[1], 10))
-              .toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
-          } catch (err2) { return timeEl.value.replace(':', 'h'); }
-        })();
+    ].filter(function (l) { return l !== null; }).join("\n");
 
-    var PUNCT = {
-      ja: { comma: '\u3001', stop: '\u3002', sp: '' },
-      zh: { comma: '\uFF0C', stop: '\u3002', sp: '' },
-      ar: { comma: '\u060C', stop: '.', sp: ' ' }
+    activeStatusState = {
+      type: "success",
+      name: nomComplet,
+      date: dateEl.value,
+      time: timeEl.value,
+      nb: nb
     };
-    var pc = PUNCT[lang] || { comma: ',', stop: '.', sp: ' ' };
-
-    var autoresponseBody = [
-      (th('hi') || 'Merci infiniment') + pc.comma + pc.sp + nomComplet + pc.stop,
-      '',
-      th('l1') || 'Votre demande de table vient de nous parvenir.',
-      (th('l2') || 'Nous vous attendons') + ' : ' + jourLu + ' · ' + heureLue + (String(nb) !== '1' ? ' ' + (th('for') || 'pour') + ' ' + couverts : '') + pc.stop,
-      '',
-      th('l4') || 'Au plaisir de vous recevoir très prochainement,',
-      '',
-      th('sign') || 'L’équipe de La Colline Gambetta',
-      '4 rue Belgrand, 75020 Paris (Métro Gambetta)',
-      '01 43 49 05 93 · lacollinegambetta@mailo.com'
-    ].join('\n');
-
-    var sujet = mDict.subject + ' — ' + nomComplet + ' — ' + jourLu + ' ' + mDict.at + ' ' + heureLue + ' (' + couverts + ')';
-
-    var corps = [
-      mDict.greeting,
-      '',
-      mDict.request,
-      '',
-      mDict.name + ' : ' + nomComplet,
-      mDict.phone + ' : ' + phone.value.trim(),
-      mail.value.trim() ? (mDict.mail + ' : ' + mail.value.trim()) : null,
-      mDict.date + ' : ' + jourLu,
-      mDict.time + ' : ' + heureLue,
-      mDict.guests + ' : ' + couverts,
-      mDict.preference + ' : ' + pref,
-      msg ? '' : null,
-      msg ? (mDict.message + ' : ' + msg) : null,
-      '',
-      mDict.thanks,
-      nomComplet
-    ].filter(function (l) { return l !== null; }).join('\n');
-
-    status.textContent = '';
-    status.classList.add('form-status--thanks');
-
-    var h = document.createElement('p');
-    h.className = 'thanks__hello';
-    h.textContent = th('hi') + pc.comma + pc.sp + nomComplet + pc.stop;
-
-    var p1 = document.createElement('p');
-    p1.className = 'thanks__line';
-    p1.textContent = th('l1');
-
-    var p2 = document.createElement('p');
-    p2.className = 'thanks__when';
-    var intro = document.createElement('span');
-    intro.className = 'thanks__when-intro';
-    intro.textContent = th('l2') + pc.stop;
-
-    var quand = document.createElement('strong');
-    quand.className = 'thanks__when-detail';
-    quand.textContent = jourLu + ' \u00b7 ' + heureLue;
-
-    var ligne = document.createElement('span');
-    ligne.className = 'thanks__when-line';
-    ligne.appendChild(quand);
-
-    if (String(nb) !== '1') {
-      var lien = document.createElement('span');
-      lien.className = 'thanks__when-for';
-      lien.textContent = ' ' + th('for') + ' ';
-      var qui = document.createElement('strong');
-      qui.className = 'thanks__when-detail';
-      qui.textContent = couverts;
-      ligne.appendChild(lien);
-      ligne.appendChild(qui);
-    }
-
-    p2.appendChild(intro);
-    p2.appendChild(ligne);
-
-    var p4 = document.createElement('p');
-    p4.className = 'thanks__line thanks__warm';
-    p4.textContent = th('l4');
-
-    var sg = document.createElement('p');
-    sg.className = 'thanks__sign';
-    sg.textContent = th('sign');
-
-    var tel = document.createElement('p');
-    tel.className = 'thanks__tel';
-    tel.appendChild(document.createTextNode(th('tel') + ' '));
-    var a = document.createElement('a');
-    a.href = 'tel:+33143490593';
-    a.textContent = '01 43 49 05 93';
-    tel.appendChild(a);
-
-    [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
+    renderStatusCard(activeStatusState);
 
     var payload = new FormData();
-    payload.append('action', 'reserve');
-    payload.append('_subject', sujet);
-    payload.append('_template', 'box');
-    payload.append('_captcha', 'false');
-    payload.append('Nom', nomComplet);
-    payload.append('Téléphone', phone.value.trim());
-    payload.append('Mail', mail.value.trim() || '—');
-    payload.append('Date', jourLu);
-    payload.append('Heure', heureLue);
-    payload.append('Couverts', couverts);
-    payload.append('Préférence', pref);
-    payload.append('Message', msg || '—');
-    payload.append('Langue', lang.toUpperCase());
-    payload.append('Récapitulatif', corps);
+    payload.append("action", "reserve");
+    payload.append("_subject", sujet);
+    payload.append("_template", "box");
+    payload.append("_captcha", "false");
+    payload.append("Nom", nomComplet);
+    payload.append("Téléphone", phone.value.trim());
+    payload.append("Mail", mail.value.trim() || "—");
+    payload.append("Date", jourLu);
+    payload.append("Heure", heureLue);
+    payload.append("Couverts", couverts);
+    payload.append("Préférence", pref);
+    payload.append("Message", msg || "—");
+    payload.append("Langue", lang.toUpperCase());
+    payload.append("Récapitulatif", corps);
     if (mail.value.trim()) {
-      payload.append('_replyto', mail.value.trim());
-      payload.append('_autoresponse', autoresponseBody);
+      payload.append("_replyto", mail.value.trim());
+      payload.append("_autoresponse", autoresponseBody);
     }
 
-    var btn = form.querySelector('.btn-book');
-    var sending = document.getElementById('bk-sending');
-    var bar = document.getElementById('bk-bar');
+    var btn = form.querySelector(".btn-book");
+    var sending = document.getElementById("bk-sending");
+    var bar = document.getElementById("bk-bar");
 
     status.hidden = true;
     sending.hidden = false;
     btn.disabled = true;
 
-    bar.style.width = '0%';
+    bar.style.width = "0%";
     requestAnimationFrame(function () {
-      requestAnimationFrame(function () { bar.style.width = '100%'; });
+      requestAnimationFrame(function () { bar.style.width = "100%"; });
     });
-    try { sending.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e0) {}
+    try { sending.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e0) {}
 
-    var FALLBACK_ENDPOINT = 'https://formsubmit.co/ajax/' +
-      atob('bGFjb2xsaW5lZ2FtYmV0dGFAbWFpbG8uY29t');
+    var FALLBACK_ENDPOINT = "https://formsubmit.co/ajax/" +
+      atob("bGFjb2xsaW5lZ2FtYmV0dGFAbWFpbG8uY29t");
     var started = Date.now();
     var MIN_MS = 5000;
-
-    function showCapacityError(openMail) {
-      status.textContent = '';
-      status.className = 'form-status form-status--thanks';
-
-      var h = document.createElement('p');
-      h.className = 'thanks__hello';
-      var title = th('apology-hi') || capacityCopy('apologyTitle');
-      h.textContent = title + (nomComplet ? pc.comma + pc.sp + nomComplet : '') + pc.stop;
-
-      var p1 = document.createElement('p');
-      p1.className = 'thanks__line';
-      p1.textContent = th('apology-l1') || capacityCopy('apologyLine1');
-
-      var p2 = document.createElement('p');
-      p2.className = 'thanks__when';
-      var ligne = document.createElement('span');
-      ligne.className = 'thanks__when-line';
-      var detail = document.createElement('strong');
-      detail.className = 'thanks__when-detail';
-      detail.textContent = th('apology-l2') || capacityCopy('apologyLine2');
-      ligne.appendChild(detail);
-      p2.appendChild(ligne);
-
-      var p4 = document.createElement('p');
-      p4.className = 'thanks__line thanks__warm';
-      p4.textContent = th('apology-l4') || capacityCopy('apologyLine4');
-
-      var sg = document.createElement('p');
-      sg.className = 'thanks__sign';
-      sg.textContent = th('sign') || capacityCopy('apologySign');
-
-      var tel = document.createElement('p');
-      tel.className = 'thanks__tel';
-      var telTxt = th('apology-call') || capacityCopy('apologyCall');
-      tel.appendChild(document.createTextNode(telTxt + ' '));
-      var a = document.createElement('a');
-      a.href = 'tel:+33143490593';
-      a.textContent = '01 43 49 05 93';
-      tel.appendChild(a);
-
-      [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
-      status.hidden = false;
-      try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e2) {}
-      if (openMail) {
-        window.location.href = 'mailto:lacollinegambetta@mailo.com?subject=' +
-          encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
-      }
-    }
 
     function finish(ok, failure) {
       var rest = Math.max(0, MIN_MS - (Date.now() - started));
       setTimeout(function () {
         sending.hidden = true;
         btn.disabled = false;
-        bar.style.width = '0%';
+        bar.style.width = "0%";
         if (ok) {
+          activeStatusState = {
+            type: "success",
+            name: nomComplet,
+            date: dateEl.value,
+            time: timeEl.value,
+            nb: nb
+          };
+          renderStatusCard(activeStatusState);
           status.hidden = false;
-          try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e1) {}
+          try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e1) {}
           form.reset();
           updateAvailability();
-        } else if (failure && (failure.capacityFull || failure.code === 'CAPACITY_FULL')) {
-          showCapacityError(false);
+        } else if (failure && (failure.capacityFull || failure.code === "CAPACITY_FULL")) {
+          activeStatusState = {
+            type: "capacity",
+            name: nomComplet
+          };
+          renderStatusCard(activeStatusState);
+          status.hidden = false;
+          try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e2) {}
           updateAvailability();
         } else {
-          showCapacityError(true);
+          activeStatusState = {
+            type: "error",
+            name: nomComplet
+          };
+          renderStatusCard(activeStatusState);
+          status.hidden = false;
+          try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e2) {}
           updateAvailability();
+          window.location.href = "mailto:lacollinegambetta@mailo.com?subject=" +
+            encodeURIComponent(sujet) + "&body=" + encodeURIComponent(corps);
         }
       }, rest);
     }
