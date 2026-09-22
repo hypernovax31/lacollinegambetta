@@ -25,6 +25,7 @@
   var STORE_KEY = 'lcg-lang';
   var DICTS = {
     en: {
+      "Nom pour la réservation": "Reservation name",
       "Nom de la réservation": "Reservation name",
 
       'pour': 'for',
@@ -479,6 +480,7 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ NET PRICES IN EUROS • SERVICE INCLUDED ✦"
     },
     es: {
+      "Nom pour la réservation": "Nombre de la reserva",
       "Nom de la réservation": "Nombre de la reserva",
 
       'pour': 'para',
@@ -933,6 +935,7 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     de: {
+      "Nom pour la réservation": "Name der Reservierung",
       "Nom de la réservation": "Name der Reservierung",
 
       'pour': 'für',
@@ -1387,6 +1390,7 @@
       "MÉTRO GAMBETTA": "U-Bahnhof Gambetta"
     },
     it: {
+      "Nom pour la réservation": "Nome della prenotazione",
       "Nom de la réservation": "Nome della prenotazione",
 
       'pour': 'per',
@@ -1841,6 +1845,7 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     pt: {
+      "Nom pour la réservation": "Nome da reserva",
       "Nom de la réservation": "Nome da reserva",
 
       'pour': 'para',
@@ -2295,6 +2300,7 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     nl: {
+      "Nom pour la réservation": "Naam van de reservering",
       "Nom de la réservation": "Naam van de reservering",
 
       'pour': 'voor',
@@ -2750,6 +2756,7 @@
     },
   
     ar: {
+      "Nom pour la réservation": "اسم الحجز",
       "Nom de la réservation": "اسم الحجز",
 
       'pour': 'لـ',
@@ -3222,6 +3229,7 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ساندويتش جمبون وجبنة مع بيضة مقلية"
     },
     zh: {
+      "Nom pour la réservation": "预订人姓名",
       "Nom de la réservation": "预订人姓名",
 
       'pour': '共',
@@ -3694,6 +3702,7 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "烤火腿奶酪三明治，上加煎蛋"
     },
     uk: {
+      "Nom pour la réservation": "Ім’я для бронювання",
       "Nom de la réservation": "Ім’я для бронювання",
 
       'pour': 'на',
@@ -4166,6 +4175,7 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "Підсмажений сендвіч із шинкою та сиром, зверху яєчня"
     },
     ja: {
+      "Nom pour la réservation": "ご予約のお名前",
       "Nom de la réservation": "ご予約のお名前",
 
       'pour': '·',
@@ -4638,6 +4648,7 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ハムとチーズのグリルサンド、ベシャメルソース、目玉焼きのせ",
     },
     ko: {
+      "Nom pour la réservation": "예약자 성함",
       "Nom de la réservation": "예약자 성함",
 
       'pour': '·',
@@ -5110,6 +5121,7 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "구운 햄과 치즈 샌드위치, 베샤멜 소스, 맨 위에 프라이 에그",
     },
     pl: {
+      "Nom pour la réservation": "Nazwisko do rezerwacji",
       "Nom de la réservation": "Nazwisko do rezerwacji",
 
       'pour': 'dla',
@@ -5564,6 +5576,7 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ CENY W EURO • SERWIS WLICZONY ✦",
     },
     tr: {
+      "Nom pour la réservation": "Rezervasyon adı",
       "Nom de la réservation": "Rezervasyon adı",
 
       'pour': '·',
@@ -6018,6 +6031,7 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ EURO CİNSİNDEN NET FİYATLAR • SERVİS DAHİL ✦",
     },
     hi: {
+      "Nom pour la réservation": "बुकिंग का नाम",
       "Nom de la réservation": "बुकिंग का नाम",
 
       'pour': 'के लिए',

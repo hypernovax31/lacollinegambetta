@@ -1994,7 +1994,7 @@ html[lang="uk"] .thanks__sign {
         <form id="book-form" novalidate>
           <div class="form-grid">
             <div class="field" data-field>
-              <label for="bk-name">Nom de la réservation</label>
+              <label for="bk-name">Nom pour la réservation</label>
               <input id="bk-name" name="nom" type="text" autocomplete="name" required placeholder="Votre nom">
               <p class="field__error" data-error hidden>Merci d’indiquer votre nom.</p>
             </div>
@@ -3358,7 +3358,7 @@ html[lang="uk"] .thanks__sign {
       "",
       "Nouvelle demande de réservation pour La Colline Gambetta :",
       "",
-      "• Nom de la réservation : " + nomComplet,
+      "• Nom pour la réservation : " + nomComplet,
       "• Téléphone : " + phone.value.trim(),
       mail.value.trim() ? ("• Mail : " + mail.value.trim()) : "• Mail : Non renseigné",
       "• Date : " + dateFr,
@@ -3390,7 +3390,7 @@ html[lang="uk"] .thanks__sign {
     payload.append("_subject", sujetMailo);
     payload.append("_template", "box");
     payload.append("_captcha", "false");
-    payload.append("Nom de la réservation", savedNomComplet);
+    payload.append("Nom pour la réservation", savedNomComplet);
     payload.append("Téléphone", phone.value.trim());
     payload.append("Mail", mail.value.trim() || "—");
     payload.append("Date", dateFr);
