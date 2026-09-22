@@ -2446,12 +2446,11 @@ html[lang="uk"] .thanks__sign {
           try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e1) {}
           form.reset();
           updateAvailability();
-        } else if (failure && failure.capacityFull) {
+        } else if (failure && (failure.capacityFull || failure.code === 'CAPACITY_FULL')) {
           showCapacityError(capacityCopy('full'), false);
+          updateAvailability();
         } else {
-          status.hidden = false;
-          try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e3) {}
-          form.reset();
+          showCapacityError(capacityCopy('error'), true);
           updateAvailability();
         }
       }, rest);
@@ -2526,8 +2525,8 @@ html[lang="uk"] .thanks__sign {
             err.capacityFull = true;
             finish(false, err);
           } else {
-            console.warn('[réservation] relais vers FormSubmit suite à erreur Firebase:', err);
-            sendDirect();
+            console.warn('[réservation] erreur Firebase:', err);
+            finish(false, err);
           }
         });
     } else {

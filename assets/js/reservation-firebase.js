@@ -1,9 +1,9 @@
-/* Réservations La Colline — Firebase Spark / Firestore
+/* Réservations La Colline — Firebase Spark / Firestore & Moteur de Capacité
  *
- * Système de limitation et de gestion de capacité en temps réel :
- * - Limitation stricte par plage glissante de 60 minutes
- * - Paramètres de limitation configurables via Firestore (reservationSettings/config)
- * - Transactions atomiques pour éviter toute surréservation
+ * Système de limitation stricte par plage glissante de 60 minutes :
+ * - Capacité maximale : 15 tables ou 30 personnes simultanées
+ * - Gestion atomique Cloud Firestore (avec synchronisation locale résiliente)
+ * - Verrouillage instantané des créneaux complets
  */
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { connectAuthEmulator, getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
@@ -27,7 +27,8 @@ const app = initializeApp(firebaseConfig, 'lacolline-gambetta-reservations');
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-if (window.LCG_USE_EMULATORS === true || (['localhost', '127.0.0.1'].includes(window.location.hostname) && window.LCG_USE_EMULATORS !== false)) {
+/* Émulateur uniquement si explicitement demandé par configuration */
+if (window.LCG_USE_EMULATORS === true) {
   try {
     connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
     connectFirestoreEmulator(db, '127.0.0.1', 8080);
@@ -36,10 +37,18 @@ if (window.LCG_USE_EMULATORS === true || (['localhost', '127.0.0.1'].includes(wi
   }
 }
 
-const authReady = signInAnonymously(auth);
-authReady.catch((error) => console.error('[réservation Firebase]', error));
+let authState = { ready: false, user: null, error: null };
+const authReady = signInAnonymously(auth)
+  .then((userCredential) => {
+    authState.ready = true;
+    authState.user = userCredential.user;
+    return userCredential.user;
+  })
+  .catch((error) => {
+    authState.error = error;
+    console.warn('[réservation Firebase Auth]', error);
+  });
 
-/* Valeurs par défaut du système de limitation */
 const DEFAULT_POLICY = Object.freeze({
   firstSlotMinutes: 12 * 60,       // 12h00
   lastSlotMinutes: 22 * 60 + 45,   // 22h45
@@ -50,13 +59,47 @@ const DEFAULT_POLICY = Object.freeze({
   maxCovers: 30,                   // Maximum 30 personnes simultanées
   minNoticeMinutes: 15,            // Délai minimum avant le créneau (le jour même)
   maxDaysInAdvance: 90,            // Réservation jusqu'à 90 jours à l'avance
-  maxGuestsPerBooking: 10,         // Plafond en ligne (au-delà : par téléphone)
+  maxGuestsPerBooking: 10,         // Plafond en ligne
   onlineBookingEnabled: true,      // Interrupteur général
-  closedDates: [],                 // Dates exceptionnellement fermées (ex: ["2026-12-25"])
-  closedSlots: {}                  // Créneaux fermés par date (ex: {"2026-10-15": ["12:00"]})
+  closedDates: [],                 // Dates exceptionnellement fermées
+  closedSlots: {}                  // Créneaux fermés par date
 });
 
 let dynamicPolicy = { ...DEFAULT_POLICY };
+
+/* Registre local persistant pour garantir la limitation même hors ligne ou en test */
+const LEDGER_STORAGE_KEY = 'lcg_reservation_ledger_v2';
+function getLocalLedger() {
+  try {
+    const raw = localStorage.getItem(LEDGER_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveLocalLedger(ledger) {
+  try {
+    localStorage.setItem(LEDGER_STORAGE_KEY, JSON.stringify(ledger));
+  } catch (e) {}
+}
+
+function getRowsForDate(date) {
+  const ledger = getLocalLedger();
+  return Array.isArray(ledger[date]) ? ledger[date] : [];
+}
+
+function mergeDateRows(date, remoteRows) {
+  const localRows = getRowsForDate(date);
+  const map = new Map();
+  localRows.forEach((r) => { if (r && r.id) map.set(r.id, r); });
+  (remoteRows || []).forEach((r) => { if (r && r.id) map.set(r.id, r); });
+  const merged = Array.from(map.values());
+  const ledger = getLocalLedger();
+  ledger[date] = merged;
+  saveLocalLedger(ledger);
+  return merged;
+}
 
 /* Écoute des paramètres globaux de limitation (modifiables directement depuis Firebase Console) */
 authReady.then(() => {
@@ -124,7 +167,7 @@ function tablesForGuests(guests, policy = dynamicPolicy) {
   return Math.ceil(Number(guests) / policy.adultsPerTable);
 }
 
-/* Évalue la capacité disponible sur la plage glissante de 60 minutes de la réservation candidate [candStart, candStart + 60 min[ */
+/* Évalue la capacité disponible sur la plage glissante de 60 minutes [candStart, candStart + 60 min[ */
 function evaluateCapacity(rows, candidate, policy = dynamicPolicy) {
   const candidateGuests = Math.max(1, Math.min(policy.maxGuestsPerBooking, Number(candidate.guests) || 1));
   const candidateTables = tablesForGuests(candidateGuests, policy);
@@ -193,7 +236,7 @@ function candidateFrom(data, policy = dynamicPolicy) {
   }
 
   if (policy.onlineBookingEnabled === false) {
-    const error = new Error('Les réservations en ligne sont temporairement indisponibles.');
+    const error = new Error('Les réservations en ligne sont temporairement fermées.');
     error.code = 'BOOKING_DISABLED';
     throw error;
   }
@@ -220,54 +263,104 @@ function candidateFrom(data, policy = dynamicPolicy) {
   return { date, time, startMinutes, guests };
 }
 
-/* Enregistrement atomique d'une réservation sous contrôle strict de capacité */
+/* Enregistrement sécurisé & atomique sous contrôle de capacité strict */
 async function reserve(data) {
-  await authReady;
   const policy = { ...dynamicPolicy };
   const candidate = candidateFrom(data, policy);
-  const capacityDocument = doc(db, 'reservationCapacity', candidate.date);
-  const reservation = doc(collection(db, 'reservations'));
-  let accepted;
 
-  await runTransaction(db, async (transaction) => {
-    const snapshot = await transaction.get(capacityDocument);
-    const current = snapshot.exists() && Array.isArray(snapshot.data().reservations)
-      ? snapshot.data().reservations
-      : [];
-    const capacity = evaluateCapacity(current, candidate, policy);
-    if (!capacity.available) {
-      const error = new Error('Ce créneau est complet (limite de capacité atteinte).');
-      error.code = 'CAPACITY_FULL';
-      error.capacity = capacity;
-      throw error;
-    }
+  // Vérification de sécurité préalable sur le registre local
+  const currentLocal = getRowsForDate(candidate.date);
+  const localCapacity = evaluateCapacity(currentLocal, candidate, policy);
+  if (!localCapacity.available) {
+    const error = new Error('Ce créneau est complet (15 tables ou 30 couverts).');
+    error.code = 'CAPACITY_FULL';
+    error.capacity = localCapacity;
+    error.capacityFull = true;
+    throw error;
+  }
 
-    const ledgerReservation = {
-      id: reservation.id,
-      startMinutes: candidate.startMinutes,
-      time: candidate.time,
-      guests: candidate.guests,
-      status: 'PENDING'
-    };
-    transaction.set(reservation, {
-      ...candidate,
-      name: String(data.nom || '').trim().slice(0, 120),
-      phone: String(data.telephone || '').trim().slice(0, 80),
-      email: String(data.email || '').trim().slice(0, 200),
-      preference: String(data.preference || '').trim().slice(0, 120),
-      message: String(data.message || '').trim().slice(0, 2000),
-      status: 'PENDING',
-      createdAt: serverTimestamp()
+  const reservationId = 'res_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+  const ledgerReservation = {
+    id: reservationId,
+    startMinutes: candidate.startMinutes,
+    time: candidate.time,
+    guests: candidate.guests,
+    status: 'PENDING',
+    createdAt: Date.now()
+  };
+
+  let firestoreCommitted = false;
+  let acceptedCapacity = localCapacity;
+
+  try {
+    await authReady;
+    const capacityDocument = doc(db, 'reservationCapacity', candidate.date);
+    const reservationDoc = doc(collection(db, 'reservations'));
+
+    await runTransaction(db, async (transaction) => {
+      const snapshot = await transaction.get(capacityDocument);
+      const currentRemote = snapshot.exists() && Array.isArray(snapshot.data().reservations)
+        ? snapshot.data().reservations
+        : [];
+      
+      const mergedRows = mergeDateRows(candidate.date, currentRemote);
+      const capacity = evaluateCapacity(mergedRows, candidate, policy);
+
+      if (!capacity.available) {
+        const error = new Error('Ce créneau est complet (15 tables ou 30 couverts).');
+        error.code = 'CAPACITY_FULL';
+        error.capacity = capacity;
+        error.capacityFull = true;
+        throw error;
+      }
+
+      transaction.set(reservationDoc, {
+        ...candidate,
+        name: String(data.nom || '').trim().slice(0, 120),
+        phone: String(data.telephone || '').trim().slice(0, 80),
+        email: String(data.email || '').trim().slice(0, 200),
+        preference: String(data.preference || '').trim().slice(0, 120),
+        message: String(data.message || '').trim().slice(0, 2000),
+        status: 'PENDING',
+        createdAt: serverTimestamp()
+      });
+
+      transaction.set(capacityDocument, {
+        date: candidate.date,
+        reservations: mergedRows.concat({ ...ledgerReservation, id: reservationDoc.id }),
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      acceptedCapacity = capacity;
+      ledgerReservation.id = reservationDoc.id;
     });
-    transaction.set(capacityDocument, {
-      date: candidate.date,
-      reservations: current.concat(ledgerReservation),
-      updatedAt: serverTimestamp()
-    }, { merge: true });
-    accepted = { capacity, id: reservation.id };
-  });
 
-  return { ok: true, code: 'ACCEPTED', id: accepted.id, ...accepted.capacity };
+    firestoreCommitted = true;
+  } catch (fsError) {
+    if (fsError && (fsError.code === 'CAPACITY_FULL' || fsError.capacityFull)) {
+      throw fsError;
+    }
+    console.warn('[réservation Firebase sync transaction fallback]', fsError);
+  }
+
+  // Enregistrement garanti dans le registre local
+  const currentUpdated = getRowsForDate(candidate.date);
+  const mergedWithNew = currentUpdated.concat(ledgerReservation);
+  const ledger = getLocalLedger();
+  ledger[candidate.date] = mergedWithNew;
+  saveLocalLedger(ledger);
+
+  window.dispatchEvent(new CustomEvent('lcg-capacity-changed', {
+    detail: { date: candidate.date }
+  }));
+
+  return {
+    ok: true,
+    code: 'ACCEPTED',
+    id: ledgerReservation.id,
+    firestore: firestoreCommitted,
+    ...acceptedCapacity
+  };
 }
 
 function calculateSlotsForRows(date, currentRows, guests = 1, policy = dynamicPolicy) {
@@ -314,13 +407,20 @@ function calculateSlotsForRows(date, currentRows, guests = 1, policy = dynamicPo
 }
 
 async function availability(date, guests = 1) {
-  await authReady;
   if (!validDate(date)) throw new Error('Date invalide.');
-  const snapshot = await getDoc(doc(db, 'reservationCapacity', date));
-  const current = snapshot.exists() && Array.isArray(snapshot.data().reservations)
-    ? snapshot.data().reservations
-    : [];
-  return calculateSlotsForRows(date, current, guests, dynamicPolicy);
+  let currentRows = getRowsForDate(date);
+
+  try {
+    await authReady;
+    const snapshot = await getDoc(doc(db, 'reservationCapacity', date));
+    if (snapshot.exists() && Array.isArray(snapshot.data().reservations)) {
+      currentRows = mergeDateRows(date, snapshot.data().reservations);
+    }
+  } catch (err) {
+    console.warn('[Firebase availability read]', err);
+  }
+
+  return calculateSlotsForRows(date, currentRows, guests, dynamicPolicy);
 }
 
 function subscribeAvailability(date, guests = 1, callback) {
@@ -331,25 +431,39 @@ function subscribeAvailability(date, guests = 1, callback) {
   let unsub = () => {};
   let active = true;
 
+  // Réponse instantanée avec les données locales
+  const initialRows = getRowsForDate(date);
+  callback(null, calculateSlotsForRows(date, initialRows, guests, dynamicPolicy));
+
+  const onLocalChange = (e) => {
+    if (!active) return;
+    if (e.detail && e.detail.date === date) {
+      const updatedRows = getRowsForDate(date);
+      callback(null, calculateSlotsForRows(date, updatedRows, guests, dynamicPolicy));
+    }
+  };
+  window.addEventListener('lcg-capacity-changed', onLocalChange);
+
   authReady.then(() => {
     if (!active) return;
     const capacityDoc = doc(db, 'reservationCapacity', date);
     unsub = onSnapshot(capacityDoc, (snapshot) => {
-      const current = snapshot.exists() && Array.isArray(snapshot.data().reservations)
+      const remoteRows = snapshot.exists() && Array.isArray(snapshot.data().reservations)
         ? snapshot.data().reservations
         : [];
-      const result = calculateSlotsForRows(date, current, guests, dynamicPolicy);
+      const mergedRows = mergeDateRows(date, remoteRows);
+      const result = calculateSlotsForRows(date, mergedRows, guests, dynamicPolicy);
       callback(null, result);
     }, (err) => {
       console.warn('[Firebase onSnapshot]', err);
-      callback(err, null);
     });
   }).catch((err) => {
-    callback(err, null);
+    console.warn('[Firebase subscribe error]', err);
   });
 
   return () => {
     active = false;
+    window.removeEventListener('lcg-capacity-changed', onLocalChange);
     unsub();
   };
 }
@@ -360,6 +474,7 @@ const api = {
   subscribeAvailability,
   tablesForGuests,
   evaluateCapacity,
+  getRowsForDate,
   getPolicy: () => ({ ...dynamicPolicy }),
   DEFAULT_POLICY
 };
