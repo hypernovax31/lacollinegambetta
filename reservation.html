@@ -902,7 +902,11 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
     .field--full { grid-row:span 3; grid-template-rows:subgrid; }
     /* Un bloc sans message d'erreur laisserait sa 3e rangee vide et sa
        zone de saisie s'etirerait pour la combler : on la cale en haut. */
-    .field > textarea, .field > input, .field > select { align-self:start; }
+    select option:disabled {
+    color: #9c8eab !important;
+    background-color: #f3eff7 !important;
+  }
+  .field > textarea, .field > input, .field > select { align-self:start; }
     /* La rangee des messages garde la meme hauteur sur toute la ligne,
        qu'un champ affiche une erreur, une precision ou rien : sans cela
        le bas des blocs d'une meme rangee ne tombait pas au meme niveau. */
@@ -1925,19 +1929,47 @@ html[lang="uk"] .thanks__sign {
       String(d.getMonth() + 1).padStart(2, '0') + '-' +
       String(d.getDate()).padStart(2, '0');
   }
+
+  /* Calcul précis du prochain créneau disponible à Paris :
+     - avant 12h00 -> 12h00 (aujourd'hui)
+     - pendant le service (ex: 12h12 -> 12h15, 14h43 -> 14h45) -> prochain quart d'heure
+     - après 22h45 (ex: 22h46) -> lendemain à 12h00 */
+  function calculateNextSlot(now) {
+    var FIRST_SLOT = 12 * 60;       // 12h00 = 720 minutes
+    var LAST_SLOT = 22 * 60 + 45;   // 22h45 = 1365 minutes
+    var STEP = 15;
+
+    if (now.minutes <= FIRST_SLOT) {
+      return { date: now.date, time: '12:00', isTomorrow: false };
+    }
+    if (now.minutes > LAST_SLOT) {
+      var dNext = new Date(now.date + 'T00:00:00');
+      dNext.setDate(dNext.getDate() + 1);
+      return { date: iso(dNext), time: '12:00', isTomorrow: true };
+    }
+    var nextMins = Math.ceil(now.minutes / STEP) * STEP;
+    if (nextMins > LAST_SLOT) {
+      var dNext2 = new Date(now.date + 'T00:00:00');
+      dNext2.setDate(dNext2.getDate() + 1);
+      return { date: iso(dNext2), time: '12:00', isTomorrow: true };
+    }
+    var h = String(Math.floor(nextMins / 60)).padStart(2, '0');
+    var m = String(nextMins % 60).padStart(2, '0');
+    return { date: now.date, time: h + ':' + m, isTomorrow: false };
+  }
+
   /* Le calendrier ne descend pas sous aujourd'hui a Paris, et ne monte
      pas au-dela de trois mois. */
   var nowP = parisNow();
+  var initialSlot = calculateNextSlot(nowP);
   dateEl.min = nowP.date;
   var max = new Date(nowP.date + 'T00:00:00');
   max.setMonth(max.getMonth() + 3);
   dateEl.max = iso(max);
-  dateEl.value = nowP.date;
+  dateEl.value = initialSlot.date;
 
-  /* Les creneaux deja passes sont grises DANS la liste plutot que
-     retires : une option supprimee puis reinserée perdrait sa
-     traduction, le moteur ayant photographie les textes au chargement.
-     Desactivee, elle reste en place et traduite. */
+  /* Les créneaux déjà passés sont grisés (disabled) dans la liste.
+     L'heure recommandée est pré-sélectionnée par défaut. */
   function refreshTimes() {
     var now = parisNow();
     /* Une page laissee ouverte franchit minuit : le plancher du
@@ -1949,26 +1981,45 @@ html[lang="uk"] .thanks__sign {
       dateEl.max = iso(mx);
     }
     if (dateEl.value && dateEl.value < now.date) dateEl.value = now.date;
-    var isToday = dateEl.value === now.date;
-    var selectedGone = false;
+
+    var next = calculateNextSlot(now);
+    var isToday = (dateEl.value === now.date);
+    var firstAvailableToday = null;
+
     Array.prototype.forEach.call(timeEl.options, function (opt) {
       if (!opt.value) return;
       var hm = opt.value.split(':');
       var mins = parseInt(hm[0], 10) * 60 + parseInt(hm[1], 10);
-      var past = isToday && mins <= now.minutes;
+      var past = isToday && (mins <= now.minutes);
       opt.disabled = past;
-      if (past && opt.selected) selectedGone = true;
+      if (!past && !firstAvailableToday) {
+        firstAvailableToday = opt.value;
+      }
     });
-    /* Un creneau devenu invalide ne doit pas rester affiche. */
-    if (selectedGone) timeEl.value = '';
-    /* Aujourd'hui, si tout le service est passe, on pousse au lendemain
-       plutot que de laisser une liste entierement grisee. */
-    if (isToday && !Array.prototype.some.call(timeEl.options, function (o) {
-      return o.value && !o.disabled;
-    })) {
-      var d = new Date(now.date + 'T00:00:00');
-      d.setDate(d.getDate() + 1);
-      if (iso(d) <= dateEl.max) { dateEl.value = iso(d); refreshTimes(); }
+
+    if (isToday) {
+      /* Aujourd'hui, si tout le service est passé (ex: 22h46), on renvoie
+         au lendemain à 12h00. */
+      if (!firstAvailableToday) {
+        var d = new Date(now.date + 'T00:00:00');
+        d.setDate(d.getDate() + 1);
+        if (iso(d) <= dateEl.max) {
+          dateEl.value = iso(d);
+          refreshTimes();
+          return;
+        }
+      }
+      /* Si aucune heure n'est choisie ou si l'heure sélectionnée est passée/grisée,
+         on positionne automatiquement la case sur le prochain quart d'heure disponible. */
+      var currentOpt = timeEl.options[timeEl.selectedIndex];
+      if (!timeEl.value || (currentOpt && currentOpt.disabled)) {
+        timeEl.value = firstAvailableToday || next.time || '12:00';
+      }
+    } else {
+      /* Date future : tous les créneaux sont disponibles, pré-sélection à 12h00 si vide */
+      if (!timeEl.value) {
+        timeEl.value = '12:00';
+      }
     }
   }
   dateEl.addEventListener('change', refreshTimes);
