@@ -1190,56 +1190,127 @@ html:not(.carte-doc) #menus .menu-points li {
 .cover-brand--menu-leader h2 span {
   color: var(--gold-700) !important;
 }
-.cover-brand--menu-leader {
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-  text-align: center;
-  color: #fff;
+/* ===== Titre principal — tailles exactes demandées pour la version web ===== */
+html:not(.carte-doc) #cover-section .titre-principal,
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  color: #fff !important;
+  gap: 6px !important;
+  margin: 0 auto !important;
+  max-width: min(100%, 960px) !important;
+  width: 100% !important;
 }
-.cover-brand--menu-leader .eyebrow {
-  font-family: 'Cinzel', serif;
-  font-weight: 700;
-  letter-spacing: .28em;
-  color: var(--gold-100);
-  text-transform: uppercase;
-  font-size: clamp(1.45rem, 3.5vw, 1.7rem);
-  line-height: 1.1;
+
+/* ✦ LA ✦ à 18pt en Cinzel gras */
+html:not(.carte-doc) #cover-section .titre-principal .eyebrow,
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader .eyebrow,
+html:not(.carte-doc) #cover-section .titre-principal .leader-title {
+  font-family: 'Cinzel', serif !important;
+  font-size: 18pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .28em !important;
+  color: #ffffff !important;
+  line-height: 1.1 !important;
+  text-transform: uppercase !important;
+  margin: 0 !important;
 }
-.cover-brand--menu-leader h2 {
-  margin: 6px 0 8px;
-  font-family: 'Cinzel', serif;
-  font-size: clamp(1.8rem, 4.8vw, 2.8rem);
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  line-height: 1;
+
+/* COLLINE à 38pt en Cinzel gras */
+html:not(.carte-doc) #cover-section .titre-principal h2,
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 {
+  font-family: 'Cinzel', serif !important;
+  font-size: 38pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .14em !important;
+  color: #ffffff !important;
+  text-transform: uppercase !important;
+  line-height: 0.95 !important;
+  margin: 4px 0 2px !important;
+  text-align: center !important;
 }
-.cover-brand--menu-leader h2 span {
-  display: block;
-  font-size: .46em;
-  letter-spacing: .22em;
-  margin-top: .18rem;
+
+/* GAMBETTA à 20pt en Cinzel gras doré */
+html:not(.carte-doc) #cover-section .titre-principal h2 span,
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 span {
+  display: block !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 20pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .22em !important;
+  color: var(--gold-bright, #ffe88f) !important;
+  margin-top: 4px !important;
+  text-transform: uppercase !important;
+  line-height: 1.1 !important;
 }
-.cover-brand--menu-leader p {
-  margin: 0;
-  font-family: 'Cinzel', serif;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-  font-size: clamp(.66rem, 1.6vw, .86rem);
-  color: var(--gold-100);
-  line-height: 1.35;
+
+/* BAR • RESTAURANT • PARIS 20ᴱ à 18pt */
+html:not(.carte-doc) #cover-section .titre-principal .leader-meta,
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader p,
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader .leader-meta {
+  font-family: 'Cinzel', serif !important;
+  font-size: 18pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .12em !important;
+  color: #ffffff !important;
+  line-height: 1.3 !important;
+  text-transform: uppercase !important;
+  margin: 2px 0 0 !important;
 }
+
+/* ✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦ à 18pt */
+html:not(.carte-doc) #cover-section .titre-principal .menu-leader-subline,
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader .menu-leader-subline,
+html:not(.carte-doc) #cover-section .titre-principal .leader-meta--sub {
+  font-family: 'Cinzel', serif !important;
+  font-size: 18pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .10em !important;
+  color: var(--gold-bright, #ffe88f) !important;
+  line-height: 1.3 !important;
+  text-transform: uppercase !important;
+  margin: 2px 0 0 !important;
+}
+
+html:not(.carte-doc) #cover-section .titre-principal .star-gold,
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader .star-gold {
+  display: inline-block !important;
+  width: 7px;
+  height: 7px;
+  margin: 0 6px;
+  vertical-align: 2px;
+  background: var(--gold-bright, #ffe88f);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  color: transparent !important;
+  font-size: 0 !important;
+  overflow: hidden;
+}
+
 @media (max-width: 640px) {
-  .cover-brand--menu-leader .eyebrow {
-    font-size: clamp(1.2rem, 5.5vw, 1.45rem);
-    letter-spacing: .22em;
+  html:not(.carte-doc) #cover-section .titre-principal .eyebrow,
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader .eyebrow {
+    font-size: clamp(11pt, 3.2vw, 18pt) !important;
+    letter-spacing: .18em !important;
   }
-  .cover-brand--menu-leader h2 {
-    font-size: clamp(1.6rem, 7vw, 2.2rem);
+  html:not(.carte-doc) #cover-section .titre-principal h2,
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 {
+    font-size: clamp(20pt, 6.5vw, 38pt) !important;
   }
-  .cover-brand--menu-leader p {
-    font-size: .72rem;
-    letter-spacing: .07em;
+  html:not(.carte-doc) #cover-section .titre-principal h2 span,
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 span {
+    font-size: clamp(12pt, 3.8vw, 20pt) !important;
+  }
+  html:not(.carte-doc) #cover-section .titre-principal .leader-meta,
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader p {
+    font-size: clamp(9.5pt, 2.8vw, 18pt) !important;
+    letter-spacing: .06em !important;
+  }
+  html:not(.carte-doc) #cover-section .titre-principal .menu-leader-subline,
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader .menu-leader-subline {
+    font-size: clamp(9pt, 2.6vw, 18pt) !important;
+    letter-spacing: .05em !important;
   }
 }
 
@@ -8807,10 +8878,10 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
 
   <section id="interior-menu">
     <header class="interior-header">
-      <div class="eyebrow"><span class="star-gold">✦</span> LA CARTE <span class="star-gold">✦</span></div>
+      <div class="eyebrow leader-title"><span class="star-gold">✦</span> LA <span class="star-gold">✦</span></div>
       <h2>COLLINE <span>GAMBETTA</span></h2>
-      <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
-      <p class="menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
+      <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
+      <p class="leader-meta leader-meta--sub menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
     </header>
     <div id="menu-nav-anchor" aria-hidden="true"></div>
     <div class="menu-nav-wrap" id="menu-nav-wrap">

@@ -807,9 +807,9 @@ html.carte-doc .print-page--cover .titre-principal .eyebrow,
 html.carte-doc .print-page--cover .cover-brand .eyebrow,
 html.carte-doc .print-page--cover .cover-brand .leader-title {
   font-family: 'Cinzel', serif !important;
-  font-size: 20pt !important;
+  font-size: 18pt !important;
   font-weight: 700 !important;
-  letter-spacing: .38em !important;
+  letter-spacing: .35em !important;
   color: #ffffff !important;
   line-height: 1 !important;
   text-transform: uppercase !important;
@@ -820,7 +820,7 @@ html.carte-doc .print-page--cover .cover-brand h2 {
   font-family: 'Cinzel', serif !important;
   font-size: 38pt !important;
   font-weight: 700 !important;
-  letter-spacing: .22em !important;
+  letter-spacing: .20em !important;
   color: #ffffff !important;
   line-height: 0.92 !important;
   text-transform: uppercase !important;
@@ -831,9 +831,9 @@ html.carte-doc .print-page--cover .cover-brand h2 {
 html.carte-doc .print-page--cover .titre-principal h2 span,
 html.carte-doc .print-page--cover .cover-brand h2 span {
   display: block !important;
-  font-size: 18.5pt !important;
-  font-weight: 600 !important;
-  letter-spacing: .34em !important;
+  font-size: 20pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .30em !important;
   color: #ffe88f !important;
   line-height: 1.1 !important;
   margin-top: 1.8mm !important;
@@ -842,9 +842,9 @@ html.carte-doc .print-page--cover .cover-brand h2 span {
 html.carte-doc .print-page--cover .titre-principal .leader-meta,
 html.carte-doc .print-page--cover .cover-brand .leader-meta {
   font-family: 'Cinzel', serif !important;
-  font-size: 13.5pt !important;
-  font-weight: 500 !important;
-  letter-spacing: .22em !important;
+  font-size: 14pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .18em !important;
   color: #ffffff !important;
   line-height: 1.25 !important;
   text-transform: uppercase !important;
@@ -855,13 +855,13 @@ html.carte-doc .print-page--cover .titre-principal .leader-meta--sub,
 html.carte-doc .print-page--cover .cover-brand .menu-leader-subline,
 html.carte-doc .print-page--cover .cover-brand .leader-meta--sub {
   font-family: 'Cinzel', serif !important;
-  font-size: 12pt !important;
-  font-weight: 500 !important;
-  letter-spacing: .16em !important;
+  font-size: 13pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .14em !important;
   color: #ffe88f !important;
   line-height: 1.25 !important;
   text-transform: uppercase !important;
-  margin: 1.6mm 0 0 0 !important;
+  margin: 1.8mm 0 0 0 !important;
 }
 html.carte-doc .print-page--cover .titre-principal .star-gold,
 html.carte-doc .print-page--cover .cover-brand .star-gold {
@@ -1977,7 +1977,7 @@ def measure_doc(css: str, flows: dict[str, list[str]], viewport: int,
 <title>Mesure — carte La Colline Gambetta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
 {css}
 
@@ -2529,7 +2529,7 @@ def assemble_html(metrics: dict, w0: float, css: str, pages: list[str]) -> str:
 <link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
 {css}
 
