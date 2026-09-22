@@ -1226,16 +1226,13 @@ html[lang="hi"] .footer-download {
   background-size:12px 8px;
   padding-right:38px;
 }
+html[lang="ar"] .field select {
+  background-position:left 14px center;
+  padding-right:14px;
+  padding-left:38px;
+}
 .field input:focus, .field select:focus, .field textarea:focus {
   outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(216,178,87,.22);
-}
-.field__date-preview {
-  margin-top:4px;
-  font-size:.84rem;
-  color:var(--violet-900);
-  font-weight:700;
-  min-height:1.2em;
-  display:block;
 }
 .field__hint { margin:0; font-size:.76rem; color:var(--muted); font-style:italic; }
 .field__hint--warn { color:#b0304a !important; font-style:normal !important; font-weight:600 !important; }
@@ -1815,8 +1812,7 @@ html[lang="uk"] .thanks__sign {
             </div>
             <div class="field" data-field>
               <label for="bk-date">Date</label>
-              <input id="bk-date" name="date" type="date" required>
-              <div id="bk-date-preview" class="field__date-preview" aria-live="polite"></div>
+              <select id="bk-date" name="date" required></select>
               <p class="field__error" data-error hidden>Merci de choisir une date à venir.</p>
             </div>
             <div class="field" data-field>
@@ -2387,22 +2383,167 @@ html[lang="uk"] .thanks__sign {
   var nowP = parisNow();
   var initialSlot = calculateNextSlot(nowP);
   dateEl.min = nowP.date;
-  var max = new Date(nowP.date + 'T00:00:00');
-  max.setMonth(max.getMonth() + 3);
-  dateEl.max = iso(max);
-  dateEl.value = initialSlot.date;
+  var LOCALE_MAP = {
+    fr: "fr-FR", en: "en-GB", es: "es-ES", de: "de-DE", it: "it-IT",
+    pt: "pt-PT", nl: "nl-NL", pl: "pl-PL", tr: "tr-TR",
+    ko: "ko-KR", zh: "zh-CN", ja: "ja-JP", uk: "uk-UA", ar: "ar-EG", hi: "hi-IN"
+  };
 
-  var currentSubscription = null;
-  var currentRequestId = 0;
-  var lastKnownSlots = null;
+  function toLocalizedDigits(numStr, lang) {
+    if (numStr === null || numStr === undefined) return "";
+    var s = String(numStr);
+    if (lang === "ar") {
+      var arDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+      return s.replace(/[0-9]/g, function (d) { return arDigits[parseInt(d, 10)]; });
+    }
+    if (lang === "hi") {
+      var hiDigits = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
+      return s.replace(/[0-9]/g, function (d) { return hiDigits[parseInt(d, 10)]; });
+    }
+    return s;
+  }
+
+  function normalizeToAsciiDigits(str) {
+    if (!str) return "";
+    var arMap = {"٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9"};
+    var hiMap = {"०":"0","१":"1","२":"2","३":"3","४":"4","५":"5","६":"6","७":"7","८":"8","९":"9"};
+    var fullMap = {"０":"0","１":"1","２":"2","３":"3","４":"4","５":"5","６":"6","７":"7","８":"8","９":"9"};
+    return str.replace(/[٠-٩]/g, function (c) { return arMap[c] || c; })
+              .replace(/[०-९]/g, function (c) { return hiMap[c] || c; })
+              .replace(/[０-９]/g, function (c) { return fullMap[c] || c; });
+  }
+
+  function formatFullName(str) {
+    if (!str) return "";
+    return str.trim().split(/\s+/).map(function (w) {
+      return w.split("-").map(function (part) {
+        return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+      }).join("-");
+    }).join(" ");
+  }
+
+  function formatLocalizedDate(isoDateStr, lang) {
+    if (!isoDateStr) return "";
+    var d = new Date(isoDateStr + "T12:00:00");
+    var loc = LOCALE_MAP[lang] || lang || "fr-FR";
+    var resStr;
+    try {
+      resStr = d.toLocaleDateString(loc, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    } catch (e) {
+      resStr = d.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    }
+    if (resStr && typeof resStr === "string") {
+      resStr = resStr.charAt(0).toUpperCase() + resStr.slice(1);
+    }
+    if (lang === "ar" || lang === "hi") {
+      return toLocalizedDigits(resStr, lang);
+    }
+    return resStr;
+  }
+
+  function formatLocalizedTime(timeStr, lang) {
+    if (!timeStr) return "";
+    var hm = timeStr.split(":");
+    var h = parseInt(hm[0], 10);
+    var m = parseInt(hm[1], 10);
+    if (lang === "fr") {
+      return (m === 0) ? (h + "h00") : (h + "h" + String(m).padStart(2, "0"));
+    }
+    var base = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+    if (lang === "ar" || lang === "hi") {
+      return toLocalizedDigits(base, lang);
+    }
+    return base;
+  }
 
   function formatTimeOption(val, lang) {
     if (!val) return "";
     var hm = val.split(":");
+    var h = hm[0];
+    var m = hm[1];
     if (lang === "fr") {
-      return hm[0] + "h" + hm[1];
+      return h + "h" + m;
     }
-    return val;
+    if (lang === "ar" || lang === "hi") {
+      return toLocalizedDigits(h + ":" + m, lang);
+    }
+    return h + ":" + m;
+  }
+
+  function getDateSep(lang) {
+    if (lang === "ja") return " \u30FB ";
+    return " \u00B7 ";
+  }
+
+  function populateDateOptions(targetIsoDate, lang) {
+    if (!dateEl) return;
+    var nowP = parisNow();
+    var next = calculateNextSlot(nowP);
+    var startIso = next.isTomorrow ? next.date : nowP.date;
+    var currentVal = targetIsoDate || dateEl.value || startIso;
+    if (currentVal < startIso) {
+      currentVal = startIso;
+    }
+
+    var startDate = new Date(startIso + "T00:00:00");
+    var totalDays = 90;
+
+    var frag = document.createDocumentFragment();
+    for (var i = 0; i < totalDays; i++) {
+      var d = new Date(startDate.getTime());
+      d.setDate(d.getDate() + i);
+      var isoStr = iso(d);
+      var opt = document.createElement("option");
+      opt.value = isoStr;
+      opt.textContent = formatLocalizedDate(isoStr, lang);
+      if (isoStr === currentVal) {
+        opt.selected = true;
+      }
+      frag.appendChild(opt);
+    }
+    dateEl.innerHTML = "";
+    dateEl.appendChild(frag);
+    dateEl.value = currentVal;
+  }
+
+  function updateGuestsOptions(lang) {
+    if (!guestsEl) return;
+    Array.prototype.forEach.call(guestsEl.options, function (opt) {
+      var val = parseInt(opt.value, 10);
+      if (!val) return;
+      var numDisplay = toLocalizedDigits(val, lang);
+      if (lang === "fr") {
+        opt.textContent = val + (val === 1 ? " personne" : " personnes");
+      } else if (lang === "en") {
+        opt.textContent = val + (val === 1 ? " guest" : " guests");
+      } else if (lang === "es") {
+        opt.textContent = val + (val === 1 ? " persona" : " personas");
+      } else if (lang === "de") {
+        opt.textContent = val + (val === 1 ? " Person" : " Personen");
+      } else if (lang === "it") {
+        opt.textContent = val + (val === 1 ? " persona" : " persone");
+      } else if (lang === "pt") {
+        opt.textContent = val + (val === 1 ? " pessoa" : " pessoas");
+      } else if (lang === "nl") {
+        opt.textContent = val + (val === 1 ? " persoon" : " personen");
+      } else if (lang === "ar") {
+        opt.textContent = (val === 1) ? "شخص واحد" : ((val === 2) ? "شخصان (٢)" : (numDisplay + " أشخاص"));
+      } else if (lang === "zh") {
+        opt.textContent = val + " 位";
+      } else if (lang === "ja") {
+        opt.textContent = val + "名";
+      } else if (lang === "ko") {
+        opt.textContent = val + "명";
+      } else if (lang === "pl") {
+        opt.textContent = val + (val === 1 ? " osoba" : (val < 5 ? " osoby" : " osób"));
+      } else if (lang === "tr") {
+        opt.textContent = val + " kişi";
+      } else if (lang === "uk") {
+        opt.textContent = val + (val === 1 ? " особа" : (val < 5 ? " особи" : " осіб"));
+      } else if (lang === "hi") {
+        opt.textContent = numDisplay + " व्यक्ति";
+      }
+    });
   }
 
   function applySlotsToSelect(slotsMap) {
@@ -2460,24 +2601,17 @@ html[lang="uk"] .thanks__sign {
     }
   }
 
+  var currentSubscription = null;
+  var currentRequestId = 0;
+  var lastKnownSlots = null;
+
   function updateAvailability() {
     var now = parisNow();
-    if (dateEl.min !== now.date) {
-      dateEl.min = now.date;
-      var mx = new Date(now.date + 'T00:00:00');
-      mx.setMonth(mx.getMonth() + 3);
-      dateEl.max = iso(mx);
-    }
-    if (dateEl.value && dateEl.value < now.date) {
-      dateEl.value = now.date;
-    }
-
-    var isToday = (dateEl.value === now.date);
     var next = calculateNextSlot(now);
-    if (isToday && next.isTomorrow) {
-      dateEl.value = next.date;
-      updateAvailability();
-      return;
+    var startIso = next.isTomorrow ? next.date : now.date;
+
+    if (!dateEl.value || dateEl.value < startIso || (dateEl.options.length > 0 && dateEl.options[0].value !== startIso)) {
+      populateDateOptions(dateEl.value && dateEl.value >= startIso ? dateEl.value : startIso, getDocLang());
     }
 
     applySlotsToSelect(lastKnownSlots);
@@ -2523,172 +2657,11 @@ html[lang="uk"] .thanks__sign {
     }
   }
 
-  dateEl.addEventListener('change', function () {
-    lastKnownSlots = null;
-    updateAvailability();
-  });
-  guestsEl.addEventListener('change', function () {
-    updateAvailability();
-  });
-
-  window.addEventListener('lcg-firebase-ready', function () {
-    updateAvailability();
-  });
-  window.addEventListener('lcg-policy-updated', function () {
-    updateAvailability();
-  });
-
   var activeStatusState = null;
-
-  function getPunctuation(lang) {
-    var PUNCT = {
-      ja: { comma: "\u3001", stop: "\u3002", sp: "" },
-      zh: { comma: "\uFF0C", stop: "\u3002", sp: "" },
-      ar: { comma: "\u060C", stop: ".", sp: " " }
-    };
-    return PUNCT[lang] || { comma: ",", stop: ".", sp: " " };
-  }
 
   function th(k) {
     var el = document.querySelector(".thanks-src [data-th=\"" + k + "\"]");
     return el ? el.textContent.trim() : "";
-  }
-
-  var LOCALE_MAP = {
-    fr: "fr-FR", en: "en-GB", es: "es-ES", de: "de-DE", it: "it-IT",
-    pt: "pt-PT", nl: "nl-NL", pl: "pl-PL", tr: "tr-TR",
-    ko: "ko-KR", zh: "zh-CN", ja: "ja-JP", uk: "uk-UA", ar: "ar-EG", hi: "hi-IN"
-  };
-
-  function toLocalizedDigits(numStr, lang) {
-    if (numStr === null || numStr === undefined) return "";
-    var s = String(numStr);
-    if (lang === "ar") {
-      var arDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
-      return s.replace(/[0-9]/g, function (d) { return arDigits[parseInt(d, 10)]; });
-    }
-    if (lang === "hi") {
-      var hiDigits = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
-      return s.replace(/[0-9]/g, function (d) { return hiDigits[parseInt(d, 10)]; });
-    }
-    return s;
-  }
-
-  function normalizeToAsciiDigits(str) {
-    if (!str) return "";
-    var arMap = {"٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9"};
-    var hiMap = {"०":"0","१":"1","२":"2","३":"3","४":"4","५":"5","६":"6","७":"7","८":"8","९":"9"};
-    var fullMap = {"０":"0","１":"1","２":"2","３":"3","４":"4","５":"5","６":"6","７":"7","８":"8","９":"9"};
-    return str.replace(/[٠-٩]/g, function (c) { return arMap[c] || c; })
-              .replace(/[०-९]/g, function (c) { return hiMap[c] || c; })
-              .replace(/[０-９]/g, function (c) { return fullMap[c] || c; });
-  }
-
-  function formatFullName(str) {
-    if (!str) return "";
-    return str.trim().split(/\s+/).map(function (w) {
-      return w.split("-").map(function (part) {
-        return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
-      }).join("-");
-    }).join(" ");
-  }
-
-  function formatLocalizedDate(isoDateStr, lang) {
-    if (!isoDateStr) return "";
-    var d = new Date(isoDateStr + "T12:00:00");
-    var loc = LOCALE_MAP[lang] || lang || "fr-FR";
-    var resStr;
-    try {
-      resStr = d.toLocaleDateString(loc, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-    } catch (e) {
-      resStr = d.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-    }
-    if (lang === "ar" || lang === "hi") {
-      return toLocalizedDigits(resStr, lang);
-    }
-    return resStr;
-  }
-
-  function formatLocalizedTime(timeStr, lang) {
-    if (!timeStr) return "";
-    var hm = timeStr.split(":");
-    var h = parseInt(hm[0], 10);
-    var m = parseInt(hm[1], 10);
-    if (lang === "fr") {
-      return (m === 0) ? (h + "h00") : (h + "h" + String(m).padStart(2, "0"));
-    }
-    var base = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
-    if (lang === "ar" || lang === "hi") {
-      return toLocalizedDigits(base, lang);
-    }
-    return base;
-  }
-
-  function formatTimeOption(val, lang) {
-    if (!val) return "";
-    var hm = val.split(":");
-    var h = hm[0];
-    var m = hm[1];
-    if (lang === "fr") {
-      return h + "h" + m;
-    }
-    if (lang === "ar" || lang === "hi") {
-      return toLocalizedDigits(h + ":" + m, lang);
-    }
-    return h + ":" + m;
-  }
-
-  function updateGuestsOptions(lang) {
-    if (!guestsEl) return;
-    Array.prototype.forEach.call(guestsEl.options, function (opt) {
-      var val = parseInt(opt.value, 10);
-      if (!val) return;
-      var numDisplay = toLocalizedDigits(val, lang);
-      if (lang === "fr") {
-        opt.textContent = val + (val === 1 ? " personne" : " personnes");
-      } else if (lang === "en") {
-        opt.textContent = val + (val === 1 ? " guest" : " guests");
-      } else if (lang === "es") {
-        opt.textContent = val + (val === 1 ? " persona" : " personas");
-      } else if (lang === "de") {
-        opt.textContent = val + (val === 1 ? " Person" : " Personen");
-      } else if (lang === "it") {
-        opt.textContent = val + (val === 1 ? " persona" : " persone");
-      } else if (lang === "pt") {
-        opt.textContent = val + (val === 1 ? " pessoa" : " pessoas");
-      } else if (lang === "nl") {
-        opt.textContent = val + (val === 1 ? " persoon" : " personen");
-      } else if (lang === "ar") {
-        opt.textContent = (val === 1) ? "شخص واحد" : ((val === 2) ? "شخصان (٢)" : (numDisplay + " أشخاص"));
-      } else if (lang === "zh") {
-        opt.textContent = val + " 位";
-      } else if (lang === "ja") {
-        opt.textContent = val + "名";
-      } else if (lang === "ko") {
-        opt.textContent = val + "명";
-      } else if (lang === "pl") {
-        opt.textContent = val + (val === 1 ? " osoba" : (val < 5 ? " osoby" : " osób"));
-      } else if (lang === "tr") {
-        opt.textContent = val + " kişi";
-      } else if (lang === "uk") {
-        opt.textContent = val + (val === 1 ? " особа" : (val < 5 ? " особи" : " осіб"));
-      } else if (lang === "hi") {
-        opt.textContent = numDisplay + " व्यक्ति";
-      }
-    });
-  }
-
-  function updateDatePreview() {
-    var prev = document.getElementById("bk-date-preview");
-    if (!prev || !dateEl.value) return;
-    var lang = getDocLang();
-    var joliDate = formatLocalizedDate(dateEl.value, lang);
-    prev.textContent = "📅 " + joliDate;
-  }
-
-  function getDateSep(lang) {
-    if (lang === "ja") return " \u30FB ";
-    return " \u00B7 ";
   }
 
   function renderStatusCard(data) {
@@ -2812,20 +2785,36 @@ html[lang="uk"] .thanks__sign {
     }
   }
 
+  var nowP = parisNow();
+  var initialSlot = calculateNextSlot(nowP);
+  populateDateOptions(initialSlot.date, getDocLang());
+  updateGuestsOptions(getDocLang());
+
+  dateEl.addEventListener('change', function () {
+    lastKnownSlots = null;
+    updateAvailability();
+  });
+  guestsEl.addEventListener('change', function () {
+    updateAvailability();
+  });
+
+  window.addEventListener('lcg-firebase-ready', function () {
+    updateAvailability();
+  });
+  window.addEventListener('lcg-policy-updated', function () {
+    updateAvailability();
+  });
+
   var langObserver = new MutationObserver(function () {
     var langNow = getDocLang();
+    populateDateOptions(dateEl.value, langNow);
     updateGuestsOptions(langNow);
     applySlotsToSelect(lastKnownSlots);
-    updateDatePreview();
     if (activeStatusState && !status.hidden) {
       renderStatusCard(activeStatusState);
     }
   });
   langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
-
-  updateGuestsOptions(getDocLang());
-  updateDatePreview();
-  dateEl.addEventListener("change", updateDatePreview);
 
   updateAvailability();
   setInterval(updateAvailability, 60000);
@@ -2929,7 +2918,7 @@ html[lang="uk"] .thanks__sign {
       "",
       "Nouvelle demande de réservation pour La Colline Gambetta :",
       "",
-      "• Nom : " + nomComplet,
+      "• Nom de la réservation : " + nomComplet,
       "• Téléphone : " + phone.value.trim(),
       mail.value.trim() ? ("• Mail : " + mail.value.trim()) : "• Mail : Non renseigné",
       "• Date : " + dateFr,
@@ -2961,7 +2950,7 @@ html[lang="uk"] .thanks__sign {
     payload.append("_subject", sujetMailo);
     payload.append("_template", "box");
     payload.append("_captcha", "false");
-    payload.append("Nom", savedNomComplet);
+    payload.append("Nom de la réservation", savedNomComplet);
     payload.append("Téléphone", phone.value.trim());
     payload.append("Mail", mail.value.trim() || "—");
     payload.append("Date", dateFr);
