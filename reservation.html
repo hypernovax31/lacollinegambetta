@@ -988,6 +988,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(216,178,87,.22);
 }
 .field__hint { margin:0; font-size:.76rem; color:var(--muted); font-style:italic; }
+.field__hint--warn { color:#b0304a !important; font-style:normal !important; font-weight:600 !important; }
 .field--error input, .field--error select { border-color:#b0304a; box-shadow:0 0 0 3px rgba(176,48,74,.14); }
 .field__error { margin:0; font-size:.76rem; color:#b0304a; font-weight:600; }
 .field__error[hidden] { display:none; }
@@ -1539,7 +1540,6 @@ html[lang="uk"] .thanks__sign {
       <article class="panel">
         <div class="panel__head">
           <h4 class="panel__title">Réserver ma table</h4>
-          <p class="panel__subtitle">Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.</p>
         </div>
 
         
@@ -1547,7 +1547,7 @@ html[lang="uk"] .thanks__sign {
         <form id="book-form" novalidate>
           <div class="form-grid">
             <div class="field" data-field>
-              <label for="bk-name">Nom</label>
+              <label for="bk-name">Nom de la réservation</label>
               <input id="bk-name" name="nom" type="text" autocomplete="name" required placeholder="Votre nom">
               <p class="field__error" data-error hidden>Merci d’indiquer votre nom.</p>
             </div>
@@ -1616,6 +1616,7 @@ html[lang="uk"] .thanks__sign {
                 <option value="22:45">22h45</option>
               </select>
               <p class="field__error" data-error hidden>Merci de choisir une heure.</p>
+              <p class="field__hint field__hint--warn" id="bk-time-hint" hidden></p>
             </div>
             <div class="field" data-field>
               <label for="bk-guests">Nombre de personnes</label>
@@ -1888,28 +1889,123 @@ html[lang="uk"] .thanks__sign {
   var status = document.getElementById('bk-status');
   var dateEl = document.getElementById('bk-date');
   var timeEl = document.getElementById('bk-time');
+  var timeHintEl = document.getElementById('bk-time-hint');
   var guestsEl = document.getElementById('bk-guests');
-  /* L'API relative est configurée dans reservation-config.js. L'envoi passe
-     par le contrôle centralisé (15 tables ou 30 couverts simultanés
-     dans une fenêtre glissante de 60 minutes). Une panne de cet endpoint ne
-     retombe volontairement pas sur FormSubmit : sinon un client pourrait
-     contourner la limite. */
+
   var CAPACITY_ENDPOINT = String(window.LCG_RESERVATION_ENDPOINT || '').trim();
   var FIREBASE_CAPACITY = CAPACITY_ENDPOINT === 'firebase';
 
-  /* Les heures et les nombres de couverts sont écrits en clair dans le
-     HTML, et non fabriqués ici : le moteur de traduction photographie
-     les textes de la page au chargement (avant que ce script ne tourne),
-     donc des options créées en JS resteraient éternellement en français.
-     Écrites dans la page, elles suivent la langue choisie comme le
-     reste. */
+  /* Mémorisation des libellés de base des créneaux (ex: "12h00", "12h15"...) */
+  Array.prototype.forEach.call(timeEl.options, function (opt) {
+    if (opt.value && !opt.dataset.base) {
+      opt.dataset.base = opt.textContent.trim();
+    }
+  });
 
-  /* ---- Dates et heures : rien avant l'instant present, a PARIS ------
-     L'heure de reference est celle du restaurant, pas celle du visiteur :
-     un client a New York ou a Tokyo ne doit pas pouvoir reserver un
-     creneau deja passe a Paris, ni se voir refuser un creneau encore
-     valable. `Intl` donne l'heure de Paris sans table de fuseaux a
-     maintenir, et gere l'heure d'ete tout seul. */
+  var FULL_LABELS = {
+    fr: '(Complet)',
+    en: '(Full)',
+    es: '(Completo)',
+    de: '(Ausgebucht)',
+    it: '(Al completo)',
+    pt: '(Lotado)',
+    nl: '(Vol)',
+    pl: '(Brak miejsc)',
+    zh: '(已满)',
+    uk: '(Заповнено)',
+    ja: '(満席)',
+    ko: '(마감)',
+    ar: '(مكتمل)',
+    tr: '(Dolu)',
+    hi: '(भरा हुआ)'
+  };
+
+  function getDocLang() {
+    return (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
+  }
+
+  function capacityCopy(kind) {
+    var langNow = getDocLang();
+    var copy = {
+      fr: {
+        full: 'Ce créneau est complet (15 tables ou 30 couverts). Choisissez une autre heure ou appelez-nous au 01 43 49 05 93.',
+        allFull: 'Tous les créneaux en ligne sont complets pour cette date. Appelez-nous au 01 43 49 05 93.',
+        error: 'La disponibilité de ce créneau ne peut pas être vérifiée pour le moment. Appelez-nous au 01 43 49 05 93 pour réserver.'
+      },
+      en: {
+        full: 'This time slot is full (15 tables or 30 guests). Please choose another time or call us on 01 43 49 05 93.',
+        allFull: 'All online slots are fully booked for this date. Please call us on 01 43 49 05 93.',
+        error: 'This time slot could not be checked. Please call 01 43 49 05 93 to book.'
+      },
+      es: {
+        full: 'Este horario está completo (15 mesas o 30 comensales). Elija otra hora o llámenos al 01 43 49 05 93.',
+        allFull: 'Todos los turnos online están completos para esta fecha. Llámenos al 01 43 49 05 93.',
+        error: 'No se puede comprobar este horario. Llámenos al 01 43 49 05 93 para reservar.'
+      },
+      de: {
+        full: 'Dieser Zeitraum ist voll (15 Tische oder 30 Gäste). Bitte wählen Sie eine andere Uhrzeit oder rufen Sie uns unter 01 43 49 05 93 an.',
+        allFull: 'Alle Online-Termine für dieses Datum sind ausgebucht. Rufen Sie uns unter 01 43 49 05 93 an.',
+        error: 'Die Verfügbarkeit konnte nicht geprüft werden. Bitte rufen Sie für eine Reservierung 01 43 49 05 93 an.'
+      },
+      it: {
+        full: 'Questa fascia oraria è completa (15 tavoli o 30 coperti). Scelga un altro orario o chiami lo 01 43 49 05 93.',
+        allFull: 'Tutti i posti online sono al completo per questa data. Chiami lo 01 43 49 05 93.',
+        error: 'Impossibile verificare la disponibilità. Chiami lo 01 43 49 05 93 per prenotare.'
+      },
+      pt: {
+        full: 'Este horário está completo (15 mesas ou 30 pessoas). Escolha outra hora ou ligue para 01 43 49 05 93.',
+        allFull: 'Todos os horários online estão esgotados para esta data. Ligue para 01 43 49 05 93.',
+        error: 'Não foi possível verificar a disponibilidade. Ligue para 01 43 49 05 93 para reservar.'
+      },
+      nl: {
+        full: 'Dit tijdslot is vol (15 tafels of 30 gasten). Kies een ander tijdstip of bel 01 43 49 05 93.',
+        allFull: 'Alle online tijdsloten zijn volgeboekt voor deze datum. Bel 01 43 49 05 93.',
+        error: 'De beschikbaarheid kon niet worden gecontroleerd. Bel 01 43 49 05 93 om te reserveren.'
+      },
+      ar: {
+        full: 'هذا الموعد ممتلئ (15 طاولة أو 30 شخصاً). اختر وقتاً آخر أو اتصل بنا على 01 43 49 05 93.',
+        allFull: 'جميع المواعيد عبر الإنترنت محجوزة لهذا اليوم. اتصل بنا على 01 43 49 05 93.',
+        error: 'تعذر التحقق من توفر هذا الموعد. اتصل بنا على 01 43 49 05 93 للحجز.'
+      },
+      zh: {
+        full: '该时段已满（15 张桌子或 30 位客人）。请选择其他时间，或致电 01 43 49 05 93。',
+        allFull: '该日期的在线预订已全部约满。请致电 01 43 49 05 93。',
+        error: '暂时无法确认该时段的可用性。请致电 01 43 49 05 93 预订。'
+      },
+      ja: {
+        full: 'この時間帯は満席です（15卓または30名）。別の時間を選ぶか、01 43 49 05 93までお電話ください。',
+        allFull: 'この日のオンライン予約枠はすべて満席です。01 43 49 05 93までお電話ください。',
+        error: '空席状況を確認できません。ご予約は01 43 49 05 93までお電話ください。'
+      },
+      ko: {
+        full: '이 시간대는 마감되었습니다(테이블 15개 또는 30명). 다른 시간을 선택하거나 01 43 49 05 93으로 전화해 주세요.',
+        allFull: '해당 날짜의 모든 온라인 예약이 마감되었습니다. 01 43 49 05 93으로 전화해 주세요.',
+        error: '이 시간대의 예약 가능 여부를 확인할 수 없습니다. 예약은 01 43 49 05 93으로 전화해 주세요.'
+      },
+      pl: {
+        full: 'Ten przedział jest pełny (15 stolików lub 30 osób). Wybierz inną godzinę albo zadzwoń pod numer 01 43 49 05 93.',
+        allFull: 'Wszystkie rezerwacje online na ten dzień są zajęte. Zadzwoń pod numer 01 43 49 05 93.',
+        error: 'Nie można sprawdzić dostępności. Aby zarezerwować, zadzwoń pod numer 01 43 49 05 93.'
+      },
+      tr: {
+        full: 'Bu saat aralığı dolu (15 masa veya 30 kişi). Başka bir saat seçin ya da 01 43 49 05 93 numarasını arayın.',
+        allFull: 'Bu tarih için tüm çevrimiçi saatler doludur. 01 43 49 05 93 numarasını arayın.',
+        error: 'Bu saat aralığının uygunluğu kontrol edilemedi. Rezervasyon için 01 43 49 05 93 numarasını arayın.'
+      },
+      uk: {
+        full: 'Цей час уже заповнений (15 столів або 30 гостей). Виберіть інший час або зателефонуйте за номером 01 43 49 05 93.',
+        allFull: 'Усі онлайн-слоти на цю дату заповнені. Зателефонуйте за номером 01 43 49 05 93.',
+        error: 'Не вдалося перевірити доступність. Для бронювання зателефонуйте за номером 01 43 49 05 93.'
+      },
+      hi: {
+        full: 'यह समय पूरी तरह बुक है (15 टेबल या 30 मेहमान)। कोई दूसरा समय चुनें या 01 43 49 05 93 पर कॉल करें।',
+        allFull: 'इस तारीख के लिए सभी ऑनलाइन स्लॉट भर चुके हैं। 01 43 49 05 93 पर कॉल करें।',
+        error: 'इस समय की उपलब्धता की जाँच नहीं हो सकी। बुकिंग के लिए 01 43 49 05 93 पर कॉल करें।'
+      }
+    };
+    return (copy[langNow] || copy.fr)[kind];
+  }
+
   function parisNow() {
     var p = new Intl.DateTimeFormat('fr-FR', {
       timeZone: 'Europe/Paris',
@@ -1930,10 +2026,6 @@ html[lang="uk"] .thanks__sign {
       String(d.getDate()).padStart(2, '0');
   }
 
-  /* Calcul précis du prochain créneau disponible à Paris :
-     - avant 12h00 -> 12h00 (aujourd'hui)
-     - pendant le service (ex: 12h12 -> 12h15, 14h43 -> 14h45) -> prochain quart d'heure
-     - après 22h45 (ex: 22h46) -> lendemain à 12h00 */
   function calculateNextSlot(now) {
     var FIRST_SLOT = 12 * 60;       // 12h00 = 720 minutes
     var LAST_SLOT = 22 * 60 + 45;   // 22h45 = 1365 minutes
@@ -1958,8 +2050,6 @@ html[lang="uk"] .thanks__sign {
     return { date: now.date, time: h + ':' + m, isTomorrow: false };
   }
 
-  /* Le calendrier ne descend pas sous aujourd'hui a Paris, et ne monte
-     pas au-dela de trois mois. */
   var nowP = parisNow();
   var initialSlot = calculateNextSlot(nowP);
   dateEl.min = nowP.date;
@@ -1968,67 +2058,149 @@ html[lang="uk"] .thanks__sign {
   dateEl.max = iso(max);
   dateEl.value = initialSlot.date;
 
-  /* Les créneaux déjà passés sont grisés (disabled) dans la liste.
-     L'heure recommandée est pré-sélectionnée par défaut. */
-  function refreshTimes() {
+  var currentSubscription = null;
+  var currentRequestId = 0;
+  var lastKnownSlots = null;
+
+  function applySlotsToSelect(slotsMap) {
     var now = parisNow();
-    /* Une page laissee ouverte franchit minuit : le plancher du
-       calendrier doit suivre, sinon la veille reste selectionnable. */
+    var isToday = (dateEl.value === now.date);
+    var lang = getDocLang();
+    var fullSuffix = FULL_LABELS[lang] || '(Complet)';
+    var availableCount = 0;
+    var firstAvailable = null;
+
+    Array.prototype.forEach.call(timeEl.options, function (opt) {
+      if (!opt.value) return;
+      var base = opt.dataset.base || opt.textContent.trim().replace(/\s*\([^)]*\)$/, '');
+      opt.dataset.base = base;
+
+      var hm = opt.value.split(':');
+      var mins = parseInt(hm[0], 10) * 60 + parseInt(hm[1], 10);
+      var isPast = isToday && (mins <= now.minutes);
+
+      var isCapacityAvailable = true;
+      if (slotsMap && slotsMap[opt.value] !== undefined) {
+        isCapacityAvailable = !!slotsMap[opt.value];
+      }
+
+      if (isPast) {
+        opt.disabled = true;
+        opt.textContent = base;
+      } else if (!isCapacityAvailable) {
+        opt.disabled = true;
+        opt.textContent = base + ' ' + fullSuffix;
+      } else {
+        opt.disabled = false;
+        opt.textContent = base;
+        availableCount++;
+        if (!firstAvailable) firstAvailable = opt.value;
+      }
+    });
+
+    if (timeHintEl) {
+      if (availableCount === 0) {
+        timeHintEl.textContent = capacityCopy('allFull');
+        timeHintEl.hidden = false;
+      } else {
+        timeHintEl.hidden = true;
+      }
+    }
+
+    var currentOpt = timeEl.options[timeEl.selectedIndex];
+    if (availableCount > 0) {
+      if (!timeEl.value || (currentOpt && currentOpt.disabled)) {
+        timeEl.value = firstAvailable || '12:00';
+      }
+    } else {
+      timeEl.value = '';
+    }
+  }
+
+  function updateAvailability() {
+    var now = parisNow();
     if (dateEl.min !== now.date) {
       dateEl.min = now.date;
       var mx = new Date(now.date + 'T00:00:00');
       mx.setMonth(mx.getMonth() + 3);
       dateEl.max = iso(mx);
     }
-    if (dateEl.value && dateEl.value < now.date) dateEl.value = now.date;
+    if (dateEl.value && dateEl.value < now.date) {
+      dateEl.value = now.date;
+    }
 
-    var next = calculateNextSlot(now);
     var isToday = (dateEl.value === now.date);
-    var firstAvailableToday = null;
+    var next = calculateNextSlot(now);
+    if (isToday && next.isTomorrow) {
+      dateEl.value = next.date;
+      updateAvailability();
+      return;
+    }
 
-    Array.prototype.forEach.call(timeEl.options, function (opt) {
-      if (!opt.value) return;
-      var hm = opt.value.split(':');
-      var mins = parseInt(hm[0], 10) * 60 + parseInt(hm[1], 10);
-      var past = isToday && (mins <= now.minutes);
-      opt.disabled = past;
-      if (!past && !firstAvailableToday) {
-        firstAvailableToday = opt.value;
-      }
-    });
+    applySlotsToSelect(lastKnownSlots);
 
-    if (isToday) {
-      /* Aujourd'hui, si tout le service est passé (ex: 22h46), on renvoie
-         au lendemain à 12h00. */
-      if (!firstAvailableToday) {
-        var d = new Date(now.date + 'T00:00:00');
-        d.setDate(d.getDate() + 1);
-        if (iso(d) <= dateEl.max) {
-          dateEl.value = iso(d);
-          refreshTimes();
-          return;
-        }
-      }
-      /* Si aucune heure n'est choisie ou si l'heure sélectionnée est passée/grisée,
-         on positionne automatiquement la case sur le prochain quart d'heure disponible. */
-      var currentOpt = timeEl.options[timeEl.selectedIndex];
-      if (!timeEl.value || (currentOpt && currentOpt.disabled)) {
-        timeEl.value = firstAvailableToday || next.time || '12:00';
-      }
-    } else {
-      /* Date future : tous les créneaux sont disponibles, pré-sélection à 12h00 si vide */
-      if (!timeEl.value) {
-        timeEl.value = '12:00';
+    var targetDate = dateEl.value;
+    var guests = guestsEl.value || 2;
+    var reqId = ++currentRequestId;
+
+    if (currentSubscription) {
+      try { currentSubscription(); } catch (eSub) {}
+      currentSubscription = null;
+    }
+
+    if (!targetDate || !FIREBASE_CAPACITY) return;
+
+    function handleResult(res) {
+      if (reqId !== currentRequestId) return;
+      if (!res || !Array.isArray(res.slots)) return;
+      var map = {};
+      res.slots.forEach(function (s) {
+        map[s.time || s.value] = s.available;
+      });
+      lastKnownSlots = map;
+      applySlotsToSelect(map);
+    }
+
+    if (window.LCGFirebaseReservation) {
+      if (typeof window.LCGFirebaseReservation.subscribeAvailability === 'function') {
+        currentSubscription = window.LCGFirebaseReservation.subscribeAvailability(targetDate, guests, function (err, res) {
+          if (err) {
+            console.warn('[Disponibilité Firebase]', err);
+            return;
+          }
+          handleResult(res);
+        });
+      } else if (typeof window.LCGFirebaseReservation.availability === 'function') {
+        window.LCGFirebaseReservation.availability(targetDate, guests)
+          .then(handleResult)
+          .catch(function (err) {
+            console.warn('[Disponibilité Firebase]', err);
+          });
       }
     }
   }
-  dateEl.addEventListener('change', refreshTimes);
-  refreshTimes();
-  /* La page peut rester ouverte longtemps : on reevalue chaque minute,
-     et au retour sur l'onglet. */
-  setInterval(refreshTimes, 60000);
+
+  dateEl.addEventListener('change', function () {
+    lastKnownSlots = null;
+    updateAvailability();
+  });
+  guestsEl.addEventListener('change', function () {
+    updateAvailability();
+  });
+
+  window.addEventListener('lcg-firebase-ready', function () {
+    updateAvailability();
+  });
+
+  var langObserver = new MutationObserver(function () {
+    applySlotsToSelect(lastKnownSlots);
+  });
+  langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+
+  updateAvailability();
+  setInterval(updateAvailability, 60000);
   document.addEventListener('visibilitychange', function () {
-    if (!document.hidden) refreshTimes();
+    if (!document.hidden) updateAvailability();
   });
 
   function setError(input, on) {
@@ -2053,21 +2225,23 @@ html[lang="uk"] .thanks__sign {
     var mail = document.getElementById('bk-mail');
 
     if (!name.value.trim()) { setError(name, true); bad = bad || name; }
-    /* Un numéro français, écrit comme on veut : au moins 8 chiffres. */
     if ((phone.value.match(/\d/g) || []).length < 8) { setError(phone, true); bad = bad || phone; }
     if (mail.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail.value.trim())) {
       setError(mail, true); bad = bad || mail;
     }
-    /* Dernier controle a l'envoi : l'heure de Paris a pu avancer depuis
-       l'ouverture de la page. */
+
     var nowChk = parisNow();
     if (!dateEl.value || dateEl.value < nowChk.date) { setError(dateEl, true); bad = bad || dateEl; }
-    if (!timeEl.value) { setError(timeEl, true); bad = bad || timeEl; }
-    else if (dateEl.value === nowChk.date) {
+
+    var selectedOpt = timeEl.options[timeEl.selectedIndex];
+    if (!timeEl.value || (selectedOpt && selectedOpt.disabled)) {
+      setError(timeEl, true); bad = bad || timeEl;
+    } else if (dateEl.value === nowChk.date) {
       var hm2 = timeEl.value.split(':');
       var m2 = parseInt(hm2[0], 10) * 60 + parseInt(hm2[1], 10);
       if (m2 <= nowChk.minutes) { setError(timeEl, true); bad = bad || timeEl; }
     }
+
     if (!guestsEl.value) { setError(guestsEl, true); bad = bad || guestsEl; }
 
     if (bad) {
@@ -2076,15 +2250,19 @@ html[lang="uk"] .thanks__sign {
       return;
     }
 
-    /* Pas de serveur derrière ce site : la demande part par courriel, dans
-       le client de messagerie du visiteur, entièrement pré-remplie. Le
-       message reste affiché à l'écran pour qu'il puisse aussi appeler. */
+    function formatFullName(raw) {
+      var str = String(raw || '').trim().replace(/\s+/g, ' ');
+      if (!str) return '';
+      return str
+        .toLowerCase()
+        .replace(/(?:^|[\s\-\x27\u2019])\p{L}/gu, function (match) {
+          return match.toUpperCase();
+        });
+    }
+
+    var nomComplet = formatFullName(name.value);
     var d = new Date(dateEl.value + 'T12:00:00');
     var jolie = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-    /* Deux versions du nombre de couverts : celle affichee suit la
-       langue du client, celle du courriel reste en francais — c'est le
-       restaurateur qui le lit. La valeur de l'option est un chiffre nu,
-       jamais traduit, donc sure. */
     var couverts = guestsEl.options[guestsEl.selectedIndex].textContent;
     var nb = guestsEl.value;
     var couvertsFr = nb + (nb === '1' ? ' personne' : ' personnes');
@@ -2096,7 +2274,7 @@ html[lang="uk"] .thanks__sign {
       '',
       'Je souhaite réserver une table à La Colline Gambetta.',
       '',
-      'Nom : ' + name.value.trim(),
+      'Nom : ' + nomComplet,
       'Téléphone : ' + phone.value.trim(),
       mail.value.trim() ? 'Mail : ' + mail.value.trim() : null,
       'Date : ' + jolie,
@@ -2107,21 +2285,16 @@ html[lang="uk"] .thanks__sign {
       msg ? 'Message : ' + msg : null,
       '',
       'Merci beaucoup,',
-      name.value.trim()
+      nomComplet
     ].filter(function (l) { return l !== null; }).join('\n');
 
-    var sujet = 'Réservation — ' + name.value.trim() + ' — ' + jolie + ' à ' + timeEl.value.replace(':', 'h') + ' (' + couvertsFr + ')';
+    var sujet = 'Réservation — ' + nomComplet + ' — ' + jolie + ' à ' + timeEl.value.replace(':', 'h') + ' (' + couvertsFr + ')';
 
-    /* Remerciement personnalise. Les fragments viennent du DOM, donc
-       deja traduits par le moteur ; seuls le nom, la date et l'heure
-       sont injectes. Le nom passe par textContent, jamais par
-       innerHTML : c'est une saisie libre. */
     function th(k) {
       var el = document.querySelector('.thanks-src [data-th="' + k + '"]');
       return el ? el.textContent.trim() : '';
     }
-    /* La date suit la langue affichee : le client la relit dans la
-       sienne, meme si le courriel part en francais. */
+
     var lang = document.documentElement.getAttribute('lang') || 'fr';
     var jourLu;
     try {
@@ -2136,14 +2309,7 @@ html[lang="uk"] .thanks__sign {
               .toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
           } catch (err2) { return timeEl.value.replace(':', 'h'); }
         })();
-    /* Prenom seul : plus chaleureux qu'un nom complet en tete de mot. */
-    var prenom = name.value.trim().split(/\s+/)[0];
-    /* La ponctuation n'est pas universelle : le chinois et le japonais
-       ont leurs propres virgule et point pleine chasse, l'arabe sa
-       virgule inversee. Coller « , » et « . » a du japonais trahirait
-       le soin apporte au reste du message.
-       La virgule pleine chasse du chinois et du japonais porte deja son
-       blanc : lui ajouter une espace creuse un trou. */
+
     var PUNCT = {
       ja: { comma: '\u3001', stop: '\u3002', sp: '' },
       zh: { comma: '\uFF0C', stop: '\u3002', sp: '' },
@@ -2156,40 +2322,37 @@ html[lang="uk"] .thanks__sign {
 
     var h = document.createElement('p');
     h.className = 'thanks__hello';
-    h.textContent = th('hi') + pc.comma + pc.sp + prenom + pc.stop;
+    h.textContent = th('hi') + pc.comma + pc.sp + nomComplet + pc.stop;
 
     var p1 = document.createElement('p');
     p1.className = 'thanks__line';
     p1.textContent = th('l1');
 
-    /* L'encart : l'annonce reste en texte courant, puis la date,
-       l'heure et le nombre de personnes sont detaches sur leur propre
-       ligne, en gras. C'est la ligne que le client relit et retient ;
-       noyee dans la phrase, elle se cherchait. */
     var p2 = document.createElement('p');
     p2.className = 'thanks__when';
     var intro = document.createElement('span');
     intro.className = 'thanks__when-intro';
     intro.textContent = th('l2') + pc.stop;
-    /* Deux groupes en gras — le moment, puis le nombre de personnes —
-       relies par un mot de liaison en texte courant. Le contraste rend
-       la ligne lisible d'un coup d'oeil, sans la surcharger. */
+
     var quand = document.createElement('strong');
     quand.className = 'thanks__when-detail';
     quand.textContent = jourLu + ' \u00b7 ' + heureLue;
-    var lien = document.createElement('span');
-    lien.className = 'thanks__when-for';
-    lien.textContent = ' ' + th('for') + ' ';
-    var qui = document.createElement('strong');
-    qui.className = 'thanks__when-detail';
-    qui.textContent = couverts;
-    /* Les trois morceaux sont groupes dans une ligne propre : c'est
-       elle qui porte le centrage et le repli equilibre. */
+
     var ligne = document.createElement('span');
     ligne.className = 'thanks__when-line';
     ligne.appendChild(quand);
-    ligne.appendChild(lien);
-    ligne.appendChild(qui);
+
+    if (String(nb) !== '1') {
+      var lien = document.createElement('span');
+      lien.className = 'thanks__when-for';
+      lien.textContent = ' ' + th('for') + ' ';
+      var qui = document.createElement('strong');
+      qui.className = 'thanks__when-detail';
+      qui.textContent = couverts;
+      ligne.appendChild(lien);
+      ligne.appendChild(qui);
+    }
+
     p2.appendChild(intro);
     p2.appendChild(ligne);
 
@@ -2211,19 +2374,12 @@ html[lang="uk"] .thanks__sign {
 
     [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
 
-    /* --- Notification du restaurant -----------------------------------
-       La capacité est décidée par l'API locale. Le relais FormSubmit ne
-       sert plus qu'à notifier le restaurant après acceptation ; il ne peut
-       donc jamais créer une réservation qui contourne le compteur.
-
-       L'adresse est encodée en base64 dans l'attribut du formulaire plutôt
-       qu'écrite en clair, pour ne pas l'offrir aux aspirateurs d'adresses. */
     var payload = new FormData();
     payload.append('action', 'reserve');
     payload.append('_subject', sujet);
     payload.append('_template', 'box');
     payload.append('_captcha', 'false');
-    payload.append('Nom', name.value.trim());
+    payload.append('Nom', nomComplet);
     payload.append('Téléphone', phone.value.trim());
     payload.append('Mail', mail.value.trim() || '—');
     payload.append('Date', jolie);
@@ -2232,7 +2388,6 @@ html[lang="uk"] .thanks__sign {
     payload.append('Préférence', pref);
     payload.append('Message', msg || '—');
     payload.append('Récapitulatif', corps);
-    /* Repondre directement au client depuis la boite du restaurant. */
     if (mail.value.trim()) payload.append('_replyto', mail.value.trim());
 
     var btn = form.querySelector('.btn-book');
@@ -2242,8 +2397,7 @@ html[lang="uk"] .thanks__sign {
     status.hidden = true;
     sending.hidden = false;
     btn.disabled = true;
-    /* La barre est lancee a la frame suivante : posee a 100 % dans le
-       meme cycle, la transition ne demarrerait pas. */
+
     bar.style.width = '0%';
     requestAnimationFrame(function () {
       requestAnimationFrame(function () { bar.style.width = '100%'; });
@@ -2252,79 +2406,8 @@ html[lang="uk"] .thanks__sign {
 
     var FALLBACK_ENDPOINT = 'https://formsubmit.co/ajax/' +
       atob('bGFjb2xsaW5lZ2FtYmV0dGFAbWFpbG8uY29t');
-    var ENDPOINT = CAPACITY_ENDPOINT || FALLBACK_ENDPOINT;
-    var CENTRAL_CAPACITY = !!CAPACITY_ENDPOINT;
-    /* La barre dure cinq secondes pleines : la reponse arrive souvent
-       avant, mais on ne coupe pas l'animation en cours de route. */
     var started = Date.now();
     var MIN_MS = 5000;
-
-    function capacityCopy(kind) {
-      var langNow = (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
-      var copy = {
-        fr: {
-          full: 'Ce créneau est complet (15 tables ou 30 couverts). Choisissez une autre heure ou appelez-nous au 01 43 49 05 93.',
-          error: 'La disponibilité de ce créneau ne peut pas être vérifiée pour le moment. Appelez-nous au 01 43 49 05 93 pour réserver.'
-        },
-        en: {
-          full: 'This time slot is full (15 tables or 30 guests). Please choose another time or call us on 01 43 49 05 93.',
-          error: 'This time slot could not be checked. Please call 01 43 49 05 93 to book.'
-        },
-        es: {
-          full: 'Este horario está completo (15 mesas o 30 comensales). Elija otra hora o llámenos al 01 43 49 05 93.',
-          error: 'No se puede comprobar este horario. Llámenos al 01 43 49 05 93 para reservar.'
-        },
-        de: {
-          full: 'Dieser Zeitraum ist voll (15 Tische oder 30 Gäste). Bitte wählen Sie eine andere Uhrzeit oder rufen Sie uns unter 01 43 49 05 93 an.',
-          error: 'Die Verfügbarkeit konnte nicht geprüft werden. Bitte rufen Sie für eine Reservierung 01 43 49 05 93 an.'
-        },
-        it: {
-          full: 'Questa fascia oraria è completa (15 tavoli o 30 coperti). Scelga un altro orario o chiami lo 01 43 49 05 93.',
-          error: 'Impossibile verificare la disponibilità. Chiami lo 01 43 49 05 93 per prenotare.'
-        },
-        pt: {
-          full: 'Este horário está completo (15 mesas ou 30 pessoas). Escolha outra hora ou ligue para 01 43 49 05 93.',
-          error: 'Não foi possível verificar a disponibilidade. Ligue para 01 43 49 05 93 para reservar.'
-        },
-        nl: {
-          full: 'Dit tijdslot is vol (15 tafels of 30 gasten). Kies een ander tijdstip of bel 01 43 49 05 93.',
-          error: 'De beschikbaarheid kon niet worden gecontroleerd. Bel 01 43 49 05 93 om te reserveren.'
-        },
-        ar: {
-          full: 'هذا الموعد ممتلئ (15 طاولة أو 30 شخصاً). اختر وقتاً آخر أو اتصل بنا على 01 43 49 05 93.',
-          error: 'تعذر التحقق من توفر هذا الموعد. اتصل بنا على 01 43 49 05 93 للحجز.'
-        },
-        zh: {
-          full: '该时段已满（15 张桌子或 30 位客人）。请选择其他时间，或致电 01 43 49 05 93。',
-          error: '暂时无法确认该时段的可用性。请致电 01 43 49 05 93 预订。'
-        },
-        ja: {
-          full: 'この時間帯は満席です（15卓または30名）。別の時間を選ぶか、01 43 49 05 93までお電話ください。',
-          error: '空席状況を確認できません。ご予約は01 43 49 05 93までお電話ください。'
-        },
-        ko: {
-          full: '이 시간대는 마감되었습니다(테이블 15개 또는 30명). 다른 시간을 선택하거나 01 43 49 05 93으로 전화해 주세요.',
-          error: '이 시간대의 예약 가능 여부를 확인할 수 없습니다. 예약은 01 43 49 05 93으로 전화해 주세요.'
-        },
-        pl: {
-          full: 'Ten przedział jest pełny (15 stolików lub 30 osób). Wybierz inną godzinę albo zadzwoń pod numer 01 43 49 05 93.',
-          error: 'Nie można sprawdzić dostępności. Aby zarezerwować, zadzwoń pod numer 01 43 49 05 93.'
-        },
-        tr: {
-          full: 'Bu saat aralığı dolu (15 masa veya 30 kişi). Başka bir saat seçin ya da 01 43 49 05 93 numarasını arayın.',
-          error: 'Bu saat aralığının uygunluğu kontrol edilemedi. Rezervasyon için 01 43 49 05 93 numarasını arayın.'
-        },
-        uk: {
-          full: 'Цей час уже заповнений (15 столів або 30 гостей). Виберіть інший час або зателефонуйте за номером 01 43 49 05 93.',
-          error: 'Не вдалося перевірити доступність. Для бронювання зателефонуйте за номером 01 43 49 05 93.'
-        },
-        hi: {
-          full: 'यह समय पूरी तरह बुक है (15 टेबल या 30 मेहमान)। कोई दूसरा समय चुनें या 01 43 49 05 93 पर कॉल करें।',
-          error: 'इस समय की उपलब्धता की जाँच नहीं हो सकी। बुकिंग के लिए 01 43 49 05 93 पर कॉल करें।'
-        }
-      };
-      return (copy[langNow] || copy.fr)[kind];
-    }
 
     function showCapacityError(message, openMail) {
       status.textContent = '';
@@ -2359,15 +2442,14 @@ html[lang="uk"] .thanks__sign {
           status.hidden = false;
           try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e1) {}
           form.reset();
-          refreshTimes();
+          updateAvailability();
         } else if (failure && failure.capacityFull) {
           showCapacityError(capacityCopy('full'), false);
         } else {
-          /* En cas de difficulté technique résiduelle, on affiche le message de validation pour ne pas frustrer l'utilisateur */
           status.hidden = false;
           try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e3) {}
           form.reset();
-          refreshTimes();
+          updateAvailability();
         }
       }, rest);
     }
@@ -2386,7 +2468,6 @@ html[lang="uk"] .thanks__sign {
           finish(true);
         })
         .catch(function () {
-          /* Si fetch est bloqué par adblocker ou réseau, on valide le message client */
           finish(true);
         });
     }
@@ -2403,7 +2484,6 @@ html[lang="uk"] .thanks__sign {
     }
 
     if (FIREBASE_CAPACITY) {
-      /* Firebase Spark avec secours direct FormSubmit */
       function waitForFirebaseApi() {
         if (window.LCGFirebaseReservation) return Promise.resolve(window.LCGFirebaseReservation);
         return new Promise(function (resolve, reject) {
@@ -2420,13 +2500,14 @@ html[lang="uk"] .thanks__sign {
           window.addEventListener('lcg-firebase-ready', ready);
         });
       }
+
       waitForFirebaseApi()
         .then(function (firebaseApi) {
           return firebaseApi.reserve({
             date: dateEl.value,
             heure: timeEl.value,
             couverts: guestsEl.value,
-            nom: name.value.trim(),
+            nom: nomComplet,
             telephone: phone.value.trim(),
             email: mail.value.trim(),
             preference: pref,
@@ -2446,62 +2527,6 @@ html[lang="uk"] .thanks__sign {
             sendDirect();
           }
         });
-    } else if (CENTRAL_CAPACITY) {
-      /* Mode API HTTP optionnel : réponse dans une iframe cachée. */
-      var responseFrame = document.createElement('iframe');
-      var responseName = 'lcg-reservation-response-' + Date.now();
-      responseFrame.name = responseName;
-      responseFrame.title = 'Réponse de réservation';
-      responseFrame.setAttribute('aria-hidden', 'true');
-      responseFrame.style.cssText = 'position:absolute;width:1px;height:1px;border:0;opacity:0;pointer-events:none;';
-      document.body.appendChild(responseFrame);
-
-      var transport = document.createElement('form');
-      transport.method = 'POST';
-      transport.action = ENDPOINT;
-      transport.target = responseName;
-      transport.style.display = 'none';
-      payload.forEach(function (value, key) {
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = value;
-        transport.appendChild(input);
-      });
-      document.body.appendChild(transport);
-
-      var received = false;
-      function cleanTransport() {
-        window.removeEventListener('message', receiveCapacityMessage);
-        if (transport.parentNode) transport.parentNode.removeChild(transport);
-        if (responseFrame.parentNode) responseFrame.parentNode.removeChild(responseFrame);
-      }
-      function receiveCapacityMessage(event) {
-        var data = event.data || {};
-        if (event.source !== responseFrame.contentWindow ||
-            data.source !== 'lcg-reservation-capacity' || !data.payload) return;
-        received = true;
-        cleanTransport();
-        var result = data.payload;
-        if (result.ok === true) {
-          notifyRestaurant();
-          finish(true);
-        } else if (result.code === 'CAPACITY_FULL') {
-          var err = new Error(result.message || 'capacity full');
-          err.capacityFull = true;
-          finish(false, err);
-        } else {
-          sendDirect();
-        }
-      }
-      window.addEventListener('message', receiveCapacityMessage);
-      transport.submit();
-
-      setTimeout(function () {
-        if (received) return;
-        cleanTransport();
-        sendDirect();
-      }, 5000);
     } else {
       sendDirect();
     }

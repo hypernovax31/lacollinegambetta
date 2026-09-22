@@ -25,6 +25,8 @@
   var STORE_KEY = 'lcg-lang';
   var DICTS = {
     en: {
+      "Nom de la réservation": "Reservation name",
+
       'pour': 'for',
       'Envoi de votre réservation…': 'Sending your reservation…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'Automatic sending did not go through: your mail app opens with the request, or call us directly.',
@@ -470,6 +472,8 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ NET PRICES IN EUROS • SERVICE INCLUDED ✦"
     },
     es: {
+      "Nom de la réservation": "Nombre de la reserva",
+
       'pour': 'para',
       'Envoi de votre réservation…': 'Enviando su reserva…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'El envío automático no se completó: su correo se abre con la solicitud, o llámenos directamente.',
@@ -915,6 +919,8 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     de: {
+      "Nom de la réservation": "Name der Reservierung",
+
       'pour': 'für',
       'Envoi de votre réservation…': 'Ihre Reservierung wird gesendet…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'Der automatische Versand ist fehlgeschlagen: Ihr Mailprogramm öffnet sich mit der Anfrage, oder rufen Sie uns direkt an.',
@@ -1360,6 +1366,8 @@
       "MÉTRO GAMBETTA": "U-Bahnhof Gambetta"
     },
     it: {
+      "Nom de la réservation": "Nome della prenotazione",
+
       'pour': 'per',
       'Envoi de votre réservation…': 'Invio della prenotazione…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'L\'invio automatico non è riuscito: la sua posta si apre con la richiesta, oppure ci chiami direttamente.',
@@ -1805,6 +1813,8 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     pt: {
+      "Nom de la réservation": "Nome da reserva",
+
       'pour': 'para',
       'Envoi de votre réservation…': 'A enviar a sua reserva…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'O envio automático não foi concluído: o seu email abre com o pedido, ou ligue-nos diretamente.',
@@ -2250,6 +2260,8 @@
       "MÉTRO GAMBETTA": "Metro Gambetta"
     },
     nl: {
+      "Nom de la réservation": "Naam van de reservering",
+
       'pour': 'voor',
       'Envoi de votre réservation…': 'Uw reservering wordt verstuurd…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'Automatisch versturen is mislukt: uw mailprogramma opent met de aanvraag, of bel ons direct.',
@@ -2696,6 +2708,8 @@
     },
   
     ar: {
+      "Nom de la réservation": "اسم الحجز",
+
       'pour': 'لـ',
       'Envoi de votre réservation…': 'جارٍ إرسال حجزك…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'لم يكتمل الإرسال التلقائي: سيفتح بريدك بالطلب، أو اتصل بنا مباشرة.',
@@ -3159,6 +3173,8 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ساندويتش جمبون وجبنة مع بيضة مقلية"
     },
     zh: {
+      "Nom de la réservation": "预订人姓名",
+
       'pour': '共',
       'Envoi de votre réservation…': '正在發送您的訂位…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': '自動發送未成功：您的郵件將開啟並附上申請，或直接致電我們。',
@@ -3622,6 +3638,8 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "烤火腿奶酪三明治，上加煎蛋"
     },
     uk: {
+      "Nom de la réservation": "Ім’я для бронювання",
+
       'pour': 'на',
       'Envoi de votre réservation…': 'Надсилаємо ваше бронювання…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'Автоматичне надсилання не вдалося: ваша пошта відкриється із запитом, або зателефонуйте нам напряму.',
@@ -4085,6 +4103,8 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "Підсмажений сендвіч із шинкою та сиром, зверху яєчня"
     },
     ja: {
+      "Nom de la réservation": "ご予約のお名前",
+
       'pour': '·',
       'Envoi de votre réservation…': 'ご予約を送信しています…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': '自動送信に失敗しました。メールソフトが依頼内容とともに開きます。お電話でも承ります。',
@@ -4548,6 +4568,8 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ハムとチーズのグリルサンド、ベシャメルソース、目玉焼きのせ",
     },
     ko: {
+      "Nom de la réservation": "예약자 성함",
+
       'pour': '·',
       'Envoi de votre réservation…': '예약을 보내는 중…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': '자동 전송에 실패했습니다: 메일 앱이 요청과 함께 열립니다. 또는 직접 전화 주세요.',
@@ -5011,6 +5033,8 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "구운 햄과 치즈 샌드위치, 베샤멜 소스, 맨 위에 프라이 에그",
     },
     pl: {
+      "Nom de la réservation": "Nazwisko do rezerwacji",
+
       'pour': 'dla',
       'Envoi de votre réservation…': 'Wysyłanie rezerwacji…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'Automatyczna wysyłka nie powiodła się: Twoja poczta otworzy się z prośbą, albo zadzwoń do nas.',
@@ -5456,6 +5480,8 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ CENY W EURO • SERWIS WLICZONY ✦",
     },
     tr: {
+      "Nom de la réservation": "Rezervasyon adı",
+
       'pour': '·',
       'Envoi de votre réservation…': 'Rezervasyonunuz gönderiliyor…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'Otomatik gönderim tamamlanmadı: e-posta uygulamanız talebinizle açılacak veya bizi doğrudan arayın.',
@@ -5901,6 +5927,8 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ EURO CİNSİNDEN NET FİYATLAR • SERVİS DAHİL ✦",
     },
     hi: {
+      "Nom de la réservation": "बुकिंग का नाम",
+
       'pour': 'के लिए',
       'Envoi de votre réservation…': 'आपका आरक्षण भेजा जा रहा है…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'स्वचालित प्रेषण पूरा नहीं हुआ: आपका मेल अनुरोध के साथ खुलेगा, या हमें सीधे कॉल करें।',

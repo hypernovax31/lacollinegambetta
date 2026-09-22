@@ -12,6 +12,7 @@ import {
   doc,
   getDoc,
   getFirestore,
+  onSnapshot,
   runTransaction,
   serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
@@ -24,10 +25,16 @@ if (!firebaseConfig || firebaseConfig.projectId !== 'la-colline-gambetta') {
 const app = initializeApp(firebaseConfig, 'lacolline-gambetta-reservations');
 const auth = getAuth(app);
 const db = getFirestore(app);
-if (['localhost', '127.0.0.1'].includes(window.location.hostname)) {
-  connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-  connectFirestoreEmulator(db, '127.0.0.1', 8080);
+
+if (window.LCG_USE_EMULATORS === true || (['localhost', '127.0.0.1'].includes(window.location.hostname) && window.LCG_USE_EMULATORS !== false)) {
+  try {
+    connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+    connectFirestoreEmulator(db, '127.0.0.1', 8080);
+  } catch (emuErr) {
+    console.warn('[Firebase emulator init]', emuErr);
+  }
 }
+
 const authReady = signInAnonymously(auth);
 /* Évite un « Unhandled promise rejection » lorsque l'authentification
  * anonyme n'est pas encore activée dans le projet : reserve() reprend la
@@ -35,13 +42,13 @@ const authReady = signInAnonymously(auth);
 authReady.catch((error) => console.error('[réservation Firebase]', error));
 
 const POLICY = Object.freeze({
-  firstSlotMinutes: 12 * 60,
-  lastSlotMinutes: 22 * 60 + 45,
+  firstSlotMinutes: 12 * 60,       // 12h00
+  lastSlotMinutes: 22 * 60 + 45,   // 22h45
   stepMinutes: 15,
-  durationMinutes: 60,
-  adultsPerTable: 2,
-  maxTables: 15,
-  maxCovers: 30
+  durationMinutes: 60,             // Plage glissante d'une heure
+  adultsPerTable: 2,               // 1-2 pers = 1 table, 3-4 = 2 tables, etc.
+  maxTables: 15,                   // Maximum 15 tables simultanées
+  maxCovers: 30                    // Maximum 30 couverts simultanés
 });
 
 function formatMinutes(minutes) {
@@ -77,49 +84,65 @@ function timeMinutes(value) {
   return minutes;
 }
 
-/* Une réservation est comptée en tables, pas seulement en demandes :
- * 1 personne = 1 table ; 2 personnes = 1 table ; 3 ou 4 personnes = 2 tables.
- * Le calcul général est le plafond du nombre de personnes divisé par deux. */
+/* Une réservation est comptée en tables :
+ * 1 à 2 personnes = 1 table ; 3 à 4 personnes = 2 tables ; 5 à 6 personnes = 3 tables, etc.
+ * Plafond du nombre de personnes divisé par deux. */
 function tablesForGuests(guests) {
   return Math.ceil(Number(guests) / POLICY.adultsPerTable);
 }
 
+/* Évalue la capacité disponible sur la plage glissante de 60 minutes de la réservation candidate [candStart, candStart + 60 min[ */
 function evaluateCapacity(rows, candidate) {
-  const active = rows
-    .filter((row) => ['PENDING', 'CONFIRMED'].includes(String(row.status || '').toUpperCase()))
-    .map((row) => ({ startMinutes: Number(row.startMinutes), guests: Number(row.guests) }))
-    .filter((row) => Number.isInteger(row.startMinutes) && Number.isInteger(row.guests));
-  active.push({ startMinutes: candidate.startMinutes, guests: candidate.guests });
+  const candidateGuests = Math.max(1, Math.min(10, Number(candidate.guests) || 1));
+  const candidateTables = tablesForGuests(candidateGuests);
+  const candStart = Number(candidate.startMinutes);
+  const candEnd = candStart + POLICY.durationMinutes;
 
-  const events = [];
-  active.forEach((reservation) => {
-    const tables = tablesForGuests(reservation.guests);
-    events.push({ minute: reservation.startMinutes, tableDelta: tables, coverDelta: reservation.guests });
-    events.push({
-      minute: reservation.startMinutes + POLICY.durationMinutes,
-      tableDelta: -tables,
-      coverDelta: -reservation.guests
+  const overlapping = (rows || []).filter((row) => {
+    const status = String(row.status || '').toUpperCase();
+    if (!['PENDING', 'CONFIRMED'].includes(status)) return false;
+    const rStart = Number(row.startMinutes);
+    if (!Number.isInteger(rStart)) return false;
+    const rEnd = rStart + POLICY.durationMinutes;
+    return rStart < candEnd && candStart < rEnd;
+  });
+
+  const timePoints = new Set([candStart]);
+  overlapping.forEach((row) => {
+    const rStart = Number(row.startMinutes);
+    if (rStart >= candStart && rStart < candEnd) {
+      timePoints.add(rStart);
+    }
+  });
+
+  let maxExistingTables = 0;
+  let maxExistingCovers = 0;
+  timePoints.forEach((t) => {
+    let tTables = 0;
+    let tCovers = 0;
+    overlapping.forEach((row) => {
+      const rStart = Number(row.startMinutes);
+      const rEnd = rStart + POLICY.durationMinutes;
+      if (t >= rStart && t < rEnd) {
+        tTables += tablesForGuests(row.guests);
+        tCovers += Number(row.guests);
+      }
     });
+    maxExistingTables = Math.max(maxExistingTables, tTables);
+    maxExistingCovers = Math.max(maxExistingCovers, tCovers);
   });
-  events.sort((a, b) => a.minute - b.minute || a.tableDelta - b.tableDelta);
 
-  let tables = 0;
-  let covers = 0;
-  let peakTables = 0;
-  let peakCovers = 0;
-  events.forEach((event) => {
-    tables += event.tableDelta;
-    covers += event.coverDelta;
-    peakTables = Math.max(peakTables, tables);
-    peakCovers = Math.max(peakCovers, covers);
-  });
+  const available = (maxExistingTables + candidateTables <= POLICY.maxTables) &&
+                    (maxExistingCovers + candidateGuests <= POLICY.maxCovers);
 
   return {
-    available: peakTables <= POLICY.maxTables && peakCovers <= POLICY.maxCovers,
-    tables: peakTables,
-    covers: peakCovers,
-    remainingTables: Math.max(0, POLICY.maxTables - peakTables),
-    remainingCovers: Math.max(0, POLICY.maxCovers - peakCovers)
+    available,
+    tables: maxExistingTables + candidateTables,
+    covers: maxExistingCovers + candidateGuests,
+    existingTables: maxExistingTables,
+    existingCovers: maxExistingCovers,
+    remainingTables: Math.max(0, POLICY.maxTables - maxExistingTables),
+    remainingCovers: Math.max(0, POLICY.maxCovers - maxExistingCovers)
   };
 }
 
@@ -190,6 +213,22 @@ async function reserve(data) {
   return { ok: true, code: 'ACCEPTED', id: accepted.id, ...accepted.capacity };
 }
 
+function calculateSlotsForRows(date, currentRows, guests = 1) {
+  const numberOfGuests = Math.max(1, Math.min(10, Number(guests) || 1));
+  const slots = [];
+  for (let minutes = POLICY.firstSlotMinutes; minutes <= POLICY.lastSlotMinutes; minutes += POLICY.stepMinutes) {
+    const capacity = evaluateCapacity(currentRows, { startMinutes: minutes, guests: numberOfGuests });
+    slots.push({
+      time: formatMinutes(minutes),
+      startMinutes: minutes,
+      available: capacity.available,
+      remainingTables: capacity.remainingTables,
+      remainingCovers: capacity.remainingCovers
+    });
+  }
+  return { date, durationMinutes: POLICY.durationMinutes, guests: numberOfGuests, slots };
+}
+
 async function availability(date, guests = 1) {
   await authReady;
   if (!validDate(date)) throw new Error('Date invalide.');
@@ -197,15 +236,47 @@ async function availability(date, guests = 1) {
   const current = snapshot.exists() && Array.isArray(snapshot.data().reservations)
     ? snapshot.data().reservations
     : [];
-  const numberOfGuests = Math.max(1, Math.min(10, Number(guests) || 1));
-  const slots = [];
-  for (let minutes = POLICY.firstSlotMinutes; minutes <= POLICY.lastSlotMinutes; minutes += POLICY.stepMinutes) {
-    const capacity = evaluateCapacity(current, { startMinutes: minutes, guests: numberOfGuests });
-    slots.push({ value: formatMinutes(minutes), available: capacity.available, ...capacity });
-  }
-  return { date, durationMinutes: POLICY.durationMinutes, slots };
+  return calculateSlotsForRows(date, current, guests);
 }
 
-const api = { reserve, availability, tablesForGuests, POLICY };
+function subscribeAvailability(date, guests = 1, callback) {
+  if (!validDate(date)) {
+    callback(new Error('Date invalide.'), null);
+    return () => {};
+  }
+  let unsub = () => {};
+  let active = true;
+
+  authReady.then(() => {
+    if (!active) return;
+    const capacityDoc = doc(db, 'reservationCapacity', date);
+    unsub = onSnapshot(capacityDoc, (snapshot) => {
+      const current = snapshot.exists() && Array.isArray(snapshot.data().reservations)
+        ? snapshot.data().reservations
+        : [];
+      const result = calculateSlotsForRows(date, current, guests);
+      callback(null, result);
+    }, (err) => {
+      console.warn('[Firebase onSnapshot]', err);
+      callback(err, null);
+    });
+  }).catch((err) => {
+    callback(err, null);
+  });
+
+  return () => {
+    active = false;
+    unsub();
+  };
+}
+
+const api = {
+  reserve,
+  availability,
+  subscribeAvailability,
+  tablesForGuests,
+  evaluateCapacity,
+  POLICY
+};
 window.LCGFirebaseReservation = api;
-window.dispatchEvent(new CustomEvent('lcg-firebase-ready'));
+window.dispatchEvent(new CustomEvent('lcg-firebase-ready', { detail: api }));
