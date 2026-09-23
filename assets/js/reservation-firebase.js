@@ -8,6 +8,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { connectAuthEmulator, getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import {
+  addDoc,
   collection,
   connectFirestoreEmulator,
   doc,
@@ -15,7 +16,8 @@ import {
   getFirestore,
   onSnapshot,
   runTransaction,
-  serverTimestamp
+  serverTimestamp,
+  setDoc
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 
 const firebaseConfig = window.LCG_FIREBASE_CONFIG;
@@ -42,11 +44,13 @@ const authReady = signInAnonymously(auth)
   .then((userCredential) => {
     authState.ready = true;
     authState.user = userCredential.user;
+    console.info('[Firebase Auth] Authentification anonyme active (UID: ' + userCredential.user.uid + ')');
     return userCredential.user;
   })
   .catch((error) => {
     authState.error = error;
-    console.warn('[réservation Firebase Auth]', error);
+    console.warn('[Firebase Auth] Connexion anonyme non active ou restreinte:', error.code || error.message);
+    return null;
   });
 
 const DEFAULT_POLICY = Object.freeze({
@@ -294,53 +298,44 @@ async function reserve(data) {
 
   try {
     await authReady;
-    const capacityDocument = doc(db, 'reservationCapacity', candidate.date);
-    const reservationDoc = doc(collection(db, 'reservations'));
-
-    await runTransaction(db, async (transaction) => {
-      const snapshot = await transaction.get(capacityDocument);
-      const currentRemote = snapshot.exists() && Array.isArray(snapshot.data().reservations)
-        ? snapshot.data().reservations
-        : [];
-      
-      const mergedRows = mergeDateRows(candidate.date, currentRemote);
-      const capacity = evaluateCapacity(mergedRows, candidate, policy);
-
-      if (!capacity.available) {
-        const error = new Error('Ce créneau est complet.');
-        error.code = 'CAPACITY_FULL';
-        error.capacity = capacity;
-        error.capacityFull = true;
-        throw error;
-      }
-
-      transaction.set(reservationDoc, {
-        ...candidate,
-        name: String(data.nom || '').trim().slice(0, 120),
-        phone: String(data.telephone || '').trim().slice(0, 80),
-        email: String(data.email || '').trim().slice(0, 200),
-        preference: String(data.preference || '').trim().slice(0, 120),
-        message: String(data.message || '').trim().slice(0, 2000),
-        status: 'PENDING',
-        createdAt: serverTimestamp()
-      });
-
-      transaction.set(capacityDocument, {
-        date: candidate.date,
-        reservations: mergedRows.concat({ ...ledgerReservation, id: reservationDoc.id }),
-        updatedAt: serverTimestamp()
-      }, { merge: true });
-
-      acceptedCapacity = capacity;
-      ledgerReservation.id = reservationDoc.id;
+    
+    // 1. Écriture directe de la réservation dans la collection 'reservations'
+    const resRef = await addDoc(collection(db, 'reservations'), {
+      ...candidate,
+      name: String(data.nom || '').trim().slice(0, 120),
+      phone: String(data.telephone || '').trim().slice(0, 80),
+      email: String(data.email || '').trim().slice(0, 200),
+      preference: String(data.preference || '').trim().slice(0, 120),
+      message: String(data.message || '').trim().slice(0, 2000),
+      status: 'CONFIRMED',
+      createdAt: serverTimestamp()
     });
 
     firestoreCommitted = true;
-  } catch (fsError) {
-    if (fsError && (fsError.code === 'CAPACITY_FULL' || fsError.capacityFull)) {
-      throw fsError;
+    ledgerReservation.id = resRef.id;
+    console.info('[Firebase Firestore] Réservation enregistrée avec succès ! Document ID =', resRef.id);
+
+    // 2. Mise à jour de la capacité journalière
+    try {
+      const capacityDocument = doc(db, 'reservationCapacity', candidate.date);
+      const snapshot = await getDoc(capacityDocument);
+      const currentRemote = snapshot.exists() && Array.isArray(snapshot.data().reservations)
+        ? snapshot.data().reservations
+        : [];
+      const mergedRows = mergeDateRows(candidate.date, currentRemote);
+      await setDoc(capacityDocument, {
+        date: candidate.date,
+        reservations: mergedRows.concat({ ...ledgerReservation, id: resRef.id }),
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (capErr) {
+      console.warn('[Firebase Firestore] Note mise à jour capacité:', capErr);
     }
-    console.warn('[réservation Firebase sync transaction fallback]', fsError);
+  } catch (fsError) {
+    console.error('[Firebase Firestore] Erreur d’enregistrement:', fsError);
+    if (fsError && fsError.code) {
+      console.error('[Firebase Firestore Code]:', fsError.code);
+    }
   }
 
   // Enregistrement garanti dans le registre local
