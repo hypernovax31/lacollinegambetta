@@ -2,16 +2,19 @@
 window.LCG_RESERVATION_ENDPOINT = 'firebase';
 window.LCG_RESTAURANT_EMAIL = 'restaurant@lacollinegambetta.com';
 
-/* Configuration du fournisseur d'email :
+/* Configuration des emails :
  *
- * OPTION 1 (Recommandée & Gratuite) : Web3Forms (Délivrabilité 100 % sur Gmail, Orange, etc.)
- * Obtenez votre clé d'accès instantanée en 10 secondes sur https://web3forms.com avec 'restaurant@lacollinegambetta.com'
- * et collez-la dans 'web3formsKey' ci-dessous.
+ * OPTION 1 : FormSubmit (Par défaut, envoi au restaurant + auto-réponse au client)
  *
- * OPTION 2 : FormSubmit (Gratuit, envoyé directement à restaurant@lacollinegambetta.com)
+ * OPTION 2 (Recommandée pour 0 % de spam avec Google Workspace) :
+ * Script Google Apps rattaché à restaurant@lacollinegambetta.com.
+ * L'e-mail de confirmation part directement depuis votre compte officiel Google Workspace.
+ *
+ * OPTION 3 : Web3Forms (Clé d'accès sur https://web3forms.com)
  */
 window.LCG_EMAIL_CONFIG = {
-  provider: 'formsubmit', // 'web3forms' ou 'formsubmit'
-  web3formsKey: '',       // ex: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
-  restaurantEmail: 'restaurant@lacollinegambetta.com'
+  provider: 'formsubmit',      // 'formsubmit', 'google_script', ou 'web3forms'
+  restaurantEmail: 'restaurant@lacollinegambetta.com',
+  googleScriptUrl: '',         // URL de votre Web App Google Apps Script si configurée
+  web3formsKey: ''             // Clé Web3Forms si utilisée
 };

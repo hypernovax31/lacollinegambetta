@@ -3317,9 +3317,47 @@ html[lang="uk"] .thanks__sign {
 
     function dispatchNotificationEmail(callback) {
       var cfg = window.LCG_EMAIL_CONFIG || {};
+      var googleScriptUrl = cfg.googleScriptUrl && typeof cfg.googleScriptUrl === 'string' && cfg.googleScriptUrl.trim().length > 0 ? cfg.googleScriptUrl.trim() : null;
       var web3Key = cfg.web3formsKey && typeof cfg.web3formsKey === 'string' && cfg.web3formsKey.trim().length > 0 ? cfg.web3formsKey.trim() : null;
 
-      if (web3Key) {
+      if (googleScriptUrl) {
+        var clientMail = mail.value.trim();
+        var gsPayload = {
+          action: "reservation",
+          restaurantEmail: targetRestaurantEmail,
+          restaurantSubject: sujetRestaurant,
+          restaurantBody: corpsRestaurant,
+          clientEmail: clientMail || "",
+          clientName: savedNomComplet,
+          clientSubject: "Confirmation de votre réservation — La Colline Gambetta",
+          clientBody: autoresponseBody,
+          details: {
+            nom: savedNomComplet,
+            telephone: phone.value.trim(),
+            email: clientMail || "Non renseigné",
+            date: dateFr,
+            heure: heureFr,
+            couverts: couvertsFr,
+            preference: prefFr,
+            message: msg || "—",
+            langue: langueClient
+          }
+        };
+        fetch(googleScriptUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(gsPayload)
+        })
+          .then(function () {
+            console.log('[Notification Google Apps Script] Envoyée avec succès');
+            if (callback) callback(true);
+          })
+          .catch(function (err) {
+            console.warn('[Notification Google Apps Script error, repli FormSubmit]', err);
+            sendViaFormSubmit(callback);
+          });
+      } else if (web3Key) {
         var web3Payload = {
           access_key: web3Key,
           subject: sujetRestaurant,
@@ -3352,7 +3390,6 @@ html[lang="uk"] .thanks__sign {
           .then(function (r) { return r.json().catch(function () { return {}; }); })
           .then(function (data) {
             console.log('[Notification Web3Forms]', data);
-            /* Envoyer également FormSubmit pour déclencher l'auto-réponse de confirmation au client */
             if (mail.value.trim()) {
               sendViaFormSubmit(callback);
             } else if (callback) {
@@ -3370,12 +3407,12 @@ html[lang="uk"] .thanks__sign {
 
     function sendViaFormSubmit(callback) {
       var fsData = {
+        name: savedNomComplet,
         _subject: sujetRestaurant,
         _template: "box",
         _captcha: "false",
         "Nom pour la réservation": savedNomComplet,
         "Téléphone": phone.value.trim(),
-        "E-mail": mail.value.trim() || "Non renseigné",
         "Date": dateFr,
         "Heure": heureFr,
         "Couverts": couvertsFr,
