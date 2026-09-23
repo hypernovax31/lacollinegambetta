@@ -3309,11 +3309,11 @@ html[lang="uk"] .thanks__sign {
       })
         .then(function (r) { return r.json().catch(function () { return {}; }); })
         .then(function (data) {
-          console.log('[Notification Email]', data);
+          console.log('[Notification Email direct]', data);
           finish(true);
         })
         .catch(function (err) {
-          console.warn('[Notification Email error]', err);
+          console.warn('[Notification Email direct error]', err);
           finish(true);
         });
     }
@@ -3336,86 +3336,6 @@ html[lang="uk"] .thanks__sign {
       } catch (notifyError) {
         console.warn('[Notification Email background exception]', notifyError);
       }
-    }
-
-    var btn = form.querySelector(".btn-book");
-    var sending = document.getElementById("bk-sending");
-    var bar = document.getElementById("bk-bar");
-
-    status.hidden = true;
-    sending.hidden = false;
-    btn.disabled = true;
-
-    bar.style.transition = 'none';
-    bar.style.width = '0%';
-    void bar.offsetWidth;
-    bar.style.transition = 'width 4.8s linear';
-    bar.style.width = '100%';
-
-    try { sending.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e0) {}
-
-    var FALLBACK_ENDPOINT = "https://formsubmit.co/ajax/" +
-      atob("bGFjb2xsaW5lZ2FtYmV0dGFAbWFpbG8uY29t");
-    var started = Date.now();
-    var MIN_MS = 5000;
-
-    function finish(ok, failure) {
-      var rest = Math.max(0, MIN_MS - (Date.now() - started));
-      setTimeout(function () {
-        sending.hidden = true;
-        btn.disabled = false;
-        bar.style.transition = 'none';
-        bar.style.width = '0%';
-        if (ok) {
-          activeStatusState = {
-            type: "success",
-            name: savedNomComplet,
-            date: savedDate,
-            time: savedTime,
-            nb: savedNb
-          };
-          renderStatusCard(activeStatusState);
-          status.hidden = false;
-          try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e1) {}
-          form.reset();
-          var nowAfter = parisNow();
-          var nextAfter = calculateNextSlot(nowAfter);
-          if (dateEl) {
-            dateEl.min = nowAfter.date;
-            dateEl.removeAttribute('max');
-            dateEl.value = nextAfter.date;
-            updateDateDisplay();
-          }
-          updateAvailability();
-        } else if (failure && (failure.capacityFull || failure.code === "CAPACITY_FULL")) {
-          activeStatusState = {
-            type: "capacity",
-            name: savedNomComplet
-          };
-          renderStatusCard(activeStatusState);
-          status.hidden = false;
-          try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e2) {}
-          updateAvailability();
-        } else {
-          activeStatusState = {
-            type: "error",
-            name: savedNomComplet
-          };
-          renderStatusCard(activeStatusState);
-          status.hidden = false;
-          try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e2) {}
-          updateAvailability();
-        }
-      }, rest);
-    }
-
-    function sendDirect() {
-      notifyViaBrevoOrFallback();
-      finish(true);
-    }
-
-    function notifyRestaurant() {
-      notifyViaBrevoOrFallback();
     }
 
     if (FIREBASE_CAPACITY) {
