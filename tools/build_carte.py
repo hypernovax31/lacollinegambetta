@@ -658,6 +658,40 @@ html.carte-doc .carte-toolbar { display: none !important; }
 html.carte-doc .download-card,
 html.carte-doc .download-btn { display: none !important; }
 
+/* Typographie officielle Cinzel / Montserrat pour la carte A4 */
+html.carte-doc .cover-brand h1,
+html.carte-doc .cover-brand h2,
+html.carte-doc .cover-brand .eyebrow,
+html.carte-doc .cover-brand .leader-title,
+html.carte-doc .cover-brand .leader-meta,
+html.carte-doc .cover-brand .menu-leader-subline,
+html.carte-doc .cover-brand p,
+html.carte-doc .print-page__kicker,
+html.carte-doc .print-page__brand,
+html.carte-doc .print-page__brand--sub,
+html.carte-doc .print-page__meta,
+html.carte-doc .print-page__meta--sub,
+html.carte-doc .print-page__header *,
+html.carte-doc .panel__title,
+html.carte-doc .cover-footer-address,
+html.carte-doc .cover-action,
+html.carte-doc .food-card__head h5,
+html.carte-doc .food-card__head strong,
+html.carte-doc .price-line__price,
+html.carte-doc .price-line__name,
+html.carte-doc .offer-card__price,
+html.carte-doc .formule-header h4,
+html.carte-doc .formule-price,
+html.carte-doc .wine-table th,
+html.carte-doc .wine-no,
+html.carte-doc .beer-note,
+html.carte-doc .beer-table__head,
+html.carte-doc .beer-row__price,
+html.carte-doc .beer-row__hh,
+html.carte-doc .footer-details {
+  font-family: 'Cinzel', serif !important;
+}
+
 /* En-tête : titres plus grands, bande violette mieux remplie. */
 html.carte-doc .print-page:not(.print-page--cover) .print-page__header {
   height: 39mm !important;
@@ -668,23 +702,34 @@ html.carte-doc .print-page:not(.print-page--cover) .print-page__header {
 html.carte-doc .print-page__kicker {
   font-size: 9pt !important;
   letter-spacing: .38em !important;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
 }
 html.carte-doc .print-page__brand {
   font-size: 29pt !important;
   letter-spacing: .22em !important;
   line-height: .88 !important;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
 }
 html.carte-doc .print-page__brand--sub {
   font-size: 14.8pt !important;
   letter-spacing: .34em !important;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
+  color: #ffe88f !important;
 }
 html.carte-doc .print-page__meta {
   font-size: 9.4pt !important;
   letter-spacing: .2em !important;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 600 !important;
 }
 html.carte-doc .print-page__meta--sub {
   font-size: 8.2pt !important;
   letter-spacing: .18em !important;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 600 !important;
 }
 
 /* Pied : logo IG, e-mail en toutes lettres, allergènes avant l’alcool. */
