@@ -6,7 +6,6 @@ window.LCG_FIREBASE_CONFIG = {
   authDomain: 'la-colline-gambetta-2026.firebaseapp.com',
   projectId: 'la-colline-gambetta-2026',
   storageBucket: 'la-colline-gambetta-2026.firebasestorage.app',
-  messagingSenderId: '554395667155',
-  appId: '1:554395667155:web:fab7716ba589444a8fa226',
-  measurementId: 'G-DB8545VJPW'
+  messagingSenderId: '147102990992',
+  appId: '1:147102990992:web:42ad47a491fabec3240e15'
 };
