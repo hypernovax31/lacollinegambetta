@@ -38,15 +38,6 @@ import { imagesToPdf, jpegInfo } from './jpeg-pdf.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const SRC = 'carte.html';
-const OUT_NAME = 'carte-a4.pdf';
-const IMAGES_DIR = 'carte-a4-pages';
-const STAGE = join(ROOT, '.carte-pdf');
-/* Le nombre de feuilles vient de carte.html (la pagination est mesurée, pas
-   devinée) ; --pages N permet de l'imposer dans un test. */
-const ECART_CENTRAGE_MM = 0.2, JEU_CADRE_MM = 1.5;   // centrage et non-chevauchement du cadre
-const SHEET_OVERFLOW_PX = 2;             // au-delà de ~0,7 mm hors feuille, la capture rognerait
-const MIN_JPG_BYTES = 40_000;  // une feuille vraiment imprimée pèse plus lourd : anti-page-blanche
-
 const argv = process.argv.slice(2);
 const flag = (name, def) => {
   const i = argv.indexOf(`--${name}`);
@@ -54,12 +45,21 @@ const flag = (name, def) => {
   const next = argv[i + 1];
   return next && !next.startsWith('--') ? next : true;
 };
-const QUALITY = Number(flag('quality', 84));
+const IS_IMPRIMEUR = argv.includes('--imprimeur');
+const OUT_NAME = String(flag('out', IS_IMPRIMEUR ? 'Carte_LaCollineGambetta_Imprimeur_300DPI.pdf' : 'carte-a4.pdf'));
+const IMAGES_DIR = IS_IMPRIMEUR ? 'carte-imprimeur-pages' : 'carte-a4-pages';
+const STAGE = join(ROOT, IS_IMPRIMEUR ? '.carte-imprimeur-pdf' : '.carte-pdf');
+/* Le nombre de feuilles vient de carte.html (la pagination est mesurée, pas
+   devinée) ; --pages N permet de l'imposer dans un test. */
+const ECART_CENTRAGE_MM = 0.2, JEU_CADRE_MM = 1.5;   // centrage et non-chevauchement du cadre
+const SHEET_OVERFLOW_PX = 2;             // au-delà de ~0,7 mm hors feuille, la capture rognerait
+const MIN_JPG_BYTES = 40_000;  // une feuille vraiment imprimée pèse plus lourd : anti-page-blanche
+
+const QUALITY = Number(flag('quality', IS_IMPRIMEUR ? 100 : 84));
 const EXPECTED_PAGES = Number(flag('pages', 0));
 
-/* Résolution optimisée des feuilles pour un téléchargement 5× plus rapide
-   tout en conservant un rendu net et parfaitement lisible. */
-const DPI = Number(flag('dpi', 180));
+/* Résolution : 300 dpi sans compression pour l'imprimeur, 180 dpi pour le site web. */
+const DPI = Number(flag('dpi', IS_IMPRIMEUR ? 300 : 180));
 const JPG_WIDTH = Math.round((210 / 25.4) * DPI);    // 210 mm → largeur en px
 const JPG_HEIGHT = Math.round((297 / 25.4) * DPI);   // 297 mm → hauteur en px
 const JPG_SLACK = Math.max(6, Math.round(DPI / 50)); // tolérance du liseré doré, adaptée à la densité
@@ -322,11 +322,13 @@ async function main() {
   }
 
   const built = imagesToPdf({ images: jpgs, out: join(ROOT, OUT_NAME), tolerate: 0.005, annotations });
-  copyFileSync(join(ROOT, OUT_NAME), join(ROOT, 'Carte_LaCollineGambetta.pdf'));
+  if (!IS_IMPRIMEUR && OUT_NAME === 'carte-a4.pdf') {
+    copyFileSync(join(ROOT, OUT_NAME), join(ROOT, 'Carte_LaCollineGambetta.pdf'));
+  }
   rmSync(STAGE, { recursive: true, force: true });
   const ko = (n) => Math.round(n / 1024).toLocaleString('fr-FR');   // n en octets
   const total = shots.reduce((a, s) => a + s.ko, 0);   // déjà en Ko
-  console.log(`\n${OUT_NAME} & Carte_LaCollineGambetta.pdf : ${built.pages} pages image A4, ${ko(built.bytes)} Ko `
+  console.log(`\n${OUT_NAME} : ${built.pages} pages image A4, ${ko(built.bytes)} Ko `
     + `(les JPEG pèsent ${total.toLocaleString('fr-FR')} Ko, embarqués octet pour octet — aucune re-compression)`);
   console.log(`${IMAGES_DIR}/ : les ${shots.length} feuilles, livrables telles quelles.`);
 }
