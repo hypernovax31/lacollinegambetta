@@ -7,9 +7,6 @@
 <meta name="description" content="Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
-<link rel="dns-prefetch" href="https://fonts.googleapis.com">
-<link rel="dns-prefetch" href="https://fonts.gstatic.com">
-<link rel="prefetch" href="index.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
@@ -17,15 +14,1806 @@
 <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
 
 <!-- Fontes prioritaires indispensables au premier affichage (Cinzel + Montserrat avec affichage instantané swap) -->
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Parisienne&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Parisienne&display=swap" rel="stylesheet">
 
 <!-- Fontes internationales chargées de façon asynchrone sans bloquer le rendu initial -->
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;700&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;700&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap"></noscript>
-<link rel="stylesheet" href="assets/css/reservation.css?v=2026092401">
 <style>
-:root{--violet-950:#24102e;--violet-900:#432155;--violet-800:#592e6f;--gold-500:#d8b257;--cream:#fcfbf7;--ink:#24102e;}
-body{margin:0;font-family:'Montserrat',sans-serif;background:linear-gradient(180deg,#24102e 0,#24102e 100vh,#fcfbf7 100vh,#fcfbf7 100%);color:var(--ink);overflow-x:hidden;}
+/* =====================================================================
+   Page de réservation.
+
+   Les règles ci-dessous ne sont PAS réécrites : elles sont extraites
+   telles quelles de index.html (en-tête, pied de page, pilules de
+   contact, panneaux, titres à pastille violette liseré or, y compris
+   leurs points de rupture). Le seul ajout propre à cette page est le
+   formulaire, plus bas, qui reprend les mêmes variables de couleur,
+   les mêmes rayons et les mêmes fontes.
+   ===================================================================== */
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0; font-family:'Montserrat',sans-serif; color:var(--ink);
+  background:var(--cream); min-height:100svh; display:flex; flex-direction:column;
+}
+button, a { font:inherit; }
+
+:root {
+  --violet-950:#24102e;
+  --violet-900:#432155;
+  --violet-800:#592e6f;
+  --violet-700:#6b3c87;
+  --gold-100:#fef9db;
+  --gold-300:#f0d78f;
+  --gold-500:#d8b257;
+  --gold-700:#9c7a2d;
+  --cream:#fcfbf7;
+  --ink:#24102e;
+  --muted:#7b6a88;
+  --line:rgba(216,178,87,.28);
+  --shadow:0 12px 30px rgba(36,16,46,.08);
+}
+.top-controls { background:#592e6f; border-bottom:1px solid rgba(216,178,87,.45); padding:10px 12px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; align-items:stretch; box-shadow:0 4px 15px rgba(0,0,0,.4); }
+.control-btn, .nav-btn, .contact-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:44px; width:100%; padding:10px 16px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; transition:.2s ease; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-align:center; }
+.control-btn:hover, .nav-btn:hover, .contact-link:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
+.control-btn.active, .nav-btn.active { background:linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%); color:var(--violet-950); border-color:#fcf6ba; }
+.footer-links { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+.contact-link svg, .footer-link svg { width:15px; height:15px; flex:0 0 auto; stroke:#fff; }
+.interior-header { background:#592e6f; color:#fff; padding:24px 16px 20px; text-align:center; border-bottom:2px solid rgba(216,178,87,.42); }
+.interior-header .eyebrow { font-family:'Cinzel',serif; letter-spacing:.3em; color:var(--gold-100); text-transform:uppercase; font-size:.78rem; }
+.interior-header h2 { margin:8px 0 10px; font-family:'Cinzel',serif; font-size:clamp(2.2rem,6vw,3.4rem); letter-spacing:.18em; text-transform:uppercase; line-height:1; }
+.interior-header h2 span { display:block; color:var(--gold-500); font-size:.48em; letter-spacing:.28em; margin-top:.28rem; }
+.interior-header p { margin:0; font-family:'Cinzel',serif; letter-spacing:.12em; text-transform:uppercase; font-size:clamp(.74rem,2vw,.98rem); }
+.nav-btn { width:100%; min-width:0; white-space:normal; text-align:center; line-height:1.2; }
+.container { width:min(100% - 24px, 1120px); margin:20px auto 0; }
+.panel { background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(252,251,247,.98)); border:1px solid rgba(216,178,87,.38); border-radius:22px; box-shadow:var(--shadow); padding:16px; }
+.panel__head { display:grid; gap:6px; justify-items:center; text-align:center; margin-bottom:12px; }
+.panel__title { margin:0; display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:50px; max-width:100%; padding:10px 22px; border-radius:999px; background:#592e6f; color:#fff; border:1px solid var(--gold-500); font-family:'Cinzel',serif; font-size:clamp(1rem,1.8vw,1.24rem); letter-spacing:.12em; text-transform:uppercase; white-space:normal; text-align:center; line-height:1.2; }
+.panel__title::before, .panel__title::after { content:'✦'; color:var(--gold-500); font-size:.72em; }
+.panel__subtitle { margin:0; color:var(--muted); font-style:italic; font-size:.9rem; }
+.footer { background:#592e6f; border-top:2px solid var(--gold-500); color:#fff; padding:16px 12px calc(18px + env(safe-area-inset-bottom)); text-align:center; margin-top:24px; }
+.footer-details { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px 20px; color:var(--gold-100); font-family:'Cinzel',serif; font-size:clamp(.62rem,1.2vw,.84rem); letter-spacing:.08em; text-transform:uppercase; }
+.footer-links { margin:10px 0; }
+.footer-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:42px; padding:8px 14px; text-decoration:none; display:inline-flex; gap:8px; align-items:center; justify-content:center; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+.footer-link:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
+.footer-link .ig-dot { fill:#fff; }
+.footer-note { color:var(--gold-500); font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.14em; font-size:clamp(.56rem,1vw,.76rem); }
+/* Trois mentions distinctes plutôt qu'une phrase à puces : d'un bloc,
+   la ligne se lisait comme un paragraphe et on n'y distinguait rien. En
+   éléments séparés, chacune se lit d'un coup d'œil, et sur écran étroit
+   elles se rangent l'une sous l'autre au lieu de se couper n'importe où.
+   Le séparateur est dessiné en CSS : il disparaît de lui-même en
+   colonne, et n'est pas lu par les synthèses vocales. */
+.footer-legal {
+  margin-top:8px; color:rgba(255,255,255,.7);
+  display:flex; flex-wrap:wrap; justify-content:center;
+  align-items:center; gap:4px 18px;
+  font-size:clamp(.62rem,1.05vw,.72rem); line-height:1.5; letter-spacing:.02em;
+}
+.footer-legal .legal-item { position:relative; white-space:normal; }
+.footer-legal .legal-item + .legal-item::before {
+  content:''; position:absolute; left:-9px; top:50%;
+  width:3px; height:3px; margin-top:-1.5px; border-radius:50%;
+  background:var(--gold-500); opacity:.55;
+}
+/* La mention sur l'alcool est obligatoire : elle reste la plus lisible. */
+.footer-legal .legal-item--alcool { color:rgba(255,255,255,.9); }
+@media (max-width: 720px) {
+  .footer-legal { flex-direction:column; gap:3px; text-align:center; }
+  .footer-legal .legal-item + .legal-item::before { display:none; }
+}
+@media (max-width: 860px) {
+.container { width:min(100% - 16px, 1120px); }
+}
+@media (max-width: 640px) {
+.control-btn, .contact-link, .footer-link { width:100%; }
+.footer-links { display:grid; grid-template-columns:1fr; width:100%; }
+.panel { padding:14px; }
+.footer-details { gap:4px 12px; }
+}
+@media (max-width: 640px) {
+.nav-btn {
+    min-height: 42px;
+    font-size: .72rem;
+    padding: 9px 10px;
+  }
+}
+@media (max-width: 420px) {
+.nav-btn {
+    width: 100%;
+  }
+}
+.footer {
+  background: linear-gradient(180deg, #6b3c87 0%, #592e6f 55%, #432155 100%) !important;
+  border-top: 1px solid rgba(216,178,87,.45) !important;
+  color: #fff;
+  box-shadow: 0 -10px 26px rgba(36,16,46,.12) inset !important;
+}
+.footer-details {
+  color: var(--gold-100);
+}
+.footer-note {
+  color: var(--gold-300);
+}
+.footer-legal {
+  color: rgba(255,255,255,.88);
+}
+@media (max-height: 760px) {
+.contact-link {
+    min-height: 40px;
+    padding: 8px 12px;
+  }
+}
+.top-controls .control-btn {
+  white-space: nowrap;
+  line-height: 1.15;
+}
+@media (max-width: 480px) {
+.top-controls .control-btn {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 640px) {
+.top-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+.top-controls .control-btn {
+    flex: none !important;
+    min-width: 0;
+    padding: 9px 8px;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+  }
+}
+@media (max-width: 420px) {
+.top-controls {
+    padding: 8px;
+    gap: 6px;
+  }
+.top-controls .control-btn {
+    font-size: 0.66rem;
+    padding: 8px 6px;
+  }
+}
+.top-controls {
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+.top-controls .control-btn {
+  min-width: 0;
+  width: min(100%, 360px);
+  justify-self: center;
+}
+@media (max-width: 640px) {
+.top-controls {
+    width: 100vw;
+  }
+.top-controls .control-btn {
+    width: 100%;
+  }
+.top-controls .control-btn {
+    font-size: 0.68rem;
+    padding: 8px 6px;
+    letter-spacing: 0.01em;
+  }
+}
+@media (max-width: 420px) {
+.top-controls .control-btn {
+    font-size: 0.62rem;
+    padding: 8px 4px;
+  }
+}
+.interior-header {
+  padding: 18px 14px 16px;
+}
+.interior-header .eyebrow {
+  font-size: .72rem;
+  letter-spacing: .24em;
+}
+.interior-header h2 {
+  margin: 6px 0 8px;
+  font-size: clamp(1.8rem, 4.8vw, 2.8rem);
+  letter-spacing: .14em;
+}
+.interior-header h2 span {
+  font-size: .46em;
+  letter-spacing: .22em;
+  margin-top: .18rem;
+}
+.interior-header p {
+  font-size: clamp(.66rem, 1.6vw, .86rem);
+  letter-spacing: .09em;
+}
+@media (max-width: 640px) {
+.interior-header {
+    padding: 16px 12px 14px;
+  }
+.interior-header h2 {
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+  }
+}
+@media (max-width: 640px) {
+.control-btn, .nav-btn, .contact-link, .footer-link {
+    font-size: 0.78rem !important;
+    letter-spacing: 0.02em !important;
+    min-height: 42px !important;
+  }
+.panel__title {
+    font-size: 1rem !important;
+  }
+.footer-legal {
+    font-size: 0.8rem !important;
+    line-height: 1.45 !important;
+  }
+.interior-header .eyebrow, .interior-header p {
+    font-size: 0.9rem !important;
+    line-height: 1.35 !important;
+  }
+}
+@media (max-width: 420px) {
+.control-btn, .nav-btn, .contact-link, .footer-link {
+    font-size: 0.74rem !important;
+  }
+}
+.interior-header, .top-controls, .footer {
+  color: #ffffff;
+}
+.interior-header .eyebrow, .interior-header h2, .interior-header h2 span, .interior-header p, .footer-details, .footer-note, .footer-legal, .top-controls .control-btn, .menu-nav .nav-btn {
+  color: #ffffff !important;
+}
+.top-controls .control-btn.active, .menu-nav .nav-btn.active {
+  color: var(--violet-950) !important;
+}
+.interior-header .eyebrow, .interior-header p, .footer-note {
+  text-shadow: 0 1px 2px rgba(0,0,0,.14);
+}
+.menu-leader-subline {
+  margin-top: 8px;
+  color: var(--gold-100) !important;
+}
+.interior-header h2 span {
+  color: var(--gold-700) !important;
+}
+.panel__title {
+  color: #ffffff !important;
+}
+.star-gold {
+  color: var(--gold-bright) !important;
+  text-shadow: 0 0 0.5px rgba(36,16,46,.75), 0 0 10px rgba(255,216,106,.22);
+}
+.panel__title::before, .panel__title::after {
+  color: var(--gold-bright) !important;
+}
+.star-gold, .panel__title::before, .panel__title::after {
+  font-size: 0.78rem !important;
+  line-height: 1 !important;
+}
+.star-gold {
+  display: inline-block;
+  vertical-align: middle;
+  transform: translateY(-0.02em);
+}
+.interior-header h2 span {
+  color: var(--gold-bright) !important;
+  text-shadow: 0 0 10px rgba(255,232,143,0.18);
+}
+.star-gold, .panel__title::before, .panel__title::after {
+  color: var(--gold-bright) !important;
+  text-shadow: 0 0 12px rgba(255,232,143,0.28), 0 0 1px rgba(36,16,46,0.65);
+}
+.interior-header .eyebrow {
+  font-family: 'Cinzel', serif !important;
+  font-size: clamp(1.8rem, 4.8vw, 2.8rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: .14em !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
+  color: #ffffff !important;
+  text-shadow: 0 4px 18px rgba(0,0,0,.35);
+}
+@media (max-width: 640px) {
+.interior-header .eyebrow {
+    font-size: clamp(1.45rem, 7vw, 2.1rem) !important;
+    letter-spacing: .1em !important;
+    line-height: 1.05 !important;
+  }
+}
+.top-controls, .interior-header, .panel__title, .footer {
+  color: #ffffff !important;
+}
+.top-controls *, .interior-header *, .panel__title *, .footer * {
+  color: inherit;
+}
+.interior-header h2, .interior-header p, .interior-header .eyebrow, .panel__title, .footer-details, .footer-note, .footer-legal, .footer-link, .top-controls .control-btn, .menu-nav .nav-btn {
+  color: #ffffff !important;
+}
+.top-controls .control-btn.active, .menu-nav .nav-btn.active {
+  color: var(--violet-950) !important;
+}
+.interior-header .eyebrow {
+  font-family: 'Cinzel', serif !important;
+  font-size: .72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .24em !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase !important;
+  color: var(--gold-100) !important;
+  text-shadow: none !important;
+}
+@media (max-width: 640px) {
+.interior-header .eyebrow {
+    font-size: .72rem !important;
+    letter-spacing: .18em !important;
+  }
+}
+.interior-header, .interior-header .eyebrow, .interior-header h2, .interior-header p, .top-controls, .top-controls .control-btn, .menu-nav .nav-btn, .panel__title, .panel__title *, .footer, .footer-details, .footer-note, .footer-legal, .footer-link {
+  color: #ffffff !important;
+}
+.top-controls .control-btn.active, .menu-nav .nav-btn.active {
+  color: var(--violet-950) !important;
+}
+.interior-header h2 span, .star-gold, .panel__title::before, .panel__title::after, .footer-note .star-gold {
+  color: var(--gold-bright) !important;
+}
+.top-controls, .top-controls .control-btn, .menu-nav .nav-btn, .interior-header, .interior-header .eyebrow, .interior-header h2, .interior-header p, .panel__title, .footer, .footer-details, .footer-note, .footer-legal, .footer-link {
+  color: #ffffff !important;
+}
+.top-controls .control-btn.active, .menu-nav .nav-btn.active {
+  color: var(--violet-950) !important;
+}
+.top-controls .control-btn.active svg, .menu-nav .nav-btn.active svg {
+  stroke: var(--violet-950) !important;
+}
+.top-controls .control-btn.active .star-gold, .menu-nav .nav-btn.active .star-gold {
+  color: var(--violet-950) !important;
+  text-shadow: none !important;
+}
+.interior-header h2 span, .star-gold, .panel__title::before, .panel__title::after, .footer-note .star-gold {
+  color: var(--gold-bright) !important;
+}
+@media (max-width: 480px) {
+.menu-nav .nav-btn:last-child {
+    grid-column: span 2;
+  }
+.nav-btn {
+    font-size: 1rem !important;
+    line-height: 1.25 !important;
+    padding: 10px 12px !important;
+    min-height: 46px !important;
+  }
+}
+.panel__subtitle {
+  font-size: clamp(0.76rem, 0.28vw + 0.68rem, 0.92rem) !important;
+  line-height: 1.35 !important;
+}
+.panel__title {
+  font-size: clamp(0.88rem, 1.6vw, 1.24rem) !important;
+}
+.control-btn {
+  font-size: clamp(0.72rem, 0.22vw + 0.64rem, 0.85rem) !important;
+}
+.top-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px !important;
+}
+.top-controls .control-btn {
+  width: auto !important;
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+  padding: 9px 18px !important;
+}
+@media print {
+.top-controls { display:none !important; }
+}
+.top-controls {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px !important;
+  padding-left: 58px !important;
+  padding-right: 58px !important;
+}
+.top-controls__nav .control-btn {
+  width: auto !important;
+  flex: 0 0 auto !important;
+}
+.footer-links {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: min(100%, 920px);
+  gap: 10px;
+  justify-items: stretch;
+}
+.footer-links .footer-link {
+  width: 100%;
+  min-width: 0;
+  justify-content: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 720px) {
+.top-controls {
+    padding-left: 50px !important;
+    padding-right: 50px !important;
+    gap: 8px !important;
+  }
+.footer-links { gap: 8px; }
+.footer-links .footer-link {
+    font-size: 0.68rem !important;
+    padding: 8px 8px !important;
+    letter-spacing: 0.02em !important;
+  }
+}
+@media (max-width: 640px) {
+.footer-links {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
+.footer-links {
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr) minmax(0, 1.35fr);
+}
+@media (max-width: 780px) {
+.footer-links {
+    grid-template-columns: 1fr;
+  }
+}
+.panel__title {
+  font-size: 1.08rem !important;
+  letter-spacing: .12em !important;
+  padding: 10px 22px !important;
+}
+@media (max-width: 640px) {
+.panel__title { font-size: 0.96rem !important; }
+}
+.footer-links .footer-link {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
+  font-style: normal !important;
+}
+.footer-links .footer-link svg {
+  width: 15px !important;
+  height: 15px !important;
+  flex: 0 0 auto;
+  stroke: currentColor;
+}
+.footer-links {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+@media (max-width: 780px) {
+.footer-links .footer-link {
+    font-size: 0.78rem !important;
+    letter-spacing: 0.02em !important;
+  }
+}
+html .panel__subtitle.qty {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  font-size: var(--qty-size) !important;
+  line-height: 1.4 !important;
+  letter-spacing: .02em !important;
+  text-transform: none !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--qty-ink) !important;
+}
+.footer-download-wrap { margin: 8px auto 4px; }
+.footer-download {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 7px; width: auto;
+  padding: 6px 14px; border-radius: 999px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .24);
+  color: rgba(255, 255, 255, .78);
+  text-decoration: none;
+  font-family: 'Montserrat', system-ui, sans-serif; font-weight: 500;
+  font-size: .64rem; letter-spacing: .18em; text-transform: uppercase;
+  transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+  cursor: pointer;
+}
+.footer-download svg { width: 12px; height: 12px; flex: 0 0 auto; opacity: .85; }
+.footer-download:hover {
+  color: #fff; border-color: rgba(216, 178, 87, .7);
+  background: rgba(255, 255, 255, .05);
+}
+.footer-download:active { transform: translateY(1px); }
+@media (max-width: 640px) {
+.footer-download { font-size: .6rem; letter-spacing: .14em; padding: 5px 12px; }
+}
+/* ===== Écritures non latines : fontes dédiées & mappages ===== */
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/amiri-arabic-400.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/amiri-arabic-700.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/playfair-cyrillic-500.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 700; font-display:swap; src:url('assets/fonts/playfair-cyrillic-600.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:800 900; font-display:swap; src:url('assets/fonts/playfair-cyrillic-700.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/montserrat-cyrillic-400.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/montserrat-cyrillic-700.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/sc-serif-600.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/sc-serif-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/tajawal-arabic-400.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/tajawal-arabic-500.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/tajawal-arabic-700.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/sc-sans-400.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/sc-sans-500.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/sc-sans-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'CinzelJP'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/ja-serif-600.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'CinzelJP'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/ja-serif-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'MontserratJP'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/ja-sans-400.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'MontserratJP'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/ja-sans-500.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'MontserratJP'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/ja-sans-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/ko-serif-600.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/ko-serif-700.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/ko-sans-400.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/ko-sans-500.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/ko-sans-700.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/hi-serif-600.woff2') format('woff2'); unicode-range:U+0900-097F; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/hi-serif-700.woff2') format('woff2'); unicode-range:U+0900-097F; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/hi-sans-400.woff2') format('woff2'); unicode-range:U+0900-097F; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/hi-sans-500.woff2') format('woff2'); unicode-range:U+0900-097F; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/hi-sans-700.woff2') format('woff2'); unicode-range:U+0900-097F; }
+
+/* Réinitialisation de l'interlettrage et de la casse pour les écritures non latines */
+html[lang="ar"], html[lang="ar"] *,
+html[lang="ja"], html[lang="ja"] *,
+html[lang="ko"], html[lang="ko"] *,
+html[lang="zh"], html[lang="zh"] *,
+html[lang="hi"], html[lang="hi"] * {
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* Coréen (Korean) */
+html[lang="ko"] {
+  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Montserrat', sans-serif;
+}
+html[lang="ko"] .interior-header .eyebrow,
+html[lang="ko"] .interior-header h2,
+html[lang="ko"] .interior-header p,
+html[lang="ko"] .panel__title,
+html[lang="ko"] .footer-details,
+html[lang="ko"] .footer-note,
+html[lang="ko"] .hours__val,
+html[lang="ko"] .hours__t,
+html[lang="ko"] .hours__day,
+html[lang="ko"] .form-status strong,
+html[lang="ko"] .thanks__hello,
+html[lang="ko"] .thanks__when-detail,
+html[lang="ko"] .thanks__when-intro,
+html[lang="ko"] .thanks__when-slot,
+html[lang="ko"] .thanks__when-guests,
+html[lang="ko"] .thanks__sign,
+html[lang="ko"] .sending__label {
+  font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif !important;
+}
+html[lang="ko"] .field input,
+html[lang="ko"] .field select,
+html[lang="ko"] .field textarea,
+html[lang="ko"] .field label,
+html[lang="ko"] .thanks__line,
+html[lang="ko"] .thanks__tel,
+html[lang="ko"] .control-btn,
+html[lang="ko"] .nav-btn,
+html[lang="ko"] .contact-link,
+html[lang="ko"] .footer-link,
+html[lang="ko"] .footer-download {
+  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif !important;
+}
+
+/* Chinois (Chinese) */
+html[lang="zh"] {
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Montserrat', sans-serif;
+}
+html[lang="zh"] .interior-header .eyebrow,
+html[lang="zh"] .interior-header h2,
+html[lang="zh"] .interior-header p,
+html[lang="zh"] .panel__title,
+html[lang="zh"] .footer-details,
+html[lang="zh"] .footer-note,
+html[lang="zh"] .hours__val,
+html[lang="zh"] .hours__t,
+html[lang="zh"] .hours__day,
+html[lang="zh"] .form-status strong,
+html[lang="zh"] .thanks__hello,
+html[lang="zh"] .thanks__when-detail,
+html[lang="zh"] .thanks__when-intro,
+html[lang="zh"] .thanks__when-slot,
+html[lang="zh"] .thanks__when-guests,
+html[lang="zh"] .thanks__sign,
+html[lang="zh"] .sending__label {
+  font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif !important;
+}
+html[lang="zh"] .field input,
+html[lang="zh"] .field select,
+html[lang="zh"] .field textarea,
+html[lang="zh"] .field label,
+html[lang="zh"] .thanks__line,
+html[lang="zh"] .thanks__tel,
+html[lang="zh"] .control-btn,
+html[lang="zh"] .nav-btn,
+html[lang="zh"] .contact-link,
+html[lang="zh"] .footer-link,
+html[lang="zh"] .footer-download {
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif !important;
+}
+
+/* Japonais (Japanese) */
+html[lang="ja"] {
+  font-family: 'MontserratJP', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
+}
+html[lang="ja"] .interior-header .eyebrow,
+html[lang="ja"] .interior-header h2,
+html[lang="ja"] .interior-header p,
+html[lang="ja"] .panel__title,
+html[lang="ja"] .footer-details,
+html[lang="ja"] .footer-note,
+html[lang="ja"] .hours__val,
+html[lang="ja"] .hours__t,
+html[lang="ja"] .hours__day,
+html[lang="ja"] .form-status strong,
+html[lang="ja"] .thanks__hello,
+html[lang="ja"] .thanks__when-detail,
+html[lang="ja"] .thanks__when-intro,
+html[lang="ja"] .thanks__when-slot,
+html[lang="ja"] .thanks__when-guests,
+html[lang="ja"] .thanks__sign,
+html[lang="ja"] .sending__label {
+  font-family: 'CinzelJP', 'Noto Serif JP', 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', serif !important;
+}
+html[lang="ja"] .field input,
+html[lang="ja"] .field select,
+html[lang="ja"] .field textarea,
+html[lang="ja"] .field label,
+html[lang="ja"] .thanks__line,
+html[lang="ja"] .thanks__tel,
+html[lang="ja"] .control-btn,
+html[lang="ja"] .nav-btn,
+html[lang="ja"] .contact-link,
+html[lang="ja"] .footer-link,
+html[lang="ja"] .footer-download {
+  font-family: 'MontserratJP', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif !important;
+}
+
+/* Ukrainien (Ukrainian / Cyrillic) */
+html[lang="uk"] {
+  font-family: 'Montserrat', 'Roboto', 'Helvetica Neue', sans-serif;
+}
+html[lang="uk"] .interior-header .eyebrow,
+html[lang="uk"] .interior-header h2,
+html[lang="uk"] .interior-header p,
+html[lang="uk"] .panel__title,
+html[lang="uk"] .footer-details,
+html[lang="uk"] .footer-note,
+html[lang="uk"] .hours__val,
+html[lang="uk"] .hours__t,
+html[lang="uk"] .hours__day,
+html[lang="uk"] .form-status strong,
+html[lang="uk"] .thanks__hello,
+html[lang="uk"] .thanks__when-detail,
+html[lang="uk"] .thanks__when-intro,
+html[lang="uk"] .thanks__when-slot,
+html[lang="uk"] .thanks__when-guests,
+html[lang="uk"] .thanks__sign,
+html[lang="uk"] .sending__label {
+  font-family: 'Playfair Display', 'Georgia', serif !important;
+  text-transform: none;
+}
+html[lang="uk"] .field input,
+html[lang="uk"] .field select,
+html[lang="uk"] .field textarea,
+html[lang="uk"] .field label,
+html[lang="uk"] .thanks__line,
+html[lang="uk"] .thanks__tel,
+html[lang="uk"] .control-btn,
+html[lang="uk"] .nav-btn,
+html[lang="uk"] .contact-link,
+html[lang="uk"] .footer-link,
+html[lang="uk"] .footer-download {
+  font-family: 'Montserrat', 'Roboto', 'Helvetica Neue', sans-serif !important;
+}
+
+/* Arabe (Arabic) */
+html[lang="ar"] {
+  font-family: 'Tajawal', 'Noto Sans Arabic', 'Geeza Pro', 'Segoe UI', sans-serif;
+  direction: rtl;
+}
+html[lang="ar"] .interior-header .eyebrow,
+html[lang="ar"] .interior-header h2,
+html[lang="ar"] .interior-header p,
+html[lang="ar"] .panel__title,
+html[lang="ar"] .footer-details,
+html[lang="ar"] .footer-note,
+html[lang="ar"] .hours__val,
+html[lang="ar"] .hours__t,
+html[lang="ar"] .hours__day,
+html[lang="ar"] .form-status strong,
+html[lang="ar"] .thanks__hello,
+html[lang="ar"] .thanks__when-detail,
+html[lang="ar"] .thanks__when-intro,
+html[lang="ar"] .thanks__when-slot,
+html[lang="ar"] .thanks__when-guests,
+html[lang="ar"] .thanks__sign,
+html[lang="ar"] .sending__label {
+  font-family: 'Amiri', 'Traditional Arabic', serif !important;
+}
+html[lang="ar"] .field input,
+html[lang="ar"] .field select,
+html[lang="ar"] .field textarea,
+html[lang="ar"] .field label,
+html[lang="ar"] .thanks__line,
+html[lang="ar"] .thanks__tel,
+html[lang="ar"] .control-btn,
+html[lang="ar"] .nav-btn,
+html[lang="ar"] .contact-link,
+html[lang="ar"] .footer-link,
+html[lang="ar"] .footer-download {
+  font-family: 'Tajawal', 'Noto Sans Arabic', 'Geeza Pro', 'Segoe UI', sans-serif !important;
+}
+
+/* Hindi */
+html[lang="hi"] {
+  font-family: 'Noto Sans Devanagari', 'Montserrat', sans-serif;
+}
+html[lang="hi"] .interior-header .eyebrow,
+html[lang="hi"] .interior-header h2,
+html[lang="hi"] .interior-header p,
+html[lang="hi"] .panel__title,
+html[lang="hi"] .footer-details,
+html[lang="hi"] .footer-note,
+html[lang="hi"] .hours__val,
+html[lang="hi"] .hours__t,
+html[lang="hi"] .hours__day,
+html[lang="hi"] .form-status strong,
+html[lang="hi"] .thanks__hello,
+html[lang="hi"] .thanks__when-detail,
+html[lang="hi"] .thanks__when-intro,
+html[lang="hi"] .thanks__when-slot,
+html[lang="hi"] .thanks__when-guests,
+html[lang="hi"] .thanks__sign,
+html[lang="hi"] .sending__label {
+  font-family: 'Noto Serif Devanagari', serif !important;
+}
+html[lang="hi"] .field input,
+html[lang="hi"] .field select,
+html[lang="hi"] .field textarea,
+html[lang="hi"] .field label,
+html[lang="hi"] .thanks__line,
+html[lang="hi"] .thanks__tel,
+html[lang="hi"] .control-btn,
+html[lang="hi"] .nav-btn,
+html[lang="hi"] .contact-link,
+html[lang="hi"] .footer-link,
+html[lang="hi"] .footer-download {
+  font-family: 'Noto Sans Devanagari', 'Montserrat', sans-serif !important;
+}
+
+/* ===== Sélecteur de langue (repris du site) ===== */
+.lang-dock {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1003;
+  width: 66px;
+  height: 62px;
+  pointer-events: none;
+}
+.lang-dock > * { pointer-events: auto; }
+.lang-dock .lang-btn {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  transform: none;
+}
+
+/* -- Le globe, toujours fixe en haut a droite -------------------------
+   Il ne s'ancre plus dans le bandeau de titre : il reste colle au coin
+   de la FENETRE sur toutes les pages et dans toutes les vues, y compris
+   au-dessus du bandeau « Page de Garde / Menu & Carte ». Le socle est
+   donc pose au-dessus de tout (z-index superieur au bandeau, qui monte
+   a 1002 quand il colle en haut).
+
+   Contrepartie : le globe recouvre le coin haut droit. Chaque bandeau
+   qui passe dessous doit donc lui reserver sa gouttiere, sinon un
+   bouton ou un titre long vient se glisser dessous. */
+.lang-dock { z-index: 1600; }
+.interior-header { position: relative; }
+/* Gouttiere symetrique : le titre reste centre sans passer sous le
+   globe. Symetrique, car un padding d'un seul cote decalerait le
+   titre. */
+.interior-header { padding-left: 58px; padding-right: 58px; }
+@media (max-width: 720px) {
+  .interior-header { padding-left: 54px; padding-right: 54px; }
+}
+
+.lang-dock .lang-menu {
+  /* Le menu est ancré à la FENÊTRE, pas au socle : le socle ne fait que
+     66 px de large, et un panneau en absolu dedans ne pouvait plus
+     s'étendre ni se centrer. C'est ce qui avait fait perdre au menu son
+     affichage pleine largeur sur petit écran. En `fixed`, il retrouve la
+     fenêtre pour cadre de référence, à l'identique sur les trois pages. */
+  position: fixed;
+  top: 60px;
+  right: 12px;
+  left: auto;
+  transform: none;
+}
+/* Petit écran : pleine largeur, comme avant le socle. */
+@media (max-width: 640px) {
+  .lang-dock .lang-menu {
+    top: 56px;
+    left: 10px;
+    right: 10px;
+    min-width: 0;
+    max-height: calc(100vh - 76px);
+  }
+}
+/* Fenêtre basse : le panneau s'élargit et se centre horizontalement
+   pour que les quinze langues tiennent sans défilement interne. */
+/* Fenetre basse : le panneau reste cale A DROITE, sous l'en-tete, au
+   plus pres du bouton qui l'ouvre, plutot que centre au milieu de
+   l'ecran. Il s'elargit vers la GAUCHE, son bord droit etant fixe.
+   `!important` : dans cette page, un correctif sans lui ne tient pas. */
+@media (min-width: 641px) and (max-height: 500px) {
+  .lang-dock .lang-menu {
+    top: 52px !important;
+    right: 12px !important;
+    left: auto !important;
+    transform: none !important;
+    max-height: calc(100vh - 64px) !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+}
+
+@media (max-width: 720px) {
+.lang-dock { width: 58px; height: 58px; }
+.lang-dock .lang-btn { right: 8px; top: 9px; }
+.lang-dock .lang-menu { top: 56px; }
+}
+
+.lang-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(216, 178, 87, .45);
+  background: transparent;
+  color: #fff;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: .2s ease;
+}
+.lang-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: #fff;
+}
+.lang-btn:hover {
+  background: rgba(255, 255, 255, .08);
+  border-color: #fcf6ba;
+  color: var(--gold-100);
+}
+.lang-btn:hover svg {
+  stroke: var(--gold-100);
+}
+.lang-btn:focus-visible {
+  outline: 2px solid #fcf6ba;
+  outline-offset: 2px;
+}
+.lang-btn { cursor: pointer; }
+.lang-menu {
+  
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 12px;
+  z-index: 1002;
+  min-width: 232px;
+  max-width: calc(100vw - 24px);
+  
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-sizing: border-box;
+  padding: 10px 10px 12px;
+  border: 1px solid rgba(216, 178, 87, .45);
+  border-radius: 14px;
+  background: rgba(56, 27, 71, .97);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.lang-menu[hidden] { display: none; }
+.lang-menu:not([hidden]) { animation: langMenuIn .18s ease-out; }
+/* La definition manquait dans cette page : l'animation d'ouverture etait
+   donc inerte ici, le panneau apparaissait sans fondu. */
+@keyframes langMenuIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: .9rem;
+  text-align: left;
+  cursor: pointer;
+}
+.lang-option:hover, .lang-option:focus-visible { background: rgba(243, 213, 106, .14); outline: none; }
+.lang-option:focus-visible { box-shadow: inset 0 0 0 2px rgba(243, 213, 106, .55); }
+/* Ces deux règles manquaient ici : le menu de la réservation n'avait
+   hérité que des styles du bouton et des options, pas de ceux du titre
+   ni de la LISTE — c'est pourquoi les quinze langues s'empilaient en une
+   seule colonne alors que la carte les présentait en deux. Reprises à
+   l'identique du fichier principal, le menu est le même partout. */
+.lang-menu__title {
+  margin: 2px 8px 8px;
+  font-family: 'Cinzel', serif;
+  font-size: .68rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold-100);
+}
+.lang-menu__list { display: grid; gap: 2px; }
+@media (max-height: 860px) {
+.lang-menu { min-width: 300px; padding: 8px 10px 10px; }
+.lang-menu__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.lang-option { min-height: 40px; padding: 6px 8px; font-size: .86rem; }
+}
+@media (max-height: 500px) {
+.lang-menu { min-width: 380px; max-height: calc(100vh - 70px); padding: 6px 8px 8px; }
+.lang-menu__list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; }
+.lang-option { min-height: 36px; padding: 5px 7px; font-size: .8rem; gap: 7px; }
+}
+.lang-flag {
+  display: block;
+  width: 26px;
+  height: 17.5px;
+  flex: 0 0 26px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .25);
+}
+.lang-check { margin-left: auto; color: var(--gold-500); font-size: .9rem; opacity: 0; }
+.lang-option[aria-checked="true"] { background: rgba(243, 213, 106, .1); }
+.lang-option[aria-checked="true"] .lang-check { opacity: 1; }
+@media (max-width: 640px) {
+.lang-menu {
+    top: calc(100% + 8px);
+    left: 10px;
+    right: 10px;
+    bottom: auto;
+    min-width: 0;
+    max-height: calc(100vh - 130px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+.lang-menu:not([hidden]) { animation: none; }
+}
+@media print {
+.lang-menu { display: none !important; }
+}
+@media (max-width: 720px) {
+.lang-btn {
+    right: 8px;
+    width: 40px;
+    height: 40px;
+  }
+.lang-btn svg { width: 16px; height: 16px; }
+}
+@media print {
+.lang-btn { display: none !important; }
+}
+
+/* ===== Propre à cette page ===== */
+
+/* Titres de section : la pastille violette du site, sans exception.
+   (J'avais éclairci ces deux pastilles pour gagner du contraste ; c'était
+   rompre l'unité de la carte, où tous les titres de panneau sont violets.
+   On garde donc le violet et le texte blanc du site — le contraste du
+   blanc sur #592e6f reste confortable — et c'est aux LIBELLÉS de champs,
+   traités plus bas, de passer en noir.) */
+#reservation-page .panel__head .panel__subtitle { color:#4a3d55 !important; }
+
+/* Pied de page : les pilules s'adaptent enfin à leur texte.
+   Le site impose aux .footer-link une grille de trois colonnes égales
+   avec white-space:nowrap et text-overflow:ellipsis — l'adresse de
+   courriel, bien plus longue que les deux autres, s'y trouvait coupée.
+   On rend la rangée fluide : chaque pilule prend la largeur de son
+   contenu, la ligne se replie toute seule quand la place manque, et le
+   texte n'est plus jamais tronqué (il passe à la ligne s'il le faut).
+   Aucune taille de police n'est réduite : c'est la mise en page qui
+   cède, pas la lisibilité. */
+#reservation-page .footer-links,
+#reservation-page .footer-links:where(*) {
+  display:flex !important;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:stretch;
+  gap:10px;
+  width:min(100%, 920px);
+  margin:10px auto;
+  grid-template-columns:none !important;
+}
+#reservation-page .footer-links .footer-link {
+  width:auto !important;
+  max-width:100%;
+  flex:0 1 auto;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  overflow-wrap:anywhere;
+  text-align:center;
+  line-height:1.35;
+  min-height:44px;
+  padding:9px 16px;
+  font-size:.78rem !important;
+}
+/* Écrans étroits : une pilule par ligne, pleine largeur, texte entier. */
+@media (max-width: 560px) {
+  #reservation-page .footer-links { flex-direction:column; align-items:stretch; }
+  #reservation-page .footer-links .footer-link { width:100% !important; }
+}
+
+#reservation-page { background:var(--cream); flex:1 0 auto; display:flex; flex-direction:column; }
+/* Le globe est posé en absolu (comme dans le bandeau du site) : la barre
+   doit donc être son repère, et réserver la place à droite pour qu'il ne
+   recouvre jamais le bouton de retour. */
+.book-back {
+  position: sticky; top: 0; z-index: 1002;
+  padding: 10px 64px; display: flex; justify-content: center;
+  background: #592e6f; border-bottom: 1px solid rgba(216,178,87,.45);
+  box-shadow: 0 4px 15px rgba(0,0,0,.4);
+}
+/* La gouttiere de droite est celle du globe, qui flotte au-dessus de la
+   barre : sans elle, le bouton passerait dessous. Elle est repetee a
+   gauche pour que le bouton reste centre. */
+@media (max-width: 560px) { .book-back { padding: 10px 56px; } }
+.book-back .contact-link {
+  width: min(100%, 360px);
+  /* Meme or que les boutons actifs du bandeau (« Page de Garde »
+     selectionne) : le retour a la carte est l'onglet en cours. */
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%);
+  color: var(--violet-950);
+  border-color: #fcf6ba;
+  font-weight: 600;
+}
+.book-back .contact-link svg { stroke: var(--violet-950); }
+.book-back .contact-link:hover {
+  filter: brightness(1.06);
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%);
+  color: var(--violet-950);
+}
+/* ===== Rythme vertical =====
+   Le corps de page était une suite d'éléments aux marges chacune
+   réglée dans son coin : deux panneaux qui se touchaient, un bouton de
+   retour collé au dernier encart, et tout l'espace restant rejeté en bas
+   quand la fenêtre est haute. On pose ici UNE échelle d'espacement, et
+   on laisse la grille la distribuer.
+
+   --gap-bloc  : entre deux panneaux
+   --gap-inter : entre un panneau et un élément isolé (bouton de retour)
+   Les deux respirent avec la hauteur de la fenêtre (clamp sur vh) :
+   serrés sur un téléphone, généreux sur un grand écran, jamais
+   arbitraires. */
+:root { --gap-bloc: clamp(16px, 2.4vh, 26px); --gap-inter: clamp(14px, 2vh, 22px); }
+.book-main { flex:1 0 auto; display:flex; flex-direction:column; }
+/* La colonne occupe la hauteur disponible et centre son contenu quand il
+   y a du mou : sur une grande fenêtre, le formulaire n'est plus tassé en
+   haut avec un vide sous le pied de page. justify-content:center ne
+   déborde pas — au-delà, la page défile normalement. */
+#reservation-page .container {
+  display:flex;
+  flex-direction:column;
+  gap:var(--gap-bloc);
+  flex:1 0 auto;
+  justify-content:center;
+  margin:var(--gap-bloc) auto;
+}
+/* Le bouton de retour est un élément isolé : il se détache des panneaux
+   d'un cran plus serré que l'écart entre deux panneaux, pour qu'on lise
+   « fin de page » et non « troisième bloc ». */
+#reservation-page .book-back-bottom { margin:calc(var(--gap-inter) - var(--gap-bloc)) 0 0; }
+
+.form-grid { display:grid; grid-template-columns:1fr; gap:14px; }
+@media (min-width:680px) {
+  .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .field--full { grid-column:1 / -1; }
+  /* Alignement horizontal des champs, écran large.
+     Chaque bloc empile intitulé, champ et message d'erreur. Sans
+     coordination, un intitulé sur deux lignes — « Nombre de personnes »
+     à l'étroit — ou une erreur affichée d'un seul côté décalait le
+     champ voisin. Avec `subgrid`, les trois rangées sont communes à
+     toute la ligne : les intitulés partagent une rangée, les champs une
+     autre, les erreurs une troisième. Les cases s'alignent donc au
+     pixel, quels que soient la longueur des libellés et la langue. */
+  .form-grid { align-items:start; }
+}
+@supports (grid-template-rows: subgrid) {
+  @media (min-width:680px) {
+    .form-grid { grid-auto-rows:auto; }
+    /* Chaque bloc occupe trois rangees communes — intitule, champ,
+       message — pour que les cases voisines s'alignent au pixel.
+       Les blocs pleine largeur DOIVENT couvrir le meme nombre de
+       rangees : avec `grid-row:auto` ils n'en occupaient qu'une, et le
+       placement automatique melangeait alors des elements de 3 rangees
+       et de 1 rangee. Le curseur de placement revenait en arriere et
+       posait le bloc suivant SUR un bloc deja place — d'ou les cases
+       qui se chevauchaient. */
+    .field { grid-row:span 3; grid-template-rows:subgrid; gap:6px; }
+    .field--full { grid-row:span 3; grid-template-rows:subgrid; }
+    /* Un bloc sans message d'erreur laisserait sa 3e rangee vide et sa
+       zone de saisie s'etirerait pour la combler : on la cale en haut. */
+    select option:disabled {
+    color: #9c8eab !important;
+    background-color: #f3eff7 !important;
+  }
+  .field > textarea, .field > input, .field > select { align-self:start; }
+    /* La rangee des messages garde la meme hauteur sur toute la ligne,
+       qu'un champ affiche une erreur, une precision ou rien : sans cela
+       le bas des blocs d'une meme rangee ne tombait pas au meme niveau. */
+    .field__error, .field__hint { min-height:1.05rem; }
+    .field__error[hidden] { display:block !important; visibility:hidden; }
+  }
+}
+.field { display:grid; gap:6px; min-width:0; align-content:start; }
+/* Intitulés des champs en texte normal (non gras, casse normale) */
+.field > label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--ink, #1f1235);
+  font-weight: 400;
+  line-height: 1.35;
+  align-self: end;
+}
+.field > label .opt {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  color: #6b6277;
+}
+/* Contenus des cases à remplir et sélecteurs en gras */
+.field input, .field select, .field textarea {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink, #1f1235);
+  background: #ffffff;
+  border: 1px solid rgba(216,178,87,.5);
+  border-radius: 14px;
+  padding: 0 14px;
+  height: 52px;
+  min-height: 52px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: .18s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.field input::placeholder,
+.field textarea::placeholder {
+  font-weight: 400;
+  color: var(--muted, #857d91);
+  opacity: 0.75;
+}
+.field select option {
+  font-weight: 700;
+  color: var(--ink, #1f1235);
+}
+/* La zone de texte libre */
+.field textarea {
+  height: 110px;
+  min-height: 110px;
+  padding: 12px 14px;
+  resize: vertical;
+  line-height: 1.5;
+  font-weight: 700;
+}
+/* -- Date et heure : les deux seules cases au contenu natif -----------
+   Un `input[type=date]` et un `select` n'affichent pas du texte simple
+   mais des sous-elements dessines par le navigateur. Sur iOS et Safari,
+   ces sous-elements portent leurs propres marges et une hauteur de ligne
+   qui ignorent celles de la case : le contenu depassait donc du cadre et
+   la case voisine paraissait plus basse. C'est ce qui donnait le
+   chevauchement entre Date et Heure, et la dissymetrie des deux cases.
+
+   On remet ces sous-elements a plat : aucune marge propre, hauteur de
+   ligne alignee sur celle de la case, contenu centre verticalement.
+   La case ne peut alors plus etre dimensionnee par son contenu natif. */
+.field input[type="date"],
+.field input[type="time"] {
+  display:flex; align-items:center;
+  line-height:normal; text-align:left;
+}
+.field input[type="date"]::-webkit-date-and-time-value,
+.field input[type="time"]::-webkit-date-and-time-value {
+  margin:0; padding:0; text-align:left; line-height:normal;
+}
+.field input[type="date"]::-webkit-datetime-edit,
+.field input[type="time"]::-webkit-datetime-edit {
+  padding:0; line-height:normal;
+}
+.field input[type="date"]::-webkit-calendar-picker-indicator {
+  margin:0; padding:0; opacity:.55; cursor:pointer;
+}
+/* Safari ajoute une marge interne propre aux champs date : elle
+   s'additionnait a la notre et decalait le texte vers le bas. */
+.field input[type="date"]::-webkit-inner-spin-button { display:none; }
+
+/* Le chevron des listes deroulantes, retire par `appearance:none`. */
+.field select {
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%239c7a2d' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' d='M1 1.5 6 6.5l5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  background-size:12px 8px;
+  padding-right:38px;
+}
+html[lang="ar"] .field select {
+  background-position:left 14px center;
+  padding-right:14px;
+  padding-left:38px;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(216,178,87,.22);
+}
+/* Sélecteur de date avec Calendrier natif de l'appareil & affichage jour/date complet */
+.field__date-box {
+  position: relative;
+  width: 100%;
+  height: 52px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.field__date-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.field__date-text {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border: 1px solid rgba(216,178,87,.5);
+  border-radius: 14px;
+  padding: 0 42px 0 14px;
+  display: flex;
+  align-items: center;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink, #1f1235);
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 1;
+  transition: border-color .18s ease, box-shadow .18s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.field__date-box:hover .field__date-text {
+  border-color: var(--gold-500, #d8b257);
+}
+.field__date-input:focus ~ .field__date-text {
+  outline: none;
+  border-color: var(--gold-500, #d8b257);
+  box-shadow: 0 0 0 3px rgba(216,178,87,.22);
+}
+.field--error .field__date-text {
+  border-color: #b0304a !important;
+  box-shadow: 0 0 0 3px rgba(176,48,74,.14) !important;
+}
+.field__date-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 19px;
+  height: 19px;
+  color: var(--gold-700, #9c7a2d);
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.field__date-icon svg {
+  width: 100%;
+  height: 100%;
+}
+html[lang="ar"] .field__date-text {
+  padding: 0 14px 0 42px;
+  text-align: right;
+}
+html[lang="ar"] .field__date-icon {
+  right: auto;
+  left: 14px;
+}
+.field__hint { margin:0; font-size:.76rem; color:var(--muted); font-style:italic; }
+.field__hint--warn { color:#b0304a !important; font-style:normal !important; font-weight:600 !important; }
+.field--error input, .field--error select { border-color:#b0304a; box-shadow:0 0 0 3px rgba(176,48,74,.14); }
+.field__error { margin:0; font-size:.76rem; color:#b0304a; font-weight:600; }
+.field__error[hidden] { display:none; }
+/* Navigateurs sans `subgrid` — dont Safari iOS jusqu'a recemment.
+   Sans rangees partagees, chaque bloc se dimensionne seul : un intitule
+   qui passe sur deux lignes ou un message d'erreur affiche d'un seul
+   cote suffisait a decaler la case voisine, et les blocs finissaient par
+   se chevaucher. A defaut de rangees communes, on fige la hauteur de
+   chaque partie pour que tous les blocs fassent la meme hauteur par
+   construction. */
+@supports not (grid-template-rows: subgrid) {
+  @media (min-width:680px) {
+    .field > label {
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      height:1.3em; line-height:1.3;
+    }
+    .field__error, .field__hint {
+      min-height:1.05rem; overflow:hidden;
+    }
+    .field__error[hidden] { display:block !important; visibility:hidden; }
+    /* Meme hauteur totale pour tous les blocs d'une meme rangee. */
+    .field:not(.field--full) { min-height:calc(1.3em + 6px + 52px + 6px + 1.05rem); }
+  }
+}
+
+/* Le bouton d'envoi est la pilule dorée des onglets actifs du site
+   (.nav-btn.active) : même dégradé, même bordure, même casse. */
+.form-actions { margin-top:clamp(16px, 2.2vh, 24px); display:grid; gap:10px; justify-items:center; }
+.btn-book {
+  background:linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%);
+  color:var(--violet-950); border:1px solid #fcf6ba; border-radius:999px;
+  min-height:48px; width:min(100%,380px); padding:10px 24px;
+  font-weight:700; letter-spacing:.04em; text-transform:uppercase; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  transition:.2s ease;
+}
+.btn-book:hover { filter:brightness(1.05); }
+.btn-book:active { transform:translateY(1px); }
+.btn-book svg { width:16px; height:16px; flex:0 0 auto; }
+.form-note { margin:0; text-align:center; font-size:.8rem; color:var(--muted); font-style:italic; }
+
+.form-status {
+  margin:16px 0 0; padding:14px 16px; border-radius:16px; text-align:center;
+  border:1px solid var(--gold-500); background:#fffdf4; color:var(--violet-900);
+  line-height:1.55;
+}
+.form-status[hidden] { display:none; }
+.form-status strong { font-family:'Cinzel',serif; letter-spacing:.06em; }
+.form-status a { color:var(--gold-700); font-weight:700; }
+
+/* Les coordonnées reprennent les pilules du pied de page, sur fond clair. */
+.info-grid { display:grid; grid-template-columns:1fr; gap:10px; }
+@media (min-width:680px) { .info-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.info-link {
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:44px; padding:8px 14px; border-radius:999px; text-decoration:none;
+  border:1px solid rgba(216,178,87,.45); color:var(--violet-900); background:#fff;
+  font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+  font-size:.8rem; transition:.2s ease; text-align:center;
+}
+.info-link:hover { background:#fffaea; border-color:var(--gold-500); }
+.info-link svg { width:15px; height:15px; flex:0 0 auto; stroke:var(--violet-900); }
+
+/* ===== Plan interactif =====
+   Encart aux mêmes codes que le reste : coins arrondis, liseré or,
+   ombre douce. On peut s'y déplacer et zoomer ; le bouton en haut à
+   droite ramène la vue sur le restaurant. */
+.map-wrap {
+  position:relative; margin:clamp(10px, 1.6vh, 16px) 0 clamp(10px, 1.6vh, 14px); border-radius:18px; overflow:hidden;
+  border:1px solid rgba(216,178,87,.5); box-shadow:var(--shadow);
+  background:#f4f4f2;
+}
+#book-map { width:100%; height:clamp(240px, 42vw, 360px); background:#f4f4f2; }
+.map-fallback, .map-wrap .map-error {
+  margin:0; padding:18px; text-align:center; color:var(--violet-900);
+  font-family:'Cinzel',serif; letter-spacing:.06em;
+}
+/* Pastille de recentrage : la pilule dorée du site, en rond. */
+.map-recenter {
+  position:absolute; right:10px; top:10px; z-index:500;
+  width:40px; height:40px; padding:0; border-radius:999px; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:#fff;
+  color:var(--violet-800); border:1px solid rgba(36,16,46,.12);
+  box-shadow:0 2px 8px rgba(36,16,46,.16); transition:.18s ease;
+}
+.map-recenter:hover { background:#fff; color:var(--violet-950); border-color:var(--gold-500); box-shadow:0 4px 12px rgba(36,16,46,.2); }
+.map-recenter:active { transform:translateY(1px); }
+.map-recenter svg { width:19px; height:19px; }
+/* Épingle du restaurant, dessinée plutôt qu'en image. */
+/* Épingle : un simple disque violet cerclé de blanc, avec un halo doux.
+   Sur un fond aussi clair, la goutte dorée faisait ornement ; un point
+   net se lit mieux et laisse la carte respirer. */
+.map-pin {
+  width:20px; height:20px; border-radius:50%;
+  background:var(--violet-800);
+  border:3px solid #fff;
+  box-shadow:0 0 0 1px rgba(36,16,46,.18), 0 3px 10px rgba(36,16,46,.3);
+}
+.map-foot {
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:10px; margin-bottom:4px;
+}
+.map-address {
+  font-family:'Cinzel',serif; font-size:.82rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--violet-900); text-align:center;
+}
+.info-link--route { flex:0 0 auto; }
+/* Commandes MapLibre : mêmes codes que le bouton de recentrage —
+   blanc, discret, sans le bleu par défaut. */
+.maplibregl-ctrl-group { border:0 !important; box-shadow:0 2px 8px rgba(36,16,46,.16) !important; border-radius:10px !important; overflow:hidden; }
+.maplibregl-ctrl-group button {
+  width:30px !important; height:30px !important;
+  background:#fff !important; color:var(--violet-800) !important;
+  border-bottom:1px solid rgba(36,16,46,.10) !important;
+}
+.maplibregl-ctrl-group button:hover { background:#fffaea !important; }
+.maplibregl-ctrl-group button:last-child { border-bottom:0 !important; }
+.maplibregl-canvas { outline:none; }
+.maplibregl-map { font-family:'Montserrat',sans-serif; background:#f4f4f2; }
+/* Attribution : obligatoire, donc lisible — mais discrète. */
+.maplibregl-ctrl-attrib {
+  background:rgba(255,255,255,.82) !important; font-size:9px !important;
+  border-radius:8px 0 0 0 !important;
+}
+.maplibregl-ctrl-attrib a { color:var(--violet-800) !important; }
+.maplibregl-ctrl-attrib-button { background-color:rgba(255,255,255,.9) !important; }
+/* Infobulle aux couleurs de la maison. */
+.maplibregl-popup-content {
+  background:#fffdf6 !important; border:1px solid var(--gold-500);
+  border-radius:12px !important; box-shadow:0 10px 26px rgba(36,16,46,.18) !important;
+  padding:10px 14px !important; font-family:'Montserrat',sans-serif;
+  font-size:.78rem; line-height:1.5; color:var(--violet-900); text-align:center;
+}
+.maplibregl-popup-content strong {
+  font-family:'Cinzel',serif; letter-spacing:.08em; color:var(--violet-900);
+}
+.maplibregl-popup-tip { border-top-color:#fffdf6 !important; border-bottom-color:#fffdf6 !important; }
+/* Le voile « Ctrl + molette pour zoomer » repris dans la même langue graphique. */
+.maplibregl-cooperative-gesture-screen {
+  background:rgba(36,16,46,.55) !important; font-family:'Montserrat',sans-serif !important;
+}
+
+/* Retour à la carte, en bas de page : la pilule des liens de contact. */
+.book-back-bottom { display:flex; justify-content:center; }
+.book-back-bottom .contact-link--back {
+  width:min(100%,360px); color:var(--violet-900);
+  border-color:rgba(216,178,87,.6); background:#fff;
+  font-family:'Cinzel',serif; letter-spacing:.1em;
+}
+.book-back-bottom .contact-link--back svg { stroke:var(--violet-900); }
+.book-back-bottom .contact-link--back:hover {
+  background:#fffaea; border-color:var(--gold-500); color:var(--violet-900);
+}
+
+/* ===== Horaires : deux cartouches plutot qu'un releve ================
+   Les horaires etaient deux lignes de releve, libelle a gauche et heure
+   a droite, qui se percutaient des que la largeur manquait. Ils
+   deviennent deux cartouches autonomes : un pictogramme, l'intitule,
+   puis l'amplitude ou les deux heures sont reliees par un trait.
+
+   Le trait remplace le tiret et la mention « en continu » : il DIT la
+   continuite au lieu de l'ecrire, dans toutes les langues a la fois. Il
+   se dilate pour occuper l'espace disponible, ce qui donne aux deux
+   cartouches des heures parfaitement alignees quelle que soit la
+   largeur, sans jamais de collision : chaque partie a sa place propre. */
+/* En tete de page : la marge passe EN DESSOUS, les cartouches ouvrant
+   desormais le contenu au lieu de clore un bloc. */
+.hours {
+  margin:0 0 clamp(14px, 2vh, 20px);
+  display:grid; gap:10px;
+}
+.hours__card {
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  align-items:center;
+  gap:2px 12px;
+  padding:12px 16px;
+  border:1px solid rgba(216,178,87,.42);
+  border-radius:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(252,251,247,.96));
+  transition:border-color .22s ease;
+}
+.hours__card:hover { border-color:rgba(216,178,87,.72); }
+.hours__ico {
+  grid-row:1 / span 2; width:26px; height:26px;
+  color:var(--gold-700); opacity:.9;
+}
+.hours__day {
+  font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.12em;
+  font-size:.72rem; color:var(--violet-900); opacity:.78;
+  min-width:0; overflow-wrap:break-word;
+}
+/* Les deux heures aux extremites, le trait au milieu : c'est lui qui
+   absorbe la largeur, donc les heures ne se rencontrent jamais. */
+.hours__val {
+  display:flex; align-items:center; gap:10px;
+  font-family:'Cinzel',serif; font-weight:700; color:var(--gold-700);
+  font-size:1.12rem; line-height:1.2; min-width:0;
+}
+.hours__t { flex:0 0 auto; font-variant-numeric:tabular-nums; }
+.hours__sep {
+  flex:1 1 auto; min-width:18px; height:1px;
+  background:linear-gradient(90deg,
+    rgba(216,178,87,.15), rgba(216,178,87,.75), rgba(216,178,87,.15));
+  position:relative;
+}
+/* Deux pastilles aux extremites du trait : le geste se lit comme une
+   plage, pas comme une simple ligne. */
+.hours__sep::before,
+.hours__sep::after {
+  content:''; position:absolute; top:50%;
+  width:3px; height:3px; border-radius:50%;
+  background:var(--gold-500); transform:translateY(-50%);
+}
+.hours__sep::before { left:0; }
+.hours__sep::after  { right:0; }
+
+/* Grand ecran et paysage : la hauteur est comptee ou la largeur
+   abondante — les deux cartouches se rangent cote a cote. */
+@media (min-width:900px), (orientation:landscape) and (max-height:600px) {
+  .hours { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+}
+/* Paysage sur telephone : on resserre sans rien empiler. */
+@media (orientation:landscape) and (max-height:600px) {
+  .hours { margin-top:10px; gap:10px; }
+  .hours__card { padding:9px 12px; gap:1px 10px; }
+  .hours__ico { width:22px; height:22px; }
+  .hours__val { font-size:1rem; }
+  .hours__day { font-size:.66rem; }
+}
+/* Ecran etroit : le pictogramme cede la place, le texte prime. */
+@media (max-width:420px) {
+  .hours__card { padding:10px 13px; }
+  .hours__ico { display:none; }
+  .hours__card { grid-template-columns:minmax(0,1fr); }
+}
+
+/* ===== Scintillement des étoiles dorées (même dispositif qu'index) ====
+   Les ✦ respirent chacune à leur rythme plutôt que de rester figées ou
+   de battre à l'unisson. Opacité seule — propriété composée, animée par
+   le GPU, sans recalcul de mise en page. Cycles longs et premiers entre
+   eux, retards négatifs pour que les étoiles soient déjà en cours de
+   cycle au chargement. */
+@keyframes starBreath {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .62; }
+}
+.star-gold,
+.panel__title::before,
+.panel__title::after {
+  animation: starBreath 4.3s ease-in-out infinite !important;
+  will-change: opacity;
+}
+/* Les deux étoiles d'un même libellé ne battent jamais ensemble. */
+.star-gold:last-child:not(:first-child) {
+  animation-duration: 5.7s !important;
+  animation-delay: -2.4s !important;
+}
+.star-gold:first-child { animation-delay: -.7s !important; }
+.panel__title::before {
+  animation-duration: 6.9s !important; animation-delay: -1.9s !important;
+}
+.panel__title::after {
+  animation-duration: 5.1s !important; animation-delay: -3.6s !important;
+}
+.panel:nth-of-type(2n) .panel__title::before { animation-delay: -3.1s !important; }
+.panel:nth-of-type(2n) .panel__title::after  { animation-delay: -1.2s !important; }
+/* La coche du menu de langue signale une sélection : une information,
+   pas un ornement. */
+.lang-check { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .star-gold, .panel__title::before, .panel__title::after {
+    animation: none !important; opacity: 1 !important;
+  }
+}
+@media print {
+  .star-gold, .panel__title::before, .panel__title::after {
+    animation: none !important; opacity: 1 !important;
+  }
+}
+
+/* ===== Remerciement apres envoi =====================================
+   Un petit mot de la maison plutot qu'un accuse de reception. Le cadre
+   du bandeau d'etat est conserve, mais il s'ouvre et respire, et se
+   termine par une signature manuscrite.
+
+   La signature est la seule ecriture cursive du site : elle doit le
+   rester, sinon elle perd sa valeur de signature. */
+.form-status--thanks {
+  padding: 22px 20px 18px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(216,178,87,.10), transparent 62%),
+    #fffdf4;
+  animation: thanksIn .5s cubic-bezier(.2,.8,.3,1) both;
+}
+@keyframes thanksIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.form-status--thanks p { margin: 0 0 9px; }
+.form-status--thanks p:last-child { margin-bottom: 0; }
+
+.thanks__hello {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.06rem, 3.2vw, 1.3rem);
+  letter-spacing: .05em;
+  color: var(--violet-900);
+}
+.thanks__line { font-size: .88rem; color: var(--violet-900); }
+
+/* La section qui reprend jour, heure et couverts, parfaitement centrée */
+.thanks__when {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 10px auto 14px !important;
+  padding: 14px 24px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(216,178,87,.5);
+  background: #ffffff;
+  font-family: 'Cinzel', serif;
+  letter-spacing: .03em;
+  color: var(--violet-900);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  box-sizing: border-box;
+}
+/* L'annonce : introduite clairement et centrée */
+.thanks__when-intro {
+  display: block;
+  text-align: center;
+  font-size: clamp(.84rem, 2.5vw, .96rem);
+  font-weight: 500;
+  color: var(--gold-800, #85641f);
+  margin: 0 0 8px !important;
+  letter-spacing: .04em;
+}
+/* La ligne date et heure : centrée avec date et heure en gras */
+.thanks__when-slot {
+  display: block;
+  text-align: center;
+  font-size: clamp(.96rem, 2.9vw, 1.12rem);
+  line-height: 1.45;
+  margin: 0 0 6px !important;
+  color: var(--violet-950, #1f1235);
+}
+/* La ligne du nombre de personnes : centrée */
+.thanks__when-guests {
+  display: block;
+  text-align: center;
+  font-size: clamp(.92rem, 2.7vw, 1.05rem);
+  line-height: 1.4;
+  margin: 0 !important;
+  color: var(--violet-950, #1f1235);
+}
+.thanks__when-detail {
+  display: inline;
+  font-weight: 700;
+  color: var(--violet-950, #1f1235);
+}
+/* Les mots de liaison en texte courant pour faire ressortir les informations clés */
+.thanks__when-at,
+.thanks__when-for {
+  font-weight: 400;
+  color: var(--ink, #2c2538);
+  opacity: .88;
+}
+.thanks__warm { font-style: italic; color: #6b4a8a; }
+
+/* Signature manuscrite, precedee d'un filet dore qui l'isole du
+   message, comme au bas d'une carte. */
+.thanks__sign {
+  margin-top: 14px !important;
+  padding-top: 14px;
+  border-top: 1px solid rgba(216,178,87,.42);
+  font-family: 'Parisienne', 'Segoe Script', 'Brush Script MT', cursive;
+  /* Une cursive porte bien plus bas et bien plus petit qu'une capitale :
+     elle est agrandie pour retrouver une presence comparable. */
+  font-size: clamp(1.5rem, 5vw, 1.95rem);
+  line-height: 1.35;
+  letter-spacing: .01em;
+  color: var(--gold-700);
+  /* Les jambages descendants ne doivent pas etre rognes par le cadre. */
+  padding-bottom: 2px;
+}
+.thanks__tel { font-size: .8rem; color: var(--muted); }
+.thanks__tel a { color: var(--gold-700); font-weight: 700; white-space: nowrap; }
+
+/* Les écritures non latines n'ont pas de cursive équivalente : la
+   signature y reprend la fonte de titre de la langue. */
+html[lang="ar"] .thanks__sign,
+html[lang="zh"] .thanks__sign,
+html[lang="ja"] .thanks__sign,
+html[lang="ko"] .thanks__sign,
+html[lang="hi"] .thanks__sign {
+  font-size: clamp(1rem, 3.4vw, 1.2rem);
+  font-style: normal;
+  letter-spacing: 0 !important;
+}
+html[lang="uk"] .thanks__sign {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1rem, 3.4vw, 1.2rem);
+  font-style: italic;
+}
+@media (prefers-reduced-motion: reduce) {
+  .form-status--thanks { animation: none; }
+}
+
+/* ===== Barre d'envoi =================================================
+   Cinq secondes pendant lesquelles le client voit sa reservation
+   partir. La duree est volontairement pleine, meme si le relais
+   repond avant : une barre qui saute a 100 % en une demi-seconde
+   n'inspire pas le meme soin qu'une progression tenue. */
+.sending { margin: 16px 0 0; text-align: center; }
+.sending[hidden] { display: none; }
+.sending__label {
+  margin: 0 0 9px;
+  font-family: 'Cinzel', serif;
+  font-size: .84rem;
+  letter-spacing: .06em;
+  color: var(--violet-900);
+}
+.sending__track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(89, 46, 111, .12);
+  border: 1px solid rgba(216, 178, 87, .42);
+  overflow: hidden;
+}
+.sending__bar {
+  width: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #bf953f, #fcf6ba, #d8b257, #fef9db);
+  background-size: 200% 100%;
+  transition: width 5s linear;
+  animation: sendingShine 1.6s linear infinite;
+}
+@keyframes sendingShine {
+  from { background-position: 0% 0; }
+  to   { background-position: 200% 0; }
+}
+/* Bouton neutralise pendant l'envoi : pas de double reservation. */
+.btn-book:disabled { opacity: .55; cursor: progress; }
+@media (prefers-reduced-motion: reduce) {
+  .sending__bar { animation: none; }
+}
 </style>
 </head>
 <body>
@@ -1815,12 +3603,6 @@ body{margin:0;font-family:'Montserrat',sans-serif;background:linear-gradient(180
 })();
 </script>
 
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js').catch(function () {});
-  });
-}
-</script>
+
 </body>
 </html>
