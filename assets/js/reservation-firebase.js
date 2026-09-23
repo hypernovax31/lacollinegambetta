@@ -21,7 +21,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 
 const firebaseConfig = window.LCG_FIREBASE_CONFIG;
-if (!firebaseConfig || firebaseConfig.projectId !== 'la-colline-gambetta') {
+if (!firebaseConfig || !firebaseConfig.projectId) {
   throw new Error('Configuration Firebase La Colline absente ou incorrecte.');
 }
 
