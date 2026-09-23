@@ -539,9 +539,9 @@ def extract_cover(src: str) -> str:
     start = src.find('<div class="cover-page">')
     node, _ = take_element(src[start:], "div")
     node = node.replace(' onclick="showView(\'menu\')"', "")
-    node = node.replace('href="#menu-nav-anchor"', 'href="https://hypernovax31.github.io/lacollinegambetta/#menu-nav-anchor"')
-    node = node.replace('href="index.html#menu-nav-anchor"', 'href="https://hypernovax31.github.io/lacollinegambetta/#menu-nav-anchor"')
-    node = node.replace('href="https://lacollinegambetta.fr/#menu-nav-anchor"', 'href="https://hypernovax31.github.io/lacollinegambetta/#menu-nav-anchor"')
+    node = node.replace('href="#menu-nav-anchor"', 'href="https://lacollinegambetta.com/#menu-nav-anchor"')
+    node = node.replace('href="index.html#menu-nav-anchor"', 'href="https://lacollinegambetta.com/#menu-nav-anchor"')
+    node = node.replace('href="https://lacollinegambetta.fr/#menu-nav-anchor"', 'href="https://lacollinegambetta.com/#menu-nav-anchor"')
     while '<a class="download-card"' in node:
         a = node.find('<a class="download-card"')
         frag, rest = take_element(node[a:], "a")
@@ -589,7 +589,7 @@ FOOTER = """<footer class="print-page__footer">
 <span aria-hidden="true">·</span>
 <span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</span>
 <span aria-hidden="true">·</span>
-<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>lacollinegambetta@mailo.com</span>
+<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>contact@lacollinegambetta.com</span>
 </div>
 <small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>"""

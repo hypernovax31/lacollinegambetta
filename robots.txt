@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hypernovax31.github.io/lacollinegambetta/sitemap.xml
+Sitemap: https://lacollinegambetta.com/sitemap.xml
