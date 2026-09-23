@@ -2313,6 +2313,52 @@ html[lang="uk"] .thanks__sign {
 })();
 </script>
 
+<script>
+/* Téléchargement instantané du menu PDF */
+(function () {
+  var NOM = 'Carte_LaCollineGambetta.pdf';
+  function lier(selecteur) {
+    var els = document.querySelectorAll(selecteur);
+    for (var i = 0; i < els.length; i++) {
+      els[i].addEventListener('click', function (ev) {
+        var href = this.getAttribute('href');
+        if (!href) return;
+        ev.preventDefault();
+        var a = document.createElement('a');
+        a.rel = 'noopener';
+        a.href = href;
+        a.download = this.getAttribute('download') || NOM;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+    }
+  }
+  function prefetchPdf() {
+    try {
+      var link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = NOM;
+      link.as = 'fetch';
+      document.head.appendChild(link);
+    } catch (e) {}
+  }
+  function prêt() {
+    lier('.footer-download');
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(prefetchPdf, { timeout: 3000 });
+    } else {
+      setTimeout(prefetchPdf, 2000);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', prêt);
+  } else {
+    prêt();
+  }
+})();
+</script>
+
 <script src="assets/js/reservation-config.js?v=202609231400"></script>
 <script src="assets/js/firebase-config.js?v=202609231400"></script>
 <script type="module" src="assets/js/reservation-firebase.js?v=202609231400"></script>

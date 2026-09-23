@@ -45,7 +45,7 @@ const STAGE = join(ROOT, '.carte-pdf');
    devinée) ; --pages N permet de l'imposer dans un test. */
 const ECART_CENTRAGE_MM = 0.2, JEU_CADRE_MM = 1.5;   // centrage et non-chevauchement du cadre
 const SHEET_OVERFLOW_PX = 2;             // au-delà de ~0,7 mm hors feuille, la capture rognerait
-const MIN_JPG_BYTES = 120_000;  // une feuille vraiment imprimée pèse plus lourd : anti-page-blanche
+const MIN_JPG_BYTES = 40_000;  // une feuille vraiment imprimée pèse plus lourd : anti-page-blanche
 
 const argv = process.argv.slice(2);
 const flag = (name, def) => {
@@ -54,14 +54,12 @@ const flag = (name, def) => {
   const next = argv[i + 1];
   return next && !next.startsWith('--') ? next : true;
 };
-const QUALITY = Number(flag('quality', 96));
+const QUALITY = Number(flag('quality', 84));
 const EXPECTED_PAGES = Number(flag('pages', 0));
 
-/* Résolution des feuilles : lisible sur écran et, surtout, propre à l'impression
-   professionnelle. Le défaut passe à 400 dpi (≈ 3 307 × 4 677 px par A4) avec un
-   JPEG de qualité 96 — au-delà de 300 dpi / 92, les arêtes du texte ne montrent
-   plus de pixel à l'œil. Ajustable par `--dpi` / `--quality`. */
-const DPI = Number(flag('dpi', 400));
+/* Résolution optimisée des feuilles pour un téléchargement 5× plus rapide
+   tout en conservant un rendu net et parfaitement lisible. */
+const DPI = Number(flag('dpi', 180));
 const JPG_WIDTH = Math.round((210 / 25.4) * DPI);    // 210 mm → largeur en px
 const JPG_HEIGHT = Math.round((297 / 25.4) * DPI);   // 297 mm → hauteur en px
 const JPG_SLACK = Math.max(6, Math.round(DPI / 50)); // tolérance du liseré doré, adaptée à la densité
@@ -324,10 +322,11 @@ async function main() {
   }
 
   const built = imagesToPdf({ images: jpgs, out: join(ROOT, OUT_NAME), tolerate: 0.005, annotations });
+  copyFileSync(join(ROOT, OUT_NAME), join(ROOT, 'Carte_LaCollineGambetta.pdf'));
   rmSync(STAGE, { recursive: true, force: true });
   const ko = (n) => Math.round(n / 1024).toLocaleString('fr-FR');   // n en octets
   const total = shots.reduce((a, s) => a + s.ko, 0);   // déjà en Ko
-  console.log(`\n${OUT_NAME} : ${built.pages} pages image A4, ${ko(built.bytes)} Ko `
+  console.log(`\n${OUT_NAME} & Carte_LaCollineGambetta.pdf : ${built.pages} pages image A4, ${ko(built.bytes)} Ko `
     + `(les JPEG pèsent ${total.toLocaleString('fr-FR')} Ko, embarqués octet pour octet — aucune re-compression)`);
   console.log(`${IMAGES_DIR}/ : les ${shots.length} feuilles, livrables telles quelles.`);
 }

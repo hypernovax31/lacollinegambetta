@@ -9811,9 +9811,23 @@ else sizeCoverMedallion();
       });
     }
   }
+  function prefetchPdf() {
+    try {
+      var link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = NOM;
+      link.as = 'fetch';
+      document.head.appendChild(link);
+    } catch (e) {}
+  }
   function prêt() {
     lier('.lang-btn');
     lier('.footer-download');
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(prefetchPdf, { timeout: 3000 });
+    } else {
+      setTimeout(prefetchPdf, 2000);
+    }
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', prêt);
