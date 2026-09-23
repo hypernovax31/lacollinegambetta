@@ -3160,7 +3160,7 @@ html[lang="uk"] .thanks__sign {
     );
     var autoresponseBody = autoresponseLines.join("\n");
 
-    /* Formatage 100 % en français pour l'email envoyé au restaurant sur Mailo */
+    /* Formatage 100 % en français pour l'email de notification envoyé au restaurant */
     var dateFr = formatLocalizedDate(dateEl.value, "fr");
     var heureFr = formatLocalizedTime(timeEl.value, "fr");
     var couvertsFr = nb + (nb === "1" ? " personne" : " personnes");
@@ -3174,9 +3174,9 @@ html[lang="uk"] .thanks__sign {
     };
     var langueClient = LANG_NAMES[lang] || lang.toUpperCase();
 
-    var sujetMailo = "Réservation — " + nomComplet + " — " + dateFr + " à " + heureFr + " (" + couvertsFr + ")";
+    var sujetRestaurant = "Réservation — " + nomComplet + " — " + dateFr + " à " + heureFr + " (" + couvertsFr + ")";
 
-    var corpsMailo = [
+    var corpsRestaurant = [
       "Bonjour,",
       "",
       "Nouvelle demande de réservation pour La Colline Gambetta :",
@@ -3210,7 +3210,7 @@ html[lang="uk"] .thanks__sign {
 
     var payload = new FormData();
     payload.append("action", "reserve");
-    payload.append("_subject", sujetMailo);
+    payload.append("_subject", sujetRestaurant);
     payload.append("_template", "box");
     payload.append("_captcha", "false");
     payload.append("Nom pour la réservation", savedNomComplet);
@@ -3222,7 +3222,7 @@ html[lang="uk"] .thanks__sign {
     payload.append("Préférence", prefFr);
     if (msg) payload.append("Message", msg);
     payload.append("Langue du client", langueClient);
-    payload.append("Récapitulatif", corpsMailo);
+    payload.append("Récapitulatif", corpsRestaurant);
     if (mail.value.trim()) {
       payload.append("email", mail.value.trim());
       payload.append("_replyto", mail.value.trim());
@@ -3245,8 +3245,13 @@ html[lang="uk"] .thanks__sign {
 
     try { sending.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e0) {}
 
-    var FALLBACK_ENDPOINT = "https://formsubmit.co/ajax/" +
-      atob("bGFjb2xsaW5lZ2FtYmV0dGFAbWFpbG8uY29t");
+    var targetRestaurantEmail = (
+      (window.LCG_EMAIL_CONFIG && window.LCG_EMAIL_CONFIG.restaurantEmail) ||
+      window.LCG_RESTAURANT_EMAIL ||
+      "contact@lacollinegambetta.com"
+    ).trim();
+
+    var FALLBACK_ENDPOINT = "https://formsubmit.co/ajax/" + encodeURIComponent(targetRestaurantEmail);
     var started = Date.now();
     var MIN_MS = 5000;
 
@@ -3317,7 +3322,7 @@ html[lang="uk"] .thanks__sign {
       if (web3Key) {
         var web3Payload = {
           access_key: web3Key,
-          subject: sujetMailo,
+          subject: sujetRestaurant,
           from_name: "La Colline Gambetta",
           "Nom pour la réservation": savedNomComplet,
           "Téléphone": phone.value.trim(),
@@ -3328,7 +3333,7 @@ html[lang="uk"] .thanks__sign {
           "Préférence": prefFr,
           "Message": msg || "—",
           "Langue du client": langueClient,
-          "Récapitulatif": corpsMailo
+          "Récapitulatif": corpsRestaurant
         };
         if (mail.value.trim()) {
           web3Payload.email = mail.value.trim();
@@ -3347,7 +3352,12 @@ html[lang="uk"] .thanks__sign {
           .then(function (r) { return r.json().catch(function () { return {}; }); })
           .then(function (data) {
             console.log('[Notification Web3Forms]', data);
-            if (callback) callback(true);
+            /* Envoyer également FormSubmit pour déclencher l'auto-réponse de confirmation au client */
+            if (mail.value.trim()) {
+              sendViaFormSubmit(callback);
+            } else if (callback) {
+              callback(true);
+            }
           })
           .catch(function (err) {
             console.warn('[Notification Web3Forms error, repli FormSubmit]', err);
