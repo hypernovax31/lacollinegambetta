@@ -85,7 +85,13 @@
 <link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Serif+KR:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+JP:wght@400;500;700;800&family=Noto+Serif+JP:wght@600;700;900&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&family=Noto+Sans+Arabic:wght@400;500;700;800&family=Noto+Sans+Devanagari:wght@400;500;700;800&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+<!-- Fontes prioritaires indispensables au premier affichage (Cinzel + Montserrat avec affichage instantané swap) -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+<!-- Fontes internationales chargées de façon asynchrone sans bloquer le rendu initial -->
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;700&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;700&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap"></noscript>
 <style>
 :root {
   --violet-950:#24102e;
@@ -8903,7 +8909,7 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
     </div>
   </div>
   <canvas id="xmas-snow" aria-hidden="true"></canvas>
-  <div id="xmas-sleigh" aria-hidden="true"><span class="trail"></span><img src="assets/noel/sleigh.svg" alt="" draggable="false"></div>
+  <div id="xmas-sleigh" aria-hidden="true"><span class="trail"></span><img src="assets/noel/sleigh.svg" alt="" draggable="false" loading="lazy" decoding="async"></div>
   <div class="top-controls" style="display:none">
     <div class="top-controls__nav">
       <button class="control-btn active" id="btn-show-cover" onclick="showView('cover')"><span class="star-gold">✦</span> Page de Garde</button>

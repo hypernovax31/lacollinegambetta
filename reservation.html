@@ -9,8 +9,16 @@
 <link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Parisienne&family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Serif+KR:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700;800&family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+JP:wght@400;500;700;800&family=Noto+Serif+JP:wght@600;700;900&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&family=Noto+Sans+Arabic:wght@400;500;700;800&family=Noto+Sans+Devanagari:wght@400;500;700;800&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" crossorigin="">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+
+<!-- Fontes prioritaires indispensables au premier affichage (Cinzel + Montserrat avec affichage instantané swap) -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Parisienne&display=swap" rel="stylesheet">
+
+<!-- Fontes internationales chargées de façon asynchrone sans bloquer le rendu initial -->
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;700&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;700&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap"></noscript>
 <style>
 /* =====================================================================
    Page de réservation.
@@ -2153,35 +2161,47 @@ html[lang="uk"] .thanks__sign {
     </footer>
 </div>
 
-<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" crossorigin=""></script>
 <script>
-/* Plan du restaurant.
-   Fond OpenFreeMap (style Positron), rendu en vectoriel par MapLibre.
-   CARTO impose depuis peu une clé pour ses tuiles matricielles et
-   estampille « API KEY REQUIRED » en travers de celles servies sans
-   clé : c'est ce filigrane qu'on voit apparaître. Plutôt que d'aller
-   chercher une clé — donc un compte, un quota et un secret à gérer dans
-   une page statique où il serait de toute façon public — on passe à
-   OpenFreeMap : aucune clé, aucune inscription, aucun quota, usage
-   commercial autorisé, et le même parti pris graphique (gris très
-   clair, la typographie seule porte l'information). Le vectoriel a en
-   prime l'avantage de rester net à tous les niveaux de zoom.
-   L'attribution est obligatoire : MapLibre l'affiche depuis le style.
-   Si MapLibre ne se charge pas — hors ligne, WebGL absent, blocage
-   réseau — l'encart affiche l'adresse en clair plutôt qu'un rectangle
-   vide. */
+/* Plan du restaurant : chargement asynchrone à la demande (lazy-loading)
+   pour ne pas ralentir l'affichage initial du formulaire.
+   Fond OpenFreeMap (style Positron), rendu en vectoriel par MapLibre. */
 (function () {
   var LAT = 48.8647788, LON = 2.3993777, ZOOM = 16.4;
   var el = document.getElementById('book-map');
   var btn = document.getElementById('map-recenter');
   if (!el) return;
 
+  var isLoaded = false;
+  function loadAndInitMap() {
+    if (isLoaded) return;
+    isLoaded = true;
+
+    // Injection asynchrone du CSS MapLibre
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css';
+    css.crossOrigin = '';
+    document.head.appendChild(css);
+
+    // Injection asynchrone du script MapLibre
+    var script = document.createElement('script');
+    script.src = 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js';
+    script.crossOrigin = '';
+    script.async = true;
+    script.onload = function () {
+      initMap();
+    };
+    script.onerror = function () {
+      fallback();
+    };
+    document.body.appendChild(script);
+  }
+
   function fallback() {
     el.innerHTML = '<p class="map-error">4 rue Belgrand, 75020 Paris — métro Gambetta</p>';
     if (btn) btn.hidden = true;
   }
-  /* WebGL est indispensable au rendu vectoriel : on le vérifie avant de
-     tenter quoi que ce soit, sinon MapLibre lève une exception. */
+
   function hasWebGL() {
     try {
       var c = document.createElement('canvas');
@@ -2189,47 +2209,63 @@ html[lang="uk"] .thanks__sign {
         (c.getContext('webgl') || c.getContext('experimental-webgl')));
     } catch (e) { return false; }
   }
-  if (typeof maplibregl === 'undefined' || !hasWebGL()) { fallback(); return; }
 
-  var map;
-  try {
-    map = new maplibregl.Map({
-      container: el,
-      style: 'https://tiles.openfreemap.org/styles/positron',
-      center: [LON, LAT],
-      zoom: ZOOM,
-      attributionControl: false,
-      /* La molette fait défiler la PAGE : on ne piège pas le défilement
-         de quelqu'un qui ne fait que passer devant l'encart. Ctrl +
-         molette zoome, et MapLibre l'indique de lui-même. */
-      cooperativeGestures: true
+  function initMap() {
+    if (typeof maplibregl === 'undefined' || !hasWebGL()) { fallback(); return; }
+
+    var map;
+    try {
+      map = new maplibregl.Map({
+        container: el,
+        style: 'https://tiles.openfreemap.org/styles/positron',
+        center: [LON, LAT],
+        zoom: ZOOM,
+        attributionControl: false,
+        cooperativeGestures: true
+      });
+    } catch (e) { fallback(); return; }
+
+    map.on('error', function (e) {
+      if (e && e.error && !map.isStyleLoaded()) fallback();
     });
-  } catch (e) { fallback(); return; }
 
-  map.on('error', function (e) {
-    /* Style injoignable : on ne laisse pas un cadre vide. */
-    if (e && e.error && !map.isStyleLoaded()) fallback();
-  });
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
+    map.addControl(new maplibregl.AttributionControl({
+      compact: true,
+      customAttribution: '<a href="https://openfreemap.org/" target="_blank" rel="noopener">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+    }));
 
-  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
-  map.addControl(new maplibregl.AttributionControl({
-    compact: true,
-    customAttribution: '<a href="https://openfreemap.org/" target="_blank" rel="noopener">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
-  }));
+    var dot = document.createElement('div');
+    dot.className = 'map-pin';
+    new maplibregl.Marker({ element: dot })
+      .setLngLat([LON, LAT])
+      .setPopup(new maplibregl.Popup({ offset: 16, closeButton: false }).setHTML(
+        '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Métro Gambetta'
+      ))
+      .addTo(map);
 
-  /* Épingle : le même disque violet cerclé de blanc qu'avant, en élément
-     HTML plutôt qu'en icône Leaflet. */
-  var dot = document.createElement('div');
-  dot.className = 'map-pin';
-  new maplibregl.Marker({ element: dot })
-    .setLngLat([LON, LAT])
-    .setPopup(new maplibregl.Popup({ offset: 16, closeButton: false }).setHTML(
-      '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Métro Gambetta'
-    ))
-    .addTo(map);
+    if (btn) {
+      btn.addEventListener('click', function () {
+        map.flyTo({ center: [LON, LAT], zoom: ZOOM, duration: 600 });
+      });
+    }
+    window.addEventListener('resize', function () { map.resize(); });
+    setTimeout(function () { map.resize(); }, 300);
+  }
 
-  if (btn) {
-    btn.addEventListener('click', function () {
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        observer.disconnect();
+        loadAndInitMap();
+      }
+    }, { rootMargin: '400px' });
+    observer.observe(el);
+  } else {
+    setTimeout(loadAndInitMap, 1500);
+  }
+})();
+</script>
       map.flyTo({ center: [LON, LAT], zoom: ZOOM, duration: 600 });
     });
   }
