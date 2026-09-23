@@ -3322,6 +3322,25 @@ html[lang="uk"] .thanks__sign {
 
       if (googleScriptUrl) {
         var clientMail = mail.value.trim();
+        var clientSubjectMap = {
+          fr: "Confirmation de votre réservation — La Colline Gambetta",
+          en: "Booking confirmation — La Colline Gambetta",
+          es: "Confirmación de su reserva — La Colline Gambetta",
+          de: "Bestätigung Ihrer Reservierung — La Colline Gambetta",
+          it: "Conferma della prenotazione — La Colline Gambetta",
+          pt: "Confirmação da sua reserva — La Colline Gambetta",
+          nl: "Bevestiging van uw reservering — La Colline Gambetta",
+          ar: "تأكيد حجزك — La Colline Gambetta",
+          zh: "预订确认 — La Colline Gambetta",
+          ja: "ご予約確認 — La Colline Gambetta",
+          ko: "예약 확인 — La Colline Gambetta",
+          pl: "Potwierdzenie rezerwacji — La Colline Gambetta",
+          tr: "Rezervasyon onayı — La Colline Gambetta",
+          uk: "Підтвердження бронювання — La Colline Gambetta",
+          hi: "आरक्षण की पुष्टि — La Colline Gambetta"
+        };
+        var localizedClientSubject = clientSubjectMap[lang] || "Confirmation de votre réservation — La Colline Gambetta";
+
         var gsPayload = {
           action: "reservation",
           restaurantEmail: targetRestaurantEmail,
@@ -3329,7 +3348,7 @@ html[lang="uk"] .thanks__sign {
           restaurantBody: corpsRestaurant,
           clientEmail: clientMail || "",
           clientName: savedNomComplet,
-          clientSubject: "Confirmation de votre réservation — La Colline Gambetta",
+          clientSubject: localizedClientSubject,
           clientBody: autoresponseBody,
           details: {
             nom: savedNomComplet,
