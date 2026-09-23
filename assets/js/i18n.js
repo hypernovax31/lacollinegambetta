@@ -312,6 +312,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Photograph for illustration only — serving suggestion.",
       "Tout voir": "Show all",
       "Tout masquer": "Hide all",
+      "Voir plus": "Show all",
+      "Voir moins": "Hide all",
       "Voir les photos": "Show photos",
       "Masquer les photos": "Hide photos",
       "Photographies non contractuelles, suggestions de présentation": "Photographs are for illustration only, serving suggestions",
@@ -748,6 +750,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Fotografía no contractual — sugerencia de presentación.",
       "Tout voir": "Ver todo",
       "Tout masquer": "Ocultar todo",
+      "Voir plus": "Ver todo",
+      "Voir moins": "Ocultar todo",
       "Voir les photos": "Ver las fotos",
       "Masquer les photos": "Ocultar las fotos",
       "Photographies non contractuelles, suggestions de présentation": "Fotografías no contractuales, sugerencias de presentación",
@@ -1205,6 +1209,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Abbildung unverbindlich — Serviervorschlag.",
       "Tout voir": "Alle anzeigen",
       "Tout masquer": "Alle ausblenden",
+      "Voir plus": "Alle anzeigen",
+      "Voir moins": "Alle ausblenden",
       "Voir les photos": "Fotos anzeigen",
       "Masquer les photos": "Fotos ausblenden",
       "Photographies non contractuelles, suggestions de présentation": "Abbildungen unverbindlich, Serviervorschläge",
@@ -1659,6 +1665,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Fotografia non contrattuale — suggerimento di presentazione.",
       "Tout voir": "Mostra tutto",
       "Tout masquer": "Nascondi tutto",
+      "Voir plus": "Mostra tutto",
+      "Voir moins": "Nascondi tutto",
       "Voir les photos": "Mostra le foto",
       "Masquer les photos": "Nascondi le foto",
       "Photographies non contractuelles, suggestions de présentation": "Fotografie non contrattuali, suggerimenti di presentazione",
@@ -2114,6 +2122,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Fotografia não contratual — sugestão de apresentação.",
       "Tout voir": "Ver tudo",
       "Tout masquer": "Ocultar tudo",
+      "Voir plus": "Ver tudo",
+      "Voir moins": "Ocultar tudo",
       "Voir les photos": "Ver as fotos",
       "Masquer les photos": "Ocultar as fotos",
       "Photographies non contractuelles, suggestions de présentation": "Fotografias não contratuais, sugestões de apresentação",
@@ -2570,6 +2580,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Foto niet bindend — serveersuggestie.",
       "Tout voir": "Alles tonen",
       "Tout masquer": "Alles verbergen",
+      "Voir plus": "Alles tonen",
+      "Voir moins": "Alles verbergen",
       "Voir les photos": "Foto’s tonen",
       "Masquer les photos": "Foto’s verbergen",
       "Photographies non contractuelles, suggestions de présentation": "Foto’s zijn niet bindend, serveersuggesties",
@@ -3040,6 +3052,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "صورة غير تعاقدية — اقتراح للتقديم.",
       "Tout voir": "عرض الكل",
       "Tout masquer": "إخفاء الكل",
+      "Voir plus": "عرض الكل",
+      "Voir moins": "إخفاء الكل",
       "Voir les photos": "عرض الصور",
       "Masquer les photos": "إخفاء الصور",
       "Photographies non contractuelles, suggestions de présentation": "الصور غير تعاقدية، اقتراحات للتقديم",
@@ -3513,6 +3527,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "图片仅供参考 — 摆盘建议。",
       "Tout voir": "全部显示",
       "Tout masquer": "全部隐藏",
+      "Voir plus": "全部显示",
+      "Voir moins": "全部隐藏",
       "Voir les photos": "显示照片",
       "Masquer les photos": "隐藏照片",
       "Photographies non contractuelles, suggestions de présentation": "图片仅供参考，为摆盘建议",
@@ -3985,6 +4001,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Фотографія не є договірною — приклад подачі.",
       "Tout voir": "Показати все",
       "Tout masquer": "Сховати все",
+      "Voir plus": "Показати все",
+      "Voir moins": "Сховати все",
       "Voir les photos": "Показати фото",
       "Masquer les photos": "Сховати фото",
       "Photographies non contractuelles, suggestions de présentation": "Фотографії не є договірними, приклади подачі",
@@ -4459,6 +4477,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "写真はイメージです — 盛り付け例。",
       "Tout voir": "すべて表示",
       "Tout masquer": "すべて隠す",
+      "Voir plus": "すべて表示",
+      "Voir moins": "すべて隠す",
       "Voir les photos": "写真を表示",
       "Masquer les photos": "写真を隠す",
       "Photographies non contractuelles, suggestions de présentation": "写真はイメージです（盛り付け例）",
@@ -4932,6 +4952,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "사진은 이미지 컷입니다 — 연출된 예시.",
       "Tout voir": "모두 보기",
       "Tout masquer": "모두 숨기기",
+      "Voir plus": "모두 보기",
+      "Voir moins": "모두 숨기기",
       "Voir les photos": "사진 보기",
       "Masquer les photos": "사진 숨기기",
       "Photographies non contractuelles, suggestions de présentation": "사진은 연출된 이미지입니다",
@@ -5408,6 +5430,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Zdjęcie niewiążące — propozycja podania.",
       "Tout voir": "Pokaż wszystko",
       "Tout masquer": "Ukryj wszystko",
+      "Voir plus": "Pokaż wszystko",
+      "Voir moins": "Ukryj wszystko",
       "Voir les photos": "Pokaż zdjęcia",
       "Masquer les photos": "Ukryj zdjęcia",
       "Photographies non contractuelles, suggestions de présentation": "Zdjęcia niewiążące, propozycje podania",
@@ -5863,6 +5887,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Fotoğraf temsilidir — sunum önerisi.",
       "Tout voir": "Tümünü göster",
       "Tout masquer": "Tümünü gizle",
+      "Voir plus": "Tümünü göster",
+      "Voir moins": "Tümünü gizle",
       "Voir les photos": "Fotoğrafları göster",
       "Masquer les photos": "Fotoğrafları gizle",
       "Photographies non contractuelles, suggestions de présentation": "Fotoğraflar temsilidir, sunum önerisidir",
@@ -6315,6 +6341,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "तस्वीर केवल उदाहरण है — प्रस्तुति का सुझाव।",
       "Tout voir": "सब दिखाएँ",
       "Tout masquer": "सब छिपाएँ",
+      "Voir plus": "सब दिखाएँ",
+      "Voir moins": "सब छिपाएँ",
       "Voir les photos": "तस्वीरें दिखाएँ",
       "Masquer les photos": "तस्वीरें छिपाएँ",
       "Photographies non contractuelles, suggestions de présentation": "तस्वीरें केवल उदाहरण हैं, प्रस्तुति के सुझाव",
@@ -6542,7 +6570,7 @@
         var p = n.parentElement;
         while (p && p !== document.body) {
           if (SKIP_TAGS[p.tagName]) return NodeFilter.FILTER_REJECT;
-          if (p.classList && p.classList.contains('lang-menu')) return NodeFilter.FILTER_REJECT;
+          if (p.classList && (p.classList.contains('lang-menu') || p.classList.contains('foldall'))) return NodeFilter.FILTER_REJECT;
           p = p.parentElement;
         }
         return NodeFilter.FILTER_ACCEPT;
@@ -6568,6 +6596,25 @@
     function (el) { return { el: el, fr: el.getAttribute('data-label') }; }
   );
   var LANG = 'fr';
+
+  function syncFoldAllButtons(lang) {
+    var d = DICTS[lang] || {};
+    var tplOpen = document.getElementById('foldall-open-tpl');
+    var tplShut = document.getElementById('foldall-shut-tpl');
+    var txtOpen = (lang === 'fr') ? 'Tout voir' : (d['Tout voir'] || d['Voir plus'] || (tplOpen ? tplOpen.textContent.trim() : 'Tout voir'));
+    var txtShut = (lang === 'fr') ? 'Tout masquer' : (d['Tout masquer'] || d['Voir moins'] || (tplShut ? tplShut.textContent.trim() : 'Tout masquer'));
+    var btns = document.querySelectorAll('.foldall__btn');
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      var isPressed = b.getAttribute('aria-pressed') === 'true';
+      var text = isPressed ? txtShut : txtOpen;
+      b.title = text;
+      b.setAttribute('aria-label', text);
+      var lab = b.querySelector('.foldall__label');
+      if (lab) lab.textContent = text;
+    }
+  }
+
   function applyLang(lang, save) {
     LANG = lang;
     var d = DICTS[lang] || {};
@@ -6595,6 +6642,10 @@
         b.setAttribute('aria-checked', b.getAttribute('data-lang') === lang ? 'true' : 'false');
       });
     }
+    syncFoldAllButtons(lang);
+    try {
+      window.dispatchEvent(new CustomEvent('lcg-lang-changed', { detail: { lang: lang } }));
+    } catch (e) {}
     if (save) { try { localStorage.setItem(STORE_KEY, lang); } catch (e) {} }
     /* Les libellés traduits changent les largeurs et les hauteurs :
        recalage des bandeaux, du ruban d'onglets et du médaillon. */

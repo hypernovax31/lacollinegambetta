@@ -10177,7 +10177,7 @@ else sizeCoverMedallion();
 })();
 </script>
 
-<script src="assets/js/i18n.js?v=202609210330" defer></script>
+<script src="assets/js/i18n.js?v=202609231200" defer></script>
 
 <!-- ============ Assiettes en photo : les fiches deviennent des dépliants ============ -->
 <script>
@@ -10495,21 +10495,28 @@ else sizeCoverMedallion();
     var first = targets()[0];
     if (first.closest('.panel') !== host) return;
 
+    function getFoldAllTexts() {
+      var lang = document.documentElement.getAttribute('lang') || 'fr';
+      var d = (window.__i18nDicts && window.__i18nDicts[lang]) || {};
+      var tplOpen = document.getElementById('foldall-open-tpl');
+      var tplShut = document.getElementById('foldall-shut-tpl');
+      var open = (lang === 'fr') ? 'Tout voir' : (d['Tout voir'] || d['Voir plus'] || (tplOpen ? tplOpen.textContent.trim() : 'Tout voir'));
+      var shut = (lang === 'fr') ? 'Tout masquer' : (d['Tout masquer'] || d['Voir moins'] || (tplShut ? tplShut.textContent.trim() : 'Tout masquer'));
+      return { open: open, shut: shut };
+    }
+
     var bar = document.createElement('div');
     bar.className = 'foldall';
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'foldall__btn';
     btn.setAttribute('aria-pressed', 'false');
-    var tplOpen = document.getElementById('foldall-open-tpl');
-    var tplShut = document.getElementById('foldall-shut-tpl');
-    var TXT_OPEN = tplOpen ? tplOpen.textContent.trim() : 'Tout voir';
-    var TXT_SHUT = tplShut ? tplShut.textContent.trim() : 'Tout masquer';
+    var txts = getFoldAllTexts();
     var lab = document.createElement('span');
     lab.className = 'foldall__label';
-    lab.textContent = TXT_OPEN;
-    btn.title = TXT_OPEN;
-    btn.setAttribute('aria-label', TXT_OPEN);
+    lab.textContent = txts.open;
+    btn.title = txts.open;
+    btn.setAttribute('aria-label', txts.open);
     var ico = document.createElement('span');
     ico.className = 'foldall__ico';
     ico.setAttribute('aria-hidden', 'true');
@@ -10534,11 +10541,14 @@ else sizeCoverMedallion();
                el.classList.contains('beer-row--open');
       }).length;
       var all = list.length > 0 && open === list.length;
+      var currentTexts = getFoldAllTexts();
       btn.setAttribute('aria-pressed', all ? 'true' : 'false');
-      btn.title = all ? TXT_SHUT : TXT_OPEN;
+      btn.title = all ? currentTexts.shut : currentTexts.open;
       lab.textContent = btn.title;
       btn.setAttribute('aria-label', btn.title);
     }
+
+    window.addEventListener('lcg-lang-changed', sync);
 
     /* --- Indice d'amorce -------------------------------------------
        Le bouton se signale quand il entre à l'écran, et seulement là :
