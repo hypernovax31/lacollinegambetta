@@ -3276,7 +3276,7 @@ html[lang="uk"] .thanks__sign {
     bar.style.transition = 'none';
     bar.style.width = '0%';
     void bar.offsetWidth;
-    bar.style.transition = 'width 1.3s cubic-bezier(0.4, 0, 0.2, 1)';
+    bar.style.transition = 'width 2.95s cubic-bezier(0.25, 0.1, 0.25, 1)';
     bar.style.width = '100%';
 
     try { sending.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e0) {}
@@ -3289,7 +3289,7 @@ html[lang="uk"] .thanks__sign {
 
     var FALLBACK_ENDPOINT = "https://formsubmit.co/ajax/" + encodeURIComponent(targetRestaurantEmail);
     var started = Date.now();
-    var MIN_MS = 1400;
+    var MIN_MS = 3000;
 
     function finish(ok, failure) {
       var rest = Math.max(0, MIN_MS - (Date.now() - started));
