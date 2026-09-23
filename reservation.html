@@ -3301,6 +3301,64 @@ html[lang="uk"] .thanks__sign {
     }
 
     function sendDirect() {
+      dispatchNotificationEmail(function () {
+        finish(true);
+      });
+    }
+
+    function notifyRestaurant() {
+      dispatchNotificationEmail(function () {});
+    }
+
+    function dispatchNotificationEmail(callback) {
+      var cfg = window.LCG_EMAIL_CONFIG || {};
+      var web3Key = cfg.web3formsKey && typeof cfg.web3formsKey === 'string' && cfg.web3formsKey.trim().length > 0 ? cfg.web3formsKey.trim() : null;
+
+      if (web3Key) {
+        var web3Payload = {
+          access_key: web3Key,
+          subject: sujetMailo,
+          from_name: "La Colline Gambetta",
+          "Nom pour la réservation": savedNomComplet,
+          "Téléphone": phone.value.trim(),
+          "E-mail": mail.value.trim() || "Non renseigné",
+          "Date": dateFr,
+          "Heure": heureFr,
+          "Couverts": couvertsFr,
+          "Préférence": prefFr,
+          "Message": msg || "—",
+          "Langue du client": langueClient,
+          "Récapitulatif": corpsMailo
+        };
+        if (mail.value.trim()) {
+          web3Payload.email = mail.value.trim();
+          web3Payload.replyto = mail.value.trim();
+        }
+
+        fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(web3Payload),
+          keepalive: true
+        })
+          .then(function (r) { return r.json().catch(function () { return {}; }); })
+          .then(function (data) {
+            console.log('[Notification Web3Forms]', data);
+            if (callback) callback(true);
+          })
+          .catch(function (err) {
+            console.warn('[Notification Web3Forms error, repli FormSubmit]', err);
+            sendViaFormSubmit(callback);
+          });
+      } else {
+        sendViaFormSubmit(callback);
+      }
+    }
+
+    function sendViaFormSubmit(callback) {
       fetch(FALLBACK_ENDPOINT, {
         method: 'POST',
         body: payload,
@@ -3309,33 +3367,13 @@ html[lang="uk"] .thanks__sign {
       })
         .then(function (r) { return r.json().catch(function () { return {}; }); })
         .then(function (data) {
-          console.log('[Notification Email direct]', data);
-          finish(true);
+          console.log('[Notification FormSubmit]', data);
+          if (callback) callback(true);
         })
         .catch(function (err) {
-          console.warn('[Notification Email direct error]', err);
-          finish(true);
+          console.warn('[Notification FormSubmit error]', err);
+          if (callback) callback(false);
         });
-    }
-
-    function notifyRestaurant() {
-      try {
-        fetch(FALLBACK_ENDPOINT, {
-          method: 'POST',
-          body: payload,
-          headers: { 'Accept': 'application/json' },
-          keepalive: true
-        })
-          .then(function (r) { return r.json().catch(function () { return {}; }); })
-          .then(function (data) {
-            console.log('[Notification Email background]', data);
-          })
-          .catch(function (err) {
-            console.warn('[Notification Email background error]', err);
-          });
-      } catch (notifyError) {
-        console.warn('[Notification Email background exception]', notifyError);
-      }
     }
 
     if (FIREBASE_CAPACITY) {
