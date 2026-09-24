@@ -8899,6 +8899,116 @@ html.carte-doc .print-page--cover .cover-hours { gap:2px; padding-top:4px; paddi
 }
 
 
+
+
+/* ===== Couverture panoramique : lignes, espacements et animation des horaires =====
+   En paysage, la largeur est le meilleur espace de lecture : les blocs courts
+   restent donc sur une ligne, sans modifier le rendu vertical de la couverture. */
+@keyframes coverHoursIn {
+  from { opacity:0; transform:translateY(10px); }
+  to { opacity:1; transform:none; }
+}
+@keyframes coverHoursDot {
+  0%, 100% { opacity:.72; transform:scale(.92); box-shadow:0 0 0 3px rgba(169,229,169,.13), 0 0 8px rgba(169,229,169,.48); }
+  50% { opacity:1; transform:scale(1.12); box-shadow:0 0 0 4px rgba(169,229,169,.2), 0 0 14px rgba(169,229,169,.82); }
+}
+html:not(.carte-doc) #cover-section.cover-enter .cover-hours {
+  animation:coverHoursIn .6s cubic-bezier(.22,.8,.3,1) .82s both;
+}
+html:not(.carte-doc) #cover-section.cover-enter .cover-hours__heading {
+  animation:coverRise .5s cubic-bezier(.22,.8,.3,1) .88s both;
+}
+html:not(.carte-doc) #cover-section.cover-enter .cover-hours__range {
+  animation:coverRise .5s cubic-bezier(.22,.8,.3,1) .96s both;
+}
+html:not(.carte-doc) #cover-section.cover-enter .cover-hours__status {
+  animation:coverRise .5s cubic-bezier(.22,.8,.3,1) 1.04s both;
+}
+html:not(.carte-doc) #cover-section .cover-hours__dot {
+  animation:coverHoursDot 2.8s ease-in-out 1.7s infinite;
+}
+
+@media screen and (orientation:landscape) {
+  /* Une phrase formant un même bloc ne se casse plus en deux lignes en
+     paysage : titre, horaires, adresse et libellés de contact restent lisibles
+     d'un seul regard. */
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 {
+    white-space:nowrap !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 span {
+    display:inline !important;
+    margin:0 0 0 .28em !important;
+    vertical-align:baseline;
+  }
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader .leader-meta,
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader .menu-leader-subline,
+  html:not(.carte-doc) #cover-section .cover-hours__range,
+  html:not(.carte-doc) #cover-section .cover-footer-address,
+  html:not(.carte-doc) #cover-section .cover-links .contact-link {
+    white-space:nowrap !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-footer-address {
+    max-width:none !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-footer {
+    width:min(100%, 1280px) !important;
+    gap:clamp(5px, 1vh, 10px) !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-links {
+    display:grid !important;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    width:100% !important;
+    gap:8px !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-links .contact-link {
+    width:100% !important;
+    min-width:0 !important;
+    padding-left:10px !important;
+    padding-right:10px !important;
+  }
+}
+
+@media screen and (orientation:landscape) and (max-height:560px) {
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 {
+    font-size:clamp(1rem, 4.4vh, 1.45rem) !important;
+    line-height:1 !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 span {
+    font-size:.55em !important;
+    letter-spacing:.16em !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-hours {
+    width:min(100%, 680px) !important;
+    gap:2px !important;
+    padding:3px 10px 4px !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-hours__heading {
+    font-size:clamp(.52rem, 1.9vh, .68rem) !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-hours__range {
+    font-size:clamp(.6rem, 2.1vh, .76rem) !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-hours__status {
+    font-size:clamp(.52rem, 1.8vh, .66rem) !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-footer-address {
+    font-size:clamp(.55rem, 1.9vh, .72rem) !important;
+    line-height:1.15 !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-links {
+    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+    gap:6px !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-links .contact-link:nth-child(4) {
+    grid-column:1 / -1;
+  }
+  html:not(.carte-doc) #cover-section .cover-links .contact-link {
+    min-height:28px !important;
+    font-size:clamp(.5rem, 1.7vh, .62rem) !important;
+    padding:2px 5px !important;
+  }
+}
+
 </style>
 </head>
 <body>
