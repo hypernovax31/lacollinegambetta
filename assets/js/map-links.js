@@ -35,6 +35,22 @@
     if (!appUrl) return;
 
     event.preventDefault();
+
+    /* Sur iOS/iPadOS, Safari ne signale pas toujours le passage vers Plans
+       par visibilitychange. Le minuteur de repli finissait donc par ouvrir
+       Google Maps même lorsque maps:// avait bien été accepté et que Plans
+       était en train de s’ouvrir. Plans est l’application native attendue
+       sur ces appareils : on lui laisse la navigation sans lancer un faux
+       repli après 1,2 s. */
+    if (isIOS()) {
+      try {
+        window.location.assign(appUrl);
+      } catch (error) {
+        openFallback(link, fallback);
+      }
+      return;
+    }
+
     var settled = false;
     var timer;
 
