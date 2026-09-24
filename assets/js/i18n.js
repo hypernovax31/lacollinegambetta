@@ -6861,6 +6861,7 @@
       var value = localizeDisplayDigits(contactValue(kind), lang);
       var emailPillKeepsOnlyAddress = kind === 'email' && (
         links[i].classList.contains('footer-link--mail') ||
+        links[i].classList.contains('contact-link--mail') ||
         links[i].classList.contains('info-link')
       );
       var text = emailPillKeepsOnlyAddress ? value : labels[kind] + ' · ' + value;
