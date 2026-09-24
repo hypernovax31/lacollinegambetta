@@ -84,11 +84,64 @@
     .legal-bottom-nav a:hover { background:#fff; border-color:var(--gold-500); color:var(--violet-950); }
     .legal-bottom-nav > span { color:var(--gold-700); }
     @media (max-width:650px) { .site-header h1 { letter-spacing:.02em; } }
+    .site-header { position:relative; }
+    .language-switcher {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      width:max-content;
+      max-width:100%;
+      margin:16px auto 0;
+      color:var(--gold-100);
+      font-size:.72rem;
+      font-weight:700;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+    .language-switcher select {
+      min-height:36px;
+      padding:7px 32px 7px 12px;
+      border:1px solid rgba(216,178,87,.7);
+      border-radius:999px;
+      background:rgba(36,16,46,.42);
+      color:#fff;
+      font:600 .76rem 'Montserrat',sans-serif;
+      cursor:pointer;
+    }
+    .language-switcher select:focus { outline:2px solid var(--gold-100); outline-offset:2px; }
+    .language-switcher option { color:var(--ink); background:#fff; }
+    html[dir="rtl"] .language-switcher { direction:rtl; }
+    @media (max-width:650px) {
+      .language-switcher { margin-top:12px; font-size:.66rem; }
+      .language-switcher select { min-height:34px; font-size:.7rem; }
+    }
+
   </style>
 </head>
 <body>
   <header class="site-header">
     <div class="eyebrow">✦ La Colline Gambetta ✦</div>
+    <div class="language-switcher">
+      <label for="legal-language">Langue</label>
+      <select id="legal-language" aria-label="Choisir la langue">
+        <option value="fr">Français</option>
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="de">Deutsch</option>
+        <option value="it">Italiano</option>
+        <option value="pt">Português</option>
+        <option value="nl">Nederlands</option>
+        <option value="ar">العربية</option>
+        <option value="zh">中文</option>
+        <option value="uk">Українська</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+        <option value="pl">Polski</option>
+        <option value="tr">Türkçe</option>
+        <option value="hi">हिन्दी</option>
+      </select>
+    </div>
     <h1>Confidentialité</h1>
     <p>Réservations, notifications et protection de vos données</p>
     <nav class="top-nav" aria-label="Navigation secondaire">
@@ -194,5 +247,6 @@
   </footer>
   <nav class="legal-bottom-nav" aria-label="Informations légales"><a href="mentions-legales.html">Mentions légales</a><span aria-hidden="true">·</span><a href="confidentialite.html">Confidentialité</a></nav>
 
+  <script src="assets/js/legal-i18n.js"></script>
 </body>
 </html>

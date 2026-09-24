@@ -9042,24 +9042,23 @@ html:not(.carte-doc) #cover-section .cover-hours__dot {
 .legal-bottom-nav > span { color:var(--gold-700, #9c7a2d); }
 
 
-/* ===== Couverture : un bloc éditorial = une ligne ======================
-   Les éléments courts de la garde restent groupés comme une signature de
-   restaurant : le titre, les promesses, les horaires, l'adresse et chaque
-   libellé ne se cassent plus artificiellement, en portrait comme en paysage.
-   La taille se contracte progressivement sur les petits écrans. */
+/* ===== Couverture : le nom du restaurant retrouve sa signature sur deux lignes =====
+   Le bloc « COLLINE / GAMBETTA » reste volontairement empilé comme dans la
+   composition d'origine. Les autres phrases courtes restent regroupées sur
+   une ligne en portrait comme en paysage. */
 html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 {
-  white-space: nowrap !important;
-  font-size: clamp(1.35rem, 5.2vw, 38pt) !important;
-  letter-spacing: .10em !important;
-  line-height: 1 !important;
+  white-space: normal !important;
+  font-size: clamp(1.7rem, 5.2vw, 38pt) !important;
+  letter-spacing: .14em !important;
+  line-height: .95 !important;
 }
 html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 span {
-  display: inline !important;
-  margin: 0 0 0 .24em !important;
+  display: block !important;
+  margin: 4px 0 0 !important;
   vertical-align: baseline !important;
   font-size: .52em !important;
-  letter-spacing: .14em !important;
-  line-height: 1 !important;
+  letter-spacing: .22em !important;
+  line-height: 1.1 !important;
 }
 html:not(.carte-doc) #cover-section .cover-brand--menu-leader .leader-meta,
 html:not(.carte-doc) #cover-section .cover-brand--menu-leader .menu-leader-subline,
@@ -9084,12 +9083,33 @@ html:not(.carte-doc) #cover-section .cover-links .contact-link {
 }
 @media (max-width:420px) {
   html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 {
-    font-size: clamp(1.18rem, 6.2vw, 1.55rem) !important;
-    letter-spacing: .06em !important;
+    font-size: clamp(1.5rem, 7vw, 2rem) !important;
+    letter-spacing: .08em !important;
   }
   html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 span {
-    margin-left: .16em !important;
-    letter-spacing: .08em !important;
+    margin-top: 3px !important;
+    letter-spacing: .12em !important;
+  }
+}
+
+/* ===== Couverture mobile en paysage : pied de page 2 × 2 ================
+   Les quatre actions restent de même largeur et ne laissent plus un bouton
+   seul sur une ligne : réservation, Instagram / téléphone, puis e-mail. */
+@media screen and (orientation:landscape) and (max-width:1000px) and (max-height:700px) {
+  html:not(.carte-doc) #cover-section .cover-links {
+    display:grid !important;
+    grid-template-columns:repeat(2, minmax(0,1fr)) !important;
+    width:min(100%, 760px) !important;
+    gap:6px !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-links .contact-link {
+    grid-column:auto !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:30px !important;
+    padding:4px 7px !important;
+    font-size:clamp(.52rem, 1.8vh, .7rem) !important;
+    white-space:nowrap !important;
   }
 }
 
