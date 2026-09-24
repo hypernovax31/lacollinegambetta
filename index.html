@@ -8864,6 +8864,8 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
   letter-spacing:.03em;
 }
 .cover-hours__status.is-closed { color:#f3d8cd; }
+.cover-hours__status.is-opening-soon,
+.cover-hours__status.is-closing-soon { color:var(--gold-300, #f0d78f); }
 .cover-hours__dot {
   width:7px;
   height:7px;
@@ -8871,6 +8873,11 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
   border-radius:50%;
   background:#a9e5a9;
   box-shadow:0 0 0 3px rgba(169,229,169,.14), 0 0 11px rgba(169,229,169,.72);
+}
+.cover-hours__status.is-opening-soon .cover-hours__dot,
+.cover-hours__status.is-closing-soon .cover-hours__dot {
+  background:var(--gold-300, #f0d78f);
+  box-shadow:0 0 0 3px rgba(240,215,143,.12);
 }
 .cover-hours__status.is-closed .cover-hours__dot {
   background:#e7a18c;
@@ -12019,21 +12026,21 @@ else sizeCoverMedallion();
 (function () {
   'use strict';
   var copy = {
-    fr: { label:'Horaires', days:'Tous les jours', range:'07h00 — 02h00', continuous:'service continu', open:'Ouvert maintenant', closed:'Fermé actuellement' },
-    en: { label:'Opening hours', days:'Every day', range:'07:00 — 02:00', continuous:'all-day service', open:'Open now', closed:'Closed now' },
-    es: { label:'Horario', days:'Todos los días', range:'07:00 — 02:00', continuous:'servicio continuo', open:'Abierto ahora', closed:'Cerrado ahora' },
-    de: { label:'Öffnungszeiten', days:'Jeden Tag', range:'07:00 — 02:00', continuous:'durchgehend', open:'Jetzt geöffnet', closed:'Derzeit geschlossen' },
-    it: { label:'Orari', days:'Tutti i giorni', range:'07:00 — 02:00', continuous:'servizio continuo', open:'Aperto ora', closed:'Chiuso al momento' },
-    pt: { label:'Horário', days:'Todos os dias', range:'07:00 — 02:00', continuous:'serviço contínuo', open:'Aberto agora', closed:'Fechado neste momento' },
-    nl: { label:'Openingsuren', days:'Elke dag', range:'07:00 — 02:00', continuous:'doorlopende service', open:'Nu open', closed:'Momenteel gesloten' },
-    ar: { label:'ساعات العمل', days:'كل يوم', range:'٧:٠٠ — ٢:٠٠', continuous:'خدمة متواصلة', open:'مفتوح الآن', closed:'مغلق حاليًا' },
-    zh: { label:'营业时间', days:'每天', range:'07:00 — 02:00', continuous:'全天供应', open:'现在营业', closed:'目前歇业' },
-    ja: { label:'営業時間', days:'毎日', range:'07:00 — 02:00', continuous:'終日営業', open:'現在営業中', closed:'現在休業中' },
-    ko: { label:'영업시간', days:'매일', range:'07:00 — 02:00', continuous:'종일 서비스', open:'현재 영업 중', closed:'현재 영업 종료' },
-    pl: { label:'Godziny otwarcia', days:'Codziennie', range:'07:00 — 02:00', continuous:'serwis całodzienny', open:'Otwarte teraz', closed:'Obecnie zamknięte' },
-    tr: { label:'Çalışma saatleri', days:'Her gün', range:'07:00 — 02:00', continuous:'gün boyu servis', open:'Şimdi açık', closed:'Şu anda kapalı' },
-    uk: { label:'Години роботи', days:'Щодня', range:'07:00 — 02:00', continuous:'безперервне обслуговування', open:'Зараз відчинено', closed:'Наразі зачинено' },
-    hi: { label:'खुलने का समय', days:'हर दिन', range:'सुबह 7:00 — रात 2:00', continuous:'दिनभर सेवा', open:'अभी खुला है', closed:'अभी बंद है' }
+    fr: { label:'Horaires', days:'Tous les jours', range:'07h00 — 02h00', continuous:'service continu', open:'Ouvert maintenant', closingSoon:'Ouvert · ferme à 02h00', openingSoon:'Ouvre bientôt · à 07h00', closed:'Fermé · ouvre à 07h00' },
+    en: { label:'Opening hours', days:'Every day', range:'07:00 — 02:00', continuous:'all-day service', open:'Open now', closingSoon:'Open · closes at 02:00', openingSoon:'Opening soon · at 07:00', closed:'Closed · opens at 07:00' },
+    es: { label:'Horario', days:'Todos los días', range:'07:00 — 02:00', continuous:'servicio continuo', open:'Abierto ahora', closingSoon:'Abierto · cierra a las 02:00', openingSoon:'Abre pronto · a las 07:00', closed:'Cerrado · abre a las 07:00' },
+    de: { label:'Öffnungszeiten', days:'Jeden Tag', range:'07:00 — 02:00', continuous:'durchgehend', open:'Jetzt geöffnet', closingSoon:'Geöffnet · schließt um 02:00', openingSoon:'Öffnet bald · um 07:00', closed:'Geschlossen · öffnet um 07:00' },
+    it: { label:'Orari', days:'Tutti i giorni', range:'07:00 — 02:00', continuous:'servizio continuo', open:'Aperto ora', closingSoon:'Aperto · chiude alle 02:00', openingSoon:'Apre presto · alle 07:00', closed:'Chiuso · apre alle 07:00' },
+    pt: { label:'Horário', days:'Todos os dias', range:'07:00 — 02:00', continuous:'serviço contínuo', open:'Aberto agora', closingSoon:'Aberto · fecha às 02:00', openingSoon:'Abre em breve · às 07:00', closed:'Fechado · abre às 07:00' },
+    nl: { label:'Openingsuren', days:'Elke dag', range:'07:00 — 02:00', continuous:'doorlopende service', open:'Nu open', closingSoon:'Open · sluit om 02:00', openingSoon:'Gaat bijna open · om 07:00', closed:'Gesloten · opent om 07:00' },
+    ar: { label:'ساعات العمل', days:'كل يوم', range:'٧:٠٠ — ٢:٠٠', continuous:'خدمة متواصلة', open:'مفتوح الآن', closingSoon:'مفتوح · يغلق الساعة ٠٢:٠٠', openingSoon:'يفتح قريبًا · الساعة ٠٧:٠٠', closed:'مغلق · يفتح الساعة ٠٧:٠٠' },
+    zh: { label:'营业时间', days:'每天', range:'07:00 — 02:00', continuous:'全天供应', open:'现在营业', closingSoon:'营业中 · 02:00关门', openingSoon:'即将营业 · 07:00开始', closed:'歇业 · 07:00开始营业' },
+    ja: { label:'営業時間', days:'毎日', range:'07:00 — 02:00', continuous:'終日営業', open:'現在営業中', closingSoon:'営業中 · 02:00閉店', openingSoon:'まもなく営業開始 · 07:00', closed:'休業中 · 07:00開店' },
+    ko: { label:'영업시간', days:'매일', range:'07:00 — 02:00', continuous:'종일 서비스', open:'현재 영업 중', closingSoon:'영업 중 · 02:00에 마감', openingSoon:'곧 영업 시작 · 07:00', closed:'영업 종료 · 07:00에 시작' },
+    pl: { label:'Godziny otwarcia', days:'Codziennie', range:'07:00 — 02:00', continuous:'serwis całodzienny', open:'Otwarte teraz', closingSoon:'Otwarte · zamyka o 02:00', openingSoon:'Wkrótce otwarcie · o 07:00', closed:'Zamknięte · otwarcie o 07:00' },
+    tr: { label:'Çalışma saatleri', days:'Her gün', range:'07:00 — 02:00', continuous:'gün boyu servis', open:'Şimdi açık', closingSoon:'Açık · kapanış 02:00', openingSoon:'Yakında açılıyor · 07:00', closed:'Kapalı · açılış 07:00' },
+    uk: { label:'Години роботи', days:'Щодня', range:'07:00 — 02:00', continuous:'безперервне обслуговування', open:'Зараз відчинено', closingSoon:'Відчинено · зачинення о 02:00', openingSoon:'Незабаром відкриття · о 07:00', closed:'Зачинено · відкриття о 07:00' },
+    hi: { label:'खुलने का समय', days:'हर दिन', range:'सुबह 7:00 — रात 2:00', continuous:'दिनभर सेवा', open:'अभी खुला है', closingSoon:'खुला है · 02:00 बजे बंद', openingSoon:'जल्द खुलेगा · 07:00 बजे', closed:'बंद है · 07:00 बजे खुलेगा' }
   };
   function currentLanguage() {
     return (document.documentElement.getAttribute('lang') || 'fr').slice(0, 2).toLowerCase();
@@ -12060,14 +12067,18 @@ else sizeCoverMedallion();
     var text = copy[currentLanguage()] || copy.fr;
     var minutes = parisMinutes();
     var isOpen = minutes === null ? true : (minutes >= 7 * 60 || minutes < 2 * 60);
+    var isClosingSoon = minutes !== null && minutes >= 60 && minutes < 2 * 60;
+    var isOpeningSoon = minutes !== null && minutes >= 6 * 60 && minutes < 7 * 60;
     label.textContent = text.label;
     hours.setAttribute('aria-label', text.label);
     days.textContent = text.days;
     range.textContent = text.range;
     continuous.textContent = text.continuous;
-    status.classList.toggle('is-open', isOpen);
-    status.classList.toggle('is-closed', !isOpen);
-    statusText.textContent = isOpen ? text.open : text.closed;
+    status.classList.toggle('is-open', isOpen && !isClosingSoon);
+    status.classList.toggle('is-closed', !isOpen && !isOpeningSoon);
+    status.classList.toggle('is-opening-soon', isOpeningSoon);
+    status.classList.toggle('is-closing-soon', isClosingSoon);
+    statusText.textContent = isClosingSoon ? text.closingSoon : (isOpeningSoon ? text.openingSoon : (isOpen ? text.open : text.closed));
     status.setAttribute('aria-label', statusText.textContent);
   }
   updateHours();
