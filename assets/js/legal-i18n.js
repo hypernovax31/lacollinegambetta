@@ -176,12 +176,29 @@
     } catch (e) {}
     for (var i = 0; i < options.length; i++) {
       var option = options[i];
-      if (!option.getAttribute('data-native-label')) {
-        option.setAttribute('data-native-label', option.textContent.trim());
+      var label = option.querySelector('.legal-lang-label') || option;
+      if (!label.getAttribute('data-native-label')) {
+        label.setAttribute('data-native-label', label.textContent.trim());
       }
       var code = option.getAttribute('data-lang');
       var translated = displayNames && code ? displayNames.of(code) : '';
-      option.textContent = translated || option.getAttribute('data-native-label');
+      label.textContent = translated || label.getAttribute('data-native-label');
+    }
+  }
+
+  function fitPrivacyTitle() {
+    if (!document.querySelector('link[rel="canonical"][href*="confidentialite"]')) return;
+    var title = document.querySelector('.site-header h1');
+    if (!title) return;
+    title.style.whiteSpace = 'nowrap';
+    title.style.fontSize = '';
+    var width = title.clientWidth;
+    if (!width) return;
+    var size = parseFloat(window.getComputedStyle(title).fontSize) || 16;
+    var minimum = 10;
+    while (title.scrollWidth > width && size > minimum) {
+      size = Math.max(minimum, size - .25);
+      title.style.fontSize = size + 'px';
     }
   }
 
@@ -228,6 +245,7 @@
     for (var ti = 0; ti < topNav.length; ti++) topNav[ti].setAttribute('aria-label', dict['Navigation secondaire'] || 'Navigation secondaire');
     var legalNav = document.querySelectorAll('.legal-bottom-nav');
     for (var li = 0; li < legalNav.length; li++) legalNav[li].setAttribute('aria-label', dict['Informations légales'] || 'Informations légales');
+    fitPrivacyTitle();
     if (save) {
       try { localStorage.setItem('lcg-lang', lang); } catch (e) {}
     }
@@ -243,6 +261,8 @@
     initial = DICTS[browser] ? browser : 'fr';
   }
   apply(initial, false);
+  window.addEventListener('resize', fitPrivacyTitle);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitPrivacyTitle);
   var button = document.getElementById('legal-lang-btn');
   var menu = document.getElementById('legal-lang-menu');
   if (button && menu) {

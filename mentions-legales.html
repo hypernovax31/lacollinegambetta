@@ -133,6 +133,10 @@
     .legal-lang-menu__title { margin:2px 8px 8px; color:var(--gold-100); font:600 .68rem/1.2 'Cinzel',serif; letter-spacing:.2em; text-transform:uppercase; }
     .legal-lang-menu__list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:2px; }
     .legal-lang-option {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
       min-height:36px;
       padding:6px 8px;
       border:0;
@@ -142,6 +146,19 @@
       font:600 .75rem 'Montserrat',sans-serif;
       text-align:left;
       cursor:pointer;
+    }
+    .legal-lang-flag {
+      width:24px;
+      height:16px;
+      flex:0 0 auto;
+      border-radius:2px;
+      box-shadow:0 0 0 1px rgba(255,255,255,.2);
+    }
+    .legal-lang-label {
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
     }
     .legal-lang-option:hover, .legal-lang-option:focus-visible { background:rgba(243,213,106,.14); outline:none; }
     .legal-lang-option[aria-checked="true"] { background:rgba(243,213,106,.1); color:var(--gold-100); }
@@ -485,21 +502,21 @@
       <div class="legal-lang-menu" id="legal-lang-menu" role="menu" aria-label="Langue / Language" hidden>
         <p class="legal-lang-menu__title">Langue</p>
         <div class="legal-lang-menu__list" role="group">
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="fr" aria-checked="true">Français</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="en" aria-checked="false">English</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="es" aria-checked="false">Español</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="de" aria-checked="false">Deutsch</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="it" aria-checked="false">Italiano</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="pt" aria-checked="false">Português</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="nl" aria-checked="false">Nederlands</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="ar" aria-checked="false">العربية</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="zh" aria-checked="false">中文</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="uk" aria-checked="false">Українська</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="ja" aria-checked="false">日本語</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="ko" aria-checked="false">한국어</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="pl" aria-checked="false">Polski</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="tr" aria-checked="false">Türkçe</button>
-          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="hi" aria-checked="false">हिन्दी</button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="fr" aria-checked="true"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="10" height="20" fill="#0055A4"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#EF4135"/></svg><span class="legal-lang-label">Français</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="en" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#012169"/><path d="M0 0 30 20M30 0 0 20" stroke="#fff" stroke-width="4"/><path d="M0 0 30 20M30 0 0 20" stroke="#C8102E" stroke-width="1.8"/><path d="M15 0v20M0 10h30" stroke="#fff" stroke-width="6.5"/><path d="M15 0v20M0 10h30" stroke="#C8102E" stroke-width="3.6"/></svg><span class="legal-lang-label">English</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="es" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#AA151B"/><rect y="5" width="30" height="10" fill="#F1BF00"/></svg><span class="legal-lang-label">Español</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="de" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#000"/><rect y="6.7" width="30" height="6.6" fill="#DD0000"/><rect y="13.3" width="30" height="6.7" fill="#FFCE00"/></svg><span class="legal-lang-label">Deutsch</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="it" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="10" height="20" fill="#009246"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#CE2B37"/></svg><span class="legal-lang-label">Italiano</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="pt" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="12" height="20" fill="#046A38"/><rect x="12" width="18" height="20" fill="#DA291C"/><circle cx="12" cy="10" r="4.6" fill="#FFE900"/></svg><span class="legal-lang-label">Português</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="nl" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#AE1C28"/><rect y="6.7" width="30" height="6.6" fill="#fff"/><rect y="13.3" width="30" height="6.7" fill="#21468B"/></svg><span class="legal-lang-label">Nederlands</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="ar" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#165D31"/><rect x="6" y="7.4" width="18" height="1.6" rx="0.8" fill="#fff"/><rect x="8" y="11.2" width="14" height="1.1" rx="0.55" fill="#fff" opacity=".92"/></svg><span class="legal-lang-label">العربية</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="zh" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#DE2910"/><g fill="#FFDE00"><path transform="translate(5.6,5.2) scale(3.1)" d="M 1.000,-0.000 L 0.309,0.225 L 0.309,0.951 L -0.118,0.363 L -0.809,0.588 L -0.382,0.000 L -0.809,-0.588 L -0.118,-0.363 L 0.309,-0.951 L 0.309,-0.225 Z"/><path transform="translate(11.2,2.1) scale(1.05)" d="M 1.000,-0.000 L 0.309,0.225 L 0.309,0.951 L -0.118,0.363 L -0.809,0.588 L -0.382,0.000 L -0.809,-0.588 L -0.118,-0.363 L 0.309,-0.951 L 0.309,-0.225 Z"/><path transform="translate(13.6,4.6) scale(1.05)" d="M 1.000,-0.000 L 0.309,0.225 L 0.309,0.951 L -0.118,0.363 L -0.809,0.588 L -0.382,0.000 L -0.809,-0.588 L -0.118,-0.363 L 0.309,-0.951 L 0.309,-0.225 Z"/><path transform="translate(13.6,8.1) scale(1.05)" d="M 1.000,-0.000 L 0.309,0.225 L 0.309,0.951 L -0.118,0.363 L -0.809,0.588 L -0.382,0.000 L -0.809,-0.588 L -0.118,-0.363 L 0.309,-0.951 L 0.309,-0.225 Z"/><path transform="translate(11.2,10.4) scale(1.05)" d="M 1.000,-0.000 L 0.309,0.225 L 0.309,0.951 L -0.118,0.363 L -0.809,0.588 L -0.382,0.000 L -0.809,-0.588 L -0.118,-0.363 L 0.309,-0.951 L 0.309,-0.225 Z"/></g></svg><span class="legal-lang-label">中文</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="uk" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="10" fill="#005BBB"/><rect y="10" width="30" height="10" fill="#FFD500"/></svg><span class="legal-lang-label">Українська</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="ja" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#BC002D"/></svg><span class="legal-lang-label">日本語</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="ko" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="5.2" fill="#0047A0"/><path d="M9.8,10 A5.2,5.2 0 0 1 20.2,10 A2.6,2.6 0 0 1 15,10 A2.6,2.6 0 0 0 9.8,10 Z" fill="#CD2E3A"/><g transform="translate(5.00,4.60) rotate(-45)"><rect x="-3.1" y="-2.32" width="6.2" height="0.85" fill="#000"/><rect x="-3.1" y="-0.42" width="6.2" height="0.85" fill="#000"/><rect x="-3.1" y="1.48" width="6.2" height="0.85" fill="#000"/></g><g transform="translate(25.00,4.60) rotate(45)"><rect x="-3.1" y="-2.32" width="6.2" height="0.85" fill="#000"/><rect x="-3.1" y="-0.42" width="2.55" height="0.85" fill="#000"/><rect x="0.55" y="-0.42" width="2.55" height="0.85" fill="#000"/><rect x="-3.1" y="1.48" width="6.2" height="0.85" fill="#000"/></g><g transform="translate(5.00,15.40) rotate(-45)"><rect x="-3.1" y="-2.32" width="2.55" height="0.85" fill="#000"/><rect x="0.55" y="-2.32" width="2.55" height="0.85" fill="#000"/><rect x="-3.1" y="-0.42" width="6.2" height="0.85" fill="#000"/><rect x="-3.1" y="1.48" width="2.55" height="0.85" fill="#000"/><rect x="0.55" y="1.48" width="2.55" height="0.85" fill="#000"/></g><g transform="translate(25.00,15.40) rotate(45)"><rect x="-3.1" y="-2.32" width="2.55" height="0.85" fill="#000"/><rect x="0.55" y="-2.32" width="2.55" height="0.85" fill="#000"/><rect x="-3.1" y="-0.42" width="2.55" height="0.85" fill="#000"/><rect x="0.55" y="-0.42" width="2.55" height="0.85" fill="#000"/><rect x="-3.1" y="1.48" width="2.55" height="0.85" fill="#000"/><rect x="0.55" y="1.48" width="2.55" height="0.85" fill="#000"/></g></svg><span class="legal-lang-label">한국어</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="pl" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#DC143C"/></svg><span class="legal-lang-label">Polski</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="tr" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#E30A17"/><circle cx="11.2" cy="10" r="4.1" fill="#fff"/><circle cx="12.7" cy="10" r="3.3" fill="#E30A17"/><polygon points="19.40,7.90 21.40,9.35 20.63,11.70 18.17,11.70 17.40,9.35" fill="#fff"/></svg><span class="legal-lang-label">Türkçe</span></button>
+          <button type="button" class="legal-lang-option" role="menuitemradio" data-lang="hi" aria-checked="false"><svg class="legal-lang-flag lang-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="6.67" fill="#FF9933"/><rect y="6.67" width="30" height="6.66" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#138808"/><circle cx="15" cy="10" r="2.55" fill="none" stroke="#000080" stroke-width="0.62"/><line x1="12.45" y1="10.00" x2="17.55" y2="10.00" stroke="#000080" stroke-width="0.34"/><line x1="12.54" y1="9.34" x2="17.46" y2="10.66" stroke="#000080" stroke-width="0.34"/><line x1="12.79" y1="8.72" x2="17.21" y2="11.28" stroke="#000080" stroke-width="0.34"/><line x1="13.20" y1="8.20" x2="16.80" y2="11.80" stroke="#000080" stroke-width="0.34"/><line x1="13.72" y1="7.79" x2="16.27" y2="12.21" stroke="#000080" stroke-width="0.34"/><line x1="14.34" y1="7.54" x2="15.66" y2="12.46" stroke="#000080" stroke-width="0.34"/><line x1="15.00" y1="7.45" x2="15.00" y2="12.55" stroke="#000080" stroke-width="0.34"/><line x1="15.66" y1="7.54" x2="14.34" y2="12.46" stroke="#000080" stroke-width="0.34"/><line x1="16.27" y1="7.79" x2="13.73" y2="12.21" stroke="#000080" stroke-width="0.34"/><line x1="16.80" y1="8.20" x2="13.20" y2="11.80" stroke="#000080" stroke-width="0.34"/><line x1="17.21" y1="8.72" x2="12.79" y2="11.28" stroke="#000080" stroke-width="0.34"/><line x1="17.46" y1="9.34" x2="12.54" y2="10.66" stroke="#000080" stroke-width="0.34"/><circle cx="15" cy="10" r="0.5" fill="#000080"/></svg><span class="legal-lang-label">हिन्दी</span></button>
         </div>
       </div>
     </div>
