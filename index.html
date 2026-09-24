@@ -9298,6 +9298,52 @@ html:not(.carte-doc) #vins .wine-table tbody td:last-child {
     border-radius:0;
   }
 }
+
+/* ===== Vins : architecture des encarts comme les plats et desserts =====
+   Chaque appellation devient une vraie fiche autonome, sur le même modèle
+   que `.food-card` : fond blanc, filet doré, rayon de 18 px et respiration
+   intérieure identique. Les colonnes de contenances restent alignées sur
+   ordinateur, tandis que le mobile conserve sa lecture en deux bandes. */
+html:not(.carte-doc) #vins .wine-table tbody {
+  display:grid;
+  gap:12px;
+}
+html:not(.carte-doc) #vins .wine-table tbody tr {
+  display:grid;
+  align-items:baseline;
+  padding:12px;
+  background:#fff;
+  border:1px solid rgba(216,178,87,.34);
+  border-radius:18px;
+  transition:border-color .22s ease;
+}
+html:not(.carte-doc) #vins .wine-table tbody tr:hover {
+  border-color:rgba(216,178,87,.6);
+}
+html:not(.carte-doc) #vins .wine-table tbody td,
+html:not(.carte-doc) #vins .wine-table tbody td:first-child,
+html:not(.carte-doc) #vins .wine-table tbody td:last-child {
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+}
+html:not(.carte-doc) #vins .wine-table tbody td.wine-name {
+  padding-right:8px !important;
+}
+@media (max-width:706px) {
+  html:not(.carte-doc) #vins .wine-table tbody {
+    gap:10px;
+  }
+  html:not(.carte-doc) #vins .wine-table tbody tr {
+    padding:10px 11px 11px;
+    border:1px solid rgba(216,178,87,.34) !important;
+    border-radius:16px;
+  }
+  html:not(.carte-doc) #vins .wine-table tbody td.wine-name {
+    padding-right:0 !important;
+  }
+}
 </style>
 </head>
 <body>
