@@ -59,7 +59,6 @@ const DEFAULT_POLICY = Object.freeze({
   adultsPerTable: 2,               // 1-2 pers = 1 table, 3-4 = 2 tables, etc.
   maxTables: 15,                   // Maximum 15 tables simultanées
   maxCovers: 30,                   // Maximum 30 personnes simultanées
-  minNoticeMinutes: 15,            // Délai minimum avant le créneau (le jour même)
   // Aucune date maximale : tous les jours futurs restent réservables.
   maxGuestsPerBooking: 10,         // Plafond en ligne
   onlineBookingEnabled: true,      // Interrupteur général
@@ -115,7 +114,6 @@ authReady.then(() => {
           maxTables: Number.isInteger(data.maxTables) && data.maxTables > 0 ? data.maxTables : DEFAULT_POLICY.maxTables,
           maxCovers: Number.isInteger(data.maxCovers) && data.maxCovers > 0 ? data.maxCovers : DEFAULT_POLICY.maxCovers,
           durationMinutes: Number.isInteger(data.durationMinutes) && data.durationMinutes > 0 ? data.durationMinutes : DEFAULT_POLICY.durationMinutes,
-          minNoticeMinutes: Number.isInteger(data.minNoticeMinutes) && data.minNoticeMinutes >= 0 ? data.minNoticeMinutes : DEFAULT_POLICY.minNoticeMinutes,
           maxGuestsPerBooking: Number.isInteger(data.maxGuestsPerBooking) && data.maxGuestsPerBooking > 0 ? data.maxGuestsPerBooking : DEFAULT_POLICY.maxGuestsPerBooking,
           onlineBookingEnabled: data.onlineBookingEnabled !== false,
           closedDates: Array.isArray(data.closedDates) ? data.closedDates : [],
@@ -255,8 +253,8 @@ function candidateFrom(data, policy = dynamicPolicy) {
     throw error;
   }
 
-  if (date < now.date || (date === now.date && startMinutes <= (now.minutes + (policy.minNoticeMinutes || 0)))) {
-    const error = new Error('Ce créneau est déjà passé ou trop proche.');
+  if (date < now.date || (date === now.date && startMinutes < now.minutes)) {
+    const error = new Error('Ce créneau est déjà passé.');
     error.code = 'PAST_TIME';
     throw error;
   }
@@ -401,7 +399,7 @@ function calculateSlotsForRows(date, currentRows, guests = 1, policy = dynamicPo
 
   for (let minutes = policy.firstSlotMinutes; minutes <= policy.lastSlotMinutes; minutes += policy.stepMinutes) {
     const timeStr = formatMinutes(minutes);
-    const isPast = isToday && (minutes <= (now.minutes + (policy.minNoticeMinutes || 0)));
+    const isPast = isToday && (minutes < now.minutes);
     const isSlotClosed = !policy.onlineBookingEnabled || isDateClosed || dateClosedSlots.includes(timeStr);
 
     let available = false;

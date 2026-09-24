@@ -37,7 +37,6 @@ en créant ou modifiant le document suivant dans **Cloud Firestore** :
 | `maxTables` | `number` | Nombre maximum de tables simultanées | `15` |
 | `maxCovers` | `number` | Nombre maximum de couverts simultanés | `30` |
 | `durationMinutes` | `number` | Durée moyenne d'occupation d'une table (min) | `60` |
-| `minNoticeMinutes` | `number` | Délai minimum avant le créneau pour le jour même | `15` |
 | `maxDaysInAdvance` | `number` | Nombre maximum de jours ouvrables à l'avance | `90` |
 | `maxGuestsPerBooking` | `number` | Nombre max de personnes par réservation en ligne | `10` |
 | `onlineBookingEnabled` | `boolean` | Activer ou suspendre les réservations en ligne | `true` |

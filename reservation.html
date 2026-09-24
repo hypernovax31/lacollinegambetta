@@ -3169,7 +3169,7 @@ html[lang="uk"] .thanks__sign {
 
       var hm = opt.value.split(':');
       var mins = parseInt(hm[0], 10) * 60 + parseInt(hm[1], 10);
-      var isPast = isToday && (mins <= now.minutes);
+      var isPast = isToday && (mins < now.minutes);
 
       var isCapacityAvailable = true;
       var isUnavailableByTiming = false;
