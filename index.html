@@ -9460,8 +9460,12 @@ html:not(.carte-doc) #cover-section > .cover-page > #titre-principal {
   max-width: 960px !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-left: 58px !important;
-  padding-right: 58px !important;
+  /* Le globe est en position absolue : il ne doit pas réduire la largeur
+     utile du titre, sinon les phrases longues débordent sur les petits
+     écrans. La boîte de titre reste donc centrée sans gouttière latérale. */
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  min-width: 0 !important;
   box-sizing: border-box !important;
   text-align: center !important;
 }
@@ -9470,9 +9474,14 @@ html:not(.carte-doc) #cover-section > .cover-page > #titre-principal > h2,
 html:not(.carte-doc) #cover-section > .cover-page > #titre-principal > p {
   width: 100% !important;
   max-width: 100% !important;
+  min-width: 0 !important;
   margin-left: auto !important;
   margin-right: auto !important;
   text-align: center !important;
+  white-space: normal !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  text-wrap: balance;
 }
 html:not(.carte-doc) #cover-section > .cover-page > #titre-principal > h2 {
   white-space: normal !important;
