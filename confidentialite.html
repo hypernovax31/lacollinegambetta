@@ -173,12 +173,6 @@
       background:linear-gradient(180deg, #6b3c87 0%, #592e6f 55%, #432155 100%);
       box-shadow:0 -10px 26px rgba(36,16,46,.12) inset;
     }
-    .star-gold { color:#ffd86a; text-shadow:0 0 .5px rgba(36,16,46,.75), 0 0 10px rgba(255,216,106,.22); }
-    .footer-note { color:var(--gold-300); font:600 .68rem/1.5 'Cinzel',serif; letter-spacing:.12em; text-transform:uppercase; }
-    .footer-legal { display:flex; justify-content:center; flex-wrap:wrap; gap:3px 18px; margin:7px auto 0; color:rgba(255,255,255,.88); font-size:.68rem; }
-    .footer-legal .legal-item { position:relative; white-space:normal; }
-    .footer-legal .legal-item + .legal-item::before { content:'•'; position:absolute; left:-12px; color:var(--gold-500); }
-    .footer-legal .legal-item--alcool { color:rgba(255,255,255,.9); }
     .footer-download-wrap { margin:8px auto 4px; }
     .footer-download { display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:32px; padding:6px 13px; border:1px solid rgba(216,178,87,.45); border-radius:999px; background:transparent; color:#fff; font-size:.68rem; font-weight:700; letter-spacing:.06em; text-decoration:none; text-transform:uppercase; }
     .footer-download svg { width:12px; height:12px; flex:0 0 auto; }
@@ -192,12 +186,10 @@
     .footer .legal-bottom-nav { background:transparent; color:rgba(255,255,255,.78); padding:10px 0 2px; }
     .footer .legal-bottom-nav a { border-color:rgba(216,178,87,.58); color:#fff; }
     .footer .legal-bottom-nav a:hover { background:rgba(255,255,255,.08); border-color:var(--gold-100); color:var(--gold-100); }
-    .footer .legal-bottom-nav { flex-wrap:nowrap; width:max-content; max-width:calc(100% - 16px); overflow-x:auto; overflow-y:hidden; white-space:nowrap; scrollbar-width:none; }
+    .footer .legal-bottom-nav { flex-wrap:nowrap; width:max-content; max-width:calc(100% - 16px); margin-left:auto; margin-right:auto; overflow-x:auto; overflow-y:hidden; white-space:nowrap; scrollbar-width:none; }
     .footer .legal-bottom-nav::-webkit-scrollbar { display:none; }
     .footer .legal-bottom-nav a { flex:0 0 auto; }
     @media (max-width:650px) {
-      .footer-legal { flex-direction:column; gap:3px; }
-      .footer-legal .legal-item + .legal-item::before { display:none; }
       .footer .footer-link { width:100%; }
     }
 
@@ -320,13 +312,6 @@
     <p style="margin:24px 4px 0;color:var(--muted);font-size:.82rem">Dernière mise à jour : <time datetime="2026-09-24">24 septembre 2026</time></p>
   </main>
     <footer class="footer">
-      <div class="footer-note"><span class="star-gold">✦</span> Prix nets en euros • service compris <span class="star-gold">✦</span></div>
-      <div class="footer-legal">
-        <span class="legal-item">Photographies non contractuelles, suggestions de présentation</span>
-        <span class="legal-item">Allergènes : informations sur demande</span>
-        <span class="legal-item legal-item--alcool">L’abus d’alcool est dangereux pour la santé</span>
-      </div>
-
       <div class="footer-download-wrap"><a class="footer-download" href="Carte_LaCollineGambetta.pdf" download="Carte_LaCollineGambetta.pdf" title="Télécharger la carte au format PDF">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11.5"/><path d="M7.5 11.2 12 15.7l4.5-4.5"/><path d="M4.5 19.5h15"/></svg>
         <span>Télécharger la carte (PDF)</span>
