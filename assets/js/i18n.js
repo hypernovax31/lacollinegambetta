@@ -6857,7 +6857,7 @@
       var kind = contactKind(links[i]);
       if (!kind) continue;
       var value = localizeDisplayDigits(contactValue(kind), lang);
-      var text = labels[kind] + ' · ' + value;
+      var text = (kind === 'email' && links[i].classList.contains('footer-link--mail')) ? value : labels[kind] + ' · ' + value;
       var node = contactTextNode(links[i]);
       if (node) node.nodeValue = text;
     }
