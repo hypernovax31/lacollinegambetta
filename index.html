@@ -9041,6 +9041,58 @@ html:not(.carte-doc) #cover-section .cover-hours__dot {
 }
 .legal-bottom-nav > span { color:var(--gold-700, #9c7a2d); }
 
+
+/* ===== Couverture : un bloc éditorial = une ligne ======================
+   Les éléments courts de la garde restent groupés comme une signature de
+   restaurant : le titre, les promesses, les horaires, l'adresse et chaque
+   libellé ne se cassent plus artificiellement, en portrait comme en paysage.
+   La taille se contracte progressivement sur les petits écrans. */
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 {
+  white-space: nowrap !important;
+  font-size: clamp(1.35rem, 5.2vw, 38pt) !important;
+  letter-spacing: .10em !important;
+  line-height: 1 !important;
+}
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 span {
+  display: inline !important;
+  margin: 0 0 0 .24em !important;
+  vertical-align: baseline !important;
+  font-size: .52em !important;
+  letter-spacing: .14em !important;
+  line-height: 1 !important;
+}
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader .leader-meta,
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader .menu-leader-subline,
+html:not(.carte-doc) #cover-section .cover-hours__heading,
+html:not(.carte-doc) #cover-section .cover-hours__range,
+html:not(.carte-doc) #cover-section .cover-hours__status,
+html:not(.carte-doc) #cover-section .cover-footer-address,
+html:not(.carte-doc) #cover-section .cover-links .contact-link {
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
+}
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader .leader-meta,
+html:not(.carte-doc) #cover-section .cover-brand--menu-leader .menu-leader-subline {
+  max-width: none !important;
+}
+html:not(.carte-doc) #cover-section .cover-footer-address {
+  max-width: none !important;
+  font-size: clamp(.56rem, 1.25vw, .94rem) !important;
+}
+html:not(.carte-doc) #cover-section .cover-links .contact-link {
+  min-width: 0;
+}
+@media (max-width:420px) {
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 {
+    font-size: clamp(1.18rem, 6.2vw, 1.55rem) !important;
+    letter-spacing: .06em !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-brand--menu-leader h2 span {
+    margin-left: .16em !important;
+    letter-spacing: .08em !important;
+  }
+}
+
 </style>
 </head>
 <body>

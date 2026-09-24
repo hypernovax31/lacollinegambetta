@@ -2009,6 +2009,71 @@ html[lang="uk"] .thanks__sign {
   .hours__cuisine { gap:3px; padding-left:5px; }
 }
 
+
+/* ===== Horaires de cuisine : précision petit-déjeuner ==================
+   Un seul ruban, une information principale et une note de service plus
+   légère : le style reprend le vocabulaire discret des cartes d'hôtels et
+   des brasseries soignées, sans recréer un second encart. */
+.hours__card--single .hours__single-line {
+  gap: 9px;
+}
+.hours__card--single .hours__day {
+  color: var(--gold-100);
+  font-weight: 700;
+}
+.hours__card--single .hours__t {
+  color: #fff;
+}
+.hours__breakfast {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 9px;
+  padding-left: 11px;
+  border-left: 1px solid rgba(240,215,143,.48);
+  white-space: nowrap;
+}
+.hours__breakfast-separator {
+  display: none;
+}
+.hours__breakfast-copy {
+  color: var(--gold-100);
+  font-family: 'Montserrat', sans-serif;
+  font-size: .82em;
+  font-weight: 700;
+  letter-spacing: .025em;
+  line-height: 1.15;
+  text-transform: none;
+  white-space: nowrap;
+}
+@media (max-width:700px) {
+  .hours__card--single .hours__single-line {
+    gap: 7px;
+    font-size: clamp(.58rem, 2.55vw, .72rem);
+    letter-spacing: .025em;
+  }
+  .hours__breakfast {
+    gap: 7px;
+    padding-left: 8px;
+  }
+  .hours__breakfast-copy {
+    font-size: .8em;
+  }
+}
+@media (max-width:360px) {
+  .hours__card--single .hours__single-line {
+    gap: 4px;
+    font-size: .54rem;
+    letter-spacing: .01em;
+  }
+  .hours__breakfast {
+    gap: 4px;
+    padding-left: 6px;
+  }
+  .hours__breakfast-copy {
+    font-size: .78em;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2110,14 +2175,13 @@ html[lang="uk"] .thanks__sign {
   <main class="book-main">
     <div class="container">
 
-      <div class="hours" aria-label="Horaires du bar, du restaurant et de la cuisine">
+      <div class="hours" aria-label="Horaires de cuisine et menu petit-déjeuner">
         <div class="hours__card hours__card--single">
           <svg class="hours__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/></svg>
           <div class="hours__single-line">
-            <span class="hours__day">Tous les jours</span>
-            <span class="hours__bullet" aria-hidden="true">·</span>
-            <span class="hours__t">07h00 – 02h00</span>
-            <span class="hours__cuisine"><span class="hours__day">Cuisine</span> <span class="hours__t">12h00 – 00h00</span></span>
+            <span class="hours__day">Cuisine</span>
+            <span class="hours__t">12h00 – 00h00</span>
+            <span class="hours__breakfast"><span class="hours__breakfast-separator" aria-hidden="true">·</span><span class="hours__breakfast-copy">Menu petit-déjeuner jusqu’à 12h</span></span>
           </div>
         </div>
       </div>
