@@ -350,6 +350,18 @@
       .footer .footer-link { width:100%; }
     }
 
+
+    /* L’accueil est l’action principale, comme « Menu & Carte » actif. */
+    .footer .footer-link--book,
+    .footer .footer-link--book:hover,
+    .footer .footer-link--book:focus-visible {
+      background:linear-gradient(135deg,#bf953f 0%,#fcf6ba 30%,#d8b257 60%,#fef9db 100%);
+      border-color:#fcf6ba;
+      color:var(--violet-950) !important;
+      outline:none;
+    }
+    .footer .footer-link--book:hover,
+    .footer .footer-link--book:focus-visible { transform:translateY(-1px); }
   </style>
 </head>
 <body>
