@@ -6797,6 +6797,26 @@
   );
   var LANG = 'fr';
 
+  function syncLanguageOptionLabels(lang) {
+    var menu = document.getElementById('lang-menu');
+    if (!menu) return;
+    var options = menu.querySelectorAll('.lang-option');
+    var displayNames = null;
+    try {
+      if (window.Intl && Intl.DisplayNames) displayNames = new Intl.DisplayNames([lang], { type: 'language' });
+    } catch (e) {}
+    for (var i = 0; i < options.length; i++) {
+      var option = options[i];
+      var label = option.querySelector('span:not(.lang-check)') || option;
+      if (!label.getAttribute('data-native-label')) {
+        label.setAttribute('data-native-label', label.textContent.trim());
+      }
+      var code = option.getAttribute('data-lang');
+      var translated = displayNames && code ? displayNames.of(code) : '';
+      label.textContent = translated || label.getAttribute('data-native-label');
+    }
+  }
+
   function syncFoldAllButtons(lang) {
     var d = DICTS[lang] || {};
     var tplOpen = document.getElementById('foldall-open-tpl');
@@ -6912,6 +6932,7 @@
         b.setAttribute('aria-checked', b.getAttribute('data-lang') === lang ? 'true' : 'false');
       });
     }
+    syncLanguageOptionLabels(lang);
     syncFoldAllButtons(lang);
     try {
       window.dispatchEvent(new CustomEvent('lcg-lang-changed', { detail: { lang: lang } }));

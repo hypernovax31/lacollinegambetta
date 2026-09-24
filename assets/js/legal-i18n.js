@@ -167,6 +167,24 @@
       nodes.push({ node:title.firstChild, pre:m[1], post:m[3], key:norm(m[2]) });
     }
   }
+  function syncLanguageOptionLabels(menu, lang) {
+    if (!menu) return;
+    var options = menu.querySelectorAll('.legal-lang-option');
+    var displayNames = null;
+    try {
+      if (window.Intl && Intl.DisplayNames) displayNames = new Intl.DisplayNames([lang], { type: 'language' });
+    } catch (e) {}
+    for (var i = 0; i < options.length; i++) {
+      var option = options[i];
+      if (!option.getAttribute('data-native-label')) {
+        option.setAttribute('data-native-label', option.textContent.trim());
+      }
+      var code = option.getAttribute('data-lang');
+      var translated = displayNames && code ? displayNames.of(code) : '';
+      option.textContent = translated || option.getAttribute('data-native-label');
+    }
+  }
+
   function apply(lang, save) {
     if (!DICTS[lang]) lang = 'fr';
     var dict = DICTS[lang];
@@ -204,6 +222,7 @@
       for (var oi = 0; oi < options.length; oi++) {
         options[oi].setAttribute('aria-checked', options[oi].getAttribute('data-lang') === lang ? 'true' : 'false');
       }
+      syncLanguageOptionLabels(menu, lang);
     }
     var topNav = document.querySelectorAll('.top-nav');
     for (var ti = 0; ti < topNav.length; ti++) topNav[ti].setAttribute('aria-label', dict['Navigation secondaire'] || 'Navigation secondaire');
