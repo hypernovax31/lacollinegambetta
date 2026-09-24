@@ -1520,19 +1520,13 @@ html[lang="ar"] .field__date-icon {
   background:#fffaea; border-color:var(--gold-500); color:var(--violet-900);
 }
 
-/* ===== Horaires : deux cartouches plutot qu'un releve ================
-   Les horaires etaient deux lignes de releve, libelle a gauche et heure
-   a droite, qui se percutaient des que la largeur manquait. Ils
-   deviennent deux cartouches autonomes : un pictogramme, l'intitule,
-   puis l'amplitude ou les deux heures sont reliees par un trait.
-
-   Le trait remplace le tiret et la mention « en continu » : il DIT la
-   continuite au lieu de l'ecrire, dans toutes les langues a la fois. Il
-   se dilate pour occuper l'espace disponible, ce qui donne aux deux
-   cartouches des heures parfaitement alignees quelle que soit la
-   largeur, sans jamais de collision : chaque partie a sa place propre. */
-/* En tete de page : la marge passe EN DESSOUS, les cartouches ouvrant
-   desormais le contenu au lieu de clore un bloc. */
+/* ===== Horaires : base graphique de la plage d'ouverture ==============
+   La variante finale .hours__card--combined, plus bas, rassemble le bar,
+   le restaurant et la cuisine dans un seul encart. Les primitives ci-dessous
+   restent partagées par les lignes d'horaires : heures tabulaires, trait doré
+   et séparateurs lisibles à toutes les largeurs. */
+/* En tête de page : la marge passe EN DESSOUS, l'encart ouvrant désormais
+   le contenu au lieu de clore un bloc. */
 .hours {
   margin:0 0 clamp(14px, 2vh, 20px);
   display:grid; gap:10px;
@@ -1831,6 +1825,85 @@ html[lang="uk"] .thanks__sign {
 .footer-legal-nav a:hover { color:var(--gold-100); text-decoration:underline; text-underline-offset:3px; }
 .footer-legal-nav span { color:var(--gold-500); }
 
+
+
+/* ===== Horaires : un seul encart pour le bar, le restaurant et la cuisine =====
+   Une carte unique évite l’effet « deux blocs indépendants » : le nom de
+   l’établissement pose le contexte, puis les deux lignes donnent les plages
+   horaires avec un alignement calme et lisible. */
+.hours {
+  display:block;
+  width:min(100%, 760px);
+  margin:0 auto clamp(14px, 2vh, 20px);
+}
+.hours__card--combined {
+  display:grid;
+  grid-template-columns:minmax(190px, .8fr) minmax(0, 1.2fr);
+  align-items:stretch;
+  gap:0;
+  padding:0;
+  overflow:hidden;
+  border-radius:18px;
+  background:linear-gradient(135deg, rgba(255,255,255,.98), rgba(252,251,247,.98));
+}
+.hours__top {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:18px 20px;
+  background:linear-gradient(145deg, rgba(89,46,111,.98), rgba(67,33,85,.98));
+  color:#fff;
+}
+.hours__card--combined .hours__ico {
+  flex:0 0 28px;
+  width:28px;
+  height:28px;
+  color:var(--gold-300);
+  opacity:1;
+}
+.hours__service {
+  font-family:'Cinzel',serif;
+  font-size:clamp(.68rem, 1.2vw, .82rem);
+  font-weight:700;
+  letter-spacing:.12em;
+  line-height:1.35;
+  text-transform:uppercase;
+}
+.hours__schedule {
+  display:grid;
+  align-content:center;
+  padding:10px 20px;
+}
+.hours__row {
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) minmax(185px, 1.2fr);
+  align-items:center;
+  gap:18px;
+  min-height:42px;
+}
+.hours__row + .hours__row {
+  border-top:1px solid rgba(216,178,87,.24);
+}
+.hours__card--combined .hours__day {
+  font-size:.72rem;
+  letter-spacing:.12em;
+  line-height:1.25;
+}
+.hours__card--combined .hours__val {
+  font-size:1.08rem;
+}
+@media (max-width:700px) {
+  .hours__card--combined { grid-template-columns:1fr; }
+  .hours__top { justify-content:center; padding:12px 16px; }
+  .hours__schedule { padding:6px 16px 8px; }
+  .hours__row { grid-template-columns:minmax(0, 1fr) minmax(170px, 1.25fr); gap:12px; min-height:40px; }
+}
+@media (max-width:420px) {
+  .hours__service { letter-spacing:.08em; }
+  .hours__row { grid-template-columns:minmax(0, .8fr) minmax(150px, 1.2fr); gap:8px; }
+  .hours__card--combined .hours__val { font-size:1rem; }
+}
+
 </style>
 </head>
 <body>
@@ -1932,17 +2005,23 @@ html[lang="uk"] .thanks__sign {
   <main class="book-main">
     <div class="container">
 
-      <div class="hours">
-      <div class="hours__card">
-      <svg class="hours__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/></svg>
-      <span class="hours__day">Tous les jours</span>
-      <span class="hours__val"><span class="hours__t">07h00</span><span class="hours__sep" aria-hidden="true"></span><span class="hours__t">02h00</span></span>
-      </div>
-      <div class="hours__card">
-      <svg class="hours__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10.2"/><circle cx="12" cy="12" r="7.4"/><path d="M9.1 4.5c-.62 0-1.12.5-1.12 1.12v5.26c0 .62.5 1.12 1.12 1.12s1.12-.5 1.12-1.12V5.62c0-.62-.5-1.12-1.12-1.12z"/><path d="M9.1 12v7.5"/><path d="M14.1 4.6v3.2M15.9 4.6v3.2M17.7 4.6v3.2"/><path d="M14.1 7.8c0 1.25.8 2.1 1.8 2.1s1.8-.85 1.8-2.1"/><path d="M15.9 9.9v9.6"/></svg>
-      <span class="hours__day">Cuisine</span>
-      <span class="hours__val"><span class="hours__t">12h00</span><span class="hours__sep" aria-hidden="true"></span><span class="hours__t">00h00</span></span>
-      </div>
+      <div class="hours" aria-label="Horaires du bar et du restaurant">
+        <div class="hours__card hours__card--combined">
+          <div class="hours__top">
+            <svg class="hours__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/></svg>
+            <span class="hours__service">BAR • RESTAURANT • PARIS 20ᵉ</span>
+          </div>
+          <div class="hours__schedule">
+            <div class="hours__row">
+              <span class="hours__day">Tous les jours</span>
+              <span class="hours__val"><span class="hours__t">07h00</span><span class="hours__sep" aria-hidden="true"></span><span class="hours__t">02h00</span></span>
+            </div>
+            <div class="hours__row">
+              <span class="hours__day">Cuisine</span>
+              <span class="hours__val"><span class="hours__t">12h00</span><span class="hours__sep" aria-hidden="true"></span><span class="hours__t">00h00</span></span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <article class="panel">
