@@ -9311,7 +9311,7 @@ html:not(.carte-doc) #vins .wine-table tbody {
 html:not(.carte-doc) #vins .wine-table tbody tr {
   display:grid;
   align-items:baseline;
-  padding:12px;
+  padding:14px 16px;
   background:#fff;
   border:1px solid rgba(216,178,87,.34);
   border-radius:18px;
@@ -9336,7 +9336,7 @@ html:not(.carte-doc) #vins .wine-table tbody td.wine-name {
     gap:10px;
   }
   html:not(.carte-doc) #vins .wine-table tbody tr {
-    padding:10px 11px 11px;
+    padding:12px 14px 13px;
     border:1px solid rgba(216,178,87,.34) !important;
     border-radius:16px;
   }
@@ -9358,6 +9358,9 @@ html:not(.carte-doc) .lang-dock {
   width:66px !important;
   height:62px !important;
 }
+html:not(.carte-doc) #cover-section .cover-brand {
+  padding-inline:58px;
+}
 html:not(.carte-doc) #interior-menu .lang-dock .lang-menu {
   position:absolute !important;
   top:calc(100% + 8px) !important;
@@ -9377,6 +9380,9 @@ html:not(.carte-doc) #cover-section .lang-dock .lang-menu {
   max-height:calc(100vh - 76px) !important;
 }
 @media (max-width:720px) {
+  html:not(.carte-doc) #cover-section .cover-brand {
+    padding-inline:54px;
+  }
   html:not(.carte-doc) .lang-dock {
     width:58px !important;
     height:58px !important;
