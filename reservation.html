@@ -73,6 +73,7 @@ button, a { font:inherit; }
 .panel__subtitle { margin:0; color:var(--muted); font-style:italic; font-size:.9rem; }
 .footer { background:#592e6f; border-top:2px solid var(--gold-500); color:#fff; padding:16px 12px calc(18px + env(safe-area-inset-bottom)); text-align:center; margin-top:24px; }
 .footer-details { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px 20px; color:var(--gold-100); font-family:'Cinzel',serif; font-size:clamp(.62rem,1.2vw,.84rem); letter-spacing:.08em; text-transform:uppercase; }
+    .footer-details__metro { flex-basis:100%; }
 .footer-links { margin:10px 0; }
 .footer-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:42px; padding:8px 14px; text-decoration:none; display:inline-flex; gap:8px; align-items:center; justify-content:center; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
 .footer-link:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
@@ -2433,7 +2434,7 @@ html[lang="uk"] .thanks__sign {
         <a href="tel:+33143490593" class="footer-link" title="Appeler le restaurant" aria-label="Appeler le restaurant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</a>
         <a href="mailto:restaurant@lacollinegambetta.com" class="footer-link footer-link--mail" title="restaurant@lacollinegambetta.com" aria-label="restaurant@lacollinegambetta.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>restaurant@lacollinegambetta.com</a>
       </div>
-      <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><span>4 RUE BELGRAND, 75020 PARIS</span><span>•</span><span>MÉTRO GAMBETTA</span></div>
+      <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><span>4 RUE BELGRAND, 75020 PARIS</span><span class="footer-details__metro">MÉTRO GAMBETTA</span></div>
       <nav class="legal-bottom-nav" aria-label="Informations légales"><a href="mentions-legales.html">Mentions légales</a><span aria-hidden="true">·</span><a href="confidentialite.html">Confidentialité</a></nav>
   </footer>
 </div>
