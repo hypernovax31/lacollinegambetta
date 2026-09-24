@@ -536,6 +536,9 @@ def rescope_site_css(css: str) -> tuple[str, dict]:
 
 
 def extract_cover(src: str) -> str:
+    # La couverture imprimée reprend aussi le cartouche d'horaires du site :
+    # l'indicateur dynamique est masqué en mode carte-doc par la CSS, mais
+    # l'amplitude et le service continu restent lisibles sur le PDF.
     start = src.find('<div class="cover-page">')
     node, _ = take_element(src[start:], "div")
     node = node.replace(' onclick="showView(\'menu\')"', "")

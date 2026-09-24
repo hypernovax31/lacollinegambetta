@@ -8827,6 +8827,78 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
   .top-controls > .lang-dock { width: 50px; }
   .top-controls > .lang-dock .lang-btn { right: 8px; }
 }
+/* ===== Horaires de la couverture : repère visuel et statut local ===== */
+.cover-hours {
+  display:grid;
+  justify-items:center;
+  gap:5px;
+  width:min(100%, 540px);
+  padding:7px 14px 8px;
+  border-top:1px solid rgba(216,178,87,.48);
+  border-bottom:1px solid rgba(216,178,87,.28);
+  color:var(--gold-100);
+  font-family:'Cinzel',serif;
+  text-align:center;
+}
+.cover-hours__heading {
+  color:var(--gold-300, #f0d78f);
+  font-size:clamp(.62rem,1.1vw,.76rem);
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.cover-hours__range {
+  font-size:clamp(.75rem,1.35vw,.92rem);
+  letter-spacing:.1em;
+  line-height:1.35;
+}
+.cover-hours__status {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:#d7f2d8;
+  font-family:'Montserrat',sans-serif;
+  font-size:clamp(.62rem,1.1vw,.76rem);
+  font-weight:700;
+  letter-spacing:.03em;
+}
+.cover-hours__status.is-closed { color:#f3d8cd; }
+.cover-hours__dot {
+  width:7px;
+  height:7px;
+  flex:0 0 7px;
+  border-radius:50%;
+  background:#a9e5a9;
+  box-shadow:0 0 0 3px rgba(169,229,169,.14), 0 0 11px rgba(169,229,169,.72);
+}
+.cover-hours__status.is-closed .cover-hours__dot {
+  background:#e7a18c;
+  box-shadow:0 0 0 3px rgba(231,161,140,.12);
+}
+html.carte-doc .print-page--cover .cover-hours__status { display:none !important; }
+html.carte-doc .print-page--cover .cover-hours { gap:2px; padding-top:4px; padding-bottom:4px; }
+
+.footer-legal-nav {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  width:100%;
+  margin-top:2px;
+  color:rgba(255,255,255,.68);
+  font-size:.68rem;
+  letter-spacing:.04em;
+}
+.footer-legal-nav a { color:inherit; text-decoration:none; }
+.footer-legal-nav a:hover { color:var(--gold-100); text-decoration:underline; text-underline-offset:3px; }
+.footer-legal-nav span { color:var(--gold-500); }
+@media (max-width:520px) {
+  .cover-hours { width:100%; }
+  .cover-hours__heading { letter-spacing:.11em; }
+  .cover-hours__range { letter-spacing:.06em; }
+}
+
+
 </style>
 </head>
 <body>
@@ -8991,6 +9063,11 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
       <a href="index.html#menu-nav-anchor" class="contact-link cover-action" onclick="showView('menu'); return false;"><span class="star-gold">✦</span> Menu & Carte <span class="star-gold">✦</span></a>
       </div>
       <div class="cover-footer">
+        <div class="cover-hours" aria-label="Horaires d’ouverture">
+          <div class="cover-hours__heading"><span class="star-gold">✦</span> <span data-hours-label>Horaires</span> <span class="star-gold">✦</span></div>
+          <div class="cover-hours__range"><span data-hours-days>Tous les jours</span> · <span data-hours-range>07h00 — 02h00</span> · <span data-hours-continuous>service continu</span></div>
+          <div class="cover-hours__status is-open" data-hours-status role="status" aria-live="polite"><span class="cover-hours__dot" aria-hidden="true"></span><span data-hours-status-text>Ouvert maintenant</span></div>
+        </div>
         <div class="cover-footer-address">4 rue Belgrand • 75020 Paris • Place Gambetta</div>
         <div class="cover-links">
           <a href="reservation.html" class="contact-link contact-link--book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6"/><path d="M8 3v4M16 3v4"/><path d="M8.6 14.4h6.8"/></svg>Réservation</a>
@@ -9163,6 +9240,7 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
       </a></div>
 <div class="footer-links">
         <a href="reservation.html" class="footer-link footer-link--book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6"/><path d="M8 3v4M16 3v4"/><path d="M8.6 14.4h6.8"/></svg>Réserver ma table</a>
+        <span class="footer-legal-nav" aria-label="Informations légales"><a href="mentions-legales.html">Mentions légales</a><span aria-hidden="true">·</span><a href="confidentialite.html">Confidentialité</a></span>
         <a href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener" class="footer-link" title="Ouvrir Instagram" aria-label="Ouvrir Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle class="ig-dot" cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>lacolline.gambetta</a>
         <a href="tel:+33143490593" class="footer-link" title="Appeler le restaurant" aria-label="Appeler le restaurant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</a>
         <a href="mailto:restaurant@lacollinegambetta.com" class="footer-link footer-link--mail" title="Envoyer un e-mail" aria-label="Envoyer un e-mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>restaurant@lacollinegambetta.com</a>
@@ -11698,6 +11776,70 @@ else sizeCoverMedallion();
   /* aperçus manuels (console) : window.__hhLaunch() / window.__nyLaunch() */
   window.__hhLaunch = function () { launch(true); };
   window.__nyLaunch = function () { var c = nyCamp(parisNow()); if (c) launch(true, c); };
+})();
+</script>
+
+<script>
+/* Statut des horaires : l’horloge est toujours celle de Paris, y compris
+   quand la personne consulte depuis un autre fuseau. L’amplitude 07h00–02h00
+   traverse minuit : 00h00–01h59 reste donc ouvert, 02h00–06h59 est fermé. */
+(function () {
+  'use strict';
+  var copy = {
+    fr: { label:'Horaires', days:'Tous les jours', range:'07h00 — 02h00', continuous:'service continu', open:'Ouvert maintenant', closed:'Fermé actuellement' },
+    en: { label:'Opening hours', days:'Every day', range:'07:00 — 02:00', continuous:'all-day service', open:'Open now', closed:'Closed now' },
+    es: { label:'Horario', days:'Todos los días', range:'07:00 — 02:00', continuous:'servicio continuo', open:'Abierto ahora', closed:'Cerrado ahora' },
+    de: { label:'Öffnungszeiten', days:'Jeden Tag', range:'07:00 — 02:00', continuous:'durchgehend', open:'Jetzt geöffnet', closed:'Derzeit geschlossen' },
+    it: { label:'Orari', days:'Tutti i giorni', range:'07:00 — 02:00', continuous:'servizio continuo', open:'Aperto ora', closed:'Chiuso al momento' },
+    pt: { label:'Horário', days:'Todos os dias', range:'07:00 — 02:00', continuous:'serviço contínuo', open:'Aberto agora', closed:'Fechado neste momento' },
+    nl: { label:'Openingsuren', days:'Elke dag', range:'07:00 — 02:00', continuous:'doorlopende service', open:'Nu open', closed:'Momenteel gesloten' },
+    ar: { label:'ساعات العمل', days:'كل يوم', range:'٧:٠٠ — ٢:٠٠', continuous:'خدمة متواصلة', open:'مفتوح الآن', closed:'مغلق حاليًا' },
+    zh: { label:'营业时间', days:'每天', range:'07:00 — 02:00', continuous:'全天供应', open:'现在营业', closed:'目前歇业' },
+    ja: { label:'営業時間', days:'毎日', range:'07:00 — 02:00', continuous:'終日営業', open:'現在営業中', closed:'現在休業中' },
+    ko: { label:'영업시간', days:'매일', range:'07:00 — 02:00', continuous:'종일 서비스', open:'현재 영업 중', closed:'현재 영업 종료' },
+    pl: { label:'Godziny otwarcia', days:'Codziennie', range:'07:00 — 02:00', continuous:'serwis całodzienny', open:'Otwarte teraz', closed:'Obecnie zamknięte' },
+    tr: { label:'Çalışma saatleri', days:'Her gün', range:'07:00 — 02:00', continuous:'gün boyu servis', open:'Şimdi açık', closed:'Şu anda kapalı' },
+    uk: { label:'Години роботи', days:'Щодня', range:'07:00 — 02:00', continuous:'безперервне обслуговування', open:'Зараз відчинено', closed:'Наразі зачинено' },
+    hi: { label:'खुलने का समय', days:'हर दिन', range:'सुबह 7:00 — रात 2:00', continuous:'दिनभर सेवा', open:'अभी खुला है', closed:'अभी बंद है' }
+  };
+  function currentLanguage() {
+    return (document.documentElement.getAttribute('lang') || 'fr').slice(0, 2).toLowerCase();
+  }
+  function parisMinutes() {
+    try {
+      var parts = new Intl.DateTimeFormat('en-GB', { timeZone:'Europe/Paris', hour:'2-digit', minute:'2-digit', hourCycle:'h23' }).formatToParts(new Date());
+      var hour = Number((parts.find(function (part) { return part.type === 'hour'; }) || {}).value);
+      var minute = Number((parts.find(function (part) { return part.type === 'minute'; }) || {}).value);
+      return (hour * 60) + minute;
+    } catch (error) {
+      return null;
+    }
+  }
+  function updateHours() {
+    var label = document.querySelector('[data-hours-label]');
+    var days = document.querySelector('[data-hours-days]');
+    var range = document.querySelector('[data-hours-range]');
+    var continuous = document.querySelector('[data-hours-continuous]');
+    var status = document.querySelector('[data-hours-status]');
+    var hours = document.querySelector('.cover-hours');
+    var statusText = document.querySelector('[data-hours-status-text]');
+    if (!label || !days || !range || !continuous || !status || !hours || !statusText) return;
+    var text = copy[currentLanguage()] || copy.fr;
+    var minutes = parisMinutes();
+    var isOpen = minutes === null ? true : (minutes >= 7 * 60 || minutes < 2 * 60);
+    label.textContent = text.label;
+    hours.setAttribute('aria-label', text.label);
+    days.textContent = text.days;
+    range.textContent = text.range;
+    continuous.textContent = text.continuous;
+    status.classList.toggle('is-open', isOpen);
+    status.classList.toggle('is-closed', !isOpen);
+    statusText.textContent = isOpen ? text.open : text.closed;
+    status.setAttribute('aria-label', statusText.textContent);
+  }
+  updateHours();
+  window.setInterval(updateHours, 60000);
+  window.addEventListener('lcg-lang-changed', updateHours);
 })();
 </script>
 
