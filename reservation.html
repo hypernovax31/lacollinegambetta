@@ -2224,9 +2224,10 @@ html[lang="uk"] .thanks__sign {
       attributionButton.title = labels.attribution;
       attributionButton.setAttribute('aria-label', labels.attribution);
     }
+    var localizeDigits = window.LCGLocalizeDisplayDigits || function (value) { return value; };
     var mapError = el.querySelector('.map-error');
-    if (mapError) mapError.textContent = copy.fallback;
-    if (activePopup) activePopup.setHTML(copy.popup);
+    if (mapError) mapError.textContent = localizeDigits(copy.fallback, lang);
+    if (activePopup) activePopup.setHTML(localizeDigits(copy.popup, lang));
   }
   window.addEventListener('lcg-lang-changed', localizeMapControls);
 
@@ -2610,7 +2611,8 @@ html[lang="uk"] .thanks__sign {
       }
     };
     var currentDict = copy[langNow] || copy.fr;
-    return currentDict[kind] !== undefined ? currentDict[kind] : (currentDict.apologyLine1 || '');
+    var message = currentDict[kind] !== undefined ? currentDict[kind] : (currentDict.apologyLine1 || '');
+    return window.LCGLocalizeDisplayDigits ? window.LCGLocalizeDisplayDigits(message, langNow) : message;
   }
 
   function parisNow() {
@@ -3019,6 +3021,17 @@ html[lang="uk"] .thanks__sign {
     link.setAttribute('aria-label', label);
   }
 
+  function localizedDisplayText(value, lang) {
+    return window.LCGLocalizeDisplayDigits ? window.LCGLocalizeDisplayDigits(value, lang) : value;
+  }
+
+  function localizedRestaurantAddress(lang) {
+    var key = '4 rue Belgrand, 75020 Paris — métro Gambetta';
+    var dict = window.__i18nDicts && window.__i18nDicts[lang];
+    var value = (lang !== 'fr' && dict && dict[key]) ? dict[key] : key;
+    return localizedDisplayText(value, lang);
+  }
+
   function renderStatusCard(data) {
     if (!data || !status) return;
     var lang = getDocLang();
@@ -3183,6 +3196,7 @@ html[lang="uk"] .thanks__sign {
 
       [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
     }
+    if (window.LCGSyncContactButtons) window.LCGSyncContactButtons(getDocLang());
   }
 
   var nowP = parisNow();
@@ -3320,8 +3334,8 @@ html[lang="uk"] .thanks__sign {
       th("l4") || "Au plaisir de vous recevoir très prochainement,",
       "",
       th("sign") || "L’équipe de La Colline Gambetta",
-      "4 rue Belgrand, 75020 Paris (Métro Gambetta)",
-      "01 43 49 05 93 · restaurant@lacollinegambetta.com"
+      localizedRestaurantAddress(lang),
+      localizedDisplayText("01 43 49 05 93", lang) + " · restaurant@lacollinegambetta.com"
     );
     var autoresponseBody = autoresponseLines.join("\n");
 

@@ -57,6 +57,7 @@
       "Itinéraire": "Directions",
       "Appeler le restaurant": "Call the restaurant",
       "Ouvrir Instagram": "Open Instagram",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "Send an email",
       "Recentrer sur le restaurant": "Recentre on the restaurant",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — Gambetta metro",
@@ -515,6 +516,7 @@
       "Itinéraire": "Cómo llegar",
       "Appeler le restaurant": "Llamar al restaurante",
       "Ouvrir Instagram": "Abrir Instagram",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "Enviar un correo electrónico",
       "Recentrer sur le restaurant": "Centrar en el restaurante",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 París — metro Gambetta",
@@ -973,6 +975,7 @@
       "Itinéraire": "Route",
       "Appeler le restaurant": "Restaurant anrufen",
       "Ouvrir Instagram": "Instagram öffnen",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "E-Mail senden",
       "Recentrer sur le restaurant": "Auf das Restaurant zentrieren",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — Metro Gambetta",
@@ -1431,6 +1434,7 @@
       "Itinéraire": "Itinerario",
       "Appeler le restaurant": "Chiama il ristorante",
       "Ouvrir Instagram": "Apri Instagram",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "Invia un’e-mail",
       "Recentrer sur le restaurant": "Centra sul ristorante",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Parigi — metrò Gambetta",
@@ -1889,6 +1893,7 @@
       "Itinéraire": "Como chegar",
       "Appeler le restaurant": "Ligar para o restaurante",
       "Ouvrir Instagram": "Abrir o Instagram",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "Enviar um e-mail",
       "Recentrer sur le restaurant": "Centrar no restaurante",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — metro Gambetta",
@@ -2347,6 +2352,7 @@
       "Itinéraire": "Route",
       "Appeler le restaurant": "Bel het restaurant",
       "Ouvrir Instagram": "Instagram openen",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "Een e-mail sturen",
       "Recentrer sur le restaurant": "Centreren op het restaurant",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Parijs — metro Gambetta",
@@ -2806,6 +2812,7 @@
       "Itinéraire": "الاتجاهات",
       "Appeler le restaurant": "الاتصال بالمطعم",
       "Ouvrir Instagram": "فتح إنستغرام",
+      "Instagram": "إنستغرام",
       "Envoyer un e-mail": "إرسال بريد إلكتروني",
       "Recentrer sur le restaurant": "التوسيط على المطعم",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 باريس — مترو Gambetta",
@@ -3282,6 +3289,7 @@
       "Itinéraire": "路线",
       "Appeler le restaurant": "致电餐厅",
       "Ouvrir Instagram": "打开 Instagram",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "发送电子邮件",
       "Recentrer sur le restaurant": "回到餐厅位置",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 巴黎 — Gambetta 地铁站",
@@ -3758,6 +3766,7 @@
       "Itinéraire": "Маршрут",
       "Appeler le restaurant": "Зателефонувати до ресторану",
       "Ouvrir Instagram": "Відкрити Instagram",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "Надіслати електронний лист",
       "Recentrer sur le restaurant": "Центрувати на ресторані",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Париж — метро Gambetta",
@@ -4234,6 +4243,7 @@
       "Itinéraire": "経路",
       "Appeler le restaurant": "レストランに電話する",
       "Ouvrir Instagram": "Instagramを開く",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "メールを送る",
       "Recentrer sur le restaurant": "レストランに戻す",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 パリ — メトロ Gambetta",
@@ -4710,6 +4720,7 @@
       "Itinéraire": "길찾기",
       "Appeler le restaurant": "레스토랑에 전화하기",
       "Ouvrir Instagram": "Instagram 열기",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "이메일 보내기",
       "Recentrer sur le restaurant": "레스토랑으로 중심 이동",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 파리 — Gambetta 역",
@@ -5186,6 +5197,7 @@
       "Itinéraire": "Trasa",
       "Appeler le restaurant": "Zadzwoń do restauracji",
       "Ouvrir Instagram": "Otwórz Instagram",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "Wyślij e-mail",
       "Recentrer sur le restaurant": "Wyśrodkuj na restauracji",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paryż — metro Gambetta",
@@ -5644,6 +5656,7 @@
       "Itinéraire": "Yol tarifi",
       "Appeler le restaurant": "Restoranı ara",
       "Ouvrir Instagram": "Instagram’ı aç",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "E-posta gönder",
       "Recentrer sur le restaurant": "Restorana ortala",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — Gambetta metrosu",
@@ -6102,6 +6115,7 @@
       "Itinéraire": "रास्ता",
       "Appeler le restaurant": "रेस्तराँ को कॉल करें",
       "Ouvrir Instagram": "Instagram खोलें",
+      "Instagram": "Instagram",
       "Envoyer un e-mail": "ई-मेल भेजें",
       "Recentrer sur le restaurant": "रेस्तरां पर केंद्रित करें",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 पेरिस — Gambetta मेट्रो",
@@ -6642,6 +6656,70 @@
     }
   }
 
+  var DISPLAY_DIGITS = {
+    ar: '٠١٢٣٤٥٦٧٨٩',
+    hi: '०१२३४५६७८९',
+    zh: '〇一二三四五六七八九',
+    ja: '０１２３４５６７８９',
+    ko: '０１２３４５６７８９'
+  };
+  function localizeDisplayDigits(value, lang) {
+    var map = DISPLAY_DIGITS[lang];
+    if (!map) return String(value);
+    return String(value).replace(/[0-9]/g, function (digit) {
+      return map.charAt(parseInt(digit, 10));
+    });
+  }
+  function contactKind(anchor) {
+    var href = anchor.getAttribute('href') || '';
+    if (href.indexOf('tel:+33143490593') === 0) return 'phone';
+    if (href.indexOf('https://www.instagram.com/lacolline.gambetta') === 0) return 'instagram';
+    if (href.indexOf('mailto:restaurant@lacollinegambetta.com') === 0) return 'email';
+    return '';
+  }
+  function contactValue(kind) {
+    if (kind === 'phone') return '01 43 49 05 93';
+    if (kind === 'instagram') return 'lacolline.gambetta';
+    if (kind === 'email') return 'restaurant@lacollinegambetta.com';
+    return '';
+  }
+  function contactTextNode(anchor) {
+    for (var i = 0; i < anchor.childNodes.length; i++) {
+      var node = anchor.childNodes[i];
+      if (node.nodeType === 3 && node.nodeValue.trim()) return node;
+    }
+    return null;
+  }
+  function syncContactButtons(lang) {
+    var d = DICTS[lang] || {};
+    var labels = {
+      phone: d['Téléphone'] || 'Téléphone',
+      instagram: d['Instagram'] || 'Instagram',
+      email: d['E-mail'] || 'E-mail'
+    };
+    var links = document.querySelectorAll('a[href^="tel:+33143490593"], a[href^="https://www.instagram.com/lacolline.gambetta"], a[href^="mailto:restaurant@lacollinegambetta.com"]');
+    for (var i = 0; i < links.length; i++) {
+      var kind = contactKind(links[i]);
+      if (!kind) continue;
+      var value = localizeDisplayDigits(contactValue(kind), lang);
+      var text = labels[kind] + ' · ' + value;
+      var node = contactTextNode(links[i]);
+      if (node) node.nodeValue = text;
+    }
+    var addressNodes = document.querySelectorAll('.cover-footer-address, .footer-details, .map-address, .map-fallback, .map-error');
+    for (var j = 0; j < addressNodes.length; j++) {
+      var walker = document.createTreeWalker(addressNodes[j], NodeFilter.SHOW_TEXT);
+      var textNode;
+      while ((textNode = walker.nextNode())) {
+        if (/[0-9]/.test(textNode.nodeValue)) {
+          textNode.nodeValue = localizeDisplayDigits(textNode.nodeValue, lang);
+        }
+      }
+    }
+  }
+  window.LCGLocalizeDisplayDigits = localizeDisplayDigits;
+  window.LCGSyncContactButtons = syncContactButtons;
+
   function applyLang(lang, save) {
     LANG = lang;
     var d = DICTS[lang] || {};
@@ -6663,6 +6741,7 @@
     DATALABELS.forEach(function (e) {
       e.el.setAttribute('data-label', (lang === 'fr') ? e.fr : (d[e.fr] != null ? d[e.fr] : e.fr));
     });
+    syncContactButtons(lang);
     var menu = document.getElementById('lang-menu');
     if (menu) {
       Array.prototype.forEach.call(menu.querySelectorAll('.lang-option'), function (b) {
