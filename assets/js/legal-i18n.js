@@ -167,16 +167,25 @@
     });
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    var select = document.getElementById('legal-language');
-    if (select) {
-      select.value = lang;
-      select.setAttribute('aria-label', dict['Choisir la langue'] || 'Choisir la langue');
+    var button = document.getElementById('legal-lang-btn');
+    var menu = document.getElementById('legal-lang-menu');
+    if (button) {
+      button.setAttribute('aria-label', dict['Choisir la langue'] || 'Choisir la langue');
+      button.setAttribute('title', dict['Choisir la langue'] || 'Choisir la langue');
     }
-    var label = dict['Langue'] || 'Langue';
-    var picker = document.querySelector('.language-switcher label');
-    if (picker) picker.textContent = label;
-    var nav = document.querySelectorAll('.top-nav, .legal-bottom-nav');
-    for (var i = 0; i < nav.length; i++) nav[i].setAttribute('aria-label', dict['Navigation secondaire'] || 'Navigation secondaire');
+    if (menu) {
+      menu.setAttribute('aria-label', dict['Langue'] || 'Langue');
+      var menuTitle = menu.querySelector('.legal-lang-menu__title');
+      if (menuTitle) menuTitle.textContent = dict['Langue'] || 'Langue';
+      var options = menu.querySelectorAll('.legal-lang-option');
+      for (var oi = 0; oi < options.length; oi++) {
+        options[oi].setAttribute('aria-checked', options[oi].getAttribute('data-lang') === lang ? 'true' : 'false');
+      }
+    }
+    var topNav = document.querySelectorAll('.top-nav');
+    for (var ti = 0; ti < topNav.length; ti++) topNav[ti].setAttribute('aria-label', dict['Navigation secondaire'] || 'Navigation secondaire');
+    var legalNav = document.querySelectorAll('.legal-bottom-nav');
+    for (var li = 0; li < legalNav.length; li++) legalNav[li].setAttribute('aria-label', dict['Informations légales'] || 'Informations légales');
     if (save) {
       try { localStorage.setItem('lcg-lang', lang); } catch (e) {}
     }
@@ -190,7 +199,39 @@
     initial = DICTS[browser] ? browser : 'fr';
   }
   apply(initial, false);
-  var select = document.getElementById('legal-language');
-  if (select) select.addEventListener('change', function () { apply(this.value, true); });
+  var button = document.getElementById('legal-lang-btn');
+  var menu = document.getElementById('legal-lang-menu');
+  if (button && menu) {
+    button.addEventListener('click', function () {
+      var open = menu.hidden;
+      menu.hidden = !open;
+      button.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) {
+        var current = menu.querySelector('.legal-lang-option[aria-checked="true"]');
+        if (current) current.focus();
+      }
+    });
+    menu.addEventListener('click', function (event) {
+      var option = event.target.closest('.legal-lang-option');
+      if (!option) return;
+      apply(option.getAttribute('data-lang'), true);
+      menu.hidden = true;
+      button.setAttribute('aria-expanded', 'false');
+      button.focus();
+    });
+    document.addEventListener('click', function (event) {
+      if (!menu.hidden && !menu.contains(event.target) && event.target !== button && !button.contains(event.target)) {
+        menu.hidden = true;
+        button.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !menu.hidden) {
+        menu.hidden = true;
+        button.setAttribute('aria-expanded', 'false');
+        button.focus();
+      }
+    });
+  }
   window.__setLegalLang = function (lang) { apply(lang, true); };
 })();
