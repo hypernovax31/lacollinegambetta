@@ -2266,16 +2266,6 @@ html[lang="uk"] .thanks__sign {
   }
 })();
 </script>
-      map.flyTo({ center: [LON, LAT], zoom: ZOOM, duration: 600 });
-    });
-  }
-  /* L'encart est dimensionné en clamp() : si sa hauteur change après le
-     premier rendu (rotation, changement de langue), MapLibre doit être
-     prévenu, sinon la toile reste sur une bande grise. */
-  window.addEventListener('resize', function () { map.resize(); });
-  setTimeout(function () { map.resize(); }, 300);
-})();
-</script>
 
 <script>
 /* Bouton « Itinéraire » : ouvrir l'application de navigation de
@@ -3063,6 +3053,40 @@ html[lang="uk"] .thanks__sign {
       tel.appendChild(a);
 
       [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
+    } else if (data.type === "error") {
+      /* A network/database failure is not a full slot: explain that no
+         reservation was confirmed instead of displaying a false success. */
+      var h = document.createElement("p");
+      h.className = "thanks__hello";
+      h.textContent = (th("apology-hi") || capacityCopy("apologyTitle")) + ".";
+
+      var p1 = document.createElement("p");
+      p1.className = "thanks__line";
+      p1.textContent = capacityCopy("error");
+
+      var p2 = document.createElement("div");
+      p2.className = "thanks__when";
+      var detail = document.createElement("p");
+      detail.className = "thanks__when-slot thanks__when-detail";
+      detail.textContent = capacityCopy("apologyLine4");
+      p2.appendChild(detail);
+
+      var p4 = document.createElement("p");
+      p4.className = "thanks__line thanks__warm";
+      p4.textContent = (th("apology-call") || capacityCopy("apologyCall"));
+
+      var sg = document.createElement("p");
+      sg.className = "thanks__sign";
+      sg.textContent = th("sign") || capacityCopy("apologySign");
+
+      var tel = document.createElement("p");
+      tel.className = "thanks__tel";
+      var a = document.createElement("a");
+      a.href = "tel:+33143490593";
+      a.textContent = "01 43 49 05 93";
+      tel.appendChild(a);
+
+      [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
     } else {
       // Apology card
       var h = document.createElement("p");
@@ -3265,7 +3289,7 @@ html[lang="uk"] .thanks__sign {
       "",
       "• Nom pour la réservation : " + nomComplet,
       "• Téléphone : " + phone.value.trim(),
-      mail.value.trim() ? ("• Mail : " + mail.value.trim()) : "• Mail : Non renseigné",
+      mail.value.trim() ? ("• E-mail : " + mail.value.trim()) : "• E-mail : Non renseigné",
       "• Date : " + dateFr,
       "• Heure : " + heureFr,
       "• Couverts : " + couvertsFr,
@@ -3592,8 +3616,10 @@ html[lang="uk"] .thanks__sign {
             err.capacityFull = true;
             finish(false, err);
           } else {
-            console.warn('[réservation] Firebase indisponible, repli envoi direct:', err);
-            sendDirect();
+            /* Never bypass the atomic capacity check with a direct email:
+               a Firebase failure is not a validated booking. */
+            console.warn('[réservation] Validation Firebase impossible; aucune réservation confirmée:', err);
+            finish(false, err);
           }
         });
     } else {

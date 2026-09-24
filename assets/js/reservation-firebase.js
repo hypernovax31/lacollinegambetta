@@ -8,7 +8,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import { connectAuthEmulator, getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import {
-  addDoc,
   collection,
   connectFirestoreEmulator,
   doc,
@@ -16,8 +15,7 @@ import {
   getFirestore,
   onSnapshot,
   runTransaction,
-  serverTimestamp,
-  setDoc
+  serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 
 const firebaseConfig = window.LCG_FIREBASE_CONFIG;
@@ -296,11 +294,20 @@ async function reserve(data) {
   let firestoreCommitted = false;
   let acceptedCapacity = localCapacity;
 
+  /*
+   * The individual reservation and the day capacity ledger MUST be written
+   * in one Firestore transaction.  The former implementation used addDoc()
+   * followed by a read/write of reservationCapacity, which allowed two
+   * simultaneous clients to both observe a free slot and exceed the 30-cover
+   * limit.  A transaction re-reads the day document when it is contested and
+   * aborts the later request after the capacity check is repeated.
+   */
   try {
     await authReady;
-    
-    // 1. Écriture directe de la réservation dans la collection 'reservations'
-    const resRef = await addDoc(collection(db, 'reservations'), {
+
+    const reservationRef = doc(collection(db, 'reservations'));
+    const capacityRef = doc(db, 'reservationCapacity', candidate.date);
+    const reservationData = {
       ...candidate,
       name: String(data.nom || '').trim().slice(0, 120),
       phone: String(data.telephone || '').trim().slice(0, 80),
@@ -309,38 +316,65 @@ async function reserve(data) {
       message: String(data.message || '').trim().slice(0, 2000),
       status: 'CONFIRMED',
       createdAt: serverTimestamp()
+    };
+
+    await runTransaction(db, async (transaction) => {
+      const snapshot = await transaction.get(capacityRef);
+      const remoteRows = snapshot.exists() && Array.isArray(snapshot.data().reservations)
+        ? snapshot.data().reservations
+        : [];
+      const rows = mergeDateRows(candidate.date, remoteRows);
+      const capacity = evaluateCapacity(rows, candidate, policy);
+
+      if (!capacity.available) {
+        const error = new Error('Ce créneau est complet.');
+        error.code = 'CAPACITY_FULL';
+        error.capacity = capacity;
+        error.capacityFull = true;
+        throw error;
+      }
+
+      const committedRow = {
+        id: reservationRef.id,
+        startMinutes: candidate.startMinutes,
+        time: candidate.time,
+        guests: candidate.guests,
+        status: 'CONFIRMED',
+        createdAt: Date.now()
+      };
+      const nextRows = rows.filter((row) => row && row.id !== reservationRef.id);
+
+      transaction.set(reservationRef, reservationData);
+      transaction.set(capacityRef, {
+        date: candidate.date,
+        reservations: nextRows.concat(committedRow),
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      acceptedCapacity = capacity;
+      ledgerReservation.id = reservationRef.id;
     });
 
     firestoreCommitted = true;
-    ledgerReservation.id = resRef.id;
-    console.info('[Firebase Firestore] Réservation enregistrée avec succès ! Document ID =', resRef.id);
-
-    // 2. Mise à jour de la capacité journalière
-    try {
-      const capacityDocument = doc(db, 'reservationCapacity', candidate.date);
-      const snapshot = await getDoc(capacityDocument);
-      const currentRemote = snapshot.exists() && Array.isArray(snapshot.data().reservations)
-        ? snapshot.data().reservations
-        : [];
-      const mergedRows = mergeDateRows(candidate.date, currentRemote);
-      await setDoc(capacityDocument, {
-        date: candidate.date,
-        reservations: mergedRows.concat({ ...ledgerReservation, id: resRef.id }),
-        updatedAt: serverTimestamp()
-      }, { merge: true });
-    } catch (capErr) {
-      console.warn('[Firebase Firestore] Note mise à jour capacité:', capErr);
-    }
+    console.info('[Firebase Firestore] Réservation et capacité validées atomiquement. Document ID =', reservationRef.id);
   } catch (fsError) {
-    console.error('[Firebase Firestore] Erreur d’enregistrement:', fsError);
+    console.error('[Firebase Firestore] Échec de la validation atomique:', fsError);
+    if (fsError && fsError.code === 'CAPACITY_FULL') {
+      throw fsError;
+    }
     if (fsError && fsError.code) {
       console.error('[Firebase Firestore Code]:', fsError.code);
     }
+    const error = new Error('La réservation n’a pas pu être validée.');
+    error.code = 'FIREBASE_WRITE_FAILED';
+    error.cause = fsError;
+    throw error;
   }
 
-  // Enregistrement garanti dans le registre local
+  // Enregistrement local uniquement après une validation Firestore réussie.
   const currentUpdated = getRowsForDate(candidate.date);
-  const mergedWithNew = currentUpdated.concat(ledgerReservation);
+  const mergedWithNew = currentUpdated.filter((row) => row && row.id !== ledgerReservation.id);
+  mergedWithNew.push(ledgerReservation);
   const ledger = getLocalLedger();
   ledger[candidate.date] = mergedWithNew;
   saveLocalLedger(ledger);
