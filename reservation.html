@@ -1079,34 +1079,6 @@ html[lang="hi"] .footer-download {
 }
 
 #reservation-page { background:var(--cream); flex:1 0 auto; display:flex; flex-direction:column; }
-/* Le globe est posé en absolu (comme dans le bandeau du site) : la barre
-   doit donc être son repère, et réserver la place à droite pour qu'il ne
-   recouvre jamais le bouton de retour. */
-.book-back {
-  position: sticky; top: 0; z-index: 1002;
-  padding: 10px 64px; display: flex; justify-content: center;
-  background: #592e6f; border-bottom: 1px solid rgba(216,178,87,.45);
-  box-shadow: 0 4px 15px rgba(0,0,0,.4);
-}
-/* La gouttiere de droite est celle du globe, qui flotte au-dessus de la
-   barre : sans elle, le bouton passerait dessous. Elle est repetee a
-   gauche pour que le bouton reste centre. */
-@media (max-width: 560px) { .book-back { padding: 10px 56px; } }
-.book-back .contact-link {
-  width: min(100%, 360px);
-  /* Meme or que les boutons actifs du bandeau (« Page de Garde »
-     selectionne) : le retour a la carte est l'onglet en cours. */
-  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%);
-  color: var(--violet-950);
-  border-color: #fcf6ba;
-  font-weight: 600;
-}
-.book-back .contact-link svg { stroke: var(--violet-950); }
-.book-back .contact-link:hover {
-  filter: brightness(1.06);
-  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%);
-  color: var(--violet-950);
-}
 /* ===== Rythme vertical =====
    Le corps de page était une suite d'éléments aux marges chacune
    réglée dans son coin : deux panneaux qui se touchaient, un bouton de
@@ -1115,11 +1087,10 @@ html[lang="hi"] .footer-download {
    on laisse la grille la distribuer.
 
    --gap-bloc  : entre deux panneaux
-   --gap-inter : entre un panneau et un élément isolé (bouton de retour)
-   Les deux respirent avec la hauteur de la fenêtre (clamp sur vh) :
+   L’écart respire avec la hauteur de la fenêtre (clamp sur vh) :
    serrés sur un téléphone, généreux sur un grand écran, jamais
    arbitraires. */
-:root { --gap-bloc: clamp(16px, 2.4vh, 26px); --gap-inter: clamp(14px, 2vh, 22px); }
+:root { --gap-bloc: clamp(16px, 2.4vh, 26px); }
 .book-main { flex:1 0 auto; display:flex; flex-direction:column; }
 /* La colonne occupe la hauteur disponible et centre son contenu quand il
    y a du mou : sur une grande fenêtre, le formulaire n'est plus tassé en
@@ -1133,11 +1104,6 @@ html[lang="hi"] .footer-download {
   justify-content:center;
   margin:var(--gap-bloc) auto;
 }
-/* Le bouton de retour est un élément isolé : il se détache des panneaux
-   d'un cran plus serré que l'écart entre deux panneaux, pour qu'on lise
-   « fin de page » et non « troisième bloc ». */
-#reservation-page .book-back-bottom { margin:calc(var(--gap-inter) - var(--gap-bloc)) 0 0; }
-
 .form-grid { display:grid; grid-template-columns:1fr; gap:14px; }
 @media (min-width:680px) {
   .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -1511,18 +1477,6 @@ html[lang="ar"] .field__date-icon {
 /* Le voile « Ctrl + molette pour zoomer » repris dans la même langue graphique. */
 .maplibregl-cooperative-gesture-screen {
   background:rgba(36,16,46,.55) !important; font-family:'Montserrat',sans-serif !important;
-}
-
-/* Retour à la carte, en bas de page : la pilule des liens de contact. */
-.book-back-bottom { display:flex; justify-content:center; }
-.book-back-bottom .contact-link--back {
-  width:min(100%,360px); color:var(--violet-900);
-  border-color:rgba(216,178,87,.6); background:#fff;
-  font-family:'Cinzel',serif; letter-spacing:.1em;
-}
-.book-back-bottom .contact-link--back svg { stroke:var(--violet-900); }
-.book-back-bottom .contact-link--back:hover {
-  background:#fffaea; border-color:var(--gold-500); color:var(--violet-900);
 }
 
 /* ===== Horaires : base graphique de la plage d'ouverture ==============
@@ -2188,14 +2142,6 @@ html[lang="uk"] .thanks__sign {
   </div>
 
 
-<div class="book-back">
-  <a class="contact-link" href="index.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
-    Retour à la carte
-  </a>
-  
-</div>
-
 <div id="reservation-page">
   <header class="interior-header">
 
@@ -2422,13 +2368,6 @@ html[lang="uk"] .thanks__sign {
         
       </article>
 
-      <div class="book-back-bottom">
-        <a class="contact-link contact-link--back" href="index.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
-          Retour à la carte
-        </a>
-      </div>
-
     </div>
   </main>
 
@@ -2460,7 +2399,12 @@ html[lang="uk"] .thanks__sign {
    pour ne pas ralentir l'affichage initial du formulaire.
    Fond OpenFreeMap (style Positron), rendu en vectoriel par MapLibre. */
 (function () {
-  var LAT = 48.8647788, LON = 2.3993777, ZOOM = 16.4;
+  var LAT = 48.8647788, LON = 2.3993777;
+  /* Vue d’ensemble : Paris et sa première couronne restent visibles dès
+     l’ouverture, au lieu d’être centrés au niveau de la rue. */
+  var PARIS_BOUNDS = [[2.20, 48.78], [2.58, 48.96]];
+  var INITIAL_ZOOM = 10.5;
+  var RESTAURANT_ZOOM = 16.4;
   var el = document.getElementById('book-map');
   var btn = document.getElementById('map-recenter');
   if (!el) return;
@@ -2572,8 +2516,10 @@ html[lang="uk"] .thanks__sign {
       map = new maplibregl.Map({
         container: el,
         style: 'https://tiles.openfreemap.org/styles/positron',
-        center: [LON, LAT],
-        zoom: ZOOM,
+        center: [2.39, 48.87],
+        zoom: INITIAL_ZOOM,
+        bounds: PARIS_BOUNDS,
+        fitBoundsOptions: { padding: 18, maxZoom: 11.5 },
         attributionControl: false,
         cooperativeGestures: true
       });
@@ -2601,7 +2547,7 @@ html[lang="uk"] .thanks__sign {
 
     if (btn) {
       btn.addEventListener('click', function () {
-        map.flyTo({ center: [LON, LAT], zoom: ZOOM, duration: 600 });
+        map.flyTo({ center: [LON, LAT], zoom: RESTAURANT_ZOOM, duration: 600 });
       });
     }
     window.addEventListener('resize', function () { map.resize(); });
