@@ -61,6 +61,28 @@
       color:var(--gold-100);
       transform:translateY(-1px);
     }
+
+    .legal-bottom-nav {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:center;
+      gap:6px 10px;
+      padding:10px 16px 18px;
+      background:var(--cream);
+      color:var(--muted);
+      font-size:.7rem;
+      letter-spacing:.04em;
+    }
+    .legal-bottom-nav a {
+      padding:5px 10px;
+      border:1px solid rgba(156,122,45,.38);
+      border-radius:999px;
+      color:var(--violet-900);
+      text-decoration:none;
+    }
+    .legal-bottom-nav a:hover { background:#fff; border-color:var(--gold-500); color:var(--violet-950); }
+    .legal-bottom-nav > span { color:var(--gold-700); }
     @media (max-width:650px) { .site-header h1 { letter-spacing:.02em; } }
   </style>
 </head>
@@ -168,9 +190,9 @@
     <div class="footer-links">
       <a href="index.html">Accueil</a>
       <a href="reservation.html">Réserver une table</a>
-      <a href="mentions-legales.html">Mentions légales</a>
-      <a href="confidentialite.html" aria-current="page">Confidentialité</a>
     </div>
   </footer>
+  <nav class="legal-bottom-nav" aria-label="Informations légales"><a href="mentions-legales.html">Mentions légales</a><span aria-hidden="true">·</span><a href="confidentialite.html">Confidentialité</a></nav>
+
 </body>
 </html>
