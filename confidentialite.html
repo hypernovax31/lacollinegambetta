@@ -426,7 +426,10 @@
     }
     @media (max-width:420px) {
       .site-header h1 {
-        font-size:clamp(1.1rem, 7vw, 1.9rem);
+        /* « Confidentialité » est un mot unique : il doit rester entier,
+           même sur un écran de 280–320 px avec les marges du bandeau. */
+        font-size:clamp(.85rem, 5vw, 1.45rem);
+        letter-spacing:0;
       }
     }
 
