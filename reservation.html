@@ -2062,6 +2062,67 @@ html[lang="uk"] .thanks__sign {
     }
     .footer .footer-link--book:hover,
     .footer .footer-link--book:focus-visible { transform:translateY(-1px); }
+
+/* ===== Ruban d’horaires : hiérarchie compacte et professionnelle ===== */
+.hours__card--single {
+  gap:12px;
+  min-height:52px;
+  padding:10px 18px;
+  border:1px solid rgba(240,215,143,.58);
+  box-shadow:0 9px 22px rgba(36,16,46,.16);
+}
+.hours__card--single .hours__ico {
+  width:20px;
+  height:20px;
+  flex-basis:20px;
+}
+.hours__card--single .hours__single-line {
+  gap:10px;
+  letter-spacing:.055em;
+}
+.hours__card--single .hours__day {
+  font-size:.62rem;
+  letter-spacing:.18em;
+}
+.hours__card--single .hours__t {
+  font-size:1.04rem;
+  letter-spacing:.035em;
+}
+.hours__card--single .hours__breakfast {
+  gap:0;
+  padding:4px 10px;
+  border:1px solid rgba(240,215,143,.4);
+  border-radius:999px;
+  background:rgba(240,215,143,.1);
+}
+.hours__card--single .hours__breakfast-copy {
+  font-size:.72em;
+  font-weight:600;
+  letter-spacing:.035em;
+}
+@media (max-width:700px) {
+  .hours__card--single {
+    gap:8px;
+    min-height:46px;
+    padding:8px 12px;
+  }
+  .hours__card--single .hours__single-line {
+    gap:7px;
+    letter-spacing:.02em;
+  }
+  .hours__card--single .hours__day { letter-spacing:.12em; }
+  .hours__card--single .hours__t { font-size:.95rem; }
+  .hours__card--single .hours__breakfast { padding:3px 8px; }
+}
+@media (max-width:420px) {
+  .hours__card--single { gap:5px; padding-inline:9px; }
+  .hours__card--single .hours__single-line { gap:5px; font-size:clamp(.56rem,2.5vw,.68rem); }
+  .hours__card--single .hours__day { letter-spacing:.08em; }
+  .hours__card--single .hours__t { font-size:.88rem; }
+  .hours__card--single .hours__breakfast { padding:3px 6px; }
+  .hours__card--single .hours__breakfast-copy { font-size:.76em; }
+}
+
 </style>
 </head>
 <body>
