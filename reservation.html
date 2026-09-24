@@ -2774,6 +2774,7 @@ body * {
 <script src="assets/js/reservation-config.js?v=202609231700"></script>
 <script src="assets/js/firebase-config.js?v=202609231700"></script>
 <script type="module" src="assets/js/reservation-firebase.js?v=202609231700"></script>
+<script src="assets/js/localized-digits.js?v=202609241200"></script>
 <script src="assets/js/i18n.js?v=202609231700" defer></script>
 
 <script>
@@ -3048,16 +3049,9 @@ body * {
 
   function toLocalizedDigits(numStr, lang) {
     if (numStr === null || numStr === undefined) return "";
-    var s = String(numStr);
-    if (lang === "ar") {
-      var arDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
-      return s.replace(/[0-9]/g, function (d) { return arDigits[parseInt(d, 10)]; });
-    }
-    if (lang === "hi") {
-      var hiDigits = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
-      return s.replace(/[0-9]/g, function (d) { return hiDigits[parseInt(d, 10)]; });
-    }
-    return s;
+    return window.LCGLocalizeDisplayDigits
+      ? window.LCGLocalizeDisplayDigits(String(numStr), lang)
+      : String(numStr);
   }
 
   var CJK_NUMBERS = {
@@ -3132,10 +3126,7 @@ body * {
     if (resStr && typeof resStr === "string") {
       resStr = resStr.charAt(0).toUpperCase() + resStr.slice(1);
     }
-    if (lang === "ar" || lang === "hi") {
-      return toLocalizedDigits(resStr, lang);
-    }
-    return resStr;
+    return toLocalizedDigits(resStr, lang);
   }
 
   function formatClock(h, m, lang) {
@@ -3144,9 +3135,9 @@ body * {
     if (lang === "fr") return String(parseInt(hour, 10)) + "h" + minute;
     var base = hour + ":" + minute;
     if (lang === "ar" || lang === "hi") return toLocalizedDigits(base, lang);
-    if (lang === "zh") return hour + "时" + minute + "分";
-    if (lang === "ja") return hour + "時" + minute + "分";
-    if (lang === "ko") return hour + "시 " + minute + "분";
+    if (lang === "zh") return toLocalizedDigits(hour, lang) + "时" + toLocalizedDigits(minute, lang) + "分";
+    if (lang === "ja") return toLocalizedDigits(hour, lang) + "時" + toLocalizedDigits(minute, lang) + "分";
+    if (lang === "ko") return toLocalizedDigits(hour, lang) + "시 " + toLocalizedDigits(minute, lang) + "분";
     return base;
   }
 

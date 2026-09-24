@@ -6830,19 +6830,15 @@
     }
   }
 
-  var DISPLAY_DIGITS = {
-    ar: '٠١٢٣٤٥٦٧٨٩',
-    hi: '०१२३४५६७८९',
-    zh: '〇一二三四五六七八九',
-    ja: '０１２３４５６７８９',
-    ko: '０１２３４５６７８９'
-  };
   function localizeDisplayDigits(value, lang) {
-    var map = DISPLAY_DIGITS[lang];
-    if (!map) return String(value);
-    return String(value).replace(/[0-9]/g, function (digit) {
-      return map.charAt(parseInt(digit, 10));
-    });
+    return window.LCGLocalizeDisplayDigits
+      ? window.LCGLocalizeDisplayDigits(value, lang)
+      : String(value == null ? '' : value);
+  }
+  function localizeAllDisplayDigits(lang) {
+    if (window.LCGLocalizeAllDisplayDigits) {
+      window.LCGLocalizeAllDisplayDigits(document.body, lang);
+    }
   }
   function contactKind(anchor) {
     var href = anchor.getAttribute('href') || '';
@@ -6918,7 +6914,8 @@
       });
     });
     DATALABELS.forEach(function (e) {
-      e.el.setAttribute('data-label', (lang === 'fr') ? e.fr : (d[e.fr] != null ? d[e.fr] : e.fr));
+      var dataLabel = (lang === 'fr') ? e.fr : (d[e.fr] != null ? d[e.fr] : e.fr);
+      e.el.setAttribute('data-label', localizeDisplayDigits(dataLabel, lang));
     });
     syncContactButtons(lang);
     var menu = document.getElementById('lang-menu');
@@ -6932,6 +6929,10 @@
     try {
       window.dispatchEvent(new CustomEvent('lcg-lang-changed', { detail: { lang: lang } }));
     } catch (e) {}
+    /* Les scripts de la page (horaires, carte, réservation, messages)
+       peuvent réécrire des nombres pendant l’événement : le passage final
+       garantit que tout ce qui est visible adopte aussi les chiffres locaux. */
+    localizeAllDisplayDigits(lang);
     if (save) { try { localStorage.setItem(STORE_KEY, lang); } catch (e) {} }
     /* Les libellés traduits changent les largeurs et les hauteurs :
        recalage des bandeaux, du ruban d'onglets et du médaillon. */
@@ -7078,6 +7079,9 @@
         if (lang && !userPicked && lang !== LANG) applyLang(lang, false);
       });
     }
+  }
+  if (window.LCGInstallDisplayDigitObserver) {
+    window.LCGInstallDisplayDigitObserver(function () { return LANG; });
   }
 
   /* Pays de l'opérateur : géolocalisation IP au nom du visiteur par

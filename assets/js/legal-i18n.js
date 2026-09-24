@@ -241,6 +241,7 @@
     var legalNav = document.querySelectorAll('.legal-bottom-nav');
     for (var li = 0; li < legalNav.length; li++) legalNav[li].setAttribute('aria-label', dict['Informations légales'] || 'Informations légales');
     fitPrivacyTitle();
+    if (window.LCGLocalizeAllDisplayDigits) window.LCGLocalizeAllDisplayDigits(document.body, lang);
     if (save) {
       try { localStorage.setItem('lcg-lang', lang); } catch (e) {}
     }
@@ -256,6 +257,11 @@
     initial = DICTS[browser] ? browser : 'fr';
   }
   apply(initial, false);
+  if (window.LCGInstallDisplayDigitObserver) {
+    window.LCGInstallDisplayDigitObserver(function () {
+      return document.documentElement.lang || 'fr';
+    });
+  }
   window.addEventListener('resize', fitPrivacyTitle);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitPrivacyTitle);
   var button = document.getElementById('legal-lang-btn');

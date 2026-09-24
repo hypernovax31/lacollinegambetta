@@ -10832,6 +10832,7 @@ else sizeCoverMedallion();
 })();
 </script>
 
+<script src="assets/js/localized-digits.js?v=202609241200"></script>
 <script src="assets/js/i18n.js?v=202609231200" defer></script>
 
 <!-- ============ Assiettes en photo : les fiches deviennent des dépliants ============ -->
@@ -11627,21 +11628,23 @@ else sizeCoverMedallion();
     }
   });
   var NUM = { ar: '٠١٢٣٤٥٦٧٨٩', hi: '०१२३४५६७८९' };
-  /* numéraux traditionnels pour les langues qui ne comptent pas en chiffres
-     européens : chinois/japonais (kanji) et coréen (hangul) ; les autres
-     langues du site (latines, cyrillique, turc) écrivent réellement leurs
-     comptes à rebours en chiffres européens — c'est leur usage local */
+  /* Les animations utilisent les mêmes formes locales que le reste de la
+     page : kanji chinois/japonais, mots coréens et mots cyrilliques en
+     ukrainien, sans réintroduire de chiffres européens. */
   var NUMS = {
     zh: { 1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '七', 8: '八', 9: '九', 10: '十' },
     ja: { 1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '七', 8: '八', 9: '九', 10: '十' },
-    ko: { 1: '일', 2: '이', 3: '삼', 4: '사', 5: '오', 6: '육', 7: '칠', 8: '팔', 9: '구', 10: '십' }
+    ko: { 1: '일', 2: '이', 3: '삼', 4: '사', 5: '오', 6: '육', 7: '칠', 8: '팔', 9: '구', 10: '십' },
+    uk: { 1: 'один', 2: 'два', 3: 'три', 4: 'чотири', 5: 'п’ять', 6: 'шість', 7: 'сім', 8: 'вісім', 9: 'дев’ять', 10: 'десять' }
   };
   var digit = function (n) {
     var lang = animLang();
     if (NUMS[lang] && NUMS[lang][n] != null) return NUMS[lang][n];
     var map = NUM[lang];
-    if (!map) return String(n);
-    return String(n).replace(/[0-9]/g, function (d) { return map.charAt(+d); });
+    if (map) return String(n).replace(/[0-9]/g, function (d) { return map.charAt(+d); });
+    return window.LCGLocalizeDisplayDigits
+      ? window.LCGLocalizeDisplayDigits(String(n), lang)
+      : String(n);
   };
   var message = function () {
     return MSG[animLang()] || MSG.fr;
