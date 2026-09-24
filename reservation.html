@@ -2400,10 +2400,11 @@ html[lang="uk"] .thanks__sign {
    Fond OpenFreeMap (style Positron), rendu en vectoriel par MapLibre. */
 (function () {
   var LAT = 48.8647788, LON = 2.3993777;
-  /* Vue d’ensemble : Paris et sa première couronne restent visibles dès
-     l’ouverture, au lieu d’être centrés au niveau de la rue. */
-  var PARIS_BOUNDS = [[2.20, 48.78], [2.58, 48.96]];
-  var INITIAL_ZOOM = 10.5;
+  /* Vue d’ensemble : tout Paris intra-muros reste visible dès l’ouverture,
+     avec une marge suffisante sur la métropole proche, au lieu d’un cadrage
+     centré au niveau de la rue. */
+  var PARIS_BOUNDS = [[2.20, 48.80], [2.50, 48.92]];
+  var INITIAL_ZOOM = 11.5;
   var RESTAURANT_ZOOM = 16.4;
   var el = document.getElementById('book-map');
   var btn = document.getElementById('map-recenter');
@@ -2519,7 +2520,7 @@ html[lang="uk"] .thanks__sign {
         center: [2.39, 48.87],
         zoom: INITIAL_ZOOM,
         bounds: PARIS_BOUNDS,
-        fitBoundsOptions: { padding: 18, maxZoom: 11.5 },
+        fitBoundsOptions: { padding: 18, maxZoom: 12.0 },
         attributionControl: false,
         cooperativeGestures: true
       });
