@@ -6797,23 +6797,18 @@
   );
   var LANG = 'fr';
 
-  function syncLanguageOptionLabels(lang) {
+  function syncLanguageOptionLabels() {
     var menu = document.getElementById('lang-menu');
     if (!menu) return;
     var options = menu.querySelectorAll('.lang-option');
-    var displayNames = null;
-    try {
-      if (window.Intl && Intl.DisplayNames) displayNames = new Intl.DisplayNames([lang], { type: 'language' });
-    } catch (e) {}
     for (var i = 0; i < options.length; i++) {
-      var option = options[i];
-      var label = option.querySelector('span:not(.lang-check)') || option;
+      var label = options[i].querySelector('span:not(.lang-check)') || options[i];
       if (!label.getAttribute('data-native-label')) {
         label.setAttribute('data-native-label', label.textContent.trim());
       }
-      var code = option.getAttribute('data-lang');
-      var translated = displayNames && code ? displayNames.of(code) : '';
-      label.textContent = translated || label.getAttribute('data-native-label');
+      /* Le modal affiche toujours le nom propre de chaque langue,
+         jamais sa traduction dans la langue actuellement sélectionnée. */
+      label.textContent = label.getAttribute('data-native-label');
     }
   }
 
@@ -6932,7 +6927,7 @@
         b.setAttribute('aria-checked', b.getAttribute('data-lang') === lang ? 'true' : 'false');
       });
     }
-    syncLanguageOptionLabels(lang);
+    syncLanguageOptionLabels();
     syncFoldAllButtons(lang);
     try {
       window.dispatchEvent(new CustomEvent('lcg-lang-changed', { detail: { lang: lang } }));
