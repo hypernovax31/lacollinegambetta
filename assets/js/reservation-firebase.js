@@ -60,7 +60,7 @@ const DEFAULT_POLICY = Object.freeze({
   maxTables: 15,                   // Maximum 15 tables simultanées
   maxCovers: 30,                   // Maximum 30 personnes simultanées
   minNoticeMinutes: 15,            // Délai minimum avant le créneau (le jour même)
-  maxDaysInAdvance: 90,            // Réservation jusqu'à 90 jours à l'avance
+  // Aucune date maximale : tous les jours futurs restent réservables.
   maxGuestsPerBooking: 10,         // Plafond en ligne
   onlineBookingEnabled: true,      // Interrupteur général
   closedDates: [],                 // Dates exceptionnellement fermées
@@ -116,7 +116,6 @@ authReady.then(() => {
           maxCovers: Number.isInteger(data.maxCovers) && data.maxCovers > 0 ? data.maxCovers : DEFAULT_POLICY.maxCovers,
           durationMinutes: Number.isInteger(data.durationMinutes) && data.durationMinutes > 0 ? data.durationMinutes : DEFAULT_POLICY.durationMinutes,
           minNoticeMinutes: Number.isInteger(data.minNoticeMinutes) && data.minNoticeMinutes >= 0 ? data.minNoticeMinutes : DEFAULT_POLICY.minNoticeMinutes,
-          maxDaysInAdvance: Number.isInteger(data.maxDaysInAdvance) && data.maxDaysInAdvance > 0 ? data.maxDaysInAdvance : DEFAULT_POLICY.maxDaysInAdvance,
           maxGuestsPerBooking: Number.isInteger(data.maxGuestsPerBooking) && data.maxGuestsPerBooking > 0 ? data.maxGuestsPerBooking : DEFAULT_POLICY.maxGuestsPerBooking,
           onlineBookingEnabled: data.onlineBookingEnabled !== false,
           closedDates: Array.isArray(data.closedDates) ? data.closedDates : [],
