@@ -6753,6 +6753,8 @@
     ['a[href^="https://www.instagram.com/lacolline.gambetta"]', 'aria-label', 'Ouvrir Instagram'],
     ['.footer .footer-link--mail', 'title', 'restaurant@lacollinegambetta.com'],
     ['.footer .footer-link--mail', 'aria-label', 'restaurant@lacollinegambetta.com'],
+    ['.info-link[href^="mailto:restaurant@lacollinegambetta.com"]', 'title', 'Envoyer un e-mail'],
+    ['.info-link[href^="mailto:restaurant@lacollinegambetta.com"]', 'aria-label', 'Envoyer un e-mail'],
     ['#book-map', 'aria-label', 'Plan : 4 rue Belgrand, Paris 20ᵉ'],
   ];
   function norm(t) { return String(t).replace(/\s+/g, ' ').trim(); }
@@ -6857,7 +6859,11 @@
       var kind = contactKind(links[i]);
       if (!kind) continue;
       var value = localizeDisplayDigits(contactValue(kind), lang);
-      var text = (kind === 'email' && links[i].classList.contains('footer-link--mail')) ? value : labels[kind] + ' · ' + value;
+      var emailPillKeepsOnlyAddress = kind === 'email' && (
+        links[i].classList.contains('footer-link--mail') ||
+        links[i].classList.contains('info-link')
+      );
+      var text = emailPillKeepsOnlyAddress ? value : labels[kind] + ' · ' + value;
       var node = contactTextNode(links[i]);
       if (node) node.nodeValue = text;
     }
