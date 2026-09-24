@@ -6753,6 +6753,8 @@
     ['a[href^="https://www.instagram.com/lacolline.gambetta"]', 'aria-label', 'Ouvrir Instagram'],
     ['.footer .footer-link--mail', 'title', 'restaurant@lacollinegambetta.com'],
     ['.footer .footer-link--mail', 'aria-label', 'restaurant@lacollinegambetta.com'],
+    ['#cover-section .contact-link--mail', 'title', 'restaurant@lacollinegambetta.com'],
+    ['#cover-section .contact-link--mail', 'aria-label', 'restaurant@lacollinegambetta.com'],
     ['.info-link[href^="mailto:restaurant@lacollinegambetta.com"]', 'title', 'Envoyer un e-mail'],
     ['.info-link[href^="mailto:restaurant@lacollinegambetta.com"]', 'aria-label', 'Envoyer un e-mail'],
     ['#book-map', 'aria-label', 'Plan : 4 rue Belgrand, Paris 20ᵉ'],

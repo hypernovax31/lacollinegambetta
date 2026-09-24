@@ -433,6 +433,35 @@
       }
     }
 
+    /* ===== Finition du bandeau légal =================================== */
+    .site-header .eyebrow {
+      color:var(--gold-500) !important;
+    }
+    @media screen and (max-width:720px) and (orientation:landscape) {
+      .site-header {
+        padding-top:16px;
+        padding-bottom:14px;
+      }
+      .site-header p {
+        font-size:.72rem;
+        line-height:1.25;
+      }
+      .legal-card {
+        padding:12px 16px;
+      }
+      .legal-card p,
+      .legal-card li,
+      .legal-card dd,
+      .legal-card dt {
+        font-size:.82rem;
+        line-height:1.4;
+      }
+      .legal-card h3 {
+        font-size:.88rem;
+        line-height:1.25;
+      }
+    }
+
     /* ===== Règle éditoriale absolue : aucun mot coupé ==================
        Les retours se font uniquement entre les mots, jamais à l'intérieur
        d'un mot, d'une adresse ou d'un titre. */
