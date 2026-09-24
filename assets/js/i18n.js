@@ -320,7 +320,7 @@
       "FAIT MAISON • SERVICE CONTINU • TERRASSE": "HOMEMADE FOOD • ALL-DAY SERVICE • TERRACE",
       "BAR • RESTAURANT • PARIS 20ᵉ": "BAR • RESTAURANT • PARIS 20TH ARR.",
       "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta": "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta",
-      "LIGNE 3 • MÉTRO GAMBETTA": "Line 3 • Gambetta metro",
+      "MÉTRO GAMBETTA • LIGNE 3": "Gambetta metro • Line 3",
       "Photographies non contractuelles, suggestions de présentation • Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé": "Photographs are for illustration only, serving suggestions • Allergen information available on request • Alcohol abuse is dangerous for your health",
       "Photographie non contractuelle — suggestion de présentation.": "Photograph for illustration only — serving suggestion.",
       "Tout voir": "Show all",
@@ -962,7 +962,7 @@
       "4 RUE BELGRAND, 75020 PARIS": "4 RUE BELGRAND, 75020 PARIS",
       "✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦": "✦ COMIDA CASERA • SERVICIO CONTINUO • TERRAZA ✦",
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ PRECIOS NETOS EN EUROS • SERVICIO INCLUIDO ✦",
-      "LIGNE 3 • MÉTRO GAMBETTA": "Línea 3 • Metro Gambetta"
+      "MÉTRO GAMBETTA • LIGNE 3": "Metro Gambetta • Línea 3"
     },
     de: {
       "Nom pour la réservation": "Name der Reservierung",
@@ -1432,7 +1432,7 @@
       "4 RUE BELGRAND, 75020 PARIS": "4 RUE BELGRAND, 75020 PARIS",
       "✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦": "✦ HAUSGEMACHT • DURCHGEHENDER SERVICE • TERRASSE ✦",
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ NETTOPREISE IN EURO • SERVICE INKLUSIVE ✦",
-      "LIGNE 3 • MÉTRO GAMBETTA": "Linie 3 • U-Bahn Gambetta"
+      "MÉTRO GAMBETTA • LIGNE 3": "U-Bahn Gambetta • Linie 3"
     },
     it: {
       "Nom pour la réservation": "Nome della prenotazione",
@@ -1902,7 +1902,7 @@
       "4 RUE BELGRAND, 75020 PARIS": "4 RUE BELGRAND, 75020 PARIS",
       "✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦": "✦ CUCINA CASARECCIA • SERVIZIO CONTINUO • TERRAZZA ✦",
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ PREZZI NETTI IN EURO • SERVIZIO INCLUSO ✦",
-      "LIGNE 3 • MÉTRO GAMBETTA": "Linea 3 • Metro Gambetta"
+      "MÉTRO GAMBETTA • LIGNE 3": "Metro Gambetta • Linea 3"
     },
     pt: {
       "Nom pour la réservation": "Nome da reserva",
@@ -2372,7 +2372,7 @@
       "4 RUE BELGRAND, 75020 PARIS": "4 RUE BELGRAND, 75020 PARIS",
       "✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦": "✦ COMIDA CASEIRA • SERVIÇO CONTÍNUO • ESPLANADA ✦",
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ PREÇOS LÍQUIDOS EM EUROS • SERVIÇO INCLUÍDO ✦",
-      "LIGNE 3 • MÉTRO GAMBETTA": "Linha 3 • Metro Gambetta"
+      "MÉTRO GAMBETTA • LIGNE 3": "Metro Gambetta • Linha 3"
     },
     nl: {
       "Nom pour la réservation": "Naam van de reservering",
@@ -2842,7 +2842,7 @@
       "4 RUE BELGRAND, 75020 PARIS": "4 RUE BELGRAND, 75020 PARIS",
       "✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦": "✦ VERSENSE GERECHTEN • DOORLOPEN SERVICE • TERRAS ✦",
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ NETTOPRIJZEN IN EURO • SERVICE INBEGREPEN ✦",
-      "LIGNE 3 • MÉTRO GAMBETTA": "Lijn 3 • Metro Gambetta"
+      "MÉTRO GAMBETTA • LIGNE 3": "Metro Gambetta • Lijn 3"
     },
   
     ar: {
@@ -3197,7 +3197,7 @@
       "PINTE": "بينت",
       "Madeleine": "مادلين",
       "HH": "س.س.",
-      "LIGNE 3 • MÉTRO GAMBETTA": "الخط 3 • مترو غامبيتا",
+      "MÉTRO GAMBETTA • LIGNE 3": "مترو غامبيتا • الخط 3",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "4 شارع بيلغراند • 75020 باريس • ساحة غامبيتا",
       "COLLINE": "كولين",
       "GAMBETTA": "غامبيتا",
@@ -3685,7 +3685,7 @@
       "PINTE": "品脱",
       "Madeleine": "玛德琳",
       "HH": "欢时",
-      "LIGNE 3 • MÉTRO GAMBETTA": "3号线 • 甘贝塔地铁站",
+      "MÉTRO GAMBETTA • LIGNE 3": "甘贝塔地铁站 • 3号线",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "贝勒格朗街4号 • 75020 巴黎 • 甘贝塔广场",
       "COLLINE": "拉科林",
       "GAMBETTA": "冈贝塔",
@@ -4172,7 +4172,7 @@
       "PINTE": "ПІНТА",
       "Madeleine": "Мадлен",
       "HH": "Щ.Г.",
-      "LIGNE 3 • MÉTRO GAMBETTA": "Лінія 3 • метро Gambetta",
+      "MÉTRO GAMBETTA • LIGNE 3": "метро Gambetta • Лінія 3",
       "Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.": "Зелений салат, помідор, панірована куряча відбивна, яйце мімоза, крутон, тост із козячого сиру.",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "4 вул. Бельгран • 75020 Париж • площа Гамбетта",
       "COLLINE": "КОЛЛІН",
@@ -4661,7 +4661,7 @@
       "PINTE": "パイント",
       "Madeleine": "マドレーヌ",
       "HH": "ハピアワ",
-      "LIGNE 3 • MÉTRO GAMBETTA": "3号線 • ガンベッタ駅",
+      "MÉTRO GAMBETTA • LIGNE 3": "ガンベッタ駅 • 3号線",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "ベルグラン通り4番 • 75020パリ • ガンベッタ広場",
       "COLLINE": "コリーヌ",
       "GAMBETTA": "ガンベッタ",
@@ -5149,7 +5149,7 @@
       "PINTE": "파인트",
       "Madeleine": "마들렌",
       "HH": "해피아워",
-      "LIGNE 3 • MÉTRO GAMBETTA": "3호선 • 감베타역",
+      "MÉTRO GAMBETTA • LIGNE 3": "감베타역 • 3호선",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "벨그랑 거리 4 • 75020 파리 • 감베타 광장",
       "COLLINE": "콜린",
       "GAMBETTA": "감베타",
@@ -5581,7 +5581,7 @@
       "FAIT MAISON • SERVICE CONTINU • TERRASSE": "KUCHNIA DOMOWA • SERWIS CAŁODNIOWY • TARAS",
       "BAR • RESTAURANT • PARIS 20ᵉ": "BAR • RESTAURACJA • PARYŻ 20. DZIELNICA",
       "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta": "BAR • RESTAURACJA · 01 43 49 05 93 · ◎ lacolline.gambetta",
-      "LIGNE 3 • MÉTRO GAMBETTA": "Linia 3 • Metro Gambetta",
+      "MÉTRO GAMBETTA • LIGNE 3": "Metro Gambetta • Linia 3",
       "Photographies non contractuelles, suggestions de présentation • Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé": "Zdjęcia niewiążące, propozycje podania • Informacje o alergenach na życzenie • Nadużywanie alkoholu jest szkodliwe dla zdrowia",
       "Photographie non contractuelle — suggestion de présentation.": "Zdjęcie niewiążące — propozycja podania.",
       "Tout voir": "Pokaż wszystko",
@@ -6051,7 +6051,7 @@
       "FAIT MAISON • SERVICE CONTINU • TERRASSE": "EV YAPIMI • GÜN BOYU SERVİS • TERAS",
       "BAR • RESTAURANT • PARIS 20ᵉ": "BAR • RESTORAN • PARİS 20. BÖLGE",
       "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta": "BAR • RESTORAN · 01 43 49 05 93 · ◎ lacolline.gambetta",
-      "LIGNE 3 • MÉTRO GAMBETTA": "3. Hat • Gambetta metrosu",
+      "MÉTRO GAMBETTA • LIGNE 3": "Gambetta metrosu • 3. Hat",
       "Photographies non contractuelles, suggestions de présentation • Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé": "Fotoğraflar temsilidir, sunum önerisidir • Alerjen bilgisi talep üzerine • Aşırı alkol tüketimi sağlığa zararlıdır",
       "Photographie non contractuelle — suggestion de présentation.": "Fotoğraf temsilidir — sunum önerisi.",
       "Tout voir": "Tümünü göster",
@@ -6577,7 +6577,7 @@
       "PINTE": "पिंट",
       "Madeleine": "मैडलीन",
       "HH": "है.आ.",
-      "LIGNE 3 • MÉTRO GAMBETTA": "लाइन 3 • गांबेता मेट्रो",
+      "MÉTRO GAMBETTA • LIGNE 3": "गांबेता मेट्रो • लाइन 3",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "रू बेलग्रां 4 • 75020 पेरिस • प्लास गांबेता",
       "COLLINE": "कोलीन",
       "GAMBETTA": "गांबेता",

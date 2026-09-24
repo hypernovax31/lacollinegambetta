@@ -8874,6 +8874,8 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
 }
 .cover-hours__happy:hover,
 .cover-hours__happy:focus-visible { color:var(--gold-100, #fef9db); text-decoration:underline; text-underline-offset:3px; }
+.cover-hours__happy[hidden],
+[data-hours-happy-separator][hidden] { display:none !important; }
 @keyframes coverHappyHourPulse {
   0%, 100% { opacity:.78; transform:translateY(0); text-shadow:none; }
   50% { opacity:1; transform:translateY(-1px); text-shadow:0 0 8px rgba(240,215,143,.38); }
@@ -9339,7 +9341,7 @@ html:not(.carte-doc) #cover-section .cover-footer-address {
       <div class="cover-footer">
         <div class="cover-hours" aria-label="Horaires d’ouverture">
           <div class="cover-hours__heading"><span class="star-gold">✦</span> <span data-hours-label>Horaires</span> <span class="star-gold">✦</span></div>
-          <div class="cover-hours__range"><span data-hours-days>Tous les jours</span><span aria-hidden="true">·</span><span data-hours-range>07h00 — 02h00</span><span aria-hidden="true">·</span><a href="index.html#cocktails" id="cover-happy-hour-link" class="cover-hours__happy" data-hours-happy onclick="showView('menu'); setTimeout(function(){ var btn=document.getElementById('btn-show-cocktails'); if(btn) showMenuSection('cocktails', btn); }, 0); return false;">Happy Hour</a></div>
+          <div class="cover-hours__range"><span data-hours-days>Tous les jours</span><span aria-hidden="true">·</span><span data-hours-range>07h00 — 02h00</span><span aria-hidden="true" data-hours-happy-separator hidden>·</span><a href="index.html#cocktails" id="cover-happy-hour-link" class="cover-hours__happy" data-hours-happy hidden onclick="showView('menu'); setTimeout(function(){ var btn=document.getElementById('btn-show-cocktails'); if(btn) showMenuSection('cocktails', btn); }, 0); return false;">Happy Hour</a></div>
           <div class="cover-hours__status is-open" data-hours-status role="status" aria-live="polite"><span class="cover-hours__dot" aria-hidden="true"></span><span data-hours-status-text>Ouvert maintenant</span></div>
         </div>
         <div class="cover-footer-address"><a href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" data-default-map data-map-address="La Colline Gambetta, 4 Rue Belgrand, 75020 Paris" target="_blank" rel="noopener" title="Ouvrir l’adresse dans le plan">4 rue Belgrand • 75020 Paris • Place Gambetta</a></div>
@@ -9518,7 +9520,7 @@ html:not(.carte-doc) #cover-section .cover-footer-address {
         <a href="tel:+33143490593" class="footer-link" title="Appeler le restaurant" aria-label="Appeler le restaurant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</a>
         <a href="mailto:restaurant@lacollinegambetta.com" class="footer-link footer-link--mail" title="restaurant@lacollinegambetta.com" aria-label="restaurant@lacollinegambetta.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>restaurant@lacollinegambetta.com</a>
       </div>
-      <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><a class="footer-address-link" href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" data-default-map data-map-address="La Colline Gambetta, 4 Rue Belgrand, 75020 Paris" target="_blank" rel="noopener" title="Ouvrir l’adresse dans le plan">4 RUE BELGRAND, 75020 PARIS</a><span class="footer-details__metro">LIGNE 3 • MÉTRO GAMBETTA</span></div>
+      <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><a class="footer-address-link" href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" data-default-map data-map-address="La Colline Gambetta, 4 Rue Belgrand, 75020 Paris" target="_blank" rel="noopener" title="Ouvrir l’adresse dans le plan">4 RUE BELGRAND, 75020 PARIS</a><span class="footer-details__metro">MÉTRO GAMBETTA • LIGNE 3</span></div>
       <nav class="legal-bottom-nav" aria-label="Informations légales"><a href="mentions-legales.html">Mentions légales</a><span aria-hidden="true">·</span><a href="confidentialite.html">Confidentialité</a></nav>
     </footer>
   </section>
@@ -12094,6 +12096,7 @@ else sizeCoverMedallion();
     var days = document.querySelector('[data-hours-days]');
     var range = document.querySelector('[data-hours-range]');
     var happy = document.querySelector('[data-hours-happy]');
+    var happySeparator = document.querySelector('[data-hours-happy-separator]');
     var status = document.querySelector('[data-hours-status]');
     var hours = document.querySelector('.cover-hours');
     var statusText = document.querySelector('[data-hours-status-text]');
@@ -12103,11 +12106,18 @@ else sizeCoverMedallion();
     var isOpen = minutes === null ? true : (minutes >= 7 * 60 || minutes < 2 * 60);
     var isClosingSoon = minutes !== null && minutes >= 60 && minutes < 2 * 60;
     var isOpeningSoon = minutes !== null && minutes >= 6 * 60 && minutes < 7 * 60;
+    /* Le Happy Hour est proposé chaque jour de 17h00 à 23h00, heure de Paris.
+       En dehors de cette fenêtre, le libellé et son séparateur disparaissent
+       entièrement : il ne doit pas suggérer une offre disponible. */
+    var isHappyHour = minutes !== null && minutes >= 17 * 60 && minutes < 23 * 60;
     label.textContent = text.label;
     hours.setAttribute('aria-label', text.label);
     days.textContent = text.days;
     range.textContent = text.range;
     happy.textContent = text.happy;
+    happy.hidden = !isHappyHour;
+    happy.setAttribute('aria-hidden', isHappyHour ? 'false' : 'true');
+    if (happySeparator) happySeparator.hidden = !isHappyHour;
     status.classList.toggle('is-open', isOpen && !isClosingSoon);
     status.classList.toggle('is-closed', !isOpen && !isOpeningSoon);
     status.classList.toggle('is-opening-soon', isOpeningSoon);
