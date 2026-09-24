@@ -430,14 +430,18 @@
     }
     @media (max-width:420px) {
       .site-header {
-        padding-left:36px;
-        padding-right:36px;
+        padding-left:24px;
+        padding-right:24px;
       }
       .site-header h1 {
-        /* Un mot unique : il reste entier et rentre dans le bandeau,
-           y compris sur les écrans de 280 à 320 px. */
-        font-size:clamp(.78rem, 5vw, 1.4rem);
+        /* Le titre reste sur une seule ligne et dispose de toute la
+           largeur utile, même sur les écrans de 280 à 320 px. */
+        display:block;
+        width:100%;
+        max-width:none;
+        font-size:clamp(.8rem, 5vw, 1.4rem);
         letter-spacing:0;
+        white-space:nowrap;
       }
     }
     @media screen and (max-width:720px) and (orientation:landscape) {

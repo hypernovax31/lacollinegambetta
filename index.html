@@ -9361,6 +9361,22 @@ html:not(.carte-doc) .lang-dock {
 html:not(.carte-doc) #cover-section .cover-brand {
   padding-inline:58px !important;
 }
+/* Dans la vue Menu & Carte, le globe appartient au bandeau sticky qui
+   contient les deux boutons de vue, jamais au titre intérieur de la carte. */
+html:not(.carte-doc) .top-controls > .lang-dock {
+  position:absolute !important;
+  top:0 !important;
+  right:0 !important;
+  bottom:auto !important;
+  left:auto !important;
+  width:66px !important;
+  height:62px !important;
+}
+html:not(.carte-doc) .top-controls > .lang-dock .lang-btn {
+  top:10px !important;
+  right:12px !important;
+  transform:none !important;
+}
 html:not(.carte-doc) #interior-menu .lang-dock .lang-menu {
   position:absolute !important;
   top:calc(100% + 8px) !important;
@@ -9386,6 +9402,14 @@ html:not(.carte-doc) #cover-section .lang-dock .lang-menu {
   html:not(.carte-doc) .lang-dock {
     width:58px !important;
     height:58px !important;
+  }
+  html:not(.carte-doc) .top-controls > .lang-dock {
+    width:58px !important;
+    height:58px !important;
+  }
+  html:not(.carte-doc) .top-controls > .lang-dock .lang-btn {
+    right:8px !important;
+    top:9px !important;
   }
   html:not(.carte-doc) .lang-dock .lang-btn {
     right:8px !important;
@@ -9855,14 +9879,14 @@ function showView(view) {
   function dockLang(view) {
     const dock = document.querySelector('.lang-dock');
     if (!dock) return;
-    /* Dans la carte, le globe est ANCRE dans le bandeau des deux
-       boutons : il defile avec lui et se cale dans son coin droit. Sur
-       la page de garde ce bandeau est masque — un globe place dedans
-       serait invisible — il retourne donc au corps de page, ou il reste
-       fixe en haut a droite. Un seul globe : on le DEPLACE. */
+    /* Dans la carte, le globe est ANCRE dans le véritable bandeau des
+       deux boutons (« Page de Garde » / « Menu & Carte ») : il reste dans
+       son angle supérieur droit et suit ce bandeau sticky. Sur la page de
+       garde ce bandeau est masqué — le globe revient donc dans la couverture.
+       Un seul globe : on le déplace, sans en créer un second. */
     const coverTitle = document.querySelector('#cover-section .cover-page');
-    const menuTitle = document.querySelector('#interior-menu .interior-header');
-    const target = view === 'menu' ? (menuTitle || document.body) : (coverTitle || document.body);
+    const menuBar = document.querySelector('.top-controls');
+    const target = view === 'menu' ? (menuBar || document.body) : (coverTitle || document.body);
     if (dock.parentElement === target) return;
     target.insertBefore(dock, target.firstChild);
   }
