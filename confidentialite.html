@@ -359,6 +359,41 @@
     }
     .footer .footer-link--book:hover,
     .footer .footer-link--book:focus-visible { transform:translateY(-1px); }
+
+    /* Même gabarit de pills que le pied de page de la réservation. */
+    .footer .footer-links {
+      display:flex !important;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:stretch;
+      gap:10px;
+      width:min(100%,920px);
+      margin:10px auto;
+    }
+    .footer .footer-links .footer-link {
+      width:auto;
+      max-width:100%;
+      flex:0 1 auto;
+      min-height:44px;
+      padding:9px 16px;
+      white-space:normal;
+      overflow:visible;
+      text-overflow:clip;
+      overflow-wrap:anywhere;
+      text-align:center;
+      line-height:1.35;
+      font-size:.78rem !important;
+    }
+    .footer .footer-links .footer-link--mail {
+      font-size:.78rem !important;
+    }
+    @media (max-width:560px) {
+      .footer .footer-links {
+        flex-direction:column;
+        align-items:stretch;
+      }
+      .footer .footer-links .footer-link { width:100%; }
+    }
   </style>
 </head>
 <body>
