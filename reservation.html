@@ -3107,6 +3107,8 @@ html[lang="uk"] .thanks__sign {
   }
 
   dateEl.addEventListener('change', function () {
+    userSelectedDate = !!dateEl.value;
+    userSelectedTime = false;
     updateDateDisplay();
     setError(dateEl, false);
     lastKnownSlots = null;
@@ -3117,6 +3119,11 @@ html[lang="uk"] .thanks__sign {
     setError(dateEl, false);
   });
 
+  timeEl.addEventListener('change', function () {
+    userSelectedTime = !!timeEl.value;
+    updateAvailability();
+  });
+
   function updateGuestsOptions(lang) {
     if (!guestsEl) return;
     Array.prototype.forEach.call(guestsEl.options, function (opt) {
@@ -3125,6 +3132,9 @@ html[lang="uk"] .thanks__sign {
       opt.textContent = formatGuestQuantity(val, lang, false);
     });
   }
+
+  var userSelectedDate = false;
+  var userSelectedTime = false;
 
   function applySlotsToSelect(slotsMap) {
     var now = parisNow();
@@ -3163,7 +3173,10 @@ html[lang="uk"] .thanks__sign {
     });
 
     if (timeHintEl) {
-      if (availableCount === 0) {
+      /* Ne jamais afficher ce message au chargement ni après la seule
+         sélection de la date : les deux choix doivent venir du visiteur. */
+      var dateAndTimeChosen = userSelectedDate && userSelectedTime;
+      if (availableCount === 0 && dateAndTimeChosen) {
         timeHintEl.textContent = capacityCopy('allFull');
         timeHintEl.hidden = false;
       } else {
@@ -3694,6 +3707,9 @@ html[lang="uk"] .thanks__sign {
           status.hidden = false;
           try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e1) {}
           form.reset();
+          userSelectedDate = false;
+          userSelectedTime = false;
+          if (timeHintEl) timeHintEl.hidden = true;
           var nowAfter = parisNow();
           var nextAfter = calculateNextSlot(nowAfter);
           if (dateEl) {
