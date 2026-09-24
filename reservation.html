@@ -2172,6 +2172,64 @@ html[lang="uk"] .thanks__sign {
   if (!el) return;
 
   var isLoaded = false;
+  var activePopup = null;
+  var MAP_COPY = {
+    fr: { fallback: '4 rue Belgrand, 75020 Paris — métro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Métro Gambetta' },
+    en: { fallback: '4 rue Belgrand, 75020 Paris — Gambetta metro', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Gambetta metro' },
+    es: { fallback: '4 rue Belgrand, 75020 París — metro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 París<br>Metro Gambetta' },
+    de: { fallback: '4 rue Belgrand, 75020 Paris — Metro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Metro Gambetta' },
+    it: { fallback: '4 rue Belgrand, 75020 Parigi — metro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Parigi<br>Metro Gambetta' },
+    pt: { fallback: '4 rue Belgrand, 75020 Paris — metro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Metro Gambetta' },
+    nl: { fallback: '4 rue Belgrand, 75020 Parijs — metro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Parijs<br>Metro Gambetta' },
+    pl: { fallback: '4 rue Belgrand, 75020 Paryż — metro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paryż<br>Metro Gambetta' },
+    zh: { fallback: '4 rue Belgrand，75020 巴黎 — Gambetta 地铁站', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand，75020 巴黎<br>Gambetta 地铁站' },
+    uk: { fallback: '4 rue Belgrand, 75020 Париж — метро Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Париж<br>Метро Gambetta' },
+    ja: { fallback: '4 rue Belgrand、75020 パリ — ガンベッタ駅', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand、75020 パリ<br>ガンベッタ駅' },
+    ko: { fallback: '4 rue Belgrand, 75020 파리 — 감베타 지하철역', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 파리<br>감베타 지하철역' },
+    ar: { fallback: '4 rue Belgrand، 75020 باريس — مترو Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand، 75020 باريس<br>مترو Gambetta' },
+    tr: { fallback: '4 rue Belgrand, 75020 Paris — Gambetta metrosu', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Gambetta metrosu' },
+    hi: { fallback: '4 rue Belgrand, 75020 पेरिस — गाम्बेटा मेट्रो', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 पेरिस<br>गाम्बेटा मेट्रो' }
+  };
+  function currentMapCopy() {
+    var lang = (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
+    return MAP_COPY[lang] || MAP_COPY.fr;
+  }
+  var MAP_CONTROL_LABELS = {
+    fr: { in: 'Zoom avant', out: 'Zoom arrière', attribution: 'Informations cartographiques' },
+    en: { in: 'Zoom in', out: 'Zoom out', attribution: 'Map information' },
+    es: { in: 'Acercar', out: 'Alejar', attribution: 'Información del mapa' },
+    de: { in: 'Vergrößern', out: 'Verkleinern', attribution: 'Karteninformationen' },
+    it: { in: 'Ingrandisci', out: 'Riduci', attribution: 'Informazioni sulla mappa' },
+    pt: { in: 'Ampliar', out: 'Reduzir', attribution: 'Informações do mapa' },
+    nl: { in: 'Inzoomen', out: 'Uitzoomen', attribution: 'Kaartinformatie' },
+    pl: { in: 'Przybliż', out: 'Oddal', attribution: 'Informacje o mapie' },
+    zh: { in: '放大', out: '缩小', attribution: '地图信息' },
+    uk: { in: 'Збільшити', out: 'Зменшити', attribution: 'Інформація про карту' },
+    ja: { in: '拡大', out: '縮小', attribution: '地図情報' },
+    ko: { in: '확대', out: '축소', attribution: '지도 정보' },
+    ar: { in: 'تكبير', out: 'تصغير', attribution: 'معلومات الخريطة' },
+    tr: { in: 'Yakınlaştır', out: 'Uzaklaştır', attribution: 'Harita bilgileri' },
+    hi: { in: 'ज़ूम इन', out: 'ज़ूम आउट', attribution: 'मानचित्र की जानकारी' }
+  };
+  function localizeMapControls() {
+    var lang = (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
+    var labels = MAP_CONTROL_LABELS[lang] || MAP_CONTROL_LABELS.fr;
+    var copy = currentMapCopy();
+    var zoomIn = el.querySelector('.maplibregl-ctrl-zoom-in');
+    var zoomOut = el.querySelector('.maplibregl-ctrl-zoom-out');
+    var attributionButton = el.querySelector('.maplibregl-ctrl-attrib-button');
+    if (zoomIn) { zoomIn.title = labels.in; zoomIn.setAttribute('aria-label', labels.in); }
+    if (zoomOut) { zoomOut.title = labels.out; zoomOut.setAttribute('aria-label', labels.out); }
+    if (attributionButton) {
+      attributionButton.title = labels.attribution;
+      attributionButton.setAttribute('aria-label', labels.attribution);
+    }
+    var mapError = el.querySelector('.map-error');
+    if (mapError) mapError.textContent = copy.fallback;
+    if (activePopup) activePopup.setHTML(copy.popup);
+  }
+  window.addEventListener('lcg-lang-changed', localizeMapControls);
+
   function loadAndInitMap() {
     if (isLoaded) return;
     isLoaded = true;
@@ -2198,7 +2256,8 @@ html[lang="uk"] .thanks__sign {
   }
 
   function fallback() {
-    el.innerHTML = '<p class="map-error">4 rue Belgrand, 75020 Paris — métro Gambetta</p>';
+    el.innerHTML = '<p class="map-error"></p>';
+    localizeMapControls();
     if (btn) btn.hidden = true;
   }
 
@@ -2230,6 +2289,7 @@ html[lang="uk"] .thanks__sign {
     });
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
+    localizeMapControls();
     map.addControl(new maplibregl.AttributionControl({
       compact: true,
       customAttribution: '<a href="https://openfreemap.org/" target="_blank" rel="noopener">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
@@ -2237,12 +2297,12 @@ html[lang="uk"] .thanks__sign {
 
     var dot = document.createElement('div');
     dot.className = 'map-pin';
+    activePopup = new maplibregl.Popup({ offset: 16, closeButton: false }).setHTML(currentMapCopy().popup);
     new maplibregl.Marker({ element: dot })
       .setLngLat([LON, LAT])
-      .setPopup(new maplibregl.Popup({ offset: 16, closeButton: false }).setHTML(
-        '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Métro Gambetta'
-      ))
+      .setPopup(activePopup)
       .addTo(map);
+    localizeMapControls();
 
     if (btn) {
       btn.addEventListener('click', function () {
@@ -2620,6 +2680,37 @@ html[lang="uk"] .thanks__sign {
     return s;
   }
 
+  var CJK_NUMBERS = {
+    zh: ['', '一', '两', '三', '四', '五', '六', '七', '八', '九', '十'],
+    ja: ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
+  };
+  var KO_NUMBERS = ['', '한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
+  function formatGuestQuantity(value, lang, longLabel) {
+    var n = parseInt(value, 10);
+    if (!n) return '';
+    if (lang === 'zh') return (CJK_NUMBERS.zh[n] || String(n)) + (longLabel ? '位客人' : '位');
+    if (lang === 'ja') return (CJK_NUMBERS.ja[n] || String(n)) + '名';
+    if (lang === 'ko') return (KO_NUMBERS[n] || String(n)) + ' 명';
+    var shown = toLocalizedDigits(n, lang);
+    if (lang === 'ar') {
+      return n === 1 ? 'شخص واحد' : (n === 2 ? 'شخصان' : shown + ' أشخاص');
+    }
+    if (lang === 'hi') return shown + ' व्यक्ति';
+    var labels = {
+      fr: n === 1 ? 'personne' : 'personnes',
+      en: n === 1 ? 'guest' : 'guests',
+      es: n === 1 ? 'persona' : 'personas',
+      de: n === 1 ? 'Person' : 'Personen',
+      it: n === 1 ? 'persona' : 'persone',
+      pt: n === 1 ? 'pessoa' : 'pessoas',
+      nl: n === 1 ? 'persoon' : 'personen',
+      pl: n === 1 ? 'osoba' : (n < 5 ? 'osoby' : 'osób'),
+      tr: 'kişi',
+      uk: n === 1 ? 'особа' : (n < 5 ? 'особи' : 'осіб')
+    };
+    return shown + ' ' + (labels[lang] || labels.fr);
+  }
+
   function normalizeToAsciiDigits(str) {
     if (!str) return "";
     var arMap = {"٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9"};
@@ -2667,33 +2758,28 @@ html[lang="uk"] .thanks__sign {
     return resStr;
   }
 
+  function formatClock(h, m, lang) {
+    var hour = String(h).padStart(2, "0");
+    var minute = String(m).padStart(2, "0");
+    if (lang === "fr") return String(parseInt(hour, 10)) + "h" + minute;
+    var base = hour + ":" + minute;
+    if (lang === "ar" || lang === "hi") return toLocalizedDigits(base, lang);
+    if (lang === "zh") return hour + "时" + minute + "分";
+    if (lang === "ja") return hour + "時" + minute + "分";
+    if (lang === "ko") return hour + "시 " + minute + "분";
+    return base;
+  }
+
   function formatLocalizedTime(timeStr, lang) {
     if (!timeStr) return "";
     var hm = timeStr.split(":");
-    var h = parseInt(hm[0], 10);
-    var m = parseInt(hm[1], 10);
-    if (lang === "fr") {
-      return (m === 0) ? (h + "h00") : (h + "h" + String(m).padStart(2, "0"));
-    }
-    var base = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
-    if (lang === "ar" || lang === "hi") {
-      return toLocalizedDigits(base, lang);
-    }
-    return base;
+    return formatClock(parseInt(hm[0], 10), parseInt(hm[1], 10), lang);
   }
 
   function formatTimeOption(val, lang) {
     if (!val) return "";
     var hm = val.split(":");
-    var h = hm[0];
-    var m = hm[1];
-    if (lang === "fr") {
-      return h + "h" + m;
-    }
-    if (lang === "ar" || lang === "hi") {
-      return toLocalizedDigits(h + ":" + m, lang);
-    }
-    return h + ":" + m;
+    return formatClock(parseInt(hm[0], 10), parseInt(hm[1], 10), lang);
   }
 
   function getDateSep(lang) {
@@ -2793,38 +2879,7 @@ html[lang="uk"] .thanks__sign {
     Array.prototype.forEach.call(guestsEl.options, function (opt) {
       var val = parseInt(opt.value, 10);
       if (!val) return;
-      var numDisplay = toLocalizedDigits(val, lang);
-      if (lang === "fr") {
-        opt.textContent = val + (val === 1 ? " personne" : " personnes");
-      } else if (lang === "en") {
-        opt.textContent = val + (val === 1 ? " guest" : " guests");
-      } else if (lang === "es") {
-        opt.textContent = val + (val === 1 ? " persona" : " personas");
-      } else if (lang === "de") {
-        opt.textContent = val + (val === 1 ? " Person" : " Personen");
-      } else if (lang === "it") {
-        opt.textContent = val + (val === 1 ? " persona" : " persone");
-      } else if (lang === "pt") {
-        opt.textContent = val + (val === 1 ? " pessoa" : " pessoas");
-      } else if (lang === "nl") {
-        opt.textContent = val + (val === 1 ? " persoon" : " personen");
-      } else if (lang === "ar") {
-        opt.textContent = (val === 1) ? "شخص واحد" : ((val === 2) ? "شخصان (٢)" : (numDisplay + " أشخاص"));
-      } else if (lang === "zh") {
-        opt.textContent = val + " 位";
-      } else if (lang === "ja") {
-        opt.textContent = val + "名";
-      } else if (lang === "ko") {
-        opt.textContent = val + "명";
-      } else if (lang === "pl") {
-        opt.textContent = val + (val === 1 ? " osoba" : (val < 5 ? " osoby" : " osób"));
-      } else if (lang === "tr") {
-        opt.textContent = val + " kişi";
-      } else if (lang === "uk") {
-        opt.textContent = val + (val === 1 ? " особа" : (val < 5 ? " особи" : " осіб"));
-      } else if (lang === "hi") {
-        opt.textContent = numDisplay + " व्यक्ति";
-      }
+      opt.textContent = formatGuestQuantity(val, lang, false);
     });
   }
 
@@ -2965,19 +3020,7 @@ html[lang="uk"] .thanks__sign {
       var prepAt = getTimePreposition(lang);
       var forWord = getForWord(lang);
 
-      var guestLabels = {
-        fr: "personnes", en: "guests", es: "comensales", de: "Gäste",
-        it: "coperti", pt: "pessoas", nl: "gasten", ar: "أشخاص",
-        zh: "位客人", ja: "名", ko: "명", pl: "osób", tr: "kişi", uk: "гостей", hi: "मेहमान"
-      };
-      var guestLabel1 = {
-        fr: "personne", en: "guest", es: "comensal", de: "Gast",
-        it: "coperto", pt: "pessoa", nl: "gast", ar: "شخص",
-        zh: "位客人", ja: "名", ko: "명", pl: "osoba", tr: "kişi", uk: "гість", hi: "मेहमान"
-      };
-      var lbl = (String(data.nb) === "1") ? (guestLabel1[lang] || "personne") : (guestLabels[lang] || "personnes");
-      var nbStr = (lang === "ar" || lang === "hi") ? toLocalizedDigits(data.nb, lang) : data.nb;
-      var couvertsStr = nbStr + " " + lbl;
+      var couvertsStr = formatGuestQuantity(data.nb, lang, true);
 
       var h = document.createElement("p");
       h.className = "thanks__hello";

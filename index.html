@@ -10062,13 +10062,32 @@ else sizeCoverMedallion();
   }
   /* ---------- Bouton grelots (visible en saison, bas a droite) ---------- */
   var bellBtn = null;
+  var BELL_LABELS = {
+    fr: { on: 'Grelots du traîneau : activés — ils sonnent au passage du traîneau', off: 'Grelots du traîneau : coupés (cliquer pour réactiver)' },
+    en: { on: 'Sleigh bells: on — they ring as the sleigh passes', off: 'Sleigh bells: off (click to turn them back on)' },
+    es: { on: 'Cascabeles del trineo: activados — suenan cuando pasa el trineo', off: 'Cascabeles del trineo: desactivados (pulse para reactivarlos)' },
+    de: { on: 'Schlittenglöckchen: an — sie läuten beim Vorbeiflug', off: 'Schlittenglöckchen: aus (zum Reaktivieren klicken)' },
+    it: { on: 'Campanelli della slitta: attivati — suonano al passaggio della slitta', off: 'Campanelli della slitta: disattivati (clicca per riattivarli)' },
+    pt: { on: 'Sinos do trenó: ligados — tocam quando o trenó passa', off: 'Sinos do trenó: desligados (clique para reativar)' },
+    nl: { on: 'Sleejbelletjes: aan — ze klinken wanneer de slee voorbijvliegt', off: 'Sleejbelletjes: uit (klik om ze weer aan te zetten)' },
+    pl: { on: 'Dzwonki sań: włączone — dzwonią, gdy sanie przelatują', off: 'Dzwonki sań: wyłączone (kliknij, aby je włączyć)' },
+    zh: { on: '雪橇铃声：已开启 — 雪橇经过时会响起', off: '雪橇铃声：已关闭（点击重新开启）' },
+    uk: { on: 'Дзвіночки саней: увімкнено — вони дзвенять під час польоту', off: 'Дзвіночки саней: вимкнено (натисніть, щоб увімкнути)' },
+    ja: { on: 'そりの鈴：オン — そりが通ると鳴ります', off: 'そりの鈴：オフ（クリックで再開）' },
+    ko: { on: '썰매 방울: 켜짐 — 썰매가 지나갈 때 울립니다', off: '썰매 방울: 꺼짐 (클릭하여 다시 켜기)' },
+    ar: { on: 'أجراس الزلاجة: مفعّلة — ترنّ عند مرور الزلاجة', off: 'أجراس الزلاجة: متوقفة (اضغط لإعادة تفعيلها)' },
+    tr: { on: 'Kızak çanları: açık — kızak geçerken çalar', off: 'Kızak çanları: kapalı (yeniden açmak için tıklayın)' },
+    hi: { on: 'स्लेज की घंटियाँ: चालू — स्लेज के गुजरने पर बजती हैं', off: 'स्लेज की घंटियाँ: बंद (फिर चालू करने के लिए क्लिक करें)' }
+  };
   function bellsUpdateBtn() {
     if (!bellBtn) return;
+    var lang = (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
+    var copy = BELL_LABELS[lang] || BELL_LABELS.fr;
+    var label = bMuted ? copy.off : copy.on;
     bellBtn.classList.toggle('muted', bMuted);
     bellBtn.setAttribute('aria-pressed', bMuted ? 'false' : 'true');
-    bellBtn.title = bMuted
-      ? 'Grelots du tra\u00eeneau : coup\u00e9s (cliquer pour r\u00e9activer)'
-      : 'Grelots du tra\u00eeneau : activ\u00e9s \u2014 ils sonnent au passage du tra\u00eeneau';
+    bellBtn.title = label;
+    bellBtn.setAttribute('aria-label', label);
   }
   function bellsMakeBtn() {
     bellBtn = document.createElement('button');
@@ -10108,6 +10127,7 @@ else sizeCoverMedallion();
     document.body.appendChild(bellBtn);
   }
   bellsMakeBtn();
+  window.addEventListener('lcg-lang-changed', bellsUpdateBtn);
   /* Deblocage du son au premier geste du visiteur, n'importe ou sur la
      page (politique autoplay). Capture : fonctionne meme si un script
      arrete la propagation. Sans « once » : on retente a chaque geste
@@ -10211,6 +10231,35 @@ else sizeCoverMedallion();
 (function () {
   if (document.documentElement.classList.contains('carte-doc')) return;
 
+  /* Les fiches et la visionneuse sont créées après le chargement du DOM.
+     Elles ne peuvent donc pas être photographiées par le moteur i18n avec
+     le reste du HTML : leurs libellés d'accessibilité doivent être relus
+     dans le dictionnaire au moment où ils sont créés, puis resynchronisés
+     si l'utilisateur change de langue pendant que la carte est ouverte. */
+  function uiText(key, fallback) {
+    var lang = document.documentElement.getAttribute('lang') || 'fr';
+    var dict = window.__i18nDicts && window.__i18nDicts[lang];
+    return (lang !== 'fr' && dict && dict[key]) ? dict[key] : fallback;
+  }
+  function syncPhotoToggleLabel(btn) {
+    if (!btn) return;
+    var open = btn.getAttribute('aria-expanded') === 'true';
+    var text = uiText(open ? 'Masquer les photos' : 'Voir les photos', open ? 'Masquer les photos' : 'Voir les photos');
+    btn.setAttribute('aria-label', text);
+    btn.title = text;
+  }
+  function syncPhotoToggleLabels() {
+    document.querySelectorAll('.food-card__toggle, .hh-line__toggle, .price-line__toggle, .beer-row__toggle').forEach(function (btn) {
+      syncPhotoToggleLabel(btn);
+      var host = btn.parentElement;
+      var title = host && host.querySelector('.food-card__head h5, .hh-line__name, .price-line__name, .beer-row__name');
+      var img = host && host.querySelector('img');
+      if (title && img) img.alt = title.textContent.trim();
+    });
+    if (typeof syncLightboxLabels === 'function') syncLightboxLabels();
+  }
+  window.addEventListener('lcg-lang-changed', syncPhotoToggleLabels);
+
   function wrap(card) {
     var src = card.getAttribute('data-photo');
     if (!src || card.classList.contains('food-card--photo')) return;
@@ -10223,6 +10272,7 @@ else sizeCoverMedallion();
     btn.type = 'button';
     btn.className = 'food-card__toggle';
     btn.setAttribute('aria-expanded', 'false');
+    syncPhotoToggleLabel(btn);
     /* Tout le contenu actuel de la fiche passe dans le bouton, dans l'ordre. */
     while (card.firstChild) btn.appendChild(card.firstChild);
     card.appendChild(btn);
@@ -10275,6 +10325,7 @@ else sizeCoverMedallion();
       if (lbActive()) { lbOpen(card); return; }
       var open = card.classList.toggle('food-card--open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      syncPhotoToggleLabel(btn);
       if (open && !img.src) img.src = img.getAttribute('data-src');
     });
   }
@@ -10295,6 +10346,7 @@ else sizeCoverMedallion();
     btn.type = 'button';
     btn.className = 'hh-line__toggle';
     btn.setAttribute('aria-expanded', 'false');
+    syncPhotoToggleLabel(btn);
     while (line.firstChild) btn.appendChild(line.firstChild);
     line.appendChild(btn);
 
@@ -10343,6 +10395,7 @@ else sizeCoverMedallion();
       if (lbActive()) { lbOpen(line); return; }
       var open = line.classList.toggle('hh-line--open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      syncPhotoToggleLabel(btn);
       if (open && !img.src) img.src = img.getAttribute('data-src');
     });
   }
@@ -10358,6 +10411,7 @@ else sizeCoverMedallion();
     btn.type = 'button';
     btn.className = 'price-line__toggle';
     btn.setAttribute('aria-expanded', 'false');
+    syncPhotoToggleLabel(btn);
     while (line.firstChild) btn.appendChild(line.firstChild);
     line.appendChild(btn);
 
@@ -10404,6 +10458,7 @@ else sizeCoverMedallion();
       if (lbActive()) { lbOpen(line); return; }
       var open = line.classList.toggle('price-line--open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      syncPhotoToggleLabel(btn);
       if (open && !img.src) img.src = img.getAttribute('data-src');
     });
   }
@@ -10426,6 +10481,7 @@ else sizeCoverMedallion();
     btn.type = 'button';
     btn.className = 'beer-row__toggle';
     btn.setAttribute('aria-expanded', 'false');
+    syncPhotoToggleLabel(btn);
     btn.appendChild(row);
     line.appendChild(btn);
 
@@ -10481,6 +10537,7 @@ else sizeCoverMedallion();
       if (lbActive()) { lbOpen(line); return; }
       var open = line.classList.toggle('beer-row--open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      syncPhotoToggleLabel(btn);
       if (open && !img.src) img.src = img.getAttribute('data-src');
     });
   }
@@ -10636,6 +10693,18 @@ else sizeCoverMedallion();
     return t ? t.textContent.trim() : 'Happy Hour';
   }
 
+  function syncLightboxLabels() {
+    if (!lb) return;
+    var closeText = uiText('Fermer', 'Fermer');
+    var prevText = uiText('Photo précédente', 'Photo précédente');
+    var nextText = uiText('Photo suivante', 'Photo suivante');
+    var close = lb.querySelector('.lightbox__close');
+    if (close) { close.setAttribute('aria-label', closeText); close.title = closeText; }
+    if (lbPrev) { lbPrev.setAttribute('aria-label', prevText); lbPrev.title = prevText; }
+    if (lbNext) { lbNext.setAttribute('aria-label', nextText); lbNext.title = nextText; }
+    if (lb.classList.contains('is-open') && lbGroup && lbGroup.length) lbShow(lbIndex);
+  }
+
   function lbBuild() {
     if (lb) return lb;
     lb = document.createElement('div');
@@ -10679,16 +10748,16 @@ else sizeCoverMedallion();
     var close = document.createElement('button');
     close.type = 'button';
     close.className = 'lightbox__close';
-    close.setAttribute('aria-label', 'Fermer');
+    close.setAttribute('aria-label', uiText('Fermer', 'Fermer'));
 
     lbPrev = document.createElement('button');
     lbPrev.type = 'button';
     lbPrev.className = 'lightbox__nav lightbox__nav--prev';
-    lbPrev.setAttribute('aria-label', 'Photo précédente');
+    lbPrev.setAttribute('aria-label', uiText('Photo précédente', 'Photo précédente'));
     lbNext = document.createElement('button');
     lbNext.type = 'button';
     lbNext.className = 'lightbox__nav lightbox__nav--next';
-    lbNext.setAttribute('aria-label', 'Photo suivante');
+    lbNext.setAttribute('aria-label', uiText('Photo suivante', 'Photo suivante'));
 
     frame.appendChild(lbImg);
     frame.appendChild(bar);
@@ -10697,6 +10766,7 @@ else sizeCoverMedallion();
     frame.appendChild(lbNext);
     lb.appendChild(frame);
     document.body.appendChild(lb);
+    syncLightboxLabels();
 
     close.addEventListener('click', lbClose);
     /* Clic sur le fond — mais pas sur le cadre — referme. */
@@ -10912,15 +10982,29 @@ else sizeCoverMedallion();
      réglé dans une langue non traduite */
   var ANIM_LANG = null;
   function animLang() {
+    /* La langue choisie dans le globe prime toujours sur celle du système.
+       Sinon, un visiteur français qui sélectionne l'arabe voyait encore le
+       décompte et le message de l'Happy Hour en français. */
+    var selected = (document.documentElement.getAttribute('lang') || 'fr').slice(0, 2);
+    if (MSG[selected]) { ANIM_LANG = selected; return selected; }
     if (ANIM_LANG) return ANIM_LANG;
     var list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || ''];
     for (var i = 0; i < list.length; i++) {
       var p = String(list[i] || '').toLowerCase().split('-')[0];
       if (MSG[p]) { ANIM_LANG = p; return p; }
     }
-    ANIM_LANG = (document.documentElement.getAttribute('lang') || 'fr').slice(0, 2);
+    ANIM_LANG = 'fr';
     return ANIM_LANG;
   }
+  window.addEventListener('lcg-lang-changed', function () {
+    ANIM_LANG = null;
+    if (titleEl && camp) {
+      camp.title = animLang() === 'fr' ? 'HAPPY HOUR' : (window.__i18nDicts && window.__i18nDicts[animLang()] && window.__i18nDicts[animLang()]['HAPPY HOUR']) || camp.title;
+      if (titleEl) titleEl.textContent = camp.title;
+      if (kickerEl) kickerEl.textContent = camp.title;
+      if (msgText && camp.msg) msgText.textContent = camp.msg();
+    }
+  });
   var NUM = { ar: '٠١٢٣٤٥٦٧٨٩', hi: '०१२३४५६७८९' };
   /* numéraux traditionnels pour les langues qui ne comptent pas en chiffres
      européens : chinois/japonais (kanji) et coréen (hangul) ; les autres
