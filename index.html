@@ -8854,8 +8854,14 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
   line-height:1.35;
 }
 .cover-hours__happy {
+  width:100%;
+  margin-top:-1px;
   color:var(--gold-300, #f0d78f);
+  font-size:clamp(.62rem,1.1vw,.76rem);
   font-weight:700;
+  letter-spacing:.06em;
+  line-height:1.3;
+  text-align:center;
   white-space:nowrap;
 }
 .cover-hours__status {
@@ -9310,7 +9316,8 @@ html:not(.carte-doc) #cover-section .cover-links .contact-link {
       <div class="cover-footer">
         <div class="cover-hours" aria-label="Horaires d’ouverture">
           <div class="cover-hours__heading"><span class="star-gold">✦</span> <span data-hours-label>Horaires</span> <span class="star-gold">✦</span></div>
-          <div class="cover-hours__range"><span data-hours-days>Tous les jours</span> · <span data-hours-range>07h00 — 02h00</span> · <span data-hours-continuous>service continu</span> · <span class="cover-hours__happy" data-hours-happy>Happy Hour · 17h00 — 23h00</span></div>
+          <div class="cover-hours__range"><span data-hours-days>Tous les jours</span> · <span data-hours-range>07h00 — 02h00</span> · <span data-hours-continuous>service continu</span></div>
+          <div class="cover-hours__happy" data-hours-happy>Happy Hour · 17h00 — 23h00</div>
           <div class="cover-hours__status is-open" data-hours-status role="status" aria-live="polite"><span class="cover-hours__dot" aria-hidden="true"></span><span data-hours-status-text>Ouvert maintenant</span></div>
         </div>
         <div class="cover-footer-address">4 rue Belgrand • 75020 Paris • Place Gambetta</div>
