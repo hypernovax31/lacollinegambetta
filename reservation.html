@@ -2098,15 +2098,15 @@ html[lang="uk"] .thanks__sign {
           <p class="panel__subtitle">Pour le jour même, le téléphone reste le plus sûr.</p>
         </div>
         <div class="info-grid">
-          <a class="info-link" href="tel:+33143490593">
+          <a class="info-link" href="tel:+33143490593" title="Appeler le restaurant" aria-label="Appeler le restaurant">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
             01 43 49 05 93
           </a>
-          <a class="info-link" href="mailto:restaurant@lacollinegambetta.com">
+          <a class="info-link" href="mailto:restaurant@lacollinegambetta.com" title="Envoyer un e-mail" aria-label="Envoyer un e-mail">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>
             restaurant@lacollinegambetta.com
           </a>
-          <a class="info-link" href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener">
+          <a class="info-link" href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener" title="Ouvrir Instagram" aria-label="Ouvrir Instagram">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>
             lacolline.gambetta
           </a>
@@ -2153,9 +2153,9 @@ html[lang="uk"] .thanks__sign {
         <span>Télécharger la carte (PDF)</span>
       </a></div>
 <div class="footer-links">
-        <a href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener" class="footer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle class="ig-dot" cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>lacolline.gambetta</a>
-        <a href="tel:+33143490593" class="footer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</a>
-        <a href="mailto:restaurant@lacollinegambetta.com" class="footer-link footer-link--mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>restaurant@lacollinegambetta.com</a>
+        <a href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener" class="footer-link" title="Ouvrir Instagram" aria-label="Ouvrir Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle class="ig-dot" cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>lacolline.gambetta</a>
+        <a href="tel:+33143490593" class="footer-link" title="Appeler le restaurant" aria-label="Appeler le restaurant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</a>
+        <a href="mailto:restaurant@lacollinegambetta.com" class="footer-link footer-link--mail" title="Envoyer un e-mail" aria-label="Envoyer un e-mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>restaurant@lacollinegambetta.com</a>
       </div>
       <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><span>4 RUE BELGRAND, 75020 PARIS</span><span>•</span><span>MÉTRO GAMBETTA</span></div>
     </footer>
@@ -3006,6 +3006,19 @@ html[lang="uk"] .thanks__sign {
     return el ? el.textContent.trim() : "";
   }
 
+  function contactCopy(key, fallback) {
+    var lang = getDocLang();
+    var dict = window.__i18nDicts && window.__i18nDicts[lang];
+    return (lang !== 'fr' && dict && dict[key]) ? dict[key] : fallback;
+  }
+
+  function labelContactLink(link, key, fallback) {
+    if (!link) return;
+    var label = contactCopy(key, fallback);
+    link.title = label;
+    link.setAttribute('aria-label', label);
+  }
+
   function renderStatusCard(data) {
     if (!data || !status) return;
     var lang = getDocLang();
@@ -3092,6 +3105,7 @@ html[lang="uk"] .thanks__sign {
       tel.appendChild(document.createTextNode((th("tel") || "Une question ? Appelez-nous au") + " "));
       var a = document.createElement("a");
       a.href = "tel:+33143490593";
+      labelContactLink(a, 'Appeler le restaurant', 'Appeler le restaurant');
       a.textContent = "01 43 49 05 93";
       tel.appendChild(a);
 
@@ -3126,6 +3140,7 @@ html[lang="uk"] .thanks__sign {
       tel.className = "thanks__tel";
       var a = document.createElement("a");
       a.href = "tel:+33143490593";
+      labelContactLink(a, 'Appeler le restaurant', 'Appeler le restaurant');
       a.textContent = "01 43 49 05 93";
       tel.appendChild(a);
 
@@ -3162,6 +3177,7 @@ html[lang="uk"] .thanks__sign {
       tel.appendChild(document.createTextNode(telTxt + " "));
       var a = document.createElement("a");
       a.href = "tel:+33143490593";
+      labelContactLink(a, 'Appeler le restaurant', 'Appeler le restaurant');
       a.textContent = "01 43 49 05 93";
       tel.appendChild(a);
 
