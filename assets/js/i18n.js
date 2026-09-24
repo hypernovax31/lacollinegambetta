@@ -6751,8 +6751,8 @@
     ['a[href^="tel:+33143490593"]', 'aria-label', 'Appeler le restaurant'],
     ['a[href^="https://www.instagram.com/lacolline.gambetta"]', 'title', 'Ouvrir Instagram'],
     ['a[href^="https://www.instagram.com/lacolline.gambetta"]', 'aria-label', 'Ouvrir Instagram'],
-    ['a[href^="mailto:restaurant@lacollinegambetta.com"]', 'title', 'Envoyer un e-mail'],
-    ['a[href^="mailto:restaurant@lacollinegambetta.com"]', 'aria-label', 'Envoyer un e-mail'],
+    ['.footer .footer-link--mail', 'title', 'restaurant@lacollinegambetta.com'],
+    ['.footer .footer-link--mail', 'aria-label', 'restaurant@lacollinegambetta.com'],
     ['#book-map', 'aria-label', 'Plan : 4 rue Belgrand, Paris 20ᵉ'],
   ];
   function norm(t) { return String(t).replace(/\s+/g, ' ').trim(); }

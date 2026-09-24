@@ -129,7 +129,6 @@
     ['Télécharger la carte au format PDF','Download the menu as a PDF','Descargar la carta en PDF','Speisekarte als PDF herunterladen','Scarica la carta in PDF','Descarregar a carta em PDF','Menu als pdf downloaden','تنزيل القائمة بصيغة PDF','以 PDF 格式下载菜单','Завантажити меню у форматі PDF','メニューをPDFでダウンロード','메뉴를 PDF로 다운로드','Pobierz kartę w formacie PDF','Menüyü PDF olarak indir','मेन्यू को PDF के रूप में डाउनलोड करें'],
     ['Ouvrir Instagram','Open Instagram','Abrir Instagram','Instagram öffnen','Apri Instagram','Abrir o Instagram','Instagram openen','فتح إنستغرام','打开 Instagram','Відкрити Instagram','Instagramを開く','Instagram 열기','Otwórz Instagram','Instagram’ı aç','Instagram खोलें'],
     ['Appeler le restaurant','Call the restaurant','Llamar al restaurante','Restaurant anrufen','Chiama il ristorante','Ligar para o restaurante','Restaurant bellen','الاتصال بالمطعم','致电餐厅','Зателефонувати до ресторану','レストランに電話','레스토랑에 전화','Zadzwoń do restauracji','Restoranı ara','रेस्तरां को कॉल करें'],
-    ['Envoyer un e-mail','Send an email','Enviar un correo electrónico','E-Mail senden','Invia un’e-mail','Enviar um e-mail','Een e-mail sturen','إرسال بريد إلكتروني','发送电子邮件','Надіслати електронний лист','メールを送信','이메일 보내기','Wyślij e-mail','E-posta gönder','ई-मेल भेजें'],
     ['MÉTRO GAMBETTA','Gambetta metro','Metro Gambetta','U-Bahn Gambetta','Metro Gambetta','Metro Gambetta','Metro Gambetta','مترو غامبيتا','Gambetta 地铁站','Метро Gambetta','ガンベッタ駅','감베타 지하철역','Metro Gambetta','Gambetta metrosu','गाम्बेटा मेट्रो'],
     ['RCS','Trade and Companies Register','Registro Mercantil','Handelsregister','Registro delle imprese','Registo Comercial','Handelsregister','السجل التجاري والشركات','商业和公司登记处','Реєстр торгівлі та компаній','商業・会社登記所','상업·회사 등록부','Rejestr handlowy i spółek','Ticaret ve Şirketler Sicili','व्यापार और कंपनी रजिस्टर'],
     ['24 juillet 2026','24 July 2026','24 de julio de 2026','24. Juli 2026','24 luglio 2026','24 de julho de 2026','24 juli 2026','٢٤ يوليو ٢٠٢٦','2026年7月24日','24 липня 2026','2026年7月24日','2026년 7월 24일','24 lipca 2026','24 Temmuz 2026','24 जुलाई 2026'],
@@ -183,8 +182,8 @@
       ['.footer-links a[href^="https://www.instagram.com"]', 'aria-label', 'Ouvrir Instagram'],
       ['.footer-links a[href^="tel:"]', 'title', 'Appeler le restaurant'],
       ['.footer-links a[href^="tel:"]', 'aria-label', 'Appeler le restaurant'],
-      ['.footer-links a[href^="mailto:"]', 'title', 'Envoyer un e-mail'],
-      ['.footer-links a[href^="mailto:"]', 'aria-label', 'Envoyer un e-mail']
+      ['.footer-links a[href^="mailto:"]', 'title', 'restaurant@lacollinegambetta.com'],
+      ['.footer-links a[href^="mailto:"]', 'aria-label', 'restaurant@lacollinegambetta.com']
     ];
     for (var fi = 0; fi < footerAttrs.length; fi++) {
       var attr = footerAttrs[fi];
