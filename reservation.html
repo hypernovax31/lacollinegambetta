@@ -2692,6 +2692,23 @@ html[lang="uk"] .thanks__sign {
     tr: '(Dolu)',
     hi: '(भरा हुआ)'
   };
+  var UNAVAILABLE_LABELS = {
+    fr: '(Indisponible)',
+    en: '(Unavailable)',
+    es: '(No disponible)',
+    de: '(Nicht verfügbar)',
+    it: '(Non disponibile)',
+    pt: '(Indisponível)',
+    nl: '(Niet beschikbaar)',
+    pl: '(Niedostępne)',
+    zh: '(不可用)',
+    uk: '(Недоступно)',
+    ja: '(利用不可)',
+    ko: '(이용 불가)',
+    ar: '(غير متاح)',
+    tr: '(Mevcut değil)',
+    hi: '(उपलब्ध नहीं)'
+  };
 
   function getDocLang() {
     return (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
@@ -3141,6 +3158,7 @@ html[lang="uk"] .thanks__sign {
     var isToday = (dateEl.value === now.date);
     var lang = getDocLang();
     var fullSuffix = FULL_LABELS[lang] || '(Complet)';
+    var unavailableSuffix = UNAVAILABLE_LABELS[lang] || '(Indisponible)';
     var availableCount = 0;
     var firstAvailable = null;
 
@@ -3154,8 +3172,15 @@ html[lang="uk"] .thanks__sign {
       var isPast = isToday && (mins <= now.minutes);
 
       var isCapacityAvailable = true;
+      var isUnavailableByTiming = false;
       if (slotsMap && slotsMap[opt.value] !== undefined) {
-        isCapacityAvailable = !!slotsMap[opt.value];
+        var slotInfo = slotsMap[opt.value];
+        if (slotInfo && typeof slotInfo === 'object') {
+          isCapacityAvailable = !!slotInfo.available;
+          isUnavailableByTiming = !!slotInfo.isPast || !!slotInfo.isClosed;
+        } else {
+          isCapacityAvailable = !!slotInfo;
+        }
       }
 
       if (isPast) {
@@ -3163,7 +3188,7 @@ html[lang="uk"] .thanks__sign {
         opt.textContent = base;
       } else if (!isCapacityAvailable) {
         opt.disabled = true;
-        opt.textContent = base + ' ' + fullSuffix;
+        opt.textContent = base + ' ' + (isUnavailableByTiming ? unavailableSuffix : fullSuffix);
       } else {
         opt.disabled = false;
         opt.textContent = base;
@@ -3230,7 +3255,11 @@ html[lang="uk"] .thanks__sign {
       if (!res || !Array.isArray(res.slots)) return;
       var map = {};
       res.slots.forEach(function (s) {
-        map[s.time || s.value] = s.available;
+        map[s.time || s.value] = {
+          available: !!s.available,
+          isPast: !!s.isPast,
+          isClosed: !!s.isClosed
+        };
       });
       lastKnownSlots = map;
       applySlotsToSelect(map);
