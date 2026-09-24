@@ -9344,6 +9344,59 @@ html:not(.carte-doc) #vins .wine-table tbody td.wine-name {
     padding-right:0 !important;
   }
 }
+
+/* ===== Globe : ancré au bandeau de titre actif ========================
+   Le bouton suit le bandeau visible — couverture ou en-tête de la carte —
+   au lieu de se placer dans le bandeau d'actions. Il reste ainsi dans le
+   coin supérieur droit de l'identité visuelle de chaque vue. */
+html:not(.carte-doc) .lang-dock {
+  position:absolute !important;
+  top:0 !important;
+  right:0 !important;
+  bottom:auto !important;
+  left:auto !important;
+  width:66px !important;
+  height:62px !important;
+}
+html:not(.carte-doc) #interior-menu .lang-dock .lang-menu {
+  position:absolute !important;
+  top:calc(100% + 8px) !important;
+  right:12px !important;
+  left:auto !important;
+  transform:none !important;
+  max-height:calc(100vh - 76px) !important;
+}
+/* La couverture coupe ses effets décoratifs : le menu s'ouvre donc hors de
+   la couverture, sous le globe, sans être rogné par son overflow. */
+html:not(.carte-doc) #cover-section .lang-dock .lang-menu {
+  position:fixed !important;
+  top:62px !important;
+  right:12px !important;
+  left:auto !important;
+  transform:none !important;
+  max-height:calc(100vh - 76px) !important;
+}
+@media (max-width:720px) {
+  html:not(.carte-doc) .lang-dock {
+    width:58px !important;
+    height:58px !important;
+  }
+  html:not(.carte-doc) .lang-dock .lang-btn {
+    right:8px !important;
+    top:9px !important;
+  }
+  html:not(.carte-doc) #interior-menu .lang-dock .lang-menu {
+    top:calc(100% + 4px) !important;
+    right:8px !important;
+    max-height:calc(100vh - 68px) !important;
+  }
+  html:not(.carte-doc) #cover-section .lang-dock .lang-menu {
+    top:58px !important;
+    right:10px !important;
+    left:10px !important;
+    max-height:calc(100vh - 70px) !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -9786,8 +9839,9 @@ function showView(view) {
        la page de garde ce bandeau est masque — un globe place dedans
        serait invisible — il retourne donc au corps de page, ou il reste
        fixe en haut a droite. Un seul globe : on le DEPLACE. */
-    const bar = document.querySelector('.top-controls');
-    const target = (view === 'menu' && bar) ? bar : document.body;
+    const coverTitle = document.querySelector('#cover-section .cover-page');
+    const menuTitle = document.querySelector('#interior-menu .interior-header');
+    const target = view === 'menu' ? (menuTitle || document.body) : (coverTitle || document.body);
     if (dock.parentElement === target) return;
     target.insertBefore(dock, target.firstChild);
   }

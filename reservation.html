@@ -2123,6 +2123,40 @@ html[lang="uk"] .thanks__sign {
   .hours__card--single .hours__breakfast-copy { font-size:.76em; }
 }
 
+/* Le globe est ancré dans le bandeau de titre de la réservation. */
+.lang-dock {
+  position:absolute !important;
+  top:0 !important;
+  right:0 !important;
+  bottom:auto !important;
+  left:auto !important;
+  width:66px !important;
+  height:62px !important;
+}
+.lang-dock .lang-menu {
+  position:absolute !important;
+  top:calc(100% + 8px) !important;
+  right:12px !important;
+  left:auto !important;
+  transform:none !important;
+  max-height:calc(100vh - 76px) !important;
+}
+@media (max-width:720px) {
+  .lang-dock {
+    width:58px !important;
+    height:58px !important;
+  }
+  .lang-dock .lang-btn {
+    right:8px !important;
+    top:9px !important;
+  }
+  .lang-dock .lang-menu {
+    top:calc(100% + 4px) !important;
+    right:8px !important;
+    max-height:calc(100vh - 68px) !important;
+  }
+}
+
 /* GAMBETTA reprend exactement le doré lumineux du titre de la page de garde. */
 :root {
   --gold-bright:#ffe88f;
@@ -2135,6 +2169,12 @@ html[lang="uk"] .thanks__sign {
 </style>
 </head>
 <body>
+
+
+
+
+<div id="reservation-page">
+  <header class="interior-header">
 
 <div class="lang-dock">
     <button type="button" class="lang-btn" id="lang-btn" title="Langue / Language" aria-label="Langue / Language" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
@@ -2210,10 +2250,6 @@ html[lang="uk"] .thanks__sign {
       </div>
     </div>
   </div>
-
-
-<div id="reservation-page">
-  <header class="interior-header">
 
 
       <div class="eyebrow"><span class="star-gold">✦</span> RÉSERVATION <span class="star-gold">✦</span></div>

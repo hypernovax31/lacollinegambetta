@@ -87,7 +87,7 @@
     @media (max-width:650px) { .facts { grid-template-columns:1fr; gap:2px; } .facts dd { margin-bottom:8px; } .site-header h1 { letter-spacing:.045em; } }
     .site-header { position:relative; }
     .legal-lang-dock {
-      position:fixed;
+      position:absolute;
       top:0;
       right:0;
       z-index:20;
@@ -117,7 +117,7 @@
     .legal-lang-btn:hover, .legal-lang-btn:focus-visible { background:rgba(255,255,255,.12); border-color:var(--gold-100); outline:none; }
     .legal-lang-btn:hover svg, .legal-lang-btn:focus-visible svg { stroke:var(--gold-100); }
     .legal-lang-menu {
-      position:fixed;
+      position:absolute;
       top:58px;
       right:10px;
       width:min(380px, calc(100vw - 20px));
@@ -396,6 +396,41 @@
         align-items:stretch;
       }
       .footer .footer-links .footer-link { width:100%; }
+    }
+
+    /* Le globe appartient au bandeau du titre : il reste dans son angle
+       supérieur droit, sans flotter au-dessus du contenu au défilement. */
+    .site-header .legal-lang-dock {
+      position:absolute;
+      top:0;
+      right:0;
+    }
+    .site-header .legal-lang-menu {
+      position:absolute;
+      top:58px;
+      right:10px;
+    }
+    @media (max-width:720px) {
+      .site-header {
+        padding-left:16px;
+        padding-right:16px;
+      }
+      .site-header h1 {
+        max-width:100%;
+        font-size:clamp(1.55rem, 8.6vw, 2.35rem);
+        letter-spacing:.04em;
+        line-height:1.08;
+        overflow-wrap:anywhere;
+      }
+      .legal-card > h2 {
+        min-width:0;
+        overflow-wrap:anywhere;
+      }
+    }
+    @media (max-width:420px) {
+      .site-header h1 {
+        font-size:clamp(1.45rem, 8.2vw, 2rem);
+      }
     }
   </style>
 </head>
