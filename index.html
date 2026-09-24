@@ -9207,6 +9207,26 @@ html:not(.carte-doc) #cover-section .cover-hours .cover-footer-address {
     letter-spacing:.05em;
   }
 }
+
+/* Le globe reste attaché à la fenêtre, même lorsque le bandeau Menu & Carte
+   devient défilant : il ne doit jamais partir avec le scroll de la page. */
+html:not(.carte-doc) .lang-dock,
+html:not(.carte-doc) .top-controls > .lang-dock {
+  position:fixed !important;
+  top:0 !important;
+  right:0 !important;
+  bottom:auto !important;
+  left:auto !important;
+  width:66px !important;
+  height:62px !important;
+}
+@media (max-width:720px) {
+  html:not(.carte-doc) .lang-dock,
+  html:not(.carte-doc) .top-controls > .lang-dock {
+    width:58px !important;
+    height:58px !important;
+  }
+}
 </style>
 </head>
 <body>
