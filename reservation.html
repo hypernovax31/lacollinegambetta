@@ -154,7 +154,7 @@ button, a { font:inherit; }
 @media (max-width: 480px) {
 .top-controls .control-btn {
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
   }
 }
 @media (max-width: 640px) {
@@ -1065,7 +1065,7 @@ html[lang="hi"] .footer-download {
   white-space:normal !important;
   overflow:visible !important;
   text-overflow:clip !important;
-  overflow-wrap:anywhere;
+  overflow-wrap:normal;
   text-align:center;
   line-height:1.35;
   min-height:44px;
@@ -1509,7 +1509,7 @@ html[lang="ar"] .field__date-icon {
 .hours__day {
   font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.12em;
   font-size:.72rem; color:var(--violet-900); opacity:.78;
-  min-width:0; overflow-wrap:break-word;
+  min-width:0; overflow-wrap:normal;
 }
 /* Les deux heures aux extremites, le trait au milieu : c'est lui qui
    absorbe la largeur, donc les heures ne se rencontrent jamais. */
@@ -2155,6 +2155,20 @@ html[lang="uk"] .thanks__sign {
     right:8px !important;
     max-height:calc(100vh - 68px) !important;
   }
+}
+
+/* ===== Règle éditoriale absolue : aucun mot coupé ======================
+   Les retours se font uniquement entre les mots, jamais à l'intérieur
+   d'un mot, d'une adresse ou d'un intitulé. */
+body,
+body * {
+  overflow-wrap:normal !important;
+  word-break:normal !important;
+  hyphens:none !important;
+}
+.info-link[href^="mailto:"],
+.footer-link--mail {
+  white-space:nowrap !important;
 }
 
 /* GAMBETTA reprend exactement le doré lumineux du titre de la page de garde. */

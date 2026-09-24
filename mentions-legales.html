@@ -382,7 +382,7 @@
       white-space:normal;
       overflow:visible;
       text-overflow:clip;
-      overflow-wrap:anywhere;
+      overflow-wrap:normal;
       text-align:center;
       line-height:1.35;
       font-size:.78rem !important;
@@ -420,17 +420,27 @@
         font-size:clamp(1.55rem, 8.6vw, 2.35rem);
         letter-spacing:.04em;
         line-height:1.08;
-        overflow-wrap:anywhere;
+        overflow-wrap:normal;
       }
       .legal-card > h2 {
         min-width:0;
-        overflow-wrap:anywhere;
+        overflow-wrap:normal;
       }
     }
     @media (max-width:420px) {
       .site-header h1 {
-        font-size:clamp(1.45rem, 8.2vw, 2rem);
+        font-size:clamp(1.1rem, 7vw, 1.9rem);
       }
+    }
+
+    /* ===== Règle éditoriale absolue : aucun mot coupé ==================
+       Les retours se font uniquement entre les mots, jamais à l'intérieur
+       d'un mot, d'une adresse ou d'un titre. */
+    body,
+    body * {
+      overflow-wrap:normal !important;
+      word-break:normal !important;
+      hyphens:none !important;
     }
   </style>
 </head>

@@ -573,7 +573,7 @@ html:not(.carte-doc) .container {
 @media (max-width: 480px) {
   .top-controls .control-btn {
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
   }
 }
 @media (max-width: 640px) {
@@ -630,7 +630,7 @@ html:not(.carte-doc) .container {
   /* Libellés longs en langue étrangère : la pilule se replie sur deux
      lignes plutôt que de déborder (min-height la laisse grandir). */
   white-space: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
 }
 @media (max-width: 640px) {
   .top-controls {
@@ -4411,7 +4411,7 @@ html:not(.carte-doc) #cover-section .cover-brand .eyebrow,
 html:not(.carte-doc) #cover-section .leader-meta,
 html:not(.carte-doc) #cover-section .menu-leader-subline {
   max-width: 100%;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
 }
 html:not(.carte-doc) #cover-section .cover-brand h2 {
   display: block !important;
@@ -4477,7 +4477,7 @@ html:not(.carte-doc) #cover-section .cover-action,
   html:not(.carte-doc) #cover-section .cover-action,
   #btn-show-menu {
     white-space: normal !important;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
   }
   /* en bloc, les trois morceaux (✦ libellé ✦) redeviennent un seul
      flux inline qui se replie proprement, au lieu de trois items flex
@@ -4711,7 +4711,7 @@ html:not(.carte-doc) .beer-row__name,
 html:not(.carte-doc) .choice-card li,
 html:not(.carte-doc) .wine-table td {
   white-space: normal !important;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
   min-width: 0;
 }
 /* Les en-têtes de colonnes (25 cl, 50 cl, HH…) restent sur une ligne, mais
@@ -8738,12 +8738,12 @@ html:not(.carte-doc) #boissons .beer-row__photo img {
    séparateurs — la valeur elle-même restant insécable grâce à
    `white-space:normal` posé sur le conteneur et non sur le nombre. */
 html:not(.carte-doc) #boissons .price-line,
-html:not(.carte-doc) #cocktails .hh-line { overflow-wrap:break-word; }
+html:not(.carte-doc) #cocktails .hh-line { overflow-wrap:normal; }
 html:not(.carte-doc) #boissons .price-line__row,
 html:not(.carte-doc) #cocktails .hh-line__row { min-width:0; }
 html:not(.carte-doc) #boissons .price-line__name,
 html:not(.carte-doc) #cocktails .hh-line__name {
-  min-width:0; overflow-wrap:break-word; word-break:break-word; hyphens:auto;
+  min-width:0; overflow-wrap:normal; word-break:normal; hyphens:none;
 }
 html:not(.carte-doc) #boissons .price-line__price {
   min-width:0; white-space:normal; text-align:right;
@@ -8753,7 +8753,7 @@ html:not(.carte-doc) #boissons .price-line__price {
 html:not(.carte-doc) #boissons .price-list__note,
 html:not(.carte-doc) #cocktails .price-list__note,
 html:not(.carte-doc) #boissons .price-line__name .qty {
-  min-width:0; max-width:100%; overflow-wrap:break-word; word-break:break-word;
+  min-width:0; max-width:100%; overflow-wrap:normal; word-break:normal;
 }
 /* Le tiroir et la photo ne doivent pas non plus élargir l'encart. */
 html:not(.carte-doc) #boissons .price-line__drawer,
@@ -9359,7 +9359,7 @@ html:not(.carte-doc) .lang-dock {
   height:62px !important;
 }
 html:not(.carte-doc) #cover-section .cover-brand {
-  padding-inline:58px;
+  padding-inline:58px !important;
 }
 html:not(.carte-doc) #interior-menu .lang-dock .lang-menu {
   position:absolute !important;
@@ -9381,7 +9381,7 @@ html:not(.carte-doc) #cover-section .lang-dock .lang-menu {
 }
 @media (max-width:720px) {
   html:not(.carte-doc) #cover-section .cover-brand {
-    padding-inline:54px;
+    padding-inline:54px !important;
   }
   html:not(.carte-doc) .lang-dock {
     width:58px !important;
@@ -9402,6 +9402,21 @@ html:not(.carte-doc) #cover-section .lang-dock .lang-menu {
     left:10px !important;
     max-height:calc(100vh - 70px) !important;
   }
+}
+
+/* ===== Règle éditoriale absolue : aucun mot coupé ======================
+   Les retours se font uniquement entre les mots. Aucun composant ne peut
+   forcer une césure, une coupure arbitraire ou un mot cassé par overflow. */
+html:not(.carte-doc) body,
+html:not(.carte-doc) body * {
+  overflow-wrap:normal !important;
+  word-break:normal !important;
+  hyphens:none !important;
+}
+html:not(.carte-doc) .contact-link--mail,
+html:not(.carte-doc) .footer-link--mail,
+html:not(.carte-doc) .info-link[href^="mailto:"] {
+  white-space:nowrap !important;
 }
 </style>
 </head>
