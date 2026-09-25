@@ -7838,8 +7838,10 @@ html:not(.carte-doc) .lightbox {
   position:fixed; inset:0; z-index:9500;
   display:flex; align-items:center; justify-content:center;
   padding:clamp(16px,4vw,48px);
+  /* Fond d'arrière-plan constant : aucune variation globale au survol ou
+     au changement de photo dans la visionneuse. */
   background:rgba(24,12,32,.82);
-  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:none; backdrop-filter:none;
   opacity:0; visibility:hidden;
   transition:opacity .28s ease, visibility .28s;
 }
@@ -7957,6 +7959,11 @@ html:not(.carte-doc) .lightbox__nav--prev { left:10px; }
 html:not(.carte-doc) .lightbox__nav--next { right:10px; }
 html:not(.carte-doc) .lightbox__nav--prev::before { transform:rotate(135deg) translate(-2px,-2px); }
 html:not(.carte-doc) .lightbox__nav--next::before { transform:rotate(-45deg) translate(-2px,-2px); }
+html:not(.carte-doc) .lightbox__nav:hover,
+html:not(.carte-doc) .lightbox__nav:focus-visible,
+html:not(.carte-doc) .lightbox__nav:active {
+  background:rgba(255,255,255,.94);
+}
 html:not(.carte-doc) .lightbox__nav:hover {
   border-color:rgba(216,178,87,.9); transform:translateY(-50%) scale(1.06);
 }
@@ -10044,6 +10051,34 @@ html:not(.carte-doc) #vins .wine-row__chevron {
 html:not(.carte-doc) #vins .wine-row--open .wine-row__chevron {
   transform: rotate(-135deg) translate(-2px,-2px);
   border-color: var(--gold-700);
+}
+/* Sur PC, le chevron occupe la dernière colonne de la rangée, après toutes
+   les contenances. Il ne doit plus être accroché à l'appellation. */
+@media screen and (min-width:861px) {
+  html:not(.carte-doc) #interior-menu #vins .wine-table:not(.wine-table--short) tbody tr.wine-row {
+    grid-template-columns:minmax(0,1fr) repeat(4,minmax(max-content,96px)) 14px !important;
+    column-gap:16px !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row {
+    grid-template-columns:minmax(0,1fr) repeat(2,minmax(max-content,132px)) 14px !important;
+    column-gap:18px !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-row .wine-name {
+    padding-right:0 !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-row .wine-row__chevron {
+    position:static !important;
+    grid-column:-1 !important;
+    grid-row:1 !important;
+    justify-self:end !important;
+    align-self:center !important;
+    margin:0 !important;
+  }
+}
+@media screen and (max-width:860px) {
+  html:not(.carte-doc) #vins .wine-row {
+    position:relative;
+  }
 }
 html:not(.carte-doc) #vins .wine-detail-row {
   display: none !important;
@@ -12313,7 +12348,9 @@ else sizeCoverMedallion();
       var chevron = document.createElement('span');
       chevron.className = 'wine-row__chevron';
       chevron.setAttribute('aria-hidden', 'true');
-      name.appendChild(chevron);
+      /* Le chevron est le dernier enfant de la rangée : sur PC il peut
+         ainsi occuper la colonne dédiée après toutes les contenances. */
+      row.appendChild(chevron);
 
       row.tabIndex = 0;
       row.setAttribute('role', 'button');
