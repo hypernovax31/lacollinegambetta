@@ -10122,8 +10122,9 @@ html:not(.carte-doc) #vins .wine-detail-lines {
 }
 html:not(.carte-doc) #vins .wine-detail-line {
   display: grid;
-  grid-template-columns: 165px minmax(0, 1fr);
-  gap: 14px;
+  grid-template-columns: minmax(190px, max-content) minmax(0, 1fr);
+  column-gap: 20px;
+  row-gap: 2px;
   align-items: baseline;
   min-width: 0;
   margin: 0;
