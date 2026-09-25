@@ -9499,6 +9499,98 @@ html:not(.carte-doc) #interior-menu > .interior-header > p {
   margin-right: auto !important;
   text-align: center !important;
 }
+/* ===== Contenu centré sur écran PC =====
+   La version mobile conserve ses largeurs et ses alignements propres. Sur
+   écran large, les cartes, listes, tableaux et prix partagent le même axe
+   central : aucun intitulé ou montant ne reste plaqué sur un bord. */
+@media screen and (min-width: 861px) {
+  html:not(.carte-doc) #interior-menu .panel,
+  html:not(.carte-doc) #interior-menu .food-card,
+  html:not(.carte-doc) #interior-menu .choice-card,
+  html:not(.carte-doc) #interior-menu .special-card,
+  html:not(.carte-doc) #interior-menu .breakfast-card,
+  html:not(.carte-doc) #interior-menu .accent-band {
+    text-align: center !important;
+  }
+
+  html:not(.carte-doc) #interior-menu .food-card__head {
+    justify-content: center !important;
+  }
+  html:not(.carte-doc) #interior-menu .food-card__head h5,
+  html:not(.carte-doc) #interior-menu .food-card__head strong,
+  html:not(.carte-doc) #interior-menu .food-card__note {
+    text-align: center !important;
+  }
+
+  html:not(.carte-doc) #interior-menu .price-line__row {
+    justify-content: center !important;
+  }
+  html:not(.carte-doc) #interior-menu .price-line__name,
+  html:not(.carte-doc) #interior-menu .price-line__price,
+  html:not(.carte-doc) #interior-menu .price-list__note,
+  html:not(.carte-doc) #interior-menu .hh-line__name,
+  html:not(.carte-doc) #interior-menu .hh-line__price,
+  html:not(.carte-doc) #interior-menu .hh-line__hh,
+  html:not(.carte-doc) #interior-menu .hh-head {
+    text-align: center !important;
+  }
+
+  html:not(.carte-doc) #interior-menu .hh-head > *,
+  html:not(.carte-doc) #interior-menu .hh-line__row > *,
+  html:not(.carte-doc) #interior-menu .hh-line__price,
+  html:not(.carte-doc) #interior-menu .hh-line__hh,
+  html:not(.carte-doc) #interior-menu .hh-line__row .grand-price {
+    justify-self: center !important;
+  }
+
+  html:not(.carte-doc) #interior-menu .beer-table__head,
+  html:not(.carte-doc) #interior-menu .beer-row,
+  html:not(.carte-doc) #interior-menu .beer-row__row,
+  html:not(.carte-doc) #interior-menu .beer-table__head span,
+  html:not(.carte-doc) #interior-menu .beer-row__name,
+  html:not(.carte-doc) #interior-menu .beer-row__price,
+  html:not(.carte-doc) #interior-menu .beer-row__hh {
+    text-align: center !important;
+  }
+  html:not(.carte-doc) #interior-menu .beer-table__head span,
+  html:not(.carte-doc) #interior-menu .beer-row > *,
+  html:not(.carte-doc) #interior-menu .beer-row__row > * {
+    justify-self: center !important;
+  }
+
+  html:not(.carte-doc) #interior-menu .wine-table th,
+  html:not(.carte-doc) #interior-menu .wine-table td,
+  html:not(.carte-doc) #interior-menu .wine-table .wine-name,
+  html:not(.carte-doc) #interior-menu .wine-table .wine-no {
+    text-align: center !important;
+  }
+  html:not(.carte-doc) #interior-menu .wine-table th,
+  html:not(.carte-doc) #interior-menu .wine-table td {
+    justify-self: center !important;
+  }
+
+  html:not(.carte-doc) #interior-menu .choice-card h5 {
+    justify-content: center !important;
+    text-align: center !important;
+  }
+  html:not(.carte-doc) #interior-menu .choice-card li {
+    padding-left: 0 !important;
+    text-align: center !important;
+  }
+  html:not(.carte-doc) #interior-menu .choice-card li::before {
+    position: static !important;
+    margin-right: .4em;
+  }
+
+  html:not(.carte-doc) #interior-menu .day-lines div {
+    justify-content: center !important;
+    text-align: center !important;
+  }
+  html:not(.carte-doc) #interior-menu #menus .menu-points {
+    padding-left: 0 !important;
+    text-align: center !important;
+  }
+}
 </style>
 </head>
 <body>

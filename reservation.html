@@ -2181,6 +2181,58 @@ body * {
   text-shadow:0 0 10px rgba(255,232,143,.18);
 }
 
+/* ===== Contenu centré sur écran PC =====
+   À partir de 861 px, chaque bloc de la réservation partage le même axe
+   central. Les règles mobiles restent inchangées. */
+@media screen and (min-width: 861px) {
+  #reservation-page,
+  #reservation-page .panel,
+  #reservation-page .hours,
+  #reservation-page .form-status,
+  #reservation-page .map-foot {
+    text-align: center !important;
+  }
+
+  #reservation-page .hours__card--single,
+  #reservation-page .hours__single-line {
+    justify-content: center !important;
+  }
+
+  #reservation-page .field {
+    justify-items: center;
+    text-align: center !important;
+  }
+  #reservation-page .field > label,
+  #reservation-page .field__hint,
+  #reservation-page .field__error {
+    width: 100%;
+    text-align: center !important;
+  }
+  #reservation-page .field input,
+  #reservation-page .field select,
+  #reservation-page .field textarea {
+    text-align: center !important;
+  }
+  #reservation-page .field select {
+    text-align-last: center;
+  }
+  #reservation-page .field__date-text {
+    justify-content: center;
+    padding-left: 42px;
+    padding-right: 42px;
+    text-align: center;
+  }
+
+  #reservation-page .info-grid,
+  #reservation-page .form-actions,
+  #reservation-page .footer-links,
+  #reservation-page .footer-legal,
+  #reservation-page .legal-bottom-nav {
+    justify-items: center;
+    justify-content: center;
+    text-align: center !important;
+  }
+}
 </style>
 </head>
 <body>
