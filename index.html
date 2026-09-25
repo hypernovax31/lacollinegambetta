@@ -10056,11 +10056,11 @@ html:not(.carte-doc) #vins .wine-row--open .wine-row__chevron {
    les contenances. Il ne doit plus être accroché à l'appellation. */
 @media screen and (min-width:861px) {
   html:not(.carte-doc) #interior-menu #vins .wine-table:not(.wine-table--short) tbody tr.wine-row {
-    grid-template-columns:minmax(0,1fr) repeat(4,minmax(max-content,96px)) 14px !important;
-    column-gap:16px !important;
+    grid-template-columns:26px minmax(0,1fr) repeat(4,minmax(max-content,92px)) 14px !important;
+    column-gap:18px !important;
   }
   html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row {
-    grid-template-columns:minmax(0,1fr) repeat(2,minmax(max-content,132px)) 14px !important;
+    grid-template-columns:26px minmax(0,1fr) repeat(2,minmax(max-content,132px)) 14px !important;
     column-gap:18px !important;
   }
   html:not(.carte-doc) #interior-menu #vins .wine-row .wine-name {
@@ -10073,6 +10073,18 @@ html:not(.carte-doc) #vins .wine-row--open .wine-row__chevron {
     justify-self:end !important;
     align-self:center !important;
     margin:0 !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-row td.wine-name {
+    justify-self:start !important;
+    text-align:left !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-row td:not(.wine-name):not(.wine-no) {
+    justify-self:end !important;
+    text-align:right !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table thead tr th:not(.th-name):not(:first-child) {
+    justify-self:end !important;
+    text-align:right !important;
   }
 }
 @media screen and (max-width:860px) {
