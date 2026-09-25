@@ -6830,14 +6830,19 @@
     }
   }
 
+  /* localized-digits.js est chargé avant ce fichier. Conserver sa référence
+     avant d’exposer le relais i18n : sinon le relais se rappellerait lui-même
+     au premier applyLang() et interromprait tout le script de traduction. */
+  var baseLocalizeDisplayDigits = window.LCGLocalizeDisplayDigits;
+  var baseLocalizeAllDisplayDigits = window.LCGLocalizeAllDisplayDigits;
   function localizeDisplayDigits(value, lang) {
-    return window.LCGLocalizeDisplayDigits
-      ? window.LCGLocalizeDisplayDigits(value, lang)
+    return baseLocalizeDisplayDigits
+      ? baseLocalizeDisplayDigits(value, lang)
       : String(value == null ? '' : value);
   }
   function localizeAllDisplayDigits(lang) {
-    if (window.LCGLocalizeAllDisplayDigits) {
-      window.LCGLocalizeAllDisplayDigits(document.body, lang);
+    if (baseLocalizeAllDisplayDigits) {
+      baseLocalizeAllDisplayDigits(document.body, lang);
     }
   }
   function contactKind(anchor) {
