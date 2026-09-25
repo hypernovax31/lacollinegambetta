@@ -10088,6 +10088,52 @@ html:not(.carte-doc) #vins .wine-detail-text strong {
   }
 }
 
+/* ===== Mobile : tiroirs boissons/cocktails sans vide sous la photo =====
+   Sur petit écran les lignes sont en colonne. Les anciennes règles de
+   cartes conservaient à la fois le gap de la fiche, la marge basse de la
+   photo et une hauteur de ligne héritée de la grille : un grand espace
+   blanc apparaissait alors avant l'encart suivant. Le tiroir doit épouser
+   strictement son contenu. */
+@media screen and (max-width:720px) {
+  html:not(.carte-doc) #boissons .price-line--open,
+  html:not(.carte-doc) #cocktails .hh-line--open {
+    height:auto !important;
+    min-height:0 !important;
+    align-self:start !important;
+    gap:0 !important;
+    padding-bottom:7px !important;
+  }
+  html:not(.carte-doc) #boissons .price-line--open > .price-line__drawer,
+  html:not(.carte-doc) #cocktails .hh-line--open > .hh-line__drawer {
+    height:auto !important;
+    min-height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+  html:not(.carte-doc) #boissons .price-line--open .price-line__drawer > div,
+  html:not(.carte-doc) #cocktails .hh-line--open .hh-line__drawer > div {
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    overflow:visible !important;
+  }
+  html:not(.carte-doc) #boissons .price-line--open .price-line__photo,
+  html:not(.carte-doc) #cocktails .hh-line--open .hh-line__photo {
+    width:100% !important;
+    height:auto !important;
+    max-height:none !important;
+    aspect-ratio:16 / 9 !important;
+    margin:6px 0 0 !important;
+  }
+  html:not(.carte-doc) #boissons .price-line--open .price-line__photo img,
+  html:not(.carte-doc) #cocktails .hh-line--open .hh-line__photo img {
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+}
+
 </style>
 </head>
 <body>
