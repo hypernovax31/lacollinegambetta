@@ -10062,7 +10062,7 @@ html:not(.carte-doc) #vins .wine-detail-line {
 html:not(.carte-doc) #vins .wine-detail-label {
   min-width: 0;
   color: var(--violet-900);
-  font-weight: 400;
+  font-weight: 700;
   letter-spacing: .05em;
   white-space: nowrap;
 }
@@ -10070,6 +10070,7 @@ html:not(.carte-doc) #vins .wine-detail-value {
   min-width: 0;
   color: var(--ink);
   font-weight: 400;
+  text-transform: lowercase;
   overflow-wrap: normal;
   word-break: normal;
   hyphens: none;
@@ -10082,13 +10083,29 @@ html:not(.carte-doc) #vins .wine-detail-value {
   }
 }
 @media (max-width: 706px) {
+  html:not(.carte-doc) #vins .wine-detail-row {
+    width: 100% !important;
+    min-width: 0 !important;
+    justify-self: stretch !important;
+  }
+  html:not(.carte-doc) #vins .wine-detail-row > td {
+    box-sizing: border-box;
+  }
   html:not(.carte-doc) #vins .wine-detail-card {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
     margin: 0 0 3px;
     padding: 12px 14px 13px;
     border-radius: 13px;
   }
+  html:not(.carte-doc) #vins .wine-detail-lines,
   html:not(.carte-doc) #vins .wine-detail-line {
-    grid-template-columns: 1fr;
+    width: 100%;
+    min-width: 0;
+  }
+  html:not(.carte-doc) #vins .wine-detail-line {
+    grid-template-columns: minmax(0, 1fr);
     gap: 2px;
   }
   html:not(.carte-doc) #vins .wine-detail-label {
@@ -10102,36 +10119,45 @@ html:not(.carte-doc) #vins .wine-detail-value {
   }
 }
 
-/* ===== Mobile : tiroirs boissons/cocktails sans vide sous la photo =====
-   Sur petit écran les lignes sont en colonne. Les anciennes règles de
-   cartes conservaient à la fois le gap de la fiche, la marge basse de la
-   photo et une hauteur de ligne héritée de la grille : un grand espace
-   blanc apparaissait alors avant l'encart suivant. Le tiroir doit épouser
-   strictement son contenu. */
+/* ===== Mobile : mêmes animations photo que dans Desserts ============
+   Les cartes de plats et desserts déploient leur photo par une transition
+   de grille 0fr → 1fr. Les boissons et cocktails conservaient auparavant
+   un affichage direct sur mobile pour supprimer un vide résiduel : ce
+   raccourci supprimait aussi l'animation. Tous les tiroirs reprennent
+   maintenant le même mécanisme, sans hauteur forcée ni débordement. */
 @media screen and (max-width:720px) {
   html:not(.carte-doc) #boissons .price-line--open,
-  html:not(.carte-doc) #cocktails .hh-line--open {
+  html:not(.carte-doc) #cocktails .hh-line--open,
+  html:not(.carte-doc) #boissons .beer-row--open {
     height:auto !important;
     min-height:0 !important;
     align-self:start !important;
     gap:0 !important;
     padding-bottom:7px !important;
   }
-  html:not(.carte-doc) #boissons .price-line--open > .price-line__drawer,
-  html:not(.carte-doc) #cocktails .hh-line--open > .hh-line__drawer {
-    display:block !important;
+  html:not(.carte-doc) #boissons .price-line__drawer,
+  html:not(.carte-doc) #cocktails .hh-line__drawer,
+  html:not(.carte-doc) #boissons .beer-row__drawer {
+    display:grid !important;
+    grid-template-rows:0fr !important;
     height:auto !important;
     min-height:0 !important;
     margin:0 !important;
     padding:0 !important;
-    grid-template-rows:none !important;
+    transition:grid-template-rows .32s cubic-bezier(.4,.1,.2,1) !important;
   }
-  html:not(.carte-doc) #boissons .price-line--open .price-line__drawer > div,
-  html:not(.carte-doc) #cocktails .hh-line--open .hh-line__drawer > div {
+  html:not(.carte-doc) #boissons .price-line--open > .price-line__drawer,
+  html:not(.carte-doc) #cocktails .hh-line--open > .hh-line__drawer,
+  html:not(.carte-doc) #boissons .beer-row--open > .beer-row__drawer {
+    grid-template-rows:1fr !important;
+  }
+  html:not(.carte-doc) #boissons .price-line__drawer > div,
+  html:not(.carte-doc) #cocktails .hh-line__drawer > div,
+  html:not(.carte-doc) #boissons .beer-row__drawer > div {
     height:auto !important;
     min-height:0 !important;
     max-height:none !important;
-    overflow:visible !important;
+    overflow:hidden !important;
   }
   html:not(.carte-doc) #boissons .price-line--open .price-line__photo,
   html:not(.carte-doc) #cocktails .hh-line--open .hh-line__photo {
