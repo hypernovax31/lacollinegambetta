@@ -75,6 +75,10 @@ button, a { font:inherit; }
 .footer { background:#592e6f; border-top:2px solid var(--gold-500); color:#fff; padding:16px 12px calc(18px + env(safe-area-inset-bottom)); text-align:center; margin-top:24px; }
 .footer-details { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px 20px; color:var(--gold-100); font-family:'Cinzel',serif; font-size:clamp(.62rem,1.2vw,.84rem); letter-spacing:.08em; text-transform:uppercase; }
     .footer-details__metro { flex-basis:100%; }
+@media (min-width: 861px) {
+  .footer-details { flex-wrap:nowrap; white-space:nowrap; }
+  .footer-details__metro { flex-basis:auto; }
+}
     .footer-address-link { color:inherit; text-decoration:none; }
     .footer-address-link:hover, .footer-address-link:focus-visible { color:var(--gold-100); text-decoration:underline; text-underline-offset:3px; }
 .footer-links { margin:10px 0; }
