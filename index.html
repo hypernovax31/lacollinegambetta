@@ -9915,6 +9915,60 @@ html:not(.carte-doc) #vins .wine-producer {
   word-break:normal;
   hyphens:none;
 }
+/* ===== Réglages PC finaux : cocktails et vins =========================
+   Les règles historiques de centrage du menu sont plus spécifiques sur
+   desktop. Ces reprises rétablissent l'axe gauche des intitulés, resserrent
+   les deux tarifs et gardent le chevron sur la même ligne, à droite. */
+@media screen and (min-width:861px) {
+  html:not(.carte-doc) #interior-menu #cocktails .hh-line,
+  html:not(.carte-doc) #interior-menu #cocktails .hh-line > .hh-line__toggle,
+  html:not(.carte-doc) #interior-menu #cocktails .hh-head {
+    grid-template-columns:minmax(0,1fr) repeat(2,minmax(max-content,64px)) 12px !important;
+    column-gap:12px !important;
+  }
+  html:not(.carte-doc) #interior-menu #cocktails .hh-line__name {
+    justify-self:start !important;
+    text-align:left !important;
+    padding:0 !important;
+    margin:0 !important;
+  }
+  html:not(.carte-doc) #interior-menu #cocktails .hh-line__price,
+  html:not(.carte-doc) #interior-menu #cocktails .hh-line__hh {
+    justify-self:end !important;
+    text-align:right !important;
+    margin:0 !important;
+  }
+  html:not(.carte-doc) #interior-menu #cocktails .hh-line__chevron {
+    grid-column:4 !important;
+    grid-row:1 !important;
+    align-self:center !important;
+    justify-self:end !important;
+    margin:0 !important;
+  }
+  html:not(.carte-doc) #interior-menu #cocktails .hh-head span:nth-child(2),
+  html:not(.carte-doc) #interior-menu #cocktails .hh-head span:nth-child(3) {
+    justify-self:end !important;
+    text-align:right !important;
+  }
+  html:not(.carte-doc) #interior-menu #cocktails .hh-head::after {
+    grid-column:4 !important;
+    justify-self:end !important;
+  }
+
+  /* Sur PC, l'appellation et son producteur restent dans le même flux
+     horizontal ; la première colonne se replie si elle manque de place,
+     sans jamais passer sous une colonne de prix. */
+  html:not(.carte-doc) #interior-menu #vins .wine-table .wine-name {
+    justify-self:start !important;
+    text-align:left !important;
+    min-width:0 !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table .wine-producer {
+    display:inline !important;
+    margin-top:0 !important;
+    white-space:normal !important;
+  }
+}
 </style>
 </head>
 <body>
