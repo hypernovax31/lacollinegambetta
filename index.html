@@ -9974,6 +9974,10 @@ html:not(.carte-doc) #vins .wine-producer {
    Le tableau reste la carte des prix. Chaque rangée devient un encart
    accessible ; son tiroir reprend le geste des fiches photos, sans ajouter
    de bloc permanent sous les tableaux. */
+@keyframes wine-detail-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 html:not(.carte-doc) #vins .wine-row {
   cursor: pointer;
 }
@@ -10007,29 +10011,31 @@ html:not(.carte-doc) #vins .wine-row--open .wine-row__chevron {
   border-color: var(--gold-700);
 }
 html:not(.carte-doc) #vins .wine-detail-row {
-  display: grid !important;
-  grid-template-rows: 0fr !important;
+  display: none !important;
+  grid-column: 1 / -1 !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: auto !important;
   padding: 0 !important;
-  margin: -5px 0 0 !important;
+  margin: -4px 0 0 !important;
   border: 0 !important;
   background: transparent !important;
-  overflow: hidden;
-  transition: grid-template-rows .32s cubic-bezier(.4,.1,.2,1);
 }
 html:not(.carte-doc) #vins .wine-detail-row--open {
-  grid-template-rows: 1fr !important;
+  display: grid !important;
+  animation: wine-detail-in .22s ease-out both;
 }
 html:not(.carte-doc) #vins .wine-detail-row > td {
   display: block !important;
-  min-height: 0;
-  overflow: hidden;
+  width: 100% !important;
+  min-width: 0 !important;
   padding: 0 !important;
   border: 0 !important;
   background: transparent !important;
 }
 html:not(.carte-doc) #vins .wine-detail-card {
-  margin: 0 24px 4px;
-  padding: 13px 16px 14px;
+  width: 100%;
+  margin: 0 0 5px;
+  padding: 14px 20px 15px;
   border: 1px solid rgba(216,178,87,.28);
   border-radius: 14px;
   background: rgba(255,255,255,.72);
@@ -10055,8 +10061,8 @@ html:not(.carte-doc) #vins .wine-detail-text strong {
 }
 @media (max-width: 706px) {
   html:not(.carte-doc) #vins .wine-detail-card {
-    margin: 0 14px 3px;
-    padding: 12px 13px 13px;
+    margin: 0 0 3px;
+    padding: 12px 14px 13px;
     border-radius: 13px;
   }
 }
