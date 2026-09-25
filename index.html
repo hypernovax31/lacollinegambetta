@@ -9591,6 +9591,44 @@ html:not(.carte-doc) #interior-menu > .interior-header > p {
     text-align: center !important;
   }
 }
+/* ===== Page de garde : centrage horizontal intégral sur PC =====
+   Tous les blocs visibles de la couverture suivent le même axe central.
+   Le sélecteur de langue reste volontairement en haut à droite, comme
+   prévu pour rester accessible sur toutes les vues. */
+@media screen and (min-width: 861px) {
+  html:not(.carte-doc) #cover-section .cover-page {
+    justify-items: center !important;
+  }
+
+  html:not(.carte-doc) #cover-section .cover-brand,
+  html:not(.carte-doc) #cover-section .medallion-container,
+  html:not(.carte-doc) #cover-section .cover-action,
+  html:not(.carte-doc) #cover-section .cover-footer,
+  html:not(.carte-doc) #cover-section .cover-hours,
+  html:not(.carte-doc) #cover-section .cover-links {
+    justify-self: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+  }
+
+  html:not(.carte-doc) #cover-section .cover-brand > *,
+  html:not(.carte-doc) #cover-section .cover-footer-address,
+  html:not(.carte-doc) #cover-section .cover-footer-address a {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+  }
+
+  html:not(.carte-doc) #cover-section .cover-links {
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-links .contact-link {
+    justify-content: center !important;
+    text-align: center !important;
+  }
+}
 </style>
 </head>
 <body>
