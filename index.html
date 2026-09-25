@@ -10052,26 +10052,47 @@ html:not(.carte-doc) #vins .wine-detail-title {
   letter-spacing: .04em;
   text-transform: uppercase;
 }
-html:not(.carte-doc) #vins .wine-detail-text {
-  margin: 0;
+html:not(.carte-doc) #vins .wine-detail-lines {
+  display: grid;
+  gap: 7px;
+  width: 100%;
+  text-align: left;
 }
-html:not(.carte-doc) #vins .wine-detail-text strong {
+html:not(.carte-doc) #vins .wine-detail-line {
+  display: grid;
+  grid-template-columns: 165px minmax(0, 1fr);
+  gap: 14px;
+  align-items: baseline;
+  min-width: 0;
+  margin: 0;
+  text-align: left;
+}
+html:not(.carte-doc) #vins .wine-detail-label {
+  min-width: 0;
   color: var(--violet-900);
   font-weight: 800;
+  letter-spacing: .05em;
+  white-space: nowrap;
+}
+html:not(.carte-doc) #vins .wine-detail-value {
+  min-width: 0;
+  color: var(--ink);
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+  text-align: left;
 }
 @media screen and (min-width: 861px) {
   html:not(.carte-doc) #vins .wine-detail-card {
-    display: grid;
-    grid-template-columns: minmax(220px, .32fr) minmax(0, 1fr);
-    gap: 22px;
-    align-items: baseline;
+    display: block;
     padding: 15px 22px 16px;
   }
   html:not(.carte-doc) #vins .wine-detail-title {
-    margin: 0;
+    margin: 0 0 10px;
     padding-left: 12px;
     border-left: 2px solid var(--gold-500);
     line-height: 1.3;
+    text-align: left;
   }
 }
 @media (max-width: 706px) {
@@ -10079,6 +10100,13 @@ html:not(.carte-doc) #vins .wine-detail-text strong {
     margin: 0 0 3px;
     padding: 12px 14px 13px;
     border-radius: 13px;
+  }
+  html:not(.carte-doc) #vins .wine-detail-line {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  html:not(.carte-doc) #vins .wine-detail-label {
+    display: block;
   }
 }
 @media print {
@@ -12256,18 +12284,25 @@ else sizeCoverMedallion();
       var title = document.createElement('h5');
       title.className = 'wine-detail-title';
       title.textContent = 'Dégustation & accords';
-      var text = document.createElement('p');
-      text.className = 'wine-detail-text';
-      var mouth = document.createElement('strong');
-      mouth.textContent = 'Bouche. ';
-      var advice = document.createElement('strong');
-      advice.textContent = 'Accords dans la carte. ';
-      text.appendChild(mouth);
-      text.appendChild(document.createTextNode(tasting + ' '));
-      text.appendChild(advice);
-      text.appendChild(document.createTextNode(pairing));
+      var lines = document.createElement('div');
+      lines.className = 'wine-detail-lines';
+      function makeLine(labelText, valueText) {
+        var line = document.createElement('p');
+        line.className = 'wine-detail-line';
+        var label = document.createElement('strong');
+        label.className = 'wine-detail-label';
+        label.textContent = labelText;
+        var value = document.createElement('span');
+        value.className = 'wine-detail-value';
+        value.textContent = valueText;
+        line.appendChild(label);
+        line.appendChild(value);
+        return line;
+      }
+      lines.appendChild(makeLine('DÉGUSTATION :', tasting));
+      lines.appendChild(makeLine('ACCORDS :', pairing));
       card.appendChild(title);
-      card.appendChild(text);
+      card.appendChild(lines);
       cell.appendChild(card);
       detail.appendChild(cell);
       row.parentNode.insertBefore(detail, row.nextSibling);
