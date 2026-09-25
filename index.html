@@ -10059,6 +10059,21 @@ html:not(.carte-doc) #vins .wine-detail-text strong {
   color: var(--violet-900);
   font-weight: 800;
 }
+@media screen and (min-width: 861px) {
+  html:not(.carte-doc) #vins .wine-detail-card {
+    display: grid;
+    grid-template-columns: minmax(220px, .32fr) minmax(0, 1fr);
+    gap: 22px;
+    align-items: baseline;
+    padding: 15px 22px 16px;
+  }
+  html:not(.carte-doc) #vins .wine-detail-title {
+    margin: 0;
+    padding-left: 12px;
+    border-left: 2px solid var(--gold-500);
+    line-height: 1.3;
+  }
+}
 @media (max-width: 706px) {
   html:not(.carte-doc) #vins .wine-detail-card {
     margin: 0 0 3px;
