@@ -489,7 +489,24 @@
       word-break:normal !important;
       hyphens:none !important;
     }
-  </style>
+  /* ===== Contenu centré sur écran PC ===== */
+@media screen and (min-width: 861px) {
+  main,
+  .legal-card,
+  .legal-card > h2,
+  .legal-card h3,
+  .legal-card p,
+  .legal-card li,
+  .legal-card dd,
+  .legal-card dt {
+    text-align: center;
+  }
+  .legal-card ul {
+    padding-left: 0;
+    list-style-position: inside;
+  }
+}
+</style>
 </head>
 <body>
   <header class="site-header">
