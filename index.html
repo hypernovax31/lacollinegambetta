@@ -12060,11 +12060,16 @@ else sizeCoverMedallion();
       return key.length > 2 && /[A-Za-zÀ-ÿŒœ]/.test(key);
     }).sort(function (a, b) { return b.length - a.length; }).forEach(function (key) {
       var escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      result = result.replace(new RegExp('(^|\\s)' + escaped + '(?=\\s|[,.!?;:]|$)', 'g'), function (_, before) {
+      /* Les accords réutilisent parfois un nom de plat en minuscule
+         au milieu de la phrase (« cuisse… », « assiette… »), alors que la
+         clé du dictionnaire commence par une majuscule. Le drapeau `i`
+         traduit ces deux formes sans toucher aux URLs ni aux valeurs
+         techniques. */
+      result = result.replace(new RegExp('(^|\\s)' + escaped + '(?=\\s|[,.!?;:]|$)', 'gi'), function (_, before) {
         return before + dict[key];
       });
     });
-    if (dict['ou']) result = result.replace(/(^|\s)ou(?=\s|[,.!?;:]|$)/g, function (_, before) { return before + dict['ou']; });
+    if (dict['ou']) result = result.replace(/(^|\s)ou(?=\s|[,.!?;:]|$)/gi, function (_, before) { return before + dict['ou']; });
     return result;
   }
 
@@ -12298,7 +12303,18 @@ else sizeCoverMedallion();
   window.addEventListener('lcg-lang-changed', function () {
     ANIM_LANG = null;
     if (titleEl && camp) {
-      camp.title = animLang() === 'fr' ? 'HAPPY HOUR' : (window.__i18nDicts && window.__i18nDicts[animLang()] && window.__i18nDicts[animLang()]['HAPPY HOUR']) || camp.title;
+      /* Une campagne du Nouvel An garde son propre titre et son propre
+         message lorsqu’une langue change pendant l’animation. */
+      if (camp.kind === 'ny') {
+        var refreshed = nyCamp(parisNow());
+        if (refreshed) {
+          camp.title = refreshed.title;
+          camp.msg = refreshed.msg;
+        }
+      } else {
+        var current = animLang();
+        camp.title = current === 'fr' ? 'HAPPY HOUR' : (window.__i18nDicts && window.__i18nDicts[current] && window.__i18nDicts[current]['HAPPY HOUR']) || camp.title;
+      }
       if (titleEl) titleEl.textContent = camp.title;
       if (kickerEl) kickerEl.textContent = camp.title;
       if (msgText && camp.msg) msgText.textContent = camp.msg();
@@ -12730,7 +12746,7 @@ else sizeCoverMedallion();
   var camp = null;
   var CAMP_HH = {
     lead: LEAD_MS, max: 5, targetMs: START_MS, key: 'lcg-hh-done-', chime: CHIME,
-    title: 'HAPPY HOUR', msg: message, hours: true
+    title: 'HAPPY HOUR', msg: message, hours: true, kind: 'hh'
   };
   /* zodiaque chinois à partir de 2026 = Cheval (suivant la table LUNAR_NY) */
   var ZODIAC_ZH = ['\u9a6c', '\u7f8a', '\u7334', '\u9e21', '\u72d7', '\u732a',
@@ -12763,7 +12779,7 @@ else sizeCoverMedallion();
     }
     return {
       lead: 10000, max: 10, targetMs: 86400000, key: 'lcg-ny-done-', chime: CHIME_NY,
-      title: title, hours: false, day: day,
+      title: title, hours: false, day: day, kind: 'ny',
       msg: msgFn
     };
   }
