@@ -10314,7 +10314,7 @@ html:not(.carte-doc) .foldall--hint .foldall__ico {
   </article>
 
   <!-- ============ Petit déjeuner ============ -->
-  <article class="fmb-card fmb-card--pdj">
+  <article id="menu-petit-dejeuner" class="fmb-card fmb-card--pdj">
     <div class="fmb-head">
       <p class="fmb-pils">Petit déjeuner</p>
       <img class="fmb-ico" src="assets/menus/icon-pdj.png" alt="" aria-hidden="true" loading="eager" decoding="async">
@@ -10812,12 +10812,38 @@ if (document.readyState === 'loading') {
 } else {
   buildPrintDocument();
 }
+function scrollToMenuTarget(targetId) {
+  const target = document.getElementById(targetId);
+  if (!target) return;
+  const topBar = document.querySelector('.top-controls');
+  const navWrap = document.getElementById('menu-nav-wrap');
+  const stickyOffset = () => (topBar ? topBar.offsetHeight : 0) + (navWrap ? navWrap.offsetHeight : 0);
+  const liveTarget = () => Math.max(0, Math.round(
+    target.getBoundingClientRect().top + window.scrollY - stickyOffset() - 10
+  ));
+  animateScrollTo(liveTarget(), 280, liveTarget);
+  lockSectionAnchor(target, () => stickyOffset() + 10);
+}
 function openInteractiveMenuIfHashed() {
-  if (location.hash === '#menu-nav-anchor' || location.hash === '#interior-menu' || location.hash === '#menu') {
+  const hash = location.hash;
+  const breakfastTarget = hash === '#menu-petit-dejeuner';
+  if (hash === '#menu-nav-anchor' || hash === '#interior-menu' || hash === '#menu' || breakfastTarget) {
     /* Effacer le hash AVANT showView pour empêcher le navigateur de scroller
        nativement vers l'ancre (ce qui court-circuiterait l'animation). */
     history.replaceState(null, '', location.pathname + location.search);
     showView('menu');
+    if (breakfastTarget) {
+      /* La carte est une vue interne : activer « Nos menus » avant de viser
+         précisément la carte du petit-déjeuner. Deux images laissent les
+         bandeaux épinglés recalculer leur hauteur avant le défilement final. */
+      requestAnimationFrame(() => {
+        const menuButton = Array.from(document.querySelectorAll('#menu-nav .nav-btn'))
+          .find(btn => /showMenuSection\(\s*['"]menus['"]/.test(btn.getAttribute('onclick') || ''));
+        if (!menuButton) return;
+        showMenuSection('menus', menuButton);
+        requestAnimationFrame(() => scrollToMenuTarget('menu-petit-dejeuner'));
+      });
+    }
   }
 }
 openInteractiveMenuIfHashed();
