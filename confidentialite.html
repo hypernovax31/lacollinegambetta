@@ -452,6 +452,47 @@
     .site-header .eyebrow {
       color:var(--gold-500) !important;
     }
+
+    /* Les pages légales restent claires dans leur partie haute : le violet
+       est réservé aux éléments de contenu et au pied de page. */
+    body {
+      background:var(--cream);
+    }
+    .site-header {
+      color:var(--violet-950);
+      background:var(--cream);
+      border-bottom-color:rgba(216,178,87,.65);
+    }
+    .site-header h1 {
+      color:var(--violet-950);
+    }
+    .site-header p {
+      color:var(--muted);
+    }
+    .site-header .eyebrow {
+      color:var(--violet-700) !important;
+    }
+    .top-nav a {
+      border-color:rgba(156,122,45,.52);
+      background:rgba(255,255,255,.5);
+      color:var(--violet-900);
+    }
+    .top-nav a:hover, .top-nav a:focus-visible {
+      background:#fff;
+      border-color:var(--gold-500);
+      color:var(--violet-950);
+    }
+    .legal-lang-btn {
+      background:rgba(255,255,255,.5);
+      border-color:rgba(156,122,45,.52);
+      color:var(--violet-900);
+    }
+    .legal-lang-btn svg {
+      stroke:var(--violet-900);
+    }
+    .legal-lang-btn:hover svg, .legal-lang-btn:focus-visible svg {
+      stroke:var(--violet-950);
+    }
     @media (max-width:420px) {
       .site-header {
         padding-left:24px;
