@@ -85,6 +85,10 @@
       var element = elements[i];
       ['title', 'aria-label', 'placeholder'].forEach(function (attribute) {
         if (!element.hasAttribute(attribute)) return;
+        /* Un exemple de numéro international dans le formulaire reste
+           lisible en chiffres ASCII : c'est une valeur technique affichée,
+           dont le préfixe doit rester immédiatement identifiable. */
+        if (attribute === 'placeholder' && element.hasAttribute('data-phone-example')) return;
         var current = element.getAttribute(attribute);
         var next = localizeDisplayDigits(current, lang);
         if (next !== current) element.setAttribute(attribute, next);
@@ -102,7 +106,8 @@
         } else if (mutation.type === 'attributes') {
           var element = mutation.target;
           var attribute = mutation.attributeName;
-          if (element.hasAttribute(attribute)) {
+          if (element.hasAttribute(attribute) &&
+              !(attribute === 'placeholder' && element.hasAttribute('data-phone-example'))) {
             var current = element.getAttribute(attribute);
             var next = localizeDisplayDigits(current, lang);
             if (next !== current) element.setAttribute(attribute, next);

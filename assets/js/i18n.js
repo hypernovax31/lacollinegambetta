@@ -7544,25 +7544,19 @@
   /* ---- Choix de la langue de départ ----
      Ordre de précédence :
        1. ?lang= dans l'URL (partage de lien, tests) — jamais mémorisé ;
-       2. choix mémorisé (clic au globe) : la détection automatique ne
-          joue que pour un visiteur qui n'a jamais choisi ;
-       3. langue de l'appareil — la première langue soutenue de
-          navigator.languages, dans l'ordre de préférence. L'anglais y
-          est traité comme un réglage « par défaut » (beaucoup
-          d'appareils sont réglés EN sans que ce soit la langue de
-          l'usager) : on écarte l'anglais et on retient la première
-          autre langue de la liste — un appareil [en, ja] révèle
-          souvent un usager japonais, sans aucune requête externe ;
-       4. pays de l'opérateur (géolocalisation IP) : affine l'anglais.
-          En itinérance l'adresse IP suit le pays de la SIM, d'où le
-          nom « opérateur » — c'est le cas visé : le touriste dont le
-          téléphone est resté en anglais ;
+       2. choix mémorisé (clic au globe) : il reste prioritaire ;
+       3. repli immédiat sur la locale primaire de l'appareil, afin de
+          afficher une langue utilisable sans attendre le réseau ;
+       4. pays détecté par le réseau (géolocalisation IP) : lorsqu'il est
+          fiable et associé à une langue du site, il devient la langue
+          automatique, même si la locale du navigateur était générique ;
        5. repli final : anglais.
-     La langue détectée n'est JAMAIS mémorisée (seul un clic au globe
-     l'est) : un changement de langue de l'appareil est suivi dès la
-     visite suivante. Le pays opérateur, lui, est mis en cache le
-     temps de la session (sessionStorage) pour ne pas réinterroger le
-     service à chaque chargement. */
+     Une page web ne peut pas lire le pays d'origine de la carte SIM : le
+     navigateur ne donne ni son IMSI ni son MCC. La locale régionale et le
+     pays du réseau sont donc les seuls signaux accessibles sans demander
+     une permission sensible. La langue détectée n'est JAMAIS mémorisée
+     (seul un clic au globe l'est) ; le pays réseau est mis en cache le
+     temps de la session. */
   var userPicked = false;
   var GEO_KEY = 'lcg-geo';
   var GEO_TTL = 8 * 60 * 60 * 1000; /* 8 h : une session de visite */
@@ -7592,6 +7586,39 @@
     TR: 'tr',
     IN: 'hi'
   };
+  function primaryDeviceLocale() {
+    try {
+      /* navigator.language est la locale active ; languages[0] n'est qu'un
+         repli lorsque le navigateur ne renseigne pas cette valeur. */
+      return String(navigator.language ||
+        (navigator.languages && navigator.languages.length ? navigator.languages[0] : '') || '');
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function regionFromLocale(locale) {
+    var parts = String(locale || '').replace(/_/g, '-').split('-');
+    for (var i = 1; i < parts.length; i++) {
+      if (/^[A-Za-z]{2}$/.test(parts[i]) || /^\\d{3}$/.test(parts[i])) {
+        return parts[i].toUpperCase();
+      }
+    }
+    return '';
+  }
+
+  function languageFromDeviceFallback() {
+    var locale = primaryDeviceLocale();
+    var base = locale.toLowerCase().split(/[-_]/)[0];
+    /* Une langue explicitement choisie dans la locale passe avant la
+       majorité supposée du pays : fr-CA reste français, fr-CH reste
+       français, etc. */
+    if (base === 'fr' || DICTS[base]) return base;
+    var regionalLanguage = COUNTRY_LANG[regionFromLocale(locale)];
+    if (regionalLanguage) return regionalLanguage;
+    return 'en';
+  }
+
   var initial = null;
   try { initial = new URLSearchParams(location.search).get('lang'); } catch (e) {}
   /* Valeur d'URL illisible (ex. ?lang=xx) : traitée comme absente. */
@@ -7601,32 +7628,14 @@
     /* 1-2. préférence explicite : pas de détection, pas de requête. */
     applyLang(initial, false);
   } else {
-    /* 3. langue de l'appareil (l'anglais « par défaut » écarté). */
-    var navList = [];
-    try {
-      navList = (navigator.languages && navigator.languages.length)
-        ? navigator.languages
-        : [navigator.language || ''];
-    } catch (e) {}
-    var pick = null;
-    for (var ni = 0; ni < navList.length; ni++) {
-      var nb = String(navList[ni] || '').toLowerCase().split('-')[0];
-      if (nb !== 'en' && (nb === 'fr' || DICTS[nb])) { pick = nb; break; }
-    }
-    if (pick) {
-      applyLang(pick, false);
-    } else {
-      /* 4-5. anglais immédiat — c'est le repli final, appliqué avant
-         réponse pour ne jamais retarder l'affichage — puis pays de
-         l'opérateur : appareil réglé EN seul, ou écriture non
-         soutenue (thaï, russe…). */
-      applyLang('en', false);
-      operatorCountry(function (lang) {
-        /* Un clic au globe en cours de vol gagne toujours ; la langue
-           de l'URL ou mémorisée n'arrive jamais ici. */
-        if (lang && !userPicked && lang !== LANG) applyLang(lang, false);
-      });
-    }
+    /* 3. Affichage immédiat sur la locale primaire, puis confirmation ou
+       correction par le pays du réseau. */
+    applyLang(languageFromDeviceFallback(), false);
+    operatorCountry(function (lang) {
+      /* Un clic au globe en cours de route gagne toujours ; une réponse
+         réseau tardive ne peut jamais écraser un choix volontaire. */
+      if (lang && !userPicked && lang !== LANG) applyLang(lang, false);
+    });
   }
   if (window.LCGInstallDisplayDigitObserver) {
     window.LCGInstallDisplayDigitObserver(function () { return LANG; });
@@ -7637,11 +7646,11 @@
   window.__i18nReady = true;
   try { window.dispatchEvent(new CustomEvent('lcg-i18n-ready', { detail: { lang: LANG } })); } catch (e) {}
 
-  /* Pays de l'opérateur : géolocalisation IP au nom du visiteur par
-     un service tiers gratuit sans clé — ipwho.is, repli geojs.io
-     (tous deux renvoient le code pays à deux lettres). Échec ou
-     lenteur : silencieux, l'anglais reste. N'est appelé que pour un
-     premier visiteur sans préférence lisible sur l'appareil. */
+  /* Pays du réseau : géolocalisation IP au nom du visiteur par un service
+     tiers gratuit sans clé — ipwho.is, repli geojs.io (tous deux renvoient
+     le code pays à deux lettres). Échec ou lenteur : silencieux, la locale
+     primaire déjà affichée reste en place. Cette information décrit le
+     réseau actuel, pas la carte SIM, que le Web ne peut pas inspecter. */
   function operatorCountry(then) {
     var cached = null;
     try { cached = JSON.parse(sessionStorage.getItem(GEO_KEY) || 'null'); } catch (e) {}
