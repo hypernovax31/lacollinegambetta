@@ -3507,7 +3507,7 @@ html[lang="hi"] .footer-details, html[lang="hi"] .footer-note, html[lang="hi"] .
   text-transform: uppercase;
   color: var(--gold-100);
 }
-.lang-menu__list { display: grid; gap: 2px; }
+.lang-menu__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; }
 .lang-option {
   display: flex;
   align-items: center;
@@ -8997,10 +8997,16 @@ html:not(.carte-doc) .top-controls > .lang-dock .lang-btn {
   transform:none !important;
 }
 html:not(.carte-doc) #interior-menu .lang-dock .lang-menu {
-  position:absolute !important;
-  top:calc(100% + 8px) !important;
+  /* Le bouton reste dans le bandeau sticky ; le panneau, lui, doit
+     garder la fenêtre comme cadre de référence et ne jamais être
+     comprimé par le socle étroit du globe. */
+  position:fixed !important;
+  top:62px !important;
   right:12px !important;
   left:auto !important;
+  width:min(420px, calc(100vw - 24px)) !important;
+  min-width:0 !important;
+  max-width:calc(100vw - 24px) !important;
   transform:none !important;
   max-height:calc(100vh - 76px) !important;
 }
@@ -9011,6 +9017,9 @@ html:not(.carte-doc) #cover-section .lang-dock .lang-menu {
   top:62px !important;
   right:12px !important;
   left:auto !important;
+  width:min(420px, calc(100vw - 24px)) !important;
+  min-width:0 !important;
+  max-width:calc(100vw - 24px) !important;
   transform:none !important;
   max-height:calc(100vh - 76px) !important;
 }
@@ -9035,14 +9044,23 @@ html:not(.carte-doc) #cover-section .lang-dock .lang-menu {
     top:9px !important;
   }
   html:not(.carte-doc) #interior-menu .lang-dock .lang-menu {
-    top:calc(100% + 4px) !important;
-    right:8px !important;
-    max-height:calc(100vh - 68px) !important;
-  }
-  html:not(.carte-doc) #cover-section .lang-dock .lang-menu {
+    position:fixed !important;
     top:58px !important;
     right:10px !important;
     left:10px !important;
+    width:auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+    max-height:calc(100vh - 70px) !important;
+  }
+  html:not(.carte-doc) #cover-section .lang-dock .lang-menu {
+    position:fixed !important;
+    top:58px !important;
+    right:10px !important;
+    left:10px !important;
+    width:auto !important;
+    min-width:0 !important;
+    max-width:none !important;
     max-height:calc(100vh - 70px) !important;
   }
 }

@@ -983,7 +983,7 @@ html[lang="hi"] .footer-download {
   text-transform: uppercase;
   color: var(--gold-100);
 }
-.lang-menu__list { display: grid; gap: 2px; }
+.lang-menu__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; }
 @media (max-height: 860px) {
 .lang-menu { min-width: 300px; padding: 8px 10px 10px; }
 .lang-menu__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -2142,10 +2142,15 @@ html[lang="uk"] .thanks__sign {
   height:62px !important;
 }
 .lang-dock .lang-menu {
-  position:absolute !important;
-  top:calc(100% + 8px) !important;
+  /* Le bouton est ancré dans l’en-tête, mais la fenêtre doit rester
+     ancrée à la fenêtre : sinon son parent de 58 px la comprime sur mobile. */
+  position:fixed !important;
+  top:62px !important;
   right:12px !important;
   left:auto !important;
+  width:min(420px, calc(100vw - 24px)) !important;
+  min-width:0 !important;
+  max-width:calc(100vw - 24px) !important;
   transform:none !important;
   max-height:calc(100vh - 76px) !important;
 }
@@ -2159,9 +2164,14 @@ html[lang="uk"] .thanks__sign {
     top:9px !important;
   }
   .lang-dock .lang-menu {
-    top:calc(100% + 4px) !important;
-    right:8px !important;
-    max-height:calc(100vh - 68px) !important;
+    position:fixed !important;
+    top:58px !important;
+    right:10px !important;
+    left:10px !important;
+    width:auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+    max-height:calc(100vh - 70px) !important;
   }
 }
 
