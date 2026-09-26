@@ -10169,8 +10169,13 @@ html:not(.carte-doc) #vins .wine-detail-value {
 @media (max-width: 706px) {
   /* Sur petit écran, le tiroir est sorti de la grille interne du tableau :
      il devient une bande pleine largeur de fenêtre, au lieu de rester
-     comprimé par les colonnes de la ligne du vin. */
-  html:not(.carte-doc) #vins .wine-detail-row {
+     comprimé par les colonnes de la ligne du vin. L'état fermé reste
+     explicitement masqué pour que le clic sur le vin déclenche bien son
+     ouverture. */
+  html:not(.carte-doc) #vins .wine-detail-row:not(.wine-detail-row--open) {
+    display: none !important;
+  }
+  html:not(.carte-doc) #vins .wine-detail-row--open {
     display: block !important;
     grid-column: 1 / -1 !important;
     width: 100vw !important;
