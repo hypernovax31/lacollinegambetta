@@ -7713,7 +7713,7 @@ html:not(.carte-doc) .food-card__photo {
 }
 html:not(.carte-doc) .food-card__photo img {
   width:100%; height:100%; object-fit:cover; display:block;
-  opacity:0; transition:opacity .4s ease; transform:scale(1.001);
+  opacity:0; transition:opacity .12s ease; transform:scale(1.001);
 }
 html:not(.carte-doc) .food-card__photo img.is-loaded { opacity:1; }
 /* Liseré or intérieur : la photo porte le même code que le reste du site. */
@@ -7772,7 +7772,7 @@ html:not(.carte-doc) .hh-line__photo {
 }
 html:not(.carte-doc) .hh-line__photo img {
   width:100%; height:100%; object-fit:cover; display:block;
-  opacity:0; transition:opacity .4s ease;
+  opacity:0; transition:opacity .12s ease;
 }
 html:not(.carte-doc) .hh-line__photo img.is-loaded { opacity:1; }
 html:not(.carte-doc) .hh-line__photo::after {
@@ -8103,7 +8103,16 @@ html.lightbox-open, html.lightbox-open body { overflow:hidden; }
   html:not(.carte-doc) .lightbox__nav:focus-visible,
   html:not(.carte-doc) .lightbox__nav:active {
     background:#fff !important;
+    background-color:#fff !important;
+    background-image:none !important;
     opacity:1 !important;
+    filter:none !important;
+    mix-blend-mode:normal !important;
+    transition:none !important;
+  }
+  html:not(.carte-doc) .lightbox__frame > .lightbox__close,
+  html:not(.carte-doc) .lightbox__frame > .lightbox__nav {
+    isolation:isolate;
   }
 }
 
@@ -8353,7 +8362,7 @@ html:not(.carte-doc) .beer-row__photo {
 }
 html:not(.carte-doc) .beer-row__photo img {
   width:100%; height:100%; object-fit:cover; display:block;
-  opacity:0; transition:opacity .3s ease;
+  opacity:0; transition:opacity .12s ease;
 }
 html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
 @media (max-width:860px) {
@@ -8715,7 +8724,7 @@ html:not(.carte-doc) .price-line__photo {
 }
 html:not(.carte-doc) .price-line__photo img {
   width:100%; height:100%; object-fit:cover; display:block;
-  opacity:0; transition:opacity .4s ease;
+  opacity:0; transition:opacity .12s ease;
 }
 html:not(.carte-doc) .price-line__photo img.is-loaded { opacity:1; }
 html:not(.carte-doc) .price-line__photo:has(img.is-loaded) {
@@ -11776,6 +11785,43 @@ else sizeCoverMedallion();
   }
   window.addEventListener('lcg-lang-changed', syncPhotoToggleLabels);
 
+  /* Précharge les photos dans le cache du navigateur avant le clic. Le
+     tiroir et la visionneuse utilisent ensuite la même URL : l'image
+     apparaît sans attendre une nouvelle requête au moment de l'ouverture. */
+  var photoPreloads = Object.create(null);
+  function preloadPhoto(src, priority) {
+    if (!src || photoPreloads[src]) return;
+    var probe = new Image();
+    probe.decoding = 'async';
+    if ('fetchPriority' in probe) probe.fetchPriority = priority || 'low';
+    photoPreloads[src] = probe;
+    probe.src = src;
+  }
+  function bindPhotoPrefetch(host, src) {
+    if (!host || !src) return;
+    var primed = false;
+    function prime() {
+      if (primed) return;
+      primed = true;
+      preloadPhoto(src, 'high');
+    }
+    host.addEventListener('pointerenter', prime, { once:true, passive:true });
+    host.addEventListener('touchstart', prime, { once:true, passive:true });
+  }
+  function schedulePhotoPreload(section) {
+    if (!section) return;
+    var run = function () {
+      section.querySelectorAll('[data-photo]').forEach(function (item) {
+        preloadPhoto(item.getAttribute('data-photo'), 'low');
+      });
+    };
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(run, { timeout:1200 });
+    } else {
+      window.setTimeout(run, 120);
+    }
+  }
+
   function wrap(card) {
     var src = card.getAttribute('data-photo');
     if (!src || card.classList.contains('food-card--photo')) return;
@@ -11805,7 +11851,7 @@ else sizeCoverMedallion();
     figure.className = 'food-card__photo';
     var img = document.createElement('img');
     img.alt = label;
-    img.loading = 'lazy';
+    img.loading = 'eager';
     img.decoding = 'async';
     img.setAttribute('data-src', src);
     img.addEventListener('load', function () { img.classList.add('is-loaded'); });
@@ -11834,6 +11880,7 @@ else sizeCoverMedallion();
     drawer.id = id;
     btn.setAttribute('aria-controls', id);
     card.classList.add('food-card--photo');
+    bindPhotoPrefetch(card, src);
 
     btn.addEventListener('click', function () {
       /* Écran large : la photo passe en surimpression, la grille ne
@@ -11842,7 +11889,10 @@ else sizeCoverMedallion();
       var open = card.classList.toggle('food-card--open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       syncPhotoToggleLabel(btn);
-      if (open && !img.src) img.src = img.getAttribute('data-src');
+      if (open && !img.src) {
+        if ('fetchPriority' in img) img.fetchPriority = 'high';
+        img.src = img.getAttribute('data-src');
+      }
     });
   }
 
@@ -11881,7 +11931,7 @@ else sizeCoverMedallion();
     figure.className = 'hh-line__photo';
     var img = document.createElement('img');
     img.alt = label;
-    img.loading = 'lazy';
+    img.loading = 'eager';
     img.decoding = 'async';
     img.setAttribute('data-src', src);
     img.addEventListener('load', function () { img.classList.add('is-loaded'); });
@@ -11904,6 +11954,7 @@ else sizeCoverMedallion();
     drawer.id = id;
     btn.setAttribute('aria-controls', id);
     line.classList.add('hh-line--photo');
+    bindPhotoPrefetch(line, src);
 
     btn.addEventListener('click', function () {
       /* Écran large : la photo passe en surimpression, la grille ne
@@ -11912,7 +11963,10 @@ else sizeCoverMedallion();
       var open = line.classList.toggle('hh-line--open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       syncPhotoToggleLabel(btn);
-      if (open && !img.src) img.src = img.getAttribute('data-src');
+      if (open && !img.src) {
+        if ('fetchPriority' in img) img.fetchPriority = 'high';
+        img.src = img.getAttribute('data-src');
+      }
     });
   }
 
@@ -11944,7 +11998,7 @@ else sizeCoverMedallion();
     figure.className = 'price-line__photo';
     var img = document.createElement('img');
     img.alt = nameEl.textContent.trim();
-    img.loading = 'lazy';
+    img.loading = 'eager';
     img.decoding = 'async';
     img.setAttribute('data-src', src);
     img.addEventListener('load', function () { img.classList.add('is-loaded'); });
@@ -11967,6 +12021,7 @@ else sizeCoverMedallion();
     drawer.id = id;
     btn.setAttribute('aria-controls', id);
     line.classList.add('price-line--photo');
+    bindPhotoPrefetch(line, src);
 
     btn.addEventListener('click', function () {
       /* Écran large : la photo passe en surimpression, la grille ne
@@ -11975,7 +12030,10 @@ else sizeCoverMedallion();
       var open = line.classList.toggle('price-line--open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       syncPhotoToggleLabel(btn);
-      if (open && !img.src) img.src = img.getAttribute('data-src');
+      if (open && !img.src) {
+        if ('fetchPriority' in img) img.fetchPriority = 'high';
+        img.src = img.getAttribute('data-src');
+      }
     });
   }
 
@@ -12013,7 +12071,7 @@ else sizeCoverMedallion();
     figure.className = 'beer-row__photo';
     var img = document.createElement('img');
     img.alt = nameEl.textContent.trim();
-    img.loading = 'lazy';
+    img.loading = 'eager';
     img.decoding = 'async';
     img.setAttribute('data-src', src);
     img.addEventListener('load', function () { img.classList.add('is-loaded'); });
@@ -12041,6 +12099,7 @@ else sizeCoverMedallion();
     drawer.id = id;
     btn.setAttribute('aria-controls', id);
     line.classList.add('beer-row--photo');
+    bindPhotoPrefetch(line, src);
 
     /* L'en-tête gagne la même colonne de chevron, sinon « 25 cl », « PINTE »
        et « HH » ne tombent plus au-dessus de leurs chiffres. */
@@ -12054,7 +12113,10 @@ else sizeCoverMedallion();
       var open = line.classList.toggle('beer-row--open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       syncPhotoToggleLabel(btn);
-      if (open && !img.src) img.src = img.getAttribute('data-src');
+      if (open && !img.src) {
+        if ('fetchPriority' in img) img.fetchPriority = 'high';
+        img.src = img.getAttribute('data-src');
+      }
     });
   }
 
@@ -12246,6 +12308,9 @@ else sizeCoverMedallion();
 
     lbImg = document.createElement('img');
     lbImg.className = 'lightbox__img';
+    lbImg.loading = 'eager';
+    lbImg.decoding = 'async';
+    if ('fetchPriority' in lbImg) lbImg.fetchPriority = 'high';
     lbImg.alt = '';
 
     /* Bandeau : la rubrique, l'intitulé, le descriptif et les tarifs,
@@ -12368,6 +12433,12 @@ else sizeCoverMedallion();
 
     lbImg.src = info.src;
     lbImg.alt = info.title;
+    /* La photo voisine est préparée pendant la lecture : la flèche
+       change d'image sans attendre une nouvelle requête réseau. */
+    if (lbGroup.length > 1) {
+      preloadPhoto(lbGroup[(lbIndex + lbGroup.length - 1) % lbGroup.length].getAttribute('data-photo'), 'low');
+      preloadPhoto(lbGroup[(lbIndex + 1) % lbGroup.length].getAttribute('data-photo'), 'low');
+    }
     lbSection.textContent = info.section;
     lbSection.hidden = !info.section;
     lbTitle.textContent = info.title;
@@ -12531,6 +12602,17 @@ else sizeCoverMedallion();
       document.querySelectorAll('.menu-section .panel'),
       mountFoldAll
     );
+
+    /* Les photos de l'onglet visible commencent à se charger après le
+       premier rendu, sans bloquer le texte de la carte. Les autres onglets
+       sont préparés dès qu'ils deviennent actifs. */
+    schedulePhotoPreload(document.querySelector('.menu-section.active'));
+    document.querySelectorAll('.menu-nav .nav-btn').forEach(function (navBtn) {
+      navBtn.addEventListener('click', function () {
+        var match = /showMenuSection\(\s*'([^']+)'/.exec(navBtn.getAttribute('onclick') || '');
+        if (match) schedulePhotoPreload(document.getElementById(match[1]));
+      });
+    });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
