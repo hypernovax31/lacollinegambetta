@@ -6760,6 +6760,18 @@
     ['#book-map', 'aria-label', 'Plan : 4 rue Belgrand, Paris 20ᵉ'],
   ];
   function norm(t) { return String(t).replace(/\s+/g, ' ').trim(); }
+  /* Une quantité est une seule information : ne jamais laisser le moteur
+     ou la largeur mobile séparer le nombre de son unité. Cette normalisation
+     ne traduit pas l’unité et ne modifie aucune valeur technique ; elle pose
+     seulement un espace insécable entre « 190 » et « g », « 140 » et « mL »,
+     etc. */
+  function keepMeasuresTogether(value) {
+    return String(value == null ? '' : value).replace(
+      /(\d+(?:[.,]\d+)?)\s+(mL|ml|ML|cL|cl|L|l|g|gr|kg|مل|ملل|毫升|мл|мл|л|ミリリットル|밀리리터)/g,
+      '$1\u00a0$2'
+    );
+  }
+  window.LCGKeepMeasuresTogether = keepMeasuresTogether;
   var SKIP_TAGS = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, CODE: 1, PRE: 1, TEXTAREA: 1 };
   var nodes = null;
   function collect() {
@@ -7436,7 +7448,7 @@
     var d = DICTS[lang] || {};
     nodes.forEach(function (e) {
       var t = (lang === 'fr') ? e.key : (d[e.key] != null ? d[e.key] : e.key);
-      e.node.nodeValue = e.pre + t + e.post;
+      e.node.nodeValue = e.pre + keepMeasuresTogether(t) + e.post;
     });
     document.documentElement.setAttribute('lang', lang);
     /* L'arabe s'écrit de droite à gauche : toute la page bascule en
@@ -7451,7 +7463,7 @@
     });
     DATALABELS.forEach(function (e) {
       var dataLabel = (lang === 'fr') ? e.fr : (d[e.fr] != null ? d[e.fr] : e.fr);
-      e.el.setAttribute('data-label', localizeDisplayDigits(dataLabel, lang));
+      e.el.setAttribute('data-label', keepMeasuresTogether(localizeDisplayDigits(dataLabel, lang)));
     });
     syncContactButtons(lang);
     var menu = document.getElementById('lang-menu');
@@ -7619,6 +7631,11 @@
   if (window.LCGInstallDisplayDigitObserver) {
     window.LCGInstallDisplayDigitObserver(function () { return LANG; });
   }
+  /* Les composants créés dynamiquement (notamment les tiroirs vins
+     mobiles) peuvent s'initialiser après le premier applyLang. Exposer un
+     signal explicite évite de dépendre de l'ordre defer/DOMContentLoaded. */
+  window.__i18nReady = true;
+  try { window.dispatchEvent(new CustomEvent('lcg-i18n-ready', { detail: { lang: LANG } })); } catch (e) {}
 
   /* Pays de l'opérateur : géolocalisation IP au nom du visiteur par
      un service tiers gratuit sans clé — ipwho.is, repli geojs.io

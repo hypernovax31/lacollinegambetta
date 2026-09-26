@@ -6996,6 +6996,61 @@ html:not(.carte-doc) .lang-check { animation: none !important; }
   .choice-card li::before, .fmb-star { animation: none !important; opacity: 1 !important; }
 }
 
+/* ===== Noël basse consommation : neige + traîneau =====================
+   Le décor est saisonnier (1–31 décembre, ou ?noel=1 pour l'aperçu),
+   suspendu quand l’onglet est caché et volontairement limité : peu de
+   flocons, cadence basse, un seul passage de traîneau occasionnel et aucun
+   son tant que la personne n’a pas activé les grelots. */
+#xmas-snow {
+  position:fixed; inset:0; z-index:9970;
+  display:none; width:100%; height:100%;
+  pointer-events:none;
+}
+#xmas-snow.on { display:block; }
+#xmas-sleigh {
+  position:fixed; left:0; top:0; z-index:9980;
+  display:none; pointer-events:none;
+  transform:translate3d(0,0,0);
+}
+#xmas-sleigh.on { display:block; }
+#xmas-sleigh img {
+  display:block; width:100%; height:auto;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,.35));
+}
+#xmas-sleigh.flip img { transform:scaleX(-1); }
+#xmas-sleigh .trail {
+  position:absolute; top:52%; width:42%; height:26%;
+  border-radius:50%;
+  background:radial-gradient(closest-side,rgba(255,210,120,.42),rgba(255,210,120,0));
+  filter:blur(5px);
+}
+#xmas-sleigh.ltr .trail { right:88%; }
+#xmas-sleigh.rtl .trail { left:88%; }
+#xmas-bells-btn {
+  position:fixed; right:16px; bottom:16px; z-index:9990;
+  display:none; align-items:center; justify-content:center;
+  width:42px; height:42px; padding:0;
+  border:1px solid rgba(216,178,87,.45); border-radius:50%;
+  background:rgba(24,12,30,.82); color:#d8b257; cursor:pointer;
+  box-sizing:border-box;
+}
+#xmas-bells-btn.on { display:inline-flex; }
+#xmas-bells-btn:hover { background:rgba(38,18,46,.95); }
+#xmas-bells-btn:focus-visible { outline:2px solid #d8b257; outline-offset:2px; }
+#xmas-bells-btn svg { width:21px; height:21px; display:block; }
+#xmas-bells-btn .bell-off { display:none; }
+#xmas-bells-btn.muted .bell-off { display:block; }
+#xmas-bells-btn.muted .bell-body { opacity:.45; }
+@media (max-width:520px) {
+  #xmas-bells-btn { right:10px; bottom:10px; width:38px; height:38px; }
+}
+html.carte-doc #xmas-snow,
+html.carte-doc #xmas-sleigh,
+html.carte-doc #xmas-bells-btn { display:none !important; }
+@media print {
+  #xmas-snow, #xmas-sleigh, #xmas-bells-btn { display:none !important; }
+}
+
 /* ===== Japonais : activation des fontes jumelles =====
    Copie scopée de chaque règle font-family du site : en vue
    japonaise les idéogrammes et kana passent dans CinzelJP /
@@ -10134,6 +10189,8 @@ html:not(.carte-doc) #cover-section .cover-action::after {
       </div>
     </div>
   </div>
+  <canvas id="xmas-snow" aria-hidden="true"></canvas>
+  <div id="xmas-sleigh" aria-hidden="true"><span class="trail"></span><img src="assets/noel/sleigh.svg" alt="" draggable="false" loading="lazy" decoding="async"></div>
   <div class="top-controls" style="display:none">
     <div class="top-controls__nav">
       <button class="control-btn active" id="btn-show-cover" onclick="showView('cover')"><span class="star-gold">✦</span> Page de Garde</button>
@@ -11057,6 +11114,294 @@ else sizeCoverMedallion();
 
 
 
+<script>
+/* ===== Noël : animation complète, cadence basse et pause intelligente =====
+   Neige légère, traîneau occasionnel et grelots optionnels. Le décor est
+   limité au mois de décembre (ou ?noel=1), s'arrête dans un onglet caché,
+   ne crée aucun contexte audio sans clic et utilise un rendu à 14 i/s au
+   lieu d'une boucle plein écran à 60 i/s. */
+(function () {
+  'use strict';
+  function xmasActive() {
+    var query = '';
+    try { query = new URLSearchParams(location.search).get('noel'); } catch (e) {}
+    if (query === '0') return false;
+    if (document.documentElement.classList.contains('carte-doc')) return false;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+    return query === '1' || new Date().getMonth() === 11;
+  }
+
+  var api = { active:false, fly:function () {}, flakeCount:function () { return 0; }, bells:function () { return { enabled:false, state:'none' }; } };
+  window.__xmas = api;
+  if (!xmasActive()) return;
+  api.active = true;
+
+  var snow = document.getElementById('xmas-snow');
+  var sleigh = document.getElementById('xmas-sleigh');
+  if (!snow || !sleigh || !snow.getContext) return;
+  var ctx = snow.getContext('2d');
+  var lowPower = !!(navigator.connection && navigator.connection.saveData);
+  var hidden = document.hidden;
+  var renderTimer = 0, resizeTimer = 0, sleighTimer = 0;
+  var renderFps = lowPower ? 8 : 14;
+  var flakes = [], W = 0, H = 0, dpr = 1;
+  var sleighState = null;
+
+  function rand(min, max) { return min + Math.random() * (max - min); }
+  function flakeLimit() { return lowPower ? 14 : Math.max(22, Math.min(42, Math.round(W * H / 26000))); }
+  function newFlake(anywhere) {
+    var r = rand(.8, 2.8);
+    return {
+      x:Math.random() * W,
+      y:anywhere ? Math.random() * H : rand(-12, -2),
+      r:r,
+      o:rand(.4, .9),
+      v:rand(18, 42) * (.65 + r / 3),
+      sway:rand(8, 24),
+      phase:Math.random() * Math.PI * 2,
+      freq:rand(.35, .9)
+    };
+  }
+  function resizeSnow() {
+    dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1 : 1.25);
+    W = Math.max(1, window.innerWidth);
+    H = Math.max(1, window.innerHeight);
+    snow.width = Math.round(W * dpr);
+    snow.height = Math.round(H * dpr);
+    snow.style.width = W + 'px';
+    snow.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var wanted = flakeLimit();
+    while (flakes.length < wanted) flakes.push(newFlake(true));
+    flakes.length = wanted;
+  }
+  function scheduleRender() {
+    if (!hidden && !renderTimer) renderTimer = setTimeout(render, Math.round(1000 / renderFps));
+  }
+  function finishSleigh() {
+    if (!sleighState) return;
+    sleigh.classList.remove('on', 'flip', 'ltr', 'rtl');
+    sleigh.style.opacity = '';
+    sleigh.style.transform = '';
+    sleighState = null;
+    scheduleSleigh(rand(70000, 140000));
+  }
+  function renderSleigh(now) {
+    if (!sleighState) return;
+    var state = sleighState;
+    var progress = Math.min(1, (now - state.start) / state.duration);
+    var x = state.ltr ? state.x0 + (state.x1 - state.x0) * progress : state.x1 - (state.x1 - state.x0) * progress;
+    var y = state.top + Math.sin(progress * Math.PI * 2 * state.waves) * state.amplitude - Math.sin(progress * Math.PI) * H * .025;
+    var fade = progress < .1 ? progress / .1 : (progress > .9 ? (1 - progress) / .1 : 1);
+    sleigh.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0)';
+    sleigh.style.opacity = fade.toFixed(3);
+    if (bellsEnabled && progress > .04 && progress < .96) scheduleBell();
+    if (progress >= 1) { finishSleigh(); stopBells(); }
+  }
+  function render() {
+    renderTimer = 0;
+    if (hidden) return;
+    var now = performance.now();
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#fff';
+    for (var i = 0; i < flakes.length; i++) {
+      var f = flakes[i];
+      f.phase += f.freq / renderFps;
+      f.y += f.v / renderFps;
+      f.x += Math.cos(f.phase) * f.sway / renderFps;
+      if (f.y > H + 6) { flakes[i] = newFlake(false); continue; }
+      if (f.x > W + 6) f.x = -6;
+      if (f.x < -6) f.x = W + 6;
+      ctx.globalAlpha = f.o;
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    renderSleigh(now);
+    scheduleRender();
+  }
+  function scheduleSleigh(delay) {
+    clearTimeout(sleighTimer);
+    sleighTimer = 0;
+    if (hidden) return;
+    sleighTimer = setTimeout(function () {
+      sleighTimer = 0;
+      api.fly();
+    }, delay == null ? rand(70000, 140000) : delay);
+  }
+  function fly(options) {
+    if (sleighState || hidden) return;
+    options = options || {};
+    var width = options.width || Math.round(Math.max(220, Math.min(390, W * .28)));
+    var ltr = options.dir ? options.dir === 'ltr' : Math.random() < .5;
+    sleighState = {
+      ltr:ltr,
+      x0:-width - 70,
+      x1:W + 70,
+      top:options.top == null ? Math.round(H * rand(.06, .32)) : options.top,
+      duration:options.duration || rand(9000, 12000),
+      amplitude:rand(8, 20),
+      waves:rand(1.2, 1.8),
+      start:performance.now()
+    };
+    sleigh.style.width = width + 'px';
+    sleigh.classList.remove('flip', 'ltr', 'rtl');
+    sleigh.classList.add('on', ltr ? 'ltr' : 'rtl');
+    if (!ltr) sleigh.classList.add('flip');
+    startBells();
+    scheduleRender();
+  }
+  api.fly = fly;
+  api.flakeCount = function () { return flakes.length; };
+
+  /* Audio strictement opt-in : un seul grelot discret à la fois, puis le
+     contexte est suspendu à la fin du passage. Aucun minuteur audio permanent. */
+  var audioContext = null, audioGain = null, bellTimer = 0, bellsEnabled = false;
+  var BELL_COPY = {
+    fr:['Activer les grelots du traîneau','Désactiver les grelots du traîneau'],
+    en:['Turn sleigh bells on','Turn sleigh bells off'],
+    es:['Activar los cascabeles del trineo','Desactivar los cascabeles del trineo'],
+    de:['Schlittenglöckchen einschalten','Schlittenglöckchen ausschalten'],
+    it:['Attivare i campanelli della slitta','Disattivare i campanelli della slitta'],
+    pt:['Ativar os sinos do trenó','Desativar os sinos do trenó'],
+    nl:['Sleejbelletjes inschakelen','Sleejbelletjes uitschakelen'],
+    pl:['Włącz dzwonki sań','Wyłącz dzwonki sań'],
+    zh:['开启雪橇铃声','关闭雪橇铃声'],
+    uk:['Увімкнути дзвіночки саней','Вимкнути дзвіночки саней'],
+    ja:['そりの鈴をオンにする','そりの鈴をオフにする'],
+    ko:['썰매 방울 켜기','썰매 방울 끄기'],
+    ar:['تفعيل أجراس الزلاجة','إيقاف أجراس الزلاجة'],
+    tr:['Kızak çanlarını aç','Kızak çanlarını kapat'],
+    hi:['स्लेज की घंटियाँ चालू करें','स्लेज की घंटियाँ बंद करें']
+  };
+  var bellButton = document.createElement('button');
+  bellButton.type = 'button';
+  bellButton.id = 'xmas-bells-btn';
+  bellButton.className = 'on muted';
+  bellButton.setAttribute('aria-pressed', 'false');
+  bellButton.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="bell-body" d="M12 3.2c-3.1 0-5.2 2.2-5.2 5v3.1c0 .8-.3 1.6-.9 2.2l-1.1 1.2h14.4l-1.1-1.2c-.6-.6-.9-1.4-.9-2.2V8.2c0-2.8-2.1-5-5.2-5Z"/><path class="bell-body" d="M9.6 18.6a2.5 2.5 0 0 0 4.8 0"/><line class="bell-off" x1="4.5" y1="4.5" x2="19.5" y2="19.5"/></svg>';
+  document.body.appendChild(bellButton);
+  function bellLabel() {
+    var lang = (document.documentElement.getAttribute('lang') || 'fr').slice(0, 2);
+    var copy = BELL_COPY[lang] || BELL_COPY.fr;
+    var text = copy[bellsEnabled ? 1 : 0];
+    bellButton.title = text;
+    bellButton.setAttribute('aria-label', text);
+    bellButton.setAttribute('aria-pressed', bellsEnabled ? 'true' : 'false');
+    bellButton.classList.toggle('muted', !bellsEnabled);
+  }
+  function ensureAudio() {
+    if (audioContext) return audioContext.state === 'running';
+    var AudioCtor = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtor) return false;
+    try {
+      audioContext = new AudioCtor();
+      audioGain = audioContext.createGain();
+      audioGain.gain.value = .045;
+      audioGain.connect(audioContext.destination);
+      return audioContext.state === 'running';
+    } catch (e) { audioContext = null; audioGain = null; return false; }
+  }
+  function bellHit() {
+    if (!bellsEnabled || !audioContext || audioContext.state !== 'running') return;
+    var now = audioContext.currentTime + .015;
+    [1, 2.43, 3.83].forEach(function (ratio, i) {
+      var oscillator = audioContext.createOscillator();
+      var gain = audioContext.createGain();
+      oscillator.type = 'sine';
+      oscillator.frequency.value = (1850 + Math.random() * 350) * ratio;
+      gain.gain.setValueAtTime(.0001, now);
+      gain.gain.linearRampToValueAtTime((.16 / (i + 1)), now + .004);
+      gain.gain.exponentialRampToValueAtTime(.0001, now + .16 + i * .04);
+      oscillator.connect(gain); gain.connect(audioGain);
+      oscillator.start(now); oscillator.stop(now + .28 + i * .04);
+    });
+  }
+  function scheduleBell() {
+    if (bellTimer || !bellsEnabled || !sleighState || hidden) return;
+    bellTimer = setTimeout(function () {
+      bellTimer = 0;
+      bellHit();
+      scheduleBell();
+    }, Math.round(rand(650, 1000)));
+  }
+  function stopBells() {
+    clearTimeout(bellTimer); bellTimer = 0;
+    if (audioGain && audioContext) {
+      try { audioGain.gain.setTargetAtTime(0, audioContext.currentTime, .05); } catch (e) {}
+    }
+    if (audioContext && audioContext.state === 'running') {
+      try { audioContext.suspend(); } catch (e) {}
+    }
+  }
+  function startBells() {
+    if (!bellsEnabled) return;
+    if (audioContext && audioContext.state === 'suspended') {
+      try { audioContext.resume(); } catch (e) {}
+    }
+    if (ensureAudio()) scheduleBell();
+  }
+  bellButton.addEventListener('click', function () {
+    if (bellsEnabled) {
+      bellsEnabled = false;
+      stopBells();
+    } else {
+      bellsEnabled = ensureAudio();
+      if (bellsEnabled && audioGain) audioGain.gain.value = .045;
+      if (bellsEnabled && sleighState) scheduleBell();
+    }
+    bellLabel();
+  });
+  window.addEventListener('lcg-lang-changed', bellLabel);
+  api.bells = function () { return { enabled:bellsEnabled, state:audioContext ? audioContext.state : 'none' }; };
+
+  function pause() {
+    hidden = true;
+    clearTimeout(renderTimer); renderTimer = 0;
+    clearTimeout(sleighTimer); sleighTimer = 0;
+    clearTimeout(bellTimer); bellTimer = 0;
+    if (sleighState) sleighState.pausedAt = performance.now();
+    stopBells();
+  }
+  function resume() {
+    hidden = false;
+    if (sleighState && sleighState.pausedAt) {
+      sleighState.start += performance.now() - sleighState.pausedAt;
+      delete sleighState.pausedAt;
+    }
+    if (!sleighState) scheduleSleigh(rand(25000, 50000));
+    scheduleRender();
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) pause(); else resume();
+  });
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resizeSnow, 180);
+  }, { passive:true });
+  if (navigator.getBattery) {
+    navigator.getBattery().then(function (battery) {
+      function powerMode() {
+        var next = !battery.charging && battery.level <= .25;
+        if (next === lowPower) return;
+        lowPower = next;
+        renderFps = lowPower ? 8 : 14;
+        resizeSnow();
+      }
+      battery.addEventListener('chargingchange', powerMode);
+      battery.addEventListener('levelchange', powerMode);
+      powerMode();
+    }).catch(function () {});
+  }
+  resizeSnow();
+  snow.classList.add('on');
+  bellLabel();
+  scheduleRender();
+  scheduleSleigh(15000);
+})();
+</script>
+
 <script src="assets/js/localized-digits.js?v=202609241200"></script>
 <script src="assets/js/i18n.js?v=202609231200" defer></script>
 
@@ -11863,9 +12208,10 @@ else sizeCoverMedallion();
     var index = parseInt(row.getAttribute('data-wine-index'), 10);
     var tastings = window.__i18nWineTastings && window.__i18nWineTastings[lang];
     var tasting = lang !== 'fr' && tastings && tastings[index] ? tastings[index] : originalTasting;
+    var keepMeasure = window.LCGKeepMeasuresTogether || function (value) { return value; };
     return {
-      tasting: tasting,
-      pairing: winePairingText(originalPairing, lang),
+      tasting: keepMeasure(tasting),
+      pairing: keepMeasure(winePairingText(originalPairing, lang)),
       lang: lang
     };
   }
@@ -11961,8 +12307,13 @@ else sizeCoverMedallion();
       });
     });
     syncWineAccordions();
-    window.addEventListener('lcg-lang-changed', syncWineAccordions);
   }
+  /* The mobile accordion is created dynamically, after the static i18n
+     walker has run. Listen at script initialisation time as well as doing
+     the initial sync in mountWineAccordions(), so a language change that
+     happens before/after DOMContentLoaded is covered in both cases. */
+  window.addEventListener('lcg-lang-changed', syncWineAccordions);
+  window.addEventListener('lcg-i18n-ready', syncWineAccordions);
 
   function init() {
     mountWineAccordions();
