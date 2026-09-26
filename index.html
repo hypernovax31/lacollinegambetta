@@ -4887,49 +4887,8 @@ html:not(.carte-doc) .menu-nav .nav-btn {
   html[dir="rtl"]:not(.carte-doc) .menu-nav-hint--end { right: auto; left: 8px; }
   html[dir="rtl"]:not(.carte-doc) .menu-nav-hint--start svg,
   html[dir="rtl"]:not(.carte-doc) .menu-nav-hint--end svg { transform: scaleX(-1); }
-  /* ===== « D'autres onglets de ce côté » : deux petits signaux animés =====
-     1. Battement des flèches dorées (ci-dessous) : tant que des onglets
-        restent cachés d'un côté de l'onglet actif (has-start / has-end),
-        la flèche de ce côté esquisse une pulsation — LES DEUX FLÈCHES
-        battent à l'identique (même keyframe, même cadence) : le signal
-        est léger et discret, un frémissement de 4,5 % avec un halo
-        discret de 5 px, une pulsation toutes les 3,6 s. AUCUNE
-        interaction ne l'éteint : elle ne s'arrête que quand il n'y a
-        plus rien à révéler de ce côté — premier/dernier onglet actif —
-        ou quand le bandeau ne déborde plus.
-     2. « Coup de pouce » du ruban (JS, menuNavNudge) : à CHAQUE entrée
-        dans la carte, le ruban glisse doucement de ~40 px dans le sens
-        de lecture et revient, révélant un instant le bouton suivant —
-        et rien ne l'annule : si le ruban bouge pendant la balançoire
-        (doigt, molette, onglet cliqué), elle adopte la nouvelle
-        position et repart d'elle.
-     Mouvement réduit : aucun des deux — les flèches restent simplement
-        posées là, le bandeau reste utilisable à l'identique. */
-  html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-end .menu-nav-hint--end,
-  html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-start .menu-nav-hint--start {
-    animation: menuNavBeat 3.6s ease-in-out .35s infinite;
-  }
-  /* Le halo qui s'étend depuis la flèche passe par box-shadow : une ombre
-     n'étend JAMAIS la zone défilable de la page. Un anneau dessiné par un
-     pseudo-élément agrandi en transform dépassait le bord droit du bandeau
-     et faisait apparaître un débordement horizontal de quelques pixels
-     (page plus large que l'écran) pendant la pulsation. */
-  @keyframes menuNavBeat {
-    0%, 22%, 100% {
-      transform: translateY(-50%) scale(1);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 2px 6px rgba(0,0,0,.28), 0 0 0 0 rgba(243,213,106,.38);
-    }
-    9% {
-      transform: translateY(-50%) scale(1.045);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 2px 6px rgba(0,0,0,.28), 0 0 0 5px rgba(243,213,106,0);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-end .menu-nav-hint--end,
-    html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-start .menu-nav-hint--start {
-      animation: none;
-    }
-  }
+  /* Les flèches restent statiques ; elles conservent leur rôle de
+     navigation et leur visibilité conditionnelle quand le ruban déborde. */
   html:not(.carte-doc) .menu-nav-wrap.is-overflow .menu-nav {
     -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
     mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
@@ -6906,94 +6865,9 @@ html.carte-doc #menus .fm .fmb-card--pdj .fmb-list {
 
 /* ===== Couverture statique ============================================
    La couverture ne lance aucun effet décoratif ni cycle visuel. */
-/* --- Etoiles du titre : pulsation douce --- */
+/* --- Etoiles du titre : rendu statique ------------------------------- */
 html:not(.carte-doc) #cover-section .cover-brand .star-gold {
-  display: inline-block;   /* rythme défini plus bas, avec le reste */
-}
-/* ===== Scintillement des étoiles dorées ============================
-   Les ✦ du site restaient d'un éclat parfaitement fixe, et les rares
-   animées battaient toutes ensemble — un clignotement d'enseigne plutôt
-   qu'un reflet. Chacune respire désormais à son propre rythme.
-
-   Le procédé reste sobre, la retenue faisant tout l'effet : l'opacité
-   varie entre .62 et 1, sans changement de taille ni de couleur, sur des
-   cycles longs et volontairement premiers entre eux (3,1 / 4,3 / 5,7 /
-   6,9 s) pour que la figure ne se répète jamais à l'œil. Les retards
-   sont négatifs : les étoiles sont déjà en cours de cycle au chargement,
-   au lieu de démarrer toutes au même instant.
-
-   Opacité seule : c'est une propriété composée, animée par le GPU, sans
-   recalcul de mise en page. Le coût reste nul même avec cent étoiles. */
-@keyframes starBreath {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: .62; }
-}
-/* Variante plus creusée pour les étoiles isolées, qui portent seules le
-   regard : le contraste y passe inaperçu là où il serait trop appuyé
-   dans une file de pastilles. */
-@keyframes starBreathDeep {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: .48; }
-}
-html:not(.carte-doc) .star-gold,
-html:not(.carte-doc) .panel__title::before,
-html:not(.carte-doc) .panel__title::after,
-html:not(.carte-doc) .fmb-star {
-  animation: starBreath 4.3s ease-in-out infinite;
-  will-change: opacity;
-}
-/* Les deux étoiles qui encadrent un même libellé ne doivent jamais
-   battre à l'unisson : l'une précède l'autre d'une demi-respiration. */
-html:not(.carte-doc) .star-gold:last-child:not(:first-child) {
-  animation-duration: 5.7s;
-  animation-delay: -2.4s;
-}
-html:not(.carte-doc) .star-gold:first-child { animation-delay: -.7s; }
-/* Ouverture et fermeture des pastilles de titre : durées distinctes,
-   pour qu'une colonne de rubriques ne clignote pas en chœur. */
-html:not(.carte-doc) .panel__title::before {
-  animation-duration: 6.9s; animation-delay: -1.9s;
-}
-html:not(.carte-doc) .panel__title::after {
-  animation-duration: 5.1s; animation-delay: -3.6s;
-}
-/* Les rubriques se décalent ensuite les unes par rapport aux autres :
-   sans cela, toutes les pastilles d'un onglet respireraient ensemble. */
-html:not(.carte-doc) .panel:nth-of-type(2n) .panel__title::before { animation-delay: -3.1s; }
-html:not(.carte-doc) .panel:nth-of-type(2n) .panel__title::after  { animation-delay: -1.2s; }
-html:not(.carte-doc) .panel:nth-of-type(3n) .panel__title::before { animation-delay: -5.4s; }
-html:not(.carte-doc) .panel:nth-of-type(3n) .panel__title::after  { animation-delay: -4.3s; }
-/* Puces des formules : une file verticale, donc un décalage régulier
-   qui donne l'impression d'une onde plutôt que d'un battement. */
-html:not(.carte-doc) .choice-card li::before {
-  animation: starBreath 5.7s ease-in-out infinite;
-  animation-delay: calc(var(--i, 0) * -.43s);
-  will-change: opacity;
-}
-html:not(.carte-doc) .choice-card li:nth-child(1)::before { --i: 0; }
-html:not(.carte-doc) .choice-card li:nth-child(2)::before { --i: 1; }
-html:not(.carte-doc) .choice-card li:nth-child(3)::before { --i: 2; }
-html:not(.carte-doc) .choice-card li:nth-child(4)::before { --i: 3; }
-html:not(.carte-doc) .choice-card li:nth-child(5)::before { --i: 4; }
-html:not(.carte-doc) .choice-card li:nth-child(6)::before { --i: 5; }
-html:not(.carte-doc) .choice-card li:nth-child(7)::before { --i: 6; }
-html:not(.carte-doc) .choice-card li:nth-child(8)::before { --i: 7; }
-/* Le bouton « Menu & Carte » scintille déjà par son reflet : ses étoiles
-   restent stables pour ne pas surcharger le même point du regard. */
-html:not(.carte-doc) .cover-action .star-gold { animation: none; }
-/* La coche du menu de langue marque une sélection : une information,
-   pas un ornement. Elle ne doit pas respirer. */
-html:not(.carte-doc) .lang-check { animation: none !important; }
-@media (prefers-reduced-motion: reduce) {
-  html:not(.carte-doc) .star-gold,
-  html:not(.carte-doc) .panel__title::before,
-  html:not(.carte-doc) .panel__title::after,
-  html:not(.carte-doc) .choice-card li::before,
-  html:not(.carte-doc) .fmb-star { animation: none !important; opacity: 1 !important; }
-}
-@media print {
-  .star-gold, .panel__title::before, .panel__title::after,
-  .choice-card li::before, .fmb-star { animation: none !important; opacity: 1 !important; }
+  display:inline-block;
 }
 
 /* ===== Noël basse consommation : neige + traîneau =====================
@@ -7933,35 +7807,7 @@ html:not(.carte-doc) .foldall__ico::before { top:-2px; }
 html:not(.carte-doc) .foldall__ico::after  { top:3px; }
 html:not(.carte-doc) .foldall__btn[aria-pressed="true"] .foldall__ico { transform:rotate(180deg); }
 
-/* ===== Indice d'amorce : montrer le geste attendu =====
-   Le bouton est discret par choix, mais rien n'indiquait qu'il fallait
-   le toucher. Le double chevron descend donc trois fois, doucement,
-   comme s'il tirait le contenu vers le bas — c'est exactement le geste
-   qu'il déclenche. Trois cycles puis arrêt définitif : une animation
-   perpétuelle deviendrait un clignotement agaçant sur une carte qu'on
-   parcourt longuement.
-   L'indice ne se joue que sur les boutons encore jamais utilisés
-   (.foldall--hint, retiré au premier clic) et jamais sur un panneau
-   déjà déplié. */
-@keyframes foldall-nudge {
-  0%, 62%, 100% { transform:translateY(0); }
-  74%           { transform:translateY(3px); }
-  86%           { transform:translateY(0); }
-}
-@keyframes foldall-glow {
-  0%, 62%, 100% { box-shadow:0 4px 12px rgba(36,16,46,.07);
-                  border-color:rgba(216,178,87,.42); }
-  74%           { box-shadow:0 6px 18px rgba(191,149,63,.28);
-                  border-color:rgba(216,178,87,.9); }
-}
-html:not(.carte-doc) .foldall--hint .foldall__btn {
-  animation:foldall-glow 2.6s ease-in-out infinite;
-}
-html:not(.carte-doc) .foldall--hint .foldall__ico {
-  animation:foldall-nudge 2.6s ease-in-out infinite;
-}
-/* Ni le survol ni le focus n'interrompent l'indice : il bat sans
-   discontinuer tant que le bouton n'a pas été cliqué. */
+/* L'indice « Tout voir » reste disponible sans animation continue. */
 /* La pastille garde sa place au centre : gouttière symétrique, calculée
    sur la largeur réelle du bouton (libellé compris). */
 
@@ -10087,6 +9933,24 @@ html:not(.carte-doc) #cover-section *::after {
 html:not(.carte-doc) #cover-section .cover-action::after {
   display: none !important;
   content: none !important;
+}
+
+/* ===== Animations continues désactivées ================================
+   Les animations ponctuelles (ouverture des menus/tiroirs) restent
+   fonctionnelles. Seuls les cycles permanents du site sont coupés ici :
+   les animations Noël et Happy Hour ont leurs propres sélecteurs et restent
+   volontairement intactes. */
+html:not(.carte-doc) .star-gold,
+html:not(.carte-doc) .panel__title::before,
+html:not(.carte-doc) .panel__title::after,
+html:not(.carte-doc) .choice-card li::before,
+html:not(.carte-doc) .fmb-star,
+html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-end .menu-nav-hint--end,
+html:not(.carte-doc) .menu-nav-wrap.is-overflow.has-start .menu-nav-hint--start,
+html:not(.carte-doc) .foldall--hint .foldall__btn,
+html:not(.carte-doc) .foldall--hint .foldall__ico {
+  animation: none !important;
+  will-change: auto !important;
 }
 
 /* Le tiroir vin occupe toute la largeur de son encart sur grand écran.
