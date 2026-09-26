@@ -1919,6 +1919,28 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table th:last-child {
 #print-document .carte-flow.carte-aerate[data-sec="vins"] .tab-flow .wine-table td:last-child {
   padding-right: 10px !important;
 }
+/* Vins : les lignes de prix réservent une piste de 14 px au chevron
+   masqué dans la carte. L'en-tête doit réserver exactement la même piste,
+   sinon les intitulés 14/25/50/75 cl partent vers la droite par rapport aux
+   montants. Même grille pour thead et tbody, y compris pour les bulles. */
+html #print-document :is(#vins, [data-sec="vins"]) .wine-table:not(.wine-table--short) thead tr,
+html #print-document :is(#vins, [data-sec="vins"]) .wine-table:not(.wine-table--short) tbody tr {
+  grid-template-columns: 26px minmax(0, 1fr) repeat(4, minmax(max-content, 92px)) 14px !important;
+  column-gap: 18px !important;
+}
+/* Les lignes tbody gardent leur bordure et leurs 24 px intérieurs ; leurs
+   25 px effectifs avant la première piste doivent être reproduits sur
+   thead (sans ajouter une piste parasite ni décaler les intitulés). */
+html #print-document :is(#vins, [data-sec="vins"]) .wine-table:not(.wine-table--short) thead tr,
+html #print-document :is(#vins, [data-sec="vins"]) .wine-table.wine-table--short thead tr {
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+}
+html #print-document :is(#vins, [data-sec="vins"]) .wine-table.wine-table--short thead tr,
+html #print-document :is(#vins, [data-sec="vins"]) .wine-table.wine-table--short tbody tr {
+  grid-template-columns: 26px minmax(0, 1fr) repeat(2, minmax(max-content, 132px)) 14px !important;
+  column-gap: 18px !important;
+}
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name .carte-wine-producer {
   font-weight: 400;
   font-style: italic;
