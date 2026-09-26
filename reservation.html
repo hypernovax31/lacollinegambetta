@@ -2353,6 +2353,16 @@ body * {
 .hours__card--minimal .hours__minimal-line {
   justify-content: center;
 }
+
+/* Le ruban doit rester proche du bloc de réservation : on retire sa marge
+   basse historique et on laisse une respiration courte, identique sur mobile
+   et écran large. */
+#reservation-page .hours {
+  margin-bottom: 0;
+}
+#reservation-page .hours + .panel {
+  margin-top: -8px;
+}
 </style>
 </head>
 <body>
