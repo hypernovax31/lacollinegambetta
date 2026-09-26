@@ -9669,7 +9669,7 @@ html:not(.carte-doc) #vins .wine-detail-cell {
   display:grid !important;
   grid-column:1 / -1 !important;
   grid-row:auto !important;
-  grid-template-rows:0fr;
+  grid-template-rows:minmax(0,0fr);
   justify-self:stretch !important;
   min-width:0;
   min-height:0;
@@ -9683,7 +9683,7 @@ html:not(.carte-doc) #vins .wine-detail-cell {
 }
 html:not(.carte-doc) #vins .wine-detail-cell[aria-hidden="false"],
 html:not(.carte-doc) #vins .wine-row--open .wine-detail-cell {
-  grid-template-rows:1fr;
+  grid-template-rows:minmax(0,1fr);
   pointer-events:auto;
 }
 html:not(.carte-doc) #vins .wine-detail-cell > .wine-detail-cell__inner {
@@ -10381,6 +10381,7 @@ function stopCoverMotion() {
   try { __navNudgeGen++; __navCenterGen++; } catch (e) {}
 }
 function showView(view) {
+  if (view === 'cover' && window.LCGCloseWineAccordions) window.LCGCloseWineAccordions();
   const cover = document.getElementById('cover-section');
   const menu = document.getElementById('interior-menu');
   const btnCover = document.getElementById('btn-show-cover');
@@ -10507,6 +10508,7 @@ function centerMenuNavButton(btnElement) {
   requestAnimationFrame(step);
 }
 function showMenuSection(sectionId, btnElement) {
+  if (sectionId !== 'vins' && window.LCGCloseWineAccordions) window.LCGCloseWineAccordions();
   document.querySelectorAll('.menu-section').forEach(sec => sec.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
   const targetSection = document.getElementById(sectionId);
@@ -11733,6 +11735,7 @@ else sizeCoverMedallion();
     }
 
     window.addEventListener('lcg-lang-changed', sync);
+    window.addEventListener('lcg-wine-accordions-reset', sync);
 
     /* --- Indice d'amorce -------------------------------------------
        Le bouton se signale quand il entre à l'écran, et seulement là :
@@ -12094,6 +12097,17 @@ else sizeCoverMedallion();
       if (window.LCGLocalizeAllDisplayDigits) window.LCGLocalizeAllDisplayDigits(row, copy.lang);
     });
   }
+
+  function closeWineAccordions() {
+    document.querySelectorAll('#vins .wine-table tbody tr.wine-row').forEach(function (row) {
+      row.classList.remove('wine-row--open');
+      row.setAttribute('aria-expanded', 'false');
+      var detail = row.querySelector(':scope > .wine-detail-cell');
+      if (detail) detail.setAttribute('aria-hidden', 'true');
+    });
+    window.dispatchEvent(new Event('lcg-wine-accordions-reset'));
+  }
+  window.LCGCloseWineAccordions = closeWineAccordions;
 
   function mountWineAccordions() {
     document.querySelectorAll('#vins .wine-table tbody tr.wine-row').forEach(function (row, wineIndex) {
