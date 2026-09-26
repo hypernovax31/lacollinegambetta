@@ -1820,6 +1820,16 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
   padding-left: 10px !important;
   padding-right: 10px !important;
 }
+/* Le site garde les .hh-line en grille à quatre pistes (nom, prix, HH,
+   chevron). Dans la carte, prix et HH sont déjà regroupés dans
+   .hh-line__prices : laisser cette grille gagner réduit la ligne à sa
+   première piste et décale les intitulés « Prix / HH » vers la droite.
+   Deux identifiants dans le sélecteur neutralisent explicitement cette
+   règle écran et font porter la ligne entière par le même axe que l'en-tête. */
+html #print-document :is(#cocktails, [data-sec="cocktails"]) .hh-line {
+  display: block !important;
+  grid-template-columns: none !important;
+}
 #print-document .carte-flow[data-sec="cocktails"] .hh-line__row {
   display: flex !important;
   justify-content: space-between !important;
