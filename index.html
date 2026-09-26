@@ -10140,7 +10140,7 @@ html:not(.carte-doc) #vins .wine-detail-cell {
   background:transparent !important;
   text-align:left !important;
   pointer-events:none;
-  transition:grid-template-rows .32s cubic-bezier(.4,.1,.2,1);
+  transition:grid-template-rows .42s cubic-bezier(.4,.1,.2,1);
 }
 html:not(.carte-doc) #vins .wine-detail-cell[aria-hidden="false"],
 html:not(.carte-doc) #vins .wine-row--open .wine-detail-cell {
@@ -10155,6 +10155,14 @@ html:not(.carte-doc) #vins .wine-detail-cell > .wine-detail-cell__inner {
   margin:0 !important;
   padding:0 !important;
   text-align:left !important;
+  opacity:0;
+  transform:translateY(-5px);
+  transition:opacity .24s ease, transform .42s cubic-bezier(.4,.1,.2,1);
+}
+html:not(.carte-doc) #vins .wine-detail-cell[aria-hidden="false"] > .wine-detail-cell__inner,
+html:not(.carte-doc) #vins .wine-row--open .wine-detail-cell > .wine-detail-cell__inner {
+  opacity:1;
+  transform:translateY(0);
 }
 html:not(.carte-doc) #vins .wine-detail-cell .wine-detail-card {
   width:100%;
@@ -10298,6 +10306,12 @@ html:not(.carte-doc) #vins .wine-detail-value {
   html:not(.carte-doc) #interior-menu #vins .wine-table tbody tr.wine-row > td:nth-of-type(6) { grid-column:5 !important; grid-row:2 !important; }
   html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row > td:nth-of-type(3) { grid-column:2 !important; grid-row:2 !important; }
   html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row > td:nth-of-type(4) { grid-column:3 !important; grid-row:2 !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not(.carte-doc) #vins .wine-detail-cell,
+  html:not(.carte-doc) #vins .wine-detail-cell > .wine-detail-cell__inner {
+    transition:none;
+  }
 }
 @media print {
   .print-page--vins .wine-detail-cell,
