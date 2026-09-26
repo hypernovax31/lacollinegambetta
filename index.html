@@ -12757,7 +12757,13 @@ else sizeCoverMedallion();
     status.setAttribute('aria-label', statusText.textContent);
   }
   updateHours();
-  window.setInterval(updateHours, 60000);
+  /* Mise à jour à la demande uniquement : la page de garde n'entretient
+     plus de minuterie périodique en arrière-plan. Un retour au premier plan ou un
+     changement de langue relit immédiatement l'heure de Paris. */
+  window.addEventListener('focus', updateHours);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) updateHours();
+  });
   window.addEventListener('lcg-lang-changed', updateHours);
 })();
 </script>
