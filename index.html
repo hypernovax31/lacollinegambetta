@@ -12543,13 +12543,68 @@ else sizeCoverMedallion();
      Les données restent dans la ligne du tableau ; le DOM du tiroir est
      créé au chargement, comme pour les fiches photos, mais son contenu ne
      prend aucune place tant que la rangée est fermée. */
+  function wineText(key, fallback) {
+    var lang = document.documentElement.getAttribute('lang') || 'fr';
+    var dict = (window.__i18nDicts && window.__i18nDicts[lang]) || {};
+    return lang === 'fr' ? fallback : (dict[key] || fallback);
+  }
+
+  function winePairingText(value, lang) {
+    if (lang === 'fr') return value;
+    var dict = (window.__i18nDicts && window.__i18nDicts[lang]) || {};
+    var result = value;
+    /* Les accords réutilisent les intitulés des plats déjà présents dans le
+       dictionnaire principal. Remplacer d’abord les expressions longues
+       évite qu’un nom composé ne soit partiellement traduit. */
+    Object.keys(dict).filter(function (key) {
+      return key.length > 2 && /[A-Za-zÀ-ÿŒœ]/.test(key);
+    }).sort(function (a, b) { return b.length - a.length; }).forEach(function (key) {
+      var escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      result = result.replace(new RegExp('(^|\\s)' + escaped + '(?=\\s|[,.!?;:]|$)', 'g'), function (_, before) {
+        return before + dict[key];
+      });
+    });
+    if (dict['ou']) result = result.replace(/(^|\s)ou(?=\s|[,.!?;:]|$)/g, function (_, before) { return before + dict['ou']; });
+    return result;
+  }
+
+  function getWineCopy(row) {
+    var lang = document.documentElement.getAttribute('lang') || 'fr';
+    var originalTasting = row.getAttribute('data-wine-tasting') || '';
+    var originalPairing = row.getAttribute('data-wine-pairing') || '';
+    var index = parseInt(row.getAttribute('data-wine-index'), 10);
+    var tastings = window.__i18nWineTastings && window.__i18nWineTastings[lang];
+    var tasting = lang !== 'fr' && tastings && tastings[index] ? tastings[index] : originalTasting;
+    return {
+      tasting: tasting,
+      pairing: winePairingText(originalPairing, lang),
+      lang: lang
+    };
+  }
+
+  function syncWineAccordions() {
+    document.querySelectorAll('#vins .wine-table tbody tr.wine-row[data-wine-mounted="true"]').forEach(function (row) {
+      var name = row.querySelector('.wine-name');
+      var labels = row.querySelectorAll('.wine-detail-label');
+      var values = row.querySelectorAll('.wine-detail-value');
+      var copy = getWineCopy(row);
+      if (labels[0]) labels[0].textContent = wineText('DÉGUSTATION :', 'DÉGUSTATION :');
+      if (labels[1]) labels[1].textContent = wineText('Suggestions d’accords :', 'Suggestions d’accords :');
+      if (values[0]) values[0].textContent = copy.tasting;
+      if (values[1]) values[1].textContent = copy.pairing;
+      if (name) row.setAttribute('aria-label', wineText('DÉGUSTATION :', 'DÉGUSTATION :') + ' ' + wineText('Suggestions d’accords :', 'Suggestions d’accords :') + ' ' + name.textContent.trim());
+      if (window.LCGLocalizeAllDisplayDigits) window.LCGLocalizeAllDisplayDigits(row, copy.lang);
+    });
+  }
+
   function mountWineAccordions() {
-    document.querySelectorAll('#vins .wine-table tbody tr.wine-row').forEach(function (row) {
+    document.querySelectorAll('#vins .wine-table tbody tr.wine-row').forEach(function (row, wineIndex) {
       if (row.dataset.wineMounted === 'true') return;
       var name = row.querySelector('.wine-name');
       var tasting = row.getAttribute('data-wine-tasting');
       var pairing = row.getAttribute('data-wine-pairing');
       if (!name || !tasting || !pairing) return;
+      row.setAttribute('data-wine-index', wineIndex);
 
       var id = 'wine-note-' + Math.random().toString(36).slice(2, 9);
       var chevron = document.createElement('span');
@@ -12561,7 +12616,7 @@ else sizeCoverMedallion();
 
       row.tabIndex = 0;
       row.setAttribute('role', 'button');
-      row.setAttribute('aria-label', 'Dégustation et suggestions d’accords : ' + name.textContent.trim());
+      row.setAttribute('aria-label', wineText('DÉGUSTATION :', 'DÉGUSTATION :') + ' ' + wineText('Suggestions d’accords :', 'Suggestions d’accords :') + ' ' + name.textContent.trim());
       row.setAttribute('aria-expanded', 'false');
       row.setAttribute('aria-controls', id);
       row.dataset.wineMounted = 'true';
@@ -12577,12 +12632,13 @@ else sizeCoverMedallion();
       card.id = id;
       var lines = document.createElement('div');
       lines.className = 'wine-detail-lines';
-      function makeLine(labelText, valueText) {
+      function makeLine(key, valueText) {
         var line = document.createElement('p');
         line.className = 'wine-detail-line';
         var label = document.createElement('span');
         label.className = 'wine-detail-label';
-        label.textContent = labelText;
+        label.setAttribute('data-wine-label-key', key);
+        label.textContent = wineText(key, key);
         var value = document.createElement('span');
         value.className = 'wine-detail-value';
         value.textContent = valueText;
@@ -12590,8 +12646,9 @@ else sizeCoverMedallion();
         line.appendChild(value);
         return line;
       }
-      lines.appendChild(makeLine('DÉGUSTATION :', tasting));
-      lines.appendChild(makeLine('Suggestions d’accords :', pairing));
+      var copy = getWineCopy(row);
+      lines.appendChild(makeLine('DÉGUSTATION :', copy.tasting));
+      lines.appendChild(makeLine('Suggestions d’accords :', copy.pairing));
       card.appendChild(lines);
       var detailInner = document.createElement('div');
       detailInner.className = 'wine-detail-cell__inner';
@@ -12615,6 +12672,8 @@ else sizeCoverMedallion();
         }
       });
     });
+    syncWineAccordions();
+    window.addEventListener('lcg-lang-changed', syncWineAccordions);
   }
 
   function init() {

@@ -6795,6 +6795,537 @@
     document.querySelectorAll('[data-label]'),
     function (el) { return { el: el, fr: el.getAttribute('data-label') }; }
   );
+  /* Données créées dynamiquement après le chargement de la traduction :
+     les fiches vins restent ainsi traduites, y compris dans leurs tiroirs. */
+  var WINE_LABELS = {
+  "en": {
+    "DÉGUSTATION :": "TASTING:",
+    "Suggestions d’accords :": "PAIRING SUGGESTIONS:"
+  },
+  "es": {
+    "DÉGUSTATION :": "CATA:",
+    "Suggestions d’accords :": "SUGERENCIAS DE MARIDAJE:"
+  },
+  "de": {
+    "DÉGUSTATION :": "VERKOSTUNG:",
+    "Suggestions d’accords :": "PASSENDE SPEISEN:"
+  },
+  "it": {
+    "DÉGUSTATION :": "DEGUSTAZIONE:",
+    "Suggestions d’accords :": "SUGGERIMENTI DI ABBINAMENTO:"
+  },
+  "pt": {
+    "DÉGUSTATION :": "PROVA:",
+    "Suggestions d’accords :": "SUGESTÕES DE HARMONIZAÇÃO:"
+  },
+  "nl": {
+    "DÉGUSTATION :": "PROEVERIJ:",
+    "Suggestions d’accords :": "WIJNSPIJSUGGESTIES:"
+  },
+  "ar": {
+    "DÉGUSTATION :": "التذوق:",
+    "Suggestions d’accords :": "اقتراحات التوافق:"
+  },
+  "zh": {
+    "DÉGUSTATION :": "品鉴：",
+    "Suggestions d’accords :": "搭配建议："
+  },
+  "uk": {
+    "DÉGUSTATION :": "ДЕГУСТАЦІЯ:",
+    "Suggestions d’accords :": "ПОРАДИ ЩОДО ПОЄДНАННЯ:"
+  },
+  "ja": {
+    "DÉGUSTATION :": "テイスティング：",
+    "Suggestions d’accords :": "おすすめのペアリング："
+  },
+  "ko": {
+    "DÉGUSTATION :": "시음:",
+    "Suggestions d’accords :": "페어링 추천:"
+  },
+  "pl": {
+    "DÉGUSTATION :": "DEGUSTACJA:",
+    "Suggestions d’accords :": "SUGESTIE DOBORU DAŃ:"
+  },
+  "tr": {
+    "DÉGUSTATION :": "TADIM:",
+    "Suggestions d’accords :": "EŞLEŞTİRME ÖNERİLERİ:"
+  },
+  "hi": {
+    "DÉGUSTATION :": "चखना:",
+    "Suggestions d’accords :": "मेल सुझाव:"
+  }
+};
+  var WINE_TASTINGS = {
+  "en": [
+    "A concentrated body led by red and black fruit, with present but structured tannins and a persistent finish.",
+    "Round and full, dominated by black fruit and spices, with supple tannins and a fresh, spicy finish.",
+    "Fresh, fruity and juicy, with Gamay’s suppleness, fine tannins and a clean finish.",
+    "Soft, light and fruity, with fresh acidity, fine tannins and a generous black-cherry finish.",
+    "A light, fresh red centred on red fruit, with a supple, refreshing structure.",
+    "Round, full-bodied and fleshy, dominated by black cherry and spices, with a peppery finish and retained freshness.",
+    "Balanced, silky and elegant, with ripe fruit, spices and pepper, and a finish lightly marked by eucalyptus.",
+    "Deep and structured, with red and black fruit, pepper and garrigue herbs; tannins give depth to a long, spicy finish.",
+    "Lively and direct, with citrus, saline minerality and a fresh finish.",
+    "Fresh and lively, driven by lime, with crisp acidity and a clean, mineral finish without heaviness.",
+    "Dry, supple and tender, with pear and apple, citrus, a mineral touch and a fresh finish.",
+    "Fresh and lively, driven by exotic fruit, with slight sweetness that rounds the whole and a clean finish.",
+    "Delicate and fresh, with citrus and floral notes, a tender texture and a light finish.",
+    "Crisp and thirst-quenching, pale, citrusy and mineral, without heaviness.",
+    "Fresh attack, fine bubbles, white fruit and citrus, with a light, fresh palate and a clean finish.",
+    "Fine, creamy mousse, apple, pear and apricot notes supported by lively acidity and a fresh, slightly biscuity finish.",
+    "Fresh, fruity and light, carried by fine bubbles; Extra Dry style brings a softer feel than a very dry brut."
+  ],
+  "es": [
+    "Una materia concentrada, marcada por los frutos rojos y negros, con taninos presentes pero estructurados y un final persistente.",
+    "Redonda y amplia, dominada por la fruta negra y las especias, con taninos suaves y un final fresco y especiado.",
+    "Fresca, afrutada y jugosa, con la suavidad del Gamay, taninos finos y un final limpio.",
+    "Suave, ligera y afrutada, con una acidez fresca, taninos finos y un final goloso de cereza negra.",
+    "Un tinto ligero y fresco, centrado en la fruta roja, de estructura suave y refrescante.",
+    "Redonda, plena y carnosa, dominada por la cereza negra y las especias, con un final especiado y una frescura conservada.",
+    "Equilibrada, sedosa y elegante, con fruta madura, especias y pimienta, y un final ligeramente marcado por el eucalipto.",
+    "Estructurada y profunda, con frutos rojos y negros, pimienta y hierbas de garriga; los taninos dan relieve a un final largo y especiado.",
+    "Viva y directa, con cítricos, mineralidad salina y un final fresco.",
+    "Fresca y viva, marcada por la lima, con una acidez nítida y un final limpio y mineral, sin pesadez.",
+    "Seca, suave y tierna, con pera y manzana, cítricos, un toque mineral y un final fresco.",
+    "Fresca y viva, marcada por frutas exóticas, con una ligera dulzura que redondea el conjunto y un final limpio.",
+    "Delicada y fresca, con cítricos y notas florales, una textura tierna y un final ligero.",
+    "Crocante y refrescante, de perfil pálido, cítrico y mineral, sin pesadez.",
+    "Ataque fresco, burbuja fina, fruta blanca y cítricos, para una boca ligera y fresca y un final limpio.",
+    "Espuma fina y cremosa, notas de manzana, pera y albaricoque, sostenidas por una acidez viva y un final fresco, ligeramente abizcochado.",
+    "Fresca, afrutada y ligera, con una burbuja fina; el estilo Extra Dry aporta una sensación más tierna que un brut muy seco."
+  ],
+  "de": [
+    "Konzentriert und geprägt von roten und schwarzen Früchten, mit präsenten, aber strukturierten Tanninen und langem Abgang.",
+    "Rund und voll, von schwarzen Früchten und Gewürzen geprägt, mit weichen Tanninen sowie einem frischen, würzigen Abgang.",
+    "Frisch, fruchtig und saftig, mit der Geschmeidigkeit des Gamay, feinen Tanninen und einem klaren Abgang.",
+    "Weich, leicht und fruchtig, mit frischer Säure, feinen Tanninen und einem großzügigen Abgang von Schwarzkirsche.",
+    "Ein leichter, frischer Rotwein mit roter Frucht, geschmeidiger und erfrischender Struktur.",
+    "Rund, voll und fleischig, geprägt von Schwarzkirsche und Gewürzen, mit pfeffrigem Abgang und bewahrter Frische.",
+    "Ausgewogen, seidig und elegant, mit reifen Früchten, Gewürzen und Pfeffer sowie einem leicht von Eukalyptus geprägten Abgang.",
+    "Tief und kraftvoll, mit roten und schwarzen Früchten, Pfeffer und Garrigue-Kräutern; die Tannine geben dem langen, würzigen Abgang Struktur.",
+    "Lebhaft und geradlinig, mit Zitrusfrüchten, salziger Mineralität und frischem Abgang.",
+    "Frisch und lebhaft, von Limette getragen, mit klarer Säure und einem sauberen, mineralischen Abgang ohne Schwere.",
+    "Trocken, geschmeidig und zart, mit Birne und Apfel, Zitrusfrüchten, mineralischer Note und frischem Abgang.",
+    "Frisch und lebhaft, von exotischen Früchten getragen, mit leichter Süße, die das Ganze abrundet, und klarem Abgang.",
+    "Zart und frisch, mit Zitrusfrüchten und floralen Noten, zarter Textur und leichtem Abgang.",
+    "Knackig und erfrischend, hell, zitrisch und mineralisch, ohne Schwere.",
+    "Frischer Auftakt, feine Perlage, weiße Früchte und Zitrus, mit leichtem, frischem Mundgefühl und klarem Abgang.",
+    "Feiner, cremiger Schaum, Apfel-, Birnen- und Aprikosennoten, getragen von lebhafter Säure und frischem, leicht biscuitartigem Abgang.",
+    "Frisch, fruchtig und leicht, mit feiner Perlage; der Extra-Dry-Stil wirkt milder als ein sehr trockener Brut."
+  ],
+  "it": [
+    "Concentrato e sostenuto da frutti rossi e neri, con tannini presenti ma strutturati e un finale persistente.",
+    "Rotondo e ampio, dominato dalla frutta nera e dalle spezie, con tannini morbidi e un finale fresco e speziato.",
+    "Fresco, fruttato e succoso, con la morbidezza del Gamay, tannini fini e un finale netto.",
+    "Morbido, leggero e fruttato, con acidità fresca, tannini fini e un finale goloso di ciliegia nera.",
+    "Un rosso leggero e fresco, centrato sulla frutta rossa, dalla trama morbida e dissetante.",
+    "Rotondo, pieno e carnoso, dominato da ciliegia nera e spezie, con finale pepato e freschezza conservata.",
+    "Equilibrato, setoso ed elegante, con frutti maturi, spezie e pepe, e un finale leggermente segnato dall’eucalipto.",
+    "Strutturato e profondo, su frutti rossi e neri, pepe ed erbe di gariga; i tannini danno rilievo a un finale lungo e speziato.",
+    "Vivace e diretto, con agrumi, mineralità salina e un finale fresco.",
+    "Fresco e vivace, sostenuto dal lime, con acidità netta e un finale pulito e minerale, senza pesantezza.",
+    "Secco, morbido e delicato, su pera e mela, con agrumi, una nota minerale e un finale fresco.",
+    "Fresco e vivace, sostenuto dalla frutta esotica, con una lieve dolcezza che arrotonda l’insieme e un finale netto.",
+    "Delicato e fresco, con agrumi e note floreali, una trama morbida e un finale leggero.",
+    "Croccante e dissetante, dal profilo chiaro, agrumato e minerale, senza pesantezza.",
+    "Attacco fresco, bollicina fine, frutti bianchi e agrumi, per un sorso leggero e fresco e un finale netto.",
+    "Spuma fine e cremosa, note di mela, pera e albicocca, sostenute da acidità vivace e un finale fresco, leggermente biscottato.",
+    "Fresco, fruttato e leggero, con bollicina fine; lo stile Extra Dry offre una sensazione più morbida di un brut molto secco."
+  ],
+  "pt": [
+    "Concentrado, marcado por frutos vermelhos e pretos, com taninos presentes mas estruturados e um final persistente.",
+    "Redondo e amplo, dominado pela fruta preta e pelas especiarias, com taninos suaves e um final fresco e especiado.",
+    "Fresco, frutado e sumarento, com a suavidade do Gamay, taninos finos e um final limpo.",
+    "Suave, leve e frutado, com acidez fresca, taninos finos e um final guloso de cereja preta.",
+    "Um tinto leve e fresco, centrado na fruta vermelha, de estrutura suave e refrescante.",
+    "Redondo, cheio e carnudo, dominado pela cereja preta e pelas especiarias, com final apimentado e frescura preservada.",
+    "Equilibrado, sedoso e elegante, com fruta madura, especiarias e pimenta, e um final ligeiramente marcado pelo eucalipto.",
+    "Estruturado e profundo, com frutos vermelhos e pretos, pimenta e ervas da garrigue; os taninos dão relevo a um final longo e especiado.",
+    "Vivo e direto, com citrinos, mineralidade salina e um final fresco.",
+    "Fresco e vivo, marcado pela lima, com acidez nítida e um final limpo e mineral, sem peso.",
+    "Seco, suave e delicado, com pera e maçã, citrinos, uma nota mineral e um final fresco.",
+    "Fresco e vivo, marcado por frutos exóticos, com uma ligeira doçura que arredonda o conjunto e um final limpo.",
+    "Delicado e fresco, com citrinos e notas florais, textura suave e um final leve.",
+    "Crocante e refrescante, de perfil pálido, cítrico e mineral, sem peso.",
+    "Ataque fresco, bolha fina, fruta branca e citrinos, para uma boca leve e fresca e um final limpo.",
+    "Espuma fina e cremosa, notas de maçã, pera e alperce, apoiadas por acidez viva e um final fresco, ligeiramente biscoitado.",
+    "Fresco, frutado e leve, com bolha fina; o estilo Extra Dry é mais macio do que um brut muito seco."
+  ],
+  "nl": [
+    "Geconcentreerd en gedragen door rood en zwart fruit, met aanwezige maar gestructureerde tannines en een aanhoudende afdronk.",
+    "Rond en vol, gedomineerd door zwart fruit en specerijen, met soepele tannines en een frisse, kruidige afdronk.",
+    "Fris, fruitig en sappig, met de soepelheid van Gamay, fijne tannines en een zuivere afdronk.",
+    "Zacht, licht en fruitig, met frisse zuren, fijne tannines en een gulle afdronk van zwarte kers.",
+    "Een lichte, frisse rode wijn met rood fruit en een soepele, verfrissende structuur.",
+    "Rond, vol en vlezig, gedomineerd door zwarte kers en specerijen, met een peperige afdronk en behouden frisheid.",
+    "Evenwichtig, zijdeachtig en elegant, met rijp fruit, specerijen en peper, en een afdronk met een lichte toets eucalyptus.",
+    "Krachtig en diep, met rood en zwart fruit, peper en garriguekruiden; de tannines geven diepte aan een lange, kruidige afdronk.",
+    "Levendig en rechtlijnig, met citrus, ziltige mineraliteit en een frisse afdronk.",
+    "Fris en levendig, gedragen door limoen, met heldere zuren en een schone, minerale afdronk zonder zwaarte.",
+    "Droog, soepel en zacht, met peer en appel, citrus, een minerale toets en een frisse afdronk.",
+    "Fris en levendig, gedragen door exotisch fruit, met een lichte zoetheid die het geheel afrondt en een zuivere afdronk.",
+    "Fijn en fris, met citrus en florale tonen, een zachte textuur en een lichte afdronk.",
+    "Knisperend en dorstlessend, bleek, citrusachtig en mineraal, zonder zwaarte.",
+    "Frisse aanzet, fijne belletjes, wit fruit en citrus, met een lichte, frisse smaak en een zuivere afdronk.",
+    "Fijn en romig schuim, tonen van appel, peer en abrikoos, gedragen door levendige zuren en een frisse, licht biscuitachtige afdronk.",
+    "Fris, fruitig en licht, met fijne belletjes; Extra Dry voelt zachter aan dan een zeer droge brut."
+  ],
+  "ar": [
+    "قوام مركز تحمله الفواكه الحمراء والسوداء، مع تانينات واضحة لكنها متوازنة ونهاية طويلة.",
+    "مستدير وواسع، تهيمن عليه الفواكه السوداء والتوابل، مع تانينات ناعمة ونهاية منعشة ومتبهرة.",
+    "منعش وفاكهي وعصيري، مع نعومة غاماي وتانينات دقيقة ونهاية نظيفة.",
+    "ناعم وخفيف وفاكهي، بحموضة منعشة وتانينات دقيقة ونهاية غنية بنكهة الكرز الأسود.",
+    "نبيذ أحمر خفيف ومنعش، يتركز على الفاكهة الحمراء بقوام ناعم ومنعش.",
+    "مستدير وممتلئ وغني، تهيمن عليه الكرز الأسود والتوابل، مع نهاية فلفلية وانتعاش محفوظ.",
+    "متوازن وحريري وأنيق، مع فواكه ناضجة وتوابل وفلفل ونهاية تحمل لمسة خفيفة من الأوكالبتوس.",
+    "عميق ومهيكل، مع فواكه حمراء وسوداء وفلفل وأعشاب برية؛ تمنح التانينات عمقاً لنهاية طويلة ومتبهرة.",
+    "حيوي ومباشر، مع حمضيات ومعدنية مالحة ونهاية منعشة.",
+    "منعش وحيوي تحمله الليمون الأخضر، بحموضة واضحة ونهاية نظيفة ومعدنية من دون ثقل.",
+    "جاف وناعم ورقيق، مع الكمثرى والتفاح والحمضيات ولمسة معدنية ونهاية منعشة.",
+    "منعش وحيوي تحمله الفواكه الاستوائية، مع حلاوة خفيفة توازن المزيج ونهاية نظيفة.",
+    "رقيق ومنعش، مع الحمضيات والنفحات الزهرية وقوام طري ونهاية خفيفة.",
+    "مقرمش ومنعش، بلون فاتح وطابع حمضي ومعدني من دون ثقل.",
+    "بداية منعشة، فقاعات دقيقة، فواكه بيضاء وحمضيات، بفم خفيف ومنعش ونهاية نظيفة.",
+    "رغوة دقيقة وكريمية، ونفحات تفاح وكمثرى ومشمش تدعمها حموضة حيوية ونهاية منعشة بلمسة بسكويتية.",
+    "منعش وفاكهي وخفيف، تحمله فقاعات دقيقة؛ يمنح أسلوب Extra Dry إحساساً أكثر نعومة من بروت شديد الجفاف."
+  ],
+  "zh": [
+    "口感集中，红色与黑色水果风味突出，单宁明显而有结构，余味持久。",
+    "圆润饱满，以黑色水果和香料为主，单宁柔和，收尾清新而辛香。",
+    "清新、多汁且果味充沛，带有佳美的柔和感、细腻单宁和干净余味。",
+    "柔和、轻盈而果香浓郁，酸度清新，单宁细致，收尾带有黑樱桃的甜美。",
+    "一款轻盈清新的红葡萄酒，以红色水果为中心，结构柔和爽口。",
+    "圆润、饱满而丰厚，以黑樱桃和香料为主，带有胡椒般的收尾与持久清新感。",
+    "平衡、丝滑而优雅，呈现成熟水果、香料和胡椒气息，余味带有淡淡桉树香。",
+    "深邃而有结构，带有红黑水果、胡椒和灌木香草；单宁让悠长辛香的余味更有层次。",
+    "活泼而直接，带有柑橘、咸鲜矿物感和清新余味。",
+    "清新活泼，以青柠为主，酸度明快，余味干净矿物感十足且不显厚重。",
+    "干爽、柔和而细腻，呈现梨、苹果、柑橘、矿物触感和清新余味。",
+    "清新活泼，热带水果突出，轻微甜感让整体更圆润，余味干净。",
+    "细腻清新，带有柑橘和花香，质地柔和，余味轻盈。",
+    "清脆解渴，色泽淡雅，带有柑橘和矿物气息，毫不厚重。",
+    "入口清新，气泡细腻，白色水果与柑橘交织，口感轻盈清爽，余味干净。",
+    "泡沫细腻而绵密，带有苹果、梨和杏的香气，明快酸度支撑着清新、略带饼干感的余味。",
+    "清新、果味浓郁而轻盈，气泡细腻；Extra Dry风格比非常干型的起泡酒更柔和。"
+  ],
+  "uk": [
+    "Концентрований, із червоними та чорними ягодами, виразними, але структурованими танінами й тривалим післясмаком.",
+    "Округлий і повний, із чорними фруктами та спеціями, м’якими танінами й свіжим пряним післясмаком.",
+    "Свіжий, фруктовий і соковитий, із м’якістю Гаме, тонкими танінами та чистим післясмаком.",
+    "М’який, легкий і фруктовий, зі свіжою кислотністю, тонкими танінами та щедрим післясмаком чорної вишні.",
+    "Легке й свіже червоне вино з акцентом на червоні ягоди, м’яке та освіжаюче.",
+    "Округлий, повний і м’ясистий, із чорною вишнею та спеціями, перцевим післясмаком і збереженою свіжістю.",
+    "Збалансований, шовковистий та елегантний, зі стиглими фруктами, спеціями й перцем, із легкою нотою евкаліпта.",
+    "Глибокий і структурований, із червоними та чорними фруктами, перцем і травами гариги; таніни надають глибини довгому пряному післясмаку.",
+    "Жвавий і прямий, із цитрусами, солонуватою мінеральністю та свіжим післясмаком.",
+    "Свіжий і жвавий, із лаймом, чіткою кислотністю та чистим мінеральним післясмаком без важкості.",
+    "Сухий, м’який і ніжний, із грушею, яблуком, цитрусами, мінеральним відтінком і свіжим післясмаком.",
+    "Свіжий і жвавий, з екзотичними фруктами; легка солодкість округлює смак, а післясмак залишається чистим.",
+    "Делікатний і свіжий, із цитрусами та квітковими нотами, ніжною текстурою і легким післясмаком.",
+    "Хрусткий і освіжаючий, світлий, цитрусовий та мінеральний, без важкості.",
+    "Свіжий початок, тонкі бульбашки, білі фрукти й цитруси, легкий свіжий смак і чистий післясмак.",
+    "Тонка кремова піна, ноти яблука, груші та абрикоса, жива кислотність і свіжий, трохи бісквітний післясмак.",
+    "Свіжий, фруктовий і легкий, із тонкими бульбашками; Extra Dry м’якший за дуже сухий брют."
+  ],
+  "ja": [
+    "赤系と黒系の果実が広がる凝縮感。存在感のある構造的なタンニンと長い余韻。",
+    "丸みがあり、黒い果実とスパイスが中心。しなやかなタンニンと爽やかでスパイシーな余韻。",
+    "フレッシュで果実味豊か。ガメイのしなやかさ、きめ細かなタンニン、すっきりした余韻。",
+    "柔らかく軽やかで果実味豊か。爽やかな酸、細かなタンニン、黒いチェリーの甘やかな余韻。",
+    "赤い果実を中心とした軽やかで爽やかな赤。しなやかで飲みやすい味わい。",
+    "丸みがあり豊かで肉厚。黒いチェリーとスパイスが主役で、胡椒のような余韻と爽やかさが続く。",
+    "バランスがよく、シルキーでエレガント。熟した果実、スパイス、胡椒、ほのかなユーカリの余韻。",
+    "深みと構造があり、赤黒い果実、胡椒、ガリーグのハーブ。タンニンが長くスパイシーな余韻に奥行きを与える。",
+    "生き生きとして直線的。柑橘、塩味を帯びたミネラル感、爽やかな余韻。",
+    "ライムが主役の爽やかで快活な味わい。明確な酸と、重さのないクリーンでミネラルな余韻。",
+    "辛口でしなやか、やさしい味わい。洋梨、りんご、柑橘、ミネラル感、爽やかな余韻。",
+    "エキゾチックな果実が広がる爽やかな味わい。軽い甘みが全体を丸くし、きれいな余韻へ続く。",
+    "繊細で爽やか。柑橘と花の香り、やわらかな質感、軽い余韻。",
+    "キレがあり喉を潤す味わい。淡く、柑橘とミネラルを感じ、重さがない。",
+    "爽やかなアタック、きめ細かな泡、白い果実と柑橘。軽くフレッシュで、きれいな余韻。",
+    "きめ細かくクリーミーな泡。りんご、洋梨、あんずの香り、爽やかな酸、ややビスケットの余韻。",
+    "爽やかで果実味があり軽やか。きめ細かな泡と、非常に辛口のブリュットより柔らかなExtra Dryの味わい。"
+  ],
+  "ko": [
+    "붉은 과일과 검은 과일이 이끄는 집중감 있는 맛. 탄탄하지만 균형 잡힌 탄닌과 긴 여운.",
+    "둥글고 풍부하며 검은 과일과 향신료가 중심. 부드러운 탄닌과 신선하고 스파이시한 여운.",
+    "신선하고 과일 향이 풍부하며 즙이 많다. 가메의 부드러움, 섬세한 탄닌과 깔끔한 여운.",
+    "부드럽고 가벼우며 과일 향이 풍부하다. 신선한 산도와 섬세한 탄닌, 검은 체리의 달콤한 여운.",
+    "붉은 과일을 중심으로 한 가볍고 신선한 레드. 부드럽고 상쾌한 구조.",
+    "둥글고 풍부하며 육감적이다. 검은 체리와 향신료, 후추 같은 여운과 남아 있는 신선함.",
+    "균형 잡히고 실키하며 우아하다. 잘 익은 과일, 향신료, 후추와 은은한 유칼립투스 여운.",
+    "깊고 구조감 있다. 붉고 검은 과일, 후추와 가리그 허브, 긴 스파이시한 여운을 살리는 탄닌.",
+    "생기 있고 직선적이며 시트러스, 짭짤한 미네랄감과 신선한 여운.",
+    "라임이 이끄는 신선하고 생기 있는 맛. 선명한 산도와 무겁지 않은 깨끗한 미네랄 여운.",
+    "드라이하고 부드러우며 섬세하다. 배, 사과, 시트러스, 미네랄 터치와 신선한 여운.",
+    "열대 과일이 이끄는 신선하고 생기 있는 맛. 은은한 단맛이 전체를 둥글게 하고 깨끗한 여운.",
+    "섬세하고 신선하다. 시트러스와 꽃 향, 부드러운 질감과 가벼운 여운.",
+    "아삭하고 갈증을 풀어준다. 옅고 시트러스와 미네랄이 느껴지며 무겁지 않다.",
+    "신선한 첫맛, 고운 기포, 흰 과일과 시트러스. 가볍고 산뜻하며 깨끗한 여운.",
+    "곱고 크리미한 거품, 사과·배·살구 향. 생생한 산도와 신선하고 살짝 비스킷 같은 여운.",
+    "신선하고 과일 향이 풍부하며 가볍다. 고운 기포와 매우 드라이한 브뤼보다 부드러운 Extra Dry 스타일."
+  ],
+  "pl": [
+    "Skoncentrowane, z czerwonymi i czarnymi owocami, wyraźnymi, lecz uporządkowanymi taninami i długim finiszem.",
+    "Zaokrąglone i pełne, zdominowane przez czarne owoce i przyprawy, z miękkimi taninami oraz świeżym, korzennym finiszem.",
+    "Świeże, owocowe i soczyste, z miękkością Gamay, delikatnymi taninami i czystym finiszem.",
+    "Miękkie, lekkie i owocowe, ze świeżą kwasowością, delikatnymi taninami i szlachetnym finiszem czarnej wiśni.",
+    "Lekkie i świeże czerwone wino skupione na czerwonych owocach, o miękkiej i orzeźwiającej strukturze.",
+    "Zaokrąglone, pełne i mięsiste, z czarną wiśnią i przyprawami, pieprznym finiszem oraz zachowaną świeżością.",
+    "Zrównoważone, jedwabiste i eleganckie, z dojrzałymi owocami, przyprawami, pieprzem i lekką nutą eukaliptusa.",
+    "Głębokie i strukturalne, z czerwonymi i czarnymi owocami, pieprzem oraz ziołami garigu; taniny nadają głębi długiemu, korzennemu finiszowi.",
+    "Żywe i bezpośrednie, z cytrusami, słoną mineralnością i świeżym finiszem.",
+    "Świeże i żywe, z limonką, wyraźną kwasowością oraz czystym, mineralnym finiszem bez ciężkości.",
+    "Wytrawne, miękkie i delikatne, z gruszką, jabłkiem, cytrusami, mineralnym akcentem i świeżym finiszem.",
+    "Świeże i żywe, z egzotycznymi owocami; lekka słodycz zaokrągla całość, pozostawiając czysty finisz.",
+    "Delikatne i świeże, z cytrusami, kwiatowymi nutami, miękką teksturą i lekkim finiszem.",
+    "Rześkie i orzeźwiające, jasne, cytrusowe i mineralne, bez ciężkości.",
+    "Świeży początek, drobne bąbelki, białe owoce i cytrusy, lekki, świeży smak i czysty finisz.",
+    "Drobna, kremowa piana, nuty jabłka, gruszki i moreli, żywa kwasowość oraz świeży, lekko biszkoptowy finisz.",
+    "Świeże, owocowe i lekkie, z drobnymi bąbelkami; Extra Dry jest łagodniejsze niż bardzo wytrawny brut."
+  ],
+  "tr": [
+    "Kırmızı ve siyah meyvelerin taşıdığı yoğun yapı; belirgin ama dengeli tanenler ve kalıcı bir bitiş.",
+    "Yuvarlak ve dolgun; siyah meyve ile baharatlar önde, yumuşak tanenler ve taze, baharatlı bir bitiş.",
+    "Taze, meyvemsi ve sulu; Gamay’nin yumuşaklığı, ince tanenler ve temiz bir bitiş.",
+    "Yumuşak, hafif ve meyvemsi; taze asidite, ince tanenler ve siyah kirazın hoş bitişi.",
+    "Kırmızı meyve odaklı, hafif ve taze bir kırmızı; yumuşak ve ferahlatıcı yapıda.",
+    "Yuvarlak, dolgun ve etli; siyah kiraz ve baharatlar önde, biberimsi bitiş ve korunan tazelik.",
+    "Dengeli, ipeksi ve zarif; olgun meyve, baharat, biber ve hafif okaliptüs izli bir bitiş.",
+    "Güçlü ve derin; kırmızı-siyah meyveler, biber ve garig otları, uzun baharatlı bitişe derinlik veren tanenler.",
+    "Canlı ve doğrudan; narenciye, tuzlu mineralite ve taze bir bitiş.",
+    "Taze ve canlı; misket limonu, belirgin asidite ve ağırlık vermeyen temiz, mineral bir bitiş.",
+    "Kuru, yumuşak ve narin; armut, elma, narenciye, mineral dokunuş ve taze bitiş.",
+    "Taze ve canlı; egzotik meyveler, bütünü yuvarlayan hafif tatlılık ve temiz bir bitiş.",
+    "Nazik ve taze; narenciye, çiçeksi notalar, yumuşak doku ve hafif bitiş.",
+    "Çıtır ve ferahlatıcı; açık renkli, narenciyeli ve mineral, ağır değil.",
+    "Taze başlangıç, ince köpük, beyaz meyveler ve narenciye; hafif, taze bir damak ve temiz bitiş.",
+    "İnce ve kremamsı köpük; elma, armut ve kayısı notaları, canlı asidite ve taze, hafif bisküvimsi bitiş.",
+    "Taze, meyvemsi ve hafif; ince köpüklü Extra Dry tarzı, çok kuru bir brutdan daha yumuşak."
+  ],
+  "hi": [
+    "लाल और काले फलों से भरपूर गाढ़ा स्वाद, स्पष्ट लेकिन संतुलित टैनिन और टिकाऊ फिनिश के साथ।",
+    "गोल और भरपूर, काले फलों व मसालों का प्रभाव, मुलायम टैनिन और ताज़ी मसालेदार फिनिश।",
+    "ताज़ा, फलदार और रसदार, गामे की कोमलता, महीन टैनिन और साफ़ फिनिश के साथ।",
+    "कोमल, हल्का और फलदार, ताज़ी अम्लता, महीन टैनिन और काली चेरी की मधुर फिनिश।",
+    "लाल फलों पर केंद्रित हल्की और ताज़ा रेड वाइन, मुलायम व स्फूर्तिदायक संरचना के साथ।",
+    "गोल, भरपूर और गाढ़ी, काली चेरी व मसालों का प्रभाव, काली मिर्च जैसी फिनिश और बनी हुई ताज़गी।",
+    "संतुलित, रेशमी और सुरुचिपूर्ण, पके फलों, मसालों, काली मिर्च और हल्की यूकेलिप्टस फिनिश के साथ।",
+    "गहरी और संरचित, लाल-काले फल, काली मिर्च और जंगली जड़ी-बूटियाँ; टैनिन लंबी मसालेदार फिनिश को गहराई देते हैं।",
+    "जीवंत और सीधी, खट्टे फलों, नमकीन खनिजता और ताज़ी फिनिश के साथ।",
+    "ताज़ा और जीवंत, नींबू की सुगंध, स्पष्ट अम्लता और बिना भारीपन की साफ़ खनिज फिनिश।",
+    "सूखी, मुलायम और नाज़ुक, नाशपाती, सेब, खट्टे फल, खनिज स्पर्श और ताज़ी फिनिश के साथ।",
+    "ताज़ा और जीवंत, उष्णकटिबंधीय फलों से भरपूर; हल्की मिठास पूरे स्वाद को गोल बनाती है और फिनिश साफ़ रहती है।",
+    "नाज़ुक और ताज़ा, खट्टे फलों व फूलों की सुगंध, मुलायम बनावट और हल्की फिनिश।",
+    "कुरकुरी और प्यास बुझाने वाली, हल्की, खट्टे फलों और खनिज स्वाद वाली, बिना भारीपन के।",
+    "ताज़ी शुरुआत, महीन बुलबुले, सफ़ेद फल और खट्टे फल; हल्का, ताज़ा स्वाद और साफ़ फिनिश।",
+    "महीन और क्रीमी झाग, सेब, नाशपाती और खुबानी के स्वाद, जीवंत अम्लता और ताज़ी, हल्की बिस्कुट जैसी फिनिश।",
+    "ताज़ा, फलदार और हल्की, महीन बुलबुलों के साथ; Extra Dry शैली बहुत सूखे ब्रूट से अधिक मुलायम लगती है।"
+  ]
+};
+  Object.keys(WINE_LABELS).forEach(function (lang) {
+    if (!DICTS[lang]) DICTS[lang] = {};
+    Object.keys(WINE_LABELS[lang]).forEach(function (key) {
+      DICTS[lang][key] = WINE_LABELS[lang][key];
+    });
+  });
+  var EXTRA_COPY = {
+  "en": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Vanilla, salted butter caramel, chocolate, coffee, pistachio, hazelnut — extra scoop 2.90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Lime, strawberry, raspberry — extra scoop 2.90",
+    "Supplément Sirop": "Extra syrup",
+    "Supplément Picon": "Extra Picon",
+    "Happy Hour": "Happy Hour",
+    "Ouvert maintenant": "Open now",
+    "25 cl / PINTE / HH": "25 cl / PINT / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20th (Gambetta Metro)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20th",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, a friendly bar-brasserie at 4 rue Belgrand, Paris 20 (Gambetta Metro). All-day homemade food (12:00–00:00), Happy Hour every day from 17:00 to 23:00, sharing boards, wines and cocktails."
+  },
+  "es": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Vainilla, caramelo de mantequilla salada, chocolate, café, pistacho, avellana — suplemento por bola 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Lima, fresa, frambuesa — suplemento por bola 2,90",
+    "Supplément Sirop": "Suplemento de sirope",
+    "Supplément Picon": "Picon extra",
+    "Happy Hour": "Hora feliz",
+    "Ouvert maintenant": "Abierto ahora",
+    "25 cl / PINTE / HH": "25 cl / PINTA / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Bar, restaurante y brasserie París 20 (Metro Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Bar, restaurante y brasserie París 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, bar-brasserie acogedor en 4 rue Belgrand, París 20 (Metro Gambetta). Cocina casera todo el día (12:00–00:00), Hora feliz todos los días de 17:00 a 23:00, tablas, vinos y cócteles."
+  },
+  "de": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Vanille, Salzkaramell, Schokolade, Kaffee, Pistazie, Haselnuss — Kugel extra 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Limette, Erdbeere, Himbeere — Kugel extra 2,90",
+    "Supplément Sirop": "Extra-Sirup",
+    "Supplément Picon": "Extra Picon",
+    "Happy Hour": "Happy Hour",
+    "Ouvert maintenant": "Jetzt geöffnet",
+    "25 cl / PINTE / HH": "25 cl / PINT / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20 (Metro Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, gemütliche Bar-Brasserie in der 4 rue Belgrand, Paris 20 (Metro Gambetta). Durchgehend hausgemachte Küche (12:00–00:00), täglich Happy Hour von 17:00 bis 23:00, Bretter, Weine und Cocktails."
+  },
+  "it": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Vaniglia, caramello al burro salato, cioccolato, caffè, pistacchio, nocciola — pallina supplementare 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Lime, fragola, lampone — pallina supplementare 2,90",
+    "Supplément Sirop": "Supplemento sciroppo",
+    "Supplément Picon": "Picon extra",
+    "Happy Hour": "Happy Hour",
+    "Ouvert maintenant": "Aperto ora",
+    "25 cl / PINTE / HH": "25 cl / PINTA / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Bar, ristorante e brasserie Parigi 20 (Metro Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Bar, ristorante e brasserie Parigi 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, bar-brasserie conviviale al 4 rue Belgrand, Parigi 20 (Metro Gambetta). Cucina casalinga continuata (12:00–00:00), Happy Hour ogni giorno dalle 17:00 alle 23:00, taglieri, vini e cocktail."
+  },
+  "pt": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Baunilha, caramelo de manteiga salgada, chocolate, café, pistácio, avelã — bola extra 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Lima, morango, framboesa — bola extra 2,90",
+    "Supplément Sirop": "Xarope extra",
+    "Supplément Picon": "Picon extra",
+    "Happy Hour": "Happy Hour",
+    "Ouvert maintenant": "Aberto agora",
+    "25 cl / PINTE / HH": "25 cl / CANECA / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Bar, restaurante e brasserie Paris 20 (Metro Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Bar, restaurante e brasserie Paris 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, bar-brasserie acolhedor na 4 rue Belgrand, Paris 20 (Metro Gambetta). Cozinha caseira contínua (12:00–00:00), Happy Hour todos os dias das 17:00 às 23:00, tábuas, vinhos e cocktails."
+  },
+  "nl": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Vanille, gezouten boterkaramel, chocolade, koffie, pistache, hazelnoot — extra bolletje 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Limoen, aardbei, framboos — extra bolletje 2,90",
+    "Supplément Sirop": "Extra siroop",
+    "Supplément Picon": "Extra Picon",
+    "Happy Hour": "Happy hour",
+    "Ouvert maintenant": "Nu open",
+    "25 cl / PINTE / HH": "25 cl / PINT / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Bar, restaurant & brasserie Parijs 20 (metro Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Bar, restaurant & brasserie Parijs 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, gezellige bar-brasserie aan 4 rue Belgrand, Parijs 20 (metro Gambetta). Doorlopend huisgemaakt eten (12:00–00:00), elke dag Happy Hour van 17:00 tot 23:00, borrelplanken, wijn en cocktails."
+  },
+  "ar": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "فانيليا، كراميل بالزبدة المالحة، شوكولاتة، قهوة، فستق، بندق — كرة إضافية ٢٫٩٠",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "ليمون أخضر، فراولة، توت العليق — كرة إضافية ٢٫٩٠",
+    "Supplément Sirop": "شراب إضافي",
+    "Supplément Picon": "بيكون إضافي",
+    "Happy Hour": "ساعة السعادة",
+    "Ouvert maintenant": "مفتوح الآن",
+    "25 cl / PINTE / HH": "٢٥ مل / نصف لتر / ساعة السعادة",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — بار ومطعم وبراسيري باريس ٢٠ (مترو غامبيتا)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — بار ومطعم وبراسيري باريس ٢٠",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta، بار وبراسيري ودود في 4 شارع بيلغراند، باريس ٢٠ (مترو غامبيتا). مأكولات منزلية طوال اليوم (١٢:٠٠–٠٠:٠٠)، وساعة سعادة يومياً من ١٧:٠٠ إلى ٢٣:٠٠، وألواح مشاركة ونبيذ وكوكتيلات."
+  },
+  "zh": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "香草、咸黄油焦糖、巧克力、咖啡、开心果、榛子 — 加球 2.90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "青柠、草莓、覆盆子 — 加球 2.90",
+    "Supplément Sirop": "加糖浆",
+    "Supplément Picon": "加 Picon",
+    "Happy Hour": "欢乐时光",
+    "Ouvert maintenant": "现在营业",
+    "25 cl / PINTE / HH": "250 毫升 / 品脱 / 欢乐时光",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — 巴黎20区酒吧、餐厅与法式小餐馆（甘贝塔地铁站）",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — 巴黎20区酒吧、餐厅与法式小餐馆",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta，位于巴黎20区贝勒格朗街4号的友好酒吧餐厅（甘贝塔地铁站）。全天供应家常菜（12:00–00:00），每日17:00至23:00欢乐时光，并提供分享拼盘、葡萄酒和鸡尾酒。"
+  },
+  "uk": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Ваніль, солона карамель, шоколад, кава, фісташка, фундук — додаткова кулька 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Лайм, полуниця, малина — додаткова кулька 2,90",
+    "Supplément Sirop": "Додатковий сироп",
+    "Supplément Picon": "Додатковий Picon",
+    "Happy Hour": "Щаслива година",
+    "Ouvert maintenant": "Зараз відчинено",
+    "25 cl / PINTE / HH": "25 мл / ПІНТА / ЩАСЛИВА ГОДИНА",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — бар, ресторан і брасері, Париж 20 (метро Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — бар, ресторан і брасері, Париж 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta — затишний бар-брасері на 4 rue Belgrand, Париж 20 (метро Gambetta). Домашня кухня весь день (12:00–00:00), щодня щаслива година з 17:00 до 23:00, закусочні дошки, вина й коктейлі."
+  },
+  "ja": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "バニラ、塩バターキャラメル、チョコレート、コーヒー、ピスタチオ、ヘーゼルナッツ — 追加1玉 2.90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "ライム、いちご、ラズベリー — 追加1玉 2.90",
+    "Supplément Sirop": "シロップ追加",
+    "Supplément Picon": "Picon追加",
+    "Happy Hour": "ハッピーアワー",
+    "Ouvert maintenant": "現在営業中",
+    "25 cl / PINTE / HH": "25 cl / パイント / ハッピーアワー",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — パリ20区のバー・レストラン・ブラッスリー（ガンベッタ駅）",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — パリ20区のバー・レストラン・ブラッスリー",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta、パリ20区ベルグラン通り4番地の居心地のよいバー・ブラッスリー（ガンベッタ駅）。終日手作り料理（12:00–00:00）、毎日17:00〜23:00のハッピーアワー、シェアプレート、ワイン、カクテル。"
+  },
+  "ko": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "바닐라, 소금 버터 캐러멜, 초콜릿, 커피, 피스타치오, 헤이즐넛 — 아이스크림 한 스쿱 추가 2.90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "라임, 딸기, 라즈베리 — 아이스크림 한 스쿱 추가 2.90",
+    "Supplément Sirop": "시럽 추가",
+    "Supplément Picon": "Picon 추가",
+    "Happy Hour": "해피아워",
+    "Ouvert maintenant": "현재 영업 중",
+    "25 cl / PINTE / HH": "25 cl / 파인트 / 해피아워",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — 파리 20구 바·레스토랑·브라세리(감베타역)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — 파리 20구 바·레스토랑·브라세리",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, 파리 20구 벨그랑 거리 4번지의 편안한 바·브라세리(감베타역). 종일 제공하는 홈메이드 요리(12:00–00:00), 매일 17:00–23:00 해피아워, 플래터·와인·칵테일."
+  },
+  "pl": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Wanilia, solony karmel maślany, czekolada, kawa, pistacja, orzech laskowy — dodatkowa gałka 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Limonka, truskawka, malina — dodatkowa gałka 2,90",
+    "Supplément Sirop": "Dodatkowy syrop",
+    "Supplément Picon": "Dodatkowy Picon",
+    "Happy Hour": "Happy Hour",
+    "Ouvert maintenant": "Otwarte teraz",
+    "25 cl / PINTE / HH": "25 cl / PINTA / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — bar, restauracja i brasserie, Paryż 20 (metro Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — bar, restauracja i brasserie, Paryż 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, przyjazny bar-brasserie przy 4 rue Belgrand, Paryż 20 (metro Gambetta). Domowa kuchnia przez cały dzień (12:00–00:00), Happy Hour codziennie 17:00–23:00, deski przekąsek, wina i koktajle."
+  },
+  "tr": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Vanilya, tuzlu tereyağlı karamel, çikolata, kahve, Antep fıstığı, fındık — ilave top 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Misket limonu, çilek, ahududu — ilave top 2,90",
+    "Supplément Sirop": "Ek şurup",
+    "Supplément Picon": "Ek Picon",
+    "Happy Hour": "Happy Hour",
+    "Ouvert maintenant": "Şimdi açık",
+    "25 cl / PINTE / HH": "25 cl / PINT / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Paris 20 barı, restoranı ve brasserie’si (Gambetta metrosu)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Paris 20 barı, restoranı ve brasserie’si",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, 4 rue Belgrand, Paris 20’de (Gambetta metrosu) samimi bir bar-brasserie. Gün boyu ev yapımı yemekler (12:00–00:00), her gün 17:00–23:00 Happy Hour, paylaşım tabakları, şaraplar ve kokteyller."
+  },
+  "hi": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "वनीला, नमकीन मक्खन कारमेल, चॉकलेट, कॉफी, पिस्ता, हेज़लनट — अतिरिक्त स्कूप 2.90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "नींबू, स्ट्रॉबेरी, रास्पबेरी — अतिरिक्त स्कूप 2.90",
+    "Supplément Sirop": "अतिरिक्त सिरप",
+    "Supplément Picon": "अतिरिक्त Picon",
+    "Happy Hour": "हैप्पी आवर",
+    "Ouvert maintenant": "अभी खुला है",
+    "25 cl / PINTE / HH": "२५० मिली / पिंट / हैप्पी आवर",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — पेरिस 20 का बार, रेस्तरां और ब्रासरी (गांबेता मेट्रो)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — पेरिस 20 का बार, रेस्तरां और ब्रासरी",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, 4 rue Belgrand, पेरिस 20 (गांबेता मेट्रो) में एक दोस्ताना बार-ब्रासरी। पूरे दिन घर का खाना (12:00–00:00), हर दिन 17:00 से 23:00 तक हैप्पी आवर, प्लैटर, वाइन और कॉकटेल।"
+  }
+};
+  Object.keys(EXTRA_COPY).forEach(function (lang) {
+    Object.keys(EXTRA_COPY[lang]).forEach(function (key) {
+      DICTS[lang][key] = EXTRA_COPY[lang][key];
+    });
+  });
+  var DYNAMIC_LABELS = {
+    en: { 'L’Happy Hour est lancée !': 'Happy Hour is on!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    es: { 'L’Happy Hour est lancée !': '¡La Happy Hour está en marcha!', 'HAPPY HOUR': 'HORA FELIZ' },
+    de: { 'L’Happy Hour est lancée !': 'Die Happy Hour läuft!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    it: { 'L’Happy Hour est lancée !': 'La Happy Hour è partita!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    pt: { 'L’Happy Hour est lancée !': 'A Happy Hour começou!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    nl: { 'L’Happy Hour est lancée !': 'De Happy Hour is van start!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    ar: { 'L’Happy Hour est lancée !': 'انطلقت ساعة السعادة!', 'HAPPY HOUR': 'ساعة السعادة' },
+    zh: { 'L’Happy Hour est lancée !': '欢乐时光，正式开启！', 'HAPPY HOUR': '欢乐时光' },
+    uk: { 'L’Happy Hour est lancée !': 'Щасливі години розпочалися!', 'HAPPY HOUR': 'ЩАСЛИВА ГОДИНА' },
+    ja: { 'L’Happy Hour est lancée !': 'ハッピーアワー スタート！', 'HAPPY HOUR': 'ハッピーアワー' },
+    ko: { 'L’Happy Hour est lancée !': '해피아워 시작!', 'HAPPY HOUR': '해피아워' },
+    pl: { 'L’Happy Hour est lancée !': 'Happy Hour ruszyło!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    tr: { 'L’Happy Hour est lancée !': 'Happy Hour başladı!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    hi: { 'L’Happy Hour est lancée !': 'हैप्पी आवर शुरू!', 'HAPPY HOUR': 'हैप्पी आवर' }
+  };
+  Object.keys(DYNAMIC_LABELS).forEach(function (lang) {
+    Object.keys(DYNAMIC_LABELS[lang]).forEach(function (key) {
+      DICTS[lang][key] = DYNAMIC_LABELS[lang][key];
+    });
+  });
+  window.__i18nWineTastings = WINE_TASTINGS;
   var LANG = 'fr';
 
   function syncLanguageOptionLabels() {
