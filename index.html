@@ -9972,6 +9972,74 @@ html:not(.carte-doc) .foldall--hint .foldall__ico {
   }
 }
 
+/* ===== Bulles : même grille mobile que les autres vins ================
+   La table courte a seulement deux contenances. Sur petit écran, le numéro
+   garde sa colonne étroite, l’appellation occupe toute la largeur restante
+   de la première ligne, puis les deux intitulés de prix prennent chacun
+   une moitié égale de la seconde. Le chevron est posé en superposition :
+   il ne réserve plus une colonne ni ne rétrécit l’appellation. */
+@media screen and (max-width:706px) {
+  html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row {
+    grid-template-columns:1.8em minmax(0,1fr) minmax(0,1fr) !important;
+    grid-template-rows:auto auto auto !important;
+    column-gap:8px !important;
+    row-gap:4px !important;
+    align-items:start !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row > td.wine-no {
+    grid-column:1 !important;
+    grid-row:1 !important;
+    align-self:start !important;
+    justify-self:start !important;
+    width:auto !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row > td.wine-name {
+    grid-column:2 / -1 !important;
+    grid-row:1 !important;
+    justify-self:stretch !important;
+    width:100% !important;
+    min-width:0 !important;
+    padding-right:1.4rem !important;
+    text-align:left !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row > td:nth-of-type(3) {
+    grid-column:2 !important;
+    grid-row:2 !important;
+    justify-self:stretch !important;
+    width:100% !important;
+    min-width:0 !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row > td:nth-of-type(4) {
+    grid-column:3 !important;
+    grid-row:2 !important;
+    justify-self:stretch !important;
+    width:100% !important;
+    min-width:0 !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row > td.wine-detail-cell {
+    grid-column:1 / -1 !important;
+    grid-row:3 !important;
+    justify-self:stretch !important;
+    width:100% !important;
+    min-width:0 !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row > .wine-row__chevron {
+    position:absolute !important;
+    top:.45rem !important;
+    right:.35rem !important;
+    grid-column:auto !important;
+    grid-row:auto !important;
+    justify-self:auto !important;
+    align-self:auto !important;
+    margin:0 !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row > td:not(.wine-name):not(.wine-no):not(.wine-detail-cell)::before {
+    display:block !important;
+    width:100% !important;
+    text-align:left !important;
+  }
+}
+
 </style>
 </head>
 <body>
