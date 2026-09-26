@@ -6904,236 +6904,8 @@ html.carte-doc #menus .fm .fmb-card--pdj .fmb-list {
   .footer-download { font-size: .6rem; letter-spacing: .14em; padding: 5px 12px; }
 }
 
-/* ===== Page de garde — attirer l'œil vers le bouton doré « Menu & Carte » =====
-   Trois effets doux et continus sur le bouton de la couverture :
-   1) un anneau doré qui se propage (pouls), 2) un léger souffle vertical,
-   3) un reflet lumineux qui balaie la surface du bouton. Désactivés quand
-   l'utilisateur demande moins d'animations ou à l'impression. */
-@keyframes coverActionPulse {
-  0%   { box-shadow: 0 0 0 0 rgba(216, 178, 87, .6), 0 8px 22px rgba(156, 122, 45, .35); }
-  70%  { box-shadow: 0 0 0 18px rgba(216, 178, 87, 0), 0 8px 22px rgba(156, 122, 45, .35); }
-  100% { box-shadow: 0 0 0 0 rgba(216, 178, 87, 0), 0 8px 22px rgba(156, 122, 45, .35); }
-}
-@keyframes coverActionBreath {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50%      { transform: translateY(-2px) scale(1.025); }
-}
-@keyframes coverActionShine {
-  0%   { left: -70%; }
-  50%  { left: 135%; }
-  100% { left: 135%; }
-}
-html:not(.carte-doc) .cover-action {
-  position: relative; overflow: hidden;
-  animation: coverActionPulse 2.3s ease-out infinite,
-             coverActionBreath 2.3s ease-in-out infinite;
-}
-html:not(.carte-doc) .cover-action::after {
-  content: ""; position: absolute; top: -10%; bottom: -10%;
-  /* left: -70% = la position 0 % de coverActionShine. Sans cela, pendant le
-     délai de départ (1,7 s à l'entrée chorégraphiée de la garde) et pour
-     quiconque demande moins d'animations, le reflet se posait à sa position
-     statique — en plein sur le bouton, comme une trace blanche biaisée. */
-  left: -70%;
-  width: 36%; pointer-events: none;
-  background: linear-gradient(105deg, rgba(255,255,255,0) 0%,
-              rgba(255,255,255,.55) 50%, rgba(255,255,255,0) 100%);
-  transform: skewX(-18deg);
-  animation: coverActionShine 3.6s ease-in-out infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  html:not(.carte-doc) .cover-action,
-  html:not(.carte-doc) .cover-action::after { animation: none !important; }
-}
-@media print {
-  html:not(.carte-doc) .cover-action,
-  html:not(.carte-doc) .cover-action::after { animation: none !important; }
-}
-
-
-/* ===== Page de garde — animation pro : entree choregraphiee + ambiance =====
-   Web uniquement (jamais carte A4 / impression) : une entree en cascade
-   rejouee a chaque retour sur la garde (classe .cover-enter sur
-   #cover-section), puis une vie continue — halo dore tournant autour du
-   medaillon, flottement doux, zoom lent du relief, etincelles et nappes de
-   lumiere. Transform/opacity uniquement (pas de reflow), coupe si
-   prefers-reduced-motion ou a l'impression. */
-@keyframes coverRise {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: none; }
-}
-@keyframes coverRiseSoft {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: none; }
-}
-@keyframes coverMedalIn {
-  0%   { opacity: 0; transform: scale(.84) rotate(-5deg); }
-  60%  { opacity: 1; transform: scale(1.015) rotate(.6deg); }
-  100% { opacity: 1; transform: scale(1) rotate(0deg); }
-}
-@keyframes coverFrameIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-@keyframes coverFloat {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-7px); }
-}
-@keyframes coverInnerZoom {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.035); }
-}
-@keyframes coverHaloSpin {
-  to { transform: rotate(360deg); }
-}
-@keyframes coverHaloBreathe {
-  0%, 100% { opacity: .5; }
-  50%      { opacity: .9; }
-}
-@keyframes medalGleam {
-  /* éclosion et extinction très lentes, quasi imperceptibles :
-     opacité plafonnée basse, échelle douce, légère rotation */
-  0%   { opacity: 0; transform: scale(.84) rotate(0deg); }
-  50%  { opacity: var(--orn-cap, .5); transform: scale(1) rotate(20deg); }
-  100% { opacity: 0; transform: scale(.84) rotate(40deg); }
-}
-@keyframes medalRingSpin {
-  to { transform: rotate(360deg); }
-}
-@keyframes coverDrift1 {
-  0%, 100% { transform: translate(0, 0) scale(1); opacity: .7; }
-  50%      { transform: translate(4%, -3%) scale(1.08); opacity: 1; }
-}
-@keyframes coverDrift2 {
-  0%, 100% { transform: translate(0, 0) scale(1); opacity: .6; }
-  50%      { transform: translate(-5%, 4%) scale(1.12); opacity: .95; }
-}
-@keyframes coverStarPulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: .55; }
-}
-/* --- Entree en cascade (classe .cover-enter, remise a chaque retour) --- */
-html:not(.carte-doc) #cover-section.cover-enter .cover-page::after {
-  animation: coverFrameIn 1.2s ease-out .1s both;
-}
-html:not(.carte-doc) #cover-section.cover-enter .cover-brand .eyebrow {
-  animation: coverRise .65s cubic-bezier(.22,.8,.3,1) 0s both;
-}
-html:not(.carte-doc) #cover-section.cover-enter .cover-brand h2 {
-  animation: coverRise .65s cubic-bezier(.22,.8,.3,1) .06s both;
-}
-html:not(.carte-doc) #cover-section.cover-enter .cover-brand .leader-meta {
-  animation: coverRise .6s cubic-bezier(.22,.8,.3,1) .12s both;
-}
-html:not(.carte-doc) #cover-section.cover-enter .cover-brand .menu-leader-subline {
-  animation: coverRise .6s cubic-bezier(.22,.8,.3,1) .24s both;
-}
-html:not(.carte-doc) #cover-section.cover-enter .medallion-frame {
-  animation: none !important;
-  transform: none !important;
-}
-html:not(.carte-doc) #cover-section.cover-enter .cover-action {
-  animation: coverRiseSoft .6s cubic-bezier(.22,.8,.3,1) .75s both,
-             coverActionPulse 2.3s ease-out 1.6s infinite,
-             coverActionBreath 2.3s ease-in-out 1.6s infinite;
-}
-html:not(.carte-doc) #cover-section.cover-enter .cover-action::after {
-  animation: coverActionShine 3.6s ease-in-out 1.7s infinite;
-}
-html:not(.carte-doc) #cover-section.cover-enter .cover-footer-address {
-  animation: coverRiseSoft .6s cubic-bezier(.22,.8,.3,1) .95s both;
-}
-/* Les quatre pilules montent l'une après l'autre. Le retard est calculé
-   à partir du rang plutôt qu'écrit règle par règle : les trois règles
-   nth-child d'origine dataient d'un pied à trois boutons, si bien que le
-   quatrième — « Réservation », ajouté depuis — n'était couvert par
-   aucune. Il n'héritait donc d'aucune animation, restait visible d'emblée
-   pendant que les autres montaient, et l'ensemble paraissait décalé.
-   Avec une variable de rang, ajouter un bouton ne demande plus rien. */
-/* Le contenu reste visible avec la police de secours pendant une panne ou
-   un cache froid : l’arrivée de Cinzel/Montserrat ne doit jamais rendre la
-   couverture incomplète. La classe ready ne sert qu’à lancer l’animation. */
-html.cover-fonts-ready:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link {
-  animation: coverRiseSoft .55s cubic-bezier(.22,.8,.3,1) both;
-  animation-delay: calc(1.05s + var(--i, 0) * .1s);
-}
-html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(1) { --i: 0; }
-html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(2) { --i: 1; }
-html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(3) { --i: 2; }
-html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(4) { --i: 3; }
-html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(5) { --i: 4; }
-html:not(.carte-doc) #cover-section.cover-enter .cover-links .contact-link:nth-child(6) { --i: 5; }
-/* --- Nappes de lumiere derriere le contenu --- */
-html:not(.carte-doc) #cover-section .cover-ambient {
-  position: absolute; inset: 0; z-index: 0;
-  pointer-events: none; overflow: hidden;
-}
-html:not(.carte-doc) #cover-section .cover-ambient::before,
-html:not(.carte-doc) #cover-section .cover-ambient::after {
-  content: ""; position: absolute; border-radius: 50%;
-}
-html:not(.carte-doc) #cover-section .cover-ambient::before {
-  width: 70vmax; height: 70vmax; left: -20vmax; top: -25vmax;
-  background: radial-gradient(circle, rgba(216,178,87,.16) 0%, rgba(216,178,87,0) 60%);
-  animation: coverDrift1 11s ease-in-out infinite;
-}
-html:not(.carte-doc) #cover-section .cover-ambient::after {
-  width: 75vmax; height: 75vmax; right: -22vmax; bottom: -28vmax;
-  background: radial-gradient(circle, rgba(183,140,220,.14) 0%, rgba(183,140,220,0) 60%);
-  animation: coverDrift2 13s ease-in-out infinite;
-}
-/* --- Etincelles dorees --- */
-/* --- Ornements dorés du médaillon : posés sur le cercle doré, ils
-     apparaissent et disparaissent très lentement, tout en discrétion —
-     une lente respiration d'or autour de la photo centrale --- */
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles {
-  position: absolute; inset: 0; z-index: 3;
-  pointer-events: none;
-  animation: medalRingSpin 240s linear infinite;
-}
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span {
-  position: absolute; display: block; line-height: 1;
-  color: var(--gold-bright, #ffe88f);
-  text-shadow: 0 0 10px rgba(255,232,143,.55), 0 0 22px rgba(255,232,143,.25);
-  opacity: 0;
-  animation: medalGleam 22s ease-in-out infinite;
-  animation-name: medalGleam;
-  will-change: opacity, transform;
-}
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(1) { left: 97.5%; top: 50.0%; font-size: 8px; animation-duration: 22s; animation-delay: 0.0s; --orn-cap: 0.5; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(2) { left: 15.0%; top: 82.1%; font-size: 6px; animation-duration: 19s; animation-delay: -6.6s; --orn-cap: 0.4; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(3) { left: 54.1%; top: 2.7%; font-size: 9px; animation-duration: 26s; animation-delay: -4.0s; --orn-cap: 0.55; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(4) { left: 78.9%; top: 87.7%; font-size: 7px; animation-duration: 21s; animation-delay: -11.3s; --orn-cap: 0.45; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(5) { left: 3.2%; top: 41.8%; font-size: 10px; animation-duration: 24s; animation-delay: -6.5s; --orn-cap: 0.5; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(6) { left: 90.1%; top: 24.5%; font-size: 6px; animation-duration: 18s; animation-delay: -11.8s; --orn-cap: 0.4; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(7) { left: 37.7%; top: 95.9%; font-size: 8px; animation-duration: 25s; animation-delay: -1.9s; --orn-cap: 0.55; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(8) { left: 28.1%; top: 7.9%; font-size: 7px; animation-duration: 20s; animation-delay: -9.2s; --orn-cap: 0.45; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(9) { left: 94.6%; top: 66.2%; font-size: 9px; animation-duration: 23s; animation-delay: -5.3s; --orn-cap: 0.5; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(10) { left: 6.1%; top: 68.2%; font-size: 6px; animation-duration: 19s; animation-delay: -11.7s; --orn-cap: 0.4; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(11) { left: 70.1%; top: 7.0%; font-size: 8px; animation-duration: 26s; animation-delay: -10.0s; --orn-cap: 0.55; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(12) { left: 64.3%; top: 95.3%; font-size: 7px; animation-duration: 21s; animation-delay: -2.4s; --orn-cap: 0.45; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(13) { left: 8.9%; top: 26.3%; font-size: 10px; animation-duration: 24s; animation-delay: -12.0s; --orn-cap: 0.5; }
-html:not(.carte-doc) #cover-section .medallion-frame .cover-sparkles span:nth-child(14) { left: 96.4%; top: 39.7%; font-size: 6px; animation-duration: 20s; animation-delay: -6.2s; --orn-cap: 0.4; }
-/* --- Halo dore tournant + vie du medaillon --- */
-html:not(.carte-doc) #cover-section .medallion-frame .medallion-halo {
-  position: absolute; inset: -7%; border-radius: 50%;
-  pointer-events: none; z-index: 0;
-  background: conic-gradient(from 0deg,
-    rgba(216,178,87,0) 0%, rgba(216,178,87,.5) 12%, rgba(216,178,87,0) 26%,
-    rgba(216,178,87,0) 55%, rgba(252,246,186,.45) 68%, rgba(216,178,87,0) 82%);
-  filter: blur(8px);
-  animation: coverHaloSpin 22s linear infinite,
-             coverHaloBreathe 4.5s ease-in-out infinite;
-}
-html:not(.carte-doc) #cover-section .medallion-frame .relief-inner-svg {
-  animation: none !important;
-}
-html:not(.carte-doc) #cover-section .medallion-frame {
-  transition: filter .3s ease;
-}
-html:not(.carte-doc) #cover-section .medallion-frame:hover {
-  filter: brightness(1.06);
-}
+/* ===== Couverture statique ============================================
+   La couverture ne lance aucun effet décoratif ni cycle visuel. */
 /* --- Etoiles du titre : pulsation douce --- */
 html:not(.carte-doc) #cover-section .cover-brand .star-gold {
   display: inline-block;   /* rythme défini plus bas, avec le reste */
@@ -7206,14 +6978,6 @@ html:not(.carte-doc) .choice-card li:nth-child(5)::before { --i: 4; }
 html:not(.carte-doc) .choice-card li:nth-child(6)::before { --i: 5; }
 html:not(.carte-doc) .choice-card li:nth-child(7)::before { --i: 6; }
 html:not(.carte-doc) .choice-card li:nth-child(8)::before { --i: 7; }
-/* Étoiles de la page de garde : plus lentes et plus creusées. Elles
-   figurent sur un fond sombre, où le reflet porte davantage. */
-html:not(.carte-doc) #cover-section .cover-brand .star-gold {
-  animation: starBreathDeep 6.4s ease-in-out infinite;
-}
-html:not(.carte-doc) #cover-section .cover-brand .star-gold:last-child {
-  animation-duration: 7.6s; animation-delay: -3.2s;
-}
 /* Le bouton « Menu & Carte » scintille déjà par son reflet : ses étoiles
    restent stables pour ne pas surcharger le même point du regard. */
 html:not(.carte-doc) .cover-action .star-gold { animation: none; }
@@ -7230,98 +6994,6 @@ html:not(.carte-doc) .lang-check { animation: none !important; }
 @media print {
   .star-gold, .panel__title::before, .panel__title::after,
   .choice-card li::before, .fmb-star { animation: none !important; opacity: 1 !important; }
-}
-
-/* --- Decors caches sur la carte imprimee / le document A4 --- */
-html.carte-doc .cover-ambient,
-html.carte-doc .cover-sparkles,
-html.carte-doc .medallion-halo,
-.print-page--cover .cover-ambient,
-.print-page--cover .cover-sparkles,
-.print-page--cover .medallion-halo {
-  display: none !important;
-}
-@media (prefers-reduced-motion: reduce) {
-  html:not(.carte-doc) #cover-section .cover-ambient,
-  html:not(.carte-doc) #cover-section .cover-sparkles,
-  html:not(.carte-doc) #cover-section .medallion-halo {
-    display: none !important;
-  }
-  html:not(.carte-doc) #cover-section *,
-  html:not(.carte-doc) #cover-section *::before,
-  html:not(.carte-doc) #cover-section *::after {
-    animation: none !important;
-  }
-}
-@media print {
-  .cover-ambient,
-  .cover-sparkles,
-  .medallion-halo {
-    display: none !important;
-  }
-  html:not(.carte-doc) #cover-section *,
-  html:not(.carte-doc) #cover-section *::before,
-  html:not(.carte-doc) #cover-section *::after {
-    animation: none !important;
-  }
-}
-
-
-/* ===== Noel (01 -> 31 decembre) : neige + traineau du pere Noel =====
-   Actives par le script « NOEL » en bas de page, uniquement du 1er au 31
-   decembre (?noel=1 force la previsu, ?noel=0 coupe). Calques fixes
-   au-dessus de tout, pointer-events:none : ils ne captent aucun clic.
-   Jamais sur la carte A4 ni a l'impression. */
-#xmas-snow {
-  position: fixed; inset: 0; z-index: 9970;
-  display: none; pointer-events: none;
-}
-#xmas-snow.on { display: block; }
-#xmas-sleigh {
-  position: fixed; left: 0; top: 0; z-index: 9980;
-  display: none; pointer-events: none;
-  will-change: transform, opacity;
-}
-#xmas-sleigh.on { display: block; }
-#xmas-sleigh img {
-  display: block; width: 100%; height: auto;
-  filter: drop-shadow(0 6px 18px rgba(0,0,0,.45))
-          drop-shadow(0 0 26px rgba(255,200,90,.35));
-}
-#xmas-sleigh.flip img { transform: scaleX(-1); }
-#xmas-sleigh .trail {
-  position: absolute; top: 52%; width: 46%; height: 30%;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255,210,120,.55), rgba(255,210,120,0));
-  filter: blur(6px);
-}
-#xmas-sleigh.ltr .trail { right: 88%; }
-#xmas-sleigh.rtl .trail { left: 88%; }
-/* Bouton grelots : visible seulement en saison de Noel, il permet
-   d'activer / couper le tintement du traineau et sert de geste
-   debloquant pour l'audio des navigateurs (politique d'autoplay). */
-#xmas-bells-btn {
-  position: fixed; right: 16px; bottom: 16px; z-index: 9990;
-  display: none; align-items: center; justify-content: center;
-  width: 42px; height: 42px; padding: 0;
-  border-radius: 50%;
-  border: 1px solid rgba(216, 178, 87, .45);
-  background: rgba(24, 12, 30, .78);
-  color: #d8b257; cursor: pointer; box-sizing: border-box;
-  transition: transform .2s ease, background-color .2s ease;
-}
-#xmas-bells-btn.on { display: inline-flex; }
-#xmas-bells-btn:hover { transform: scale(1.07); background: rgba(38, 18, 46, .9); }
-#xmas-bells-btn:focus-visible { outline: 2px solid #d8b257; outline-offset: 2px; }
-#xmas-bells-btn svg { width: 21px; height: 21px; display: block; }
-#xmas-bells-btn .bell-off { display: none; }
-#xmas-bells-btn.muted .bell-off { display: block; }
-#xmas-bells-btn.muted .bell-body { opacity: .45; }
-html.carte-doc #xmas-snow,
-html.carte-doc #xmas-sleigh,
-html.carte-doc #xmas-bells-btn { display: none !important; }
-@media print {
-  #xmas-snow, #xmas-sleigh, #xmas-bells-btn { display: none !important; }
 }
 
 /* ===== Japonais : activation des fontes jumelles =====
@@ -8950,19 +8622,11 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
   font-weight:700;
   text-decoration:none;
   cursor:pointer;
-  animation:coverHappyHourPulse 2.8s ease-in-out infinite;
 }
 .cover-hours__happy:hover,
 .cover-hours__happy:focus-visible { color:var(--gold-100, #fef9db); text-decoration:underline; text-underline-offset:3px; }
 .cover-hours__happy[hidden],
 [data-hours-happy-separator][hidden] { display:none !important; }
-@keyframes coverHappyHourPulse {
-  0%, 100% { opacity:.78; transform:translateY(0); text-shadow:none; }
-  50% { opacity:1; transform:translateY(-1px); text-shadow:0 0 8px rgba(240,215,143,.38); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .cover-hours__happy { animation:none; }
-}
 .cover-hours__status {
   display:inline-flex;
   align-items:center;
@@ -9019,33 +8683,7 @@ html.carte-doc .print-page--cover .cover-hours { gap:2px; padding-top:4px; paddi
 
 
 
-/* ===== Couverture panoramique : lignes, espacements et animation des horaires =====
-   En paysage, la largeur est le meilleur espace de lecture : les blocs courts
-   restent donc sur une ligne, sans modifier le rendu vertical de la couverture. */
-@keyframes coverHoursIn {
-  from { opacity:0; transform:translateY(10px); }
-  to { opacity:1; transform:none; }
-}
-@keyframes coverHoursDot {
-  0%, 100% { opacity:.72; transform:scale(.92); box-shadow:0 0 0 3px rgba(169,229,169,.13), 0 0 8px rgba(169,229,169,.48); }
-  50% { opacity:1; transform:scale(1.12); box-shadow:0 0 0 4px rgba(169,229,169,.2), 0 0 14px rgba(169,229,169,.82); }
-}
-html:not(.carte-doc) #cover-section.cover-enter .cover-hours {
-  animation:coverHoursIn .6s cubic-bezier(.22,.8,.3,1) .82s both;
-}
-html:not(.carte-doc) #cover-section.cover-enter .cover-hours__heading {
-  animation:coverRise .5s cubic-bezier(.22,.8,.3,1) .88s both;
-}
-html:not(.carte-doc) #cover-section.cover-enter .cover-hours__range {
-  animation:coverRise .5s cubic-bezier(.22,.8,.3,1) .96s both;
-}
-html:not(.carte-doc) #cover-section.cover-enter .cover-hours__status {
-  animation:coverRise .5s cubic-bezier(.22,.8,.3,1) 1.04s both;
-}
-html:not(.carte-doc) #cover-section .cover-hours__dot {
-  animation:coverHoursDot 2.8s ease-in-out 1.7s infinite;
-}
-
+/* ===== Couverture panoramique : lignes et espacements ================= */
 @media screen and (orientation:landscape) {
   /* Une phrase formant un même bloc ne se casse plus en deux lignes en
      paysage : titre, horaires, adresse et libellés de contact restent lisibles
@@ -10379,6 +10017,42 @@ html:not(.carte-doc) #vins .wine-detail-value {
   }
 }
 
+
+/* ===== Garde statique : aucun coût d'animation en permanence ==========
+   Cette règle finale neutralise aussi les règles historiques déclarées
+   plus haut dans la feuille. Les interactions (navigation, liens, clavier)
+   restent instantanées et fonctionnelles. */
+html:not(.carte-doc) #cover-section *,
+html:not(.carte-doc) #cover-section *::before,
+html:not(.carte-doc) #cover-section *::after {
+  animation: none !important;
+  transition: none !important;
+  will-change: auto !important;
+}
+html:not(.carte-doc) #cover-section .cover-action::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Le tiroir vin occupe toute la largeur de son encart sur grand écran.
+   La règle générale des cellules de prix aligne volontairement les prix à
+   droite ; elle ne doit pas s'appliquer aux deux lignes de texte du tiroir. */
+@media screen and (min-width:861px) {
+  html:not(.carte-doc) #interior-menu #vins .wine-table tbody tr.wine-row > td.wine-detail-cell {
+    justify-self: stretch !important;
+    text-align: left !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-detail-cell__inner,
+  html:not(.carte-doc) #interior-menu #vins .wine-detail-card,
+  html:not(.carte-doc) #interior-menu #vins .wine-detail-lines,
+  html:not(.carte-doc) #interior-menu #vins .wine-detail-line,
+  html:not(.carte-doc) #interior-menu #vins .wine-detail-label,
+  html:not(.carte-doc) #interior-menu #vins .wine-detail-value {
+    justify-self: start !important;
+    text-align: left !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -10460,8 +10134,6 @@ html:not(.carte-doc) #vins .wine-detail-value {
       </div>
     </div>
   </div>
-  <canvas id="xmas-snow" aria-hidden="true"></canvas>
-  <div id="xmas-sleigh" aria-hidden="true"><span class="trail"></span><img src="assets/noel/sleigh.svg" alt="" draggable="false" loading="lazy" decoding="async"></div>
   <div class="top-controls" style="display:none">
     <div class="top-controls__nav">
       <button class="control-btn active" id="btn-show-cover" onclick="showView('cover')"><span class="star-gold">✦</span> Page de Garde</button>
@@ -10470,38 +10142,15 @@ html:not(.carte-doc) #vins .wine-detail-value {
     
   </div>
 
-  <script>
-  /* Les pilules du pied attendent que les polices soient chargées avant
-     de monter. Cinzel arrive en « swap » : lancée trop tôt, la cascade
-     démarrait avec la police de secours, puis la substitution changeait
-     la largeur des libellés en pleine montée — les pilules du rang flex
-     se redistribuaient latéralement, d'où le décalage.
-     Ce bloc est placé AVANT la page de garde : posé plus bas, le
-     masquage serait arrivé après le début de l'animation. La classe
-     n'est demandée que si l'on est en mesure de la lever, pour ne pas
-     laisser un pied invisible sans JavaScript. */
-  (function () {
-    var root = document.documentElement;
-    function go() {
-      root.classList.add('cover-fonts-ready');
-      root.classList.remove('cover-fonts-wait');
-    }
-    if (!document.fonts || document.fonts.status === 'loaded') { go(); return; }
-    root.classList.add('cover-fonts-wait');
-    document.fonts.ready.then(go);
-    setTimeout(go, 1200);   /* police jamais arrivée : on montre quand même */
-  })();
-  </script>
-  <section id="cover-section" class="cover-enter">
+  <section id="cover-section">
     <div class="cover-page">
-      <div class="cover-ambient" aria-hidden="true"></div>
       <div class="cover-brand cover-brand--menu-leader titre-principal" id="titre-principal" onclick="showView('menu')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('menu');}" role="link" tabindex="0" title="Voir la carte" aria-label="Titre principal">
         <div class="eyebrow leader-title"><span class="star-gold">✦</span> LA <span class="star-gold">✦</span></div>
         <h2>COLLINE <span>GAMBETTA</span></h2>
         <p class="leader-meta">BAR • RESTAURANT • PARIS 20ᵉ</p>
         <p class="leader-meta leader-meta--sub menu-leader-subline"><span class="star-gold">✦</span> FAIT MAISON • SERVICE CONTINU • TERRASSE <span class="star-gold">✦</span></p>
       </div>
-      <div class="medallion-container"><div class="medallion-halo" aria-hidden="true"></div><div class="medallion-frame" onclick="showView('menu')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('menu');}" role="link" tabindex="0" title="Voir la carte"><div class="cover-sparkles" aria-hidden="true"><span>✦</span><span>✦</span><span>✦</span><span>✦</span><span>✦</span><span>✦</span><span>✦</span><span>✦</span><span>✦</span><span>✦</span><span>✦</span><span>✦</span><span>✦</span><span>✦</span></div><svg class="medallion-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div class="medallion-container"><div class="medallion-frame" onclick="showView('menu')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showView('menu');}" role="link" tabindex="0" title="Voir la carte"><svg class="medallion-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="goldGradCover" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#bf953f" /><stop offset="20%" stop-color="#fcf6ba" /><stop offset="45%" stop-color="#d8b257" /><stop offset="75%" stop-color="#b38728" /><stop offset="100%" stop-color="#fef9db" />
@@ -10734,8 +10383,7 @@ html:not(.carte-doc) #vins .wine-detail-value {
 /* Cadre doré de la page de garde : on le dimensionne en carré sur le minimum
    (largeur disponible, hauteur disponible moins le bouton) pour qu'il reste
    proche des bords et qu'aucun élément ne se chevauche, à toute taille. */
-let __coverMedallionSettleUntil = 0, __coverMedallionStable = 0, __coverMedallionLast = -1;
-function sizeCoverMedallion(fromSettle) {
+function sizeCoverMedallion() {
   const section = document.getElementById('cover-section');
   const cont = document.querySelector('#cover-section .medallion-container');
   const frame = document.querySelector('#cover-section .medallion-frame');
@@ -10781,27 +10429,35 @@ function sizeCoverMedallion(fromSettle) {
   frame.style.display = '';
   frame.style.width = side + 'px';
   frame.style.height = side + 'px';
-  /* Stabilisation : lors d'un changement de régime (bascule fenêtre
-     haute ↔ basse), les mesures prises dans le gestionnaire resize
-     sont TRANSITOIRES — le conteneur finit de se stabiliser, le bouton
-     « Menu & Carte » enchaîne sa transition compact → normal
-     (transition:all sur le padding, 0,2 s), et l'événement resize
-     n'arrive qu'une fois : plus aucun recalcul ne corrige ensuite.
-     Un seul calcul fige alors un médaillon trop grand et le centrage
-     du conteneur le fait déborder sur le titre et le pied (p. ex.
-     915×412 → 740×700 : contH mesuré 399 pour 357 réel, bouton 32
-     pour 46). On re-mesure donc régulièrement pendant ~3 s — par
-     setTimeout et non requestAnimationFrame, qui ne tire plus quand
-     aucune frame n'est produite — jusqu'à ce que la taille soit
-     stable plusieurs passes de suite : elle converge alors vers les
-     vraies valeurs, quelle que soit la durée des transitions. */
-  if (side !== __coverMedallionLast) { __coverMedallionLast = side; __coverMedallionStable = 0; }
-  else if (__coverMedallionStable < 99) __coverMedallionStable++;
-  const now = (window.performance && performance.now) ? performance.now() : Date.now();
-  if (!fromSettle) { __coverMedallionSettleUntil = now + 3000; __coverMedallionStable = 0; }
-  if (now < __coverMedallionSettleUntil && __coverMedallionStable < 8) {
-    setTimeout(() => sizeCoverMedallion(true), 60);
+  /* Le dimensionnement est immédiat : la couverture ne possède plus de
+     transition à attendre ni de boucle de stabilisation. */
+}
+let __viewSyncRaf = 0;
+let __menuNavNudgeTimer = 0;
+function stopCoverMotion() {
+  /* Une éventuelle navigation démarrée dans la carte doit être interrompue
+     avant d'afficher la garde : aucune RAF ni correction de défilement ne
+     doit continuer à déplacer la page derrière sa couverture statique. */
+  if (window.__collineAnchorCleanup) window.__collineAnchorCleanup();
+  if (window.__collineScrollAnim) {
+    cancelAnimationFrame(window.__collineScrollAnim);
+    window.__collineScrollAnim = null;
   }
+  if (window.__collineAnchorLock) {
+    cancelAnimationFrame(window.__collineAnchorLock);
+    window.__collineAnchorLock = null;
+  }
+  window.__collineScrollNativeUntil = 0;
+  if (__viewSyncRaf) {
+    cancelAnimationFrame(__viewSyncRaf);
+    __viewSyncRaf = 0;
+  }
+  if (__menuNavNudgeTimer) {
+    clearTimeout(__menuNavNudgeTimer);
+    __menuNavNudgeTimer = 0;
+  }
+  /* Invalider les deux balançoires du ruban si elles étaient en cours. */
+  try { __navNudgeGen++; __navCenterGen++; } catch (e) {}
 }
 function showView(view) {
   const cover = document.getElementById('cover-section');
@@ -10833,28 +10489,28 @@ function showView(view) {
      n'apparaît qu'une fois dans la vue menu. */
   if (top) top.style.display = view === 'cover' ? 'none' : '';
   if (view === 'cover') {
+    stopCoverMotion();
     cover.style.display = 'flex';
-    /* Rejouer la choregraphie d'entree de la page de garde. */
-    cover.classList.remove('cover-enter');
-    void cover.offsetWidth;
-    cover.classList.add('cover-enter');
+    /* Couverture statique : aucun cycle d'entrée ni recalcul animé. */
     menu.style.display = 'none';
     btnCover.classList.add('active');
     btnMenu.classList.remove('active');
     dockLang('cover');
-    animateScrollTo(0, 220);
-    requestAnimationFrame(sizeCoverMedallion);
+    window.scrollTo(0, 0);
+    sizeCoverMedallion();
   } else {
     cover.style.display = 'none';
     menu.style.display = 'block';
     btnCover.classList.remove('active');
     btnMenu.classList.add('active');
     dockLang('menu');
-    animateScrollTo(0, 220);
-    requestAnimationFrame(() => {
+    window.scrollTo(0, 0);
+    __viewSyncRaf = requestAnimationFrame(() => {
+      __viewSyncRaf = 0;
       syncTopControlsHeight();
       syncMenuNavHints();
-      requestAnimationFrame(() => {
+      __viewSyncRaf = requestAnimationFrame(() => {
+        __viewSyncRaf = 0;
         syncTopControlsHeight();
         syncMenuNavHints();
       });
@@ -10864,7 +10520,11 @@ function showView(view) {
        jamais d'annulation — voir menuNavNudge). Le délai laisse la
        bascule garde → carte et le défilement de la page (220 ms) se
        terminer. */
-    setTimeout(menuNavNudge, 650);
+    if (__menuNavNudgeTimer) clearTimeout(__menuNavNudgeTimer);
+    __menuNavNudgeTimer = setTimeout(() => {
+      __menuNavNudgeTimer = 0;
+      menuNavNudge();
+    }, 650);
   }
 }
 function centerMenuNavButton(btnElement) {
@@ -11395,379 +11055,7 @@ else sizeCoverMedallion();
 })();
 </script>
 
-<script>
-/* ===== NOEL : neige + traineau, du 1er au 31 decembre chaque annee =====
-   - Neige : canvas plein ecran, flocons aleatoires (taille, vitesse,
-     derive, scintillement), densite proportionnelle a la fenetre.
-   - Traineau : passage occasionnel et aleatoire (toutes les ~20 a 55 s),
-     sens, hauteur, taille et duree tires au sort, trajectoire legerement
-     onduleuse avec fondu d'entree/sortie. Le dessin (SVG anime) est
-     oriente vers la droite, rennes en tete : les passages de gauche a
-     droite l'affichent tel quel, les passages de droite a gauche le
-     miroitent (.flip) — les rennes menent toujours la marche, le
-     traineau est tire derriere eux. Rennes au galop + pere Noel qui
-     fait coucou de la main (animation en boucle continue).
-   - Grelots : tintement synthetise en WebAudio qui accompagne tout le
-     passage visible du traineau — fondu d'entree/sortie aligne sur
-     celui de l'image, panoramique stereo qui suit l'attelage d'un bord
-     a l'autre de l'ecran. Politique d'autoplay : le son ne demarre
-     qu'apres une interaction du visiteur ; un bouton cloche (bas a
-     droite) active/coupe le tintement et debloque l'audio, tout
-     comme le premier clic n'importe ou sur la page.
-   - Previsu hors saison : ?noel=1 force, ?noel=0 coupe. Expose pour les
-     tests : window.__xmas = { active, fly, flakeCount, bells }.
-   - Coupe si prefers-reduced-motion, sur la carte A4 (html.carte-doc),
-     a l'impression (CSS), et en pause quand l'onglet est masque. */
-(function () {
-  'use strict';
-  function xmasActive() {
-    try {
-      var q = new URLSearchParams(location.search);
-      if (q.get('noel') === '1') return true;
-      if (q.get('noel') === '0') return false;
-    } catch (e) { /* sans URLSearchParams : repli sur la date */ }
-    if (document.documentElement.classList.contains('carte-doc')) return false;
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-    var d = new Date();
-    return d.getMonth() === 11;
-  }
-  var api = { active: false, fly: function () {}, flakeCount: function () { return 0; } };
-  window.__xmas = api;
-  if (!xmasActive()) return;
-  api.active = true;
 
-  var rand = function (a, b) { return a + Math.random() * (b - a); };
-
-  /* ---------- Neige ---------- */
-  var canvas = document.getElementById('xmas-snow');
-  var ctx = canvas.getContext('2d');
-  var flakes = [];
-  var snowRun = true;
-  function snowResize() {
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.round(window.innerWidth * dpr);
-    canvas.height = Math.round(window.innerHeight * dpr);
-    canvas.style.width = window.innerWidth + 'px';
-    canvas.style.height = window.innerHeight + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var n = Math.max(60, Math.min(220, Math.round(window.innerWidth * window.innerHeight / 12000)));
-    while (flakes.length < n) flakes.push(newFlake(true));
-    flakes.length = n;
-  }
-  function newFlake(anywhere) {
-    var r = rand(0.8, 3.4);
-    return {
-      x: Math.random() * window.innerWidth,
-      y: anywhere ? Math.random() * window.innerHeight : rand(-12, -2),
-      r: r,
-      o: rand(0.35, 0.95) * (0.55 + r / 5),
-      v: rand(22, 68) * (0.6 + r / 4),
-      sway: rand(12, 42),
-      freq: rand(0.4, 1.4),
-      ph: Math.random() * Math.PI * 2,
-      tw: rand(0.5, 2.2)
-    };
-  }
-  var snowLast = 0, windT = 0;
-  function snowFrame(now) {
-    requestAnimationFrame(snowFrame);
-    if (!snowRun || document.hidden) { snowLast = now; return; }
-    var dt = Math.min(0.05, snowLast ? (now - snowLast) / 1000 : 0.016);
-    snowLast = now;
-    windT += dt;
-    var W = window.innerWidth, H = window.innerHeight;
-    var wind = Math.sin(windT * 0.35) * 14;
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#ffffff';
-    for (var i = 0; i < flakes.length; i++) {
-      var f = flakes[i];
-      f.ph += dt * f.freq;
-      f.y += f.v * dt;
-      f.x += (wind * (f.r / 3.4) + Math.cos(f.ph) * f.sway * 0.35) * dt;
-      if (f.y > H + 8) { flakes[i] = newFlake(false); continue; }
-      if (f.x > W + 8) f.x = -8; else if (f.x < -8) f.x = W + 8;
-      ctx.globalAlpha = Math.max(0, Math.min(1, f.o * (0.72 + 0.28 * Math.sin(windT * f.tw + f.ph))));
-      ctx.beginPath();
-      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-  }
-  canvas.classList.add('on');
-  snowResize();
-  var rsT = null;
-  window.addEventListener('resize', function () {
-    clearTimeout(rsT);
-    rsT = setTimeout(snowResize, 150);
-  });
-  document.addEventListener('visibilitychange', function () { snowLast = 0; bellsPause(); });
-  requestAnimationFrame(snowFrame);
-  api.flakeCount = function () { return flakes.length; };
-
-  /* ---------- Grelots : tintement des sonnailles pendant le passage ---------- */
-  /* Synthese WebAudio (aucun fichier audio) : chaque tintement combine
-     des partiels inharmoniques a decay court, comme un grelot. Le
-     rythme suit le galop (accent une mesure sur deux + secousses), le
-     volume epouse le fondu d'entree/sortie du traineau et l'image
-     stereo suit sa position a l'ecran.
-     Politique d'autoplay des navigateurs : le son ne peut demarrer
-     qu'apres une interaction du visiteur. Le contexte audio n'est donc
-     JAMAIS cree hors d'un geste (clic, toucher, touche) — sinon il
-     nait « suspendu » et le passage reste muet, ce qui donne
-     l'impression que les grelots ne fonctionnent pas. Le bouton
-     cloche (bas a droite) sert de geste debloquant visible : premier
-     clic = tintement de confirmation, puis chaque passage sonne.
-     Un clic n'importe ou sur la page debloque aussi l'audio. */
-  var bctx = null, bEnv = null, bMaster = null, bPan = null, bComp = null;
-  var bTimer = null, bNext = 0, bStep = 0, bHits = 0, bOn = false, bMuted = false;
-  function bellsInit() {
-    if (bctx) return true;
-    var AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return false;
-    try {
-      bctx = new AC();
-      bComp = bctx.createDynamicsCompressor();
-      bMaster = bctx.createGain();
-      bMaster.gain.value = 0.8;
-      bEnv = bctx.createGain();
-      bEnv.gain.value = 0;
-      bPan = bctx.createStereoPanner ? bctx.createStereoPanner() : null;
-      bEnv.connect(bComp);
-      bComp.connect(bMaster);
-      if (bPan) { bMaster.connect(bPan); bPan.connect(bctx.destination); }
-      else { bMaster.connect(bctx.destination); }
-      return true;
-    } catch (e) { bctx = null; return false; }
-  }
-  function bellsWake() {
-    if (!bctx) return false;
-    if (bctx.state === 'suspended') { try { bctx.resume(); } catch (e) { /* autoplay */ } }
-    return bctx.state === 'running';
-  }
-  function bellHit(t, f, v) {
-    /* Un grelot : 4 partiels inharmoniques legerement desaccordes,
-       attaque nette, resonance courte et aleatoire. */
-    var p = [[1, 1], [2.43, 0.45], [3.83, 0.25], [5.62, 0.12]];
-    for (var i = 0; i < p.length; i++) {
-      var o = bctx.createOscillator(), g = bctx.createGain();
-      o.type = 'sine';
-      o.frequency.value = f * p[i][0] * (0.985 + Math.random() * 0.03);
-      var a = v * p[i][1] * 0.3;
-      g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(a, t + 0.004);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12 + Math.random() * 0.14);
-      o.connect(g);
-      g.connect(bEnv);
-      o.start(t);
-      o.stop(t + 0.45);
-    }
-    bHits++;
-  }
-  function bellsJingle() {
-    /* Petit tintement de confirmation (activation du son). */
-    if (!bctx || bctx.state !== 'running' || bMuted) return;
-    var t = bctx.currentTime + 0.02;
-    for (var i = 0; i < 3; i++) bellHit(t + i * 0.11, 2150 + i * 270, 0.55 - i * 0.12);
-  }
-  function bellsTick() {
-    if (!bctx || bctx.state !== 'running' || !bOn || bMuted) return;
-    var now = bctx.currentTime, ahead = now + 0.35;
-    if (bNext < now) bNext = now + 0.02;
-    while (bNext < ahead) {
-      var t = bNext, s = bStep % 2, v = s ? 0.85 : 0.42;
-      bellHit(t, 1900 + Math.random() * 800, v * (0.7 + Math.random() * 0.45));
-      if (s) bellHit(t + 0.05 + Math.random() * 0.02, 2450 + Math.random() * 700, v * 0.5);
-      if (bStep % 7 === 3) {
-        /* secousse ponctuelle du harnais */
-        bellHit(t + 0.025, 2100 + Math.random() * 500, 0.4);
-        bellHit(t + 0.052, 2300 + Math.random() * 500, 0.35);
-      }
-      bStep++;
-      bNext += 0.155;
-    }
-  }
-  function bellsStart() {
-    if (bMuted) { bOn = false; return; }
-    bOn = true;
-    bStep = 0;
-    /* Pas encore de contexte : il faudra un geste du visiteur (le
-       premier clic n'importe ou, ou le bouton cloche). D'ici la le
-       passage est muet — ce n'est pas un bug, c'est la politique
-       d'autoplay des navigateurs. */
-    if (!bctx) return;
-    if (!bellsWake()) return;
-    bNext = bctx.currentTime + 0.03;
-    if (!bTimer) bTimer = setInterval(bellsTick, 110);
-  }
-  function bellsSet(fade, xN) {
-    /* Appele a chaque image du passage : volume = fondu de l'attelage,
-       panoramique = position horizontale a l'ecran. */
-    if (!bctx || !bOn || bMuted) return;
-    if (bctx.state === 'running') {
-      if (!bTimer) { bNext = bctx.currentTime + 0.03; bTimer = setInterval(bellsTick, 110); }
-      var t = bctx.currentTime;
-      bEnv.gain.setTargetAtTime(fade, t, 0.05);
-      if (bPan) bPan.pan.setTargetAtTime(Math.max(-0.85, Math.min(0.85, xN * 2 - 1)), t, 0.08);
-    }
-  }
-  function bellsPause() {
-    if (bTimer) { clearInterval(bTimer); bTimer = null; }
-    if (bctx && bEnv) { try { bEnv.gain.setTargetAtTime(0, bctx.currentTime, 0.12); } catch (e) {} }
-  }
-  function bellsStop() {
-    bOn = false;
-    bellsPause();
-  }
-  /* ---------- Bouton grelots (visible en saison, bas a droite) ---------- */
-  var bellBtn = null;
-  var BELL_LABELS = {
-    fr: { on: 'Grelots du traîneau : activés — ils sonnent au passage du traîneau', off: 'Grelots du traîneau : coupés (cliquer pour réactiver)' },
-    en: { on: 'Sleigh bells: on — they ring as the sleigh passes', off: 'Sleigh bells: off (click to turn them back on)' },
-    es: { on: 'Cascabeles del trineo: activados — suenan cuando pasa el trineo', off: 'Cascabeles del trineo: desactivados (pulse para reactivarlos)' },
-    de: { on: 'Schlittenglöckchen: an — sie läuten beim Vorbeiflug', off: 'Schlittenglöckchen: aus (zum Reaktivieren klicken)' },
-    it: { on: 'Campanelli della slitta: attivati — suonano al passaggio della slitta', off: 'Campanelli della slitta: disattivati (clicca per riattivarli)' },
-    pt: { on: 'Sinos do trenó: ligados — tocam quando o trenó passa', off: 'Sinos do trenó: desligados (clique para reativar)' },
-    nl: { on: 'Sleejbelletjes: aan — ze klinken wanneer de slee voorbijvliegt', off: 'Sleejbelletjes: uit (klik om ze weer aan te zetten)' },
-    pl: { on: 'Dzwonki sań: włączone — dzwonią, gdy sanie przelatują', off: 'Dzwonki sań: wyłączone (kliknij, aby je włączyć)' },
-    zh: { on: '雪橇铃声：已开启 — 雪橇经过时会响起', off: '雪橇铃声：已关闭（点击重新开启）' },
-    uk: { on: 'Дзвіночки саней: увімкнено — вони дзвенять під час польоту', off: 'Дзвіночки саней: вимкнено (натисніть, щоб увімкнути)' },
-    ja: { on: 'そりの鈴：オン — そりが通ると鳴ります', off: 'そりの鈴：オフ（クリックで再開）' },
-    ko: { on: '썰매 방울: 켜짐 — 썰매가 지나갈 때 울립니다', off: '썰매 방울: 꺼짐 (클릭하여 다시 켜기)' },
-    ar: { on: 'أجراس الزلاجة: مفعّلة — ترنّ عند مرور الزلاجة', off: 'أجراس الزلاجة: متوقفة (اضغط لإعادة تفعيلها)' },
-    tr: { on: 'Kızak çanları: açık — kızak geçerken çalar', off: 'Kızak çanları: kapalı (yeniden açmak için tıklayın)' },
-    hi: { on: 'स्लेज की घंटियाँ: चालू — स्लेज के गुजरने पर बजती हैं', off: 'स्लेज की घंटियाँ: बंद (फिर चालू करने के लिए क्लिक करें)' }
-  };
-  function bellsUpdateBtn() {
-    if (!bellBtn) return;
-    var lang = (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
-    var copy = BELL_LABELS[lang] || BELL_LABELS.fr;
-    var label = bMuted ? copy.off : copy.on;
-    bellBtn.classList.toggle('muted', bMuted);
-    bellBtn.setAttribute('aria-pressed', bMuted ? 'false' : 'true');
-    bellBtn.title = label;
-    bellBtn.setAttribute('aria-label', label);
-  }
-  function bellsMakeBtn() {
-    bellBtn = document.createElement('button');
-    bellBtn.type = 'button';
-    bellBtn.id = 'xmas-bells-btn';
-    bellBtn.className = 'on';
-    bellBtn.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
-      'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<path class="bell-body" d="M12 3.2c-3.1 0-5.2 2.2-5.2 5v3.1c0 .8-.3 1.6-.9 2.2l-1.1 1.2h14.4l-1.1-1.2c-.6-.6-.9-1.4-.9-2.2V8.2c0-2.8-2.1-5-5.2-5Z"/>' +
-      '<path class="bell-body" d="M9.6 18.6a2.5 2.5 0 0 0 4.8 0"/>' +
-      '<line class="bell-off" x1="4.5" y1="4.5" x2="19.5" y2="19.5"/>' +
-      '</svg>';
-    var bBellClicked = false;
-    bellBtn.addEventListener('click', function () {
-      /* Premier clic sur la cloche : toujours activer (c'est le geste
-         attendu — le pointerdown de deblocage a pu faire naitre le
-         contexte juste avant ce clic). Clics suivants : bascule. */
-      var wantActive = bBellClicked ? bMuted : true;
-      bBellClicked = true;
-      if (wantActive) {
-        bMuted = false;
-        bellsInit();              /* ce clic est un geste : creation autorisee */
-        if (bellsWake()) {
-          bellsJingle();
-          /* Reactivation en plein vol si l'attelage est a l'ecran. */
-          var el = document.getElementById('xmas-sleigh');
-          if (el && el.classList.contains('on')) bellsStart();
-        }
-      } else {
-        bMuted = true;
-        bellsStop();
-      }
-      bellsUpdateBtn();
-    });
-    bellsUpdateBtn();
-    document.body.appendChild(bellBtn);
-  }
-  bellsMakeBtn();
-  window.addEventListener('lcg-lang-changed', bellsUpdateBtn);
-  /* Deblocage du son au premier geste du visiteur, n'importe ou sur la
-     page (politique autoplay). Capture : fonctionne meme si un script
-     arrete la propagation. Sans « once » : on retente a chaque geste
-     jusqu'a ce que le contexte tourne (Safari iOS peut resuspendre). */
-  ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) {
-    window.addEventListener(ev, function bellsUnlock() {
-      if (bMuted) return;
-      if (!bctx) bellsInit();
-      if (bctx) bellsWake();
-    }, { capture: true, passive: true });
-  });
-  api.bells = function () {
-    return {
-      on: bOn, muted: bMuted, unlocked: bctx ? bctx.state === 'running' : false,
-      state: bctx ? bctx.state : 'none', hits: bHits,
-      gain: bEnv ? +bEnv.gain.value.toFixed(3) : 0,
-      pan: bPan ? +bPan.pan.value.toFixed(2) : 0
-    };
-  };
-
-  /* ---------- Traineau ---------- */
-  var sleigh = document.getElementById('xmas-sleigh');
-  var flying = false;
-  var pre = new Image();
-  pre.src = 'assets/noel/sleigh.svg';
-  function fly(opts) {
-    if (flying) return;
-    flying = true;
-    opts = opts || {};
-    var W = window.innerWidth, H = window.innerHeight;
-    var ltr = opts.dir ? opts.dir === 'ltr' : Math.random() < 0.5;
-    var w = opts.width || Math.round(Math.max(230, Math.min(430, W * rand(0.25, 0.35))));
-    var top = opts.top != null ? opts.top : Math.round(H * rand(0.04, 0.38));
-    var dur = opts.duration || rand(9000, 14000);
-    var amp = rand(14, 34);
-    var waves = rand(1.2, 2.4);
-    sleigh.style.width = w + 'px';
-    sleigh.classList.remove('flip', 'ltr', 'rtl');
-    sleigh.classList.add('on');
-    sleigh.classList.add(ltr ? 'ltr' : 'rtl');
-    /* Le SVG est oriente vers la droite (rennes en tete a droite) :
-       passage gauche -> droite = tel quel ; passage droite -> gauche
-       = miroir (.flip). Dans les deux sens les rennes avancent en
-       tete et tirent le traineau derriere eux. */
-    if (!ltr) sleigh.classList.add('flip');
-    /* Les grelots sonnent pendant tout le passage visible. */
-    bellsStart();
-    var x0 = -w - 80, x1 = W + 80;
-    var t0 = null;
-    function step(now) {
-      if (t0 == null) t0 = now;
-      var p = Math.min(1, (now - t0) / dur);
-      var x = ltr ? x0 + (x1 - x0) * p : x1 - (x1 - x0) * p;
-      var y = top + Math.sin(p * Math.PI * 2 * waves) * amp - Math.sin(p * Math.PI) * H * 0.04;
-      var fade = p < 0.08 ? p / 0.08 : (p > 0.92 ? (1 - p) / 0.08 : 1);
-      sleigh.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0)';
-      sleigh.style.opacity = fade.toFixed(3);
-      bellsSet(fade, x / W);
-      if (p < 1 && !document.hidden) {
-        requestAnimationFrame(step);
-      } else if (p < 1) {
-        /* Onglet masque en plein vol : on reprend a la reaffichage. */
-        t0 += 250;
-        setTimeout(function () { requestAnimationFrame(step); }, 250);
-      } else {
-        sleigh.classList.remove('on');
-        sleigh.style.opacity = '';
-        sleigh.style.transform = '';
-        flying = false;
-        bellsStop();
-        schedule();
-      }
-    }
-    requestAnimationFrame(step);
-  }
-  function schedule() {
-    setTimeout(fly, Math.round(rand(20000, 55000)));
-  }
-  api.fly = fly;
-  setTimeout(fly, Math.round(rand(6000, 16000)));
-})();
-</script>
 
 <script src="assets/js/localized-digits.js?v=202609241200"></script>
 <script src="assets/js/i18n.js?v=202609231200" defer></script>
@@ -12853,92 +12141,15 @@ else sizeCoverMedallion();
     } catch (e) { return null; }
   }
 
-  /* ---- audio (WebAudio, entièrement synthétisé : cloche + supernovae) ---- */
-  var AC = null, noiseBuf = null;
-  function ctx() {
-    if (document.documentElement.classList.contains('carte-doc')) return null;
-    if (!AC) {
-      var C = window.AudioContext || window.webkitAudioContext;
-      if (!C) return null;
-      try { AC = new C(); } catch (e) { return null; }
-    }
-    if (AC.state === 'suspended') { try { AC.resume().catch(function () {}); } catch (e) {} }
-    return AC;
-  }
-  function noise() {
-    if (noiseBuf) return noiseBuf;
-    var len = Math.floor(AC.sampleRate * 1.4);
-    noiseBuf = AC.createBuffer(1, len, AC.sampleRate);
-    var d = noiseBuf.getChannelData(0);
-    for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-    return noiseBuf;
-  }
-  /* cloche : partiels inharmoniques d'une vraie cloche. Pleine (départ de
-     course) pour le GO, légère et brève pour le carillon du décompte. */
-  function bell(t, base, light) {
-    var ac = ctx(); if (!ac) return;
-    t = t || ac.currentTime;
-    base = base || 988; /* B5 — ding clair et haut */
-    var partials = light
-      ? [[1, .16, .7], [1.5, .08, .5], [2.51, .04, .35]]
-      : [[1, .5, 2.3], [1.5, .26, 1.7], [2.0, .18, 1.35], [2.51, .1, 1.0], [3.01, .06, .8], [4.05, .03, .55]];
-    partials
-      .forEach(function (p) {
-        var o = ac.createOscillator(), g = ac.createGain();
-        o.type = 'sine'; o.frequency.value = base * p[0];
-        g.gain.setValueAtTime(0.0001, t);
-        g.gain.exponentialRampToValueAtTime(p[1], t + 0.012);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + p[2]);
-        o.connect(g); g.connect(ac.destination);
-        o.start(t); o.stop(t + p[2] + 0.05);
-      });
-  }
-  /* l'audio est-il déjà déverrouillé et actif ? (utilisé par boom/clink
-     pour ne jamais programmer de sons sur un contexte suspendu) */
-  function ready() { return AC && AC.state === 'running' ? AC : null; }
-
-  /* tintement de coupes qui se trinquent : partiels aigus, très brefs.
-     Comme boom(), uniquement si l'audio tourne vraiment (rien sur un
-     contexte suspendu : pas de sons en rafale au déblocage). */
-  function clink(t) {
-    var ac = ready(); if (!ac) return;
-    t = t || ac.currentTime + 0.02;
-    [[1319, .15, .5], [1760, .09, .4], [2637, .05, .3]].forEach(function (p) {
-      var o = ac.createOscillator(), g = ac.createGain();
-      o.type = 'sine'; o.frequency.value = p[0];
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(p[1], t + 0.008);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + p[2]);
-      o.connect(g); g.connect(ac.destination);
-      o.start(t); o.stop(t + p[2] + 0.05);
-    });
-  }
-  /* explosion « supernova » : sub grave + souffle filtré — seulement si
-     l'audio est déjà déverrouillé et actif (pas de crépitement aigu) */
-  function boom(t, big) {
-    var ac = ready(); if (!ac) return;
-    t = t || ac.currentTime;
-    var k = big ? 1.25 : 1;
-    var o = ac.createOscillator(), og = ac.createGain();
-    o.type = 'sine';
-    o.frequency.setValueAtTime(92 * k, t);
-    o.frequency.exponentialRampToValueAtTime(30, t + 0.5);
-    og.gain.setValueAtTime(0.0001, t);
-    og.gain.exponentialRampToValueAtTime(0.85 * k, t + 0.02);
-    og.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
-    o.connect(og); og.connect(ac.destination);
-    o.start(t); o.stop(t + 0.6);
-    var n = ac.createBufferSource(), f = ac.createBiquadFilter(), ng = ac.createGain();
-    n.buffer = noise();
-    f.type = 'lowpass'; f.Q.value = 0.7;
-    f.frequency.setValueAtTime(1500 * k, t);
-    f.frequency.exponentialRampToValueAtTime(170, t + 0.5);
-    ng.gain.setValueAtTime(0.0001, t);
-    ng.gain.exponentialRampToValueAtTime(0.6 * k, t + 0.015);
-    ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
-    n.connect(f); f.connect(ng); ng.connect(ac.destination);
-    n.start(t); n.stop(t + 0.6);
-  }
+  /* ---- Audio synthétisé désactivé -------------------------------------
+     La couverture et le site ne créent plus de contexte WebAudio. Les
+     campagnes visuelles de l'Happy Hour restent disponibles, mais leurs
+     anciens grelots, tintements et effets sonores sont silencieux. */
+  function ctx() { return null; }
+  function ready() { return null; }
+  function bell() {}
+  function clink() {}
+  function boom() {}
 
   /* ---- feux d'artifice : bouquet final sur toute la surface ----
      Gerbes variées (pivoine, anneau, palmier, pluie dorée), flashs,
@@ -13383,10 +12594,6 @@ else sizeCoverMedallion();
     msgEl.hidden = false;
     if (!document.hidden) {
       fw = fireworks(fxCanvas);
-      var ac = ctx();
-      if (ac) ac.resume().then(function () {
-        if (AC && AC.state === 'running') bell(AC.currentTime + 0.05);
-      }).catch(function () {});
     }
     timers.push(setTimeout(close, document.hidden ? 250 : RUN_MS));
   }
@@ -13472,11 +12679,7 @@ else sizeCoverMedallion();
     if (forcedNY) { setTimeout(function () { var c = nyCamp(parisNow()); if (c) launch(true, c); }, 600); return; }
     scheduleTick();
   }
-  /* l'audio ne peut démarrer qu'après un geste du visiteur : on prépare
-     le contexte dès le premier toucher/clic (souvent bien avant 16h59m55s) */
-  ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) {
-    window.addEventListener(ev, function () { ctx(); }, { once: true, passive: true });
-  });
+  /* Aucun auditeur ni contexte audio n'est préparé au chargement. */
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
   /* aperçus manuels (console) : window.__hhLaunch() / window.__nyLaunch() */
