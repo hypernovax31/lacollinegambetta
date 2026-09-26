@@ -10060,6 +10060,23 @@ html:not(.carte-doc) .foldall--hint .foldall__ico {
   }
 }
 
+/* Écran large : la ligne d'en-tête reprend la piste du chevron et les
+   25 px effectifs (bordure + padding) des cartes de vins. */
+@media screen and (min-width:861px) {
+  html:not(.carte-doc) #interior-menu #vins .wine-table:not(.wine-table--short) thead tr {
+    grid-template-columns:26px minmax(0,1fr) repeat(4,minmax(max-content,92px)) 14px !important;
+    column-gap:18px !important;
+    padding-left:25px !important;
+    padding-right:25px !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short thead tr {
+    grid-template-columns:26px minmax(0,1fr) repeat(2,minmax(max-content,132px)) 14px !important;
+    column-gap:18px !important;
+    padding-left:25px !important;
+    padding-right:25px !important;
+  }
+}
+
 </style>
 </head>
 <body>
