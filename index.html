@@ -8114,6 +8114,16 @@ html.lightbox-open, html.lightbox-open body { overflow:hidden; }
   html:not(.carte-doc) .lightbox__frame > .lightbox__nav {
     isolation:isolate;
   }
+  /* Aucun changement visuel au survol : les commandes restent fixes au-dessus
+     de l'image, sans flash de bordure, de transparence ou d'échelle. */
+  html:not(.carte-doc) .lightbox__close:hover {
+    border-color:rgba(216,178,87,.5) !important;
+    transform:none !important;
+  }
+  html:not(.carte-doc) .lightbox__nav:hover {
+    border-color:rgba(216,178,87,.5) !important;
+    transform:translateY(-50%) !important;
+  }
 }
 
 /* ===== Tout déplier / tout replier =====
