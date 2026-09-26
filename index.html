@@ -10140,22 +10140,29 @@ html:not(.carte-doc) #vins .wine-detail-cell {
   background:transparent !important;
   text-align:left !important;
   pointer-events:none;
-  visibility:hidden;
-  transition:grid-template-rows .32s cubic-bezier(.4,.1,.2,1), visibility 0s linear .32s;
+  transition:grid-template-rows .32s cubic-bezier(.4,.1,.2,1);
 }
 html:not(.carte-doc) #vins .wine-detail-cell[aria-hidden="false"],
 html:not(.carte-doc) #vins .wine-row--open .wine-detail-cell {
   grid-template-rows:1fr;
   pointer-events:auto;
-  visibility:visible;
-  transition:grid-template-rows .32s cubic-bezier(.4,.1,.2,1), visibility 0s linear 0s;
 }
-html:not(.carte-doc) #vins .wine-detail-cell > .wine-detail-card {
+html:not(.carte-doc) #vins .wine-detail-cell > .wine-detail-cell__inner {
   width:100%;
   min-width:0;
   min-height:0;
   overflow:hidden;
-  margin:0;
+  margin:0 !important;
+  padding:0 !important;
+  text-align:left !important;
+}
+html:not(.carte-doc) #vins .wine-detail-cell .wine-detail-card {
+  width:100%;
+  min-width:0;
+  min-height:0;
+  justify-self:start;
+  overflow:hidden;
+  margin:0 !important;
   padding:14px 0 0;
   border:0;
   border-radius:0;
@@ -10203,7 +10210,10 @@ html:not(.carte-doc) #vins .wine-detail-value {
   hyphens:none;
 }
 @media screen and (min-width:861px) {
-  html:not(.carte-doc) #vins .wine-detail-cell > .wine-detail-card {
+  html:not(.carte-doc) #vins .wine-detail-cell {
+    grid-row:2 !important;
+  }
+  html:not(.carte-doc) #vins .wine-detail-cell .wine-detail-card {
     padding:14px 0 2px;
   }
 }
@@ -10215,7 +10225,7 @@ html:not(.carte-doc) #vins .wine-detail-value {
     min-width:0 !important;
     margin:0 !important;
   }
-  html:not(.carte-doc) #vins .wine-detail-cell > .wine-detail-card {
+  html:not(.carte-doc) #vins .wine-detail-cell .wine-detail-card {
     width:100%;
     padding:12px 0 1px;
   }
@@ -12569,7 +12579,10 @@ else sizeCoverMedallion();
       lines.appendChild(makeLine('DÉGUSTATION :', tasting));
       lines.appendChild(makeLine('Suggestions d’accords :', pairing));
       card.appendChild(lines);
-      detail.appendChild(card);
+      var detailInner = document.createElement('div');
+      detailInner.className = 'wine-detail-cell__inner';
+      detailInner.appendChild(card);
+      detail.appendChild(detailInner);
       row.appendChild(detail);
       detail.addEventListener('click', function (event) {
         event.stopPropagation();
