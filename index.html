@@ -12151,9 +12151,9 @@ else sizeCoverMedallion();
      avaient aucune, et celle du haut agissait à distance sur des encarts
      hors écran. Chaque panneau pilote désormais ses propres dépliants. */
   function mountFoldAll(host) {
-    /* Les vins forment un seul onglet malgré leurs quatre panneaux : ils
-       partagent donc un unique « Tout voir », posé dans le premier panneau. */
-    var scope = host.closest('#vins') || host;
+    /* Chaque panneau possède sa propre commande : les sections de vins
+       suivent ainsi le même fonctionnement que les autres catégories. */
+    var scope = host;
 
     function targets() {
       return Array.prototype.slice.call(
