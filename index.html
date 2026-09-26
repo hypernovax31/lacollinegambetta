@@ -8089,6 +8089,24 @@ html.lightbox-open, html.lightbox-open body { overflow:hidden; }
   html:not(.carte-doc) .lightbox__frame { transition:none; }
 }
 
+/* Sur PC, les commandes flottent au-dessus de la photo et ne doivent pas
+   laisser transparaître le fond violet de la visionneuse au survol. Le fond
+   blanc est volontairement opaque et identique dans tous les états : aucun
+   flash de couleur ou d'opacité ne peut apparaître sous le curseur. */
+@media screen and (min-width:721px) {
+  html:not(.carte-doc) .lightbox__close,
+  html:not(.carte-doc) .lightbox__close:hover,
+  html:not(.carte-doc) .lightbox__close:focus-visible,
+  html:not(.carte-doc) .lightbox__close:active,
+  html:not(.carte-doc) .lightbox__nav,
+  html:not(.carte-doc) .lightbox__nav:hover,
+  html:not(.carte-doc) .lightbox__nav:focus-visible,
+  html:not(.carte-doc) .lightbox__nav:active {
+    background:#fff !important;
+    opacity:1 !important;
+  }
+}
+
 /* ===== Tout déplier / tout replier =====
    Un double chevron doré posé en haut à droite de chaque onglet qui
    contient des dépliants. Même or, même trait que les chevrons des
