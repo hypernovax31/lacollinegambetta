@@ -92,9 +92,8 @@
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"></noscript>
 
-<!-- Fontes internationales chargées de façon asynchrone sans bloquer le rendu initial -->
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;700&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;700&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap"></noscript>
+<!-- Les fontes internationales sont sous-ensemblées localement dans assets/fonts
+     et sélectionnées par unicode-range : aucune feuille Google globale à charger. -->
 <style>
 :root {
   --violet-950:#24102e;
@@ -3433,20 +3432,20 @@ html[lang="hi"][lang="hi"]:is(*, #lcg-hi-ls):is(*, #lcg-hi-ls2),
 html[lang="hi"][lang="hi"]:is(*, #lcg-hi-ls):is(*, #lcg-hi-ls2) * { letter-spacing: 0 !important; }
 
 /* Typographies dédiées pour les écritures non latines */
-html[lang="ko"] { font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Montserrat', sans-serif; }
+html[lang="ko"] { font-family: 'Montserrat', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; }
 html[lang="ko"] .cover-brand .eyebrow, html[lang="ko"] .cover-brand h1, html[lang="ko"] .cover-brand p,
 html[lang="ko"] .interior-header h2, html[lang="ko"] .interior-header p, html[lang="ko"] .panel__title,
 html[lang="ko"] .food-card__head h5, html[lang="ko"] .special-card h5, html[lang="ko"] .breakfast-card h5,
 html[lang="ko"] .footer-details, html[lang="ko"] .footer-note, html[lang="ko"] .cover-footer-address {
-  font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif !important; text-transform: none !important;
+  font-family: 'Cinzel', 'Nanum Myeongjo', 'Batang', serif !important; text-transform: none !important;
 }
 
-html[lang="zh"] { font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Montserrat', sans-serif; }
+html[lang="zh"] { font-family: 'Montserrat', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
 html[lang="zh"] .cover-brand .eyebrow, html[lang="zh"] .cover-brand h1, html[lang="zh"] .cover-brand p,
 html[lang="zh"] .interior-header h2, html[lang="zh"] .interior-header p, html[lang="zh"] .panel__title,
 html[lang="zh"] .food-card__head h5, html[lang="zh"] .special-card h5, html[lang="zh"] .breakfast-card h5,
 html[lang="zh"] .footer-details, html[lang="zh"] .footer-note, html[lang="zh"] .cover-footer-address {
-  font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif !important; text-transform: none !important;
+  font-family: 'Cinzel', 'Songti SC', 'SimSun', serif !important; text-transform: none !important;
 }
 
 html[lang="uk"] { font-family: 'Montserrat', 'Roboto', 'Helvetica Neue', sans-serif; }
@@ -3454,23 +3453,23 @@ html[lang="uk"] .cover-brand .eyebrow, html[lang="uk"] .cover-brand h1, html[lan
 html[lang="uk"] .interior-header h2, html[lang="uk"] .interior-header p, html[lang="uk"] .panel__title,
 html[lang="uk"] .food-card__head h5, html[lang="uk"] .special-card h5, html[lang="uk"] .breakfast-card h5,
 html[lang="uk"] .footer-details, html[lang="uk"] .footer-note, html[lang="uk"] .cover-footer-address {
-  font-family: 'Playfair Display', 'Georgia', serif !important; text-transform: none;
+  font-family: 'Cinzel', 'Georgia', serif !important; text-transform: none;
 }
 
-html[lang="ar"] { font-family: 'Tajawal', 'Noto Sans Arabic', 'Geeza Pro', 'Segoe UI', sans-serif; }
+html[lang="ar"] { font-family: 'Montserrat', 'Geeza Pro', 'Segoe UI', sans-serif; }
 html[lang="ar"] .cover-brand .eyebrow, html[lang="ar"] .cover-brand h1, html[lang="ar"] .cover-brand p,
 html[lang="ar"] .interior-header h2, html[lang="ar"] .interior-header p, html[lang="ar"] .panel__title,
 html[lang="ar"] .food-card__head h5, html[lang="ar"] .special-card h5, html[lang="ar"] .breakfast-card h5,
 html[lang="ar"] .footer-details, html[lang="ar"] .footer-note, html[lang="ar"] .cover-footer-address {
-  font-family: 'Amiri', 'Traditional Arabic', serif !important; text-transform: none !important;
+  font-family: 'Cinzel', 'Traditional Arabic', serif !important; text-transform: none !important;
 }
 
-html[lang="hi"] { font-family: 'Noto Sans Devanagari', 'Montserrat', sans-serif; }
+html[lang="hi"] { font-family: 'Montserrat', sans-serif; }
 html[lang="hi"] .cover-brand .eyebrow, html[lang="hi"] .cover-brand h1, html[lang="hi"] .cover-brand p,
 html[lang="hi"] .interior-header h2, html[lang="hi"] .interior-header p, html[lang="hi"] .panel__title,
 html[lang="hi"] .food-card__head h5, html[lang="hi"] .special-card h5, html[lang="hi"] .breakfast-card h5,
 html[lang="hi"] .footer-details, html[lang="hi"] .footer-note, html[lang="hi"] .cover-footer-address {
-  font-family: 'Noto Serif Devanagari', serif !important; text-transform: none !important;
+  font-family: 'Cinzel', serif !important; text-transform: none !important;
 }
 
 /* ===== Menu des langues (bouton globe du bandeau) ===== */
@@ -7089,7 +7088,7 @@ html.hh-lock body { overflow: hidden; touch-action: none; }
 }
 #hh-launch .hh-launch__title {
   width: 100%; text-align: center;
-  font-family: 'Cinzel', 'Tajawal', 'Noto Serif SC', 'Noto Serif JP', 'Noto Serif KR', serif;
+  font-family: 'Cinzel', 'Tajawal', 'Cinzel', 'Noto Serif JP', 'Cinzel', serif;
   font-weight: 700;
   font-size: clamp(2.3rem, 10.5vmin, 6rem);
   letter-spacing: .16em; line-height: 1.08;
@@ -7108,7 +7107,7 @@ html.hh-lock body { overflow: hidden; touch-action: none; }
   position: relative;
   perspective: 1100px;
   transform-style: preserve-3d;
-  font-family: 'Cinzel', 'Tajawal', 'Noto Sans Devanagari', 'Noto Serif SC', 'Noto Serif JP', 'Noto Serif KR', 'Noto Serif Devanagari', serif;
+  font-family: 'Cinzel', 'Montserrat', 'Cinzel', 'Noto Serif JP', 'Cinzel', 'Cinzel', serif;
   font-weight: 700;
   font-size: clamp(6.6rem, 28vmin, 18rem);
   line-height: 1;
@@ -7162,7 +7161,7 @@ html.hh-lock body { overflow: hidden; touch-action: none; }
 }
 #hh-launch .hh-launch__msg-kicker {
   grid-row: 1;
-  font-family: 'Cinzel', 'Tajawal', 'Noto Serif SC', 'Noto Serif JP', 'Noto Serif KR', serif;
+  font-family: 'Cinzel', 'Tajawal', 'Cinzel', 'Noto Serif JP', 'Cinzel', serif;
   font-weight: 700;
   font-size: clamp(2.2rem, 11vw, 7rem);
   letter-spacing: .14em; line-height: 1.05;
@@ -7178,7 +7177,7 @@ html.hh-lock body { overflow: hidden; touch-action: none; }
 }
 #hh-launch .hh-launch__msg-main {
   grid-row: 3;
-  font-family: 'Cinzel', 'Tajawal', 'Noto Sans Devanagari', 'Noto Serif SC', 'Noto Serif JP', 'Noto Serif KR', 'Noto Serif Devanagari', serif;
+  font-family: 'Cinzel', 'Montserrat', 'Cinzel', 'Noto Serif JP', 'Cinzel', 'Cinzel', serif;
   font-weight: 700;
   font-size: clamp(2rem, 7.8vw, 5.4rem);
   line-height: 1.16;
@@ -7194,7 +7193,7 @@ html.hh-lock body { overflow: hidden; touch-action: none; }
 }
 #hh-launch .hh-launch__msg-hours {
   grid-row: 5;
-  font-family: 'Cinzel', 'Tajawal', 'Noto Serif SC', 'Noto Serif JP', 'Noto Serif KR', serif;
+  font-family: 'Cinzel', 'Tajawal', 'Cinzel', 'Noto Serif JP', 'Cinzel', serif;
   font-weight: 600;
   font-size: clamp(1.05rem, 3.2vw, 2rem);
   letter-spacing: .24em;
@@ -10213,7 +10212,7 @@ html:not(.carte-doc) .foldall--hint .foldall__ico {
                 </svg>
 
                 <svg class="relief-inner-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
-                        <image href="Logo_LaColline_Gambetta.png" x="-69" y="-16" width="418" height="312" preserveAspectRatio="none" />
+                        <image href="assets/cover/logo-facade.webp" x="-69" y="-16" width="418" height="312" preserveAspectRatio="none" />
                     </svg></div>
       <a href="index.html#menu-nav-anchor" class="contact-link cover-action" onclick="showView('menu'); return false;"><span class="star-gold">✦</span> Menu & Carte <span class="star-gold">✦</span></a>
       </div>
@@ -11083,23 +11082,10 @@ else sizeCoverMedallion();
       });
     }
   }
-  function prefetchPdf() {
-    try {
-      var link = document.createElement('link');
-      link.rel = 'prefetch';
-      link.href = NOM;
-      link.as = 'fetch';
-      document.head.appendChild(link);
-    } catch (e) {}
-  }
   function prêt() {
     lier('.lang-btn');
     lier('.footer-download');
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(prefetchPdf, { timeout: 3000 });
-    } else {
-      setTimeout(prefetchPdf, 2000);
-    }
+    /* Le PDF reste téléchargé uniquement après le clic explicite. */
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', prêt);
@@ -11472,20 +11458,6 @@ else sizeCoverMedallion();
     host.addEventListener('pointerenter', prime, { once:true, passive:true });
     host.addEventListener('touchstart', prime, { once:true, passive:true });
   }
-  function schedulePhotoPreload(section) {
-    if (!section) return;
-    var run = function () {
-      section.querySelectorAll('[data-photo]').forEach(function (item) {
-        preloadPhoto(item.getAttribute('data-photo'), 'low');
-      });
-    };
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(run, { timeout:1200 });
-    } else {
-      window.setTimeout(run, 120);
-    }
-  }
-
   function wrap(card) {
     var src = card.getAttribute('data-photo');
     if (!src || card.classList.contains('food-card--photo')) return;
@@ -12355,13 +12327,9 @@ else sizeCoverMedallion();
     /* Les photos de l'onglet visible commencent à se charger après le
        premier rendu, sans bloquer le texte de la carte. Les autres onglets
        sont préparés dès qu'ils deviennent actifs. */
-    schedulePhotoPreload(document.querySelector('.menu-section.active'));
-    document.querySelectorAll('.menu-nav .nav-btn').forEach(function (navBtn) {
-      navBtn.addEventListener('click', function () {
-        var match = /showMenuSection\(\s*'([^']+)'/.exec(navBtn.getAttribute('onclick') || '');
-        if (match) schedulePhotoPreload(document.getElementById(match[1]));
-      });
-    });
+    /* Les photos restent entièrement à la demande : elles sont préparées
+       au survol ou à l'ouverture d'une fiche, jamais en arrière-plan pour
+       une section que le visiteur ne consulte pas. */
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

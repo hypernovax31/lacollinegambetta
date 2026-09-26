@@ -19,9 +19,8 @@
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Parisienne&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Parisienne&display=swap"></noscript>
 
-<!-- Fontes internationales chargées de façon asynchrone sans bloquer le rendu initial -->
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;700&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;700&family=Noto+Serif+Devanagari:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap"></noscript>
+<!-- Fontes internationales sous-ensemblées localement dans assets/fonts
+     et sélectionnées par unicode-range : aucune feuille Google globale à charger. -->
 <style>
 /* =====================================================================
    Page de réservation.
@@ -585,7 +584,7 @@ html[lang="hi"], html[lang="hi"] * {
 
 /* Coréen (Korean) */
 html[lang="ko"] {
-  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Montserrat', sans-serif;
+  font-family: 'Montserrat', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
 }
 html[lang="ko"] .interior-header .eyebrow,
 html[lang="ko"] .interior-header h2,
@@ -604,7 +603,7 @@ html[lang="ko"] .thanks__when-slot,
 html[lang="ko"] .thanks__when-guests,
 html[lang="ko"] .thanks__sign,
 html[lang="ko"] .sending__label {
-  font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif !important;
+  font-family: 'Cinzel', 'Nanum Myeongjo', 'Batang', serif !important;
 }
 html[lang="ko"] .field input,
 html[lang="ko"] .field select,
@@ -617,12 +616,12 @@ html[lang="ko"] .nav-btn,
 html[lang="ko"] .contact-link,
 html[lang="ko"] .footer-link,
 html[lang="ko"] .footer-download {
-  font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif !important;
+  font-family: 'Montserrat', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif !important;
 }
 
 /* Chinois (Chinese) */
 html[lang="zh"] {
-  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Montserrat', sans-serif;
+  font-family: 'Montserrat', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 html[lang="zh"] .interior-header .eyebrow,
 html[lang="zh"] .interior-header h2,
@@ -641,7 +640,7 @@ html[lang="zh"] .thanks__when-slot,
 html[lang="zh"] .thanks__when-guests,
 html[lang="zh"] .thanks__sign,
 html[lang="zh"] .sending__label {
-  font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif !important;
+  font-family: 'Cinzel', 'Songti SC', 'SimSun', serif !important;
 }
 html[lang="zh"] .field input,
 html[lang="zh"] .field select,
@@ -654,7 +653,7 @@ html[lang="zh"] .nav-btn,
 html[lang="zh"] .contact-link,
 html[lang="zh"] .footer-link,
 html[lang="zh"] .footer-download {
-  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif !important;
+  font-family: 'Montserrat', 'PingFang SC', 'Microsoft YaHei', sans-serif !important;
 }
 
 /* Japonais (Japanese) */
@@ -715,7 +714,7 @@ html[lang="uk"] .thanks__when-slot,
 html[lang="uk"] .thanks__when-guests,
 html[lang="uk"] .thanks__sign,
 html[lang="uk"] .sending__label {
-  font-family: 'Playfair Display', 'Georgia', serif !important;
+  font-family: 'Cinzel', 'Georgia', serif !important;
   text-transform: none;
 }
 html[lang="uk"] .field input,
@@ -734,7 +733,7 @@ html[lang="uk"] .footer-download {
 
 /* Arabe (Arabic) */
 html[lang="ar"] {
-  font-family: 'Tajawal', 'Noto Sans Arabic', 'Geeza Pro', 'Segoe UI', sans-serif;
+  font-family: 'Montserrat', 'Geeza Pro', 'Segoe UI', sans-serif;
   direction: rtl;
 }
 html[lang="ar"] .interior-header .eyebrow,
@@ -754,7 +753,7 @@ html[lang="ar"] .thanks__when-slot,
 html[lang="ar"] .thanks__when-guests,
 html[lang="ar"] .thanks__sign,
 html[lang="ar"] .sending__label {
-  font-family: 'Amiri', 'Traditional Arabic', serif !important;
+  font-family: 'Cinzel', 'Traditional Arabic', serif !important;
 }
 html[lang="ar"] .field input,
 html[lang="ar"] .field select,
@@ -767,12 +766,12 @@ html[lang="ar"] .nav-btn,
 html[lang="ar"] .contact-link,
 html[lang="ar"] .footer-link,
 html[lang="ar"] .footer-download {
-  font-family: 'Tajawal', 'Noto Sans Arabic', 'Geeza Pro', 'Segoe UI', sans-serif !important;
+  font-family: 'Montserrat', 'Geeza Pro', 'Segoe UI', sans-serif !important;
 }
 
 /* Hindi */
 html[lang="hi"] {
-  font-family: 'Noto Sans Devanagari', 'Montserrat', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 html[lang="hi"] .interior-header .eyebrow,
 html[lang="hi"] .interior-header h2,
@@ -791,7 +790,7 @@ html[lang="hi"] .thanks__when-slot,
 html[lang="hi"] .thanks__when-guests,
 html[lang="hi"] .thanks__sign,
 html[lang="hi"] .sending__label {
-  font-family: 'Noto Serif Devanagari', serif !important;
+  font-family: 'Cinzel', serif !important;
 }
 html[lang="hi"] .field input,
 html[lang="hi"] .field select,
@@ -804,7 +803,7 @@ html[lang="hi"] .nav-btn,
 html[lang="hi"] .contact-link,
 html[lang="hi"] .footer-link,
 html[lang="hi"] .footer-download {
-  font-family: 'Noto Sans Devanagari', 'Montserrat', sans-serif !important;
+  font-family: 'Montserrat', sans-serif !important;
 }
 
 /* ===== Sélecteur de langue (repris du site) ===== */
@@ -1730,7 +1729,7 @@ html[lang="hi"] .thanks__sign {
   letter-spacing: 0 !important;
 }
 html[lang="uk"] .thanks__sign {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Cinzel', serif;
   font-size: clamp(1rem, 3.4vw, 1.2rem);
   font-style: italic;
 }
@@ -2928,22 +2927,9 @@ body * {
       });
     }
   }
-  function prefetchPdf() {
-    try {
-      var link = document.createElement('link');
-      link.rel = 'prefetch';
-      link.href = NOM;
-      link.as = 'fetch';
-      document.head.appendChild(link);
-    } catch (e) {}
-  }
   function prêt() {
     lier('.footer-download');
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(prefetchPdf, { timeout: 3000 });
-    } else {
-      setTimeout(prefetchPdf, 2000);
-    }
+    /* Le PDF reste téléchargé uniquement après le clic explicite. */
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', prêt);
