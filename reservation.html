@@ -2333,6 +2333,26 @@ body * {
   .hours__minimal-time { font-size: .86rem; }
   .hours__minimal-note { font-size: .7rem; }
 }
+
+/* Le ruban minimal ne doit pas hériter des deux colonnes des anciennes
+   cartes d'horaires : les deux lignes partagent un axe horizontal unique,
+   sur mobile comme sur écran large. */
+.hours {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+.hours__card--minimal {
+  grid-template-columns: minmax(0, 1fr) !important;
+  justify-items: center;
+}
+.hours__card--minimal .hours__minimal-line,
+.hours__card--minimal .hours__minimal-note {
+  grid-column: 1;
+  width: 100%;
+  justify-self: stretch;
+}
+.hours__card--minimal .hours__minimal-line {
+  justify-content: center;
+}
 </style>
 </head>
 <body>
