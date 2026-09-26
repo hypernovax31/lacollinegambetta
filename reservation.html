@@ -2452,7 +2452,7 @@ body * {
             </div>
             <div class="field" data-field>
               <label for="bk-phone">Téléphone</label>
-              <input id="bk-phone" name="telephone" type="tel" autocomplete="tel" required placeholder="06 12 34 56 78">
+              <input id="bk-phone" name="telephone" type="tel" autocomplete="tel" required placeholder="+33600000000">
               <p class="field__error" data-error hidden>Merci d’indiquer un numéro où vous joindre.</p>
             </div>
             <div class="field field--full" data-field>
@@ -2926,6 +2926,70 @@ body * {
 <script type="module" src="assets/js/reservation-firebase.js?v=202609231700"></script>
 <script src="assets/js/localized-digits.js?v=202609241200"></script>
 <script src="assets/js/i18n.js?v=202609231700" defer></script>
+
+<script>
+/* Exemple de téléphone du formulaire : le champ reste vide, mais son
+   indication suit le pays explicitement présent dans la locale de l’appareil.
+   Sans région certaine, aucun préfixe n’est inventé : le repli français est
+   conservé. Le numéro saisi par le client n’est jamais remplacé. */
+(function () {
+  'use strict';
+  var DEFAULT_PHONE = '+33600000000';
+  var PHONE_EXAMPLES = {
+    US: '+12025550123', CA: '+14165550123', GB: '+447700900123',
+    AU: '+61491570156', NZ: '+6421123456', IE: '+353851234567',
+    ES: '+34600000000', MX: '+525555555555', AR: '+5491123456789',
+    DE: '+4915123456789', AT: '+436641234567', CH: '+41791234567',
+    IT: '+393331234567', PT: '+351910000000', BR: '+5511987654321',
+    NL: '+31612345678', BE: '+32470123456', LU: '+352621123456',
+    PL: '+48500123456', TR: '+905321234567', UA: '+380501234567',
+    JP: '+819012345678', KR: '+821012345678', CN: '+8613812345678',
+    TW: '+886912345678', HK: '+85251234567', IN: '+919876543210',
+    SE: '+46701234567', NO: '+4791234567', DK: '+4520123456',
+    FI: '+358401234567', GR: '+306912345678', RO: '+40721234567'
+  };
+
+  function localeRegion(locale) {
+    var parts = String(locale || '').replace(/_/g, '-').split('-');
+    for (var i = 1; i < parts.length; i++) {
+      if (/^[A-Za-z]{2}$/.test(parts[i]) || /^\d{3}$/.test(parts[i])) {
+        return parts[i].toUpperCase();
+      }
+    }
+    return '';
+  }
+
+  function devicePhoneExample() {
+    var locale = '';
+    try {
+      /* Seule la locale primaire décrit la configuration active. Les langues
+         secondaires de navigator.languages ne suffisent pas à déduire le pays. */
+      locale = String(navigator.language || '');
+      if (!locale && navigator.languages && navigator.languages.length) {
+        locale = String(navigator.languages[0] || '');
+      }
+    } catch (e) {}
+    var language = locale.toLowerCase().split(/[-_]/)[0];
+    /* Un appareil réglé en français conserve explicitement le numéro
+       demandé, quelle que soit sa variante régionale. */
+    if (language === 'fr') return DEFAULT_PHONE;
+    var region = localeRegion(locale);
+    return (region && PHONE_EXAMPLES[region]) || DEFAULT_PHONE;
+  }
+
+  function updatePhoneExample() {
+    var input = document.getElementById('bk-phone');
+    if (!input) return;
+    var example = devicePhoneExample();
+    input.setAttribute('data-phone-example', example);
+    if (!input.value.trim()) input.placeholder = example;
+  }
+
+  updatePhoneExample();
+  window.addEventListener('lcg-i18n-ready', updatePhoneExample);
+  window.addEventListener('lcg-lang-changed', updatePhoneExample);
+})();
+</script>
 
 <script>
 (function () {
