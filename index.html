@@ -10112,16 +10112,24 @@ html:not(.carte-doc) #vins .wine-detail-cell {
   grid-column:1 / -1 !important;
   grid-row:auto !important;
   grid-template-rows:0fr;
+  justify-self:stretch !important;
   min-width:0;
   min-height:0;
   overflow:hidden;
   padding:0 !important;
   border:0 !important;
   background:transparent !important;
-  transition:grid-template-rows .32s cubic-bezier(.4,.1,.2,1);
+  text-align:left !important;
+  pointer-events:none;
+  visibility:hidden;
+  transition:grid-template-rows .32s cubic-bezier(.4,.1,.2,1), visibility 0s linear .32s;
 }
+html:not(.carte-doc) #vins .wine-detail-cell[aria-hidden="false"],
 html:not(.carte-doc) #vins .wine-row--open .wine-detail-cell {
   grid-template-rows:1fr;
+  pointer-events:auto;
+  visibility:visible;
+  transition:grid-template-rows .32s cubic-bezier(.4,.1,.2,1), visibility 0s linear 0s;
 }
 html:not(.carte-doc) #vins .wine-detail-cell > .wine-detail-card {
   width:100%;
@@ -10134,42 +10142,46 @@ html:not(.carte-doc) #vins .wine-detail-cell > .wine-detail-card {
   border-radius:0;
   background:transparent;
   color:var(--ink);
+  text-align:left !important;
   font-size:clamp(.78rem, .23vw + .7rem, .9rem);
   font-weight:400;
   line-height:1.55;
 }
 html:not(.carte-doc) #vins .wine-detail-lines {
   display:grid;
+  justify-items:start;
   gap:7px;
   width:100%;
-  text-align:left;
+  text-align:left !important;
 }
 html:not(.carte-doc) #vins .wine-detail-line {
-  display:grid;
-  grid-template-columns:minmax(190px,max-content) minmax(0,1fr);
-  column-gap:20px;
-  row-gap:2px;
-  align-items:baseline;
+  display:block;
+  width:100%;
   min-width:0;
   margin:0;
-  text-align:left;
+  text-align:left !important;
+}
+html:not(.carte-doc) #vins .wine-detail-label,
+html:not(.carte-doc) #vins .wine-detail-value {
+  display:block;
+  width:100%;
+  min-width:0;
+  text-align:left !important;
 }
 html:not(.carte-doc) #vins .wine-detail-label {
-  min-width:0;
   color:var(--violet-900);
   font-weight:700;
   letter-spacing:.05em;
-  white-space:nowrap;
+  white-space:normal;
 }
 html:not(.carte-doc) #vins .wine-detail-value {
-  min-width:0;
+  margin-top:2px;
   color:var(--ink);
   font-weight:400;
   text-transform:lowercase;
   overflow-wrap:normal;
   word-break:normal;
   hyphens:none;
-  text-align:left;
 }
 @media screen and (min-width:861px) {
   html:not(.carte-doc) #vins .wine-detail-cell > .wine-detail-card {
@@ -10207,6 +10219,56 @@ html:not(.carte-doc) #vins .wine-detail-value {
     display:block;
     margin-top:2px;
   }
+
+  /* La cellule du tiroir est ajoutée après les prix dans la même grille.
+     Elle ne doit jamais être prise pour une cinquième colonne de prix par
+     les sélecteurs nth-last-of-type du tableau mobile. */
+  html:not(.carte-doc) #interior-menu #vins .wine-table tbody tr.wine-row > td.wine-detail-cell {
+    display:grid !important;
+    grid-column:1 / -1 !important;
+    grid-row:auto !important;
+    justify-self:stretch !important;
+    width:100% !important;
+    min-width:0 !important;
+    padding:0 !important;
+    text-align:left !important;
+    font-size:inherit !important;
+    font-weight:400 !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table tbody tr.wine-row > td.wine-detail-cell::before {
+    content:none !important;
+    display:none !important;
+  }
+
+  /* Les formats et les montants sont empilés dans chaque case : le libellé
+     ne partage plus la ligne avec le prix, même sur les écrans étroits. */
+  html:not(.carte-doc) #interior-menu #vins .wine-table tbody tr.wine-row > td:not(.wine-name):not(.wine-no):not(.wine-detail-cell) {
+    display:flex !important;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-self:stretch !important;
+    min-width:0;
+    white-space:nowrap;
+    line-height:1.2;
+    text-align:left !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table tbody tr.wine-row > td:not(.wine-name):not(.wine-no):not(.wine-detail-cell)::before {
+    display:block;
+    width:100%;
+    margin-bottom:3px;
+    line-height:1.1;
+    white-space:nowrap;
+  }
+
+  /* Après l'insertion du tiroir, nth-last-of-type ne désigne plus les
+     quatre prix d'origine. On les replace explicitement par leur position
+     réelle pour empêcher tout décalage ou chevauchement. */
+  html:not(.carte-doc) #interior-menu #vins .wine-table tbody tr.wine-row > td:nth-of-type(3) { grid-column:2 !important; grid-row:2 !important; }
+  html:not(.carte-doc) #interior-menu #vins .wine-table tbody tr.wine-row > td:nth-of-type(4) { grid-column:3 !important; grid-row:2 !important; }
+  html:not(.carte-doc) #interior-menu #vins .wine-table tbody tr.wine-row > td:nth-of-type(5) { grid-column:4 !important; grid-row:2 !important; }
+  html:not(.carte-doc) #interior-menu #vins .wine-table tbody tr.wine-row > td:nth-of-type(6) { grid-column:5 !important; grid-row:2 !important; }
+  html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row > td:nth-of-type(3) { grid-column:2 !important; grid-row:2 !important; }
+  html:not(.carte-doc) #interior-menu #vins .wine-table.wine-table--short tbody tr.wine-row > td:nth-of-type(4) { grid-column:3 !important; grid-row:2 !important; }
 }
 @media print {
   .print-page--vins .wine-detail-cell,
