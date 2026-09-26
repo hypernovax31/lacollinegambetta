@@ -8049,34 +8049,35 @@ html.lightbox-open, html.lightbox-open body { overflow:hidden; }
   }
 }
 
-/* ===== Visionneuse PC : format fixe photo + informations =============
-   920 × 720 px est le meilleur compromis pour les clichés larges des
-   plats/desserts et les formats plus hauts des boissons : la photo reste
-   entière grâce à object-fit:contain, tandis que le bandeau d'informations
-   dispose d'une hauteur confortable. Le cadre tient encore dans une
-   fenêtre PC de 1366 × 768 avec 24 px de respiration verticale. */
+/* ===== Visionneuse PC : cadre adaptatif, taille maximale 920 × 720 =====
+   Le cadre garde une limite confortable pour le PC, mais sa largeur et sa
+   hauteur suivent désormais le ratio réel de chaque photo. Il n'y a plus
+   de grande zone vide autour d'un cliché 3/2 ou 16/9. */
 @media screen and (min-width:721px) and (min-height:561px) {
   html:not(.carte-doc) .lightbox {
     padding:24px;
   }
   html:not(.carte-doc) .lightbox__frame {
-    display:grid;
-    grid-template-rows:minmax(0,1fr) auto;
-    width:min(920px,calc(100vw - 48px));
-    height:min(720px,calc(100vh - 48px));
-    max-width:920px;
-    max-height:720px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    width:fit-content;
+    height:auto;
+    max-width:min(920px,calc(100vw - 48px));
+    max-height:min(720px,calc(100vh - 48px));
   }
   html:not(.carte-doc) .lightbox__img {
-    width:100%;
-    height:100%;
+    width:auto;
+    height:auto;
     min-width:0;
     min-height:0;
     max-width:100%;
-    max-height:none;
+    max-height:min(590px,calc(100vh - 196px));
+    align-self:center;
     object-fit:contain;
   }
   html:not(.carte-doc) .lightbox__bar {
+    align-self:stretch;
     min-height:0;
     max-height:148px;
     overflow-y:auto;
@@ -10216,12 +10217,11 @@ html:not(.carte-doc) #vins .wine-detail-value {
   }
 }
 
-/* ===== Mobile : mêmes animations photo que dans Desserts ============
-   Les cartes de plats et desserts déploient leur photo par une transition
-   de grille 0fr → 1fr. Les boissons et cocktails conservaient auparavant
-   un affichage direct sur mobile pour supprimer un vide résiduel : ce
-   raccourci supprimait aussi l'animation. Tous les tiroirs reprennent
-   maintenant le même mécanisme, sans hauteur forcée ni débordement. */
+/* ===== Mobile : tiroirs photo sans hauteur résiduelle =================
+   Le tiroir garde l'animation 0fr → 1fr des desserts, mais son contenu
+   reste strictement à sa hauteur réelle. Les photos utilisent leur ratio
+   natif : aucun cadre fixe ne peut donc réserver une piste blanche sous
+   l'image. */
 @media screen and (max-width:720px) {
   html:not(.carte-doc) #boissons .price-line--open,
   html:not(.carte-doc) #cocktails .hh-line--open,
@@ -10229,15 +10229,16 @@ html:not(.carte-doc) #vins .wine-detail-value {
     height:auto !important;
     min-height:0 !important;
     align-self:start !important;
+    align-content:start !important;
+    grid-auto-rows:min-content !important;
     gap:0 !important;
-    padding-bottom:7px !important;
+    padding-bottom:0 !important;
   }
   html:not(.carte-doc) #boissons .price-line__drawer,
   html:not(.carte-doc) #cocktails .hh-line__drawer,
   html:not(.carte-doc) #boissons .beer-row__drawer {
     display:grid !important;
     grid-template-rows:0fr !important;
-    height:auto !important;
     min-height:0 !important;
     margin:0 !important;
     padding:0 !important;
@@ -10251,25 +10252,27 @@ html:not(.carte-doc) #vins .wine-detail-value {
   html:not(.carte-doc) #boissons .price-line__drawer > div,
   html:not(.carte-doc) #cocktails .hh-line__drawer > div,
   html:not(.carte-doc) #boissons .beer-row__drawer > div {
-    height:auto !important;
     min-height:0 !important;
-    max-height:none !important;
     overflow:hidden !important;
   }
-  html:not(.carte-doc) #boissons .price-line--open .price-line__photo,
-  html:not(.carte-doc) #cocktails .hh-line--open .hh-line__photo {
+  html:not(.carte-doc) .food-card__photo,
+  html:not(.carte-doc) .price-line__photo,
+  html:not(.carte-doc) .hh-line__photo,
+  html:not(.carte-doc) .beer-row__photo {
     width:100% !important;
     height:auto !important;
     max-height:none !important;
-    aspect-ratio:16 / 9 !important;
-    margin:6px 0 0 !important;
+    aspect-ratio:auto !important;
   }
-  html:not(.carte-doc) #boissons .price-line--open .price-line__photo img,
-  html:not(.carte-doc) #cocktails .hh-line--open .hh-line__photo img {
+  html:not(.carte-doc) .food-card__photo img,
+  html:not(.carte-doc) .price-line__photo img,
+  html:not(.carte-doc) .hh-line__photo img,
+  html:not(.carte-doc) .beer-row__photo img {
     display:block;
-    width:100%;
-    height:100%;
-    object-fit:cover;
+    width:100% !important;
+    height:auto !important;
+    max-height:none !important;
+    object-fit:contain !important;
   }
 }
 
