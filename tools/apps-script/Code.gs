@@ -12,7 +12,12 @@
  * si le mail client est parti, et sinon pourquoi.
  */
 
-var SCRIPT_VERSION = '2026-09-29-f';
+var SCRIPT_VERSION = '2026-09-29-g';
+
+/* Bloc de diagnostic en bas du mail reçu par le restaurant.
+   false = mails propres, sans aucune mention technique (réglage normal).
+   true  = à n'activer que le temps d'un dépannage. */
+var DIAGNOSTIC = false;
 
 /* ⬇️ REMPLACEZ CETTE ADRESSE PAR UNE VRAIE ADRESSE À VOUS ⬇️
    C'est elle qui sera utilisée par la fonction de test testReservation.
@@ -46,10 +51,6 @@ function doPost(e) {
 
   /* 1. E-mail au restaurant */
   try {
-    /* Bloc de diagnostic ajouté en bas du mail restaurant : il montre
-       l'adresse client réellement transmise par le site. Supprimez la
-       variable DIAGNOSTIC ci-dessous une fois le problème réglé. */
-    var DIAGNOSTIC = true;
     var corpsResto = payload.restaurantBody || JSON.stringify(d, null, 2);
     if (DIAGNOSTIC) {
       corpsResto += '\n\n— — —\nDiagnostic technique\n' +
