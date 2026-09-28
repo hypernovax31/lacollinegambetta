@@ -12,7 +12,7 @@
  * si le mail client est parti, et sinon pourquoi.
  */
 
-var SCRIPT_VERSION = '2026-09-29-e';
+var SCRIPT_VERSION = '2026-09-29-f';
 
 /* ⬇️ REMPLACEZ CETTE ADRESSE PAR UNE VRAIE ADRESSE À VOUS ⬇️
    C'est elle qui sera utilisée par la fonction de test testReservation.
@@ -55,6 +55,8 @@ function doPost(e) {
       corpsResto += '\n\n— — —\nDiagnostic technique\n' +
         'clientEmail reçu : ' + (payload.clientEmail || '(vide)') + '\n' +
         'details.email reçu : ' + (d.email || '(vide)') + '\n' +
+        'expéditeur utilisé : ' + expediteur() + '\n' +
+        'quota d\'envoi restant : ' + MailApp.getRemainingDailyQuota() + '\n' +
         'version du script : ' + SCRIPT_VERSION;
     }
     var optionsRestaurant = {
@@ -82,14 +84,22 @@ function doPost(e) {
       var corps = payload.clientBody && String(payload.clientBody).trim().length
         ? payload.clientBody
         : corpsClientParDefaut(d);
-      MailApp.sendEmail({
-        to: clientEmail,
-        subject: payload.clientSubject || 'Confirmation de votre réservation — La Colline Gambetta',
-        body: corps,
-        name: 'La Colline Gambetta',
-        replyTo: RESTAURANT_EMAIL
-      });
+      /* GmailApp plutôt que MailApp : le message est archivé dans
+         « Messages envoyés » du compte, ce qui permet de vérifier
+         visuellement l'envoi et de voir un éventuel retour d'erreur. */
+      GmailApp.sendEmail(
+        clientEmail,
+        payload.clientSubject || 'Confirmation de votre réservation — La Colline Gambetta',
+        corps,
+        {
+          name: 'La Colline Gambetta',
+          replyTo: RESTAURANT_EMAIL,
+          htmlBody: corps.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\n/g, '<br>')
+        }
+      );
       report.clientMail = true;
+      report.expediteur = expediteur();
+      report.quotaRestant = MailApp.getRemainingDailyQuota();
     }
   } catch (errClient) {
     report.ok = false;
@@ -146,6 +156,15 @@ function corpsClientParDefaut(d) {
     'L’équipe de La Colline Gambetta',
     '01 43 49 05 93 · ' + RESTAURANT_EMAIL
   ].join('\n');
+}
+
+/* Adresse réellement utilisée par Google pour expédier les messages. */
+function expediteur() {
+  try {
+    return Session.getActiveUser().getEmail() || Session.getEffectiveUser().getEmail() || '(inconnu)';
+  } catch (e) {
+    return '(inconnu)';
+  }
 }
 
 function cleanEmail(value) {
