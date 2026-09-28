@@ -12,6 +12,7 @@
  * si le mail client est parti, et sinon pourquoi.
  */
 
+var SCRIPT_VERSION = '2026-09-29-c';
 var RESTAURANT_EMAIL = 'restaurant@lacollinegambetta.com';
 var CALENDAR_ID = 'primary';          // ou l'ID d'un agenda dédié aux réservations
 var DEFAULT_DURATION_MINUTES = 90;    // durée réservée pour une table
@@ -137,9 +138,37 @@ function cleanEmail(value) {
   return v;
 }
 
-/* Vérification du déploiement : ouvrir l'URL /exec dans un navigateur. */
-function doGet() {
-  return json({ ok: true, service: 'LCG reservations' });
+/* Vérification du déploiement : ouvrir l'URL /exec dans un navigateur.
+ *
+ * Deux diagnostics disponibles sans rien installer :
+ *   /exec                         → version du script actuellement déployée
+ *   /exec?selftest=mon@mail.com   → envoie un vrai mail de test à cette adresse
+ *                                   et renvoie le résultat de l'envoi
+ */
+function doGet(e) {
+  var params = (e && e.parameter) || {};
+  var cible = cleanEmail(params.selftest);
+
+  if (!cible) {
+    return json({ ok: true, service: 'LCG reservations', version: SCRIPT_VERSION });
+  }
+
+  var res = { ok: true, service: 'LCG reservations', version: SCRIPT_VERSION, selftest: cible, sent: false, error: '' };
+  try {
+    MailApp.sendEmail({
+      to: cible,
+      subject: 'Test envoi client — La Colline Gambetta',
+      body: 'Ceci est un test technique du script de réservation.\n\nSi vous recevez ce message, l\u2019envoi des mails clients fonctionne.',
+      name: 'La Colline Gambetta',
+      replyTo: RESTAURANT_EMAIL
+    });
+    res.sent = true;
+    res.quotaRestant = MailApp.getRemainingDailyQuota();
+  } catch (err) {
+    res.ok = false;
+    res.error = String(err);
+  }
+  return json(res);
 }
 
 function json(obj) {
