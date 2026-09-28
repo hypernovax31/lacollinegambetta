@@ -10369,8 +10369,13 @@ html:not(.carte-doc) .lightbox--wine .lightbox__note-label {
 html:not(.carte-doc) #vins .wine-detail-photo {
   aspect-ratio:1 / 1;
 }
+/* Le fond extérieur reste neutre : aucune auréole violette autour d'une
+   fiche vin, tout en conservant le contraste de la visionneuse. */
+html:not(.carte-doc) .lightbox--wine {
+  background:rgba(0,0,0,.88);
+}
 html:not(.carte-doc) #vins .wine-detail-photo img {
-  object-fit:contain;
+  object-fit:cover;
 }
 @media screen and (min-width:721px) {
   html:not(.carte-doc) .lightbox--wine .lightbox__img {
@@ -10380,7 +10385,8 @@ html:not(.carte-doc) #vins .wine-detail-photo img {
     max-height:none;
     aspect-ratio:1 / 1;
     align-self:center;
-    object-fit:contain;
+    object-fit:cover;
+    background:#120b08;
   }
 }
 @media screen and (max-width:720px) {
@@ -10389,7 +10395,8 @@ html:not(.carte-doc) #vins .wine-detail-photo img {
     max-width:100%;
     height:auto;
     aspect-ratio:1 / 1;
-    object-fit:contain;
+    object-fit:cover;
+    background:#120b08;
   }
 }
 
