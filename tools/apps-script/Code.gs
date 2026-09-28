@@ -12,7 +12,7 @@
  * si le mail client est parti, et sinon pourquoi.
  */
 
-var SCRIPT_VERSION = '2026-09-29-c';
+var SCRIPT_VERSION = '2026-09-29-d';
 var RESTAURANT_EMAIL = 'restaurant@lacollinegambetta.com';
 var CALENDAR_ID = 'primary';          // ou l'ID d'un agenda dédié aux réservations
 var DEFAULT_DURATION_MINUTES = 90;    // durée réservée pour une table
@@ -40,10 +40,21 @@ function doPost(e) {
 
   /* 1. E-mail au restaurant */
   try {
+    /* Bloc de diagnostic ajouté en bas du mail restaurant : il montre
+       l'adresse client réellement transmise par le site. Supprimez la
+       variable DIAGNOSTIC ci-dessous une fois le problème réglé. */
+    var DIAGNOSTIC = true;
+    var corpsResto = payload.restaurantBody || JSON.stringify(d, null, 2);
+    if (DIAGNOSTIC) {
+      corpsResto += '\n\n— — —\nDiagnostic technique\n' +
+        'clientEmail reçu : ' + (payload.clientEmail || '(vide)') + '\n' +
+        'details.email reçu : ' + (d.email || '(vide)') + '\n' +
+        'version du script : ' + SCRIPT_VERSION;
+    }
     var optionsRestaurant = {
       to: payload.restaurantEmail || RESTAURANT_EMAIL,
       subject: payload.restaurantSubject || 'Nouvelle réservation',
-      body: payload.restaurantBody || JSON.stringify(d, null, 2),
+      body: corpsResto,
       name: 'La Colline Gambetta'
     };
     var replyTo = cleanEmail(d.email);
