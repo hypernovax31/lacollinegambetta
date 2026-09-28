@@ -10361,6 +10361,38 @@ html:not(.carte-doc) .lightbox--wine .lightbox__note-label {
   }
 }
 
+/* ===== Format photo commun pour les vins ===============================
+   Les images des plats et desserts reposent sur un cadre 4/3. Les sources
+   de bouteilles peuvent avoir des ratios très différents ; la visionneuse
+   reçoit donc le même cadre fixe et le même recadrage, afin que passer d'un
+   vin à l'autre ne fasse plus varier la taille de la photo. */
+html:not(.carte-doc) #vins .wine-detail-photo {
+  aspect-ratio:4 / 3;
+}
+html:not(.carte-doc) #vins .wine-detail-photo img {
+  object-fit:cover;
+}
+@media screen and (min-width:721px) {
+  html:not(.carte-doc) .lightbox--wine .lightbox__img {
+    width:56%;
+    max-width:56%;
+    height:auto;
+    max-height:none;
+    aspect-ratio:4 / 3;
+    align-self:center;
+    object-fit:cover;
+  }
+}
+@media screen and (max-width:720px) {
+  html:not(.carte-doc) .lightbox--wine .lightbox__img {
+    width:100%;
+    max-width:100%;
+    height:auto;
+    aspect-ratio:4 / 3;
+    object-fit:cover;
+  }
+}
+
 </style>
 </head>
 <body>
