@@ -1,12 +1,15 @@
 /* La Colline Gambetta — notifications de réservation + Google Agenda
  *
- * À coller dans un nouveau projet Apps Script (https://script.google.com/home/my),
- * puis à déployer en « Application Web » avec :
- *   - Exécuter en tant que : Moi
- *   - Qui a accès         : Tout le monde
+ * À coller dans le projet Apps Script du restaurant, puis à redéployer :
+ *   Déployer → Gérer les déploiements → crayon → Version : Nouvelle version → Déployer
+ *   (Exécuter en tant que : Moi — Qui a accès : Tout le monde)
  *
- * L'URL obtenue (terminée par /exec) doit être recopiée dans
+ * L'URL obtenue (terminée par /exec) doit figurer dans
  * assets/js/reservation-config.js, clé googleScriptUrl.
+ *
+ * Cette version renvoie un compte rendu détaillé : le site journalise la
+ * réponse dans la console du navigateur, ce qui permet de voir immédiatement
+ * si le mail client est parti, et sinon pourquoi.
  */
 
 var RESTAURANT_EMAIL = 'restaurant@lacollinegambetta.com';
@@ -14,34 +17,69 @@ var CALENDAR_ID = 'primary';          // ou l'ID d'un agenda dédié aux réserv
 var DEFAULT_DURATION_MINUTES = 90;    // durée réservée pour une table
 
 function doPost(e) {
-  try {
-    var payload = JSON.parse(e.postData.contents);
-    var d = payload.details || {};
+  var report = {
+    ok: true,
+    restaurantMail: false,
+    clientMail: false,
+    calendar: false,
+    clientEmailUsed: '',
+    errors: []
+  };
 
-    /* 1. E-mail au restaurant */
-    var toRestaurant = payload.restaurantEmail || RESTAURANT_EMAIL;
+  var payload = {};
+  var d = {};
+  try {
+    payload = JSON.parse(e.postData.contents);
+    d = payload.details || {};
+  } catch (errParse) {
+    report.ok = false;
+    report.errors.push('payload illisible : ' + errParse);
+    return json(report);
+  }
+
+  /* 1. E-mail au restaurant */
+  try {
     var optionsRestaurant = {
-      to: toRestaurant,
+      to: payload.restaurantEmail || RESTAURANT_EMAIL,
       subject: payload.restaurantSubject || 'Nouvelle réservation',
       body: payload.restaurantBody || JSON.stringify(d, null, 2),
       name: 'La Colline Gambetta'
     };
-    if (d.email && String(d.email).indexOf('@') > -1) {
-      optionsRestaurant.replyTo = d.email;
-    }
+    var replyTo = cleanEmail(d.email);
+    if (replyTo) optionsRestaurant.replyTo = replyTo;
     MailApp.sendEmail(optionsRestaurant);
+    report.restaurantMail = true;
+  } catch (errResto) {
+    report.ok = false;
+    report.errors.push('mail restaurant : ' + errResto);
+  }
 
-    /* 2. E-mail de confirmation au client */
-    if (payload.clientEmail && String(payload.clientEmail).indexOf('@') > -1) {
+  /* 2. E-mail de confirmation au client
+     L'adresse est cherchée à deux endroits : clientEmail, puis details.email,
+     afin qu'une seule des deux suffise. */
+  try {
+    var clientEmail = cleanEmail(payload.clientEmail) || cleanEmail(d.email);
+    report.clientEmailUsed = clientEmail || '(aucune adresse client)';
+    if (clientEmail) {
+      var corps = payload.clientBody && String(payload.clientBody).trim().length
+        ? payload.clientBody
+        : corpsClientParDefaut(d);
       MailApp.sendEmail({
-        to: payload.clientEmail,
-        subject: payload.clientSubject || 'Confirmation de votre réservation',
-        body: payload.clientBody || '',
-        name: 'La Colline Gambetta'
+        to: clientEmail,
+        subject: payload.clientSubject || 'Confirmation de votre réservation — La Colline Gambetta',
+        body: corps,
+        name: 'La Colline Gambetta',
+        replyTo: RESTAURANT_EMAIL
       });
+      report.clientMail = true;
     }
+  } catch (errClient) {
+    report.ok = false;
+    report.errors.push('mail client : ' + errClient);
+  }
 
-    /* 3. Événement dans Google Agenda */
+  /* 3. Événement dans Google Agenda */
+  try {
     if (d.dateIso && d.heureIso) {
       var p = String(d.dateIso).split('-');
       var hm = String(d.heureIso).split(':');
@@ -62,16 +100,44 @@ function doPost(e) {
           'Message : ' + (d.message || '') + '\n' +
           'Langue : ' + (d.langue || '')
       });
+      report.calendar = true;
+    } else {
+      report.errors.push('agenda : date ou heure absente du formulaire');
     }
-
-    return json({ ok: true });
-  } catch (err) {
-    return json({ ok: false, error: String(err) });
+  } catch (errCal) {
+    report.ok = false;
+    report.errors.push('agenda : ' + errCal);
   }
+
+  console.log(JSON.stringify(report));
+  return json(report);
 }
 
-/* Permet de vérifier le déploiement en ouvrant simplement l'URL /exec
-   dans un navigateur : doit afficher {"ok":true,...}. */
+/* Filet de sécurité : si le site n'a pas transmis de texte de confirmation. */
+function corpsClientParDefaut(d) {
+  return [
+    'Merci infiniment ' + (d.nom || '') + '.',
+    '',
+    'Votre demande de table vient de nous parvenir.',
+    '',
+    'Nous vous attendons le ' + (d.date || d.dateIso || '') + ' à ' + (d.heure || d.heureIso || ''),
+    'pour ' + (d.couverts || d.couvertsNb || '') + '.',
+    '',
+    'Au plaisir de vous recevoir très prochainement,',
+    '',
+    'L’équipe de La Colline Gambetta',
+    '01 43 49 05 93 · ' + RESTAURANT_EMAIL
+  ].join('\n');
+}
+
+function cleanEmail(value) {
+  var v = String(value || '').trim();
+  if (!v || v.indexOf('@') < 1) return '';
+  if (/non renseign/i.test(v)) return '';
+  return v;
+}
+
+/* Vérification du déploiement : ouvrir l'URL /exec dans un navigateur. */
 function doGet() {
   return json({ ok: true, service: 'LCG reservations' });
 }
@@ -82,24 +148,27 @@ function json(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-/* Test manuel depuis l'éditeur : exécuter cette fonction une fois pour
-   accorder les autorisations Gmail + Agenda, puis vérifier l'agenda. */
+/* Test manuel depuis l'éditeur : remplacer l'adresse ci-dessous par une
+   adresse à vous, exécuter, puis vérifier la boîte de réception. */
 function testReservation() {
-  doPost({
+  var res = doPost({
     postData: {
       contents: JSON.stringify({
         restaurantEmail: RESTAURANT_EMAIL,
         restaurantSubject: 'TEST — Nouvelle réservation',
         restaurantBody: 'Ceci est un test de configuration.',
-        clientEmail: '',
-        clientSubject: '',
+        clientEmail: 'adresse-de-test@exemple.com',
+        clientSubject: 'TEST — Confirmation de votre réservation',
         clientBody: '',
         details: {
           nom: 'Test Colline',
           telephone: '0000000000',
-          email: 'Non renseigné',
+          email: 'adresse-de-test@exemple.com',
+          date: 'aujourd’hui',
           dateIso: Utilities.formatDate(new Date(), 'Europe/Paris', 'yyyy-MM-dd'),
+          heure: '20:00',
           heureIso: '20:00',
+          couverts: '2 personnes',
           couvertsNb: 2,
           preference: 'Salle',
           message: 'Test automatique',
@@ -108,4 +177,5 @@ function testReservation() {
       })
     }
   });
+  Logger.log(res.getContent());
 }

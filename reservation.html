@@ -2939,7 +2939,7 @@ body * {
 })();
 </script>
 
-<script src="assets/js/reservation-config.js?v=202609281900"></script>
+<script src="assets/js/reservation-config.js?v=202609291200"></script>
 <script src="assets/js/firebase-config.js?v=202609231700"></script>
 <script type="module" src="assets/js/reservation-firebase.js?v=202609231700"></script>
 <script src="assets/js/localized-digits.js?v=202609241200"></script>
@@ -4196,7 +4196,21 @@ body * {
             if (/accounts\.google\.com|Access Denied|Autorisation requise/i.test(body || '')) {
               throw new Error('Google Apps Script non public (déploiement restreint)');
             }
-            console.log('[Notification Google Apps Script] Envoyée avec succès', body);
+            /* Compte rendu détaillé du script : indique mail restaurant,
+               mail client et création de l'événement d'agenda. */
+            var report = null;
+            try { report = JSON.parse(body); } catch (eJson) {}
+            if (report) {
+              console.log('[Notification Google Apps Script] Compte rendu', report);
+              if (report.clientMail === false && mail.value.trim()) {
+                console.warn('[Notification] Mail client NON envoyé par le script. Adresse vue par le script :', report.clientEmailUsed, '— erreurs :', report.errors);
+              }
+              if (report.calendar === false) {
+                console.warn('[Notification] Événement Google Agenda non créé —', report.errors);
+              }
+            } else {
+              console.log('[Notification Google Apps Script] Envoyée avec succès', body);
+            }
             if (callback) callback(true);
           })
           .catch(function (err) {
