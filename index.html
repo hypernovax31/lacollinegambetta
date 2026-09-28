@@ -7728,6 +7728,95 @@ html.lightbox-open, html.lightbox-open body { overflow:hidden; }
   }
 }
 
+/* ===== Popup vins : bouteille à gauche, fiche à droite ================
+   La photo garde toute la hauteur du cadre. À droite, le titre ouvre la
+   fiche, les contenances/prix arrivent immédiatement en grille puis les
+   informations de dégustation et d’accords suivent dans la typographie
+   habituelle des lignes de vins. */
+@media screen and (min-width:721px) {
+  html:not(.carte-doc) .lightbox--wine {
+    padding:24px;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__frame {
+    flex-direction:row;
+    width:min(1120px, calc(100vw - 48px));
+    max-width:min(1120px, calc(100vw - 48px));
+    max-height:min(820px, calc(100vh - 48px));
+    min-height:min(560px, calc(100vh - 48px));
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__img {
+    flex:0 1 56%;
+    width:56%;
+    max-width:56%;
+    max-height:none;
+    min-width:0;
+    object-fit:cover;
+    object-position:center;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__bar {
+    flex:1 1 44%;
+    min-width:0;
+    max-width:none;
+    align-self:stretch;
+    justify-content:flex-start;
+    overflow-y:auto;
+    max-height:none;
+    padding:62px 28px 28px;
+    border-top:0;
+    border-left:1px solid rgba(216,178,87,.34);
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__line {
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    justify-content:flex-start;
+    gap:16px;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__title {
+    padding-bottom:13px;
+    border-bottom:1px solid rgba(216,178,87,.28);
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__price {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0,1fr));
+    width:100%;
+    gap:8px 18px;
+    white-space:normal;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__tarif {
+    min-width:0;
+    width:100%;
+    justify-content:space-between;
+    padding:6px 0 7px;
+    border-bottom:1px dotted rgba(122,105,136,.5);
+    gap:8px;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__tarif-lab {
+    font-size:.62rem;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__note {
+    margin-top:20px;
+    padding-top:17px;
+    border-top:1px solid rgba(216,178,87,.28);
+    max-width:none;
+    white-space:normal;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__note-line {
+    margin:0 0 13px;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__note-line:last-child { margin-bottom:0; }
+  html:not(.carte-doc) .lightbox--wine .lightbox__note-label {
+    display:block;
+    color:var(--violet-900);
+    font-weight:700;
+    letter-spacing:.05em;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__note-value {
+    display:block;
+    margin-top:3px;
+  }
+}
+
 /* ===== Tout déplier / tout replier =====
    Un double chevron doré posé en haut à droite de chaque onglet qui
    contient des dépliants. Même or, même trait que les chevrons des
@@ -12003,7 +12092,7 @@ else sizeCoverMedallion();
     line.appendChild(lbTitle);
     line.appendChild(lbPrice);
 
-    lbNote = document.createElement('p');
+    lbNote = document.createElement('div');
     lbNote.className = 'lightbox__note';
 
     bar.appendChild(lbSection);
@@ -12111,6 +12200,7 @@ else sizeCoverMedallion();
       title: t ? t.textContent.trim() : '',
       notes: notes,
       prices: prices,
+      wine: isWine ? wineCopy : null,
       hh: hhEl ? hhEl.textContent.trim() : '',
       section: head ? head.textContent.trim() : ''
     };
@@ -12133,10 +12223,32 @@ else sizeCoverMedallion();
     lbSection.hidden = !info.section;
     lbTitle.textContent = info.title;
 
-    /* Descriptif : les lignes de la carte sont recollées par un point
-       médian, plus sobre qu'une liste à puces sous une photo. */
-    lbNote.textContent = info.notes.join(' · ');
-    lbNote.hidden = !info.notes.length;
+    /* Descriptif : pour les vins, les deux informations restent séparées
+       comme dans le tiroir mobile ; pour les autres photos, on conserve le
+       bandeau compact historique. */
+    lbNote.textContent = '';
+    if (info.wine) {
+      [
+        [wineText('DÉGUSTATION :', 'DÉGUSTATION :'), info.wine.tasting],
+        [wineText('Suggestions d’accords :', 'Suggestions d’accords :'), info.wine.pairing]
+      ].forEach(function (item) {
+        var noteLine = document.createElement('p');
+        noteLine.className = 'lightbox__note-line';
+        var noteLabel = document.createElement('strong');
+        noteLabel.className = 'lightbox__note-label';
+        noteLabel.textContent = item[0];
+        var noteValue = document.createElement('span');
+        noteValue.className = 'lightbox__note-value';
+        noteValue.textContent = item[1];
+        noteLine.appendChild(noteLabel);
+        noteLine.appendChild(noteValue);
+        lbNote.appendChild(noteLine);
+      });
+      lbNote.hidden = false;
+    } else {
+      lbNote.textContent = info.notes.join(' · ');
+      lbNote.hidden = !info.notes.length;
+    }
 
     lbPrice.textContent = '';
     info.prices.forEach(function (pr) {
@@ -12174,6 +12286,7 @@ else sizeCoverMedallion();
 
   function lbOpen(el) {
     lbBuild();
+    lb.classList.toggle('lightbox--wine', el.classList.contains('wine-row'));
     lbGroup = lbSiblings(el);
     var at = lbGroup.indexOf(el);
     lbShow(at < 0 ? 0 : at);
