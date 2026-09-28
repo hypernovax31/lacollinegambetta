@@ -4173,18 +4173,34 @@ body * {
             langue: langueClient
           }
         };
+        /* La requête part en mode CORS, PAS en no-cors : une réponse opaque
+           (no-cors) est toujours considérée comme réussie par le navigateur,
+           même quand Google renvoie « Access Denied » parce que le script
+           n'est pas déployé en accès public. Résultat : aucun e-mail, aucun
+           événement d'agenda, et un faux « envoyé » côté client. En CORS,
+           l'échec est visible et le repli FormSubmit prend vraiment le relais. */
         fetch(googleScriptUrl, {
           method: "POST",
-          mode: "no-cors",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(gsPayload)
+          body: JSON.stringify(gsPayload),
+          redirect: "follow",
+          keepalive: true
         })
-          .then(function () {
-            console.log('[Notification Google Apps Script] Envoyée avec succès');
+          .then(function (r) {
+            if (!r || !r.ok) throw new Error('Google Apps Script HTTP ' + (r ? r.status : '?'));
+            return r.text().catch(function () { return ''; });
+          })
+          .then(function (body) {
+            /* Le script déployé « Tout le monde » répond en JSON/texte.
+               Une page de connexion Google signale un déploiement privé. */
+            if (/accounts\.google\.com|Access Denied|Autorisation requise/i.test(body || '')) {
+              throw new Error('Google Apps Script non public (déploiement restreint)');
+            }
+            console.log('[Notification Google Apps Script] Envoyée avec succès', body);
             if (callback) callback(true);
           })
           .catch(function (err) {
-            console.warn('[Notification Google Apps Script error, repli FormSubmit]', err);
+            console.warn('[Notification Google Apps Script indisponible, repli FormSubmit]', err);
             sendViaFormSubmit(callback);
           });
       } else if (web3Key) {
