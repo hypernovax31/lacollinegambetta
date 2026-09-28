@@ -11711,6 +11711,53 @@ else sizeCoverMedallion();
 <script src="assets/js/localized-digits.js?v=202609241200"></script>
 <script src="assets/js/i18n.js?v=202609231200" defer></script>
 
+<!-- ============ Tiroir ouvert : l'intitulé remonte en haut de l'écran ============ -->
+<script>
+/* Quand un tiroir se déplie (plat, cocktail, boisson, bière, vin), la page
+   glisse pour amener l'intitulé cliqué juste sous les bandeaux épinglés :
+   le tiroir et sa photo sont alors lisibles sans défilement manuel.
+   À la fermeture, rien ne bouge. */
+(function () {
+  if (document.documentElement.classList.contains('carte-doc')) return;
+
+  function stickyOffset() {
+    var bar = document.querySelector('.top-controls');
+    var nav = document.getElementById('menu-nav-wrap');
+    var h = 0;
+    if (bar) {
+      var bs = getComputedStyle(bar);
+      if (bs.position === 'sticky' || bs.position === 'fixed') h += bar.offsetHeight;
+    }
+    if (nav) {
+      var navSticky = nav.querySelector('.menu-nav') || nav;
+      var ns = getComputedStyle(navSticky);
+      if (ns.position === 'sticky' || ns.position === 'fixed') h += navSticky.offsetHeight;
+      else h += nav.offsetHeight;
+    }
+    return h;
+  }
+
+  /* Le tiroir s'ouvre avec une transition de hauteur : on attend deux images
+     puis la fin de la transition pour viser la position réellement atteinte. */
+  window.__lcgScrollOpenedIntoView = function (el) {
+    if (!el || !el.getBoundingClientRect) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function go() {
+      var top = Math.max(0, Math.round(
+        el.getBoundingClientRect().top + window.scrollY - stickyOffset() - 10
+      ));
+      if (Math.abs(top - window.scrollY) < 2) return;
+      try {
+        window.scrollTo({ top: top, behavior: reduce ? 'auto' : 'smooth' });
+      } catch (e) {
+        window.scrollTo(0, top);
+      }
+    }
+    requestAnimationFrame(function () { requestAnimationFrame(go); });
+  };
+})();
+</script>
+
 <!-- ============ Assiettes en photo : les fiches deviennent des dépliants ============ -->
 <script>
 /* Chaque fiche porteuse d'un attribut data-photo (entrées, plats, desserts)
@@ -11846,6 +11893,7 @@ else sizeCoverMedallion();
          bouge pas. Écran étroit : tiroir, comme avant. */
       if (lbActive()) { lbOpen(card); return; }
       var open = card.classList.toggle('food-card--open');
+      if (open && window.__lcgScrollOpenedIntoView) window.__lcgScrollOpenedIntoView(card);
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       syncPhotoToggleLabel(btn);
       if (open && !img.src) {
@@ -11920,6 +11968,7 @@ else sizeCoverMedallion();
          bouge pas. Écran étroit : tiroir, comme avant. */
       if (lbActive()) { lbOpen(line); return; }
       var open = line.classList.toggle('hh-line--open');
+      if (open && window.__lcgScrollOpenedIntoView) window.__lcgScrollOpenedIntoView(line);
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       syncPhotoToggleLabel(btn);
       if (open && !img.src) {
@@ -11987,6 +12036,7 @@ else sizeCoverMedallion();
          bouge pas. Écran étroit : tiroir, comme avant. */
       if (lbActive()) { lbOpen(line); return; }
       var open = line.classList.toggle('price-line--open');
+      if (open && window.__lcgScrollOpenedIntoView) window.__lcgScrollOpenedIntoView(line);
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       syncPhotoToggleLabel(btn);
       if (open && !img.src) {
@@ -12070,6 +12120,7 @@ else sizeCoverMedallion();
          bouge pas. Écran étroit : tiroir, comme avant. */
       if (lbActive()) { lbOpen(line); return; }
       var open = line.classList.toggle('beer-row--open');
+      if (open && window.__lcgScrollOpenedIntoView) window.__lcgScrollOpenedIntoView(line);
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       syncPhotoToggleLabel(btn);
       if (open && !img.src) {
@@ -12693,6 +12744,7 @@ else sizeCoverMedallion();
           return;
         }
         var open = row.classList.toggle('wine-row--open');
+        if (open && window.__lcgScrollOpenedIntoView) window.__lcgScrollOpenedIntoView(row);
         row.setAttribute('aria-expanded', open ? 'true' : 'false');
         detail.setAttribute('aria-hidden', open ? 'false' : 'true');
         if (open && photoImg && !photoImg.getAttribute('src')) {
