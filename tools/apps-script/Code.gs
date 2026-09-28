@@ -12,7 +12,13 @@
  * si le mail client est parti, et sinon pourquoi.
  */
 
-var SCRIPT_VERSION = '2026-09-29-d';
+var SCRIPT_VERSION = '2026-09-29-e';
+
+/* ⬇️ REMPLACEZ CETTE ADRESSE PAR UNE VRAIE ADRESSE À VOUS ⬇️
+   C'est elle qui sera utilisée par la fonction de test testReservation.
+   Tant qu'elle vaut exemple.com, aucun message ne peut arriver : ce
+   domaine n'existe pas. */
+var TEST_EMAIL = 'adresse-de-test@exemple.com';
 var RESTAURANT_EMAIL = 'restaurant@lacollinegambetta.com';
 var CALENDAR_ID = 'primary';          // ou l'ID d'un agenda dédié aux réservations
 var DEFAULT_DURATION_MINUTES = 90;    // durée réservée pour une table
@@ -188,8 +194,13 @@ function json(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-/* Test manuel depuis l'éditeur : remplacer l'adresse ci-dessous par une
-   adresse à vous, exécuter, puis vérifier la boîte de réception. */
+/* Test manuel depuis l'éditeur.
+   ATTENTION : ce test ne teste QUE le script, jamais le site web.
+   1. renseignez TEST_EMAIL en haut du fichier avec une vraie adresse ;
+   2. exécutez testReservation ;
+   3. vérifiez la boîte de réception de cette adresse.
+   Si clientEmailUsed contient encore exemple.com, c'est que TEST_EMAIL
+   n'a pas été modifié. */
 function testReservation() {
   var res = doPost({
     postData: {
@@ -197,13 +208,13 @@ function testReservation() {
         restaurantEmail: RESTAURANT_EMAIL,
         restaurantSubject: 'TEST — Nouvelle réservation',
         restaurantBody: 'Ceci est un test de configuration.',
-        clientEmail: 'adresse-de-test@exemple.com',
+        clientEmail: TEST_EMAIL,
         clientSubject: 'TEST — Confirmation de votre réservation',
         clientBody: '',
         details: {
           nom: 'Test Colline',
           telephone: '0000000000',
-          email: 'adresse-de-test@exemple.com',
+          email: TEST_EMAIL,
           date: 'aujourd’hui',
           dateIso: Utilities.formatDate(new Date(), 'Europe/Paris', 'yyyy-MM-dd'),
           heure: '20:00',
