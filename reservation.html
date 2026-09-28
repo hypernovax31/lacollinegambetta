@@ -4214,8 +4214,31 @@ body * {
             if (callback) callback(true);
           })
           .catch(function (err) {
-            console.warn('[Notification Google Apps Script indisponible, repli FormSubmit]', err);
-            sendViaFormSubmit(callback);
+            /* Google Apps Script répond par une redirection 302 vers
+               script.googleusercontent.com. Certains navigateurs refusent
+               cette redirection en mode CORS : la requête est alors bloquée
+               côté lecture, alors que le script l'aurait parfaitement
+               traitée. On la renvoie donc en mode no-cors, qui ne permet pas
+               de lire la réponse mais achemine bien la réservation : c'est
+               ce canal qui déclenche le mail restaurant, le mail client et
+               l'événement d'agenda. FormSubmit ne sert que si Google est
+               réellement injoignable. */
+            console.warn('[Notification Google Apps Script] Lecture CORS impossible, nouvel envoi en no-cors', err);
+            fetch(googleScriptUrl, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: JSON.stringify(gsPayload),
+              keepalive: true
+            })
+              .then(function () {
+                console.log('[Notification Google Apps Script] Envoi no-cors transmis');
+                if (callback) callback(true);
+              })
+              .catch(function (err2) {
+                console.warn('[Notification Google Apps Script injoignable, repli FormSubmit]', err2);
+                sendViaFormSubmit(callback);
+              });
           });
       } else if (web3Key) {
         var web3Payload = {
