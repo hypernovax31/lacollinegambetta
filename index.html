@@ -10206,7 +10206,7 @@ html:not(.carte-doc) .foldall--hint .foldall__ico {
    titre, les tarifs et enfin les textes de dégustation suivent le même
    ordre que dans la visionneuse paysage. */
 html:not(.carte-doc) #vins .wine-table tbody tr.wine-row > td:not(.wine-name):not(.wine-no):not(.wine-detail-cell) {
-  color:#D8B257 !important;
+  color:var(--gold-700) !important;
 }
 html:not(.carte-doc) #vins .wine-detail-section {
   width:100%;
@@ -10227,7 +10227,7 @@ html:not(.carte-doc) .lightbox--wine .lightbox__section {
 }
 html:not(.carte-doc) .lightbox--wine .lightbox__price,
 html:not(.carte-doc) .lightbox--wine .lightbox__tarif {
-  color:#D8B257 !important;
+  color:var(--gold-700) !important;
 }
 html:not(.carte-doc) .lightbox--wine .lightbox__note-label {
   white-space:pre-wrap;
@@ -10296,6 +10296,68 @@ html:not(.carte-doc) .lightbox--wine .lightbox__note-label {
     grid-template-columns:repeat(2,minmax(0,1fr));
     width:100%;
     gap:7px 14px;
+  }
+}
+
+
+/* ===== Popup vin mobile paysage =======================================
+   Sur un téléphone en paysage, la visionneuse utilise la faible hauteur
+   plutôt que de grossir la photo : le panneau d'informations reste à
+   droite, avec le type de vin comme premier repère en haut à gauche. */
+@media screen and (orientation:landscape) and (max-height:560px) and (min-width:721px) {
+  html:not(.carte-doc) .lightbox--wine {
+    padding:10px;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__frame {
+    width:min(920px, calc(100vw - 20px));
+    max-width:min(920px, calc(100vw - 20px));
+    max-height:calc(100vh - 20px);
+    min-height:0;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__img {
+    width:56%;
+    max-width:56%;
+    max-height:100%;
+    object-fit:contain;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__bar {
+    flex:1 1 44%;
+    padding:18px 52px 18px 20px;
+    border-left:1px solid rgba(216,178,87,.34);
+    overflow-y:auto;
+    max-height:none;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__section {
+    order:1;
+    align-self:flex-start;
+    margin:0 0 9px;
+    text-align:left;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__line {
+    order:2;
+    gap:10px;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__title {
+    padding-bottom:8px;
+    font-size:.9rem;
+    line-height:1.25;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__price {
+    gap:5px 12px;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__tarif {
+    padding:4px 0 5px;
+    font-size:.9rem;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__note {
+    order:3;
+    margin-top:12px;
+    padding-top:10px;
+    font-size:.75rem;
+    line-height:1.35;
+  }
+  html:not(.carte-doc) .lightbox--wine .lightbox__note-line {
+    margin-bottom:9px;
   }
 }
 
