@@ -10362,12 +10362,12 @@ html:not(.carte-doc) .lightbox--wine .lightbox__note-label {
 }
 
 /* ===== Format photo commun pour les vins ===============================
-   Les images des plats et desserts reposent sur un cadre 4/3. Les sources
-   de bouteilles peuvent avoir des ratios très différents ; la visionneuse
-   reçoit donc le même cadre fixe et le même centrage, sans couper la bouteille,
-   afin que passer d'un vin à l'autre ne fasse plus varier la taille de la photo. */
+   Les photos de référence de Bordeaux et des Côtes du Rhône sont carrées.
+   Toutes les bouteilles reprennent donc ce format fixe et ce centrage,
+   sans couper la bouteille, afin que passer d'un vin à l'autre ne fasse
+   plus varier la taille de la photo. */
 html:not(.carte-doc) #vins .wine-detail-photo {
-  aspect-ratio:4 / 3;
+  aspect-ratio:1 / 1;
 }
 html:not(.carte-doc) #vins .wine-detail-photo img {
   object-fit:contain;
@@ -10378,7 +10378,7 @@ html:not(.carte-doc) #vins .wine-detail-photo img {
     max-width:56%;
     height:auto;
     max-height:none;
-    aspect-ratio:4 / 3;
+    aspect-ratio:1 / 1;
     align-self:center;
     object-fit:contain;
   }
@@ -10388,7 +10388,7 @@ html:not(.carte-doc) #vins .wine-detail-photo img {
     width:100%;
     max-width:100%;
     height:auto;
-    aspect-ratio:4 / 3;
+    aspect-ratio:1 / 1;
     object-fit:contain;
   }
 }
