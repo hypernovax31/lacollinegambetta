@@ -22,57 +22,93 @@ ROOT = L.ROOT
 SS = 3  # suréchantillonnage
 
 
-def flatten(d: str, steps: int = 10):
-    toks = re.findall(r"[MLCZ]|-?\d+\.?\d*", d)
-    polys, cur, i, pt = [], [], 0, (0.0, 0.0)
+def flatten(d: str, steps: int = 12):
+    """Aplatit un chemin SVG (M, L, H, V, C, Q, Z) en polylignes."""
+    toks = re.findall(r"[MLHVCQZmlhvcqz]|-?\d+\.?\d*(?:e-?\d+)?", d)
+    polys, cur, i = [], [], 0
+    pt = (0.0, 0.0)
+    cmd = "M"
+
+    def bez3(p0, p1, p2, p3):
+        for s in range(1, steps + 1):
+            u = s / steps; v = 1 - u
+            cur.append((v**3*p0[0] + 3*v*v*u*p1[0] + 3*v*u*u*p2[0] + u**3*p3[0],
+                        v**3*p0[1] + 3*v*v*u*p1[1] + 3*v*u*u*p2[1] + u**3*p3[1]))
+
+    def bez2(p0, p1, p2):
+        for s in range(1, steps + 1):
+            u = s / steps; v = 1 - u
+            cur.append((v*v*p0[0] + 2*v*u*p1[0] + u*u*p2[0],
+                        v*v*p0[1] + 2*v*u*p1[1] + u*u*p2[1]))
+
     while i < len(toks):
         t = toks[i]
-        if t == "M":
-            if cur:
-                polys.append(cur)
-            pt = (float(toks[i + 1]), float(toks[i + 2])); cur = [pt]; i += 3
-        elif t == "L":
-            pt = (float(toks[i + 1]), float(toks[i + 2])); cur.append(pt); i += 3
-        elif t == "C":
-            p1 = (float(toks[i + 1]), float(toks[i + 2]))
-            p2 = (float(toks[i + 3]), float(toks[i + 4]))
-            p3 = (float(toks[i + 5]), float(toks[i + 6]))
-            p0 = pt
-            for s in range(1, steps + 1):
-                u = s / steps; v = 1 - u
-                cur.append((v**3*p0[0] + 3*v*v*u*p1[0] + 3*v*u*u*p2[0] + u**3*p3[0],
-                            v**3*p0[1] + 3*v*v*u*p1[1] + 3*v*u*u*p2[1] + u**3*p3[1]))
-            pt = p3; i += 7
-        elif t == "Z":
-            if cur:
-                cur.append(cur[0]); polys.append(cur); cur = []
+        if t.isalpha():
+            cmd = t
             i += 1
+            if cmd in "Zz":
+                if cur:
+                    cur.append(cur[0]); polys.append(cur); cur = []
+                continue
+        if cmd in "Mm":
+            pt = (float(toks[i]), float(toks[i + 1])); i += 2
+            if cur:
+                cur.append(cur[0]); polys.append(cur)
+            cur = [pt]
+            cmd = "L" if cmd == "M" else "l"
+        elif cmd in "Ll":
+            pt = (float(toks[i]), float(toks[i + 1])); i += 2
+            cur.append(pt)
+        elif cmd in "Hh":
+            pt = (float(toks[i]), pt[1]); i += 1
+            cur.append(pt)
+        elif cmd in "Vv":
+            pt = (pt[0], float(toks[i])); i += 1
+            cur.append(pt)
+        elif cmd in "Cc":
+            p1 = (float(toks[i]), float(toks[i + 1]))
+            p2 = (float(toks[i + 2]), float(toks[i + 3]))
+            p3 = (float(toks[i + 4]), float(toks[i + 5])); i += 6
+            bez3(pt, p1, p2, p3); pt = p3
+        elif cmd in "Qq":
+            p1 = (float(toks[i]), float(toks[i + 1]))
+            p2 = (float(toks[i + 2]), float(toks[i + 3])); i += 4
+            bez2(pt, p1, p2); pt = p2
         else:
             i += 1
     if cur:
-        polys.append(cur)
+        cur.append(cur[0]); polys.append(cur)
     return polys
 
 
-def fill(polys, size: int, scale: float) -> np.ndarray:
+def fill(polys, size: int, scale: float, rule: str = "evenodd") -> np.ndarray:
     edges = []
     for p in polys:
         for (x0, y0), (x1, y1) in zip(p, p[1:]):
             if y0 != y1:
-                edges.append((x0 * scale, y0 * scale, x1 * scale, y1 * scale))
+                edges.append((x0 * scale, y0 * scale, x1 * scale, y1 * scale,
+                              1.0 if y1 > y0 else -1.0))
     img = np.zeros((size, size), bool)
     if not edges:
         return img
     E = np.array(edges)
-    x0, y0, x1, y1 = E[:, 0], E[:, 1], E[:, 2], E[:, 3]
+    x0, y0, x1, y1, w = E[:, 0], E[:, 1], E[:, 2], E[:, 3], E[:, 4]
     ymin, ymax = np.minimum(y0, y1), np.maximum(y0, y1)
     for y in range(size):
         yc = y + 0.5
         m = (ymin <= yc) & (ymax > yc)
         if not m.any():
             continue
-        xs = np.sort(x0[m] + (yc - y0[m]) * (x1[m] - x0[m]) / (y1[m] - y0[m]))
-        for a, b in zip(xs[0::2], xs[1::2]):
+        xs = x0[m] + (yc - y0[m]) * (x1[m] - x0[m]) / (y1[m] - y0[m])
+        ordre = np.argsort(xs)
+        xs = xs[ordre]
+        if rule == "nonzero":
+            dirs = w[m][ordre]
+            cumul = np.cumsum(dirs)
+            spans = [(xs[k], xs[k + 1]) for k in range(len(xs) - 1) if cumul[k] != 0]
+        else:
+            spans = list(zip(xs[0::2], xs[1::2]))
+        for a, b in spans:
             ia, ib = int(np.ceil(a - 0.5)), int(np.ceil(b - 0.5))
             if ib > ia:
                 img[y, max(ia, 0):min(ib, size)] = True
@@ -96,7 +132,8 @@ def ramp(stops, t: np.ndarray) -> np.ndarray:
 def render(S: int = 3000) -> Image.Image:
     """Rendu couleur du medaillon sur un canevas carre de S pixels."""
     scale = S / 2000
-    gold = fill(flatten(L.OR_COMPLET), S, scale)
+    gold = fill(flatten(L.OR_FORMES), S, scale)
+    gold |= fill(flatten(L.OR_TEXTE), S, scale, rule="nonzero")
     green = fill(flatten(L.VERT_COMPLET), S, scale)
 
     img = np.zeros((S, S, 4), np.uint8)

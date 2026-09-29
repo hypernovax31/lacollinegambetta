@@ -20,7 +20,8 @@ import lcg_logo as L  # noqa: E402
 ROOT = L.ROOT
 OUT = ROOT / "assets" / "vector"
 
-OR = L.OR_COMPLET
+OR = L.OR_FORMES
+TEXTE = L.OR_TEXTE
 VERT = L.VERT_COMPLET
 GRAINS = L.GRAINS
 ANNEAU = L.OR_ANNEAU
@@ -60,6 +61,7 @@ V("logo-or-violet-relief",
   f"""  <g filter="url(#relief)">
     <circle cx="999.5" cy="999.5" r="999.5" fill="url(#disc)"/>
     <path fill="url(#or)" fill-rule="evenodd" d="{OR}"/>
+    <path fill="url(#or)" d="{TEXTE}"/>
     <path fill="url(#vert)" fill-rule="evenodd" d="{VERT}"/>
     <circle cx="999.5" cy="999.5" r="999.5" fill="url(#bombe)"/>
   </g>""")
@@ -83,6 +85,7 @@ V("logo-or-noir-grave",
   f"""  <circle cx="999.5" cy="999.5" r="999.5" fill="url(#noir)"/>
   <g filter="url(#grave)">
     <path fill="url(#or)" fill-rule="evenodd" d="{OR}"/>
+    <path fill="url(#or)" d="{TEXTE}"/>
     <path fill="url(#or)" fill-rule="evenodd" d="{VERT}"/>
   </g>""")
 
@@ -91,6 +94,7 @@ V("logo-creme-aubergine-plat",
   '    <linearGradient id="rien"><stop offset="0%" stop-color="#4a1145"/></linearGradient>',
   f"""  <circle cx="999.5" cy="999.5" r="999.5" fill="#f5ecd8"/>
   <path fill="#4a1145" fill-rule="evenodd" d="{OR}"/>
+    <path fill="#4a1145" d="{TEXTE}"/>
   <path fill="#2f7d4a" fill-rule="evenodd" d="{VERT}"/>""")
 
 V("logo-or-monochrome-estampe",
@@ -102,6 +106,7 @@ V("logo-or-monochrome-estampe",
     </filter>"""]),
   f"""  <g filter="url(#estampe)">
     <path fill="url(#or)" fill-rule="evenodd" d="{OR}"/>
+    <path fill="url(#or)" d="{TEXTE}"/>
     <path fill="url(#or)" fill-rule="evenodd" d="{VERT}"/>
   </g>""")
 
@@ -117,6 +122,7 @@ V("logo-cuivre-vert-sapin",
   f"""  <g filter="url(#longue)">
     <circle cx="999.5" cy="999.5" r="999.5" fill="url(#sapin)"/>
     <path fill="url(#cuivre)" fill-rule="evenodd" d="{OR}"/>
+    <path fill="url(#cuivre)" d="{TEXTE}"/>
     <path fill="#d7e9c9" fill-rule="evenodd" d="{VERT}"/>
   </g>""")
 
@@ -124,6 +130,7 @@ V("logo-blanc-decoupe",
   "Logo blanc monochrome - decoupe vinyle, sans ombre",
   '    <linearGradient id="rien"><stop offset="0%" stop-color="#ffffff"/></linearGradient>',
   f"""  <path fill="#ffffff" fill-rule="evenodd" d="{OR}"/>
+    <path fill="#ffffff" d="{TEXTE}"/>
   <path fill="#ffffff" fill-rule="evenodd" d="{VERT}"/>""")
 
 V("logo-or-halo-neon",
@@ -138,6 +145,7 @@ V("logo-or-halo-neon",
     </filter>"""]),
   f"""  <g filter="url(#halo)">
     <path fill="url(#or)" fill-rule="evenodd" d="{OR}"/>
+    <path fill="url(#or)" d="{TEXTE}"/>
     <path fill="#8ff0b4" fill-rule="evenodd" d="{VERT}"/>
   </g>""")
 
@@ -153,6 +161,7 @@ V("logo-argent-nuit",
   f"""  <circle cx="999.5" cy="999.5" r="999.5" fill="url(#nuit)"/>
   <g filter="url(#biseau)">
     <path fill="url(#argent)" fill-rule="evenodd" d="{OR}"/>
+    <path fill="url(#argent)" d="{TEXTE}"/>
     <path fill="#9fd8ff" fill-rule="evenodd" d="{VERT}"/>
   </g>""")
 
@@ -176,8 +185,10 @@ V("logo-minimal-negatif-or",
       f"""    <mask id="evide">
       <rect width="2000" height="2000" fill="#fff"/>
       <g fill="#000" fill-rule="evenodd">
-        <path d="{ARBRE}"/><path d="{VERT}"/><path d="{TITRE}"/>
-        <path d="{SOUSTITRE}"/><path d="{GRAINS}"/>
+        <path d="{ARBRE}"/><path d="{VERT}"/><path d="{GRAINS}"/>
+      </g>
+      <g fill="#000">
+        <path d="{TITRE}"/><path d="{SOUSTITRE}"/>
       </g>
     </mask>"""]),
   """  <circle cx="999.5" cy="999.5" r="999.5" fill="url(#or)" mask="url(#evide)"/>""")
@@ -187,7 +198,10 @@ V("logo-minimal-noir-mat",
   '    <linearGradient id="rien"><stop offset="0%" stop-color="#14100f"/></linearGradient>',
   f"""  <rect width="2000" height="2000" fill="#f2ece0"/>
   <g fill="#14100f" fill-rule="evenodd">
-    <path d="{ARBRE}"/><path d="{VERT}"/><path d="{TITRE}"/><path d="{GRAINS}"/>
+    <path d="{ARBRE}"/><path d="{VERT}"/><path d="{GRAINS}"/>
+  </g>
+  <g fill="#14100f">
+    <path d="{TITRE}"/>
   </g>""")
 
 V("logo-minimal-grains",
@@ -208,8 +222,10 @@ V("logo-minimal-cercle-ouvert",
     <path d="M1000 1960 A960 960 0 0 1 100 680"/>
   </g>
   <g fill="url(#or)" fill-rule="evenodd">
-    <path d="{ARBRE}"/><path d="{VERT}"/><path d="{TITRE}"/><path d="{SOUSTITRE}"/>
-    <path d="{GRAINS}"/>
+    <path d="{ARBRE}"/><path d="{VERT}"/><path d="{GRAINS}"/>
+  </g>
+  <g fill="url(#or)">
+    <path d="{TITRE}"/><path d="{SOUSTITRE}"/>
   </g>""")
 
 V("logo-minimal-duotone",
@@ -223,8 +239,8 @@ V("logo-minimal-duotone",
   <g filter="url(#douce)">
     <path fill="url(#or)" fill-rule="evenodd" d="{ARBRE}"/>
     <path fill="#f4efe6" fill-rule="evenodd" d="{VERT}"/>
-    <path fill="#f4efe6" fill-rule="evenodd" d="{TITRE}"/>
-    <path fill="url(#or)" fill-rule="evenodd" d="{SOUSTITRE}"/>
+    <path fill="#f4efe6" d="{TITRE}"/>
+    <path fill="url(#or)" d="{SOUSTITRE}"/>
     <path fill="url(#or)" fill-rule="evenodd" d="{GRAINS}"/>
   </g>
   <circle cx="999.5" cy="999.5" r="975" fill="none" stroke="url(#or)" stroke-width="5" opacity="0.75"/>""")
@@ -250,6 +266,7 @@ def write_masters() -> None:
         f"""  <g id="medaillon">
     <circle cx="999.5" cy="999.5" r="999.5" fill="url(#lcgDisc)"/>
     <path id="or" fill="url(#lcgGold)" fill-rule="evenodd" d="{OR}"/>
+    <path id="texte" fill="url(#lcgGold)" d="{TEXTE}"/>
     <path id="feuillage" fill="url(#lcgGreen)" fill-rule="evenodd" d="{VERT}"/>
   </g>""")
     (ROOT / "assets" / "cover" / "medaillon-logo-noir-brillant.svg").write_text(couleur, encoding="utf-8")
@@ -258,7 +275,8 @@ def write_masters() -> None:
         "La Colline Gambetta - logo medaillon or monochrome",
         L.linear("lcgGoldMono", GOLD),
         f"""  <g id="medaillon-or" fill="url(#lcgGoldMono)" fill-rule="evenodd">
-    <path id="or" d="{OR}"/>
+    <path id="or" fill-rule="evenodd" d="{OR}"/>
+    <path id="texte" fill-rule="nonzero" d="{TEXTE}"/>
     <path id="feuillage" d="{VERT}"/>
   </g>""")
     (ROOT / "assets" / "cover" / "medaillon-logo-or.svg").write_text(mono, encoding="utf-8")

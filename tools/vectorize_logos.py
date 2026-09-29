@@ -15,7 +15,7 @@ from pathlib import Path
 
 import numpy as np
 import potrace
-from PIL import Image
+from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "assets" / "vector"
@@ -37,13 +37,25 @@ def gold_gradient(gid: str) -> str:
     )
 
 
+BLUR = 3.2       # flou d'anticrenelage avant seuillage (px du canevas agrandi)
+ALPHAMAX = 1.334  # lissage maximal des coins
+OPTTOL = 1.0     # tolerance d'optimisation des courbes
+
+
+def smooth(mask_float: np.ndarray) -> np.ndarray:
+    """Flou leger puis seuillage : des bords reguliers, sans marches d'escalier."""
+    img = Image.fromarray((np.clip(mask_float, 0, 1) * 255).astype(np.uint8), "L")
+    img = img.filter(ImageFilter.GaussianBlur(BLUR))
+    return np.asarray(img) >= 128
+
+
 def trace_mask(mask: np.ndarray, turdsize: int = 4) -> str:
     """Trace un masque booléen et renvoie un attribut `d` SVG.
 
     Attention : potracer considère les zéros comme la forme, d'où le `~mask`.
     """
     path = potrace.Bitmap(~mask).trace(
-        turdsize=turdsize, alphamax=1.0, opticurve=True, opttolerance=0.2
+        turdsize=turdsize, alphamax=ALPHAMAX, opticurve=True, opttolerance=OPTTOL
     )
     out = []
     for curve in path:
@@ -67,13 +79,13 @@ def trace_mask(mask: np.ndarray, turdsize: int = 4) -> str:
     return "".join(out)
 
 
-def vectorize_icon(src: Path, dest: Path, title: str, upscale: int = 5) -> None:
+def vectorize_icon(src: Path, dest: Path, title: str, upscale: int = 8) -> None:
     """Vectorise une icône au trait à partir de son canal alpha."""
     im = Image.open(src).convert("RGBA")
     w, h = im.size
     alpha = im.split()[3].resize((w * upscale, h * upscale), Image.LANCZOS)
-    mask = np.asarray(alpha) >= 128
-    d = trace_mask(mask, turdsize=upscale * 2)
+    mask = smooth(np.asarray(alpha).astype(np.float32) / 255.0)
+    d = trace_mask(mask, turdsize=upscale * upscale)
 
     vw, vh = w * upscale, h * upscale
     side = max(vw, vh)
