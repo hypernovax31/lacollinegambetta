@@ -194,20 +194,21 @@ V("logo-minimal-negatif-or",
   """  <circle cx="999.5" cy="999.5" r="999.5" fill="url(#or)" mask="url(#evide)"/>""")
 
 V("logo-minimal-noir-mat",
-  "Minimal - encre noire mate sur creme, sans anneau",
+  "Minimal - encre noire mate sur creme, double filet conserve",
   '    <linearGradient id="rien"><stop offset="0%" stop-color="#14100f"/></linearGradient>',
   f"""  <rect width="2000" height="2000" fill="#f2ece0"/>
   <g fill="#14100f" fill-rule="evenodd">
-    <path d="{ARBRE}"/><path d="{VERT}"/><path d="{GRAINS}"/>
+    <path d="{ANNEAU}"/><path d="{ARBRE}"/><path d="{VERT}"/><path d="{GRAINS}"/>
   </g>
   <g fill="#14100f">
     <path d="{TITRE}"/>
   </g>""")
 
 V("logo-minimal-grains",
-  "Minimal - arbre, ligne d'horizon et trois grains, monochrome",
+  "Minimal - arbre, ligne d'horizon et trois grains, filet fin",
   L.linear("or", GOLD),
   f"""  <g fill="url(#or)" fill-rule="evenodd">
+    <path d="{ANNEAU_FIN}"/>
     <path d="{ARBRE}"/>
     <path d="{VERT}"/>
     <path d="{L.beans_trio(cx=1000, cy=1560, scale=1.45)}"/>
