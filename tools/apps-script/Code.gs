@@ -12,18 +12,13 @@
  * si le mail client est parti, et sinon pourquoi.
  */
 
-var SCRIPT_VERSION = '2026-09-29-k';
+var SCRIPT_VERSION = '2026-09-29-l';
 
 /* Bloc de diagnostic en bas du mail reçu par le restaurant.
    false = mails propres, sans aucune mention technique (réglage normal).
    true  = à n'activer que le temps d'un dépannage. */
 var DIAGNOSTIC = false;
 
-/* ⬇️ REMPLACEZ CETTE ADRESSE PAR UNE VRAIE ADRESSE À VOUS ⬇️
-   C'est elle qui sera utilisée par la fonction de test testReservation.
-   Tant qu'elle vaut exemple.com, aucun message ne peut arriver : ce
-   domaine n'existe pas. */
-var TEST_EMAIL = 'adresse-de-test@exemple.com';
 var RESTAURANT_EMAIL = 'restaurant@lacollinegambetta.com';
 var CALENDAR_ID = 'primary';          // ou l'ID d'un agenda dédié aux réservations
 var DEFAULT_DURATION_MINUTES = 90;    // durée réservée pour une table
@@ -221,90 +216,14 @@ function cleanEmail(value) {
 }
 
 /* Vérification du déploiement : ouvrir l'URL /exec dans un navigateur.
- *
- * Deux diagnostics disponibles sans rien installer :
- *   /exec                         → version du script actuellement déployée
- *   /exec?selftest=mon@mail.com   → envoie un vrai mail de test à cette adresse
- *                                   et renvoie le résultat de l'envoi
- */
-function doGet(e) {
-  var params = (e && e.parameter) || {};
-  var cible = cleanEmail(params.selftest);
-
-  if (!cible) {
-    return json({ ok: true, service: 'LCG reservations', version: SCRIPT_VERSION });
-  }
-
-  /* style=plain    : message nu, strictement identique à un mail écrit à la main
-     style=branded  : nom affiché + Reply-To + HTML (comportement normal)
-     Permet de savoir lequel de ces éléments déclenche le filtrage. */
-  var style = String(params.style || 'branded').toLowerCase();
-  var res = {
-    ok: true, service: 'LCG reservations', version: SCRIPT_VERSION,
-    selftest: cible, style: style, sent: false, error: ''
-  };
-  try {
-    var corps = 'Ceci est un test technique du script de réservation (' + style + ').\n\n' +
-      'Si vous recevez ce message, l\u2019envoi automatique fonctionne.';
-    var sujet = 'Test envoi client — La Colline Gambetta';
-
-    if (style === 'plain') {
-      res.mode = envoyerMail(cible, sujet, corps, {});
-    } else {
-      res.mode = envoyerMail(cible, sujet, corps, {
-        name: 'La Colline Gambetta',
-        replyTo: RESTAURANT_EMAIL
-      });
-    }
-    res.aliasDisponible = aliasRestaurant() ? true : false;
-    res.sent = true;
-    res.quotaRestant = MailApp.getRemainingDailyQuota();
-  } catch (err) {
-    res.ok = false;
-    res.error = String(err);
-  }
-  return json(res);
+   Affiche uniquement la version publiée. Aucun envoi de mail n'est
+   déclenché par cette adresse. */
+function doGet() {
+  return json({ ok: true, service: 'LCG reservations', version: SCRIPT_VERSION });
 }
 
 function json(obj) {
   return ContentService
     .createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
-}
-
-/* Test manuel depuis l'éditeur.
-   ATTENTION : ce test ne teste QUE le script, jamais le site web.
-   1. renseignez TEST_EMAIL en haut du fichier avec une vraie adresse ;
-   2. exécutez testReservation ;
-   3. vérifiez la boîte de réception de cette adresse.
-   Si clientEmailUsed contient encore exemple.com, c'est que TEST_EMAIL
-   n'a pas été modifié. */
-function testReservation() {
-  var res = doPost({
-    postData: {
-      contents: JSON.stringify({
-        restaurantEmail: RESTAURANT_EMAIL,
-        restaurantSubject: 'TEST — Nouvelle réservation',
-        restaurantBody: 'Ceci est un test de configuration.',
-        clientEmail: TEST_EMAIL,
-        clientSubject: 'TEST — Confirmation de votre réservation',
-        clientBody: '',
-        details: {
-          nom: 'Test Colline',
-          telephone: '0000000000',
-          email: TEST_EMAIL,
-          date: 'aujourd’hui',
-          dateIso: Utilities.formatDate(new Date(), 'Europe/Paris', 'yyyy-MM-dd'),
-          heure: '20:00',
-          heureIso: '20:00',
-          couverts: '2 personnes',
-          couvertsNb: 2,
-          preference: 'Salle',
-          message: 'Test automatique',
-          langue: 'fr'
-        }
-      })
-    }
-  });
-  Logger.log(res.getContent());
 }

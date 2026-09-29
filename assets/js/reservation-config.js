@@ -14,6 +14,6 @@ window.LCG_RESTAURANT_EMAIL = 'restaurant@lacollinegambetta.com';
 window.LCG_EMAIL_CONFIG = {
   provider: 'google_script',   // 'google_script', 'formsubmit', ou 'web3forms'
   restaurantEmail: 'restaurant@lacollinegambetta.com',
-  googleScriptUrl: 'https://script.google.com/macros/s/AKfycbzfKfnh2qv8p-l7kgpLRgEZYKkMcbiaGYTBmmzsbLFIQKykxTLlXPAgLMDq01RenM0/exec',
+  googleScriptUrl: 'https://script.google.com/macros/s/AKfycbwbfIXb8hDru30kgS-vzj7hdmu6b2bGnRvpFLeUYcdkNnSRxp_mwZsmDjz3QSQGdKQ/exec',
   web3formsKey: ''
 };
