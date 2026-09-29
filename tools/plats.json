@@ -285,15 +285,15 @@
     {
       "name": "Tiramisu",
       "price": "7,20",
-      "notes": [],
+      "notes": [
+        "Glace vanille"
+      ],
       "slug": "tiramisu"
     },
     {
       "name": "Tarte aux pommes",
       "price": "7,50",
-      "notes": [
-        "Glace vanille"
-      ],
+      "notes": [],
       "slug": "tarte-aux-pommes"
     },
     {
