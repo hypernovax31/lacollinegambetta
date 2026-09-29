@@ -12,7 +12,7 @@
  * si le mail client est parti, et sinon pourquoi.
  */
 
-var SCRIPT_VERSION = '2026-09-29-m';
+var SCRIPT_VERSION = '2026-09-29-n';
 
 /* Bloc de diagnostic en bas du mail reçu par le restaurant.
    false = mails propres, sans aucune mention technique (réglage normal).
@@ -20,9 +20,9 @@ var SCRIPT_VERSION = '2026-09-29-m';
 var DIAGNOSTIC = false;
 
 /* Copie cachée du mail de confirmation client vers la boîte du restaurant.
-   Sert de preuve d'envoi : si cette copie arrive, le message est bien parti
-   de Google ; si elle n'arrive pas, l'envoi échoue en amont. */
-var COPIE_CLIENT_AU_RESTAURANT = true;
+   false = le client reçoit sa confirmation seul (réglage normal).
+   true  = utile uniquement pour prouver un envoi en cas de panne. */
+var COPIE_CLIENT_AU_RESTAURANT = false;
 
 var RESTAURANT_EMAIL = 'restaurant@lacollinegambetta.com';
 var CALENDAR_ID = 'primary';          // ou l'ID d'un agenda dédié aux réservations
