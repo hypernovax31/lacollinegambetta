@@ -12,7 +12,7 @@
  * si le mail client est parti, et sinon pourquoi.
  */
 
-var SCRIPT_VERSION = '2026-09-29-h';
+var SCRIPT_VERSION = '2026-09-29-i';
 
 /* Bloc de diagnostic en bas du mail reçu par le restaurant.
    false = mails propres, sans aucune mention technique (réglage normal).
@@ -211,14 +211,15 @@ function doGet(e) {
 
   var res = { ok: true, service: 'LCG reservations', version: SCRIPT_VERSION, selftest: cible, sent: false, error: '' };
   try {
-    MailApp.sendEmail({
-      to: cible,
-      subject: 'Test envoi client — La Colline Gambetta',
-      body: 'Ceci est un test technique du script de réservation.\n\nSi vous recevez ce message, l\u2019envoi des mails clients fonctionne.',
-      name: 'La Colline Gambetta',
-      replyTo: RESTAURANT_EMAIL
-    });
+    var corps = 'Ceci est un test technique du script de réservation.\n\n' +
+      'Si vous recevez ce message, l\u2019envoi des mails clients fonctionne.';
+    var opts = { name: 'La Colline Gambetta', replyTo: RESTAURANT_EMAIL };
+    var alias = aliasRestaurant();
+    if (alias) opts.from = alias;
+    GmailApp.sendEmail(cible, 'Test envoi client — La Colline Gambetta', corps, opts);
     res.sent = true;
+    res.envoyeDepuis = alias || expediteur();
+    res.aliasDisponible = alias ? true : false;
     res.quotaRestant = MailApp.getRemainingDailyQuota();
   } catch (err) {
     res.ok = false;
