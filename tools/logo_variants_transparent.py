@@ -30,6 +30,11 @@ VERT = L.VERT_COMPLET
 GRAINS = L.GRAINS
 
 GOLD = L.GOLD_STOPS
+
+TXT_1 = text_path("BAR \u00b7 RESTAURANT", 1000, 1490, 50, largeur=860)
+TXT_2 = text_path("BAR \u00b7 RESTAURANT", 1000, 1470, 48, largeur=820)
+TXT_3 = text_path("BAR \u00b7 RESTAURANT", 1000, 1500, 52, largeur=900)
+TXT_4 = text_path("BAR \u00b7 RESTAURANT", 1000, 1550, 54, largeur=920)
 ENCRE = "#14100f"
 
 
@@ -51,24 +56,36 @@ FICHIERS: dict[str, str] = {}
 
 
 # ---------------------------------------------------------------------------
-# 1. Tampon circulaire : textes courbés le long du cadre
+# 1. Tampon circulaire : textes courbés dans une bande dédiée
+#    Les rayons sont calculés pour qu'aucune lettre ne touche les filets
+#    ni le dessin central.
 # ---------------------------------------------------------------------------
-haut = text_on_arc("LA COLLINE GAMBETTA", 1000, 1000, 800, 118, angle_centre=-90,
-                   tracking=26, sens=1)
-bas = text_on_arc("BAR \u00b7 RESTAURANT", 1000, 1000, 810, 78, angle_centre=90,
-                  tracking=30, sens=-1)
-arbre_centre = ('<g transform="translate(1000,1080) scale(1.06) translate(-1000,-700)">'
-                f'<path fill-rule="evenodd" d="{ARBRE}"/>'
-                f'<path fill-rule="evenodd" d="{VERT}"/></g>')
+FILET_EXT = L.annulus(990, 982)          # filet extérieur
+FILET_INT = L.annulus(700, 693)          # filet intérieur, borne la bande de texte
+HAUT = text_on_arc("LA COLLINE GAMBETTA", 1000, 1000, 792, 112,
+                   angle_centre=-90, tracking=30, sens=1)
+BAS = text_on_arc("BAR \u00b7 RESTAURANT", 1000, 1000, 902, 76,
+                  angle_centre=90, tracking=34, sens=-1)
+LOSANGE_G = L.polygon_path(4, 30, rotation=0, cx=1000 - 845, cy=1000)
+LOSANGE_D = L.polygon_path(4, 30, rotation=0, cx=1000 + 845, cy=1000)
+EMBLEME = (
+    '<g transform="translate(1000,930) scale(0.78) translate(-1000,-705)">'
+    f'<path fill-rule="evenodd" d="{ARBRE}"/>'
+    f'<path fill-rule="evenodd" d="{VERT}"/></g>'
+    '<g transform="translate(1000,1310) scale(1.15) translate(-1000,-1778)">'
+    f'<path fill-rule="evenodd" d="{GRAINS}"/></g>'
+)
 FICHIERS["logo-t-tampon-circulaire"] = doc(
-    "Minimal transparent - tampon circulaire, textes courbes",
+    "Minimal transparent - tampon circulaire, textes courbes dans leur bande",
     L.linear("or", GOLD),
     f"""  <g fill="url(#or)">
-    <path fill-rule="evenodd" d="{ANNEAU}"/>
-    {arbre_centre}
-    <path d="{haut}"/>
-    <path d="{bas}"/>
-    <g transform="translate(0,-236)"><path fill-rule="evenodd" d="{GRAINS}"/></g>
+    <path fill-rule="evenodd" d="{FILET_EXT}"/>
+    <path fill-rule="evenodd" d="{FILET_INT}"/>
+    <path d="{HAUT}"/>
+    <path d="{BAS}"/>
+    <path d="{LOSANGE_G}"/>
+    <path d="{LOSANGE_D}"/>
+    {EMBLEME}
   </g>""")
 
 
@@ -202,6 +219,134 @@ FICHIERS["logo-t-blanc-pur"] = doc(
     <path d="{OR_TEXTE}"/>
     <path fill-rule="evenodd" d="{VERT}"/>
   </g>""")
+
+
+
+
+# ---------------------------------------------------------------------------
+# 9. Anneau négatif : le nom est évidé dans un large bandeau doré
+# ---------------------------------------------------------------------------
+BANDEAU = L.annulus(990, 745)
+HAUT_N = text_on_arc("LA COLLINE GAMBETTA", 1000, 1000, 820, 108,
+                     angle_centre=-90, tracking=28, sens=1)
+BAS_N = text_on_arc("BAR \u00b7 RESTAURANT", 1000, 1000, 915, 74,
+                    angle_centre=90, tracking=32, sens=-1)
+FICHIERS["logo-t-anneau-negatif"] = doc(
+    "Minimal transparent - nom evide dans un bandeau dore",
+    "\n".join([
+        L.linear("or", GOLD),
+        f"""    <mask id="nom">
+      <path fill="#fff" fill-rule="evenodd" d="{BANDEAU}"/>
+      <g fill="#000">
+        <path d="{HAUT_N}"/>
+        <path d="{BAS_N}"/>
+        <path d="{L.polygon_path(4, 26, 0, 1000 - 867, 1000)}"/>
+        <path d="{L.polygon_path(4, 26, 0, 1000 + 867, 1000)}"/>
+      </g>
+    </mask>"""]),
+    f"""  <path fill="url(#or)" fill-rule="evenodd" d="{BANDEAU}" mask="url(#nom)"/>
+  <g fill="url(#or)">
+    <g transform="translate(1000,930) scale(0.74) translate(-1000,-705)">
+      <path fill-rule="evenodd" d="{ARBRE}"/>
+      <path fill-rule="evenodd" d="{VERT}"/>
+    </g>
+    <g transform="translate(1000,1290) scale(1.1) translate(-1000,-1778)">
+      <path fill-rule="evenodd" d="{GRAINS}"/>
+    </g>
+  </g>""")
+
+
+# ---------------------------------------------------------------------------
+# 10. Anneau segmenté : cadre en tirets, écriture contemporaine
+# ---------------------------------------------------------------------------
+FICHIERS["logo-t-anneau-segmente"] = doc(
+    "Minimal transparent - anneau segmente",
+    L.linear("or", GOLD),
+    f"""  <g fill="url(#or)" fill-rule="evenodd">
+    <path d="{L.dashed_ring(992, 968, n=72, ratio=0.52)}"/>
+    <path d="{L.annulus(930, 925)}"/>
+    <g transform="translate(1000,880) scale(0.82) translate(-1000,-705)">
+      <path d="{ARBRE}"/>
+      <path d="{VERT}"/>
+    </g>
+    <g transform="translate(1000,1600) scale(1.05) translate(-1000,-1778)">
+      <path d="{GRAINS}"/>
+    </g>
+  </g>
+  <g fill="url(#or)">
+    <path d="{text_path("LA COLLINE GAMBETTA", 1000, 1360, 104, largeur=1420)}"/>
+    <path d="{TXT_1}"/>
+  </g>""")
+
+
+# ---------------------------------------------------------------------------
+# 11. Cadre hexagonal : géométrie contemporaine
+# ---------------------------------------------------------------------------
+FICHIERS["logo-t-hexagone"] = doc(
+    "Minimal transparent - cadre hexagonal",
+    L.linear("or", GOLD),
+    f"""  <g fill="url(#or)" fill-rule="evenodd">
+    <path d="{L.polygon_path(6, 975, rotation=-90) + L.polygon_path(6, 961, rotation=-90)}"/>
+    <path d="{L.polygon_path(6, 905, rotation=-90) + L.polygon_path(6, 899, rotation=-90)}"/>
+    <g transform="translate(1000,880) scale(0.8) translate(-1000,-705)">
+      <path d="{ARBRE}"/>
+      <path d="{VERT}"/>
+    </g>
+    <g transform="translate(1000,1580) scale(1.05) translate(-1000,-1778)">
+      <path d="{GRAINS}"/>
+    </g>
+  </g>
+  <g fill="url(#or)">
+    <path d="{text_path("LA COLLINE GAMBETTA", 1000, 1350, 100, largeur=1360)}"/>
+    <path d="{TXT_2}"/>
+  </g>""")
+
+
+# ---------------------------------------------------------------------------
+# 12. Cadre carré à coins arrondis : signalétique moderne
+# ---------------------------------------------------------------------------
+FICHIERS["logo-t-carre-arrondi"] = doc(
+    "Minimal transparent - cadre carre a coins arrondis",
+    L.linear("or", GOLD),
+    f"""  <g fill="url(#or)" fill-rule="evenodd">
+    <path d="{L.rounded_rect(60, 60, 1880, 1880, 260) + L.rounded_rect(74, 74, 1852, 1852, 248)}"/>
+    <path d="{L.rounded_rect(140, 140, 1720, 1720, 210) + L.rounded_rect(146, 146, 1708, 1708, 205)}"/>
+    <g transform="translate(1000,870) scale(0.84) translate(-1000,-705)">
+      <path d="{ARBRE}"/>
+      <path d="{VERT}"/>
+    </g>
+    <g transform="translate(1000,1620) scale(1.1) translate(-1000,-1778)">
+      <path d="{GRAINS}"/>
+    </g>
+  </g>
+  <g fill="url(#or)">
+    <path d="{text_path("LA COLLINE GAMBETTA", 1000, 1370, 108, largeur=1470)}"/>
+    <path d="{TXT_3}"/>
+  </g>""")
+
+
+# ---------------------------------------------------------------------------
+# 13. Couronne d'arc : arc segmenté au-dessus, composition ouverte
+# ---------------------------------------------------------------------------
+FICHIERS["logo-t-arc-couronne"] = doc(
+    "Minimal transparent - couronne d'arc segmentee, composition ouverte",
+    L.linear("or", GOLD),
+    f"""  <g fill="url(#or)" fill-rule="evenodd">
+    <path d="{L.annulus_sector(988, 952, -170, -10)}"/>
+    <path d="{L.dashed_ring(902, 888, n=44, ratio=0.5, depart=-165)}"/>
+    <g transform="translate(1000,900) scale(0.86) translate(-1000,-705)">
+      <path d="{ARBRE}"/>
+      <path d="{VERT}"/>
+    </g>
+    <g transform="translate(1000,1700) scale(1.2) translate(-1000,-1778)">
+      <path d="{GRAINS}"/>
+    </g>
+  </g>
+  <g fill="url(#or)">
+    <path d="{text_path("LA COLLINE GAMBETTA", 1000, 1410, 116, largeur=1520)}"/>
+    <path d="{TXT_4}"/>
+  </g>"""
+)
 
 
 def main() -> None:

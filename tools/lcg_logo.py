@@ -196,3 +196,73 @@ if __name__ == "__main__":
     for nom, d in [("anneau", OR_ANNEAU), ("arbre", OR_ARBRE), ("titre", OR_TITRE),
                    ("soustitre", OR_SOUSTITRE), ("grains", GRAINS), ("vert", VERT_COMPLET)]:
         print(f"{nom:11s} {len(_subpaths(d)):3d} contours, {len(d):7d} caracteres")
+
+
+# ---------------------------------------------------------------------------
+# Primitives géométriques supplémentaires (toutes en courbes de Bézier)
+# ---------------------------------------------------------------------------
+def arc_points(cx: float, cy: float, r: float, a0: float, a1: float) -> list[str]:
+    """Suite de segments de Bézier approchant un arc de cercle (radians)."""
+    out = []
+    n = max(1, int(abs(a1 - a0) / (math.pi / 2)) + 1)
+    pas = (a1 - a0) / n
+    k = 4 / 3 * math.tan(pas / 4)
+    for i in range(n):
+        t0 = a0 + i * pas
+        t1 = t0 + pas
+        x0, y0 = cx + r * math.cos(t0), cy + r * math.sin(t0)
+        x1, y1 = cx + r * math.cos(t1), cy + r * math.sin(t1)
+        c1 = (x0 - k * r * math.sin(t0), y0 + k * r * math.cos(t0))
+        c2 = (x1 + k * r * math.sin(t1), y1 - k * r * math.cos(t1))
+        out.append("C%.2f %.2f %.2f %.2f %.2f %.2f" % (c1[0], c1[1], c2[0], c2[1], x1, y1))
+    return out
+
+
+def annulus_sector(r_ext: float, r_int: float, a0_deg: float, a1_deg: float,
+                   cx: float = CX, cy: float = CY) -> str:
+    """Secteur d'anneau plein, borné par deux arcs et deux segments droits."""
+    a0, a1 = math.radians(a0_deg), math.radians(a1_deg)
+    d = ["M%.2f %.2f" % (cx + r_ext * math.cos(a0), cy + r_ext * math.sin(a0))]
+    d += arc_points(cx, cy, r_ext, a0, a1)
+    d.append("L%.2f %.2f" % (cx + r_int * math.cos(a1), cy + r_int * math.sin(a1)))
+    d += arc_points(cx, cy, r_int, a1, a0)
+    d.append("Z")
+    return "".join(d)
+
+
+def dashed_ring(r_ext: float, r_int: float, n: int = 48, ratio: float = 0.5,
+                depart: float = 0.0) -> str:
+    """Anneau segmenté : n tirets pleins régulièrement répartis."""
+    pas = 360 / n
+    return "".join(
+        annulus_sector(r_ext, r_int, depart + i * pas,
+                       depart + i * pas + pas * ratio)
+        for i in range(n)
+    )
+
+
+def rounded_rect(x: float, y: float, w: float, h: float, r: float) -> str:
+    """Rectangle à coins arrondis, coins en quarts de cercle de Bézier."""
+    k = r * K
+    return (
+        f"M{x + r:.2f} {y:.2f}L{x + w - r:.2f} {y:.2f}"
+        f"C{x + w - r + k:.2f} {y:.2f} {x + w:.2f} {y + r - k:.2f} {x + w:.2f} {y + r:.2f}"
+        f"L{x + w:.2f} {y + h - r:.2f}"
+        f"C{x + w:.2f} {y + h - r + k:.2f} {x + w - r + k:.2f} {y + h:.2f} {x + w - r:.2f} {y + h:.2f}"
+        f"L{x + r:.2f} {y + h:.2f}"
+        f"C{x + r - k:.2f} {y + h:.2f} {x:.2f} {y + h - r + k:.2f} {x:.2f} {y + h - r:.2f}"
+        f"L{x:.2f} {y + r:.2f}"
+        f"C{x:.2f} {y + r - k:.2f} {x + r - k:.2f} {y:.2f} {x + r:.2f} {y:.2f}Z"
+    )
+
+
+def polygon_path(n: int, r: float, rotation: float = -90.0,
+                 cx: float = CX, cy: float = CY) -> str:
+    """Polygone régulier à n côtés."""
+    pts = []
+    for i in range(n):
+        a = math.radians(rotation + i * 360 / n)
+        pts.append((cx + r * math.cos(a), cy + r * math.sin(a)))
+    d = "M%.2f %.2f" % pts[0]
+    d += "".join("L%.2f %.2f" % p for p in pts[1:])
+    return d + "Z"
