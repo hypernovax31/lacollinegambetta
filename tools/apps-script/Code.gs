@@ -12,7 +12,7 @@
  * si le mail client est parti, et sinon pourquoi.
  */
 
-var SCRIPT_VERSION = '2026-09-29-j';
+var SCRIPT_VERSION = '2026-09-29-k';
 
 /* Bloc de diagnostic en bas du mail reçu par le restaurant.
    false = mails propres, sans aucune mention technique (réglage normal).
@@ -68,7 +68,10 @@ function doPost(e) {
     };
     var replyTo = cleanEmail(d.email);
     if (replyTo) optionsRestaurant.replyTo = replyTo;
-    MailApp.sendEmail(optionsRestaurant);
+    report.modeRestaurant = envoyerMail(
+      optionsRestaurant.to, optionsRestaurant.subject, optionsRestaurant.body,
+      { name: optionsRestaurant.name, replyTo: optionsRestaurant.replyTo }
+    );
     report.restaurantMail = true;
   } catch (errResto) {
     report.ok = false;
@@ -88,19 +91,15 @@ function doPost(e) {
       /* GmailApp plutôt que MailApp : le message est archivé dans
          « Messages envoyés » du compte, ce qui permet de vérifier
          visuellement l'envoi et de voir un éventuel retour d'erreur. */
-      var optionsClient = {
-        name: 'La Colline Gambetta',
-        replyTo: RESTAURANT_EMAIL,
-        htmlBody: corps.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\n/g, '<br>')
-      };
-      var alias = aliasRestaurant();
-      if (alias) optionsClient.from = alias;
-      report.envoyeDepuis = alias || expediteur();
-      GmailApp.sendEmail(
+      report.modeClient = envoyerMail(
         clientEmail,
         payload.clientSubject || 'Confirmation de votre réservation — La Colline Gambetta',
         corps,
-        optionsClient
+        {
+          name: 'La Colline Gambetta',
+          replyTo: RESTAURANT_EMAIL,
+          htmlBody: corps.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\n/g, '<br>')
+        }
       );
       report.clientMail = true;
       report.expediteur = expediteur();
@@ -163,6 +162,33 @@ function corpsClientParDefaut(d) {
   ].join('\n');
 }
 
+/* Envoi résilient.
+   GmailApp permet d'expédier sous l'alias du restaurant et archive le
+   message dans « Messages envoyés », mais il réclame une autorisation
+   Gmail supplémentaire. Si cette autorisation n'a pas été accordée, on
+   retombe automatiquement sur MailApp, qui fonctionne sans elle.
+   Le mode d'envoi réellement utilisé est renvoyé pour diagnostic. */
+function envoyerMail(destinataire, sujet, corps, options) {
+  var opts = options || {};
+  try {
+    var gmailOpts = {};
+    if (opts.name) gmailOpts.name = opts.name;
+    if (opts.replyTo) gmailOpts.replyTo = opts.replyTo;
+    if (opts.htmlBody) gmailOpts.htmlBody = opts.htmlBody;
+    var alias = aliasRestaurant();
+    if (alias) gmailOpts.from = alias;
+    GmailApp.sendEmail(destinataire, sujet, corps, gmailOpts);
+    return 'gmail:' + (alias || expediteur());
+  } catch (errGmail) {
+    var mailOpts = { to: destinataire, subject: sujet, body: corps };
+    if (opts.name) mailOpts.name = opts.name;
+    if (opts.replyTo) mailOpts.replyTo = opts.replyTo;
+    if (opts.htmlBody) mailOpts.htmlBody = opts.htmlBody;
+    MailApp.sendEmail(mailOpts);
+    return 'mailapp:' + expediteur();
+  }
+}
+
 /* Si le compte qui exécute le script possède restaurant@lacollinegambetta.com
    comme alias « Envoyer des e-mails en tant que », on expédie sous cette
    adresse : le message est alors signé par le domaine (SPF + DKIM) et cesse
@@ -223,16 +249,14 @@ function doGet(e) {
     var sujet = 'Test envoi client — La Colline Gambetta';
 
     if (style === 'plain') {
-      GmailApp.sendEmail(cible, sujet, corps);
-      res.envoyeDepuis = expediteur();
+      res.mode = envoyerMail(cible, sujet, corps, {});
     } else {
-      var opts = { name: 'La Colline Gambetta', replyTo: RESTAURANT_EMAIL };
-      var alias = aliasRestaurant();
-      if (alias) opts.from = alias;
-      GmailApp.sendEmail(cible, sujet, corps, opts);
-      res.envoyeDepuis = alias || expediteur();
-      res.aliasDisponible = alias ? true : false;
+      res.mode = envoyerMail(cible, sujet, corps, {
+        name: 'La Colline Gambetta',
+        replyTo: RESTAURANT_EMAIL
+      });
     }
+    res.aliasDisponible = aliasRestaurant() ? true : false;
     res.sent = true;
     res.quotaRestant = MailApp.getRemainingDailyQuota();
   } catch (err) {
