@@ -34,10 +34,13 @@
 </head>
 <body>
 <h1>Bibliothèque vectorielle</h1>
-<p class="sub">La Colline Gambetta — tous les fichiers sont des SVG vectoriels, canevas 2000 × 2000 px, soit 169,3 mm à 300 dpi, agrandissables sans perte.</p>
+<p class="sub">La Colline Gambetta — tous les fichiers sont des SVG vectoriels, canevas 2000 × 2000 px, soit 169,3 mm à 300 dpi, agrandissables sans perte. Le trio de feuilles du bas est désormais un trio de grains de café.</p>
 
 <h2>Modèles de logo principal</h2>
 <div class="grid" id="logos"></div>
+
+<h2>Série minimaliste</h2>
+<div class="grid" id="minimal"></div>
 
 <h2>Arabesques du médaillon</h2>
 <div class="grid" id="arabesques"></div>
@@ -57,6 +60,14 @@ const logos = [
   ["logo-creme-aubergine-plat.svg","Crème et aubergine","style plat mat, sans ombre", false],
   ["logo-or-monochrome-estampe.svg","Or monochrome","relief estampé, fond transparent", true],
   ["logo-blanc-decoupe.svg","Blanc monochrome","découpe vinyle, sans ombre", true],
+];
+const minimal = [
+  ["logo-minimal-epure.svg","Épure","filet fin, arbre et grains, sans texte", true],
+  ["logo-minimal-negatif-or.svg","Négatif or","disque plein, motifs évidés", true],
+  ["logo-minimal-noir-mat.svg","Encre noire mate","sur crème, sans anneau", false],
+  ["logo-minimal-grains.svg","Grains","arbre, ligne d’horizon, trois grains", true],
+  ["logo-minimal-cercle-ouvert.svg","Cercle ouvert","anneau interrompu", true],
+  ["logo-minimal-duotone.svg","Duotone anthracite","or et blanc cassé, ombre très douce", true],
 ];
 const menus = [
   ["menu-duo.svg","Menu Duo",""],
@@ -79,6 +90,7 @@ function card([file,name,desc,glossy]) {
   </figure>`;
 }
 document.getElementById('logos').innerHTML = logos.map(card).join('');
+document.getElementById('minimal').innerHTML = minimal.map(card).join('');
 document.getElementById('menus').innerHTML = menus.map(m => card([...m,true])).join('');
 document.getElementById('arabesques').innerHTML = arabesques.map(card).join('');
 </script>

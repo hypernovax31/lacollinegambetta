@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="2000" height="2000" fill="none" role="img" aria-label="Arabesques du medaillon La Colline Gambetta">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="2000" height="2000" fill="none" role="img" aria-label="Arabesques du medaillon">
   <title>Arabesques du medaillon - La Colline Gambetta</title>
-  <desc>Encadrement du medaillon, trace vectoriel, canevas 2000x2000 px (169,3 mm a 300 dpi).</desc>
+  <desc>Encadrement du medaillon, formes vectorielles, canevas 2000x2000 px (169,3 mm a 300 dpi).</desc>
   <defs>
     <linearGradient id="or" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#bf953f"/>
