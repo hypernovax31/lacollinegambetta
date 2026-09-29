@@ -12,7 +12,7 @@
  * si le mail client est parti, et sinon pourquoi.
  */
 
-var SCRIPT_VERSION = '2026-09-29-g';
+var SCRIPT_VERSION = '2026-09-29-h';
 
 /* Bloc de diagnostic en bas du mail reçu par le restaurant.
    false = mails propres, sans aucune mention technique (réglage normal).
@@ -88,15 +88,19 @@ function doPost(e) {
       /* GmailApp plutôt que MailApp : le message est archivé dans
          « Messages envoyés » du compte, ce qui permet de vérifier
          visuellement l'envoi et de voir un éventuel retour d'erreur. */
+      var optionsClient = {
+        name: 'La Colline Gambetta',
+        replyTo: RESTAURANT_EMAIL,
+        htmlBody: corps.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\n/g, '<br>')
+      };
+      var alias = aliasRestaurant();
+      if (alias) optionsClient.from = alias;
+      report.envoyeDepuis = alias || expediteur();
       GmailApp.sendEmail(
         clientEmail,
         payload.clientSubject || 'Confirmation de votre réservation — La Colline Gambetta',
         corps,
-        {
-          name: 'La Colline Gambetta',
-          replyTo: RESTAURANT_EMAIL,
-          htmlBody: corps.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\n/g, '<br>')
-        }
+        optionsClient
       );
       report.clientMail = true;
       report.expediteur = expediteur();
@@ -157,6 +161,21 @@ function corpsClientParDefaut(d) {
     'L’équipe de La Colline Gambetta',
     '01 43 49 05 93 · ' + RESTAURANT_EMAIL
   ].join('\n');
+}
+
+/* Si le compte qui exécute le script possède restaurant@lacollinegambetta.com
+   comme alias « Envoyer des e-mails en tant que », on expédie sous cette
+   adresse : le message est alors signé par le domaine (SPF + DKIM) et cesse
+   d'être filtré par Outlook / Hotmail. Sinon Gmail utilise l'adresse du
+   compte, sans erreur. */
+function aliasRestaurant() {
+  try {
+    var aliases = GmailApp.getAliases() || [];
+    for (var i = 0; i < aliases.length; i++) {
+      if (String(aliases[i]).toLowerCase() === RESTAURANT_EMAIL.toLowerCase()) return RESTAURANT_EMAIL;
+    }
+  } catch (e) {}
+  return '';
 }
 
 /* Adresse réellement utilisée par Google pour expédier les messages. */
