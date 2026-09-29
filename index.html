@@ -139,6 +139,11 @@ button,a { font:inherit; }
 .medallion-container { width:min(100%,540px); margin:0 auto; aspect-ratio:1/1; position:relative; display:flex; align-items:center; justify-content:center; }
 .medallion-frame { position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
 .medallion-svg { position:absolute; inset:-5%; width:110%; height:110%; filter:drop-shadow(0 14px 28px rgba(0,0,0,.55)); pointer-events:none; z-index:1; }
+/* Médaillon : le logo rond occupe tout le cercle intérieur sur la page de
+   garde du site ; la carte imprimable conserve sa photo de façade. */
+html:not(.carte-doc) .medallion-photo--print { display:none; }
+html.carte-doc .medallion-photo--web { display:none; }
+html:not(.carte-doc) .relief-inner-svg { background:#2e1338; }
 .relief-inner-svg { width:68%; height:68%; border-radius:50%; z-index:2; overflow:hidden; background:#fff; border:4px solid var(--gold-500); box-shadow: inset 0 0 20px rgba(0,0,0,.12), 0 14px 36px rgba(0,0,0,.34); }
 .cover-action { justify-self:center; min-width:min(100%,340px); background:transparent; color:#fff; border:1px solid rgba(216,178,87,.45); font-family:'Cinzel',serif; letter-spacing:.16em; }
 .cover-footer { display:grid; justify-items:center; gap:12px; text-align:center; color:#fff; }
@@ -10535,7 +10540,8 @@ html:not(.carte-doc) .lightbox--wine {
                 </svg>
 
                 <svg class="relief-inner-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
-                        <image href="assets/cover/logo-facade.webp" x="-69" y="-16" width="418" height="312" preserveAspectRatio="none" />
+                        <image class="medallion-photo medallion-photo--web" href="assets/cover/medaillon-logo.png?v=20260929" x="0" y="0" width="280" height="280" preserveAspectRatio="xMidYMid slice" />
+                        <image class="medallion-photo medallion-photo--print" href="assets/cover/logo-facade.webp" x="-69" y="-16" width="418" height="312" preserveAspectRatio="none" />
                     </svg></div>
       <a href="index.html#menu-nav-anchor" class="contact-link cover-action" onclick="showView('menu'); return false;"><span class="star-gold">✦</span> Menu & Carte <span class="star-gold">✦</span></a>
       </div>
