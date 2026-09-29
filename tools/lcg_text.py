@@ -74,3 +74,42 @@ if __name__ == "__main__":
     print("unitsPerEm", _UPM, "capHeight", _CAP)
     d = text_path("LA COLLINE", 1000, 1325, 152, largeur=1309)
     print(len(d), d[:120])
+
+
+def text_on_arc(texte: str, cx: float, cy: float, rayon: float, cap_height: float,
+                angle_centre: float = -90.0, tracking: float = 0.0,
+                sens: int = 1) -> str:
+    """Contours d'un texte disposé le long d'un cercle.
+
+    `angle_centre` est l'angle, en degrés, du milieu du texte (−90 = haut).
+    `sens` vaut 1 pour un texte lisible à l'extérieur du cercle (arc du haut)
+    et −1 pour l'arc du bas, lettres retournées afin de rester lisibles.
+    """
+    import math
+
+    s = cap_height / _CAP
+    noms = [_glyph_name(c) for c in texte]
+    avances = [_HMTX[n][0] * s + tracking for n in noms]
+    longueur = sum(avances)
+    span = longueur / rayon                      # angle total, en radians
+    a0 = math.radians(angle_centre) - sens * span / 2
+
+    morceaux = []
+    a = a0
+    for nom, avance in zip(noms, avances):
+        amid = a + sens * (avance / 2) / rayon
+        px = cx + rayon * math.cos(amid)
+        py = cy + rayon * math.sin(amid)
+        rot = amid + (math.pi / 2 if sens > 0 else -math.pi / 2)
+        t = (Transform()
+             .translate(px, py)
+             .rotate(rot)
+             .scale(s, -s)
+             .translate(-_HMTX[nom][0] / 2, 0))
+        pen = SVGPathPen(_GS, ntos=lambda v: "%.2f" % v)
+        _GS[nom].draw(TransformPen(pen, t))
+        d = pen.getCommands()
+        if d:
+            morceaux.append(d)
+        a += sens * avance / rayon
+    return "".join(morceaux)

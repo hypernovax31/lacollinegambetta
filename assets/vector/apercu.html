@@ -42,6 +42,9 @@
 <h2>Série minimaliste</h2>
 <div class="grid" id="minimal"></div>
 
+<h2>Série minimaliste sur fond transparent</h2>
+<div class="grid" id="transparent"></div>
+
 <h2>Arabesques du médaillon</h2>
 <div class="grid" id="arabesques"></div>
 
@@ -69,6 +72,16 @@ const minimal = [
   ["logo-minimal-cercle-ouvert.svg","Cercle ouvert","anneau interrompu", true],
   ["logo-minimal-duotone.svg","Duotone anthracite","or et blanc cassé, ombre très douce", true],
 ];
+const transparent = [
+  ["logo-t-tampon-circulaire.svg","Tampon circulaire","textes courbés le long du cadre", true],
+  ["logo-t-embleme-compact.svg","Emblème compact","sans texte, pour favicon et tampon", true],
+  ["logo-t-monogramme-lcg.svg","Monogramme LCG","initiales et filet fin", true],
+  ["logo-t-trait-fin.svg","Trait fin","filets très fins, composition aérée", true],
+  ["logo-t-epure-or.svg","Épure or","médaillon complet sans disque", true],
+  ["logo-t-blanc-pur.svg","Blanc pur","pour fonds sombres", true],
+  ["logo-t-bicolore-encre.svg","Bicolore encre","arbre or, texte encre, grains verts", false],
+  ["logo-t-signature-horizontale.svg","Signature horizontale","emblème et texte côte à côte", true],
+];
 const menus = [
   ["menu-duo.svg","Menu Duo",""],
   ["menu-complet.svg","Menu Complet",""],
@@ -91,6 +104,7 @@ function card([file,name,desc,glossy]) {
 }
 document.getElementById('logos').innerHTML = logos.map(card).join('');
 document.getElementById('minimal').innerHTML = minimal.map(card).join('');
+document.getElementById('transparent').innerHTML = transparent.map(card).join('');
 document.getElementById('menus').innerHTML = menus.map(m => card([...m,true])).join('');
 document.getElementById('arabesques').innerHTML = arabesques.map(card).join('');
 </script>
