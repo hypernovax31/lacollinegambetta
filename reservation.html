@@ -4200,6 +4200,15 @@ body * {
                mail client et création de l'événement d'agenda. */
             var report = null;
             try { report = JSON.parse(body); } catch (eJson) {}
+            /* Mode dépannage : reservation.html?debug=1 affiche à l'écran le
+               compte rendu renvoyé par le script, pour pouvoir le recopier
+               sans ouvrir la console. Invisible en usage normal. */
+            if (/[?&]debug=1/.test(location.search)) {
+              var boite = document.createElement('pre');
+              boite.style.cssText = 'position:fixed;left:10px;right:10px;bottom:10px;z-index:99999;max-height:45vh;overflow:auto;background:#111;color:#0f0;padding:12px;border-radius:8px;font-size:12px;white-space:pre-wrap;';
+              boite.textContent = 'Compte rendu du script :\n' + (body || '(réponse vide)');
+              document.body.appendChild(boite);
+            }
             if (report) {
               console.log('[Notification Google Apps Script] Compte rendu', report);
               if (report.clientMail === false && mail.value.trim()) {
@@ -4224,6 +4233,13 @@ body * {
                l'événement d'agenda. FormSubmit ne sert que si Google est
                réellement injoignable. */
             console.warn('[Notification Google Apps Script] Lecture CORS impossible, nouvel envoi en no-cors', err);
+            if (/[?&]debug=1/.test(location.search)) {
+              var boiteErr = document.createElement('pre');
+              boiteErr.style.cssText = 'position:fixed;left:10px;right:10px;bottom:10px;z-index:99999;max-height:45vh;overflow:auto;background:#111;color:#f90;padding:12px;border-radius:8px;font-size:12px;white-space:pre-wrap;';
+              boiteErr.textContent = 'Réponse du script illisible (CORS) : ' + err +
+                '\nLa réservation est renvoyée en mode no-cors ; le compte rendu ne peut pas être lu depuis le navigateur.';
+              document.body.appendChild(boiteErr);
+            }
             fetch(googleScriptUrl, {
               method: "POST",
               mode: "no-cors",
