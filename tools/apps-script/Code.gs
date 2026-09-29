@@ -12,12 +12,17 @@
  * si le mail client est parti, et sinon pourquoi.
  */
 
-var SCRIPT_VERSION = '2026-09-29-l';
+var SCRIPT_VERSION = '2026-09-29-m';
 
 /* Bloc de diagnostic en bas du mail reçu par le restaurant.
    false = mails propres, sans aucune mention technique (réglage normal).
    true  = à n'activer que le temps d'un dépannage. */
 var DIAGNOSTIC = false;
+
+/* Copie cachée du mail de confirmation client vers la boîte du restaurant.
+   Sert de preuve d'envoi : si cette copie arrive, le message est bien parti
+   de Google ; si elle n'arrive pas, l'envoi échoue en amont. */
+var COPIE_CLIENT_AU_RESTAURANT = true;
 
 var RESTAURANT_EMAIL = 'restaurant@lacollinegambetta.com';
 var CALENDAR_ID = 'primary';          // ou l'ID d'un agenda dédié aux réservations
@@ -86,15 +91,17 @@ function doPost(e) {
       /* GmailApp plutôt que MailApp : le message est archivé dans
          « Messages envoyés » du compte, ce qui permet de vérifier
          visuellement l'envoi et de voir un éventuel retour d'erreur. */
+      var optionsClient = {
+        name: 'La Colline Gambetta',
+        replyTo: RESTAURANT_EMAIL,
+        htmlBody: corps.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\n/g, '<br>')
+      };
+      if (COPIE_CLIENT_AU_RESTAURANT) optionsClient.bcc = RESTAURANT_EMAIL;
       report.modeClient = envoyerMail(
         clientEmail,
         payload.clientSubject || 'Confirmation de votre réservation — La Colline Gambetta',
         corps,
-        {
-          name: 'La Colline Gambetta',
-          replyTo: RESTAURANT_EMAIL,
-          htmlBody: corps.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\n/g, '<br>')
-        }
+        optionsClient
       );
       report.clientMail = true;
       report.expediteur = expediteur();
@@ -170,6 +177,7 @@ function envoyerMail(destinataire, sujet, corps, options) {
     if (opts.name) gmailOpts.name = opts.name;
     if (opts.replyTo) gmailOpts.replyTo = opts.replyTo;
     if (opts.htmlBody) gmailOpts.htmlBody = opts.htmlBody;
+    if (opts.bcc) gmailOpts.bcc = opts.bcc;
     var alias = aliasRestaurant();
     if (alias) gmailOpts.from = alias;
     GmailApp.sendEmail(destinataire, sujet, corps, gmailOpts);
@@ -179,6 +187,7 @@ function envoyerMail(destinataire, sujet, corps, options) {
     if (opts.name) mailOpts.name = opts.name;
     if (opts.replyTo) mailOpts.replyTo = opts.replyTo;
     if (opts.htmlBody) mailOpts.htmlBody = opts.htmlBody;
+    if (opts.bcc) mailOpts.bcc = opts.bcc;
     MailApp.sendEmail(mailOpts);
     return 'mailapp:' + expediteur();
   }
