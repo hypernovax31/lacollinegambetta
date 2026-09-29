@@ -12,7 +12,7 @@
  * si le mail client est parti, et sinon pourquoi.
  */
 
-var SCRIPT_VERSION = '2026-09-29-i';
+var SCRIPT_VERSION = '2026-09-29-j';
 
 /* Bloc de diagnostic en bas du mail reçu par le restaurant.
    false = mails propres, sans aucune mention technique (réglage normal).
@@ -209,17 +209,31 @@ function doGet(e) {
     return json({ ok: true, service: 'LCG reservations', version: SCRIPT_VERSION });
   }
 
-  var res = { ok: true, service: 'LCG reservations', version: SCRIPT_VERSION, selftest: cible, sent: false, error: '' };
+  /* style=plain    : message nu, strictement identique à un mail écrit à la main
+     style=branded  : nom affiché + Reply-To + HTML (comportement normal)
+     Permet de savoir lequel de ces éléments déclenche le filtrage. */
+  var style = String(params.style || 'branded').toLowerCase();
+  var res = {
+    ok: true, service: 'LCG reservations', version: SCRIPT_VERSION,
+    selftest: cible, style: style, sent: false, error: ''
+  };
   try {
-    var corps = 'Ceci est un test technique du script de réservation.\n\n' +
-      'Si vous recevez ce message, l\u2019envoi des mails clients fonctionne.';
-    var opts = { name: 'La Colline Gambetta', replyTo: RESTAURANT_EMAIL };
-    var alias = aliasRestaurant();
-    if (alias) opts.from = alias;
-    GmailApp.sendEmail(cible, 'Test envoi client — La Colline Gambetta', corps, opts);
+    var corps = 'Ceci est un test technique du script de réservation (' + style + ').\n\n' +
+      'Si vous recevez ce message, l\u2019envoi automatique fonctionne.';
+    var sujet = 'Test envoi client — La Colline Gambetta';
+
+    if (style === 'plain') {
+      GmailApp.sendEmail(cible, sujet, corps);
+      res.envoyeDepuis = expediteur();
+    } else {
+      var opts = { name: 'La Colline Gambetta', replyTo: RESTAURANT_EMAIL };
+      var alias = aliasRestaurant();
+      if (alias) opts.from = alias;
+      GmailApp.sendEmail(cible, sujet, corps, opts);
+      res.envoyeDepuis = alias || expediteur();
+      res.aliasDisponible = alias ? true : false;
+    }
     res.sent = true;
-    res.envoyeDepuis = alias || expediteur();
-    res.aliasDisponible = alias ? true : false;
     res.quotaRestant = MailApp.getRemainingDailyQuota();
   } catch (err) {
     res.ok = false;
