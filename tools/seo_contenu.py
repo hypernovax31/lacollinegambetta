@@ -312,7 +312,9 @@ JS_AVIS = """<script>
       if (!d || d.publie !== true || !d.note) return;
       var note = Number(String(d.note).replace(',', '.'));
       if (!(note > 0)) return;
-      var pleines = Math.round(note);
+      /* une etoile pleine par point entier ; 4,6/5 affiche donc quatre
+         etoiles pleines et une vide, la note chiffree faisant foi. */
+      var pleines = Math.round(note - 0.25);
       var etoiles = '';
       for (var i = 0; i < 5; i++) etoiles += (i < pleines ? '\\u2605' : '\\u2606');
       document.getElementById('cover-reviews-stars').textContent = etoiles;
@@ -406,6 +408,28 @@ def fil_ariane() -> None:
         print(f"  {nom} : fil d'Ariane ajoute")
 
 
+CANONIQUE = """<script>
+/* Les traductions sont servies par ?lang= : chaque version linguistique doit
+   se declarer canonique d'elle-meme, sinon Google ignore les hreflang. */
+(function () {
+  var langues = ['en','es','de','it','pt','nl','pl','zh','uk','ja','ko','ar','tr','hi'];
+  var p = new URLSearchParams(location.search).get('lang');
+  var l = document.querySelector('link[rel="canonical"]');
+  if (!l || !p || langues.indexOf(p) < 0) return;
+  l.href = 'https://lacollinegambetta.com/?lang=' + p;
+})();
+</script>"""
+
+
+def canonical_par_langue(s: str) -> str:
+    if "se declarer canonique" in s:
+        print("  canonical par langue : deja en place")
+        return s
+    i = s.index("</head>")
+    print("  canonical par langue : ajoute")
+    return s[:i] + CANONIQUE + "\n" + s[i:]
+
+
 def main() -> None:
     s = INDEX.read_text(encoding="utf-8")
     avant = len(s)
@@ -414,6 +438,7 @@ def main() -> None:
     s = hreflang(s)
     s = donnees_structurees(s)
     s = bloc_avis(s)
+    s = canonical_par_langue(s)
     INDEX.write_text(s, encoding="utf-8")
     fichier_avis()
     fil_ariane()

@@ -112,8 +112,39 @@ Galerie de la bibliothèque : `assets/vector/apercu.html`.
 - Métadonnées (canonical, robots, Open Graph, Twitter, `theme-color`,
   image de partage 1200 × 630) harmonisées sur les quatre pages :
   `python3 tools/seo_meta.py`.
-- Données structurées JSON-LD `Restaurant` dans `index.html`,
-  `sitemap.xml` et `robots.txt` à la racine.
+- Contenu et balisage : `python3 tools/seo_contenu.py` — un vrai `<h1>` sur
+  la page de garde (rendu strictement identique : les règles CSS en `h2` sont
+  élargies à `:is(h1,h2)`), `hreflang` vers les 15 langues servies par
+  `?lang=`, canonique propre à chaque langue, et données structurées
+  complètes : `Restaurant` (horaires, équipements, action de réservation),
+  `WebSite`, `Menu` avec les 173 articles et leurs prix, fil d'Ariane sur les
+  pages annexes.
+- `python3 tools/sitemaps.py` : `sitemap.xml` (pages + versions linguistiques),
+  `sitemap-images.xml` (les 172 photos, invisibles autrement car chargées en
+  JavaScript) et `robots.txt`.
+- Page `404.html` sobre, aux couleurs du site.
+
+### Avis Google de la page de garde
+
+Le bloc d'avis lit `assets/data/avis-google.json`. Tant que `publie` vaut
+`false`, **rien ne s'affiche** et la page est inchangée. Pour l'activer, il
+suffit d'y recopier les données de la fiche Google *La Colline Gambetta* :
+
+```json
+{ "publie": true, "note": 4.6, "nombre_avis": 128,
+  "url": "https://g.page/...",
+  "avis": [{ "auteur": "Claire D.", "texte": "Accueil parfait, cuisine maison." }] }
+```
+
+N'y mettre que de **vrais avis de la fiche** : la note n'est volontairement
+pas balisée en `aggregateRating`, Google interdisant de rebaliser sur son
+site les notes collectées ailleurs.
+
+### Vérification
+
+```bash
+node tools/verifier_site.mjs   # CSS, HTML, h1 unique, JSON-LD, bloc avis, liens
+```
 
 Ces trois scripts sont **idempotents** : on peut les relancer après toute
 modification du site.

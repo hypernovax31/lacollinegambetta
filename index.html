@@ -10442,6 +10442,17 @@ html:not(.carte-doc) .cover-reviews a:hover { text-decoration:underline; }
   html:not(.carte-doc) .cover-reviews__quote { display:none; }
 }
 </style>
+<script>
+/* Les traductions sont servies par ?lang= : chaque version linguistique doit
+   se declarer canonique d'elle-meme, sinon Google ignore les hreflang. */
+(function () {
+  var langues = ['en','es','de','it','pt','nl','pl','zh','uk','ja','ko','ar','tr','hi'];
+  var p = new URLSearchParams(location.search).get('lang');
+  var l = document.querySelector('link[rel="canonical"]');
+  if (!l || !p || langues.indexOf(p) < 0) return;
+  l.href = 'https://lacollinegambetta.com/?lang=' + p;
+})();
+</script>
 </head>
 <body>
   <!-- Sélecteur de langue : un seul exemplaire pour tout le site, posé
@@ -13651,7 +13662,9 @@ else sizeCoverMedallion();
       if (!d || d.publie !== true || !d.note) return;
       var note = Number(String(d.note).replace(',', '.'));
       if (!(note > 0)) return;
-      var pleines = Math.round(note);
+      /* une etoile pleine par point entier ; 4,6/5 affiche donc quatre
+         etoiles pleines et une vide, la note chiffree faisant foi. */
+      var pleines = Math.round(note - 0.25);
       var etoiles = '';
       for (var i = 0; i < 5; i++) etoiles += (i < pleines ? '\u2605' : '\u2606');
       document.getElementById('cover-reviews-stars').textContent = etoiles;
