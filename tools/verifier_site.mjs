@@ -123,14 +123,51 @@ const t2 = live.window.document.getElementById('cover-reviews').textContent.repl
   ? ok(`mode Places : "${t2.slice(0, 80)}" (les avis sous 4 etoiles sont ecartes)`)
   : ko('mode Places : ' + t2);
 
-// ------------------------------------------- 4 ter. reperes du quartier ---
-const quartier = [...d.querySelectorAll('.footer-quartier a')];
-quartier.length >= 9 && quartier.every((a) => a.href.startsWith('https://'))
-  ? ok(`pied de page : ${quartier.length} reperes de quartier (${quartier.map((a) => a.textContent).join(', ')})`)
-  : ko(`pied de page : ${quartier.length} lien(s) de quartier`);
-quartier.some((a) => /mairie11|mairie\.?11/i.test(a.href))
+// --------------------------------- 4 ter. pied de page et alentours ------
+const navs = [...d.querySelectorAll('.footer-quartier')];
+navs.length === 2 ? ok('index.html : ligne des alentours sur la page de garde et dans le pied')
+                  : ko(`index.html : ${navs.length} ligne(s) des alentours`);
+const reperes = [...navs[0].querySelectorAll('a')];
+reperes.length === 8 && reperes.every((a) => a.href.startsWith('https://'))
+  ? ok(`alentours : ${reperes.length} reperes (${reperes.map((a) => a.textContent).join(', ')})`)
+  : ko(`alentours : ${reperes.length} lien(s)`);
+reperes.some((a) => /mairie11|mairie\.?11/i.test(a.href))
   ? ko('la mairie du 11e ne doit pas figurer dans les reperes')
   : ok('aucun lien vers la mairie du 11e');
+// tri par distance : l'infobulle porte la distance, elle doit croitre
+const metres = reperes.map((a) => {
+  const m = a.title.match(/([\d,.]+)\s*(m|km)/);
+  return parseFloat(m[1].replace(',', '.')) * (m[2] === 'km' ? 1000 : 1);
+});
+metres.every((v, i) => i === 0 || v >= metres[i - 1])
+  ? ok('alentours classes du plus proche au plus lointain (' +
+       reperes.map((a, i) => `${a.textContent} ${a.title.match(/[\d,.]+ ?k?m/)[0]}`).join(' < ') + ')')
+  : ko('alentours mal classes : ' + metres.join(', '));
+navs.every((n) => n.querySelectorAll('a').length === reperes.length)
+  ? ok('la page de garde et le pied affichent les memes reperes')
+  : ko('les deux lignes des alentours different');
+
+// une seule mention du metro par page, et c'est elle qui porte l'itineraire
+for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
+  'confidentialite.html']) {
+  const t = lire(f);
+  const dom = new JSDOM(t).window.document;
+  const metros = [...dom.querySelectorAll('.footer-details__metro')];
+  const alent = dom.querySelector('.footer .footer-quartier');
+  const legal = dom.querySelector('.footer .legal-bottom-nav');
+  metros.length === 1 && !/gambetta|ratp|m\u00e9tro/i.test(alent.textContent)
+    ? ok(`${f} : mention du metro une seule fois, sans redite dans les alentours`)
+    : ko(`${f} : ${metros.length} mention(s) du metro dans le pied, ou redite`);
+  metros[0].tagName === 'A' && metros[0].hasAttribute('data-ratp-itineraire')
+    ? ok(`${f} : la mention du metro ouvre l'itineraire RATP`)
+    : ko(`${f} : la mention du metro n'est pas un itineraire`);
+  alent && legal ? ok(`${f} : alentours + mentions legales en pied de page`)
+                 : ko(`${f} : pied de page incomplet`);
+  alent.previousElementSibling.classList.contains('footer-details')
+    ? ok(`${f} : la ligne des alentours est juste sous l'adresse`)
+    : ko(`${f} : la ligne des alentours n'est pas sous l'adresse`);
+}
+
 const ratp = d.querySelector('[data-ratp-itineraire]');
 ratp && ratp.href.startsWith('https://www.ratp.fr/itineraires?end=') && ratp.href.includes('Belgrand')
   ? ok('lien RATP : itineraire avec le restaurant en arrivee')
@@ -138,9 +175,10 @@ ratp && ratp.href.startsWith('https://www.ratp.fr/itineraires?end=') && ratp.hre
 /navigator\.geolocation/.test(index) && /api-adresse\.data\.gouv\.fr\/reverse/.test(index)
   ? ok('itineraire RATP : depart pris sur la position du visiteur, avec repli')
   : ko('itineraire RATP : la geolocalisation du visiteur est absente');
-d.querySelector('.footer-quartier').previousElementSibling.classList.contains('footer-details')
-  ? ok('la ligne de quartier est bien placee sous l\'adresse')
-  : ko('la ligne de quartier n\'est pas sous l\'adresse');
+const garde = d.querySelector('#cover-section .footer-quartier--cover');
+garde && d.querySelector('#cover-section .legal-bottom-nav--cover')
+  ? ok('page de garde : adresse, metro, alentours et mentions legales')
+  : ko('page de garde : bloc de pied incomplet');
 
 // -------------------------------------------------------- 5. fichiers ------
 for (const f of ['404.html', 'sitemap.xml', 'sitemap-images.xml', 'robots.txt',

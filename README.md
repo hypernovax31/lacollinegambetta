@@ -153,22 +153,33 @@ python3 tools/avis_google.py     # (re)pose le bandeau : styles, balisage, charg
 python3 tools/pied_quartier.py   # ligne « Dans le quartier » du pied de page
 ```
 
-### Repères du quartier et itinéraire RATP
+### Pied de page commun et itinéraire RATP
 
-`tools/pied_quartier.py` pose, sous l'adresse, une ligne très discrète mais
-bien visible (jamais de lien dissimulé) vers huit repères du 20ᵉ et du 11ᵉ :
-Père-Lachaise, parc de Belleville, Carré de Baudouin, Théâtre de la Colline,
-mairie du 20ᵉ, Cirque d'Hiver, Bataclan, Opéra Bastille. La liste se modifie
-dans la constante `LIENS` du script.
+`tools/pied_quartier.py` pose le **même pied de page sur toutes les pages**,
+page de garde comprise :
 
-Le dernier lien ouvre un **itinéraire RATP** : l'arrivée est toujours
-`4, Rue Belgrand, 75, Paris` (format attendu par `ratp.fr/itineraires?end=…`)
-et le départ est la **position exacte du visiteur**. Au clic, le navigateur
-demande la géolocalisation, les coordonnées sont converties en adresse postale
-par l'API Adresse de l'État (`api-adresse.data.gouv.fr`, gratuite et sans clé),
-puis l'itinéraire s'ouvre avec `&start=…`. Si la géolocalisation est refusée,
-indisponible ou trop lente (9 s), l'itinéraire s'ouvre quand même avec la seule
-arrivée pré-remplie.
+```
+LA COLLINE GAMBETTA • 4 RUE BELGRAND, 75020 PARIS • MÉTRO GAMBETTA • LIGNE 3
+Dans les alentours • Mairie du 20ᵉ • Théâtre de la Colline • Père-Lachaise • …
+Mentions légales · Confidentialité
+```
+
+Huit repères du 20ᵉ et du 11ᵉ (jamais la mairie du 11ᵉ), **classés
+automatiquement du plus proche au plus lointain** : le script calcule la
+distance à vol d'oiseau depuis les coordonnées du restaurant et la rappelle
+dans l'infobulle de chaque lien. Pour ajouter ou retirer un lieu, il suffit de
+modifier la liste `POINTS` (libellé, adresse, latitude, longitude) : le tri se
+refait tout seul.
+
+Plus de redite : « MÉTRO GAMBETTA • LIGNE 3 » n'apparaît **qu'une fois par
+page**, et c'est cette mention qui porte l'**itinéraire RATP**. L'arrivée est
+toujours `4, Rue Belgrand, 75, Paris` (format attendu par
+`ratp.fr/itineraires?end=…`) et le départ est la **position exacte du
+visiteur** : au clic, le navigateur demande la géolocalisation, les
+coordonnées sont converties en adresse postale par l'API Adresse de l'État
+(`api-adresse.data.gouv.fr`, gratuite et sans clé), puis l'itinéraire s'ouvre
+avec `&start=…`. Si elle est refusée, indisponible ou trop lente (9 s),
+l'itinéraire s'ouvre avec la seule arrivée pré-remplie.
 
 ### Vérification
 

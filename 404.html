@@ -41,6 +41,40 @@ a.bouton{
 a.bouton:hover{background:rgba(216,178,87,.14);border-color:var(--or);}
 .adresse{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(246,238,233,.55);}
 .adresse a{color:inherit;}
+/* quartier:css:debut */
+/* ===== Pied de page : adresse, itineraire et reperes des alentours ========
+   Une ligne en tres petits caracteres sous l'adresse, dans la meme fonte que
+   le reste du pied de page. Discrete a l'oeil, parfaitement lisible pour les
+   moteurs : ce sont de vrais liens, jamais du texte dissimule. */
+html:not(.carte-doc) .footer-quartier {
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:3px 10px; margin:5px auto 0; max-width:74ch;
+  font-family:'Cinzel',serif; font-size:clamp(.5rem,.95vw,.6rem);
+  letter-spacing:.09em; text-transform:uppercase; line-height:1.5;
+  color:var(--gold-100,#f0dca8); opacity:.46;
+}
+html:not(.carte-doc) .footer-quartier a { color:inherit; text-decoration:none; }
+html:not(.carte-doc) .footer-quartier a:hover { text-decoration:underline; opacity:1; }
+html:not(.carte-doc) .footer-quartier__sep { opacity:.5; }
+html:not(.carte-doc) a.footer-details__metro { color:inherit; text-decoration:none; }
+html:not(.carte-doc) a.footer-details__metro:hover { text-decoration:underline; }
+/* Page de garde : meme ligne, encore plus sobre, sous le bandeau d'avis. */
+html:not(.carte-doc) #cover-section .footer-quartier--cover { margin-top:7px; opacity:.42; }
+html:not(.carte-doc) #cover-section .legal-bottom-nav--cover {
+  display:flex; flex-wrap:wrap; justify-content:center; gap:4px 10px;
+  margin:4px auto 0; padding:0; background:none; border:0;
+  font-family:'Cinzel',serif; font-size:clamp(.5rem,.95vw,.6rem);
+  letter-spacing:.09em; text-transform:uppercase;
+  color:var(--gold-100,#f0dca8); opacity:.42;
+}
+html:not(.carte-doc) #cover-section .legal-bottom-nav--cover a {
+  color:inherit; background:none; border:0; padding:0; text-decoration:none; text-shadow:none;
+}
+html:not(.carte-doc) #cover-section .legal-bottom-nav--cover a:hover { text-decoration:underline; }
+@media print {
+  .footer-quartier, #cover-section .legal-bottom-nav--cover { display:none !important; }
+}
+/* quartier:css:fin */
 </style>
 </head>
 <body>
@@ -59,6 +93,7 @@ a.bouton:hover{background:rgba(216,178,87,.14);border-color:var(--or);}
     <a href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris"
        target="_blank" rel="noopener">4 rue Belgrand • 75020 Paris • Métro Gambetta</a>
   </p>
+  <!-- quartier:html:debut --><nav class="footer-quartier" aria-label="Dans les alentours"><span>Dans les alentours</span><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://mairie20.paris.fr/" target="_blank" rel="noopener" title="À 100 m du restaurant">Mairie du 20ᵉ</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.colline.fr/" target="_blank" rel="noopener" title="À 300 m du restaurant">Théâtre de la Colline</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.paris.fr/lieux/cimetiere-du-pere-lachaise-4080" target="_blank" rel="noopener" title="À 350 m du restaurant">Père-Lachaise</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.pavilloncarredebaudouin.fr/" target="_blank" rel="noopener" title="À 950 m du restaurant">Carré de Baudouin</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.paris.fr/lieux/parc-de-belleville-1777" target="_blank" rel="noopener" title="À 1,3 km du restaurant">Parc de Belleville</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.bataclan.fr/" target="_blank" rel="noopener" title="À 2,1 km du restaurant">Le Bataclan</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.cirquedhiver.com/" target="_blank" rel="noopener" title="À 2,3 km du restaurant">Cirque d'Hiver</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.operadeparis.fr/visites/opera-bastille" target="_blank" rel="noopener" title="À 2,6 km du restaurant">Opéra Bastille</a></nav><!-- quartier:html:fin -->
 </main>
 </body>
 </html>
