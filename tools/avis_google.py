@@ -279,7 +279,7 @@ JS = r"""<!-- avis-google:js:debut --><script>
     var photo = lienSecurise(avis.photo || avis.photoURI);
     var profil = lienSecurise(avis.profil || avis.authorURI);
     var date = dateVisite(avis);
-    if (!(noteAvis >= 4 && noteAvis <= 5) || !texte || !auteur || !date || !lienAvis) return null;
+    if (!(noteAvis >= 4 && noteAvis <= 5) || !texte || !auteur || !lienAvis) return null;
 
     if (texte.length > 150) {
       texte = texte.slice(0, 147).replace(/[\s,;:.]+$/, '') + '\u2026';
@@ -354,10 +354,12 @@ JS = r"""<!-- avis-google:js:debut --><script>
     if (avis.profil) auteur.setAttribute('aria-label', 'Profil Google de ' + avis.auteur);
     meta.appendChild(auteur);
 
-    var date = document.createElement('time');
-    date.className = 'cover-reviews__date';
-    date.textContent = 'Visite : ' + avis.date;
-    meta.appendChild(date);
+    if (avis.date) {
+      var date = document.createElement('time');
+      date.className = 'cover-reviews__date';
+      date.textContent = 'Visite : ' + avis.date;
+      meta.appendChild(date);
+    }
 
     var source = creerLien(avis.url, 'cover-reviews__source', 'Voir cet avis sur Google Maps');
     meta.appendChild(source);
@@ -429,8 +431,8 @@ JS = r"""<!-- avis-google:js:debut --><script>
       ? 'Avis ' + (indiceActif + 1) + ' sur ' + avisAffichables.length
       : '';
     var mention = sourceAvis === 'places'
-      ? 'Avis de 4 ou 5 étoiles affichés dans l’ordre de pertinence de Google. Seuls ceux avec texte, date de visite et lien direct disponibles sont présentés. Les avis ne sont pas vérifiés par Google ; les faux contenus identifiés sont retirés.'
-      : 'Avis de 4 ou 5 étoiles avec texte, date de visite et lien direct, sélectionnés par La Colline Gambetta. Les avis ne sont pas vérifiés par Google ; les faux contenus identifiés sont retirés.';
+      ? 'Avis de 4 ou 5 étoiles affichés dans l’ordre de pertinence de Google. Seuls ceux avec texte et lien direct disponibles sont présentés ; la date de visite est affichée lorsqu’elle est fournie. Les avis ne sont pas vérifiés par Google ; les faux contenus identifiés sont retirés.'
+      : 'Avis de 4 ou 5 étoiles avec texte et lien direct, sélectionnés par La Colline Gambetta ; la date de visite est affichée lorsqu’elle est fournie. Les avis ne sont pas vérifiés par Google ; les faux contenus identifiés sont retirés.';
     if (avis.traduit) mention += ' Le texte a été traduit par Google ; le lien ouvre l’avis source.';
     divulgation.textContent = mention;
     divulgation.hidden = false;
@@ -643,7 +645,7 @@ MODELE = {
         "JavaScript et Places (New). La cle est visible dans le navigateur.",
         "B) Manuel : passez publie a true et recopiez la note, le nombre "
         "d'avis et, si vous affichez des extraits, leurs auteurs, textes, liens "
-        "Google Maps directs et mois/annee de visite. Le carrousel boucle sur "
+        "Google Maps directs et, si disponible, le mois/annee de visite. Le carrousel boucle sur "
         "les avis admissibles ; seul le premier element du nom public est montre.",
         "Aucun avis Places n'est conserve dans le navigateur. Tant qu'aucune "
         "source n'est renseignee, le bandeau reste invisible.",

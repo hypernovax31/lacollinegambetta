@@ -206,13 +206,13 @@ live.window.google = { maps: { importLibrary: (nom) => {
         reviews: [
           { rating: 3, text: 'Avis moyen a ne pas afficher.', googleMapsURI: 'https://www.google.com/maps/reviews/3',
             authorAttribution: { displayName: 'Alex R.' }, visitDateMonth: 0, visitDateYear: 2026 },
-          { rating: 4, text: 'Avis sans date à écarter.', googleMapsURI: 'https://www.google.com/maps/reviews/4',
-            authorAttribution: { displayName: 'Sans Date' } },
           { rating: 5, text: 'Terrasse agreable et planches genereuses.',
             googleMapsURI: 'https://www.google.com/maps/reviews/5', visitDateMonth: 8, visitDateYear: 2026,
             textLanguageCode: 'fr', originalTextLanguageCode: 'en',
             authorAttribution: { displayName: 'Marc L.', uri: 'https://www.google.com/maps/contrib/2',
-              photoURI: 'https://lh3.googleusercontent.com/a/marc' } }
+              photoURI: 'https://lh3.googleusercontent.com/a/marc' } },
+          { rating: 4, text: 'Avis sans date à afficher.', googleMapsURI: 'https://www.google.com/maps/reviews/4',
+            authorAttribution: { displayName: 'Sans Date' } }
         ]
       });
       return Promise.resolve();
@@ -224,10 +224,11 @@ await new Promise((r) => setTimeout(r, 50));
 const blocLive = live.window.document.getElementById('cover-reviews');
 const t2 = blocLive.textContent.replace(/\s+/g, ' ').trim();
 const premierLive = blocLive.querySelector('.cover-reviews__slide[aria-hidden="false"]');
+const slidesLive = [...blocLive.querySelectorAll('.cover-reviews__slide:not([data-carousel-clone])')];
 t2.includes('4,8/5') && t2.includes('57 avis Google') && t2.includes('Marc') &&
-  !t2.includes('Marc L.') && !t2.includes('Avis moyen') && !t2.includes('Avis sans date') &&
-  premierLive?.querySelector('.cover-reviews__author')?.textContent === 'Marc'
-  ? ok(`mode Places : note live, prénom seul et avis admissible (${t2.slice(0, 90)})`)
+  t2.includes('Avis sans date à afficher.') && !t2.includes('Marc L.') && !t2.includes('Avis moyen') &&
+  premierLive?.querySelector('.cover-reviews__author')?.textContent === 'Marc' && slidesLive.length === 2
+  ? ok(`mode Places : note live, prénoms seuls et ${slidesLive.length} avis admissibles`)
   : ko('mode Places : ' + t2);
 nomLieu === 'places' && ['rating', 'userRatingCount', 'googleMapsURI', 'reviews', 'attributions'].every((f) => champsPlaces.includes(f))
   ? ok('Places Library : charge la note, les avis, les attributions et les liens Google Maps')
@@ -240,10 +241,10 @@ attributionDonnee.textContent.includes('Source des données') &&
 premierLive?.querySelector('.cover-reviews__date')?.textContent === 'Visite : septembre 2026'
   ? ok('avis Places : date de visite francaise affichee')
   : ko('avis Places : date de visite absente');
-live.window.document.getElementById('cover-reviews-next').hidden &&
-live.window.document.getElementById('cover-reviews-previous').hidden
-  ? ok('carrousel : commandes masquees pour un seul avis')
-  : ko('carrousel : commandes visibles sans navigation possible');
+!live.window.document.getElementById('cover-reviews-next').hidden &&
+!live.window.document.getElementById('cover-reviews-previous').hidden
+  ? ok('carrousel Places : commandes visibles pour les deux avis admissibles')
+  : ko('carrousel Places : commandes masquees malgré deux avis admissibles');
 const divulgation = live.window.document.getElementById('cover-reviews-disclosure').textContent;
 divulgation.includes('4 ou 5 étoiles')
   ? ok('avis Places : filtre et ordre de pertinence declares')
@@ -251,6 +252,14 @@ divulgation.includes('4 ou 5 étoiles')
 divulgation.includes('traduit par Google')
   ? ok('avis Places : traduction signalee avec lien vers la source')
   : ko('avis Places : traduction non signalee');
+live.window.document.getElementById('cover-reviews-next').click();
+const avisSansDate = blocLive.querySelector('.cover-reviews__slide[aria-hidden="false"]');
+avisSansDate?.querySelector('.cover-reviews__author')?.textContent === 'Sans' &&
+  !avisSansDate.querySelector('.cover-reviews__date') &&
+  avisSansDate.querySelector('.cover-reviews__source')?.href.endsWith('/reviews/4')
+  ? ok('avis Places : commentaire conservé si Google ne fournit pas de date')
+  : ko('avis Places : commentaire sans date filtré ou mal lié');
+terminerTransitionAvis(live.window, live.window.document.getElementById('cover-reviews-track'));
 !script.includes('places.googleapis.com/v1') && !script.includes('sessionStorage.') && !script.includes('localStorage.')
   ? ok('avis Places : pas de REST navigateur ni de cache de contenu Google')
   : ko('avis Places : REST ou cache de contenu detecte');
