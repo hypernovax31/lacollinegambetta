@@ -613,21 +613,29 @@ html:not(.carte-doc) .footer-quartier a:hover { text-decoration:underline; opaci
 html:not(.carte-doc) .footer-quartier__sep { opacity:.5; }
 html:not(.carte-doc) a.footer-details__metro { color:inherit; text-decoration:none; }
 html:not(.carte-doc) a.footer-details__metro:hover { text-decoration:underline; }
-/* Page de garde : meme ligne, encore plus sobre, sous le bandeau d'avis. */
-html:not(.carte-doc) #cover-section .footer-quartier--cover { margin-top:7px; opacity:.42; }
-html:not(.carte-doc) #cover-section .legal-bottom-nav--cover {
+/* Le premier ecran de la couverture s'arrete aux boutons de contact.
+   Avis et reperes restent juste apres, accessibles en faisant defiler. */
+html:not(.carte-doc) .cover-more {
+  display:grid; justify-items:center; gap:6px; width:100%;
+  padding:14px 16px 20px;
+  border-top:1px solid rgba(216,178,87,.32);
+  background:linear-gradient(180deg,#432155 0%,#24102e 100%);
+  color:#fff; text-align:center;
+}
+html:not(.carte-doc) .cover-more .footer-quartier--cover { margin-top:7px; opacity:.7; }
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover {
   display:flex; flex-wrap:wrap; justify-content:center; gap:4px 10px;
   margin:4px auto 0; padding:0; background:none; border:0;
   font-family:'Cinzel',serif; font-size:clamp(.5rem,.95vw,.6rem);
   letter-spacing:.09em; text-transform:uppercase;
-  color:var(--gold-100,#f0dca8); opacity:.42;
+  color:var(--gold-100,#f0dca8); opacity:.7;
 }
-html:not(.carte-doc) #cover-section .legal-bottom-nav--cover a {
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a {
   color:inherit; background:none; border:0; padding:0; text-decoration:none; text-shadow:none;
 }
-html:not(.carte-doc) #cover-section .legal-bottom-nav--cover a:hover { text-decoration:underline; }
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover { text-decoration:underline; }
 @media print {
-  .footer-quartier, #cover-section .legal-bottom-nav--cover { display:none !important; }
+  .footer-quartier, .cover-more { display:none !important; }
 }
 /* quartier:css:fin */
 </style>
@@ -718,6 +726,7 @@ html:not(.carte-doc) #cover-section .legal-bottom-nav--cover a:hover { text-deco
     <section class="legal-card" aria-labelledby="prestataires">
       <h2 id="prestataires">5. Firebase, notifications et destinataires</h2>
       <p>Le service de réservation utilise <strong>Firebase Authentication</strong> pour une authentification anonyme technique et <strong>Cloud Firestore</strong> pour enregistrer la demande et le registre de capacité. Ces services sont fournis par Google LLC et peuvent traiter les données sur l’infrastructure de Google selon leurs propres conditions et engagements.</p>
+      <p>La page d’accueil peut aussi charger les services Google Maps Platform (Maps JavaScript API et Places API) pour afficher la note et un extrait d’avis de la fiche publique du restaurant. Lors de ces requêtes, Google peut recevoir des données techniques de connexion, notamment l’adresse IP, le site référent et des informations sur le navigateur ; aucune donnée du formulaire de réservation n’est envoyée à ces services. Consultez la <a href="https://policies.google.com/privacy" rel="noopener">politique de confidentialité de Google</a> et les <a href="https://developers.google.com/maps/documentation/places/web-service/policies" rel="noopener">règles d’attribution de l’API Places</a>.</p>
       <p>Une notification e-mail est envoyée à <a href="mailto:restaurant@lacollinegambetta.com">restaurant@lacollinegambetta.com</a> par <strong>Google Apps Script</strong>, solution actuellement configurée en priorité. En cas d’échec ou selon la configuration active, le site peut utiliser <strong>FormSubmit</strong> ou <strong>Web3Forms</strong> comme solution de repli. Ces prestataires ne doivent être conservés dans la configuration que si leurs garanties, leurs rôles et leurs durées de conservation ont été vérifiés par l’exploitant.</p>
       <p>Les données sont accessibles aux personnes du restaurant qui traitent les réservations et aux prestataires techniques strictement nécessaires à ces finalités. Elles ne sont pas vendues.</p>
     </section>
@@ -747,7 +756,7 @@ html:not(.carte-doc) #cover-section .legal-bottom-nav--cover a:hover { text-deco
       <p>Cette politique pourra être mise à jour en cas de changement du formulaire, de Firebase, des solutions de notification, des finalités ou des obligations applicables.</p>
     </section>
 
-    <p style="margin:24px 4px 0;color:var(--muted);font-size:.82rem">Dernière mise à jour : <time datetime="2026-09-24">24 septembre 2026</time></p>
+    <p style="margin:24px 4px 0;color:var(--muted);font-size:.82rem">Dernière mise à jour : <time datetime="2026-10-04">4 octobre 2026</time></p>
   </main>
     <footer class="footer">
       <div class="footer-download-wrap"><a class="footer-download" href="Carte_LaCollineGambetta.pdf" download="Carte_LaCollineGambetta.pdf" title="Télécharger la carte au format PDF">

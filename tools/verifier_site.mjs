@@ -70,58 +70,160 @@ sansPrix.length === 0 ? ok('tous les articles ont un prix valide')
                       : ko(`${sansPrix.length} article(s) sans prix : ${sansPrix.slice(0, 5)}`);
 
 // --------------------------------------------------- 4. bloc d'avis --------
-const script = index.match(/\(function \(\) \{\s*var bloc = document\.getElementById\('cover-reviews'\)[\s\S]*?\}\)\(\);/)[0];
+const marqueurDebut = index.indexOf('<!-- avis-google:js:debut -->');
+const marqueurFin = index.indexOf('<!-- avis-google:js:fin -->', marqueurDebut);
+const baliseOuverture = index.indexOf('<script>', marqueurDebut);
+const baliseFermeture = index.indexOf('</script>', baliseOuverture);
+const script = marqueurDebut >= 0 && marqueurFin > baliseFermeture
+  ? index.slice(baliseOuverture + 8, baliseFermeture) : '';
+script ? ok('chargeur des avis place dans le body') : ko('chargeur des avis absent ou hors du body');
+const occurrences = (texte, motif) => texte.split(motif).length - 1;
+occurrences(index.toLowerCase(), '<body') === 1 && occurrences(index.toLowerCase(), '</body>') === 1
+  ? ok('index.html : une seule ouverture et fermeture du body')
+  : ko('index.html : balises body dupliquees');
 const gabarit = d.getElementById('cover-reviews').outerHTML;
-const essai = new JSDOM(`<body>${gabarit}</body>`, { runScripts: 'outside-only' });
-essai.window.fetch = () => Promise.resolve({
-  ok: true,
-  json: () => Promise.resolve({
-    publie: true, note: 4.6, nombre_avis: 128, url: 'https://exemple',
-    avis: [{ auteur: 'Claire D.', texte: 'Accueil parfait et cuisine maison.' }],
-  }),
-});
+function domAvis(fetchConfig) {
+  const dom = new JSDOM(`<body>${gabarit}</body>`, {
+    runScripts: 'outside-only', pretendToBeVisual: true,
+    url: 'https://lacollinegambetta.com/'
+  });
+  dom.window.fetch = fetchConfig;
+  return dom;
+}
+function reponseJson(value) {
+  return Promise.resolve({ ok: true, json: () => Promise.resolve(value) });
+}
+
+const manuel = {
+  publie: true, note: 4.6, nombre_avis: 128,
+  url: 'https://www.google.com/maps/search/?api=1&query=restaurant',
+  avis: [{ auteur: 'Claire D.', profil: 'https://www.google.com/maps/contrib/1',
+    photo: 'https://lh3.googleusercontent.com/a/test', note: 5,
+    texte: 'Accueil parfait et cuisine maison.',
+    url_avis: 'https://www.google.com/maps/reviews/data=1', date_visite: '2026-09' }]
+};
+const essai = domAvis(() => reponseJson(manuel));
 essai.window.eval(script);
 await new Promise((r) => setTimeout(r, 30));
 const b = essai.window.document.getElementById('cover-reviews');
-!b.hidden ? ok('bloc avis : affiche quand le fichier est rempli') : ko('bloc avis : reste masque');
+!b.hidden ? ok('bloc avis : affiche la source manuelle publiee') : ko('bloc avis manuel : reste masque');
 const texte = b.textContent.replace(/\s+/g, ' ').trim();
-/4,6\/5/.test(texte) && /128 avis Google/.test(texte) && /Claire D\./.test(texte)
-  ? ok(`bloc avis : "${texte.slice(0, 80)}"`) : ko('bloc avis : contenu inattendu : ' + texte);
+texte.includes('4,6/5') && texte.includes('128 avis Google') && texte.includes('Claire D.')
+  ? ok(`bloc avis manuel : "${texte.slice(0, 80)}"`) : ko('bloc avis manuel : contenu inattendu : ' + texte);
+const dateManuelle = essai.window.document.getElementById('cover-reviews-date').textContent;
+dateManuelle === 'Visite : septembre 2026'
+  ? ok('avis manuel : mois et annee de visite affiches')
+  : ko('avis manuel : date de visite inattendue : ' + dateManuelle);
+essai.window.document.getElementById('cover-reviews-maps').textContent === 'Google Maps'
+  ? ok('attribution Google Maps visible') : ko('attribution Google Maps absente');
+essai.window.document.getElementById('cover-reviews-source').href.includes('/reviews/data=1')
+  ? ok('avis manuel : lien direct vers l’avis conserve') : ko('avis manuel : lien direct absent');
 
-const vide = new JSDOM(`<body>${gabarit}</body>`, { runScripts: 'outside-only' });
-vide.window.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve({ publie: false }) });
+const vide = domAvis(() => reponseJson({ publie: false }));
 vide.window.eval(script);
 await new Promise((r) => setTimeout(r, 30));
 vide.window.document.getElementById('cover-reviews').hidden
-  ? ok('bloc avis : invisible tant qu\'aucun avis reel n\'est saisi')
-  : ko('bloc avis : visible alors qu\'il est vide');
+  ? ok('bloc avis : invisible sans donnees reelles')
+  : ko('bloc avis : visible alors qu’il est vide');
 
-
-// --------------------------------------- 4 bis. etoiles et mode Places ----
 const remplissage = essai.window.document.getElementById('cover-reviews-stars-fill').style.width;
 remplissage === '92%' ? ok(`etoiles : remplissage exact pour 4,6/5 (${remplissage})`)
                          : ko(`etoiles : remplissage inattendu (${remplissage})`);
 
-const live = new JSDOM(`<body>${gabarit}</body>`, { runScripts: 'outside-only' });
-live.window.fetch = (u) => Promise.resolve(String(u).includes('places.googleapis.com') ? {
-  ok: true,
-  json: () => Promise.resolve({
-    rating: 4.8, userRatingCount: 57, googleMapsUri: 'https://maps.google.com/?cid=1',
-    reviews: [{ rating: 5, text: { text: 'Terrasse agreable et planches genereuses.' },
-                authorAttribution: { displayName: 'Marc L.' } },
-              { rating: 3, text: { text: 'Avis moyen a ne pas mettre en avant.' },
-                authorAttribution: { displayName: 'X.' } }],
-  }),
-} : {
-  ok: true,
-  json: () => Promise.resolve({ place_id: 'ChIJxxxx', cle_api: 'AIzaCLE', publie: false }),
-});
+// Places Library : aucune requete REST cross-origin, aucun cache Places.
+const live = domAvis(() => reponseJson({
+  place_id: 'ChIJxxxx', cle_api: 'CLE_DE_TEST', publie: true,
+  note: 5, nombre_avis: 4, url: 'https://www.google.com/maps/search/?api=1&query=restaurant',
+}));
+let champsPlaces = [];
+let nomLieu = '';
+live.window.google = { maps: { importLibrary: (nom) => {
+  nomLieu = nom;
+  return Promise.resolve({ Place: class {
+    constructor(options) { this.id = options.id; }
+    fetchFields(options) {
+      champsPlaces = options.fields;
+      Object.assign(this, {
+        rating: 4.8, userRatingCount: 57,
+        googleMapsURI: 'https://www.google.com/maps?cid=1',
+        attributions: [{ provider: 'Source des données', providerURI: 'https://www.example.com/attribution' }],
+        reviews: [
+          { rating: 3, text: 'Avis moyen a ne pas afficher.', googleMapsURI: 'https://www.google.com/maps/reviews/3',
+            authorAttribution: { displayName: 'Alex R.' }, visitDateMonth: 0, visitDateYear: 2026 },
+          { rating: 4, text: 'Avis sans date à écarter.', googleMapsURI: 'https://www.google.com/maps/reviews/4',
+            authorAttribution: { displayName: 'Sans Date' } },
+          { rating: 5, text: 'Terrasse agreable et planches genereuses.',
+            googleMapsURI: 'https://www.google.com/maps/reviews/5', visitDateMonth: 8, visitDateYear: 2026,
+            textLanguageCode: 'fr', originalTextLanguageCode: 'en',
+            authorAttribution: { displayName: 'Marc L.', uri: 'https://www.google.com/maps/contrib/2',
+              photoURI: 'https://lh3.googleusercontent.com/a/marc' } }
+        ]
+      });
+      return Promise.resolve();
+    }
+  } });
+} } };
 live.window.eval(script);
-await new Promise((r) => setTimeout(r, 60));
+await new Promise((r) => setTimeout(r, 50));
 const t2 = live.window.document.getElementById('cover-reviews').textContent.replace(/\s+/g, ' ').trim();
-/4,8\/5/.test(t2) && /57 avis Google/.test(t2) && /Marc L\./.test(t2) && !/Avis moyen/.test(t2)
-  ? ok(`mode Places : "${t2.slice(0, 80)}" (les avis sous 4 etoiles sont ecartes)`)
+t2.includes('4,8/5') && t2.includes('57 avis Google') && t2.includes('Marc L.') &&
+  !t2.includes('Avis moyen') && !t2.includes('Avis sans date')
+  ? ok(`mode Places : note live et premier avis admissible (${t2.slice(0, 90)})`)
   : ko('mode Places : ' + t2);
+nomLieu === 'places' && ['rating', 'userRatingCount', 'googleMapsURI', 'reviews', 'attributions'].every((f) => champsPlaces.includes(f))
+  ? ok('Places Library : charge la note, les avis, les attributions et les liens Google Maps')
+  : ko('Places Library : champs Places incomplets');
+const attributionDonnee = live.window.document.getElementById('cover-reviews-data-attribution');
+attributionDonnee.textContent.includes('Source des données') &&
+  attributionDonnee.querySelector('a')?.href === 'https://www.example.com/attribution'
+  ? ok('avis Places : attributions de fournisseurs affichées')
+  : ko('avis Places : attribution de fournisseur absente');
+live.window.document.getElementById('cover-reviews-date').textContent === 'Visite : septembre 2026'
+  ? ok('avis Places : date de visite francaise affichee')
+  : ko('avis Places : date de visite absente');
+const divulgation = live.window.document.getElementById('cover-reviews-disclosure').textContent;
+divulgation.includes('4 ou 5 étoiles')
+  ? ok('avis Places : filtre et ordre de pertinence declares')
+  : ko('avis Places : filtre non declare');
+divulgation.includes('traduit par Google')
+  ? ok('avis Places : traduction signalee avec lien vers la source')
+  : ko('avis Places : traduction non signalee');
+!script.includes('places.googleapis.com/v1') && !script.includes('sessionStorage.') && !script.includes('localStorage.')
+  ? ok('avis Places : pas de REST navigateur ni de cache de contenu Google')
+  : ko('avis Places : REST ou cache de contenu detecte');
+
+const chargementSdk = domAvis(() => reponseJson({
+  place_id: 'ChIJxxxx', cle_api: 'CLE_DE_TEST', publie: true, note: 5, nombre_avis: 4,
+}));
+let urlSdk = '', sdkAsync = false;
+const appendReel = chargementSdk.window.document.head.appendChild.bind(chargementSdk.window.document.head);
+chargementSdk.window.document.head.appendChild = function (element) {
+  if (element.tagName === 'SCRIPT' && element.src.includes('maps.googleapis.com/maps/api/js')) {
+    urlSdk = element.src;
+    sdkAsync = element.async;
+    chargementSdk.window.google = { maps: { importLibrary: () => Promise.resolve({ Place: class {
+      constructor() { this.rating = 4.9; this.userRatingCount = 58; this.googleMapsURI = 'https://www.google.com/maps/?cid=2'; this.reviews = []; }
+      fetchFields() { return Promise.resolve(); }
+    } }) } };
+    chargementSdk.window.setTimeout(() => element.onload(), 0);
+    return element;
+  }
+  return appendReel(element);
+};
+chargementSdk.window.eval(script);
+await new Promise((r) => setTimeout(r, 50));
+urlSdk.startsWith('https://maps.googleapis.com/maps/api/js?') && urlSdk.includes('key=CLE_DE_TEST') &&
+  urlSdk.includes('language=fr') && urlSdk.includes('region=FR') && sdkAsync
+  ? ok('Maps JavaScript : SDK charge de facon asynchrone en francais')
+  : ko('Maps JavaScript : URL ou chargement du SDK invalide');
+
+const secours = domAvis(() => reponseJson({ ...manuel, place_id: 'ChIJxxxx', cle_api: 'CLE_DE_TEST' }));
+secours.window.google = { maps: { importLibrary: () => Promise.reject(new Error('API indisponible')) } };
+secours.window.eval(script);
+await new Promise((r) => setTimeout(r, 50));
+secours.window.document.getElementById('cover-reviews').textContent.includes('4,6/5')
+  ? ok('mode Places : secours manuel si le SDK est indisponible')
+  : ko('mode Places : secours manuel absent');
 
 // --------------------------------- 4 ter. pied de page et alentours ------
 const navs = [...d.querySelectorAll('.footer-quartier')];
@@ -175,10 +277,18 @@ ratp && ratp.href.startsWith('https://www.ratp.fr/itineraires?end=') && ratp.hre
 /navigator\.geolocation/.test(index) && /api-adresse\.data\.gouv\.fr\/reverse/.test(index)
   ? ok('itineraire RATP : depart pris sur la position du visiteur, avec repli')
   : ko('itineraire RATP : la geolocalisation du visiteur est absente');
-const garde = d.querySelector('#cover-section .footer-quartier--cover');
-garde && d.querySelector('#cover-section .legal-bottom-nav--cover')
-  ? ok('page de garde : adresse, metro, alentours et mentions legales')
-  : ko('page de garde : bloc de pied incomplet');
+const garde = d.querySelector('#cover-more .footer-quartier--cover');
+const couverture = d.getElementById('cover-section');
+const sousCouverture = d.getElementById('cover-more');
+const mailCouverture = d.querySelector('#cover-section .contact-link--mail');
+const avisSousCouverture = d.querySelector('#cover-more #cover-reviews');
+garde && d.querySelector('#cover-more .legal-bottom-nav--cover')
+  ? ok('page de garde : alentours et mentions legales apres la premiere vue')
+  : ko('page de garde : bloc d’informations du quartier incomplet');
+couverture && sousCouverture && couverture.nextElementSibling === sousCouverture &&
+  mailCouverture && avisSousCouverture && !couverture.querySelector('#cover-reviews')
+  ? ok('page de garde : le bouton e-mail precede les avis et les alentours')
+  : ko('page de garde : avis ou alentours encore melanges aux boutons de contact');
 
 // -------------------------------------------------------- 5. fichiers ------
 for (const f of ['404.html', 'sitemap.xml', 'sitemap-images.xml', 'robots.txt',
@@ -218,7 +328,9 @@ const autorises = [
   'https://api.web3forms.com/submit',
   'https://formsubmit.co/ajax/',
   'https://script.google.com/macros/s/',
-  'https://places.googleapis.com/v1/places/',
+  'https://maps.googleapis.com/maps/api/js',
+  'https://developers.google.com/maps/documentation/places/web-service/policies',
+  'https://policies.google.com/privacy',
   'https://get.geojs.io/v1/ip/country.json',
   'https://ipwho.is/',
   'https://www.gstatic.com/firebasejs/10.12.5/',
@@ -247,6 +359,23 @@ inconnus.length === 0
 const enClair = [...externes].filter((u) => u.startsWith('http://') && !u.includes('127.0.0.1'));
 enClair.length === 0 ? ok('aucun lien externe en http non securise')
                      : ko('liens en http : ' + enClair.join(' | '));
+
+// La nouvelle information Google Maps de la politique de confidentialité doit
+// aussi rester traduite dans une langue proposée par l'interface.
+const legalEn = new JSDOM(lire('confidentialite.html'), {
+  runScripts: 'outside-only', url: 'https://lacollinegambetta.com/confidentialite.html?lang=en'
+});
+legalEn.window.eval(lire('assets/js/legal-i18n.js'));
+const disclosureGoogle = [...legalEn.window.document.querySelectorAll('.legal-card p')]
+  .find((p) => p.querySelector('a[href^="https://policies.google.com/privacy"]'));
+const liensGoogle = disclosureGoogle ? [...disclosureGoogle.querySelectorAll('a')].map((a) => a.textContent.trim()) : [];
+disclosureGoogle && disclosureGoogle.textContent.startsWith('The homepage') &&
+  liensGoogle[0] === 'Google Privacy Policy' && liensGoogle[1] === 'Places API attribution requirements'
+  ? ok('confidentialite : services Google Maps et liens traduits en anglais')
+  : ko('confidentialite : traduction de la declaration Google Maps incomplete');
+legalEn.window.document.querySelector('time[datetime="2026-10-04"]')?.textContent.trim() === '4 October 2026'
+  ? ok('confidentialite : date de mise a jour traduite')
+  : ko('confidentialite : date de mise a jour non traduite');
 
 console.log(erreurs ? `\n${erreurs} controle(s) en echec` : '\nTous les controles sont au vert');
 process.exit(erreurs ? 1 : 0);

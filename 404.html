@@ -58,21 +58,29 @@ html:not(.carte-doc) .footer-quartier a:hover { text-decoration:underline; opaci
 html:not(.carte-doc) .footer-quartier__sep { opacity:.5; }
 html:not(.carte-doc) a.footer-details__metro { color:inherit; text-decoration:none; }
 html:not(.carte-doc) a.footer-details__metro:hover { text-decoration:underline; }
-/* Page de garde : meme ligne, encore plus sobre, sous le bandeau d'avis. */
-html:not(.carte-doc) #cover-section .footer-quartier--cover { margin-top:7px; opacity:.42; }
-html:not(.carte-doc) #cover-section .legal-bottom-nav--cover {
+/* Le premier ecran de la couverture s'arrete aux boutons de contact.
+   Avis et reperes restent juste apres, accessibles en faisant defiler. */
+html:not(.carte-doc) .cover-more {
+  display:grid; justify-items:center; gap:6px; width:100%;
+  padding:14px 16px 20px;
+  border-top:1px solid rgba(216,178,87,.32);
+  background:linear-gradient(180deg,#432155 0%,#24102e 100%);
+  color:#fff; text-align:center;
+}
+html:not(.carte-doc) .cover-more .footer-quartier--cover { margin-top:7px; opacity:.7; }
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover {
   display:flex; flex-wrap:wrap; justify-content:center; gap:4px 10px;
   margin:4px auto 0; padding:0; background:none; border:0;
   font-family:'Cinzel',serif; font-size:clamp(.5rem,.95vw,.6rem);
   letter-spacing:.09em; text-transform:uppercase;
-  color:var(--gold-100,#f0dca8); opacity:.42;
+  color:var(--gold-100,#f0dca8); opacity:.7;
 }
-html:not(.carte-doc) #cover-section .legal-bottom-nav--cover a {
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a {
   color:inherit; background:none; border:0; padding:0; text-decoration:none; text-shadow:none;
 }
-html:not(.carte-doc) #cover-section .legal-bottom-nav--cover a:hover { text-decoration:underline; }
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover { text-decoration:underline; }
 @media print {
-  .footer-quartier, #cover-section .legal-bottom-nav--cover { display:none !important; }
+  .footer-quartier, .cover-more { display:none !important; }
 }
 /* quartier:css:fin */
 </style>

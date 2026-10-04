@@ -8,6 +8,7 @@
     "start": "npx firebase-tools emulators:start --project la-colline-gambetta --only hosting,firestore",
     "dev": "npx firebase-tools emulators:start --project la-colline-gambetta --only hosting,firestore",
     "firebase:deploy": "npx firebase-tools deploy --project la-colline-gambetta --only firestore",
+    "test:site": "node tools/verifier_site.mjs",
     "build:print": "node tools/build_browser_print.mjs",
     "build:carte-pdf": "node tools/build_carte_pdf.mjs",
     "build:imprimeur": "node tools/build_carte_pdf.mjs --imprimeur",
@@ -19,7 +20,9 @@
     "@fontsource/cinzel": "^5.3.0",
     "@fontsource/montserrat": "^5.3.0",
     "@sparticuz/chromium": "149.0.0",
+    "jsdom": "^30.1.2",
     "playwright": "1.62.1",
+    "postcss": "^8.5.28",
     "sharp": "^0.35.4"
   },
   "dependencies": {
