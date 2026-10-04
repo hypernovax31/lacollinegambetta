@@ -10857,26 +10857,35 @@ function sizeCoverMedallion() {
   const rowGap = parseFloat(cs.rowGap) || 0;
   const reserved = action ? action.offsetHeight + rowGap : 0;
   let side;
-  if (window.innerHeight <= 560) {
-    /* Fenêtre basse (≤ 560 px) : le budget se calcule sur les VRAIS
-       voisins (titre, bouton, pied de page) rapportés à la hauteur de
-       l'ÉCRAN — jamais sur la hauteur du conteneur, qui épouserait le
-       cadre et bouclerait sur lui-même. Le médaillon prend ainsi le
-       maximum de ce qui reste ; s'il ne reste rien, la taille minimale
-       garantie ci-dessous prend le relais et la page de garde défile. */
+  if (window.innerWidth <= 860 || window.innerHeight <= 560) {
+    /* MOBILE — la première vue va du titre au bouton e-mail, ni plus ni
+       moins : on dimensionne le médaillon pour que le BAS des boutons de
+       contact tombe pile sur le bas de l'écran. Le bandeau d'avis, la ligne
+       « Dans les alentours » et les mentions légales se découvrent ensuite
+       en faisant défiler. Deux passes de correction suffisent : la relation
+       entre la taille du médaillon et la position des boutons est linéaire,
+       et la mesure se fait sur le rendu réel (polices chargées comprises). */
     const pg = document.querySelector('#cover-section .cover-page');
-    const brand = document.querySelector('#cover-section .cover-brand');
-    const foot = document.querySelector('#cover-section .cover-footer');
-    let budget = window.innerHeight - 4;
-    if (pg) {
-      const pcs = getComputedStyle(pg);
-      budget -= (parseFloat(pcs.paddingTop) || 0) + (parseFloat(pcs.paddingBottom) || 0);
-      budget -= (parseFloat(pcs.rowGap) || 0) * 3;
+    const links = document.querySelector('#cover-section .cover-links');
+    const largeurMax = Math.max(60, cont.clientWidth);
+    let s = Math.min(largeurMax, Math.round(window.innerHeight * 0.52));
+    frame.style.display = '';
+    frame.style.width = s + 'px';
+    frame.style.height = s + 'px';
+    if (pg && links) {
+      const padBas = parseFloat(getComputedStyle(pg).paddingBottom) || 0;
+      for (let i = 0; i < 2; i++) {
+        const hautPage = pg.getBoundingClientRect().top;
+        const basBoutons = links.getBoundingClientRect().bottom;
+        const vise = window.innerHeight - padBas;
+        const ecart = vise - (basBoutons - hautPage);
+        if (Math.abs(ecart) < 2) break;
+        s = Math.max(60, Math.min(largeurMax, s + ecart));
+        frame.style.width = s + 'px';
+        frame.style.height = s + 'px';
+      }
     }
-    if (brand) budget -= brand.offsetHeight;
-    if (action) budget -= action.offsetHeight;
-    if (foot) budget -= foot.offsetHeight;
-    side = Math.max(0, Math.min(cont.clientWidth - 8, budget));
+    side = s;
   } else {
     side = Math.max(0, Math.min(cont.clientWidth, cont.clientHeight - reserved - 2));
   }
