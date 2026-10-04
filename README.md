@@ -128,29 +128,66 @@ Galerie de la bibliothèque : `assets/vector/apercu.html`.
 
 Le bandeau lit `assets/data/avis-google.json`. Deux façons de l'alimenter :
 
-**A — automatique (recommandé).** Renseignez `place_id` (identifiant de la
-fiche Google du restaurant) et `cle_api` (clé d'API Google Places restreinte
-au domaine `lacollinegambetta.com`) : la note, le nombre d'avis et les
-meilleurs commentaires se mettent à jour tout seuls, avec un cache de 12 h.
+**A — automatique.** Renseignez `place_id` (identifiant de la fiche) et
+`cle_api` dans ce fichier. Le navigateur utilise la bibliothèque Places de
+**Maps JavaScript API** — pas l'endpoint REST Places, qui n'est pas destiné à
+un `fetch` cross-origin. Il faut activer la facturation et les API **Maps
+JavaScript API** et **Places API (New)** dans Google Cloud. Chaque ouverture
+de la page déclenche une requête Places (aucun cache de contenu API) : vérifiez
+les quotas et budgets de facturation du projet Google Cloud.
 
-**B — manuel.** Passez `publie` à `true` et recopiez la note, le nombre
-d'avis et vos meilleurs commentaires :
+`assets/data/avis-google.json` est public, tout comme le reste du site statique :
+la clé y est donc visible côté navigateur. Utilisez une clé dédiée au site,
+restreinte dans Google Cloud aux référents `https://lacollinegambetta.com/*`
+(et `https://www.lacollinegambetta.com/*` si ce nom d'hôte sert le site) **et**
+aux deux API ci-dessus. N'y placez jamais une clé serveur ou une clé partagée
+avec d'autres applications. Une restriction de référent ne remplace pas la
+restriction d'API. Voir les [recommandations de sécurité Google Maps
+Platform](https://developers.google.com/maps/api-security-best-practices).
+
+La note et le nombre d'avis sont lus à l'ouverture de la page ; aucun contenu
+Places n'est conservé dans `localStorage` ou `sessionStorage`. En cas d'échec
+du SDK, la valeur manuelle ci-dessous sert de secours. L'extrait affiché est
+le premier avis admissible de 4 ou 5 étoiles dans l'ordre de pertinence renvoyé
+par Google ; le filtre et l'ordre sont indiqués aux visiteurs. L'auteur (photo,
+nom et lien de profil lorsqu'ils sont disponibles), le lien direct vers l'avis,
+la date de visite retournée pour les avis en France et l'attribution **Google
+Maps** et les éventuelles attributions de fournisseurs sont affichés avec
+l'extrait. Si Google renvoie une traduction, le bandeau le signale et le lien
+direct permet de consulter l'avis source.
+
+**B — manuel.** Passez `publie` à `true` et recopiez la note, le nombre d'avis
+et, si vous affichez un extrait, ses attributions :
 
 ```json
-{ "publie": true, "note": 4.8, "nombre_avis": 57,
-  "url": "https://g.page/...",
-  "avis": [{ "auteur": "Marc L.", "note": 5, "texte": "Terrasse agréable." }] }
+{
+  "publie": true,
+  "note": 4.8,
+  "nombre_avis": 57,
+  "url": "https://www.google.com/maps/...",
+  "avis": [{
+    "auteur": "Marc L.",
+    "profil": "https://www.google.com/maps/contrib/...",
+    "photo": "https://lh3.googleusercontent.com/...",
+    "note": 5,
+    "texte": "Terrasse agréable.",
+    "url_avis": "https://www.google.com/maps/...",
+    "date_visite": "2026-09"
+  }]
+}
 ```
 
-Seuls les avis à 4 étoiles ou plus sont mis en avant, et les textes sont
+Seuls les avis à 4 ou 5 étoiles sont mis en avant, et les textes sont
 tronqués à 150 caractères. Tant qu'aucune source n'est renseignée, **le
 bandeau reste invisible** et la page de garde est strictement inchangée. La
 note n'est volontairement pas balisée en `aggregateRating` : Google interdit
-de rebaliser sur son site des notes collectées ailleurs.
+de rebaliser sur son site des notes collectées ailleurs. Consultez aussi les
+[politiques d'attribution et d'affichage Places API](https://developers.google.com/maps/documentation/places/web-service/policies).
 
 ```bash
 python3 tools/avis_google.py     # (re)pose le bandeau : styles, balisage, chargeur
 python3 tools/pied_quartier.py   # ligne « Dans le quartier » du pied de page
+npm run test:site               # vérifications HTML, CSS, avis et liens
 ```
 
 ### Pied de page commun et itinéraire RATP
