@@ -5,17 +5,11 @@
     "B) Manuel : passez publie a true et recopiez ci-dessous la note, le nombre d'avis et vos meilleurs commentaires, tels qu'ils figurent sur votre fiche Google. N'y mettez que de vrais avis.",
     "Tant qu'aucune des deux sources n'est renseignee, le bandeau reste invisible et la page de garde est inchangee."
   ],
-  "publie": false,
-  "note": null,
-  "nombre_avis": null,
+  "publie": true,
+  "note": 5.0,
+  "nombre_avis": 4,
   "url": "https://share.google/730vACQ7j0hY1NJ1y",
-  "avis": [
-    {
-      "auteur": "",
-      "note": 5,
-      "texte": ""
-    }
-  ],
-  "place_id": "",
-  "cle_api": ""
+  "avis": [],
+  "place_id": "ChIJF8cwdNBt5kcRaUhXDrZCsKw",
+  "cle_api": "AIzaSyDI41xtmjfe4L_HWLUq23Lvx-ZplHlZ7PI"
 }
