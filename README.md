@@ -147,17 +147,22 @@ Platform](https://developers.google.com/maps/api-security-best-practices).
 
 La note et le nombre d'avis sont lus à l'ouverture de la page ; aucun contenu
 Places n'est conservé dans `localStorage` ou `sessionStorage`. En cas d'échec
-du SDK, la valeur manuelle ci-dessous sert de secours. L'extrait affiché est
-le premier avis admissible de 4 ou 5 étoiles dans l'ordre de pertinence renvoyé
-par Google ; le filtre et l'ordre sont indiqués aux visiteurs. L'auteur (photo,
-nom et lien de profil lorsqu'ils sont disponibles), le lien direct vers l'avis,
-la date de visite retournée pour les avis en France et l'attribution **Google
-Maps** et les éventuelles attributions de fournisseurs sont affichés avec
-l'extrait. Si Google renvoie une traduction, le bandeau le signale et le lien
-direct permet de consulter l'avis source.
+du SDK, la valeur manuelle ci-dessous sert de secours. Le carrousel affiche les
+avis admissibles de 4 ou 5 étoiles dans l'ordre de pertinence renvoyé par
+Google. Il se parcourt avec les flèches, les touches gauche/droite ou le geste
+horizontal sur mobile, et boucle du dernier au premier sans lecture automatique.
+Le prénom affiché correspond au premier élément du nom public fourni par Google ;
+la photo et le lien de profil, lorsqu'ils sont disponibles, restent associés à
+l'avis. Le lien direct vers l'avis, la date de visite retournée pour les avis
+en France et l'attribution **Google Maps** (ainsi que les éventuelles
+attributions de fournisseurs) sont également affichés. Le filtre et l'ordre
+sont indiqués aux visiteurs. Si Google renvoie une traduction, le bandeau le
+signale et le lien direct permet de consulter l'avis source.
 
 **B — manuel.** Passez `publie` à `true` et recopiez la note, le nombre d'avis
-et, si vous affichez un extrait, ses attributions :
+et, si vous affichez des extraits, leurs attributions. Plusieurs avis peuvent
+être ajoutés au tableau `avis` ; le carrousel boucle sur ceux qui sont
+admissibles :
 
 ```json
 {

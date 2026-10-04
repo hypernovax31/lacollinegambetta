@@ -97,10 +97,15 @@ function reponseJson(value) {
 const manuel = {
   publie: true, note: 4.6, nombre_avis: 128,
   url: 'https://www.google.com/maps/search/?api=1&query=restaurant',
-  avis: [{ auteur: 'Claire D.', profil: 'https://www.google.com/maps/contrib/1',
-    photo: 'https://lh3.googleusercontent.com/a/test', note: 5,
-    texte: 'Accueil parfait et cuisine maison.',
-    url_avis: 'https://www.google.com/maps/reviews/data=1', date_visite: '2026-09' }]
+  avis: [
+    { auteur: 'Claire D.', profil: 'https://www.google.com/maps/contrib/1',
+      photo: 'https://lh3.googleusercontent.com/a/test', note: 5,
+      texte: 'Accueil parfait et cuisine maison.',
+      url_avis: 'https://www.google.com/maps/reviews/data=1', date_visite: '2026-09' },
+    { auteur: 'Marc L.', profil: 'https://www.google.com/maps/contrib/2',
+      note: 4, texte: 'Très bonne adresse dans le quartier.',
+      url_avis: 'https://www.google.com/maps/reviews/data=2', date_visite: '2026-08' }
+  ]
 };
 const essai = domAvis(() => reponseJson(manuel));
 essai.window.eval(script);
@@ -108,16 +113,67 @@ await new Promise((r) => setTimeout(r, 30));
 const b = essai.window.document.getElementById('cover-reviews');
 !b.hidden ? ok('bloc avis : affiche la source manuelle publiee') : ko('bloc avis manuel : reste masque');
 const texte = b.textContent.replace(/\s+/g, ' ').trim();
-texte.includes('4,6/5') && texte.includes('128 avis Google') && texte.includes('Claire D.')
-  ? ok(`bloc avis manuel : "${texte.slice(0, 80)}"`) : ko('bloc avis manuel : contenu inattendu : ' + texte);
-const dateManuelle = essai.window.document.getElementById('cover-reviews-date').textContent;
+const slidesManuels = [...b.querySelectorAll('.cover-reviews__slide:not([data-carousel-clone])')];
+const avisActif = b.querySelector('.cover-reviews__slide[aria-hidden="false"]');
+texte.includes('4,6/5') && texte.includes('128 avis Google') && texte.includes('Claire') &&
+  !texte.includes('Claire D.') && !texte.includes('Marc L.') &&
+  slidesManuels.length === 2 && avisActif
+  ? ok(`bloc avis manuel : prénom seul et ${slidesManuels.length} diapos`)
+  : ko('bloc avis manuel : contenu inattendu : ' + texte);
+const dateManuelle = avisActif && avisActif.querySelector('.cover-reviews__date')?.textContent;
 dateManuelle === 'Visite : septembre 2026'
   ? ok('avis manuel : mois et annee de visite affiches')
   : ko('avis manuel : date de visite inattendue : ' + dateManuelle);
 essai.window.document.getElementById('cover-reviews-maps').textContent === 'Google Maps'
   ? ok('attribution Google Maps visible') : ko('attribution Google Maps absente');
-essai.window.document.getElementById('cover-reviews-source').href.includes('/reviews/data=1')
+const lienAvisManuel = avisActif && avisActif.querySelector('.cover-reviews__source');
+lienAvisManuel?.href.includes('/reviews/data=1')
   ? ok('avis manuel : lien direct vers l’avis conserve') : ko('avis manuel : lien direct absent');
+const suivantManuel = essai.window.document.getElementById('cover-reviews-next');
+const precedentManuel = essai.window.document.getElementById('cover-reviews-previous');
+const pisteManuelle = essai.window.document.getElementById('cover-reviews-track');
+function terminerTransitionAvis(dom, piste) {
+  const ev = new dom.window.Event('transitionend');
+  Object.defineProperty(ev, 'propertyName', { value: 'transform' });
+  piste.dispatchEvent(ev);
+}
+suivantManuel.hidden === false && precedentManuel.hidden === false
+  ? ok('carrousel : commandes visibles pour plusieurs avis')
+  : ko('carrousel : commandes manquantes');
+suivantManuel.click();
+const secondManuel = b.querySelector('.cover-reviews__slide[aria-hidden="false"]');
+secondManuel?.querySelector('.cover-reviews__author')?.textContent === 'Marc' &&
+  essai.window.document.getElementById('cover-reviews-status').textContent === 'Avis 2 sur 2'
+  ? ok('carrousel : avance horizontalement vers le prénom suivant')
+  : ko('carrousel : avis suivant inattendu');
+terminerTransitionAvis(essai.window, pisteManuelle);
+suivantManuel.click();
+b.querySelector('.cover-reviews__slide[aria-hidden="false"]')?.querySelector('.cover-reviews__author')?.textContent === 'Claire' &&
+  essai.window.document.getElementById('cover-reviews-status').textContent === 'Avis 1 sur 2'
+  ? ok('carrousel : boucle du dernier avis vers le premier')
+  : ko('carrousel : retour au premier avis absent');
+terminerTransitionAvis(essai.window, pisteManuelle);
+precedentManuel.click();
+b.querySelector('.cover-reviews__slide[aria-hidden="false"]')?.querySelector('.cover-reviews__author')?.textContent === 'Marc'
+  ? ok('carrousel : boucle du premier avis vers le dernier')
+  : ko('carrousel : retour au dernier avis absent');
+terminerTransitionAvis(essai.window, pisteManuelle);
+const viewportManuel = essai.window.document.getElementById('cover-reviews-viewport');
+const debutBalayage = new essai.window.Event('touchstart');
+Object.defineProperty(debutBalayage, 'touches', { value: [{ clientX: 150, clientY: 20 }] });
+viewportManuel.dispatchEvent(debutBalayage);
+const finBalayage = new essai.window.Event('touchend');
+Object.defineProperty(finBalayage, 'changedTouches', { value: [{ clientX: 75, clientY: 24 }] });
+viewportManuel.dispatchEvent(finBalayage);
+b.querySelector('.cover-reviews__slide[aria-hidden="false"]')?.querySelector('.cover-reviews__author')?.textContent === 'Claire'
+  ? ok('carrousel : balayage horizontal sur mobile')
+  : ko('carrousel : balayage mobile inactif');
+terminerTransitionAvis(essai.window, pisteManuelle);
+viewportManuel.dispatchEvent(new essai.window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+b.querySelector('.cover-reviews__slide[aria-hidden="false"]')?.querySelector('.cover-reviews__author')?.textContent === 'Marc'
+  ? ok('carrousel : navigation au clavier')
+  : ko('carrousel : navigation clavier inactive');
+terminerTransitionAvis(essai.window, pisteManuelle);
 
 const vide = domAvis(() => reponseJson({ publie: false }));
 vide.window.eval(script);
@@ -165,10 +221,13 @@ live.window.google = { maps: { importLibrary: (nom) => {
 } } };
 live.window.eval(script);
 await new Promise((r) => setTimeout(r, 50));
-const t2 = live.window.document.getElementById('cover-reviews').textContent.replace(/\s+/g, ' ').trim();
-t2.includes('4,8/5') && t2.includes('57 avis Google') && t2.includes('Marc L.') &&
-  !t2.includes('Avis moyen') && !t2.includes('Avis sans date')
-  ? ok(`mode Places : note live et premier avis admissible (${t2.slice(0, 90)})`)
+const blocLive = live.window.document.getElementById('cover-reviews');
+const t2 = blocLive.textContent.replace(/\s+/g, ' ').trim();
+const premierLive = blocLive.querySelector('.cover-reviews__slide[aria-hidden="false"]');
+t2.includes('4,8/5') && t2.includes('57 avis Google') && t2.includes('Marc') &&
+  !t2.includes('Marc L.') && !t2.includes('Avis moyen') && !t2.includes('Avis sans date') &&
+  premierLive?.querySelector('.cover-reviews__author')?.textContent === 'Marc'
+  ? ok(`mode Places : note live, prénom seul et avis admissible (${t2.slice(0, 90)})`)
   : ko('mode Places : ' + t2);
 nomLieu === 'places' && ['rating', 'userRatingCount', 'googleMapsURI', 'reviews', 'attributions'].every((f) => champsPlaces.includes(f))
   ? ok('Places Library : charge la note, les avis, les attributions et les liens Google Maps')
@@ -178,9 +237,13 @@ attributionDonnee.textContent.includes('Source des données') &&
   attributionDonnee.querySelector('a')?.href === 'https://www.example.com/attribution'
   ? ok('avis Places : attributions de fournisseurs affichées')
   : ko('avis Places : attribution de fournisseur absente');
-live.window.document.getElementById('cover-reviews-date').textContent === 'Visite : septembre 2026'
+premierLive?.querySelector('.cover-reviews__date')?.textContent === 'Visite : septembre 2026'
   ? ok('avis Places : date de visite francaise affichee')
   : ko('avis Places : date de visite absente');
+live.window.document.getElementById('cover-reviews-next').hidden &&
+live.window.document.getElementById('cover-reviews-previous').hidden
+  ? ok('carrousel : commandes masquees pour un seul avis')
+  : ko('carrousel : commandes visibles sans navigation possible');
 const divulgation = live.window.document.getElementById('cover-reviews-disclosure').textContent;
 divulgation.includes('4 ou 5 étoiles')
   ? ok('avis Places : filtre et ordre de pertinence declares')
