@@ -10853,6 +10853,29 @@ function sizeCoverMedallion() {
   const action = document.querySelector('#cover-section .cover-action');
   if (!section || !cont || !frame) return;
   if (section.style.display === 'none' || !section.offsetHeight) return;
+  /* MOBILE — la premiere vue doit aller du titre au bouton e-mail. Le pied
+     ajoute sous les boutons (avis, « Dans les alentours », mentions legales)
+     est donc repousse SOUS la ligne de flottaison : on allonge la page de
+     garde d'exactement la hauteur de ces trois elements. La grille reste
+     intacte (titre / medaillon / pied), rien ne bouge d'autre, donc aucun
+     risque de chevauchement : seul le bas de la page descend. */
+  const coverPage = document.querySelector('#cover-section .cover-page');
+  const coverFoot = document.querySelector('#cover-section .cover-footer');
+  if (coverPage) {
+    let rab = 0;
+    if (window.innerWidth <= 860 && coverFoot) {
+      const ecart = parseFloat(getComputedStyle(coverFoot).rowGap) || 0;
+      ['.cover-reviews', '.footer-quartier--cover', '.legal-bottom-nav--cover']
+        .forEach(function (sel) {
+          const el = document.querySelector('#cover-section ' + sel);
+          if (el && el.offsetParent !== null && el.offsetHeight) {
+            rab += el.offsetHeight + ecart;
+          }
+        });
+    }
+    coverPage.style.minHeight = rab > 0 ? 'calc(100svh + ' + Math.round(rab) + 'px)' : '';
+  }
+
   const cs = getComputedStyle(cont);
   const rowGap = parseFloat(cs.rowGap) || 0;
   const reserved = action ? action.offsetHeight + rowGap : 0;
