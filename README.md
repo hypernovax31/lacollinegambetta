@@ -126,19 +126,32 @@ Galerie de la bibliothèque : `assets/vector/apercu.html`.
 
 ### Avis Google de la page de garde
 
-Le bloc d'avis lit `assets/data/avis-google.json`. Tant que `publie` vaut
-`false`, **rien ne s'affiche** et la page est inchangée. Pour l'activer, il
-suffit d'y recopier les données de la fiche Google *La Colline Gambetta* :
+Le bandeau lit `assets/data/avis-google.json`. Deux façons de l'alimenter :
+
+**A — automatique (recommandé).** Renseignez `place_id` (identifiant de la
+fiche Google du restaurant) et `cle_api` (clé d'API Google Places restreinte
+au domaine `lacollinegambetta.com`) : la note, le nombre d'avis et les
+meilleurs commentaires se mettent à jour tout seuls, avec un cache de 12 h.
+
+**B — manuel.** Passez `publie` à `true` et recopiez la note, le nombre
+d'avis et vos meilleurs commentaires :
 
 ```json
-{ "publie": true, "note": 4.6, "nombre_avis": 128,
+{ "publie": true, "note": 4.8, "nombre_avis": 57,
   "url": "https://g.page/...",
-  "avis": [{ "auteur": "Claire D.", "texte": "Accueil parfait, cuisine maison." }] }
+  "avis": [{ "auteur": "Marc L.", "note": 5, "texte": "Terrasse agréable." }] }
 ```
 
-N'y mettre que de **vrais avis de la fiche** : la note n'est volontairement
-pas balisée en `aggregateRating`, Google interdisant de rebaliser sur son
-site les notes collectées ailleurs.
+Seuls les avis à 4 étoiles ou plus sont mis en avant, et les textes sont
+tronqués à 150 caractères. Tant qu'aucune source n'est renseignée, **le
+bandeau reste invisible** et la page de garde est strictement inchangée. La
+note n'est volontairement pas balisée en `aggregateRating` : Google interdit
+de rebaliser sur son site des notes collectées ailleurs.
+
+```bash
+python3 tools/avis_google.py     # (re)pose le bandeau : styles, balisage, chargeur
+python3 tools/pied_quartier.py   # ligne « Dans le quartier » du pied de page
+```
 
 ### Vérification
 

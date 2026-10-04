@@ -1,8 +1,9 @@
 {
   "_mode_emploi": [
-    "Renseignez ici les avis de la fiche Google La Colline Gambetta,",
-    "puis passez publie a true : le bloc apparait sur la page de garde.",
-    "N'y mettez que de vrais avis de votre fiche."
+    "Deux facons d'alimenter le bandeau d'avis de la page de garde.",
+    "A) Automatique : collez l'identifiant de votre fiche Google dans place_id et une cle d'API Places (restreinte au domaine lacollinegambetta.com) dans cle_api. La note, le nombre d'avis et les meilleurs commentaires se mettent a jour tout seuls.",
+    "B) Manuel : passez publie a true et recopiez ci-dessous la note, le nombre d'avis et vos meilleurs commentaires, tels qu'ils figurent sur votre fiche Google. N'y mettez que de vrais avis.",
+    "Tant qu'aucune des deux sources n'est renseignee, le bandeau reste invisible et la page de garde est inchangee."
   ],
   "publie": false,
   "note": null,
@@ -14,5 +15,7 @@
       "note": 5,
       "texte": ""
     }
-  ]
+  ],
+  "place_id": "",
+  "cle_api": ""
 }

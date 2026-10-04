@@ -96,6 +96,42 @@ vide.window.document.getElementById('cover-reviews').hidden
   ? ok('bloc avis : invisible tant qu\'aucun avis reel n\'est saisi')
   : ko('bloc avis : visible alors qu\'il est vide');
 
+
+// --------------------------------------- 4 bis. etoiles et mode Places ----
+const remplissage = essai.window.document.getElementById('cover-reviews-stars-fill').style.width;
+remplissage === '92%' ? ok(`etoiles : remplissage exact pour 4,6/5 (${remplissage})`)
+                         : ko(`etoiles : remplissage inattendu (${remplissage})`);
+
+const live = new JSDOM(`<body>${gabarit}</body>`, { runScripts: 'outside-only' });
+live.window.fetch = (u) => Promise.resolve(String(u).includes('places.googleapis.com') ? {
+  ok: true,
+  json: () => Promise.resolve({
+    rating: 4.8, userRatingCount: 57, googleMapsUri: 'https://maps.google.com/?cid=1',
+    reviews: [{ rating: 5, text: { text: 'Terrasse agreable et planches genereuses.' },
+                authorAttribution: { displayName: 'Marc L.' } },
+              { rating: 3, text: { text: 'Avis moyen a ne pas mettre en avant.' },
+                authorAttribution: { displayName: 'X.' } }],
+  }),
+} : {
+  ok: true,
+  json: () => Promise.resolve({ place_id: 'ChIJxxxx', cle_api: 'AIzaCLE', publie: false }),
+});
+live.window.eval(script);
+await new Promise((r) => setTimeout(r, 60));
+const t2 = live.window.document.getElementById('cover-reviews').textContent.replace(/\s+/g, ' ').trim();
+/4,8\/5/.test(t2) && /57 avis Google/.test(t2) && /Marc L\./.test(t2) && !/Avis moyen/.test(t2)
+  ? ok(`mode Places : "${t2.slice(0, 80)}" (les avis sous 4 etoiles sont ecartes)`)
+  : ko('mode Places : ' + t2);
+
+// ------------------------------------------- 4 ter. reperes du quartier ---
+const quartier = [...d.querySelectorAll('.footer-quartier a')];
+quartier.length === 4 && quartier.every((a) => a.href.startsWith('https://'))
+  ? ok(`pied de page : ${quartier.length} reperes de quartier (${quartier.map((a) => a.textContent).join(', ')})`)
+  : ko(`pied de page : ${quartier.length} lien(s) de quartier`);
+d.querySelector('.footer-quartier').previousElementSibling.classList.contains('footer-details')
+  ? ok('la ligne de quartier est bien placee sous l\'adresse')
+  : ko('la ligne de quartier n\'est pas sous l\'adresse');
+
 // -------------------------------------------------------- 5. fichiers ------
 for (const f of ['404.html', 'sitemap.xml', 'sitemap-images.xml', 'robots.txt',
   'assets/data/avis-google.json', 'assets/cover/og-cover.jpg']) {

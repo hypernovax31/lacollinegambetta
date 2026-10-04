@@ -261,124 +261,9 @@ def donnees_structurees(s: str) -> str:
 # --------------------------------------------------------------------------- #
 # 5. bloc d'avis Google sur la page de garde
 # --------------------------------------------------------------------------- #
-CSS_AVIS = """
-/* ===== Avis Google : une seule ligne sobre sous les liens de la page de
-   garde. Le bloc reste masque tant que assets/data/avis-google.json n'a pas
-   ete rempli, il ne peut donc jamais decaler la mise en page. ===== */
-html:not(.carte-doc) .cover-reviews[hidden] { display:none !important; }
-html:not(.carte-doc) .cover-reviews {
-  display:flex; flex-direction:column; align-items:center; gap:.3rem;
-  margin:.55rem auto 0; max-width:min(560px, 92vw); text-align:center;
-}
-html:not(.carte-doc) .cover-reviews__head {
-  display:inline-flex; align-items:center; gap:.46rem;
-  font-family:'Montserrat',sans-serif; font-size:.74rem; font-weight:600;
-  letter-spacing:.08em; text-transform:uppercase; color:var(--gold-500,#d8b257);
-}
-html:not(.carte-doc) .cover-reviews__stars { letter-spacing:.12em; font-size:.82rem; line-height:1; }
-html:not(.carte-doc) .cover-reviews__count { opacity:.72; font-weight:500; letter-spacing:.05em; }
-html:not(.carte-doc) .cover-reviews__quote {
-  margin:0; font-family:'Montserrat',sans-serif; font-style:italic;
-  font-size:.76rem; line-height:1.45; color:rgba(255,255,255,.76);
-  max-width:46ch;
-}
-html:not(.carte-doc) .cover-reviews__author { font-style:normal; opacity:.6; }
-html:not(.carte-doc) .cover-reviews a { color:inherit; text-decoration:none; }
-html:not(.carte-doc) .cover-reviews a:hover { text-decoration:underline; }
-@media (max-height: 700px) {
-  html:not(.carte-doc) .cover-reviews__quote { display:none; }
-}
-"""
-
-HTML_AVIS = """<div class="cover-reviews" id="cover-reviews" hidden aria-label="Avis Google">
-          <a class="cover-reviews__head" id="cover-reviews-link" href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" target="_blank" rel="noopener">
-            <span class="cover-reviews__stars" id="cover-reviews-stars" aria-hidden="true"></span>
-            <span id="cover-reviews-note"></span>
-            <span class="cover-reviews__count" id="cover-reviews-count"></span>
-          </a>
-          <p class="cover-reviews__quote" id="cover-reviews-quote" hidden></p>
-        </div>"""
-
-JS_AVIS = """<script>
-/* Avis Google de la page de garde : lus dans assets/data/avis-google.json,
-   jamais ecrits en dur. Tant que "publie" est faux ou que le fichier est
-   absent, le bloc reste masque et la page est rigoureusement inchangee. */
-(function () {
-  var bloc = document.getElementById('cover-reviews');
-  if (!bloc || !window.fetch) return;
-  fetch('assets/data/avis-google.json', { cache: 'no-cache' })
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .then(function (d) {
-      if (!d || d.publie !== true || !d.note) return;
-      var note = Number(String(d.note).replace(',', '.'));
-      if (!(note > 0)) return;
-      /* une etoile pleine par point entier ; 4,6/5 affiche donc quatre
-         etoiles pleines et une vide, la note chiffree faisant foi. */
-      var pleines = Math.round(note - 0.25);
-      var etoiles = '';
-      for (var i = 0; i < 5; i++) etoiles += (i < pleines ? '\\u2605' : '\\u2606');
-      document.getElementById('cover-reviews-stars').textContent = etoiles;
-      document.getElementById('cover-reviews-note').textContent =
-        note.toFixed(1).replace('.', ',') + '/5';
-      var nb = Number(d.nombre_avis || 0);
-      document.getElementById('cover-reviews-count').textContent =
-        nb ? '\\u00b7 ' + nb + ' avis Google' : '\\u00b7 Avis Google';
-      if (d.url) document.getElementById('cover-reviews-link').href = d.url;
-      var liste = (d.avis || []).filter(function (a) { return a && a.texte; });
-      if (liste.length) {
-        var a = liste[Math.floor(Math.random() * liste.length)];
-        var q = document.getElementById('cover-reviews-quote');
-        q.textContent = '\\u00ab\\u202f' + a.texte + '\\u202f\\u00bb';
-        if (a.auteur) {
-          var sp = document.createElement('span');
-          sp.className = 'cover-reviews__author';
-          sp.textContent = ' \\u2014 ' + a.auteur;
-          q.appendChild(sp);
-        }
-        q.hidden = false;
-      }
-      bloc.hidden = false;
-    })
-    .catch(function () {});
-})();
-</script>"""
-
-
-def bloc_avis(s: str) -> str:
-    if "cover-reviews" in s:
-        print("  avis Google : deja en place")
-        return s
-    fin_style = s.index("</style>")
-    s = s[:fin_style] + CSS_AVIS + s[fin_style:]
-    ancre = '      </div>\n      </div>\n'  # fin de .cover-links / .cover-footer
-    i = s.index('<div class="cover-links">')
-    j = s.index("</div>\n      </div>", i)
-    s = s[:j] + "</div>\n        " + HTML_AVIS + "\n      " + s[j + len("</div>"):]
-    k = s.rindex("</body>")
-    s = s[:k] + JS_AVIS + "\n" + s[k:]
-    print("  avis Google : bloc, styles et chargeur ajoutes")
-    return s
-
-
-def fichier_avis() -> None:
-    p = ROOT / "assets" / "data" / "avis-google.json"
-    if p.exists():
-        print("  avis Google : fichier de donnees deja present")
-        return
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps({
-        "_mode_emploi": [
-            "Renseignez ici les avis de la fiche Google La Colline Gambetta,",
-            "puis passez publie a true : le bloc apparait sur la page de garde.",
-            "N'y mettez que de vrais avis de votre fiche."],
-        "publie": False,
-        "note": None,
-        "nombre_avis": None,
-        "url": "",
-        "avis": [{"auteur": "", "note": 5, "texte": ""}],
-    }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print("  avis Google : assets/data/avis-google.json cree (vide, non publie)")
-
+# Le bandeau d'avis Google est gere par tools/avis_google.py et la ligne de
+# reperes du quartier par tools/pied_quartier.py : scripts independants et
+# idempotents eux aussi.
 
 # --------------------------------------------------------------------------- #
 # 6. fil d'Ariane sur les pages annexes
@@ -437,10 +322,8 @@ def main() -> None:
     s = description(s)
     s = hreflang(s)
     s = donnees_structurees(s)
-    s = bloc_avis(s)
     s = canonical_par_langue(s)
     INDEX.write_text(s, encoding="utf-8")
-    fichier_avis()
     fil_ariane()
     print(f"index.html : {avant} -> {len(s)} octets")
 
