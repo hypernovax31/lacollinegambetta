@@ -105,21 +105,29 @@ html:not(.carte-doc) .footer-quartier a:hover { text-decoration:underline; opaci
 html:not(.carte-doc) .footer-quartier__sep { opacity:.5; }
 html:not(.carte-doc) a.footer-details__metro { color:inherit; text-decoration:none; }
 html:not(.carte-doc) a.footer-details__metro:hover { text-decoration:underline; }
-/* Page de garde : meme ligne, encore plus sobre, sous le bandeau d'avis. */
-html:not(.carte-doc) #cover-section .footer-quartier--cover { margin-top:7px; opacity:.42; }
-html:not(.carte-doc) #cover-section .legal-bottom-nav--cover {
+/* Le premier ecran de la couverture s'arrete aux boutons de contact.
+   Avis et reperes restent juste apres, accessibles en faisant defiler. */
+html:not(.carte-doc) .cover-more {
+  display:grid; justify-items:center; gap:6px; width:100%;
+  padding:14px 16px 20px;
+  border-top:1px solid rgba(216,178,87,.32);
+  background:linear-gradient(180deg,#432155 0%,#24102e 100%);
+  color:#fff; text-align:center;
+}
+html:not(.carte-doc) .cover-more .footer-quartier--cover { margin-top:7px; opacity:.7; }
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover {
   display:flex; flex-wrap:wrap; justify-content:center; gap:4px 10px;
   margin:4px auto 0; padding:0; background:none; border:0;
   font-family:'Cinzel',serif; font-size:clamp(.5rem,.95vw,.6rem);
   letter-spacing:.09em; text-transform:uppercase;
-  color:var(--gold-100,#f0dca8); opacity:.42;
+  color:var(--gold-100,#f0dca8); opacity:.7;
 }
-html:not(.carte-doc) #cover-section .legal-bottom-nav--cover a {
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a {
   color:inherit; background:none; border:0; padding:0; text-decoration:none; text-shadow:none;
 }
-html:not(.carte-doc) #cover-section .legal-bottom-nav--cover a:hover { text-decoration:underline; }
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover { text-decoration:underline; }
 @media print {
-  .footer-quartier, #cover-section .legal-bottom-nav--cover { display:none !important; }
+  .footer-quartier, .cover-more { display:none !important; }
 }
 /* quartier:css:fin */"""
 
@@ -240,18 +248,46 @@ def poser_nav_pied(s: str) -> str:
 
 
 def poser_bloc_garde(s: str) -> str:
-    """Page de garde : adresse + metro, puis alentours et mentions legales."""
+    """Garde plein ecran; avis, alentours et mentions suivent au defilement."""
     s = re.sub(r'<div class="cover-footer-address">.*?</div>\s*</div>',
                lambda _m: COVER_ADRESSE + "\n        </div>", s, count=1, flags=re.S)
-    bloc = ("<!-- quartier:garde:debut -->\n        " + nav_alentours(" footer-quartier--cover")
-            + "\n        " + LEGAL_COVER + "<!-- quartier:garde:fin -->")
-    s, fait = entre_marqueurs(s, "<!-- quartier:garde:debut -->",
-                              "<!-- quartier:garde:fin -->", bloc)
+
+    # Replacer le bloc d'avis avec son marqueur, quelle que soit sa position
+    # actuelle, pour l'installer sous la couverture (et non dans son premier ecran).
+    avis = re.search(r'<!-- avis-google:html:debut -->.*?<!-- avis-google:html:fin -->',
+                     s, flags=re.S)
+    bloc_avis = avis.group(0) if avis else ""
+    if avis:
+        s = s[:avis.start()] + s[avis.end():]
+
+    # Supprimer l'ancienne ligne du quartier avant de reconstruire son bloc.
+    s, _ = entre_marqueurs(s, "<!-- quartier:garde:debut -->",
+                           "<!-- quartier:garde:fin -->", "")
+    # Le retrait des blocs laisse parfois des lignes vides apres les boutons.
+    s = re.sub(
+        r'(<div class="cover-links">[\s\S]*?</div>)[ \t]*\n(?:[ \t]*\n)+([ \t]*</div>)',
+        r"\1\n\2",
+        s,
+        count=1,
+    )
+    bloc = (
+        "<!-- cover-more:debut -->\n"
+        '<section id="cover-more" class="cover-more" '
+        'aria-label="Avis Google et informations du quartier">\n'
+        + ("        " + bloc_avis + "\n" if bloc_avis else "")
+        + "        <!-- quartier:garde:debut -->\n        "
+        + nav_alentours(" footer-quartier--cover")
+        + "\n        " + LEGAL_COVER + "\n        <!-- quartier:garde:fin -->\n"
+        "</section>\n<!-- cover-more:fin -->"
+    )
+    s, fait = entre_marqueurs(s, "<!-- cover-more:debut -->",
+                              "<!-- cover-more:fin -->", bloc)
     if fait:
         return s
-    ancre = "<!-- avis-google:html:fin -->"
-    i = s.index(ancre) + len(ancre)
-    return s[:i] + "\n        " + bloc + s[i:]
+
+    debut = s.index('<section id="cover-section"')
+    fin = s.index("</section>", debut) + len("</section>")
+    return s[:fin] + "\n  " + bloc + s[fin:]
 
 
 def main() -> None:

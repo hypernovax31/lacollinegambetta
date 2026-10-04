@@ -277,10 +277,18 @@ ratp && ratp.href.startsWith('https://www.ratp.fr/itineraires?end=') && ratp.hre
 /navigator\.geolocation/.test(index) && /api-adresse\.data\.gouv\.fr\/reverse/.test(index)
   ? ok('itineraire RATP : depart pris sur la position du visiteur, avec repli')
   : ko('itineraire RATP : la geolocalisation du visiteur est absente');
-const garde = d.querySelector('#cover-section .footer-quartier--cover');
-garde && d.querySelector('#cover-section .legal-bottom-nav--cover')
-  ? ok('page de garde : adresse, metro, alentours et mentions legales')
-  : ko('page de garde : bloc de pied incomplet');
+const garde = d.querySelector('#cover-more .footer-quartier--cover');
+const couverture = d.getElementById('cover-section');
+const sousCouverture = d.getElementById('cover-more');
+const mailCouverture = d.querySelector('#cover-section .contact-link--mail');
+const avisSousCouverture = d.querySelector('#cover-more #cover-reviews');
+garde && d.querySelector('#cover-more .legal-bottom-nav--cover')
+  ? ok('page de garde : alentours et mentions legales apres la premiere vue')
+  : ko('page de garde : bloc d’informations du quartier incomplet');
+couverture && sousCouverture && couverture.nextElementSibling === sousCouverture &&
+  mailCouverture && avisSousCouverture && !couverture.querySelector('#cover-reviews')
+  ? ok('page de garde : le bouton e-mail precede les avis et les alentours')
+  : ko('page de garde : avis ou alentours encore melanges aux boutons de contact');
 
 // -------------------------------------------------------- 5. fichiers ------
 for (const f of ['404.html', 'sitemap.xml', 'sitemap-images.xml', 'robots.txt',

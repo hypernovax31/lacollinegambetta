@@ -414,11 +414,15 @@ def main() -> None:
         i = s.index("</style>")
         s = s[:i] + CSS + "\n" + s[i:]
 
-    # Balisage, apres les liens de contact de la page de garde.
+    # Balisage dans la zone qui se trouve sous la premiere page d'accueil.
     if "<!-- avis-google:html:debut -->" in s:
         i = s.index("<!-- avis-google:html:debut -->")
         j = s.index("<!-- avis-google:html:fin -->", i) + len("<!-- avis-google:html:fin -->")
         s = s[:i] + HTML + s[j:]
+    elif '<section id="cover-more"' in s:
+        k = s.index('<section id="cover-more"')
+        j = s.index(">", k) + 1
+        s = s[:j] + "\n        " + HTML + s[j:]
     else:
         k = s.index('<div class="cover-links">')
         j = s.index("\n        </div>", k) + len("\n        </div>")
