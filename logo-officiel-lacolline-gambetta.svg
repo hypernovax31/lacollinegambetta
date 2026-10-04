@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-labelledby="logo-title logo-desc">
+  <title id="logo-title">La Colline Gambetta — Bar Restaurant</title>
+  <desc id="logo-desc">Logo circulaire minimaliste représentant un arbre stylisé devant une toile jaune, avec une typographie violette royale et un encadrement doré.</desc>
+  <defs>
+    <clipPath id="badge-clip">
+      <circle cx="500" cy="500" r="466"/>
+    </clipPath>
+    <linearGradient id="canvas-yellow" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#FBE39A"/>
+      <stop offset="1" stop-color="#F0C85E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Médaillon circulaire : palette de la toile et de la brasserie -->
+  <circle cx="500" cy="500" r="478" fill="#24102E"/>
+  <circle cx="500" cy="500" r="466" fill="url(#canvas-yellow)" stroke="#D8B257" stroke-width="12"/>
+  <circle cx="500" cy="500" r="429" fill="none" stroke="#9C7A2D" stroke-width="3" opacity=".72"/>
+
+  <g clip-path="url(#badge-clip)">
+    <!-- Halo discret : une ligne de colline, clin d’œil au nom du restaurant -->
+    <path d="M92 742 C245 686 346 704 500 724 C654 744 758 707 908 650"
+          fill="none" stroke="#D8B257" stroke-width="7" stroke-linecap="round" opacity=".85"/>
+
+    <!-- Typographie placée derrière le feuillage -->
+    <g fill="#432155" text-anchor="middle" font-family="Cinzel, Georgia, serif">
+      <text x="500" y="545" font-size="82" font-weight="700" letter-spacing="7">LA COLLINE</text>
+      <text x="500" y="635" font-size="91" font-weight="700" letter-spacing="5">GAMBETTA</text>
+    </g>
+    <g fill="#432155" text-anchor="middle" font-family="Montserrat, Arial, sans-serif">
+      <text x="500" y="701" font-size="27" font-weight="700" letter-spacing="7">BAR • RESTAURANT</text>
+    </g>
+
+    <!-- Arbre monoligne, volontairement aéré et placé au premier plan -->
+    <g fill="none" stroke="#432155" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M500 884 C496 817 497 748 500 687 C502 628 501 565 500 505 C499 438 501 365 500 286"
+            stroke-width="17"/>
+      <path d="M500 620 C462 574 420 530 362 487 C318 454 278 425 241 392"
+            stroke-width="11"/>
+      <path d="M499 574 C547 526 587 485 641 443 C685 409 730 380 771 341"
+            stroke-width="11"/>
+      <path d="M500 470 C458 429 423 388 392 342 C369 307 348 271 331 231"
+            stroke-width="10"/>
+      <path d="M501 431 C548 389 583 352 611 307 C634 270 653 232 670 190"
+            stroke-width="10"/>
+      <path d="M500 365 C470 331 445 295 430 255 C418 224 412 192 409 161"
+            stroke-width="8"/>
+      <path d="M502 342 C533 308 555 277 566 240 C574 213 579 185 580 156"
+            stroke-width="8"/>
+    </g>
+
+    <!-- Feuillage réduit : quelques amandes reconnaissables, sans masse compacte -->
+    <g fill="#432155" stroke="#432155" stroke-width="3">
+      <path d="M238 390 C214 375 207 348 214 326 C239 331 253 351 238 390Z"/>
+      <path d="M290 433 C267 432 248 416 244 394 C267 389 287 402 290 433Z"/>
+      <path d="M342 477 C322 487 299 480 287 462 C305 449 328 453 342 477Z"/>
+      <path d="M332 328 C307 316 299 293 305 272 C328 273 345 294 332 328Z"/>
+      <path d="M382 345 C363 333 354 312 359 292 C380 295 394 315 382 345Z"/>
+      <path d="M410 255 C390 244 383 221 389 202 C410 205 422 225 410 255Z"/>
+      <path d="M431 189 C414 176 411 155 419 139 C437 145 444 165 431 189Z"/>
+      <path d="M610 312 C631 301 653 306 665 324 C647 339 624 334 610 312Z"/>
+      <path d="M650 265 C672 253 694 258 706 276 C687 291 665 286 650 265Z"/>
+      <path d="M677 194 C697 185 716 192 724 209 C707 222 688 216 677 194Z"/>
+      <path d="M706 397 C728 383 751 388 763 407 C743 423 719 417 706 397Z"/>
+      <path d="M758 341 C779 325 802 329 816 347 C798 365 776 360 758 341Z"/>
+      <path d="M642 447 C665 440 684 450 691 470 C668 479 649 468 642 447Z"/>
+      <path d="M292 270 C271 259 265 238 273 220 C293 225 304 245 292 270Z"/>
+    </g>
+
+    <!-- Quelques feuilles en trait doré pour rappeler les détails de la toile -->
+    <g fill="none" stroke="#D8B257" stroke-width="5" stroke-linecap="round">
+      <path d="M270 348 C252 337 249 320 255 307"/>
+      <path d="M367 405 C350 394 345 378 351 364"/>
+      <path d="M446 300 C431 288 428 272 434 258"/>
+      <path d="M567 373 C584 362 590 347 586 332"/>
+      <path d="M708 449 C724 438 730 423 726 409"/>
+      <path d="M735 285 C752 274 758 259 754 245"/>
+    </g>
+  </g>
+
+  <!-- Filet extérieur : lecture nette à petite taille -->
+  <circle cx="500" cy="500" r="478" fill="none" stroke="#D8B257" stroke-width="10"/>
+</svg>

@@ -45,37 +45,16 @@ BASE_VIEWPORT = 1180        # largeur d'écran à laquelle le site est composé
 # Boissons garde ses deux feuilles, les autres tiennent sur la leur.
 SECTIONS = ["entrees", "plats", "menus", "boissons", "cocktails", "vins", "desserts"]
 
-# Blocs qui ne doivent jamais être séparés entre deux feuilles : « Boissons
-# fraîches » + « Boissons chaudes » se partagent une seule page, et tous les
-# panneaux de l'onglet Cocktails — classiques, Spritz & fraîcheur, Mules & fizz,
-# Élégance & saveurs, Mocktails — se partagent l'autre (demandes expresses), le
-# packeur les traite donc comme des unités insécables. Les indices sont ceux
-# des blocs de .tab-flow, dans l'ordre du document. Ces blocs sont marqués
-# data-merge="1" dans la carte comme dans le document de mesure : la CSS de la
-# carte (CARD_OVERRIDES) les reconnaît par ce marqueur — et pas par leur
-# position de frère, qui change quand le découpage en pages les isole.
-MERGE = {"boissons": [(0, 1), (2, 3, 4, 5, 6)],
-        # cocktails : le duo-grid du site (Spritz + Mules) est séparé en deux
-        # blocs par split_duo_grids — les indices ci-dessous sont ceux du flux
-        # APRÈS cette séparation : 0 Cocktails classiques, 1 Spritz & fraîcheur,
-        # 2 Mules & fizz, 3 Élégance & saveurs, 4 Mocktails. Demande expresse :
-        # TOUS les cocktails tiennent sur une seule feuille, l'onglet entier est
-        # donc une unité insécable unique.
+# Blocs qui ne doivent jamais être séparés entre deux feuilles :
+# Demande expresse : toutes les boissons tiennent sur une seule feuille (8 pages au total),
+# et tous les cocktails sur une autre feuille.
+MERGE = {"boissons": [(0, 1, 2, 3, 4, 5, 6)],
         "cocktails": [(0, 1, 2, 3, 4)]}
 
 # Groupes de MERGE autorisés à passer en DEUX colonnes de lignes sur leur
-# feuille quand la hauteur manque (les quatre catégories boissons + bandeau
-# HH, et les cinq panneaux de cocktails) : par défaut les catégories
-# s'empilent pleine largeur, comme « Boissons fraîches + chaudes » ; si leur
-# hauteur cumulée dépasse la feuille, le plan de mise en page bascule en deux
-# colonnes de lignes les sections les plus grandes (mesurées par le probe
-# .carte-twocolsec-probe) jusqu'à ce que tout tienne. Le bandeau HH
-# (hh-banner) n'est jamais basculé : sa hauteur ne change pas, la bascule ne
-# l'atteint donc pas. La hauteur de l'unité est la somme des hauteurs de ses
-# blocs dans leur mode + les gaps, pas la hauteur d'une disposition côte à
-# côte. C'est ce basculement qui permet aux 36 cocktails de la carte de tenir
-# sur une seule feuille pleine, sans chevauchement ni blanc perdu.
-TWOC = {"boissons": [(2, 3, 4, 5, 6)],
+# feuille quand la hauteur manque (les 6 catégories boissons + bandeau
+# HH, et les 5 panneaux de cocktails) :
+TWOC = {"boissons": [(0, 1, 2, 3, 4, 5, 6)],
         "cocktails": [(0, 1, 2, 3, 4)]}
 
 # Géométrie de la feuille, en accord avec les règles « contenant » plus bas.
@@ -102,7 +81,7 @@ ZONE_H_PX = (SHEET_H_MM - ZONE_TOP_MM - ZONE_BOTTOM_MM) * PX_PER_MM  # 842,86 px
 # feuille, 7,6 pt, devient la taille de toute la carte. `--per-onglet` rend la
 # main au réglage individuel (chaque feuille au plus grand corps qui tient).
 UNIFORME = "--per-onglet" not in sys.argv
-UNIFORME_EXCEPT = {"menus"}
+UNIFORME_EXCEPT = {"menus", "boissons"}
 # Largeurs de composition essayées, en fractions de celle du site. Au-dessus de 1,
 # le bloc est étiré (le site compose à 1 140 px mais rien ne l'oblige à rester à sa
 # largeur de conteneur quand on le pose sur papier) ; en dessous, il se resserre et
@@ -243,19 +222,22 @@ _ARTICLE_RE = re.compile(r'<article class="price-line"[^>]*>.*?</article>', re.S
 
 def _inline_note_in_article(article: str) -> str:
     """Les notes (.price-list__note) d'un article remontent dans sa ligne,
-    juste après le nom — l'article ne tient plus qu'une ligne. La classe
+    juste après le nom en <strong>. La classe
     note-cl (contenance) est conservée : la CSS lui garde son corps propre
     (--qty-size), distinct du corps des notes descriptives."""
-    notes = re.findall(r'<p class="price-list__note([^"]*)">(.*?)</p>', article, re.S)
-    if not notes:
-        return article
     name = re.search(r'(<div class="(?:price-line__name|hh-line__name)">)(.*?)(</div>)', article, re.S)
     if not name:
         return article
+    notes = re.findall(r'<p class="price-list__note([^"]*)">(.*?)</p>', article, re.S)
+    title_text = name.group(2).strip()
+    if not title_text.startswith("<strong>"):
+        title_text = f"<strong>{title_text}</strong>"
+    if not notes:
+        return article.replace(name.group(0), name.group(1) + title_text + name.group(3), 1)
     article = re.sub(r'<p class="price-list__note[^"]*">.*?</p>', '', article, flags=re.S)
     inline = "".join(f'<span class="carte-inline-note{cls}">{n}</span>' for cls, n in notes)
     return article.replace(
-        name.group(0), name.group(1) + name.group(2) + inline + name.group(3), 1)
+        name.group(0), name.group(1) + title_text + inline + name.group(3), 1)
 
 
 def inline_notes(block: str) -> str:
@@ -554,14 +536,29 @@ def rescope_site_css(css: str) -> tuple[str, dict]:
 
 
 def extract_cover(src: str) -> str:
+    # La couverture imprimée reprend aussi le cartouche d'horaires du site :
+    # l'indicateur dynamique est masqué en mode carte-doc par la CSS, mais
+    # l'amplitude et le service continu restent lisibles sur le PDF.
     start = src.find('<div class="cover-page">')
     node, _ = take_element(src[start:], "div")
     node = node.replace(' onclick="showView(\'menu\')"', "")
-    node = node.replace('href="#menu-nav-anchor"', 'href="index.html#menu-nav-anchor"')
+    node = node.replace('href="#menu-nav-anchor"', 'href="https://lacollinegambetta.com/#menu-nav-anchor"')
+    node = node.replace('href="index.html#menu-nav-anchor"', 'href="https://lacollinegambetta.com/#menu-nav-anchor"')
+    node = node.replace('href="https://lacollinegambetta.fr/#menu-nav-anchor"', 'href="https://lacollinegambetta.com/#menu-nav-anchor"')
     while '<a class="download-card"' in node:
         a = node.find('<a class="download-card"')
         frag, rest = take_element(node[a:], "a")
         node = node[:a] + rest
+    while 'reservation.html' in node:
+        a = node.find('<a')
+        while a >= 0:
+            frag, rest = take_element(node[a:], "a")
+            if 'reservation.html' in frag or 'contact-link--book' in frag:
+                node = node[:a] + rest
+                break
+            a = node.find('<a', a + 1)
+        else:
+            break
     inner_start = node.find('<svg class="relief-inner-svg"')
     if inner_start < 0:
         raise SystemExit("cover inner medallion missing")
@@ -572,8 +569,8 @@ def extract_cover(src: str) -> str:
     facade = (
         '<svg class="relief-inner-svg" viewBox="0 0 280 280" '
         'xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
-        '<image href="medallion-facade.png" width="280" height="280" '
-        'preserveAspectRatio="xMidYMid slice"/>'
+        '<image href="Logo_LaColline_Gambetta.png" x="-69" y="-16" width="418" height="312" '
+        'preserveAspectRatio="none"/>'
         "</svg>"
     )
     return node[:inner_start] + facade + node[inner_end:]
@@ -595,7 +592,7 @@ FOOTER = """<footer class="print-page__footer">
 <span aria-hidden="true">·</span>
 <span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</span>
 <span aria-hidden="true">·</span>
-<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>lacollinegambetta@mailo.com</span>
+<span class="print-foot-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>restaurant@lacollinegambetta.com</span>
 </div>
 <small>Allergènes : informations sur demande — L’abus d’alcool est dangereux pour la santé — À consommer avec modération</small>
 </footer>"""
@@ -664,6 +661,40 @@ html.carte-doc .carte-toolbar { display: none !important; }
 html.carte-doc .download-card,
 html.carte-doc .download-btn { display: none !important; }
 
+/* Typographie officielle Cinzel / Montserrat pour la carte A4 */
+html.carte-doc .cover-brand h1,
+html.carte-doc .cover-brand :is(h1,h2),
+html.carte-doc .cover-brand .eyebrow,
+html.carte-doc .cover-brand .leader-title,
+html.carte-doc .cover-brand .leader-meta,
+html.carte-doc .cover-brand .menu-leader-subline,
+html.carte-doc .cover-brand p,
+html.carte-doc .print-page__kicker,
+html.carte-doc .print-page__brand,
+html.carte-doc .print-page__brand--sub,
+html.carte-doc .print-page__meta,
+html.carte-doc .print-page__meta--sub,
+html.carte-doc .print-page__header *,
+html.carte-doc .panel__title,
+html.carte-doc .cover-footer-address,
+html.carte-doc .cover-action,
+html.carte-doc .food-card__head h5,
+html.carte-doc .food-card__head strong,
+html.carte-doc .price-line__price,
+html.carte-doc .price-line__name,
+html.carte-doc .offer-card__price,
+html.carte-doc .formule-header h4,
+html.carte-doc .formule-price,
+html.carte-doc .wine-table th,
+html.carte-doc .wine-no,
+html.carte-doc .beer-note,
+html.carte-doc .beer-table__head,
+html.carte-doc .beer-row__price,
+html.carte-doc .beer-row__hh,
+html.carte-doc .footer-details {
+  font-family: 'Cinzel', serif !important;
+}
+
 /* En-tête : titres plus grands, bande violette mieux remplie. */
 html.carte-doc .print-page:not(.print-page--cover) .print-page__header {
   height: 39mm !important;
@@ -674,23 +705,34 @@ html.carte-doc .print-page:not(.print-page--cover) .print-page__header {
 html.carte-doc .print-page__kicker {
   font-size: 9pt !important;
   letter-spacing: .38em !important;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
 }
 html.carte-doc .print-page__brand {
   font-size: 29pt !important;
   letter-spacing: .22em !important;
   line-height: .88 !important;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
 }
 html.carte-doc .print-page__brand--sub {
   font-size: 14.8pt !important;
   letter-spacing: .34em !important;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 700 !important;
+  color: #ffe88f !important;
 }
 html.carte-doc .print-page__meta {
   font-size: 9.4pt !important;
   letter-spacing: .2em !important;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 600 !important;
 }
 html.carte-doc .print-page__meta--sub {
   font-size: 8.2pt !important;
   letter-spacing: .18em !important;
+  font-family: 'Cinzel', serif !important;
+  font-weight: 600 !important;
 }
 
 /* Pied : logo IG, e-mail en toutes lettres, allergènes avant l’alcool. */
@@ -748,6 +790,10 @@ html.carte-doc .print-page__content {
   top: 47mm !important;
   bottom: 27mm !important;
 }
+html.carte-doc .print-page--boissons .print-page__content {
+  top: 44mm !important;
+  bottom: 26mm !important;
+}
 
 /* Ornements ✦ du bandeau et du pied de page : losanges dessinés, jamais un
    glyphe — Cinzel ne le contient pas, et une police système absente du poste
@@ -767,9 +813,24 @@ html.carte-doc .print-page i.carte-star {
 html.carte-doc .print-page--cover {
   background: #24102e !important;
 }
-html.carte-doc .print-page--cover::before,
+/* Double encadrement doré de la page 1 : identique aux pages intérieures (ligne principale + filet intérieur à 2 mm) */
+html.carte-doc .print-page--cover::before {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  z-index: 20 !important;
+  inset: 6mm !important;
+  border: 0.38mm solid #d8b257 !important;
+  pointer-events: none !important;
+}
 html.carte-doc .print-page--cover::after {
-  display: none !important;
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  z-index: 20 !important;
+  inset: 8mm !important;
+  border: 0.16mm solid rgba(216,178,87,.58) !important;
+  pointer-events: none !important;
 }
 html.carte-doc .print-page--cover > .cover-page {
   position: absolute !important;
@@ -777,64 +838,116 @@ html.carte-doc .print-page--cover > .cover-page {
   width: 210mm !important;
   height: 297mm !important;
   min-height: 297mm !important;
-  padding: 16mm 16mm 16mm !important;
-  display: flex !important;
-  flex-flow: column nowrap !important;
-  justify-content: safe center !important;
-  align-items: center !important;
-  gap: 0 !important;
+  padding: 0 !important;
   overflow: hidden !important;
   box-sizing: border-box;
   border: 0 !important;
+  display: block !important;
 }
 html.carte-doc .print-page--cover .cover-page::after {
-  inset: 0 !important;
-  border: 0.45mm solid rgba(216,178,87,.55) !important;
-  border-radius: 0 !important;
-  pointer-events: none;
+  display: none !important;
 }
-html.carte-doc .print-page--cover .cover-brand {
-  flex: 0 0 auto;
-  width: 100%;
-  max-width: 170mm;
-  margin: 0 0 100px !important; /* 100px entre le titre et le médaillon */
-  gap: 3mm !important;
+/* Titre principal : centré verticalement et horizontalement dans l'espace haut (du filet doré au haut du médaillon) */
+html.carte-doc #print-document .print-page--cover .titre-principal,
+html.carte-doc #print-document .print-page--cover .cover-brand {
+  position: absolute !important;
+  top: 8mm !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: calc(50% - 255px - 8mm) !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 16mm !important;
+  box-sizing: border-box !important;
+  gap: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
 }
-html.carte-doc .print-page--cover .cover-brand--menu-leader-lite .eyebrow,
-html.carte-doc .print-page--cover .leader-title {
-  font-size: 26pt !important;
+html.carte-doc #print-document .print-page--cover .titre-principal .eyebrow,
+html.carte-doc #print-document .print-page--cover .cover-brand .eyebrow,
+html.carte-doc #print-document .print-page--cover .cover-brand .leader-title {
+  font-family: 'Cinzel', serif !important;
+  font-size: 15pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .28em !important;
+  color: #ffffff !important;
+  line-height: 1.1 !important;
+  text-transform: uppercase !important;
+  margin: 0 0 1.5mm 0 !important;
+}
+html.carte-doc #print-document .print-page--cover .titre-principal :is(h1,h2),
+html.carte-doc #print-document .print-page--cover .cover-brand :is(h1,h2) {
+  font-family: 'Cinzel', serif !important;
+  font-size: 38pt !important;
+  font-weight: 700 !important;
   letter-spacing: .14em !important;
-  overflow: visible !important;
-  line-height: 1.15 !important;
+  color: #ffffff !important;
+  line-height: 0.92 !important;
+  text-transform: uppercase !important;
+  margin: 0 !important;
+  text-align: center !important;
+  display: block !important;
 }
-html.carte-doc .print-page--cover .leader-meta {
-  font-size: 11.5pt !important;
-  letter-spacing: .14em !important;
-  line-height: 1.25 !important;
+html.carte-doc #print-document .print-page--cover .titre-principal :is(h1,h2) span,
+html.carte-doc #print-document .print-page--cover .cover-brand :is(h1,h2) span {
+  display: block !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 25pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .22em !important;
+  color: var(--gold-bright, #ffe88f) !important;
+  line-height: 1.05 !important;
+  margin-top: 1.2mm !important;
+  margin-bottom: 1.5mm !important;
+  text-transform: uppercase !important;
 }
-html.carte-doc .print-page--cover .menu-leader-subline,
-html.carte-doc .print-page--cover .leader-meta--sub {
-  font-size: 10.5pt !important;
+html.carte-doc #print-document .print-page--cover .titre-principal .leader-meta,
+html.carte-doc #print-document .print-page--cover .cover-brand .leader-meta {
+  font-family: 'Cinzel', serif !important;
+  font-size: 15pt !important;
+  font-weight: 700 !important;
   letter-spacing: .12em !important;
-  line-height: 1.3 !important;
+  color: #ffffff !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase !important;
+  margin: 0 0 1.2mm 0 !important;
 }
-html.carte-doc .print-page--cover .cover-brand .star-gold {
+html.carte-doc #print-document .print-page--cover .titre-principal .menu-leader-subline,
+html.carte-doc #print-document .print-page--cover .titre-principal .leader-meta--sub,
+html.carte-doc #print-document .print-page--cover .cover-brand .menu-leader-subline,
+html.carte-doc #print-document .print-page--cover .cover-brand .leader-meta--sub {
+  font-family: 'Cinzel', serif !important;
+  font-size: 15pt !important;
+  font-weight: 700 !important;
+  letter-spacing: .10em !important;
+  color: var(--gold-bright, #ffe88f) !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase !important;
+  margin: 0 !important;
+}
+html.carte-doc #print-document .print-page--cover .titre-principal .star-gold,
+html.carte-doc #print-document .print-page--cover .cover-brand .star-gold {
   display: inline-block !important;
-  width: 10px;
-  height: 10px;
-  margin: 0 8px;
-  vertical-align: 2px;
-  background: #fcf6ba;
+  width: 6.5px;
+  height: 6.5px;
+  margin: 0 6px;
+  vertical-align: 1.5px;
+  background: var(--gold-bright, #ffe88f);
   clip-path: @@ETOILE@@;
   color: transparent !important;
   font-size: 0 !important;
   overflow: hidden;
   text-shadow: none !important;
 }
-html.carte-doc .print-page--cover .menu-leader-subline .star-gold {
-  width: 7px;
-  height: 7px;
+html.carte-doc #print-document .print-page--cover .menu-leader-subline .star-gold {
+  width: 6.5px;
+  height: 6.5px;
   margin: 0 6px;
+  vertical-align: 1.5px;
 }
 /* Le bouton « Menu & Carte » de la couverture : il reprend la pilule dorée
    « sélectionnée » de la version web (dégradé or #bf953f→#fef9db, liseré
@@ -844,6 +957,10 @@ html.carte-doc .print-page--cover .menu-leader-subline .star-gold {
    rendu qu'au document imprimé (la couverture web garde son propre style et
    ses animations). */
 html.carte-doc #print-document .print-page--cover a.contact-link.cover-action {
+  position: absolute !important;
+  top: calc(50% + 255px + 20px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
   display: inline-flex !important;
   background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%) !important;
   background-image: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%) !important;
@@ -852,71 +969,104 @@ html.carte-doc #print-document .print-page--cover a.contact-link.cover-action {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .65),
               inset 0 -2px 6px rgba(156, 122, 45, .40),
               0 10px 22px rgba(36, 16, 46, .45);   /* ombre portée : effet 3D */
+  z-index: 5 !important;
+  margin: 0 !important;
 }
-html.carte-doc .print-page--cover a.contact-link.cover-action,
-html.carte-doc .print-page--cover a.contact-link.cover-action * {
+html.carte-doc #print-document .print-page--cover a.contact-link.cover-action,
+html.carte-doc #print-document .print-page--cover a.contact-link.cover-action * {
   color: #24102e !important;
 }
-html.carte-doc .print-page--cover .medallion-container {
-  flex: 0 0 auto;
-  width: 100% !important;
-  height: auto !important;
-  max-width: 100% !important;
-  max-height: none !important;
+/* Médaillon : centrage vertical et horizontal parfait au milieu exact de la page */
+html.carte-doc #print-document .print-page--cover .medallion-container {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 510px !important;
+  height: 510px !important;
+  min-height: 510px !important;
+  max-height: 510px !important;
   margin: 0 !important;
-  aspect-ratio: auto !important;
+  padding: 0 !important;
+  aspect-ratio: 1 / 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  z-index: 2 !important;
 }
-html.carte-doc .print-page--cover .medallion-container .medallion-frame {
-  width: 520px !important;
-  height: 520px !important;
-  margin-bottom: 100px !important; /* 100px entre le médaillon et le bouton */
-}
-html.carte-doc .print-page--cover .medallion-container .cover-action {
+html.carte-doc #print-document .print-page--cover .medallion-container .medallion-frame {
+  position: relative !important;
+  width: 510px !important;
+  height: 510px !important;
   margin: 0 !important;
-  align-self: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
-html.carte-doc .print-page--cover .relief-inner-svg {
-  background: transparent !important;
+html.carte-doc #print-document .print-page--cover .relief-inner-svg {
+  background: #fcfbf7 !important;
   border: 0 !important;
   box-shadow: none !important;
   overflow: visible !important;
-  width: 66% !important;
-  height: 66% !important;
+  width: 66.5% !important;
+  height: 66.5% !important;
   border-radius: 50%;
   clip-path: circle(50% at 50% 50%);
   -webkit-clip-path: circle(50% at 50% 50%);
 }
-html.carte-doc .print-page--cover .cover-footer {
-  flex: 0 0 auto;
-  width: 100%;
-  max-width: 168mm;
+html.carte-doc #print-document .print-page--cover .cover-footer {
+  position: absolute !important;
+  bottom: 10mm !important;
+  left: 12mm !important;
+  right: 12mm !important;
+  width: auto !important;
+  max-width: none !important;
   gap: 3.5mm !important;
-  margin: 14px 0 0 !important; /* pied collé sous le bouton */
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+html.carte-doc .print-page--cover .cover-footer-address {
+  font-size: 8.5pt !important;
+  letter-spacing: .12em !important;
+  line-height: 1.4 !important;
+  max-width: 100% !important;
 }
 html.carte-doc .print-page--cover .cover-links {
-  width: 168mm !important;
+  width: 172mm !important;
   max-width: 100%;
-  gap: 2.4mm !important;
+  gap: 2.8mm !important;
   display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-html.carte-doc .print-page--cover .cover-links {
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
 }
 html.carte-doc .print-page--cover .cover-links .contact-link {
-  min-height: 9mm !important;
-  padding: 0 2.6mm !important;
-  box-sizing: border-box;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2.2mm !important;
+  min-height: 10.5mm !important;
+  padding: 0 3mm !important;
+  box-sizing: border-box !important;
   font-family: 'Montserrat', sans-serif !important;
-  font-weight: 400 !important;
-  font-size: 6.2pt !important;
+  font-weight: 500 !important;
+  font-size: 8pt !important;
   letter-spacing: .02em !important;
   text-transform: none !important;
   font-style: normal !important;
+  white-space: nowrap !important;
+  border-radius: 9999px !important;
 }
 html.carte-doc .print-page--cover .cover-links .contact-link svg {
-  width: 3.4mm !important;
-  height: 3.4mm !important;
+  width: 4.2mm !important;
+  height: 4.2mm !important;
+  flex: 0 0 auto !important;
+}
+html.carte-doc .print-page--cover .contact-link--book {
+  display: none !important;
 }
 html.carte-doc .print-page--cover a.contact-link.cover-action {
   position: relative;
@@ -1220,19 +1370,18 @@ CARD_OVERRIDES = """
    traversant). La spécificité est plus forte que la neutralisation 1fr posée
    plus haut (1,4,0 contre 1,3,0), donc la levée l'emporte sur les blocs
    marqués seulement. */
+#print-document .carte-flow [data-merge="1"].carte-2col:not(.panel--beers) .price-list,
 #print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols,
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols,
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list {
+  display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   /* !important : la neutralisation 1-col pose gap: 0 !important (shorthand),
      qui écraserait ces longhands sans !important — la gouttière doit gagner.
-     Seule la gouttière CENTRALE est élargie (40 px) : entre les prix de la
-     colonne de gauche et les intitulés de celle de droite, l'œil suit sa
-     rangée. Les rangées gardent l'espacement de la carte (padding 3 px),
-     comme les listes en une colonne — row-gap 0, sinon les pages denses
-     (boissons, cocktails) perdraient 2 points de police pour un air qui
-     existe déjà. */
-  column-gap: 40px !important;
+     Gouttière centrale équilibrée (24 px) et padding interne des lignes (10 px) :
+     utilise toute la largeur utile de la feuille en donnant à chaque intitulé et prix
+     un espace de respiration symétrique et aéré, similaire aux plats et desserts. */
+  column-gap: 24px !important;
   row-gap: 0 !important;
 }
 #print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols .price-list__col,
@@ -1241,11 +1390,11 @@ CARD_OVERRIDES = """
 }
 #print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols .price-list__col:nth-child(1) > *,
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(1) > * {
-  grid-column: 1;
+  grid-column: 1 !important;
 }
 #print-document .carte-flow [data-merge="1"].carte-2col .price-list--cols .price-list__col:nth-child(2) > *,
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-list__col:nth-child(2) > * {
-  grid-column: 2;
+  grid-column: 2 !important;
 }
 /* Listes HH simples (Spritz, Mules, Mocktails) : l'en-tête traverse les deux
    colonnes, les lignes se répartissent en rangées. */
@@ -1259,7 +1408,7 @@ CARD_OVERRIDES = """
    colonne de droite, exactement comme le site les montre côte à côte à
    l'écran (les prix de chaque colonne gardent leur titre au-dessus). */
 #print-document .carte-flow [data-merge="1"].carte-2col .hh-list--cols .hh-head--ghost {
-  display: grid !important;
+  display: flex !important;
   visibility: visible !important;
 }
 /* Sur la feuille cocktails seulement, le placement par moitiés (chaque
@@ -1362,7 +1511,10 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table tbody tr:nth-child(even)
 }
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table td {
   border-bottom: 1px dotted rgba(156, 122, 45, .38) !important;  /* pointillé du site, pas trait plein */
-  padding: 5px 0;                              /* l'air vient du filet, pas de la cellule */
+  padding: 5px 0 !important;                                     /* l'air vient du filet, pas de la cellule */
+}
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table tbody td {
+  padding: 5px 0 !important;
 }
 /* Le corps d'une carte des vins suit la taille uniforme de la carte (1,12 rem
    pour le nom, 1,28 rem pour les prix — les corps de la page des plats) : le
@@ -1414,55 +1566,380 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
 #print-document .carte-flow[data-sec="cocktails"] .hh-list__note {
   font-size: 0.98rem !important;
 }
-/* --- Feuille cocktails : une seule page, pleine, sans chevauchement --------
+/* --- Feuille boissons : une seule page, en double colonne ------------------
+   Toutes les catégories de boissons (fraîches, chaudes, apéritifs, whiskies,
+   digestifs, bières et bandeau HH) tiennent sur UNE SEULE feuille (8 pages au total
+   pour la carte A4). Les 6 panneaux passent en deux colonnes de lignes (carte-2col).
+   Les titres des boissons sont en gras (<strong>), suivis immédiatement de leurs
+   informations (notes, contenances, parfums) en italique. Les points de suspension
+   sont supprimés : le texte et le prix sont séparés par un espace aéré sans
+   aucun chevauchement ; si les informations sont longues, elles s'enroulent
+   sur la ligne du dessous sans toucher le prix. */
+#print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] {
+  padding: 3px 14px;
+}
+#print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__title {
+  min-height: 25px;
+  padding: 2.5px 14px;
+  font-size: 0.88rem !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__head {
+  margin-bottom: 2.5px;
+}
+#print-document .carte-flow[data-sec="boissons"] .panel[data-merge="1"] .panel__subtitle {
+  margin: 0 0 2px !important;
+  font-size: 0.80rem !important;
+}
+#print-document .carte-flow[data-sec="boissons"].carte-aerate .panel[data-merge="1"] > .panel__head {
+  margin-bottom: calc(2.5px + var(--carte-air-title, 0px)) !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .tab-flow {
+  row-gap: 3.5px !important;
+}
+#print-document .carte-flow[data-sec="boissons"] [data-merge="1"] .price-line {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  padding: 1.3px 8px !important;
+  box-sizing: border-box !important;
+}
+#print-document .carte-flow[data-sec="boissons"].carte-aerate [data-merge="1"] .price-line {
+  padding-top: calc(1.3px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(1.3px + var(--carte-air-side, 0px)) !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .price-line__row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  gap: 8px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .price-line__name {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  white-space: normal !important;
+  line-height: 1.25 !important;
+  color: var(--violet-900) !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .price-line__name strong {
+  font-weight: 700 !important;
+  font-size: 1.12rem !important;
+  color: var(--violet-900) !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .carte-inline-note {
+  display: inline !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 0.85rem !important;
+  font-weight: 400 !important;
+  font-style: italic !important;
+  color: var(--muted) !important;
+  margin-left: 0.45em !important;
+  white-space: normal !important;
+  text-transform: none !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .carte-inline-note.note-cl {
+  font-size: 0.80rem !important;
+  font-style: normal !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .carte-inline-note + .carte-inline-note {
+  margin-left: 0 !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .carte-inline-note + .carte-inline-note::before {
+  content: " · ";
+  margin-left: 0.35em;
+  margin-right: 0.35em;
+}
+#print-document .price-line__dots,
+#print-document .carte-flow .price-line__dots {
+  display: none !important;
+  border: none !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .price-line__price {
+  white-space: nowrap !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 1.28rem !important;
+  font-weight: 800 !important;
+  color: var(--violet-900) !important;
+  flex: 0 0 auto !important;
+  line-height: 1.25 !important;
+  text-align: right !important;
+  margin-left: auto !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .beer-note {
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+  margin: 0 0 3px !important;
+  padding: 0 10px !important;
+  line-height: 1.25 !important;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  column-gap: 24px !important;
+  row-gap: 0 !important;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .panel__head {
+  grid-column: 1 / -1;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .beer-note:not(.beer-note--second) {
+  grid-column: 1;
+  grid-row: 2;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .price-list:not(.price-list--pressions) {
+  grid-column: 1;
+  grid-row: 3;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .beer-note--second {
+  grid-column: 2;
+  grid-row: 2;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .price-list--pressions {
+  grid-column: 2;
+  grid-row: 3;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .price-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  row-gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+#print-document .carte-flow [data-merge="1"].carte-2col.panel--beers .price-line {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+#print-document .carte-flow[data-sec="boissons"] .hh-banner {
+  margin-top: 8px !important;
+  margin-bottom: 0 !important;
+  padding: 4px 10px !important;
+  color: var(--gold-700) !important;
+}
+#print-document .price-hh,
+#print-document .carte-flow .price-hh,
+#print-document .carte-flow[data-sec="boissons"] .price-hh {
+  color: var(--gold-700) !important;
+}
+/* --- Feuille cocktails : une seule page, pleine, aérée sans chevauchement ---
    L'onglet entier (36 cocktails, classiques → mocktails) tient sur une seule
    feuille parce que ses cinq panneaux passent en deux colonnes de lignes
-   (carte-2col) ET que l'air de cette feuille seulement se serre : padding
-   vertical des panneaux (16 → 5 px), pilules de titre (min-height 50 →
-   32 px) et marge sous les têtes (12 → 3 px, gardant la variable
-   d'aération). Les LIGNES gardent leurs corps uniformes de la carte — noms,
-   notes et prix sont exactement ceux des autres feuilles, à leur échelle
-   commune (0,5759). La contenance des lignes est resserrée (padding 3 →
-   1 px, note sans marge haute, interligne de note 1,3 → 1,25) et le
-   générateur (attentes d'aération « cocktails ») est aligné sur cette base 1.
-   Si la feuille respire encore, la passe d'aération rend cet air aux lignes
-   (calc(1px + var(--carte-air-side))). Rien ici ne touche au site : tout est
-   sous #print-document. */
+   (carte-2col). Les titres sont en gras, les prix PRIX et HH sont alignés en haut
+   de chaque colonne, et les ingrédients respirent sous le titre avec un padding
+   aéré et propre sans aucun chevauchement. */
 #print-document .carte-flow[data-sec="cocktails"] .panel[data-merge="1"] {
-  padding: 5px 16px;
+  padding: 4px 16px;
 }
 #print-document .carte-flow[data-sec="cocktails"] .panel[data-merge="1"] .panel__title {
-  min-height: 32px;
-  padding: 4px 18px;
+  min-height: 26px;
+  padding: 2px 14px;
+  font-size: 0.88rem !important;
 }
 #print-document .carte-flow[data-sec="cocktails"] .panel[data-merge="1"] .panel__head {
-  margin-bottom: 3px;
+  margin-bottom: 2px;
+}
+#print-document .carte-flow[data-sec="cocktails"] .panel[data-merge="1"] .panel__subtitle {
+  margin: 0 0 2px !important;
+  font-size: 0.80rem !important;
 }
 #print-document .carte-flow[data-sec="cocktails"].carte-aerate .panel[data-merge="1"] > .panel__head {
-  margin-bottom: calc(3px + var(--carte-air-title, 0px)) !important;
+  margin-bottom: calc(2px + var(--carte-air-title, 0px)) !important;
 }
 #print-document .carte-flow[data-sec="cocktails"] .tab-flow {
   row-gap: 1px !important;
 }
+#print-document .carte-flow[data-sec="cocktails"] .hh-head,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: baseline !important;
+  gap: 12px !important;
+  width: 100% !important;
+  padding: 0 10px 2px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  visibility: visible !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-head > span:first-child,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost > span:first-child {
+  display: none !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-head > span:nth-child(2),
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost > span:nth-child(2),
+#print-document .carte-flow[data-sec="cocktails"] .hh-head .hh-head__col:first-child,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost .hh-head__col:first-child {
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  text-align: right !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  color: var(--muted) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-head > span:last-child,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost > span:last-child,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head .hh-head__col:last-child,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost .hh-head__col:last-child,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head .hh-col--hh,
+#print-document .carte-flow[data-sec="cocktails"] .hh-head--ghost .hh-col--hh {
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  text-align: right !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  color: var(--gold-700) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
 #print-document .carte-flow[data-sec="cocktails"] [data-merge="1"] .hh-line,
 #print-document .carte-flow[data-sec="cocktails"] [data-merge="1"] .price-line {
-  padding: 1px 0 !important;
+  padding: 1.5px 10px !important;
+  box-sizing: border-box !important;
 }
 #print-document .carte-flow[data-sec="cocktails"].carte-aerate [data-merge="1"] .hh-line,
 #print-document .carte-flow[data-sec="cocktails"].carte-aerate [data-merge="1"] .price-line {
-  padding-top: calc(1px + var(--carte-air-side, 0px)) !important;
-  padding-bottom: calc(1px + var(--carte-air-side, 0px)) !important;
+  padding-top: calc(1.5px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(1.5px + var(--carte-air-side, 0px)) !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+/* Le site garde les .hh-line en grille à quatre pistes (nom, prix, HH,
+   chevron). Dans la carte, prix et HH sont déjà regroupés dans
+   .hh-line__prices : laisser cette grille gagner réduit la ligne à sa
+   première piste et décale les intitulés « Prix / HH » vers la droite.
+   Deux identifiants dans le sélecteur neutralisent explicitement cette
+   règle écran et font porter la ligne entière par le même axe que l'en-tête. */
+html #print-document :is(#cocktails, [data-sec="cocktails"]) .hh-line {
+  display: block !important;
+  grid-template-columns: none !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__name {
+  font-weight: 700 !important;
+  font-size: 1.12rem !important;
+  color: var(--violet-900) !important;
+  flex: 1 1 auto !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__prices {
+  display: flex !important;
+  gap: 12px !important;
+  flex: 0 0 auto !important;
+  margin-left: auto !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__price {
+  font-family: 'Cinzel', serif !important;
+  font-size: 1.28rem !important;
+  font-weight: 800 !important;
+  color: var(--violet-900) !important;
+  text-align: right !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+}
+#print-document .carte-flow[data-sec="cocktails"] .hh-line__hh {
+  font-family: 'Cinzel', serif !important;
+  font-size: 1.28rem !important;
+  font-weight: 800 !important;
+  color: var(--gold-700) !important;
+  text-align: right !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
 }
 #print-document .carte-flow[data-sec="cocktails"] .hh-line .price-list__note,
 #print-document .carte-flow[data-sec="cocktails"] .price-line .price-list__note {
-  margin-top: 0 !important;
-  line-height: 1.25 !important;
+  margin-top: 0.5px !important;
+  font-size: 0.90rem !important;
+  font-style: italic !important;
+  line-height: 1.22 !important;
+  color: var(--muted) !important;
+}
+#print-document .carte-flow[data-sec="menus"] .panel {
+  padding: 12px 16px !important;
+}
+#print-document .carte-flow[data-sec="menus"] .fm {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+#print-document .carte-flow[data-sec="vins"] .panel {
+  padding: 10px 16px 12px !important;
 }
 /* Cellules de prix du tableau des vins : la règle « prix unifiés » ≥1100 px
    ne couvre pas .wine-table td (clamp 0,85-1,08 rem) — les prix des
    bouteilles sortiraient plus petits que ceux des plats. Même corps commun. */
 #print-document .carte-flow[data-sec="vins"] .wine-table td:not(.wine-name) {
   font-size: 1.28rem !important;
+}
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table td,
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table th {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  box-sizing: border-box !important;
+}
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:first-child,
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table th:first-child {
+  padding-left: 10px !important;
+}
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:last-child,
+html.carte-doc .carte-flow[data-sec="vins"] .wine-table th:last-child {
+  padding-right: 10px !important;
+}
+#print-document .carte-flow.carte-aerate[data-sec="vins"] .tab-flow .wine-table td {
+  padding-top: calc(5px + var(--carte-air-side, 0px)) !important;
+  padding-bottom: calc(5px + var(--carte-air-side, 0px)) !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+#print-document .carte-flow.carte-aerate[data-sec="vins"] .tab-flow .wine-table td:first-child {
+  padding-left: 10px !important;
+}
+#print-document .carte-flow.carte-aerate[data-sec="vins"] .tab-flow .wine-table td:last-child {
+  padding-right: 10px !important;
+}
+/* Vins : les lignes de prix réservent une piste de 14 px au chevron
+   masqué dans la carte. L'en-tête doit réserver exactement la même piste,
+   sinon les intitulés 14/25/50/75 cl partent vers la droite par rapport aux
+   montants. Même grille pour thead et tbody, y compris pour les bulles. */
+html #print-document :is(#vins, [data-sec="vins"]) .wine-table:not(.wine-table--short) thead tr,
+html #print-document :is(#vins, [data-sec="vins"]) .wine-table:not(.wine-table--short) tbody tr {
+  grid-template-columns: 26px minmax(0, 1fr) repeat(4, minmax(max-content, 92px)) 14px !important;
+  column-gap: 18px !important;
+}
+/* Les lignes tbody gardent leur bordure et leurs 24 px intérieurs ; leurs
+   25 px effectifs avant la première piste doivent être reproduits sur
+   thead (sans ajouter une piste parasite ni décaler les intitulés). */
+html #print-document :is(#vins, [data-sec="vins"]) .wine-table:not(.wine-table--short) thead tr,
+html #print-document :is(#vins, [data-sec="vins"]) .wine-table.wine-table--short thead tr {
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+}
+html #print-document :is(#vins, [data-sec="vins"]) .wine-table.wine-table--short thead tr,
+html #print-document :is(#vins, [data-sec="vins"]) .wine-table.wine-table--short tbody tr {
+  grid-template-columns: 26px minmax(0, 1fr) repeat(2, minmax(max-content, 132px)) 14px !important;
+  column-gap: 18px !important;
 }
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name .carte-wine-producer {
   font-weight: 400;
@@ -1618,7 +2095,7 @@ def measure_doc(css: str, flows: dict[str, list[str]], viewport: int,
 <title>Mesure — carte La Colline Gambetta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
 {css}
 
@@ -1810,7 +2287,14 @@ def section_variants(metrics: dict, sid: str, w0: float) -> list[dict]:
     return out
 
 
-def plan_variants(variants: list[dict], merge=(), twoc=()):
+def zone_h_for(sid: str = "") -> float:
+    """Hauteur utile de la zone de contenu selon l'onglet."""
+    if sid == "boissons":
+        return 858.0
+    return ZONE_H_PX
+
+
+def plan_variants(variants: list[dict], merge=(), twoc=(), sid: str = "") -> list[dict]:
     """Pour chaque largeur : nombre de feuilles, facteur, et le remplissage obtenu.
 
     Le facteur est lié à la largeur par construction (f = zone / largeur) : border le
@@ -1826,9 +2310,10 @@ def plan_variants(variants: list[dict], merge=(), twoc=()):
     passées en deux colonnes de lignes si la hauteur manque (stack_or_2col).
     """
     out = []
+    zone_h = zone_h_for(sid)
     for v in variants:
         gap_pack = min(v["gap"], GAP_PACK)
-        cap = ZONE_H_PX * SAFETY / v["fit"]
+        cap = zone_h * SAFETY / v["fit"]
         twocol_totals, modes = {}, {}
         hs2 = v.get("heights2col")
         if hs2:
@@ -1842,7 +2327,7 @@ def plan_variants(variants: list[dict], merge=(), twoc=()):
         for idx in sheets:
             in_sheet = [uh for uidx, uh in units if uidx[0] in idx]
             loads.append(sum(in_sheet) + gap_pack * (len(in_sheet) - 1))
-        fill = min(load * v["fit"] / ZONE_H_PX for load in loads)
+        fill = min(load * v["fit"] / zone_h for load in loads)
         out.append({"v": v, "sheets": sheets, "loads": loads,
                     "count": len(sheets), "fill": fill, "twocol_mode": modes})
     return out
@@ -1851,7 +2336,7 @@ def plan_variants(variants: list[dict], merge=(), twoc=()):
 def choose_section(metrics: dict, sid: str, w0: float, f_uniform: float | None = None,
                    merge=(), twoc=()):
     """Meilleure (largeur de composition, facteur, découpage) pour un onglet."""
-    plans = plan_variants(section_variants(metrics, sid, w0), merge, twoc)
+    plans = plan_variants(section_variants(metrics, sid, w0), merge, twoc, sid=sid)
     if f_uniform is not None:
         cible = min(plans, key=lambda p: abs(p["v"]["fit"] - f_uniform))
         plans = [cible]
@@ -1869,6 +2354,7 @@ def choose_section(metrics: dict, sid: str, w0: float, f_uniform: float | None =
         largeur surestime alors la typo réalisable."""
         v = plan["v"]
         fits = []
+        zone_h = zone_h_for(sid)
         for idx, load in zip(plan["sheets"], plan["loads"]):
             is_twocol = tuple(idx) in twoc
             mode = plan.get("twocol_mode", {}).get(tuple(idx), []) if is_twocol else []
@@ -1877,7 +2363,7 @@ def choose_section(metrics: dict, sid: str, w0: float, f_uniform: float | None =
             gap = justify_gaps(load, k, v["gap"], v["fit"]) if justify \
                 else min(v["gap"], GAP_PACK)
             total = load + (0 if not justify else max(0, len(idx) - 1) * (gap - GAP_PACK))
-            cap = ZONE_H_PX * SAFETY
+            cap = zone_h * (0.988 if sid == "boissons" else SAFETY)
             if total * v["fit"] > cap:
                 fits.append(cap / total)   # la garde haute recadre (débordement)
             else:
@@ -1964,7 +2450,7 @@ def _rewiden_width(metrics: dict, sid: str, idx, mode, k: int, var: dict,
     tient toujours) ; sinon la plus étroite largeur mesurée ≥ celle du plan où
     la feuille borde le cadre et tient (le plus gros caractère). None si rien
     ne tient : la feuille garde la largeur du plan, centrée, sans rognage."""
-    cap = ZONE_H_PX * SAFETY
+    cap = zone_h_for(sid) * (0.988 if sid == "boissons" else SAFETY)
     max_w = max(WIDTH_RATIOS) * metrics["base_width"]
     fit_h = cap / total
     base_w = min(ZONE_W_PX / fit_h, max_w)
@@ -2013,7 +2499,7 @@ def layout(metrics: dict, uniforme: bool = False):
         raise SystemExit(f"largeur de composition mesurée à {w0} px : la mesure est fausse "
                          "(onglets non rendus ?) — relancer `node tools/measure_carte.mjs`.")
     par_section = {sid: plan_variants(section_variants(metrics, sid, w0),
-                                   MERGE.get(sid, ()), TWOC.get(sid, ()))
+                                   MERGE.get(sid, ()), TWOC.get(sid, ()), sid=sid)
                    for sid in SECTIONS}
     f_uniform = None
     if uniforme:
@@ -2086,7 +2572,9 @@ def compose_pages(src: str, metrics: dict, flows: dict, chosen: dict, w0: float,
             total = load + (0 if not justify else max(0, len(idx) - 1) * (gap - GAP_PACK))
             base_w = var["w"]
             non_bordée = False
-            if total * fit > ZONE_H_PX * SAFETY:
+            zone_h = zone_h_for(sid)
+            cap = zone_h * (0.988 if sid == "boissons" else SAFETY)
+            if total * fit > cap:
                 # La hauteur plafonne : à la largeur du plan le flux est trop
                 # haut pour border le cadre en largeur. Sans rien faire de
                 # plus, la page réduirait en laissant un blanc de chaque côté ;
@@ -2110,7 +2598,7 @@ def compose_pages(src: str, metrics: dict, flows: dict, chosen: dict, w0: float,
                     # Rien ne tient élargi : on garde la largeur du plan, la
                     # page se centre — le blanc reste dans la feuille, jamais
                     # de rognage.
-                    fit = ZONE_H_PX * SAFETY / total
+                    fit = cap / total
                     non_bordée = True
             air_side = air_title = None
             air_rows = air_titles = 0
@@ -2159,7 +2647,7 @@ def assemble_html(metrics: dict, w0: float, css: str, pages: list[str]) -> str:
 <link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
 {css}
 
@@ -2200,7 +2688,7 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
     except json.JSONDecodeError as exc:
         raise SystemExit(f"aerate_carte.mjs : sortie illisible ({exc})")
     attentes = {"entrees": 12, "plats": 12, "desserts": 12,
-                "boissons": 3, "cocktails": 1, "vins": 5}
+                "boissons": 1.5, "cocktails": 1.5, "vins": 5}
     airs: dict[int, tuple[float, float, int, int, float]] = {}
     for n, info in infos.items():
         m = meas.get(n)
@@ -2216,7 +2704,8 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
                     f"aération {m['kind']} (page {n}) : base de ligne {base} px, "
                     f"{attendu} px attendu — la CSS des lignes a changé, revoir "
                     f"le bloc « Aération » de CARD_OVERRIDES.")
-        free = ZONE_H_PX * SAFETY - m["flowH"]
+        zone_h = m.get("zone", ZONE_H_PX)
+        free = zone_h * SAFETY - m["flowH"]
         rows, titles = m["rows"], m["titles"]
         if free > 0.5 and rows + titles > 0:
             air_side = free / (2 * info["fit"] * (rows + titles))
@@ -2233,15 +2722,16 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
         res = subprocess.run(["node", str(AERATE)], cwd=ROOT, capture_output=True, text=True)
         meas2 = {m["page"]: m for m in json.loads(res.stdout)} if res.returncode == 0 else {}
         mauvaises = [n for n in airs
-                     if meas2.get(n, {}).get("flowH", 0) > ZONE_H_PX * SAFETY + 2]
+                     if meas2.get(n, {}).get("flowH", 0) > meas2.get(n, {}).get("zone", ZONE_H_PX) * SAFETY + 2]
         if not mauvaises:
             break
         for n in mauvaises:
             A, T, rows, titles, free, flowH0 = airs[n]
             m1 = meas.get(n, {}).get("flowH", 0)
             m2 = meas2.get(n, {}).get("flowH", 0)
+            zone_target = meas2.get(n, {}).get("zone", ZONE_H_PX) * SAFETY
             croissance = max(m2 - m1, 0.01)
-            garde = max(0.0, (ZONE_H_PX * SAFETY - m1) / croissance)
+            garde = max(0.0, (zone_target - m1) / croissance)
             airs[n] = (round(A * garde, 2), round(T * garde, 2), rows, titles, free, flowH0)
         pages2, labels2, _, infos2 = compose_pages(src, metrics, flows, chosen, w0, airs)
         OUT.write_text(remplacer_glyphes_a_risque(assemble_html(metrics, w0, css, pages2)),
@@ -2262,8 +2752,9 @@ def main() -> None:
             for i in group:
                 flows[sid][i] = re.sub(r"^<(\w+)", r'<\1 data-merge="1"',
                                        flows[sid][i], count=1)
-                # notes remontées dans la ligne de chaque article
-                flows[sid][i] = inline_notes(flows[sid][i])
+                # notes remontées à la suite du titre de chaque article pour boissons
+                if sid in ("boissons", "cocktails"):
+                    flows[sid][i] = inline_notes(flows[sid][i])
     # vins : le producteur après le tiret passe en sans gras (comme les notes)
     for sid in SECTIONS:
         flows[sid] = [wine_producer_light(b) for b in flows[sid]]

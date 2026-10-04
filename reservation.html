@@ -2,16 +2,67 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<link rel="canonical" href="https://lacollinegambetta.com/reservation.html">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:title" content="La Colline Gambetta — Réserver une table">
+<meta property="og:description" content="Réservez votre table à La Colline Gambetta, bar-restaurant au 4 rue Belgrand, Paris 20e.">
+<meta property="og:url" content="https://lacollinegambetta.com/reservation.html">
+<meta property="og:site_name" content="La Colline Gambetta">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:image" content="https://lacollinegambetta.com/assets/cover/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Medaillon dore de La Colline Gambetta, bar restaurant a Paris 20e">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="La Colline Gambetta — Réserver une table">
+<meta name="twitter:description" content="Réservez votre table à La Colline Gambetta, bar-restaurant au 4 rue Belgrand, Paris 20e.">
+<meta name="twitter:image" content="https://lacollinegambetta.com/assets/cover/og-cover.jpg">
+<meta name="theme-color" content="#24102e">
+<meta name="color-scheme" content="dark light">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>La Colline Gambetta — Réserver ma table</title>
+<title>La Colline Gambetta • Réserver Ma Table</title>
 <meta name="description" content="Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.">
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="apple-touch-icon" href="favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Parisienne&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" crossorigin="">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon.png?v=20260926">
+<link rel="shortcut icon" href="/favicon.ico?v=20260926">
+<link rel="apple-touch-icon" sizes="192x192" href="/favicon.png?v=20260926">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+
+<!-- Polices principales : préchargées sans bloquer le premier rendu ; le système prend le relais hors ligne. -->
+<noscript></noscript>
+
+<!-- Fontes internationales sous-ensemblées localement dans assets/fonts
+     et sélectionnées par unicode-range : aucune feuille Google globale à charger. -->
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/cinzel-700.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/montserrat-400.woff2" crossorigin>
 <style>
+/* fontes latines auto-hebergees */
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:400;font-display:swap;src:url('assets/fonts/cinzel-400.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:400;font-display:swap;src:url('assets/fonts/cinzel-ext-400.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:500;font-display:swap;src:url('assets/fonts/cinzel-500.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:500;font-display:swap;src:url('assets/fonts/cinzel-ext-500.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:600;font-display:swap;src:url('assets/fonts/cinzel-600.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:600;font-display:swap;src:url('assets/fonts/cinzel-ext-600.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:700;font-display:swap;src:url('assets/fonts/cinzel-700.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:700;font-display:swap;src:url('assets/fonts/cinzel-ext-700.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:800;font-display:swap;src:url('assets/fonts/cinzel-800.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:800;font-display:swap;src:url('assets/fonts/cinzel-ext-800.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:900;font-display:swap;src:url('assets/fonts/cinzel-900.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:900;font-display:swap;src:url('assets/fonts/cinzel-ext-900.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:400;font-display:swap;src:url('assets/fonts/montserrat-400.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:500;font-display:swap;src:url('assets/fonts/montserrat-500.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:600;font-display:swap;src:url('assets/fonts/montserrat-600.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:700;font-display:swap;src:url('assets/fonts/montserrat-700.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:800;font-display:swap;src:url('assets/fonts/montserrat-800.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:400;font-display:swap;src:url('assets/fonts/montserrat-ext-400.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:600;font-display:swap;src:url('assets/fonts/montserrat-ext-600.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:700;font-display:swap;src:url('assets/fonts/montserrat-ext-700.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Montserrat';font-style:italic;font-weight:400;font-display:swap;src:url('assets/fonts/montserrat-400-italic.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Parisienne';font-style:normal;font-weight:400;font-display:swap;src:url('assets/fonts/parisienne-400.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+
 /* =====================================================================
    Page de réservation.
 
@@ -65,6 +116,13 @@ button, a { font:inherit; }
 .panel__subtitle { margin:0; color:var(--muted); font-style:italic; font-size:.9rem; }
 .footer { background:#592e6f; border-top:2px solid var(--gold-500); color:#fff; padding:16px 12px calc(18px + env(safe-area-inset-bottom)); text-align:center; margin-top:24px; }
 .footer-details { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px 20px; color:var(--gold-100); font-family:'Cinzel',serif; font-size:clamp(.62rem,1.2vw,.84rem); letter-spacing:.08em; text-transform:uppercase; }
+    .footer-details__metro { flex-basis:100%; }
+@media (min-width: 861px) {
+  .footer-details { flex-wrap:nowrap; white-space:nowrap; }
+  .footer-details__metro { flex-basis:auto; }
+}
+    .footer-address-link { color:inherit; text-decoration:none; }
+    .footer-address-link:hover, .footer-address-link:focus-visible { color:var(--gold-100); text-decoration:underline; text-underline-offset:3px; }
 .footer-links { margin:10px 0; }
 .footer-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:42px; padding:8px 14px; text-decoration:none; display:inline-flex; gap:8px; align-items:center; justify-content:center; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
 .footer-link:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
@@ -143,7 +201,7 @@ button, a { font:inherit; }
 @media (max-width: 480px) {
 .top-controls .control-btn {
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
   }
 }
 @media (max-width: 640px) {
@@ -523,17 +581,271 @@ html .panel__subtitle.qty {
 @media (max-width: 640px) {
 .footer-download { font-size: .6rem; letter-spacing: .14em; padding: 5px 12px; }
 }
-html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel',serif; }
-html[lang="ja"] .interior-header h2 { font-family:'CinzelJP','Cinzel',serif; }
-html[lang="ja"] .interior-header p { font-family:'CinzelJP','Cinzel',serif; }
-html[lang="ja"] .panel__title { font-family:'CinzelJP','Cinzel',serif; }
-html[lang="ja"] .footer-details { font-family:'CinzelJP','Cinzel',serif; }
-html[lang="ja"] .footer-note { font-family:'CinzelJP','Cinzel',serif; }
-html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel', serif !important; }
-html[lang="ja"] .interior-header .eyebrow { font-family:'CinzelJP','Cinzel', serif !important; }
-html[lang="ja"] .footer-links .footer-link { font-family:'MontserratJP','Montserrat', sans-serif !important; }
-html[lang="ja"] .panel__subtitle.qty { font-family:'MontserratJP','Montserrat', sans-serif !important; }
-html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', system-ui, sans-serif; }
+/* ===== Écritures non latines : fontes dédiées & mappages ===== */
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/amiri-arabic-400.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/amiri-arabic-700.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/playfair-cyrillic-500.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 700; font-display:swap; src:url('assets/fonts/playfair-cyrillic-600.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:800 900; font-display:swap; src:url('assets/fonts/playfair-cyrillic-700.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/montserrat-cyrillic-400.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/montserrat-cyrillic-700.woff2') format('woff2'); unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/sc-serif-600.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/sc-serif-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/tajawal-arabic-400.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/tajawal-arabic-500.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/tajawal-arabic-700.woff2') format('woff2'); unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+FB50-FDFF,U+FE70-FEFC; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/sc-sans-400.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/sc-sans-500.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/sc-sans-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'CinzelJP'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/ja-serif-600.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'CinzelJP'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/ja-serif-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'MontserratJP'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/ja-sans-400.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'MontserratJP'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/ja-sans-500.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'MontserratJP'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/ja-sans-700.woff2') format('woff2'); unicode-range:U+3000-303F,U+3040-30FF,U+31F0-31FF,U+3400-4DBF,U+4E00-9FFF,U+FF00-FFEF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/ko-serif-600.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/ko-serif-700.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/ko-sans-400.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/ko-sans-500.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/ko-sans-700.woff2') format('woff2'); unicode-range:U+1100-11FF,U+3130-318F,U+A960-A97F,U+AC00-D7AF; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:400 500; font-display:swap; src:url('assets/fonts/hi-serif-600.woff2') format('woff2'); unicode-range:U+0900-097F; }
+@font-face { font-family:'Cinzel'; font-style:normal; font-weight:600 900; font-display:swap; src:url('assets/fonts/hi-serif-700.woff2') format('woff2'); unicode-range:U+0900-097F; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:400; font-display:swap; src:url('assets/fonts/hi-sans-400.woff2') format('woff2'); unicode-range:U+0900-097F; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:500; font-display:swap; src:url('assets/fonts/hi-sans-500.woff2') format('woff2'); unicode-range:U+0900-097F; }
+@font-face { font-family:'Montserrat'; font-style:normal; font-weight:600 800; font-display:swap; src:url('assets/fonts/hi-sans-700.woff2') format('woff2'); unicode-range:U+0900-097F; }
+
+/* Réinitialisation de l'interlettrage et de la casse pour les écritures non latines */
+html[lang="ar"], html[lang="ar"] *,
+html[lang="ja"], html[lang="ja"] *,
+html[lang="ko"], html[lang="ko"] *,
+html[lang="zh"], html[lang="zh"] *,
+html[lang="hi"], html[lang="hi"] * {
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* Coréen (Korean) */
+html[lang="ko"] {
+  font-family: 'Montserrat', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+}
+html[lang="ko"] .interior-header .eyebrow,
+html[lang="ko"] .interior-header h2,
+html[lang="ko"] .interior-header p,
+html[lang="ko"] .panel__title,
+html[lang="ko"] .footer-details,
+html[lang="ko"] .footer-note,
+html[lang="ko"] .hours__val,
+html[lang="ko"] .hours__t,
+html[lang="ko"] .hours__day,
+html[lang="ko"] .form-status strong,
+html[lang="ko"] .thanks__hello,
+html[lang="ko"] .thanks__when-detail,
+html[lang="ko"] .thanks__when-intro,
+html[lang="ko"] .thanks__when-slot,
+html[lang="ko"] .thanks__when-guests,
+html[lang="ko"] .thanks__sign,
+html[lang="ko"] .sending__label {
+  font-family: 'Cinzel', 'Nanum Myeongjo', 'Batang', serif !important;
+}
+html[lang="ko"] .field input,
+html[lang="ko"] .field select,
+html[lang="ko"] .field textarea,
+html[lang="ko"] .field label,
+html[lang="ko"] .thanks__line,
+html[lang="ko"] .thanks__tel,
+html[lang="ko"] .control-btn,
+html[lang="ko"] .nav-btn,
+html[lang="ko"] .contact-link,
+html[lang="ko"] .footer-link,
+html[lang="ko"] .footer-download {
+  font-family: 'Montserrat', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif !important;
+}
+
+/* Chinois (Chinese) */
+html[lang="zh"] {
+  font-family: 'Montserrat', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+html[lang="zh"] .interior-header .eyebrow,
+html[lang="zh"] .interior-header h2,
+html[lang="zh"] .interior-header p,
+html[lang="zh"] .panel__title,
+html[lang="zh"] .footer-details,
+html[lang="zh"] .footer-note,
+html[lang="zh"] .hours__val,
+html[lang="zh"] .hours__t,
+html[lang="zh"] .hours__day,
+html[lang="zh"] .form-status strong,
+html[lang="zh"] .thanks__hello,
+html[lang="zh"] .thanks__when-detail,
+html[lang="zh"] .thanks__when-intro,
+html[lang="zh"] .thanks__when-slot,
+html[lang="zh"] .thanks__when-guests,
+html[lang="zh"] .thanks__sign,
+html[lang="zh"] .sending__label {
+  font-family: 'Cinzel', 'Songti SC', 'SimSun', serif !important;
+}
+html[lang="zh"] .field input,
+html[lang="zh"] .field select,
+html[lang="zh"] .field textarea,
+html[lang="zh"] .field label,
+html[lang="zh"] .thanks__line,
+html[lang="zh"] .thanks__tel,
+html[lang="zh"] .control-btn,
+html[lang="zh"] .nav-btn,
+html[lang="zh"] .contact-link,
+html[lang="zh"] .footer-link,
+html[lang="zh"] .footer-download {
+  font-family: 'Montserrat', 'PingFang SC', 'Microsoft YaHei', sans-serif !important;
+}
+
+/* Japonais (Japanese) */
+html[lang="ja"] {
+  font-family: 'MontserratJP', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
+}
+html[lang="ja"] .interior-header .eyebrow,
+html[lang="ja"] .interior-header h2,
+html[lang="ja"] .interior-header p,
+html[lang="ja"] .panel__title,
+html[lang="ja"] .footer-details,
+html[lang="ja"] .footer-note,
+html[lang="ja"] .hours__val,
+html[lang="ja"] .hours__t,
+html[lang="ja"] .hours__day,
+html[lang="ja"] .form-status strong,
+html[lang="ja"] .thanks__hello,
+html[lang="ja"] .thanks__when-detail,
+html[lang="ja"] .thanks__when-intro,
+html[lang="ja"] .thanks__when-slot,
+html[lang="ja"] .thanks__when-guests,
+html[lang="ja"] .thanks__sign,
+html[lang="ja"] .sending__label {
+  font-family: 'CinzelJP', 'Noto Serif JP', 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', serif !important;
+}
+html[lang="ja"] .field input,
+html[lang="ja"] .field select,
+html[lang="ja"] .field textarea,
+html[lang="ja"] .field label,
+html[lang="ja"] .thanks__line,
+html[lang="ja"] .thanks__tel,
+html[lang="ja"] .control-btn,
+html[lang="ja"] .nav-btn,
+html[lang="ja"] .contact-link,
+html[lang="ja"] .footer-link,
+html[lang="ja"] .footer-download {
+  font-family: 'MontserratJP', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif !important;
+}
+
+/* Ukrainien (Ukrainian / Cyrillic) */
+html[lang="uk"] {
+  font-family: 'Montserrat', 'Roboto', 'Helvetica Neue', sans-serif;
+}
+html[lang="uk"] .interior-header .eyebrow,
+html[lang="uk"] .interior-header h2,
+html[lang="uk"] .interior-header p,
+html[lang="uk"] .panel__title,
+html[lang="uk"] .footer-details,
+html[lang="uk"] .footer-note,
+html[lang="uk"] .hours__val,
+html[lang="uk"] .hours__t,
+html[lang="uk"] .hours__day,
+html[lang="uk"] .form-status strong,
+html[lang="uk"] .thanks__hello,
+html[lang="uk"] .thanks__when-detail,
+html[lang="uk"] .thanks__when-intro,
+html[lang="uk"] .thanks__when-slot,
+html[lang="uk"] .thanks__when-guests,
+html[lang="uk"] .thanks__sign,
+html[lang="uk"] .sending__label {
+  font-family: 'Cinzel', 'Georgia', serif !important;
+  text-transform: none;
+}
+html[lang="uk"] .field input,
+html[lang="uk"] .field select,
+html[lang="uk"] .field textarea,
+html[lang="uk"] .field label,
+html[lang="uk"] .thanks__line,
+html[lang="uk"] .thanks__tel,
+html[lang="uk"] .control-btn,
+html[lang="uk"] .nav-btn,
+html[lang="uk"] .contact-link,
+html[lang="uk"] .footer-link,
+html[lang="uk"] .footer-download {
+  font-family: 'Montserrat', 'Roboto', 'Helvetica Neue', sans-serif !important;
+}
+
+/* Arabe (Arabic) */
+html[lang="ar"] {
+  font-family: 'Montserrat', 'Geeza Pro', 'Segoe UI', sans-serif;
+  direction: rtl;
+}
+html[lang="ar"] .interior-header .eyebrow,
+html[lang="ar"] .interior-header h2,
+html[lang="ar"] .interior-header p,
+html[lang="ar"] .panel__title,
+html[lang="ar"] .footer-details,
+html[lang="ar"] .footer-note,
+html[lang="ar"] .hours__val,
+html[lang="ar"] .hours__t,
+html[lang="ar"] .hours__day,
+html[lang="ar"] .form-status strong,
+html[lang="ar"] .thanks__hello,
+html[lang="ar"] .thanks__when-detail,
+html[lang="ar"] .thanks__when-intro,
+html[lang="ar"] .thanks__when-slot,
+html[lang="ar"] .thanks__when-guests,
+html[lang="ar"] .thanks__sign,
+html[lang="ar"] .sending__label {
+  font-family: 'Cinzel', 'Traditional Arabic', serif !important;
+}
+html[lang="ar"] .field input,
+html[lang="ar"] .field select,
+html[lang="ar"] .field textarea,
+html[lang="ar"] .field label,
+html[lang="ar"] .thanks__line,
+html[lang="ar"] .thanks__tel,
+html[lang="ar"] .control-btn,
+html[lang="ar"] .nav-btn,
+html[lang="ar"] .contact-link,
+html[lang="ar"] .footer-link,
+html[lang="ar"] .footer-download {
+  font-family: 'Montserrat', 'Geeza Pro', 'Segoe UI', sans-serif !important;
+}
+
+/* Hindi */
+html[lang="hi"] {
+  font-family: 'Montserrat', sans-serif;
+}
+html[lang="hi"] .interior-header .eyebrow,
+html[lang="hi"] .interior-header h2,
+html[lang="hi"] .interior-header p,
+html[lang="hi"] .panel__title,
+html[lang="hi"] .footer-details,
+html[lang="hi"] .footer-note,
+html[lang="hi"] .hours__val,
+html[lang="hi"] .hours__t,
+html[lang="hi"] .hours__day,
+html[lang="hi"] .form-status strong,
+html[lang="hi"] .thanks__hello,
+html[lang="hi"] .thanks__when-detail,
+html[lang="hi"] .thanks__when-intro,
+html[lang="hi"] .thanks__when-slot,
+html[lang="hi"] .thanks__when-guests,
+html[lang="hi"] .thanks__sign,
+html[lang="hi"] .sending__label {
+  font-family: 'Cinzel', serif !important;
+}
+html[lang="hi"] .field input,
+html[lang="hi"] .field select,
+html[lang="hi"] .field textarea,
+html[lang="hi"] .field label,
+html[lang="hi"] .thanks__line,
+html[lang="hi"] .thanks__tel,
+html[lang="hi"] .control-btn,
+html[lang="hi"] .nav-btn,
+html[lang="hi"] .contact-link,
+html[lang="hi"] .footer-link,
+html[lang="hi"] .footer-download {
+  font-family: 'Montserrat', sans-serif !important;
+}
 
 /* ===== Sélecteur de langue (repris du site) ===== */
 .lang-dock {
@@ -713,7 +1025,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   text-transform: uppercase;
   color: var(--gold-100);
 }
-.lang-menu__list { display: grid; gap: 2px; }
+.lang-menu__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; }
 @media (max-height: 860px) {
 .lang-menu { min-width: 300px; padding: 8px 10px 10px; }
 .lang-menu__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -800,12 +1112,15 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   white-space:normal !important;
   overflow:visible !important;
   text-overflow:clip !important;
-  overflow-wrap:anywhere;
+  overflow-wrap:normal;
   text-align:center;
   line-height:1.35;
   min-height:44px;
   padding:9px 16px;
   font-size:.78rem !important;
+}
+#reservation-page .footer .footer-link--book {
+  font-weight:800 !important;
 }
 /* Écrans étroits : une pilule par ligne, pleine largeur, texte entier. */
 @media (max-width: 560px) {
@@ -814,34 +1129,6 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 }
 
 #reservation-page { background:var(--cream); flex:1 0 auto; display:flex; flex-direction:column; }
-/* Le globe est posé en absolu (comme dans le bandeau du site) : la barre
-   doit donc être son repère, et réserver la place à droite pour qu'il ne
-   recouvre jamais le bouton de retour. */
-.book-back {
-  position: sticky; top: 0; z-index: 1002;
-  padding: 10px 64px; display: flex; justify-content: center;
-  background: #592e6f; border-bottom: 1px solid rgba(216,178,87,.45);
-  box-shadow: 0 4px 15px rgba(0,0,0,.4);
-}
-/* La gouttiere de droite est celle du globe, qui flotte au-dessus de la
-   barre : sans elle, le bouton passerait dessous. Elle est repetee a
-   gauche pour que le bouton reste centre. */
-@media (max-width: 560px) { .book-back { padding: 10px 56px; } }
-.book-back .contact-link {
-  width: min(100%, 360px);
-  /* Meme or que les boutons actifs du bandeau (« Page de Garde »
-     selectionne) : le retour a la carte est l'onglet en cours. */
-  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%);
-  color: var(--violet-950);
-  border-color: #fcf6ba;
-  font-weight: 600;
-}
-.book-back .contact-link svg { stroke: var(--violet-950); }
-.book-back .contact-link:hover {
-  filter: brightness(1.06);
-  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #d8b257 60%, #fef9db 100%);
-  color: var(--violet-950);
-}
 /* ===== Rythme vertical =====
    Le corps de page était une suite d'éléments aux marges chacune
    réglée dans son coin : deux panneaux qui se touchaient, un bouton de
@@ -850,11 +1137,10 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
    on laisse la grille la distribuer.
 
    --gap-bloc  : entre deux panneaux
-   --gap-inter : entre un panneau et un élément isolé (bouton de retour)
-   Les deux respirent avec la hauteur de la fenêtre (clamp sur vh) :
+   L’écart respire avec la hauteur de la fenêtre (clamp sur vh) :
    serrés sur un téléphone, généreux sur un grand écran, jamais
    arbitraires. */
-:root { --gap-bloc: clamp(16px, 2.4vh, 26px); --gap-inter: clamp(14px, 2vh, 22px); }
+:root { --gap-bloc: clamp(16px, 2.4vh, 26px); }
 .book-main { flex:1 0 auto; display:flex; flex-direction:column; }
 /* La colonne occupe la hauteur disponible et centre son contenu quand il
    y a du mou : sur une grande fenêtre, le formulaire n'est plus tassé en
@@ -868,11 +1154,6 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   justify-content:center;
   margin:var(--gap-bloc) auto;
 }
-/* Le bouton de retour est un élément isolé : il se détache des panneaux
-   d'un cran plus serré que l'écart entre deux panneaux, pour qu'on lise
-   « fin de page » et non « troisième bloc ». */
-#reservation-page .book-back-bottom { margin:calc(var(--gap-inter) - var(--gap-bloc)) 0 0; }
-
 .form-grid { display:grid; grid-template-columns:1fr; gap:14px; }
 @media (min-width:680px) {
   .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -902,7 +1183,11 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
     .field--full { grid-row:span 3; grid-template-rows:subgrid; }
     /* Un bloc sans message d'erreur laisserait sa 3e rangee vide et sa
        zone de saisie s'etirerait pour la combler : on la cale en haut. */
-    .field > textarea, .field > input, .field > select { align-self:start; }
+    select option:disabled {
+    color: #9c8eab !important;
+    background-color: #f3eff7 !important;
+  }
+  .field > textarea, .field > input, .field > select { align-self:start; }
     /* La rangee des messages garde la meme hauteur sur toute la ligne,
        qu'un champ affiche une erreur, une precision ou rien : sans cela
        le bas des blocs d'une meme rangee ne tombait pas au meme niveau. */
@@ -911,35 +1196,59 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   }
 }
 .field { display:grid; gap:6px; min-width:0; align-content:start; }
-/* Intitulés des champs (Nom, Téléphone, Mail, Date, Heure…) en noir :
-   ce sont les mots qu'on lit pour remplir, ils passent avant l'ornement.
-   L'or est conservé pour les seules mentions accessoires. */
-/* Intitules : hauteur de ligne fixe pour que la rangee des libelles soit
-   identique d'un bloc a l'autre. */
+/* Intitulés des champs en texte normal (non gras, casse normale) */
 .field > label {
-  font-family:'Cinzel',serif; font-size:.78rem; letter-spacing:.12em;
-  text-transform:uppercase; color:#14060c; font-weight:700;
-  line-height:1.3; align-self:end;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--ink, #1f1235);
+  font-weight: 400;
+  line-height: 1.35;
+  align-self: end;
 }
-.field > label .opt { text-transform:none; letter-spacing:0; font-weight:400; color:#5d5168; }
-/* Toutes les cases ont EXACTEMENT la meme hauteur. `min-height` seul ne
-   suffisait pas : un `select` se dimensionne sur sa police et ses marges
-   internes propres, differentes de celles d'un `input`, si bien que les
-   deux cases d'une meme ligne ne tombaient jamais tout a fait d'aplomb.
-   Une hauteur fixe, plus `box-sizing:border-box` pour que la bordure
-   soit comptee dedans, rend les cases rigoureusement identiques. */
+.field > label .opt {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  color: #6b6277;
+}
+/* Contenus des cases à remplir et sélecteurs en gras */
 .field input, .field select, .field textarea {
-  font:inherit; color:var(--ink); background:#fff;
-  border:1px solid rgba(216,178,87,.5); border-radius:14px;
-  padding:0 14px; height:52px; min-height:52px; width:100%;
-  box-sizing:border-box; transition:.18s ease;
-  appearance:none; -webkit-appearance:none;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink, #1f1235);
+  background: #ffffff;
+  border: 1px solid rgba(216,178,87,.5);
+  border-radius: 14px;
+  padding: 0 14px;
+  height: 52px;
+  min-height: 52px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: .18s ease;
+  appearance: none;
+  -webkit-appearance: none;
 }
-/* La zone de texte libre fait exactement deux cases de haut, plus
-   l'ecart qui les separerait : la symetrie reste lisible. */
+.field input::placeholder,
+.field textarea::placeholder {
+  font-weight: 400;
+  color: var(--muted, #857d91);
+  opacity: 0.75;
+}
+.field select option {
+  font-weight: 700;
+  color: var(--ink, #1f1235);
+}
+/* La zone de texte libre */
 .field textarea {
-  height:110px; min-height:110px; padding:12px 14px;
-  resize:vertical; line-height:1.5;
+  height: 110px;
+  min-height: 110px;
+  padding: 12px 14px;
+  resize: vertical;
+  line-height: 1.5;
+  font-weight: 700;
 }
 /* -- Date et heure : les deux seules cases au contenu natif -----------
    Un `input[type=date]` et un `select` n'affichent pas du texte simple
@@ -980,10 +1289,101 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   background-size:12px 8px;
   padding-right:38px;
 }
+html[lang="ar"] .field select {
+  background-position:left 14px center;
+  padding-right:14px;
+  padding-left:38px;
+}
 .field input:focus, .field select:focus, .field textarea:focus {
   outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(216,178,87,.22);
 }
+/* Sélecteur de date avec Calendrier natif de l'appareil & affichage jour/date complet */
+.field__date-box {
+  position: relative;
+  width: 100%;
+  height: 52px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.field__date-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.field__date-text {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border: 1px solid rgba(216,178,87,.5);
+  border-radius: 14px;
+  padding: 0 42px 0 14px;
+  display: flex;
+  align-items: center;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink, #1f1235);
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 1;
+  transition: border-color .18s ease, box-shadow .18s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.field__date-box:hover .field__date-text {
+  border-color: var(--gold-500, #d8b257);
+}
+.field__date-input:focus ~ .field__date-text {
+  outline: none;
+  border-color: var(--gold-500, #d8b257);
+  box-shadow: 0 0 0 3px rgba(216,178,87,.22);
+}
+.field--error .field__date-text {
+  border-color: #b0304a !important;
+  box-shadow: 0 0 0 3px rgba(176,48,74,.14) !important;
+}
+.field__date-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 19px;
+  height: 19px;
+  color: var(--gold-700, #9c7a2d);
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.field__date-icon svg {
+  width: 100%;
+  height: 100%;
+}
+html[lang="ar"] .field__date-text {
+  padding: 0 14px 0 42px;
+  text-align: right;
+}
+html[lang="ar"] .field__date-icon {
+  right: auto;
+  left: 14px;
+}
 .field__hint { margin:0; font-size:.76rem; color:var(--muted); font-style:italic; }
+.field__hint--warn { color:#b0304a !important; font-style:normal !important; font-weight:600 !important; }
 .field--error input, .field--error select { border-color:#b0304a; box-shadow:0 0 0 3px rgba(176,48,74,.14); }
 .field__error { margin:0; font-size:.76rem; color:#b0304a; font-weight:600; }
 .field__error[hidden] { display:none; }
@@ -1091,6 +1491,8 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   font-family:'Cinzel',serif; font-size:.82rem; letter-spacing:.08em;
   text-transform:uppercase; color:var(--violet-900); text-align:center;
 }
+.map-address a, .map-fallback a { color:inherit; text-decoration:none; }
+.map-address a:hover, .map-address a:focus-visible, .map-fallback a:hover, .map-fallback a:focus-visible { color:var(--violet-700); text-decoration:underline; text-underline-offset:3px; }
 .info-link--route { flex:0 0 auto; }
 /* Commandes MapLibre : mêmes codes que le bouton de recentrage —
    blanc, discret, sans le bleu par défaut. */
@@ -1127,31 +1529,13 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
   background:rgba(36,16,46,.55) !important; font-family:'Montserrat',sans-serif !important;
 }
 
-/* Retour à la carte, en bas de page : la pilule des liens de contact. */
-.book-back-bottom { display:flex; justify-content:center; }
-.book-back-bottom .contact-link--back {
-  width:min(100%,360px); color:var(--violet-900);
-  border-color:rgba(216,178,87,.6); background:#fff;
-  font-family:'Cinzel',serif; letter-spacing:.1em;
-}
-.book-back-bottom .contact-link--back svg { stroke:var(--violet-900); }
-.book-back-bottom .contact-link--back:hover {
-  background:#fffaea; border-color:var(--gold-500); color:var(--violet-900);
-}
-
-/* ===== Horaires : deux cartouches plutot qu'un releve ================
-   Les horaires etaient deux lignes de releve, libelle a gauche et heure
-   a droite, qui se percutaient des que la largeur manquait. Ils
-   deviennent deux cartouches autonomes : un pictogramme, l'intitule,
-   puis l'amplitude ou les deux heures sont reliees par un trait.
-
-   Le trait remplace le tiret et la mention « en continu » : il DIT la
-   continuite au lieu de l'ecrire, dans toutes les langues a la fois. Il
-   se dilate pour occuper l'espace disponible, ce qui donne aux deux
-   cartouches des heures parfaitement alignees quelle que soit la
-   largeur, sans jamais de collision : chaque partie a sa place propre. */
-/* En tete de page : la marge passe EN DESSOUS, les cartouches ouvrant
-   desormais le contenu au lieu de clore un bloc. */
+/* ===== Horaires : base graphique de la plage d'ouverture ==============
+   La variante finale .hours__card--combined, plus bas, rassemble le bar,
+   le restaurant et la cuisine dans un seul encart. Les primitives ci-dessous
+   restent partagées par les lignes d'horaires : heures tabulaires, trait doré
+   et séparateurs lisibles à toutes les largeurs. */
+/* En tête de page : la marge passe EN DESSOUS, l'encart ouvrant désormais
+   le contenu au lieu de clore un bloc. */
 .hours {
   margin:0 0 clamp(14px, 2vh, 20px);
   display:grid; gap:10px;
@@ -1175,7 +1559,7 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 .hours__day {
   font-family:'Cinzel',serif; text-transform:uppercase; letter-spacing:.12em;
   font-size:.72rem; color:var(--violet-900); opacity:.78;
-  min-width:0; overflow-wrap:break-word;
+  min-width:0; overflow-wrap:normal;
 }
 /* Les deux heures aux extremites, le trait au milieu : c'est lui qui
    absorbe la largeur, donc les heures ne se rencontrent jamais. */
@@ -1296,49 +1680,62 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 }
 .thanks__line { font-size: .88rem; color: var(--violet-900); }
 
-/* La ligne qui reprend jour, heure et couverts : c'est l'information
-   que le client relit, on la detache du reste. */
+/* La section qui reprend jour, heure et couverts, parfaitement centrée */
 .thanks__when {
-  display: inline-block;
-  margin: 4px auto 12px !important;
-  padding: 10px 18px;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 10px auto 14px !important;
+  padding: 14px 24px 12px;
   border-radius: 14px;
   border: 1px solid rgba(216,178,87,.5);
-  background: #fff;
+  background: #ffffff;
   font-family: 'Cinzel', serif;
-  letter-spacing: .04em;
+  letter-spacing: .03em;
   color: var(--violet-900);
   font-variant-numeric: tabular-nums;
+  text-align: center;
+  box-sizing: border-box;
 }
-/* L'annonce, en retrait : elle introduit sans voler la vedette. */
+/* L'annonce : introduite clairement et centrée */
 .thanks__when-intro {
   display: block;
   text-align: center;
-  font-size: .78rem;
-  font-weight: 400;
-  opacity: .78;
-  margin-bottom: 5px;
+  font-size: clamp(.84rem, 2.5vw, .96rem);
+  font-weight: 500;
+  color: var(--gold-800, #85641f);
+  margin: 0 0 8px !important;
+  letter-spacing: .04em;
 }
-/* La ligne que le client retient : detachee et centree dans
-   l'encart. Les deux groupes en gras et leur mot de liaison forment
-   UNE ligne — d'ou l'inline-block, un display:block les empilerait —
-   qui se replie proprement si la largeur manque. */
-.thanks__when-line {
+/* La ligne date et heure : centrée avec date et heure en gras */
+.thanks__when-slot {
   display: block;
   text-align: center;
-  text-wrap: balance;
-  line-height: 1.5;
+  font-size: clamp(.96rem, 2.9vw, 1.12rem);
+  line-height: 1.45;
+  margin: 0 0 6px !important;
+  color: var(--violet-950, #1f1235);
+}
+/* La ligne du nombre de personnes : centrée */
+.thanks__when-guests {
+  display: block;
+  text-align: center;
+  font-size: clamp(.92rem, 2.7vw, 1.05rem);
+  line-height: 1.4;
+  margin: 0 !important;
+  color: var(--violet-950, #1f1235);
 }
 .thanks__when-detail {
-  display: inline-block;
-  font-size: clamp(.92rem, 2.8vw, 1.04rem);
+  display: inline;
   font-weight: 700;
+  color: var(--violet-950, #1f1235);
 }
-/* Le mot de liaison reste en texte courant : c'est ce contraste qui
-   fait ressortir les deux groupes. */
+/* Les mots de liaison en texte courant pour faire ressortir les informations clés */
+.thanks__when-at,
 .thanks__when-for {
   font-weight: 400;
-  opacity: .8;
+  color: var(--ink, #2c2538);
+  opacity: .88;
 }
 .thanks__warm { font-style: italic; color: #6b4a8a; }
 
@@ -1361,19 +1758,21 @@ html[lang="ja"] .footer-download { font-family:'MontserratJP','Montserrat', syst
 .thanks__tel { font-size: .8rem; color: var(--muted); }
 .thanks__tel a { color: var(--gold-700); font-weight: 700; white-space: nowrap; }
 
-/* Les ecritures non latines n'ont pas de cursive equivalente : la
-   signature y reprend la fonte de titre, en italique, plutot que de
-   tomber dans une fonte de secours illisible. */
+/* Les écritures non latines n'ont pas de cursive équivalente : la
+   signature y reprend la fonte de titre de la langue. */
 html[lang="ar"] .thanks__sign,
 html[lang="zh"] .thanks__sign,
 html[lang="ja"] .thanks__sign,
 html[lang="ko"] .thanks__sign,
-html[lang="hi"] .thanks__sign,
+html[lang="hi"] .thanks__sign {
+  font-size: clamp(1rem, 3.4vw, 1.2rem);
+  font-style: normal;
+  letter-spacing: 0 !important;
+}
 html[lang="uk"] .thanks__sign {
   font-family: 'Cinzel', serif;
   font-size: clamp(1rem, 3.4vw, 1.2rem);
   font-style: italic;
-  letter-spacing: .06em;
 }
 @media (prefers-reduced-motion: reduce) {
   .form-status--thanks { animation: none; }
@@ -1418,9 +1817,636 @@ html[lang="uk"] .thanks__sign {
 @media (prefers-reduced-motion: reduce) {
   .sending__bar { animation: none; }
 }
+
+/* Liens légaux discrets, regroupés près de la réservation dans le pied. */
+.footer-legal-nav {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  width:100%;
+  margin-top:2px;
+  color:rgba(255,255,255,.68);
+  font-size:.68rem;
+  letter-spacing:.04em;
+}
+.footer-legal-nav a { color:inherit; text-decoration:none; }
+.footer-legal-nav a:hover { color:var(--gold-100); text-decoration:underline; text-underline-offset:3px; }
+.footer-legal-nav span { color:var(--gold-500); }
+
+
+
+/* ===== Horaires : un seul encart pour le bar, le restaurant et la cuisine =====
+   Une carte unique évite l’effet « deux blocs indépendants » : le nom de
+   l’établissement pose le contexte, puis les deux lignes donnent les plages
+   horaires avec un alignement calme et lisible. */
+.hours {
+  display:block;
+  width:min(100%, 760px);
+  margin:0 auto clamp(14px, 2vh, 20px);
+}
+.hours__card--combined {
+  display:grid;
+  grid-template-columns:minmax(190px, .8fr) minmax(0, 1.2fr);
+  align-items:stretch;
+  gap:0;
+  padding:0;
+  overflow:hidden;
+  border-radius:18px;
+  background:linear-gradient(135deg, rgba(255,255,255,.98), rgba(252,251,247,.98));
+}
+.hours__top {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:18px 20px;
+  background:linear-gradient(145deg, rgba(89,46,111,.98), rgba(67,33,85,.98));
+  color:#fff;
+}
+.hours__card--combined .hours__ico {
+  flex:0 0 28px;
+  width:28px;
+  height:28px;
+  color:var(--gold-300);
+  opacity:1;
+}
+.hours__service {
+  font-family:'Cinzel',serif;
+  font-size:clamp(.68rem, 1.2vw, .82rem);
+  font-weight:700;
+  letter-spacing:.12em;
+  line-height:1.35;
+  text-transform:uppercase;
+}
+.hours__schedule {
+  display:grid;
+  align-content:center;
+  padding:10px 20px;
+}
+.hours__row {
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) minmax(185px, 1.2fr);
+  align-items:center;
+  gap:18px;
+  min-height:42px;
+}
+.hours__row + .hours__row {
+  border-top:1px solid rgba(216,178,87,.24);
+}
+.hours__card--combined .hours__day {
+  font-size:.72rem;
+  letter-spacing:.12em;
+  line-height:1.25;
+}
+.hours__card--combined .hours__val {
+  font-size:1.08rem;
+}
+@media (max-width:700px) {
+  .hours__card--combined { grid-template-columns:1fr; }
+  .hours__top { justify-content:center; padding:12px 16px; }
+  .hours__schedule { padding:6px 16px 8px; }
+  .hours__row { grid-template-columns:minmax(0, 1fr) minmax(170px, 1.25fr); gap:12px; min-height:40px; }
+}
+@media (max-width:420px) {
+  .hours__service { letter-spacing:.08em; }
+  .hours__row { grid-template-columns:minmax(0, .8fr) minmax(150px, 1.2fr); gap:8px; }
+  .hours__card--combined .hours__val { font-size:1rem; }
+}
+
+
+
+/* Liens légaux : après tout le pied de page, jamais dans la couverture. */
+.legal-bottom-nav {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:6px 10px;
+  width:min(100% - 24px, 760px);
+  margin:0 auto;
+  padding:10px 12px 16px;
+  color:var(--muted, #7b6a88);
+  font-size:.68rem;
+  letter-spacing:.04em;
+  text-align:center;
+}
+.legal-bottom-nav a {
+  padding:5px 10px;
+  border:1px solid rgba(156,122,45,.38);
+  border-radius:999px;
+  color:var(--violet-900, #432155);
+  text-decoration:none;
+  transition:background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.legal-bottom-nav a:hover {
+  background:#fff;
+  border-color:var(--gold-500, #d8b257);
+  color:var(--violet-950, #24102e);
+}
+.legal-bottom-nav > span { color:var(--gold-700, #9c7a2d); }
+.footer .legal-bottom-nav a { border-color:rgba(216,178,87,.36); background:rgba(255,255,255,.04); color:rgba(255,255,255,.78) !important; text-shadow:none; }
+.footer .legal-bottom-nav a:hover { background:rgba(255,255,255,.12); border-color:var(--gold-100, #fef9db); color:#fff !important; }
+.footer .legal-bottom-nav > span { color:var(--gold-300, #f0d78f); }
+
+
+
+/* Version compacte : toutes les informations tiennent sur une seule ligne.
+   La cuisine est incluse visuellement dans la plage générale du bar et du
+   restaurant, au lieu d’occuper un second cartouche. */
+.hours__card--single {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  width:100%;
+  min-height:48px;
+  padding:10px 16px;
+  overflow:hidden;
+  border-radius:999px;
+  background:linear-gradient(135deg, rgba(89,46,111,.98), rgba(67,33,85,.98));
+  color:#fff;
+  box-shadow:0 7px 18px rgba(36,16,46,.12);
+}
+.hours__card--single .hours__ico {
+  flex:0 0 22px;
+  width:22px;
+  height:22px;
+  color:var(--gold-300);
+  opacity:1;
+}
+.hours__single-line {
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  gap:8px;
+  min-width:0;
+  white-space:nowrap;
+  font-family:'Cinzel',serif;
+  font-size:clamp(.64rem, 1.15vw, .82rem);
+  letter-spacing:.08em;
+  line-height:1.2;
+  text-transform:uppercase;
+}
+.hours__card--single .hours__day {
+  color:var(--gold-100);
+  font-size:inherit;
+  letter-spacing:.08em;
+  opacity:1;
+}
+.hours__card--single .hours__t {
+  color:#fff;
+  font-weight:700;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.hours__bullet { color:var(--gold-300); }
+.hours__cuisine {
+  display:inline-flex;
+  align-items:baseline;
+  gap:6px;
+  padding-left:10px;
+  border-left:1px solid rgba(240,215,143,.48);
+}
+.hours__cuisine .hours__t { color:var(--gold-100); }
+@media (max-width:700px) {
+  .hours__card--single { min-height:44px; padding:8px 12px; gap:7px; }
+  .hours__card--single .hours__ico { flex-basis:18px; width:18px; height:18px; }
+  .hours__single-line { gap:6px; font-size:clamp(.57rem, 2.55vw, .72rem); letter-spacing:.035em; }
+  .hours__cuisine { gap:4px; padding-left:7px; }
+}
+@media (max-width:360px) {
+  .hours__card--single { padding-left:8px; padding-right:8px; }
+  .hours__single-line { gap:4px; font-size:.55rem; letter-spacing:.02em; }
+  .hours__card--single .hours__ico { display:none; }
+  .hours__cuisine { gap:3px; padding-left:5px; }
+}
+
+
+/* ===== Horaires de cuisine : précision petit-déjeuner ==================
+   Un seul ruban, une information principale et une note de service plus
+   légère : le style reprend le vocabulaire discret des cartes d'hôtels et
+   des brasseries soignées, sans recréer un second encart. */
+.hours__card--single .hours__single-line {
+  gap: 9px;
+}
+.hours__card--single .hours__day {
+  color: var(--gold-100);
+  font-weight: 700;
+}
+.hours__card--single .hours__t {
+  color: #fff;
+}
+.hours__breakfast {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 9px;
+  padding-left: 11px;
+  border-left: 1px solid rgba(240,215,143,.48);
+  white-space: nowrap;
+}
+.hours__breakfast-separator {
+  display: none;
+}
+.hours__breakfast-copy {
+  color: var(--gold-100);
+  font-family: 'Montserrat', sans-serif;
+  font-size: .82em;
+  font-weight: 700;
+  letter-spacing: .025em;
+  line-height: 1.15;
+  text-transform: none;
+  white-space: nowrap;
+}
+@media (max-width:700px) {
+  .hours__card--single .hours__single-line {
+    gap: 7px;
+    font-size: clamp(.58rem, 2.55vw, .72rem);
+    letter-spacing: .025em;
+  }
+  .hours__breakfast {
+    gap: 7px;
+    padding-left: 8px;
+  }
+  .hours__breakfast-copy {
+    font-size: .8em;
+  }
+}
+@media (max-width:360px) {
+  .hours__card--single .hours__single-line {
+    gap: 4px;
+    font-size: .54rem;
+    letter-spacing: .01em;
+  }
+  .hours__breakfast {
+    gap: 4px;
+    padding-left: 6px;
+  }
+  .hours__breakfast-copy {
+    font-size: .78em;
+  }
+}
+
+
+/* ===== Liens légaux : deux pills sur une seule ligne =================== */
+.legal-bottom-nav {
+  flex-wrap:nowrap !important;
+  width:max-content !important;
+  max-width:calc(100% - 16px) !important;
+  overflow-x:auto;
+  overflow-y:hidden;
+  justify-content:center;
+  white-space:nowrap;
+  scrollbar-width:none;
+}
+.legal-bottom-nav::-webkit-scrollbar { display:none; }
+.legal-bottom-nav a { flex:0 0 auto; padding:5px 8px; }
+
+    /* L’accueil reprend la pill dorée du bouton actif « Menu & Carte ». */
+    .footer .footer-link--book,
+    .footer .footer-link--book:hover,
+    .footer .footer-link--book:focus-visible {
+      background:linear-gradient(135deg,#bf953f 0%,#fcf6ba 30%,#d8b257 60%,#fef9db 100%);
+      border-color:#fcf6ba;
+      color:var(--violet-950) !important;
+      outline:none;
+    }
+    .footer .footer-link--book:hover,
+    .footer .footer-link--book:focus-visible { transform:translateY(-1px); }
+
+/* ===== Ruban d’horaires : hiérarchie compacte et professionnelle ===== */
+.hours__card--single {
+  gap:12px;
+  min-height:52px;
+  padding:10px 18px;
+  border:1px solid rgba(240,215,143,.58);
+  box-shadow:0 9px 22px rgba(36,16,46,.16);
+}
+.hours__card--single .hours__ico {
+  width:20px;
+  height:20px;
+  flex-basis:20px;
+}
+.hours__card--single .hours__single-line {
+  gap:10px;
+  letter-spacing:.055em;
+}
+.hours__card--single .hours__day {
+  font-size:.62rem;
+  letter-spacing:.18em;
+}
+.hours__card--single .hours__t {
+  font-size:1.04rem;
+  letter-spacing:.035em;
+}
+.hours__card--single .hours__breakfast {
+  gap:0;
+  padding:4px 10px;
+  border:1px solid rgba(240,215,143,.4);
+  border-radius:999px;
+  background:rgba(240,215,143,.1);
+}
+.hours__card--single .hours__breakfast-copy {
+  font-size:.72em;
+  font-weight:600;
+  letter-spacing:.035em;
+}
+@media (max-width:700px) {
+  .hours__card--single {
+    gap:8px;
+    min-height:46px;
+    padding:8px 12px;
+  }
+  .hours__card--single .hours__single-line {
+    gap:7px;
+    letter-spacing:.02em;
+  }
+  .hours__card--single .hours__day { letter-spacing:.12em; }
+  .hours__card--single .hours__t { font-size:.95rem; }
+  .hours__card--single .hours__breakfast { padding:3px 8px; }
+}
+@media (max-width:420px) {
+  .hours__card--single { gap:5px; padding-inline:9px; }
+  .hours__card--single .hours__single-line { gap:5px; font-size:clamp(.56rem,2.5vw,.68rem); }
+  .hours__card--single .hours__day { letter-spacing:.08em; }
+  .hours__card--single .hours__t { font-size:.88rem; }
+  .hours__card--single .hours__breakfast { padding:3px 6px; }
+  .hours__card--single .hours__breakfast-copy { font-size:.76em; }
+}
+
+/* Le globe est ancré dans le bandeau de titre de la réservation. */
+.lang-dock {
+  position:absolute !important;
+  top:0 !important;
+  right:0 !important;
+  bottom:auto !important;
+  left:auto !important;
+  width:66px !important;
+  height:62px !important;
+}
+.lang-dock .lang-menu {
+  /* Le bouton est ancré dans l’en-tête, mais la fenêtre doit rester
+     ancrée à la fenêtre : sinon son parent de 58 px la comprime sur mobile. */
+  position:fixed !important;
+  top:62px !important;
+  right:12px !important;
+  left:auto !important;
+  width:min(420px, calc(100vw - 24px)) !important;
+  min-width:0 !important;
+  max-width:calc(100vw - 24px) !important;
+  transform:none !important;
+  max-height:calc(100vh - 76px) !important;
+}
+@media (max-width:720px) {
+  .lang-dock {
+    width:58px !important;
+    height:58px !important;
+  }
+  .lang-dock .lang-btn {
+    right:8px !important;
+    top:9px !important;
+  }
+  .lang-dock .lang-menu {
+    position:fixed !important;
+    top:58px !important;
+    right:10px !important;
+    left:10px !important;
+    width:auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+    max-height:calc(100vh - 70px) !important;
+  }
+}
+
+/* ===== Règle éditoriale absolue : aucun mot coupé ======================
+   Les retours se font uniquement entre les mots, jamais à l'intérieur
+   d'un mot, d'une adresse ou d'un intitulé. */
+body,
+body * {
+  overflow-wrap:normal !important;
+  word-break:normal !important;
+  hyphens:none !important;
+}
+.info-link[href^="mailto:"],
+.footer-link--mail {
+  white-space:nowrap !important;
+}
+
+/* GAMBETTA reprend exactement le doré lumineux du titre de la page de garde. */
+:root {
+  --gold-bright:#ffe88f;
+}
+.interior-header h2 span {
+  color:var(--gold-bright) !important;
+  text-shadow:0 0 10px rgba(255,232,143,.18);
+}
+
+/* ===== Contenu centré sur écran PC =====
+   À partir de 861 px, chaque bloc de la réservation partage le même axe
+   central. Les règles mobiles restent inchangées. */
+@media screen and (min-width: 861px) {
+  #reservation-page,
+  #reservation-page .panel,
+  #reservation-page .hours,
+  #reservation-page .form-status,
+  #reservation-page .map-foot {
+    text-align: center !important;
+  }
+
+  #reservation-page .hours__card--single,
+  #reservation-page .hours__single-line {
+    justify-content: center !important;
+  }
+
+  #reservation-page .field {
+    justify-items: center;
+    text-align: center !important;
+  }
+  #reservation-page .field > label,
+  #reservation-page .field__hint,
+  #reservation-page .field__error {
+    width: 100%;
+    text-align: center !important;
+  }
+  #reservation-page .field input,
+  #reservation-page .field select,
+  #reservation-page .field textarea {
+    text-align: center !important;
+  }
+  #reservation-page .field select {
+    text-align-last: center;
+  }
+  #reservation-page .field__date-text {
+    justify-content: center;
+    padding-left: 42px;
+    padding-right: 42px;
+    text-align: center;
+  }
+
+  #reservation-page .info-grid,
+  #reservation-page .form-actions,
+  #reservation-page .footer-links,
+  #reservation-page .footer-legal,
+  #reservation-page .legal-bottom-nav {
+    justify-items: center;
+    justify-content: center;
+    text-align: center !important;
+  }
+}
+/* ===== Note horaires : version discrète et minimaliste =================
+   L'information est hiérarchisée sur deux lignes, sans grosse pilule ni
+   icône : la plage de cuisine reste la lecture principale et le service
+   petit-déjeuner devient une note secondaire. */
+.hours__card--minimal {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  width: 100%;
+  min-height: 0;
+  padding: 10px 8px 9px;
+  border: 0;
+  border-top: 1px solid rgba(156,122,45,.38);
+  border-bottom: 1px solid rgba(156,122,45,.2);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--violet-900);
+  text-align: center;
+}
+.hours__minimal-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px 12px;
+  text-align: center;
+}
+.hours__minimal-label {
+  color: var(--gold-700);
+  font-family: 'Cinzel', serif;
+  font-size: .66rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+.hours__minimal-time {
+  color: var(--violet-900);
+  font-family: 'Cinzel', serif;
+  font-size: 1.04rem;
+  font-weight: 700;
+  letter-spacing: .035em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.hours__minimal-note {
+  margin: 0;
+  color: var(--muted);
+  font-family: 'Montserrat', sans-serif;
+  font-size: .78rem;
+  font-weight: 500;
+  letter-spacing: .015em;
+  line-height: 1.3;
+  text-align: center;
+}
+.hours__minimal-note a {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(156,122,45,.65);
+  text-underline-offset: 3px;
+}
+.hours__minimal-note a:hover,
+.hours__minimal-note a:focus-visible {
+  color: var(--gold-700);
+}
+@media (max-width: 700px) {
+  .hours__card--minimal { padding: 8px 6px 7px; }
+  .hours__minimal-line { gap: 3px 9px; }
+  .hours__minimal-label { font-size: .6rem; letter-spacing: .12em; }
+  .hours__minimal-time { font-size: .95rem; }
+  .hours__minimal-note { font-size: .74rem; }
+}
+@media (max-width: 360px) {
+  .hours__card--minimal { padding-inline: 3px; }
+  .hours__minimal-line { gap: 2px 6px; }
+  .hours__minimal-label { font-size: .56rem; letter-spacing: .08em; }
+  .hours__minimal-time { font-size: .86rem; }
+  .hours__minimal-note { font-size: .7rem; }
+}
+
+/* Le ruban minimal ne doit pas hériter des deux colonnes des anciennes
+   cartes d'horaires : les deux lignes partagent un axe horizontal unique,
+   sur mobile comme sur écran large. */
+.hours {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+.hours__card--minimal {
+  grid-template-columns: minmax(0, 1fr) !important;
+  justify-items: center;
+}
+.hours__card--minimal .hours__minimal-line,
+.hours__card--minimal .hours__minimal-note {
+  grid-column: 1;
+  width: 100%;
+  justify-self: stretch;
+}
+.hours__card--minimal .hours__minimal-line {
+  justify-content: center;
+}
+
+/* Le ruban doit rester proche du bloc de réservation : on retire sa marge
+   basse historique et on laisse une respiration courte, identique sur mobile
+   et écran large. */
+#reservation-page .hours {
+  margin-bottom: 0;
+}
+#reservation-page .hours + .panel {
+  margin-top: -8px;
+}
+/* quartier:css:debut */
+/* ===== Pied de page : adresse, itineraire et reperes des alentours ========
+   Une ligne en tres petits caracteres sous l'adresse, dans la meme fonte que
+   le reste du pied de page. Discrete a l'oeil, parfaitement lisible pour les
+   moteurs : ce sont de vrais liens, jamais du texte dissimule. */
+html:not(.carte-doc) .footer-quartier {
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
+  gap:3px 10px; margin:5px auto 0; max-width:74ch;
+  font-family:'Cinzel',serif; font-size:clamp(.5rem,.95vw,.6rem);
+  letter-spacing:.09em; text-transform:uppercase; line-height:1.5;
+  color:var(--gold-100,#f0dca8); opacity:.46;
+}
+html:not(.carte-doc) .footer-quartier a { color:inherit; text-decoration:none; }
+html:not(.carte-doc) .footer-quartier a:hover { text-decoration:underline; opacity:1; }
+html:not(.carte-doc) .footer-quartier__sep { opacity:.5; }
+html:not(.carte-doc) a.footer-details__metro { color:inherit; text-decoration:none; }
+html:not(.carte-doc) a.footer-details__metro:hover { text-decoration:underline; }
+/* Page de garde : meme ligne, encore plus sobre, sous le bandeau d'avis. */
+html:not(.carte-doc) #cover-section .footer-quartier--cover { margin-top:7px; opacity:.42; }
+html:not(.carte-doc) #cover-section .legal-bottom-nav--cover {
+  display:flex; flex-wrap:wrap; justify-content:center; gap:4px 10px;
+  margin:4px auto 0; padding:0; background:none; border:0;
+  font-family:'Cinzel',serif; font-size:clamp(.5rem,.95vw,.6rem);
+  letter-spacing:.09em; text-transform:uppercase;
+  color:var(--gold-100,#f0dca8); opacity:.42;
+}
+html:not(.carte-doc) #cover-section .legal-bottom-nav--cover a {
+  color:inherit; background:none; border:0; padding:0; text-decoration:none; text-shadow:none;
+}
+html:not(.carte-doc) #cover-section .legal-bottom-nav--cover a:hover { text-decoration:underline; }
+@media print {
+  .footer-quartier, #cover-section .legal-bottom-nav--cover { display:none !important; }
+}
+/* quartier:css:fin */
 </style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://lacollinegambetta.com/"},{"@type":"ListItem","position":2,"name":"Réservation","item":"https://lacollinegambetta.com/reservation.html"}]}</script>
 </head>
 <body>
+
+
+
+
+<div id="reservation-page">
+  <header class="interior-header">
 
 <div class="lang-dock">
     <button type="button" class="lang-btn" id="lang-btn" title="Langue / Language" aria-label="Langue / Language" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
@@ -1498,18 +2524,6 @@ html[lang="uk"] .thanks__sign {
   </div>
 
 
-<div class="book-back">
-  <a class="contact-link" href="index.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
-    Retour à la carte
-  </a>
-  
-</div>
-
-<div id="reservation-page">
-  <header class="interior-header">
-
-
       <div class="eyebrow"><span class="star-gold">✦</span> RÉSERVATION <span class="star-gold">✦</span></div>
       <h2>COLLINE <span>GAMBETTA</span></h2>
       <p>BAR • RESTAURANT • PARIS 20ᵉ</p>
@@ -1519,23 +2533,19 @@ html[lang="uk"] .thanks__sign {
   <main class="book-main">
     <div class="container">
 
-      <div class="hours">
-      <div class="hours__card">
-      <svg class="hours__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/></svg>
-      <span class="hours__day">Tous les jours</span>
-      <span class="hours__val"><span class="hours__t">07h00</span><span class="hours__sep" aria-hidden="true"></span><span class="hours__t">02h00</span></span>
-      </div>
-      <div class="hours__card">
-      <svg class="hours__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10.2"/><circle cx="12" cy="12" r="7.4"/><path d="M9.1 4.5c-.62 0-1.12.5-1.12 1.12v5.26c0 .62.5 1.12 1.12 1.12s1.12-.5 1.12-1.12V5.62c0-.62-.5-1.12-1.12-1.12z"/><path d="M9.1 12v7.5"/><path d="M14.1 4.6v3.2M15.9 4.6v3.2M17.7 4.6v3.2"/><path d="M14.1 7.8c0 1.25.8 2.1 1.8 2.1s1.8-.85 1.8-2.1"/><path d="M15.9 9.9v9.6"/></svg>
-      <span class="hours__day">Cuisine</span>
-      <span class="hours__val"><span class="hours__t">12h00</span><span class="hours__sep" aria-hidden="true"></span><span class="hours__t">00h00</span></span>
-      </div>
+      <div class="hours" aria-label="Horaires de cuisine et menu petit-déjeuner">
+        <div class="hours__card hours__card--minimal">
+          <div class="hours__minimal-line">
+            <span class="hours__minimal-label">Cuisine</span>
+            <span class="hours__minimal-time"><span>12h00</span><span aria-hidden="true"> – </span><span>00h00</span></span>
+          </div>
+          <p class="hours__minimal-note"><a href="index.html#menu-petit-dejeuner">Menu petit-déjeuner jusqu’à 12h</a></p>
+        </div>
       </div>
 
       <article class="panel">
         <div class="panel__head">
           <h4 class="panel__title">Réserver ma table</h4>
-          <p class="panel__subtitle">Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.</p>
         </div>
 
         
@@ -1543,23 +2553,34 @@ html[lang="uk"] .thanks__sign {
         <form id="book-form" novalidate>
           <div class="form-grid">
             <div class="field" data-field>
-              <label for="bk-name">Nom</label>
+              <label for="bk-name">Nom pour la réservation</label>
               <input id="bk-name" name="nom" type="text" autocomplete="name" required placeholder="Votre nom">
               <p class="field__error" data-error hidden>Merci d’indiquer votre nom.</p>
             </div>
             <div class="field" data-field>
               <label for="bk-phone">Téléphone</label>
-              <input id="bk-phone" name="telephone" type="tel" autocomplete="tel" required placeholder="06 12 34 56 78">
+              <input id="bk-phone" name="telephone" type="tel" autocomplete="tel" required placeholder="+33600000000">
               <p class="field__error" data-error hidden>Merci d’indiquer un numéro où vous joindre.</p>
             </div>
             <div class="field field--full" data-field>
-              <label for="bk-mail">Mail <span class="opt">(facultatif)</span></label>
+              <label for="bk-mail">E-mail <span class="opt">(facultatif)</span></label>
               <input id="bk-mail" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr">
               <p class="field__error" data-error hidden>Cette adresse ne semble pas valide.</p>
             </div>
             <div class="field" data-field>
               <label for="bk-date">Date</label>
-              <input id="bk-date" name="date" type="date" required>
+              <div class="field__date-box" id="bk-date-box">
+                <input id="bk-date" name="date" type="date" required class="field__date-input">
+                <div class="field__date-text" id="bk-date-text" aria-hidden="true"></div>
+                <span class="field__date-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </span>
+              </div>
               <p class="field__error" data-error hidden>Merci de choisir une date à venir.</p>
             </div>
             <div class="field" data-field>
@@ -1612,6 +2633,7 @@ html[lang="uk"] .thanks__sign {
                 <option value="22:45">22h45</option>
               </select>
               <p class="field__error" data-error hidden>Merci de choisir une heure.</p>
+              <p class="field__hint field__hint--warn" id="bk-time-hint" hidden></p>
             </div>
             <div class="field" data-field>
               <label for="bk-guests">Nombre de personnes</label>
@@ -1628,7 +2650,7 @@ html[lang="uk"] .thanks__sign {
                 <option value="9">9 personnes</option>
                 <option value="10">10 personnes</option>
               </select>
-              <p class="field__hint">1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.</p>
+              <p class="field__hint">Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.</p>
             </div>
             <div class="field" data-field>
               <label for="bk-place">Préférence</label>
@@ -1676,6 +2698,11 @@ html[lang="uk"] .thanks__sign {
             <span data-th="sign">L’équipe de La Colline Gambetta</span>
             <span data-th="tel">Une question ? Appelez-nous au</span>
             <span data-th="fail">L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.</span>
+            <span data-th="apology-hi">Toutes nos excuses</span>
+            <span data-th="apology-l1">Toutes nos tables sont déjà retenues pour ce créneau.</span>
+            <span data-th="apology-l2">Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !</span>
+            <span data-th="apology-l4">N’hésitez pas à choisir un autre créneau ou à nous contacter.</span>
+            <span data-th="apology-call">Une envie de réserver de vive voix ou une question ? Appelez-nous au</span>
           </div>
         </form>
       </article>
@@ -1686,15 +2713,15 @@ html[lang="uk"] .thanks__sign {
           <p class="panel__subtitle">Pour le jour même, le téléphone reste le plus sûr.</p>
         </div>
         <div class="info-grid">
-          <a class="info-link" href="tel:+33143490593">
+          <a class="info-link" href="tel:+33143490593" title="Appeler le restaurant" aria-label="Appeler le restaurant">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
             01 43 49 05 93
           </a>
-          <a class="info-link" href="mailto:lacollinegambetta@mailo.com">
+          <a class="info-link" href="mailto:restaurant@lacollinegambetta.com" title="Envoyer un e-mail" aria-label="Envoyer un e-mail">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>
-            lacollinegambetta@mailo.com
+            restaurant@lacollinegambetta.com
           </a>
-          <a class="info-link" href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener">
+          <a class="info-link" href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener" title="Ouvrir Instagram" aria-label="Ouvrir Instagram">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>
             lacolline.gambetta
           </a>
@@ -1706,10 +2733,10 @@ html[lang="uk"] .thanks__sign {
           <button type="button" class="map-recenter" id="map-recenter" title="Recentrer sur le restaurant" aria-label="Recentrer sur le restaurant">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 1.6v3.2M12 19.2v3.2M22.4 12h-3.2M4.8 12H1.6"/><circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"/></svg>
           </button>
-          <noscript><p class="map-fallback">4 rue Belgrand, 75020 Paris — métro Gambetta</p></noscript>
+          <noscript><p class="map-fallback"><a href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" data-default-map data-map-address="La Colline Gambetta, 4 Rue Belgrand, 75020 Paris" target="_blank" rel="noopener">4 rue Belgrand, 75020 Paris — métro Gambetta</a></p></noscript>
         </div>
         <div class="map-foot">
-          <span class="map-address">4 rue Belgrand, 75020 Paris — métro Gambetta</span>
+          <span class="map-address"><a href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" data-default-map data-map-address="La Colline Gambetta, 4 Rue Belgrand, 75020 Paris" target="_blank" rel="noopener" title="Ouvrir l’adresse dans le plan">4 rue Belgrand, 75020 Paris — métro Gambetta</a></span>
           <a class="info-link info-link--route" id="route-link" href="https://www.openstreetmap.org/directions?to=48.8647788%2C2.3993777" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
             Itinéraire
@@ -1717,13 +2744,6 @@ html[lang="uk"] .thanks__sign {
         </div>
         
       </article>
-
-      <div class="book-back-bottom">
-        <a class="contact-link contact-link--back" href="index.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
-          Retour à la carte
-        </a>
-      </div>
 
     </div>
   </main>
@@ -1741,43 +2761,124 @@ html[lang="uk"] .thanks__sign {
         <span>Télécharger la carte (PDF)</span>
       </a></div>
 <div class="footer-links">
-        <a href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener" class="footer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle class="ig-dot" cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>lacolline.gambetta</a>
-        <a href="tel:+33143490593" class="footer-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</a>
-        <a href="mailto:lacollinegambetta@mailo.com" class="footer-link footer-link--mail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>lacollinegambetta@mailo.com</a>
+        <a href="index.html" class="footer-link footer-link--book" title="Retour à l’accueil" aria-label="Retour à l’accueil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 10 8-6 8 6"/><path d="M6.5 9.5v9h11v-9"/><path d="M10 18.5v-5h4v5"/></svg>Accueil</a>
+        <a href="https://www.instagram.com/lacolline.gambetta" target="_blank" rel="noopener" class="footer-link" title="Ouvrir Instagram" aria-label="Ouvrir Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle class="ig-dot" cx="17.4" cy="6.6" r="1.25" fill="currentColor" stroke="none"/></svg>lacolline.gambetta</a>
+        <a href="tel:+33143490593" class="footer-link" title="Appeler le restaurant" aria-label="Appeler le restaurant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</a>
+        <a href="mailto:restaurant@lacollinegambetta.com" class="footer-link footer-link--mail" title="restaurant@lacollinegambetta.com" aria-label="restaurant@lacollinegambetta.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>restaurant@lacollinegambetta.com</a>
       </div>
-      <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><span>4 RUE BELGRAND, 75020 PARIS</span><span>•</span><span>MÉTRO GAMBETTA</span></div>
-    </footer>
+      <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><a class="footer-address-link" href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" data-default-map data-map-address="La Colline Gambetta, 4 Rue Belgrand, 75020 Paris" target="_blank" rel="noopener" title="Ouvrir l’adresse dans le plan">4 RUE BELGRAND, 75020 PARIS</a><a class="footer-details__metro" data-ratp-itineraire href="https://www.ratp.fr/itineraires?end=4%2C%20Rue%20Belgrand%2C%2075%2C%20Paris" target="_blank" rel="noopener" title="Itinéraire RATP jusqu’au restaurant">MÉTRO GAMBETTA • LIGNE 3</a></div>
+      <!-- quartier:html:debut --><nav class="footer-quartier" aria-label="Dans les alentours"><span>Dans les alentours</span><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://mairie20.paris.fr/" target="_blank" rel="noopener" title="À 100 m du restaurant">Mairie du 20ᵉ</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.colline.fr/" target="_blank" rel="noopener" title="À 300 m du restaurant">Théâtre de la Colline</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.paris.fr/lieux/cimetiere-du-pere-lachaise-4080" target="_blank" rel="noopener" title="À 350 m du restaurant">Père-Lachaise</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.pavilloncarredebaudouin.fr/" target="_blank" rel="noopener" title="À 950 m du restaurant">Carré de Baudouin</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.paris.fr/lieux/parc-de-belleville-1777" target="_blank" rel="noopener" title="À 1,3 km du restaurant">Parc de Belleville</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.bataclan.fr/" target="_blank" rel="noopener" title="À 2,1 km du restaurant">Le Bataclan</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.cirquedhiver.com/" target="_blank" rel="noopener" title="À 2,3 km du restaurant">Cirque d'Hiver</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.operadeparis.fr/visites/opera-bastille" target="_blank" rel="noopener" title="À 2,6 km du restaurant">Opéra Bastille</a></nav><!-- quartier:html:fin -->
+      <nav class="legal-bottom-nav" aria-label="Informations légales"><a href="mentions-legales.html">Mentions légales</a><span aria-hidden="true">·</span><a href="confidentialite.html">Confidentialité</a></nav>
+  </footer>
 </div>
 
-<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" crossorigin=""></script>
 <script>
-/* Plan du restaurant.
-   Fond OpenFreeMap (style Positron), rendu en vectoriel par MapLibre.
-   CARTO impose depuis peu une clé pour ses tuiles matricielles et
-   estampille « API KEY REQUIRED » en travers de celles servies sans
-   clé : c'est ce filigrane qu'on voit apparaître. Plutôt que d'aller
-   chercher une clé — donc un compte, un quota et un secret à gérer dans
-   une page statique où il serait de toute façon public — on passe à
-   OpenFreeMap : aucune clé, aucune inscription, aucun quota, usage
-   commercial autorisé, et le même parti pris graphique (gris très
-   clair, la typographie seule porte l'information). Le vectoriel a en
-   prime l'avantage de rester net à tous les niveaux de zoom.
-   L'attribution est obligatoire : MapLibre l'affiche depuis le style.
-   Si MapLibre ne se charge pas — hors ligne, WebGL absent, blocage
-   réseau — l'encart affiche l'adresse en clair plutôt qu'un rectangle
-   vide. */
+/* Plan du restaurant : chargement asynchrone à la demande (lazy-loading)
+   pour ne pas ralentir l'affichage initial du formulaire.
+   Fond OpenFreeMap (style Positron), rendu en vectoriel par MapLibre. */
 (function () {
-  var LAT = 48.8647788, LON = 2.3993777, ZOOM = 16.4;
+  var LAT = 48.8647788, LON = 2.3993777;
+  /* Vue d’ensemble : tout Paris intra-muros reste visible dès l’ouverture,
+     avec une marge suffisante sur la métropole proche, au lieu d’un cadrage
+     centré au niveau de la rue. */
+  var PARIS_BOUNDS = [[2.20, 48.80], [2.50, 48.92]];
+  var INITIAL_ZOOM = 11.5;
+  var RESTAURANT_ZOOM = 16.4;
   var el = document.getElementById('book-map');
   var btn = document.getElementById('map-recenter');
   if (!el) return;
 
+  var isLoaded = false;
+  var activePopup = null;
+  var MAP_COPY = {
+    fr: { fallback: '4 rue Belgrand, 75020 Paris — métro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Métro Gambetta' },
+    en: { fallback: '4 rue Belgrand, 75020 Paris — Gambetta metro', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Gambetta metro' },
+    es: { fallback: '4 rue Belgrand, 75020 París — metro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 París<br>Metro Gambetta' },
+    de: { fallback: '4 rue Belgrand, 75020 Paris — Metro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Metro Gambetta' },
+    it: { fallback: '4 rue Belgrand, 75020 Parigi — metro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Parigi<br>Metro Gambetta' },
+    pt: { fallback: '4 rue Belgrand, 75020 Paris — metro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Metro Gambetta' },
+    nl: { fallback: '4 rue Belgrand, 75020 Parijs — metro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Parijs<br>Metro Gambetta' },
+    pl: { fallback: '4 rue Belgrand, 75020 Paryż — metro Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paryż<br>Metro Gambetta' },
+    zh: { fallback: '4 rue Belgrand，75020 巴黎 — Gambetta 地铁站', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand，75020 巴黎<br>Gambetta 地铁站' },
+    uk: { fallback: '4 rue Belgrand, 75020 Париж — метро Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Париж<br>Метро Gambetta' },
+    ja: { fallback: '4 rue Belgrand、75020 パリ — ガンベッタ駅', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand、75020 パリ<br>ガンベッタ駅' },
+    ko: { fallback: '4 rue Belgrand, 75020 파리 — 감베타 지하철역', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 파리<br>감베타 지하철역' },
+    ar: { fallback: '4 rue Belgrand، 75020 باريس — مترو Gambetta', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand، 75020 باريس<br>مترو Gambetta' },
+    tr: { fallback: '4 rue Belgrand, 75020 Paris — Gambetta metrosu', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Gambetta metrosu' },
+    hi: { fallback: '4 rue Belgrand, 75020 पेरिस — गाम्बेटा मेट्रो', popup: '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 पेरिस<br>गाम्बेटा मेट्रो' }
+  };
+  function currentMapCopy() {
+    var lang = (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
+    return MAP_COPY[lang] || MAP_COPY.fr;
+  }
+  var MAP_CONTROL_LABELS = {
+    fr: { in: 'Zoom avant', out: 'Zoom arrière', attribution: 'Informations cartographiques' },
+    en: { in: 'Zoom in', out: 'Zoom out', attribution: 'Map information' },
+    es: { in: 'Acercar', out: 'Alejar', attribution: 'Información del mapa' },
+    de: { in: 'Vergrößern', out: 'Verkleinern', attribution: 'Karteninformationen' },
+    it: { in: 'Ingrandisci', out: 'Riduci', attribution: 'Informazioni sulla mappa' },
+    pt: { in: 'Ampliar', out: 'Reduzir', attribution: 'Informações do mapa' },
+    nl: { in: 'Inzoomen', out: 'Uitzoomen', attribution: 'Kaartinformatie' },
+    pl: { in: 'Przybliż', out: 'Oddal', attribution: 'Informacje o mapie' },
+    zh: { in: '放大', out: '缩小', attribution: '地图信息' },
+    uk: { in: 'Збільшити', out: 'Зменшити', attribution: 'Інформація про карту' },
+    ja: { in: '拡大', out: '縮小', attribution: '地図情報' },
+    ko: { in: '확대', out: '축소', attribution: '지도 정보' },
+    ar: { in: 'تكبير', out: 'تصغير', attribution: 'معلومات الخريطة' },
+    tr: { in: 'Yakınlaştır', out: 'Uzaklaştır', attribution: 'Harita bilgileri' },
+    hi: { in: 'ज़ूम इन', out: 'ज़ूम आउट', attribution: 'मानचित्र की जानकारी' }
+  };
+  function localizeMapControls() {
+    var lang = (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
+    var labels = MAP_CONTROL_LABELS[lang] || MAP_CONTROL_LABELS.fr;
+    var copy = currentMapCopy();
+    var zoomIn = el.querySelector('.maplibregl-ctrl-zoom-in');
+    var zoomOut = el.querySelector('.maplibregl-ctrl-zoom-out');
+    var attributionButton = el.querySelector('.maplibregl-ctrl-attrib-button');
+    if (zoomIn) { zoomIn.title = labels.in; zoomIn.setAttribute('aria-label', labels.in); }
+    if (zoomOut) { zoomOut.title = labels.out; zoomOut.setAttribute('aria-label', labels.out); }
+    if (attributionButton) {
+      attributionButton.title = labels.attribution;
+      attributionButton.setAttribute('aria-label', labels.attribution);
+    }
+    var localizeDigits = window.LCGLocalizeDisplayDigits || function (value) { return value; };
+    var mapError = el.querySelector('.map-error');
+    if (mapError) mapError.textContent = localizeDigits(copy.fallback, lang);
+    if (activePopup) activePopup.setHTML(localizeDigits(copy.popup, lang));
+  }
+  window.addEventListener('lcg-lang-changed', localizeMapControls);
+
+  function loadAndInitMap() {
+    if (isLoaded) return;
+    isLoaded = true;
+
+    // Injection asynchrone du CSS MapLibre
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css';
+    css.crossOrigin = '';
+    document.head.appendChild(css);
+
+    // Injection asynchrone du script MapLibre
+    var script = document.createElement('script');
+    script.src = 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js';
+    script.crossOrigin = '';
+    script.async = true;
+    script.onload = function () {
+      initMap();
+    };
+    script.onerror = function () {
+      fallback();
+    };
+    document.body.appendChild(script);
+  }
+
   function fallback() {
-    el.innerHTML = '<p class="map-error">4 rue Belgrand, 75020 Paris — métro Gambetta</p>';
+    el.innerHTML = '<p class="map-error"></p>';
+    localizeMapControls();
     if (btn) btn.hidden = true;
   }
-  /* WebGL est indispensable au rendu vectoriel : on le vérifie avant de
-     tenter quoi que ce soit, sinon MapLibre lève une exception. */
+
   function hasWebGL() {
     try {
       var c = document.createElement('canvas');
@@ -1785,55 +2886,64 @@ html[lang="uk"] .thanks__sign {
         (c.getContext('webgl') || c.getContext('experimental-webgl')));
     } catch (e) { return false; }
   }
-  if (typeof maplibregl === 'undefined' || !hasWebGL()) { fallback(); return; }
 
-  var map;
-  try {
-    map = new maplibregl.Map({
-      container: el,
-      style: 'https://tiles.openfreemap.org/styles/positron',
-      center: [LON, LAT],
-      zoom: ZOOM,
-      attributionControl: false,
-      /* La molette fait défiler la PAGE : on ne piège pas le défilement
-         de quelqu'un qui ne fait que passer devant l'encart. Ctrl +
-         molette zoome, et MapLibre l'indique de lui-même. */
-      cooperativeGestures: true
+  function initMap() {
+    if (typeof maplibregl === 'undefined' || !hasWebGL()) { fallback(); return; }
+
+    var map;
+    try {
+      map = new maplibregl.Map({
+        container: el,
+        style: 'https://tiles.openfreemap.org/styles/positron',
+        center: [2.39, 48.87],
+        zoom: INITIAL_ZOOM,
+        bounds: PARIS_BOUNDS,
+        fitBoundsOptions: { padding: 18, maxZoom: 12.0 },
+        attributionControl: false,
+        cooperativeGestures: true
+      });
+    } catch (e) { fallback(); return; }
+
+    map.on('error', function (e) {
+      if (e && e.error && !map.isStyleLoaded()) fallback();
     });
-  } catch (e) { fallback(); return; }
 
-  map.on('error', function (e) {
-    /* Style injoignable : on ne laisse pas un cadre vide. */
-    if (e && e.error && !map.isStyleLoaded()) fallback();
-  });
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
+    localizeMapControls();
+    map.addControl(new maplibregl.AttributionControl({
+      compact: true,
+      customAttribution: '<a href="https://openfreemap.org/" target="_blank" rel="noopener">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+    }));
 
-  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
-  map.addControl(new maplibregl.AttributionControl({
-    compact: true,
-    customAttribution: '<a href="https://openfreemap.org/" target="_blank" rel="noopener">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
-  }));
+    var dot = document.createElement('div');
+    dot.className = 'map-pin';
+    activePopup = new maplibregl.Popup({ offset: 16, closeButton: false }).setHTML(currentMapCopy().popup);
+    new maplibregl.Marker({ element: dot })
+      .setLngLat([LON, LAT])
+      .setPopup(activePopup)
+      .addTo(map);
+    localizeMapControls();
 
-  /* Épingle : le même disque violet cerclé de blanc qu'avant, en élément
-     HTML plutôt qu'en icône Leaflet. */
-  var dot = document.createElement('div');
-  dot.className = 'map-pin';
-  new maplibregl.Marker({ element: dot })
-    .setLngLat([LON, LAT])
-    .setPopup(new maplibregl.Popup({ offset: 16, closeButton: false }).setHTML(
-      '<strong>LA COLLINE GAMBETTA</strong><br>4 rue Belgrand, 75020 Paris<br>Métro Gambetta'
-    ))
-    .addTo(map);
-
-  if (btn) {
-    btn.addEventListener('click', function () {
-      map.flyTo({ center: [LON, LAT], zoom: ZOOM, duration: 600 });
-    });
+    if (btn) {
+      btn.addEventListener('click', function () {
+        map.flyTo({ center: [LON, LAT], zoom: RESTAURANT_ZOOM, duration: 600 });
+      });
+    }
+    window.addEventListener('resize', function () { map.resize(); });
+    setTimeout(function () { map.resize(); }, 300);
   }
-  /* L'encart est dimensionné en clamp() : si sa hauteur change après le
-     premier rendu (rotation, changement de langue), MapLibre doit être
-     prévenu, sinon la toile reste sur une bande grise. */
-  window.addEventListener('resize', function () { map.resize(); });
-  setTimeout(function () { map.resize(); }, 300);
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        observer.disconnect();
+        loadAndInitMap();
+      }
+    }, { rootMargin: '400px' });
+    observer.observe(el);
+  } else {
+    setTimeout(loadAndInitMap, 1500);
+  }
 })();
 </script>
 
@@ -1873,10 +2983,108 @@ html[lang="uk"] .thanks__sign {
 })();
 </script>
 
-<script src="assets/js/reservation-config.js?v=202609211530"></script>
-<script src="assets/js/firebase-config.js?v=202609211530"></script>
-<script type="module" src="assets/js/reservation-firebase.js?v=202609211530"></script>
-<script src="assets/js/i18n.js?v=202609210330" defer></script>
+<script>
+/* Téléchargement instantané du menu PDF */
+(function () {
+  var NOM = 'Carte_LaCollineGambetta.pdf';
+  function lier(selecteur) {
+    var els = document.querySelectorAll(selecteur);
+    for (var i = 0; i < els.length; i++) {
+      els[i].addEventListener('click', function (ev) {
+        var href = this.getAttribute('href');
+        if (!href) return;
+        ev.preventDefault();
+        var a = document.createElement('a');
+        a.rel = 'noopener';
+        a.href = href;
+        a.download = this.getAttribute('download') || NOM;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+    }
+  }
+  function prêt() {
+    lier('.footer-download');
+    /* Le PDF reste téléchargé uniquement après le clic explicite. */
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', prêt);
+  } else {
+    prêt();
+  }
+})();
+</script>
+
+<script src="assets/js/reservation-config.js?v=202609291600"></script>
+<script src="assets/js/firebase-config.js?v=202609231700"></script>
+<script type="module" src="assets/js/reservation-firebase.js?v=202609231700"></script>
+<script src="assets/js/localized-digits.js?v=202609241200"></script>
+<script src="assets/js/i18n.js?v=202609231700" defer></script>
+
+<script>
+/* Exemple de téléphone du formulaire : le champ reste vide, mais son
+   indication suit le pays explicitement présent dans la locale de l’appareil.
+   Sans région certaine, aucun préfixe n’est inventé : le repli français est
+   conservé. Le numéro saisi par le client n’est jamais remplacé. */
+(function () {
+  'use strict';
+  var DEFAULT_PHONE = '+33600000000';
+  var PHONE_EXAMPLES = {
+    US: '+12025550123', CA: '+14165550123', GB: '+447700900123',
+    AU: '+61491570156', NZ: '+6421123456', IE: '+353851234567',
+    ES: '+34600000000', MX: '+525555555555', AR: '+5491123456789',
+    DE: '+4915123456789', AT: '+436641234567', CH: '+41791234567',
+    IT: '+393331234567', PT: '+351910000000', BR: '+5511987654321',
+    NL: '+31612345678', BE: '+32470123456', LU: '+352621123456',
+    PL: '+48500123456', TR: '+905321234567', UA: '+380501234567',
+    JP: '+819012345678', KR: '+821012345678', CN: '+8613812345678',
+    TW: '+886912345678', HK: '+85251234567', IN: '+919876543210',
+    SE: '+46701234567', NO: '+4791234567', DK: '+4520123456',
+    FI: '+358401234567', GR: '+306912345678', RO: '+40721234567'
+  };
+
+  function localeRegion(locale) {
+    var parts = String(locale || '').replace(/_/g, '-').split('-');
+    for (var i = 1; i < parts.length; i++) {
+      if (/^[A-Za-z]{2}$/.test(parts[i]) || /^\d{3}$/.test(parts[i])) {
+        return parts[i].toUpperCase();
+      }
+    }
+    return '';
+  }
+
+  function devicePhoneExample() {
+    var locale = '';
+    try {
+      /* Seule la locale primaire décrit la configuration active. Les langues
+         secondaires de navigator.languages ne suffisent pas à déduire le pays. */
+      locale = String(navigator.language || '');
+      if (!locale && navigator.languages && navigator.languages.length) {
+        locale = String(navigator.languages[0] || '');
+      }
+    } catch (e) {}
+    var language = locale.toLowerCase().split(/[-_]/)[0];
+    /* Un appareil réglé en français conserve explicitement le numéro
+       demandé, quelle que soit sa variante régionale. */
+    if (language === 'fr') return DEFAULT_PHONE;
+    var region = localeRegion(locale);
+    return (region && PHONE_EXAMPLES[region]) || DEFAULT_PHONE;
+  }
+
+  function updatePhoneExample() {
+    var input = document.getElementById('bk-phone');
+    if (!input) return;
+    var example = devicePhoneExample();
+    input.setAttribute('data-phone-example', example);
+    if (!input.value.trim()) input.placeholder = example;
+  }
+
+  updatePhoneExample();
+  window.addEventListener('lcg-i18n-ready', updatePhoneExample);
+  window.addEventListener('lcg-lang-changed', updatePhoneExample);
+})();
+</script>
 
 <script>
 (function () {
@@ -1884,28 +3092,217 @@ html[lang="uk"] .thanks__sign {
   var status = document.getElementById('bk-status');
   var dateEl = document.getElementById('bk-date');
   var timeEl = document.getElementById('bk-time');
+  var timeHintEl = document.getElementById('bk-time-hint');
   var guestsEl = document.getElementById('bk-guests');
-  /* L'API relative est configurée dans reservation-config.js. L'envoi passe
-     par le contrôle centralisé (15 tables ou 30 couverts simultanés
-     dans une fenêtre glissante de 60 minutes). Une panne de cet endpoint ne
-     retombe volontairement pas sur FormSubmit : sinon un client pourrait
-     contourner la limite. */
+
   var CAPACITY_ENDPOINT = String(window.LCG_RESERVATION_ENDPOINT || '').trim();
   var FIREBASE_CAPACITY = CAPACITY_ENDPOINT === 'firebase';
 
-  /* Les heures et les nombres de couverts sont écrits en clair dans le
-     HTML, et non fabriqués ici : le moteur de traduction photographie
-     les textes de la page au chargement (avant que ce script ne tourne),
-     donc des options créées en JS resteraient éternellement en français.
-     Écrites dans la page, elles suivent la langue choisie comme le
-     reste. */
+  /* Mémorisation des libellés de base des créneaux (ex: "12h00", "12h15"...) */
+  Array.prototype.forEach.call(timeEl.options, function (opt) {
+    if (opt.value && !opt.dataset.base) {
+      opt.dataset.base = opt.textContent.trim();
+    }
+  });
 
-  /* ---- Dates et heures : rien avant l'instant present, a PARIS ------
-     L'heure de reference est celle du restaurant, pas celle du visiteur :
-     un client a New York ou a Tokyo ne doit pas pouvoir reserver un
-     creneau deja passe a Paris, ni se voir refuser un creneau encore
-     valable. `Intl` donne l'heure de Paris sans table de fuseaux a
-     maintenir, et gere l'heure d'ete tout seul. */
+  var FULL_LABELS = {
+    fr: '(Complet)',
+    en: '(Full)',
+    es: '(Completo)',
+    de: '(Ausgebucht)',
+    it: '(Al completo)',
+    pt: '(Lotado)',
+    nl: '(Vol)',
+    pl: '(Brak miejsc)',
+    zh: '(已满)',
+    uk: '(Заповнено)',
+    ja: '(満席)',
+    ko: '(마감)',
+    ar: '(مكتمل)',
+    tr: '(Dolu)',
+    hi: '(भरा हुआ)'
+  };
+  var UNAVAILABLE_LABELS = {
+    fr: '(Indisponible)',
+    en: '(Unavailable)',
+    es: '(No disponible)',
+    de: '(Nicht verfügbar)',
+    it: '(Non disponibile)',
+    pt: '(Indisponível)',
+    nl: '(Niet beschikbaar)',
+    pl: '(Niedostępne)',
+    zh: '(不可用)',
+    uk: '(Недоступно)',
+    ja: '(利用不可)',
+    ko: '(이용 불가)',
+    ar: '(غير متاح)',
+    tr: '(Mevcut değil)',
+    hi: '(उपलब्ध नहीं)'
+  };
+
+  function getDocLang() {
+    return (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
+  }
+
+  function capacityCopy(kind) {
+    var langNow = getDocLang();
+    var copy = {
+      fr: {
+        apologyTitle: 'Toutes nos excuses',
+        apologyLine1: 'Toutes nos tables sont déjà retenues pour ce créneau.',
+        apologyLine2: 'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !',
+        apologyLine4: 'N’hésitez pas à choisir un autre créneau ou à nous contacter.',
+        apologyCall: 'Une envie de réserver de vive voix ou une question ? Appelez-nous au',
+        apologySign: 'L’équipe de La Colline Gambetta',
+        allFull: 'Tous les créneaux en ligne sont complets pour cette date. N’hésitez pas à nous appeler au 01 43 49 05 93.',
+        error: 'La disponibilité n’a pas pu être vérifiée en ligne. N’hésitez pas à nous appeler au 01 43 49 05 93 pour réserver.'
+      },
+      en: {
+        apologyTitle: 'Our sincere apologies',
+        apologyLine1: 'All our tables are already fully booked for this time slot.',
+        apologyLine2: 'We would be delighted to welcome you a little earlier, a little later, or on another date!',
+        apologyLine4: 'Feel free to choose another time slot or reach out to us directly.',
+        apologyCall: 'Prefer to book by phone or have a question? Call us on',
+        apologySign: 'The team at La Colline Gambetta',
+        allFull: 'All online slots are fully booked for this date. Please call us on 01 43 49 05 93.',
+        error: 'Availability could not be verified online. Please call us on 01 43 49 05 93 to book.'
+      },
+      es: {
+        apologyTitle: 'Nuestras más sinceras disculpas',
+        apologyLine1: 'Todas nuestras mesas ya están reservadas para este horario.',
+        apologyLine2: '¡Estaremos encantados de recibirle un poco antes, un poco más tarde o en otra fecha!',
+        apologyLine4: 'No dude en elegir otro horario o ponerse en contacto con nosotros.',
+        apologyCall: '¿Desea reservar por teléfono o tiene alguna consulta? Llámenos al',
+        apologySign: 'El equipo de La Colline Gambetta',
+        allFull: 'Todos los turnos online están completos para esta fecha. Llámenos al 01 43 49 05 93.',
+        error: 'No se pudo verificar la disponibilidad en línea. Llámenos al 01 43 49 05 93 para reservar.'
+      },
+      de: {
+        apologyTitle: 'Bitte entschuldigen Sie',
+        apologyLine1: 'Für diesen Zeitraum sind bereits alle Tische reserviert.',
+        apologyLine2: 'Wir würden uns sehr freuen, Sie etwas früher, etwas später oder an einem anderen Wunschtermin zu begrüßen!',
+        apologyLine4: 'Wählen Sie gerne einen anderen Zeitraum oder kontaktieren Sie uns direkt.',
+        apologyCall: 'Möchten Sie telefonisch reservieren oder haben Sie Fragen? Rufen Sie uns an unter',
+        apologySign: 'Das Team von La Colline Gambetta',
+        allFull: 'Alle Online-Termine für dieses Datum sind ausgebucht. Rufen Sie uns unter 01 43 49 05 93 an.',
+        error: 'Die Verfügbarkeit konnte online nicht geprüft werden. Rufen Sie uns bitte unter 01 43 49 05 93 an.'
+      },
+      it: {
+        apologyTitle: 'Le nostre più sincere scuse',
+        apologyLine1: 'Tutti i nostri tavoli sono già occupati per questa fascia oraria.',
+        apologyLine2: 'Saremo felicissimi di accogliervi un po’ prima, un po’ più tardi o in un’altra data!',
+        apologyLine4: 'Non esiti a scegliere un altro orario o a contattarci direttamente.',
+        apologyCall: 'Desidera prenotare telefonicamente o ha una domanda? Ci chiami al',
+        apologySign: 'Il team de La Colline Gambetta',
+        allFull: 'Tutti i posti online sono al completo per questa data. Chiami lo 01 43 49 05 93.',
+        error: 'Impossibile verificare la disponibilità online. Chiami lo 01 43 49 05 93 per prenotare.'
+      },
+      pt: {
+        apologyTitle: 'As nossas sinceras desculpas',
+        apologyLine1: 'Todas as nossas mesas já se encontram reservadas para este horário.',
+        apologyLine2: 'Teremos todo o prazer em recebê-lo um pouco mais cedo, mais tarde ou noutra data!',
+        apologyLine4: 'Não hesite em escolher outro horário ou em contactar-nos.',
+        apologyCall: 'Prefere reservar por telefone ou tem alguma dúvida? Ligue-nos para',
+        apologySign: 'A equipa de La Colline Gambetta',
+        allFull: 'Todos os horários online estão esgotados para esta data. Ligue para 01 43 49 05 93.',
+        error: 'Não foi possível verificar a disponibilidade online. Ligue para 01 43 49 05 93.'
+      },
+      nl: {
+        apologyTitle: 'Onze welgemeende excuses',
+        apologyLine1: 'Al onze tafels zijn al gereserveerd voor dit tijdslot.',
+        apologyLine2: 'We verwelkomen u heel graag iets eerder, iets later of op een andere datum!',
+        apologyLine4: 'Kies gerust een ander tijdstip of neem rechtstreeks contact met ons op.',
+        apologyCall: 'Wilt u telefonisch reserveren of heeft u een vraag? Bel ons op',
+        apologySign: 'Het team van La Colline Gambetta',
+        allFull: 'Alle online tijdsloten zijn volgeboekt voor deze datum. Bel 01 43 49 05 93.',
+        error: 'Beschikbaarheid kon online niet worden gecontroleerd. Bel 01 43 49 05 93.'
+      },
+      ar: {
+        apologyTitle: 'نعتذر منكم بشدة',
+        apologyLine1: 'جميع طاولاتنا محجوزة بالكامل في هذا الموعد.',
+        apologyLine2: 'يسعدنا جداً استقبالكم في وقت أبكر قليلاً أو لاحقاً، أو في أي يوم آخر يناسبكم!',
+        apologyLine4: 'لا تترددوا في اختيار موعد آخر أو التواصل معنا مباشرة.',
+        apologyCall: 'هل ترغبون في الحجز هاتفياً أو لديكم أي استفسار؟ اتصلوا بنا على',
+        apologySign: 'فريق لا كولين غامبيتا',
+        allFull: 'جميع المواعيد عبر الإنترنت محجوزة لهذا اليوم. اتصل بنا على 01 43 49 05 93.',
+        error: 'تعذر التحقق من التوفر عبر الإنترنت. اتصل بنا على 01 43 49 05 93 للحجز.'
+      },
+      zh: {
+        apologyTitle: '非常抱歉',
+        apologyLine1: '该时段的所有餐桌均已被预订满。',
+        apologyLine2: '我们非常期待稍早、稍晚或在其他方便的日期欢迎您的光临！',
+        apologyLine4: '欢迎选择其他时段或直接与我们联系。',
+        apologyCall: '想直接电话预订或有疑问？欢迎致电',
+        apologySign: 'La Colline Gambetta 團隊',
+        allFull: '该日期的在线预订已全部约满。请致电 01 43 49 05 93。',
+        error: '暂时无法在线确认可用性。请致电 01 43 49 05 93 预订。'
+      },
+      ja: {
+        apologyTitle: '誠に申し訳ございません',
+        apologyLine1: 'この時間帯はすべてのテーブルがすでにご予約済みとなっております。',
+        apologyLine2: '少し早めのお時間やお遅めのお時間、または別の日程でお迎えできれば大変嬉しく存じます！',
+        apologyLine4: '別のお時間をお選びいただくか、直接お問い合わせください。',
+        apologyCall: 'お電話でのご予約やご質問がございましたら、お気軽にどうぞ：',
+        apologySign: 'ラ・コリーヌ・ガンベッタ一同',
+        allFull: 'この日のオンライン予約枠はすべて満席です。01 43 49 05 93までお電話ください。',
+        error: 'オンラインで空席状況を確認できませんでした。01 43 49 05 93までお電話ください。'
+      },
+      ko: {
+        apologyTitle: '대단히 죄송합니다',
+        apologyLine1: '이 시간대의 모든 테이블이 이미 예약되었습니다.',
+        apologyLine2: '조금 더 이르거나 늦은 시간, 또는 편하신 다른 날짜에 모실 수 있기를 진심으로 바랍니다!',
+        apologyLine4: '다른 시간을 선택하시거나 편하게 문의해 주세요.',
+        apologyCall: '전화로 직접 예약하시거나 문의 사항이 있으신가요? 전화해 주세요:',
+        apologySign: '라 콜린 감베타 팀',
+        allFull: '해당 날짜의 모든 온라인 예약이 마감되었습니다. 01 43 49 05 93으로 전화해 주세요.',
+        error: '온라인으로 예약 가능 여부를 확인할 수 없습니다. 01 43 49 05 93으로 전화해 주세요.'
+      },
+      pl: {
+        apologyTitle: 'Bardzo przepraszamy',
+        apologyLine1: 'Wszystkie stoliki na tę godzinę są już zajęte.',
+        apologyLine2: 'Z przyjemnością ugościmy Państwa nieco wcześniej, później lub w innym dogodnym terminie!',
+        apologyLine4: 'Zachęcamy do wyboru innej godziny lub bezpośredniego kontaktu.',
+        apologyCall: 'Chcą Państwo zarezerwować telefonicznie lub mają pytania? Zadzwońcie pod numer',
+        apologySign: 'Zespół La Colline Gambetta',
+        allFull: 'Wszystkie rezerwacje online na ten dzień są zajęte. Zadzwoń pod numer 01 43 49 05 93.',
+        error: 'Nie można sprawdzić dostępności online. Aby zarezerwować, zadzwoń pod numer 01 43 49 05 93.'
+      },
+      tr: {
+        apologyTitle: 'Çok özür dileriz',
+        apologyLine1: 'Bu saat dilimindeki tüm masalarımız dolmuştur.',
+        apologyLine2: 'Sizi biraz daha erken, biraz daha geç veya başka bir tarihte ağırlamaktan mutluluk duyarız!',
+        apologyLine4: 'Farklı bir saat seçebilir veya doğrudan bizimle iletişime geçebilirsiniz.',
+        apologyCall: 'Doğrudan telefonla rezervasyon yapmak veya soru sormak için bizi arayın:',
+        apologySign: 'La Colline Gambetta ekibi',
+        allFull: 'Bu tarih için tüm çevrimiçi saatler doludur. 01 43 49 05 93 numarasını arayın.',
+        error: 'Çevrimiçi uygunluk kontrol edilemedi. Rezervasyon için 01 43 49 05 93 numarasını arayın.'
+      },
+      uk: {
+        apologyTitle: 'Щиро перепрошуємо',
+        apologyLine1: 'Усі наші столики на цей час уже заброньовано.',
+        apologyLine2: 'Ми з радістю зустрінемо вас трохи раніше, трохи пізніше або в інший день!',
+        apologyLine4: 'Будь ласка, оберіть інший час або зв’яжіться з нами напряму.',
+        apologyCall: 'Бажаєте забронювати телефоном або маєте запитання? Зателефонуйте нам:',
+        apologySign: 'Команда La Colline Gambetta',
+        allFull: 'Усі онлайн-слоти на цю дату заповнені. Зателефонуйте за номером 01 43 49 05 93.',
+        error: 'Не вдалося перевірити доступність онлайн. Для бронювання зателефонуйте за номером 01 43 49 05 93.'
+      },
+      hi: {
+        apologyTitle: 'हमें खेद है',
+        apologyLine1: 'इस समय के लिए हमारे सभी टेबल पहले से बुक हैं।',
+        apologyLine2: 'हम थोड़ा पहले, थोड़ा बाद में या किसी अन्य तिथि पर आपका स्वागत करने में खुशी महसूस करेंगे!',
+        apologyLine4: 'कृपया कोई अन्य समय चुनें या हमसे सीधे संपर्क करें।',
+        apologyCall: 'सीधे फोन पर बुक करना चाहते हैं या कोई प्रश्न है? हमें कॉल करें:',
+        apologySign: 'ला कोलीन गंबेटा की टीम',
+        allFull: 'इस तारीख के लिए सभी ऑनलाइन स्लॉट भर चुके हैं। 01 43 49 05 93 पर कॉल करें।',
+        error: 'ऑनलाइन उपलब्धता की जाँच नहीं हो सकी। बुकिंग के लिए 01 43 49 05 93 पर कॉल करें।'
+      }
+    };
+    var currentDict = copy[langNow] || copy.fr;
+    var message = currentDict[kind] !== undefined ? currentDict[kind] : (currentDict.apologyLine1 || '');
+    return window.LCGLocalizeDisplayDigits ? window.LCGLocalizeDisplayDigits(message, langNow) : message;
+  }
+
   function parisNow() {
     var p = new Intl.DateTimeFormat('fr-FR', {
       timeZone: 'Europe/Paris',
@@ -1925,428 +3322,1116 @@ html[lang="uk"] .thanks__sign {
       String(d.getMonth() + 1).padStart(2, '0') + '-' +
       String(d.getDate()).padStart(2, '0');
   }
-  /* Le calendrier ne descend pas sous aujourd'hui a Paris, et ne monte
-     pas au-dela de trois mois. */
-  var nowP = parisNow();
-  dateEl.min = nowP.date;
-  var max = new Date(nowP.date + 'T00:00:00');
-  max.setMonth(max.getMonth() + 3);
-  dateEl.max = iso(max);
-  dateEl.value = nowP.date;
 
-  /* Les creneaux deja passes sont grises DANS la liste plutot que
-     retires : une option supprimee puis reinserée perdrait sa
-     traduction, le moteur ayant photographie les textes au chargement.
-     Desactivee, elle reste en place et traduite. */
-  function refreshTimes() {
-    var now = parisNow();
-    /* Une page laissee ouverte franchit minuit : le plancher du
-       calendrier doit suivre, sinon la veille reste selectionnable. */
-    if (dateEl.min !== now.date) {
-      dateEl.min = now.date;
-      var mx = new Date(now.date + 'T00:00:00');
-      mx.setMonth(mx.getMonth() + 3);
-      dateEl.max = iso(mx);
+  function calculateNextSlot(now) {
+    var FIRST_SLOT = 12 * 60;       // 12h00 = 720 minutes
+    var LAST_SLOT = 22 * 60 + 45;   // 22h45 = 1365 minutes
+    var STEP = 15;
+
+    if (now.minutes <= FIRST_SLOT) {
+      return { date: now.date, time: '12:00', isTomorrow: false };
     }
-    if (dateEl.value && dateEl.value < now.date) dateEl.value = now.date;
-    var isToday = dateEl.value === now.date;
-    var selectedGone = false;
+    if (now.minutes > LAST_SLOT) {
+      var dNext = new Date(now.date + 'T00:00:00');
+      dNext.setDate(dNext.getDate() + 1);
+      return { date: iso(dNext), time: '12:00', isTomorrow: true };
+    }
+    var nextMins = Math.ceil(now.minutes / STEP) * STEP;
+    if (nextMins > LAST_SLOT) {
+      var dNext2 = new Date(now.date + 'T00:00:00');
+      dNext2.setDate(dNext2.getDate() + 1);
+      return { date: iso(dNext2), time: '12:00', isTomorrow: true };
+    }
+    var h = String(Math.floor(nextMins / 60)).padStart(2, '0');
+    var m = String(nextMins % 60).padStart(2, '0');
+    return { date: now.date, time: h + ':' + m, isTomorrow: false };
+  }
+
+  var nowP = parisNow();
+  var initialSlot = calculateNextSlot(nowP);
+  dateEl.min = nowP.date;
+  var LOCALE_MAP = {
+    fr: "fr-FR", en: "en-GB", es: "es-ES", de: "de-DE", it: "it-IT",
+    pt: "pt-PT", nl: "nl-NL", pl: "pl-PL", tr: "tr-TR",
+    ko: "ko-KR", zh: "zh-CN", ja: "ja-JP", uk: "uk-UA", ar: "ar-EG", hi: "hi-IN"
+  };
+
+  function toLocalizedDigits(numStr, lang) {
+    if (numStr === null || numStr === undefined) return "";
+    return window.LCGLocalizeDisplayDigits
+      ? window.LCGLocalizeDisplayDigits(String(numStr), lang)
+      : String(numStr);
+  }
+
+  var CJK_NUMBERS = {
+    zh: ['', '一', '两', '三', '四', '五', '六', '七', '八', '九', '十'],
+    ja: ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
+  };
+  var KO_NUMBERS = ['', '한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
+  function formatGuestQuantity(value, lang, longLabel) {
+    var n = parseInt(value, 10);
+    if (!n) return '';
+    if (lang === 'zh') return (CJK_NUMBERS.zh[n] || String(n)) + (longLabel ? '位客人' : '位');
+    if (lang === 'ja') return (CJK_NUMBERS.ja[n] || String(n)) + '名';
+    if (lang === 'ko') return (KO_NUMBERS[n] || String(n)) + ' 명';
+    var shown = toLocalizedDigits(n, lang);
+    if (lang === 'ar') {
+      return n === 1 ? 'شخص واحد' : (n === 2 ? 'شخصان' : shown + ' أشخاص');
+    }
+    if (lang === 'hi') return shown + ' व्यक्ति';
+    var labels = {
+      fr: n === 1 ? 'personne' : 'personnes',
+      en: n === 1 ? 'guest' : 'guests',
+      es: n === 1 ? 'persona' : 'personas',
+      de: n === 1 ? 'Person' : 'Personen',
+      it: n === 1 ? 'persona' : 'persone',
+      pt: n === 1 ? 'pessoa' : 'pessoas',
+      nl: n === 1 ? 'persoon' : 'personen',
+      pl: n === 1 ? 'osoba' : (n < 5 ? 'osoby' : 'osób'),
+      tr: 'kişi',
+      uk: n === 1 ? 'особа' : (n < 5 ? 'особи' : 'осіб')
+    };
+    return shown + ' ' + (labels[lang] || labels.fr);
+  }
+
+  function normalizeToAsciiDigits(str) {
+    if (!str) return "";
+    var arMap = {"٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9"};
+    var hiMap = {"०":"0","१":"1","२":"2","३":"3","४":"4","५":"5","६":"6","७":"7","८":"8","९":"9"};
+    var fullMap = {"０":"0","１":"1","２":"2","３":"3","４":"4","５":"5","６":"6","７":"7","８":"8","９":"9"};
+    return str.replace(/[٠-٩]/g, function (c) { return arMap[c] || c; })
+              .replace(/[०-९]/g, function (c) { return hiMap[c] || c; })
+              .replace(/[０-９]/g, function (c) { return fullMap[c] || c; });
+  }
+
+  function formatFullName(str) {
+    if (!str) return "";
+    var clean = str.trim().replace(/\s+/g, " ");
+    return clean.replace(/[^\s\-_—–·'’\/\\+]+/g, function (word) {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    });
+  }
+
+  function formatLocalizedDate(isoDateStr, lang) {
+    if (!isoDateStr) return "";
+    var d = new Date(isoDateStr + "T12:00:00");
+    var loc = LOCALE_MAP[lang] || lang || "fr-FR";
+    var resStr;
+    try {
+      if (lang === "tr") {
+        var w = d.toLocaleDateString(loc, { weekday: "long" });
+        var dt = d.toLocaleDateString(loc, { year: "numeric", month: "long", day: "numeric" });
+        resStr = w + ", " + dt;
+      } else if (lang === "ja" || lang === "zh" || lang === "ko") {
+        var w2 = d.toLocaleDateString(loc, { weekday: "long" });
+        var dt2 = d.toLocaleDateString(loc, { year: "numeric", month: "long", day: "numeric" });
+        resStr = w2 + " " + dt2;
+      } else {
+        resStr = d.toLocaleDateString(loc, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+      }
+    } catch (e) {
+      resStr = d.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    }
+    if (resStr && typeof resStr === "string") {
+      resStr = resStr.charAt(0).toUpperCase() + resStr.slice(1);
+    }
+    return toLocalizedDigits(resStr, lang);
+  }
+
+  function formatClock(h, m, lang) {
+    var hour = String(h).padStart(2, "0");
+    var minute = String(m).padStart(2, "0");
+    if (lang === "fr") return String(parseInt(hour, 10)) + "h" + minute;
+    var base = hour + ":" + minute;
+    if (lang === "ar" || lang === "hi") return toLocalizedDigits(base, lang);
+    if (lang === "zh") return toLocalizedDigits(hour, lang) + "时" + toLocalizedDigits(minute, lang) + "分";
+    if (lang === "ja") return toLocalizedDigits(hour, lang) + "時" + toLocalizedDigits(minute, lang) + "分";
+    if (lang === "ko") return toLocalizedDigits(hour, lang) + "시 " + toLocalizedDigits(minute, lang) + "분";
+    return base;
+  }
+
+  function formatLocalizedTime(timeStr, lang) {
+    if (!timeStr) return "";
+    var hm = timeStr.split(":");
+    return formatClock(parseInt(hm[0], 10), parseInt(hm[1], 10), lang);
+  }
+
+  function formatTimeOption(val, lang) {
+    if (!val) return "";
+    var hm = val.split(":");
+    return formatClock(parseInt(hm[0], 10), parseInt(hm[1], 10), lang);
+  }
+
+  function getDateSep(lang) {
+    if (lang === "ja") return " \u30FB ";
+    return " \u00B7 ";
+  }
+
+  function getPunctuation(lang) {
+    var PUNCT = {
+      ja: { comma: "\u3001", stop: "\u3002", sp: "" },
+      zh: { comma: "\uFF0C", stop: "\u3002", sp: "" },
+      ar: { comma: "\u060C", stop: ".", sp: " " }
+    };
+    return PUNCT[lang] || { comma: ",", stop: ".", sp: " " };
+  }
+
+  function getTimePreposition(lang) {
+    var AT_MAP = {
+      fr: "à",
+      en: "at",
+      es: "a las",
+      de: "um",
+      it: "alle",
+      pt: "às",
+      nl: "om",
+      ar: "في",
+      zh: "",
+      ja: "",
+      ko: "",
+      pl: "o",
+      tr: "saat",
+      uk: "о",
+      hi: "को"
+    };
+    return (AT_MAP[lang] !== undefined) ? AT_MAP[lang] : "à";
+  }
+
+  function getForWord(lang) {
+    var FOR_MAP = {
+      fr: "pour",
+      en: "for",
+      es: "para",
+      de: "für",
+      it: "per",
+      pt: "para",
+      nl: "voor",
+      ar: "لـ",
+      zh: "共",
+      ja: "ご予約：",
+      ko: "인원:",
+      pl: "dla",
+      tr: "kişi sayısı:",
+      uk: "для",
+      hi: "के लिए"
+    };
+    return FOR_MAP[lang] || "pour";
+  }
+
+  /* --- Sélecteur de date avec Calendrier natif de l'appareil --- */
+  var dateTextEl = document.getElementById('bk-date-text');
+  var dateBoxEl = document.getElementById('bk-date-box');
+
+  function updateDateDisplay() {
+    if (!dateEl || !dateTextEl) return;
+    if (!dateEl.value) {
+      dateTextEl.textContent = "";
+      return;
+    }
+    var lang = getDocLang();
+    var prettyDate = formatLocalizedDate(dateEl.value, lang);
+    dateTextEl.textContent = prettyDate;
+  }
+
+  if (dateBoxEl && dateEl) {
+    dateBoxEl.addEventListener('click', function () {
+      try {
+        if (typeof dateEl.showPicker === 'function') {
+          dateEl.showPicker();
+        }
+      } catch (ePick) {}
+    });
+  }
+
+  dateEl.addEventListener('change', function () {
+    userSelectedDate = !!dateEl.value;
+    userSelectedTime = false;
+    updateDateDisplay();
+    setError(dateEl, false);
+    lastKnownSlots = null;
+    updateAvailability();
+  });
+  dateEl.addEventListener('input', function () {
+    updateDateDisplay();
+    setError(dateEl, false);
+  });
+
+  timeEl.addEventListener('change', function () {
+    userSelectedTime = !!timeEl.value;
+    updateAvailability();
+  });
+
+  function updateGuestsOptions(lang) {
+    if (!guestsEl) return;
+    Array.prototype.forEach.call(guestsEl.options, function (opt) {
+      var val = parseInt(opt.value, 10);
+      if (!val) return;
+      opt.textContent = formatGuestQuantity(val, lang, false);
+    });
+  }
+
+  var userSelectedDate = false;
+  var userSelectedTime = false;
+
+  function applySlotsToSelect(slotsMap) {
+    var now = parisNow();
+    var isToday = (dateEl.value === now.date);
+    var lang = getDocLang();
+    var fullSuffix = FULL_LABELS[lang] || '(Complet)';
+    var unavailableSuffix = UNAVAILABLE_LABELS[lang] || '(Indisponible)';
+    var availableCount = 0;
+    var firstAvailable = null;
+
     Array.prototype.forEach.call(timeEl.options, function (opt) {
       if (!opt.value) return;
+      var base = formatTimeOption(opt.value, lang);
+      opt.dataset.base = base;
+
       var hm = opt.value.split(':');
       var mins = parseInt(hm[0], 10) * 60 + parseInt(hm[1], 10);
-      var past = isToday && mins <= now.minutes;
-      opt.disabled = past;
-      if (past && opt.selected) selectedGone = true;
+      var isPast = isToday && (mins < now.minutes);
+
+      var isCapacityAvailable = true;
+      var isUnavailableByTiming = false;
+      if (slotsMap && slotsMap[opt.value] !== undefined) {
+        var slotInfo = slotsMap[opt.value];
+        if (slotInfo && typeof slotInfo === 'object') {
+          isCapacityAvailable = !!slotInfo.available;
+          isUnavailableByTiming = !!slotInfo.isPast || !!slotInfo.isClosed;
+        } else {
+          isCapacityAvailable = !!slotInfo;
+        }
+      }
+
+      if (isPast) {
+        opt.disabled = true;
+        opt.textContent = base;
+      } else if (!isCapacityAvailable) {
+        opt.disabled = true;
+        opt.textContent = base + ' ' + (isUnavailableByTiming ? unavailableSuffix : fullSuffix);
+      } else {
+        opt.disabled = false;
+        opt.textContent = base;
+        availableCount++;
+        if (!firstAvailable) firstAvailable = opt.value;
+      }
     });
-    /* Un creneau devenu invalide ne doit pas rester affiche. */
-    if (selectedGone) timeEl.value = '';
-    /* Aujourd'hui, si tout le service est passe, on pousse au lendemain
-       plutot que de laisser une liste entierement grisee. */
-    if (isToday && !Array.prototype.some.call(timeEl.options, function (o) {
-      return o.value && !o.disabled;
-    })) {
-      var d = new Date(now.date + 'T00:00:00');
-      d.setDate(d.getDate() + 1);
-      if (iso(d) <= dateEl.max) { dateEl.value = iso(d); refreshTimes(); }
+
+    if (timeHintEl) {
+      /* Ne jamais afficher ce message au chargement ni après la seule
+         sélection de la date : les deux choix doivent venir du visiteur. */
+      var dateAndTimeChosen = userSelectedDate && userSelectedTime;
+      if (availableCount === 0 && dateAndTimeChosen) {
+        timeHintEl.textContent = capacityCopy('allFull');
+        timeHintEl.hidden = false;
+      } else {
+        timeHintEl.hidden = true;
+      }
+    }
+
+    var currentOpt = timeEl.options[timeEl.selectedIndex];
+    if (availableCount > 0) {
+      if (!timeEl.value || (currentOpt && currentOpt.disabled)) {
+        timeEl.value = firstAvailable || '12:00';
+      }
+    } else {
+      timeEl.value = '';
     }
   }
-  dateEl.addEventListener('change', refreshTimes);
-  refreshTimes();
-  /* La page peut rester ouverte longtemps : on reevalue chaque minute,
-     et au retour sur l'onglet. */
-  setInterval(refreshTimes, 60000);
-  document.addEventListener('visibilitychange', function () {
-    if (!document.hidden) refreshTimes();
+
+  var currentSubscription = null;
+  var currentRequestId = 0;
+  var lastKnownSlots = null;
+
+  function updateAvailability() {
+    var now = parisNow();
+    var next = calculateNextSlot(now);
+    var startIso = next.isTomorrow ? next.date : now.date;
+
+    if (dateEl) {
+      if (dateEl.min !== now.date) dateEl.min = now.date;
+      dateEl.removeAttribute('max');
+      if (!dateEl.value || dateEl.value < startIso) {
+        dateEl.value = startIso;
+        updateDateDisplay();
+      }
+    }
+
+    applySlotsToSelect(lastKnownSlots);
+
+    var targetDate = dateEl ? dateEl.value : startIso;
+    var guests = guestsEl.value || 2;
+    var reqId = ++currentRequestId;
+
+    if (currentSubscription) {
+      try { currentSubscription(); } catch (eSub) {}
+      currentSubscription = null;
+    }
+
+    if (!targetDate || !FIREBASE_CAPACITY) return;
+
+    function handleResult(res) {
+      if (reqId !== currentRequestId) return;
+      if (!res || !Array.isArray(res.slots)) return;
+      var map = {};
+      res.slots.forEach(function (s) {
+        map[s.time || s.value] = {
+          available: !!s.available,
+          isPast: !!s.isPast,
+          isClosed: !!s.isClosed
+        };
+      });
+      lastKnownSlots = map;
+      applySlotsToSelect(map);
+    }
+
+    if (window.LCGFirebaseReservation) {
+      if (typeof window.LCGFirebaseReservation.subscribeAvailability === 'function') {
+        currentSubscription = window.LCGFirebaseReservation.subscribeAvailability(targetDate, guests, function (err, res) {
+          if (err) {
+            console.warn('[Disponibilité Firebase]', err);
+            return;
+          }
+          handleResult(res);
+        });
+      } else if (typeof window.LCGFirebaseReservation.availability === 'function') {
+        window.LCGFirebaseReservation.availability(targetDate, guests)
+          .then(handleResult)
+          .catch(function (err) {
+            console.warn('[Disponibilité Firebase]', err);
+          });
+      }
+    }
+  }
+
+  var activeStatusState = null;
+
+  function th(k) {
+    var el = document.querySelector(".thanks-src [data-th=\"" + k + "\"]");
+    return el ? el.textContent.trim() : "";
+  }
+
+  function contactCopy(key, fallback) {
+    var lang = getDocLang();
+    var dict = window.__i18nDicts && window.__i18nDicts[lang];
+    return (lang !== 'fr' && dict && dict[key]) ? dict[key] : fallback;
+  }
+
+  function labelContactLink(link, key, fallback) {
+    if (!link) return;
+    var label = contactCopy(key, fallback);
+    link.title = label;
+    link.setAttribute('aria-label', label);
+  }
+
+  function localizedDisplayText(value, lang) {
+    return window.LCGLocalizeDisplayDigits ? window.LCGLocalizeDisplayDigits(value, lang) : value;
+  }
+
+  function localizedRestaurantAddress(lang) {
+    var key = '4 rue Belgrand, 75020 Paris — métro Gambetta';
+    var dict = window.__i18nDicts && window.__i18nDicts[lang];
+    var value = (lang !== 'fr' && dict && dict[key]) ? dict[key] : key;
+    return localizedDisplayText(value, lang);
+  }
+
+  function renderStatusCard(data) {
+    if (!data || !status) return;
+    var lang = getDocLang();
+    var pc = getPunctuation(lang);
+
+    status.textContent = "";
+    status.className = "form-status form-status--thanks";
+
+    if (data.type === "success") {
+      var jourLu = formatLocalizedDate(data.date, lang);
+      var heureLue = formatLocalizedTime(data.time, lang);
+      var prepAt = getTimePreposition(lang);
+      var forWord = getForWord(lang);
+
+      var couvertsStr = formatGuestQuantity(data.nb, lang, true);
+
+      var h = document.createElement("p");
+      h.className = "thanks__hello";
+      h.textContent = (th("hi") || "Merci infiniment") + pc.comma + pc.sp + data.name + pc.stop;
+
+      var p1 = document.createElement("p");
+      p1.className = "thanks__line";
+      p1.textContent = th("l1") || "Votre demande de table vient de nous parvenir.";
+
+      var p2 = document.createElement("div");
+      p2.className = "thanks__when";
+
+      var intro = document.createElement("p");
+      intro.className = "thanks__when-intro";
+      intro.textContent = th("l2") || "Nous vous attendons";
+
+      var slotP = document.createElement("p");
+      slotP.className = "thanks__when-slot";
+
+      var dateElStrong = document.createElement("strong");
+      dateElStrong.className = "thanks__when-detail";
+      dateElStrong.textContent = jourLu;
+
+      var timeElStrong = document.createElement("strong");
+      timeElStrong.className = "thanks__when-detail";
+      timeElStrong.textContent = heureLue;
+
+      slotP.appendChild(dateElStrong);
+      if (prepAt) {
+        var atSpan = document.createElement("span");
+        atSpan.className = "thanks__when-at";
+        atSpan.textContent = " " + prepAt + " ";
+        slotP.appendChild(atSpan);
+      } else {
+        slotP.appendChild(document.createTextNode(" "));
+      }
+      slotP.appendChild(timeElStrong);
+
+      p2.appendChild(intro);
+      p2.appendChild(slotP);
+
+      if (String(data.nb) !== "1") {
+        var guestsP = document.createElement("p");
+        guestsP.className = "thanks__when-guests";
+
+        var forSpan = document.createElement("span");
+        forSpan.className = "thanks__when-for";
+        forSpan.textContent = forWord + " ";
+
+        var guestsStrong = document.createElement("strong");
+        guestsStrong.className = "thanks__when-detail";
+        guestsStrong.textContent = couvertsStr;
+
+        guestsP.appendChild(forSpan);
+        guestsP.appendChild(guestsStrong);
+        p2.appendChild(guestsP);
+      }
+
+      var p4 = document.createElement("p");
+      p4.className = "thanks__line thanks__warm";
+      p4.textContent = th("l4") || "Au plaisir de vous recevoir très prochainement,";
+
+      var sg = document.createElement("p");
+      sg.className = "thanks__sign";
+      sg.textContent = th("sign") || "L’équipe de La Colline Gambetta";
+
+      var tel = document.createElement("p");
+      tel.className = "thanks__tel";
+      tel.appendChild(document.createTextNode((th("tel") || "Une question ? Appelez-nous au") + " "));
+      var a = document.createElement("a");
+      a.href = "tel:+33143490593";
+      labelContactLink(a, 'Appeler le restaurant', 'Appeler le restaurant');
+      a.textContent = "01 43 49 05 93";
+      tel.appendChild(a);
+
+      [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
+    } else if (data.type === "error") {
+      /* A network/database failure is not a full slot: explain that no
+         reservation was confirmed instead of displaying a false success. */
+      var h = document.createElement("p");
+      h.className = "thanks__hello";
+      h.textContent = (th("apology-hi") || capacityCopy("apologyTitle")) + ".";
+
+      var p1 = document.createElement("p");
+      p1.className = "thanks__line";
+      p1.textContent = capacityCopy("error");
+
+      var p2 = document.createElement("div");
+      p2.className = "thanks__when";
+      var detail = document.createElement("p");
+      detail.className = "thanks__when-slot thanks__when-detail";
+      detail.textContent = capacityCopy("apologyLine4");
+      p2.appendChild(detail);
+
+      var p4 = document.createElement("p");
+      p4.className = "thanks__line thanks__warm";
+      p4.textContent = (th("apology-call") || capacityCopy("apologyCall"));
+
+      var sg = document.createElement("p");
+      sg.className = "thanks__sign";
+      sg.textContent = th("sign") || capacityCopy("apologySign");
+
+      var tel = document.createElement("p");
+      tel.className = "thanks__tel";
+      var a = document.createElement("a");
+      a.href = "tel:+33143490593";
+      labelContactLink(a, 'Appeler le restaurant', 'Appeler le restaurant');
+      a.textContent = "01 43 49 05 93";
+      tel.appendChild(a);
+
+      [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
+    } else {
+      // Apology card
+      var h = document.createElement("p");
+      h.className = "thanks__hello";
+      var title = th("apology-hi") || capacityCopy("apologyTitle");
+      h.textContent = title + (data.name ? pc.comma + pc.sp + data.name : "") + pc.stop;
+
+      var p1 = document.createElement("p");
+      p1.className = "thanks__line";
+      p1.textContent = th("apology-l1") || capacityCopy("apologyLine1");
+
+      var p2 = document.createElement("div");
+      p2.className = "thanks__when";
+      var detail = document.createElement("p");
+      detail.className = "thanks__when-slot thanks__when-detail";
+      detail.textContent = th("apology-l2") || capacityCopy("apologyLine2");
+      p2.appendChild(detail);
+
+      var p4 = document.createElement("p");
+      p4.className = "thanks__line thanks__warm";
+      p4.textContent = th("apology-l4") || capacityCopy("apologyLine4");
+
+      var sg = document.createElement("p");
+      sg.className = "thanks__sign";
+      sg.textContent = th("sign") || capacityCopy("apologySign");
+
+      var tel = document.createElement("p");
+      tel.className = "thanks__tel";
+      var telTxt = th("apology-call") || capacityCopy("apologyCall");
+      tel.appendChild(document.createTextNode(telTxt + " "));
+      var a = document.createElement("a");
+      a.href = "tel:+33143490593";
+      labelContactLink(a, 'Appeler le restaurant', 'Appeler le restaurant');
+      a.textContent = "01 43 49 05 93";
+      tel.appendChild(a);
+
+      [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
+    }
+    if (window.LCGSyncContactButtons) window.LCGSyncContactButtons(getDocLang());
+  }
+
+  var nowP = parisNow();
+  var initialSlot = calculateNextSlot(nowP);
+  if (dateEl) {
+    dateEl.min = nowP.date;
+    dateEl.removeAttribute('max');
+    dateEl.value = initialSlot.date;
+    updateDateDisplay();
+  }
+  updateGuestsOptions(getDocLang());
+
+  guestsEl.addEventListener('change', function () {
+    updateAvailability();
+  });
+
+  window.addEventListener('lcg-firebase-ready', function () {
+    updateAvailability();
+  });
+  window.addEventListener('lcg-policy-updated', function () {
+    updateAvailability();
+  });
+
+  var langObserver = new MutationObserver(function () {
+    var langNow = getDocLang();
+    updateDateDisplay();
+    updateGuestsOptions(langNow);
+    applySlotsToSelect(lastKnownSlots);
+    if (activeStatusState && !status.hidden) {
+      renderStatusCard(activeStatusState);
+    }
+  });
+  langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+
+  updateAvailability();
+  setInterval(updateAvailability, 60000);
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) updateAvailability();
   });
 
   function setError(input, on) {
-    var field = input.closest('[data-field]');
+    var field = input.closest("[data-field]");
     if (!field) return;
-    field.classList.toggle('field--error', !!on);
-    var msg = field.querySelector('[data-error]');
+    field.classList.toggle("field--error", !!on);
+    var msg = field.querySelector("[data-error]");
     if (msg) msg.hidden = !on;
   }
-  ['input', 'change'].forEach(function (ev) {
+  ["input", "change"].forEach(function (ev) {
     form.addEventListener(ev, function (e) {
-      if (e.target && e.target.closest('[data-field]')) setError(e.target, false);
+      if (e.target && e.target.closest("[data-field]")) setError(e.target, false);
     });
   });
 
-  form.addEventListener('submit', function (e) {
+  form.addEventListener("submit", function (e) {
     e.preventDefault();
     var bad = null;
 
-    var name = document.getElementById('bk-name');
-    var phone = document.getElementById('bk-phone');
-    var mail = document.getElementById('bk-mail');
+    var name = document.getElementById("bk-name");
+    var phone = document.getElementById("bk-phone");
+    var mail = document.getElementById("bk-mail");
 
     if (!name.value.trim()) { setError(name, true); bad = bad || name; }
-    /* Un numéro français, écrit comme on veut : au moins 8 chiffres. */
-    if ((phone.value.match(/\d/g) || []).length < 8) { setError(phone, true); bad = bad || phone; }
+    var rawPhone = normalizeToAsciiDigits(phone.value.trim());
+    if ((rawPhone.match(/\d/g) || []).length < 8) { setError(phone, true); bad = bad || phone; }
     if (mail.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail.value.trim())) {
       setError(mail, true); bad = bad || mail;
     }
-    /* Dernier controle a l'envoi : l'heure de Paris a pu avancer depuis
-       l'ouverture de la page. */
+
     var nowChk = parisNow();
-    if (!dateEl.value || dateEl.value < nowChk.date) { setError(dateEl, true); bad = bad || dateEl; }
-    if (!timeEl.value) { setError(timeEl, true); bad = bad || timeEl; }
-    else if (dateEl.value === nowChk.date) {
-      var hm2 = timeEl.value.split(':');
+    if (!dateEl.value || dateEl.value < nowChk.date) {
+      setError(dateEl, true);
+      bad = bad || dateEl;
+    }
+
+    var selectedOpt = timeEl.options[timeEl.selectedIndex];
+    if (!timeEl.value || (selectedOpt && selectedOpt.disabled)) {
+      setError(timeEl, true); bad = bad || timeEl;
+    } else if (dateEl.value === nowChk.date) {
+      var hm2 = timeEl.value.split(":");
       var m2 = parseInt(hm2[0], 10) * 60 + parseInt(hm2[1], 10);
       if (m2 <= nowChk.minutes) { setError(timeEl, true); bad = bad || timeEl; }
     }
+
     if (!guestsEl.value) { setError(guestsEl, true); bad = bad || guestsEl; }
 
     if (bad) {
       status.hidden = true;
-      bad.focus();
+      var fieldBox = bad.closest("[data-field]") || bad;
+      try {
+        fieldBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      } catch (eScroll) {
+        bad.scrollIntoView();
+      }
+      setTimeout(function () {
+        try {
+          bad.focus({ preventScroll: true });
+        } catch (eFocus) {
+          bad.focus();
+        }
+      }, 250);
       return;
     }
 
-    /* Pas de serveur derrière ce site : la demande part par courriel, dans
-       le client de messagerie du visiteur, entièrement pré-remplie. Le
-       message reste affiché à l'écran pour qu'il puisse aussi appeler. */
-    var d = new Date(dateEl.value + 'T12:00:00');
-    var jolie = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-    /* Deux versions du nombre de couverts : celle affichee suit la
-       langue du client, celle du courriel reste en francais — c'est le
-       restaurateur qui le lit. La valeur de l'option est un chiffre nu,
-       jamais traduit, donc sure. */
+    var lang = getDocLang();
+    var pc = getPunctuation(lang);
+
+    var nomComplet = formatFullName(name.value);
+    var d = new Date(dateEl.value + "T12:00:00");
     var couverts = guestsEl.options[guestsEl.selectedIndex].textContent;
     var nb = guestsEl.value;
-    var couvertsFr = nb + (nb === '1' ? ' personne' : ' personnes');
-    var pref = document.getElementById('bk-place').value;
-    var msg = document.getElementById('bk-msg').value.trim();
+    var placeEl = document.getElementById("bk-place");
+    var msg = document.getElementById("bk-msg").value.trim();
 
-    var corps = [
-      'Bonjour,',
-      '',
-      'Je souhaite réserver une table à La Colline Gambetta.',
-      '',
-      'Nom : ' + name.value.trim(),
-      'Téléphone : ' + phone.value.trim(),
-      mail.value.trim() ? 'Mail : ' + mail.value.trim() : null,
-      'Date : ' + jolie,
-      'Heure : ' + timeEl.value.replace(':', 'h'),
-      'Couverts : ' + couvertsFr,
-      'Préférence : ' + pref,
-      msg ? '' : null,
-      msg ? 'Message : ' + msg : null,
-      '',
-      'Merci beaucoup,',
-      name.value.trim()
-    ].filter(function (l) { return l !== null; }).join('\n');
+    var jourLu = formatLocalizedDate(dateEl.value, lang);
+    var heureLue = formatLocalizedTime(timeEl.value, lang);
+    var dateSep = getDateSep(lang);
 
-    var sujet = 'Réservation — ' + name.value.trim() + ' — ' + jolie + ' à ' + timeEl.value.replace(':', 'h') + ' (' + couvertsFr + ')';
+    var prepAt = getTimePreposition(lang);
+    var forWord = getForWord(lang);
+    var slotLineText = prepAt ? (jourLu + " " + prepAt + " " + heureLue) : (jourLu + " " + heureLue);
 
-    /* Remerciement personnalise. Les fragments viennent du DOM, donc
-       deja traduits par le moteur ; seuls le nom, la date et l'heure
-       sont injectes. Le nom passe par textContent, jamais par
-       innerHTML : c'est une saisie libre. */
-    function th(k) {
-      var el = document.querySelector('.thanks-src [data-th="' + k + '"]');
-      return el ? el.textContent.trim() : '';
+    var autoresponseLines = [
+      (th("hi") || "Merci infiniment") + pc.comma + pc.sp + nomComplet + pc.stop,
+      "",
+      th("l1") || "Votre demande de table vient de nous parvenir.",
+      "",
+      th("l2") || "Nous vous attendons",
+      slotLineText
+    ];
+    if (String(nb) !== "1") {
+      autoresponseLines.push(forWord + " " + couverts);
     }
-    /* La date suit la langue affichee : le client la relit dans la
-       sienne, meme si le courriel part en francais. */
-    var lang = document.documentElement.getAttribute('lang') || 'fr';
-    var jourLu;
-    try {
-      jourLu = d.toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' });
-    } catch (err) { jourLu = jolie; }
-    var heureLue = (lang === 'fr')
-      ? timeEl.value.replace(':', 'h')
-      : (function () {
-          try {
-            var hm = timeEl.value.split(':');
-            return new Date(2000, 0, 1, parseInt(hm[0], 10), parseInt(hm[1], 10))
-              .toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
-          } catch (err2) { return timeEl.value.replace(':', 'h'); }
-        })();
-    /* Prenom seul : plus chaleureux qu'un nom complet en tete de mot. */
-    var prenom = name.value.trim().split(/\s+/)[0];
-    /* La ponctuation n'est pas universelle : le chinois et le japonais
-       ont leurs propres virgule et point pleine chasse, l'arabe sa
-       virgule inversee. Coller « , » et « . » a du japonais trahirait
-       le soin apporte au reste du message.
-       La virgule pleine chasse du chinois et du japonais porte deja son
-       blanc : lui ajouter une espace creuse un trou. */
-    var PUNCT = {
-      ja: { comma: '\u3001', stop: '\u3002', sp: '' },
-      zh: { comma: '\uFF0C', stop: '\u3002', sp: '' },
-      ar: { comma: '\u060C', stop: '.', sp: ' ' }
+    autoresponseLines.push(
+      "",
+      th("l4") || "Au plaisir de vous recevoir très prochainement,",
+      "",
+      th("sign") || "L’équipe de La Colline Gambetta",
+      localizedRestaurantAddress(lang),
+      localizedDisplayText("01 43 49 05 93", lang) + " · restaurant@lacollinegambetta.com"
+    );
+    var autoresponseBody = autoresponseLines.join("\n");
+
+    /* Formatage 100 % en français pour l'email de notification envoyé au restaurant */
+    var dateFr = formatLocalizedDate(dateEl.value, "fr");
+    var heureFr = formatLocalizedTime(timeEl.value, "fr");
+    var couvertsFr = nb + (nb === "1" ? " personne" : " personnes");
+    var prefFr = placeEl ? placeEl.value : "Sans préférence";
+
+    var LANG_NAMES = {
+      fr: "Français", en: "Anglais", es: "Espagnol", de: "Allemand",
+      it: "Italien", pt: "Portugais", nl: "Néerlandais", ar: "Arabe",
+      zh: "Chinois", ja: "Japonais", ko: "Coréen", pl: "Polonais",
+      tr: "Turc", uk: "Ukrainien", hi: "Hindi"
     };
-    var pc = PUNCT[lang] || { comma: ',', stop: '.', sp: ' ' };
+    var langueClient = LANG_NAMES[lang] || lang.toUpperCase();
 
-    status.textContent = '';
-    status.classList.add('form-status--thanks');
+    var sujetRestaurant = "Réservation — " + nomComplet + " — " + dateFr + " à " + heureFr + " (" + couvertsFr + ")";
 
-    var h = document.createElement('p');
-    h.className = 'thanks__hello';
-    h.textContent = th('hi') + pc.comma + pc.sp + prenom + pc.stop;
+    var corpsRestaurant = [
+      "Bonjour,",
+      "",
+      "Nouvelle demande de réservation pour La Colline Gambetta :",
+      "",
+      "• Nom pour la réservation : " + nomComplet,
+      "• Téléphone : " + phone.value.trim(),
+      mail.value.trim() ? ("• E-mail : " + mail.value.trim()) : "• E-mail : Non renseigné",
+      "• Date : " + dateFr,
+      "• Heure : " + heureFr,
+      "• Couverts : " + couvertsFr,
+      "• Préférence : " + prefFr,
+      msg ? ("• Message : " + msg) : null,
+      "• Langue utilisée par le client : " + langueClient,
+      "",
+      "Demande enregistrée depuis le site web."
+    ].filter(function (l) { return l !== null; }).join("\n");
 
-    var p1 = document.createElement('p');
-    p1.className = 'thanks__line';
-    p1.textContent = th('l1');
+    var savedNomComplet = nomComplet;
+    var savedDate = dateEl.value;
+    var savedTime = timeEl.value;
+    var savedNb = guestsEl.value;
 
-    /* L'encart : l'annonce reste en texte courant, puis la date,
-       l'heure et le nombre de personnes sont detaches sur leur propre
-       ligne, en gras. C'est la ligne que le client relit et retient ;
-       noyee dans la phrase, elle se cherchait. */
-    var p2 = document.createElement('p');
-    p2.className = 'thanks__when';
-    var intro = document.createElement('span');
-    intro.className = 'thanks__when-intro';
-    intro.textContent = th('l2') + pc.stop;
-    /* Deux groupes en gras — le moment, puis le nombre de personnes —
-       relies par un mot de liaison en texte courant. Le contraste rend
-       la ligne lisible d'un coup d'oeil, sans la surcharger. */
-    var quand = document.createElement('strong');
-    quand.className = 'thanks__when-detail';
-    quand.textContent = jourLu + ' \u00b7 ' + heureLue;
-    var lien = document.createElement('span');
-    lien.className = 'thanks__when-for';
-    lien.textContent = ' ' + th('for') + ' ';
-    var qui = document.createElement('strong');
-    qui.className = 'thanks__when-detail';
-    qui.textContent = couverts;
-    /* Les trois morceaux sont groupes dans une ligne propre : c'est
-       elle qui porte le centrage et le repli equilibre. */
-    var ligne = document.createElement('span');
-    ligne.className = 'thanks__when-line';
-    ligne.appendChild(quand);
-    ligne.appendChild(lien);
-    ligne.appendChild(qui);
-    p2.appendChild(intro);
-    p2.appendChild(ligne);
+    activeStatusState = {
+      type: "success",
+      name: savedNomComplet,
+      date: savedDate,
+      time: savedTime,
+      nb: savedNb
+    };
+    renderStatusCard(activeStatusState);
 
-    var p4 = document.createElement('p');
-    p4.className = 'thanks__line thanks__warm';
-    p4.textContent = th('l4');
-
-    var sg = document.createElement('p');
-    sg.className = 'thanks__sign';
-    sg.textContent = th('sign');
-
-    var tel = document.createElement('p');
-    tel.className = 'thanks__tel';
-    tel.appendChild(document.createTextNode(th('tel') + ' '));
-    var a = document.createElement('a');
-    a.href = 'tel:+33143490593';
-    a.textContent = '01 43 49 05 93';
-    tel.appendChild(a);
-
-    [h, p1, p2, p4, sg, tel].forEach(function (el) { status.appendChild(el); });
-
-    /* --- Notification du restaurant -----------------------------------
-       La capacité est décidée par l'API locale. Le relais FormSubmit ne
-       sert plus qu'à notifier le restaurant après acceptation ; il ne peut
-       donc jamais créer une réservation qui contourne le compteur.
-
-       L'adresse est encodée en base64 dans l'attribut du formulaire plutôt
-       qu'écrite en clair, pour ne pas l'offrir aux aspirateurs d'adresses. */
     var payload = new FormData();
-    payload.append('action', 'reserve');
-    payload.append('_subject', sujet);
-    payload.append('_template', 'box');
-    payload.append('_captcha', 'false');
-    payload.append('Nom', name.value.trim());
-    payload.append('Téléphone', phone.value.trim());
-    payload.append('Mail', mail.value.trim() || '—');
-    payload.append('Date', jolie);
-    payload.append('Heure', timeEl.value.replace(':', 'h'));
-    payload.append('Couverts', couvertsFr);
-    payload.append('Préférence', pref);
-    payload.append('Message', msg || '—');
-    payload.append('Récapitulatif', corps);
-    /* Repondre directement au client depuis la boite du restaurant. */
-    if (mail.value.trim()) payload.append('_replyto', mail.value.trim());
+    payload.append("action", "reserve");
+    payload.append("_subject", sujetRestaurant);
+    payload.append("_template", "box");
+    payload.append("_captcha", "false");
+    payload.append("Nom pour la réservation", savedNomComplet);
+    payload.append("Téléphone", phone.value.trim());
+    payload.append("E-mail", mail.value.trim() || "—");
+    payload.append("Date", dateFr);
+    payload.append("Heure", heureFr);
+    payload.append("Couverts", couvertsFr);
+    payload.append("Préférence", prefFr);
+    if (msg) payload.append("Message", msg);
+    payload.append("Langue du client", langueClient);
+    payload.append("Récapitulatif", corpsRestaurant);
+    if (mail.value.trim()) {
+      payload.append("email", mail.value.trim());
+      payload.append("_replyto", mail.value.trim());
+      payload.append("_autoresponse", autoresponseBody);
+    }
 
-    var btn = form.querySelector('.btn-book');
-    var sending = document.getElementById('bk-sending');
-    var bar = document.getElementById('bk-bar');
+    var btn = form.querySelector(".btn-book");
+    var sending = document.getElementById("bk-sending");
+    var bar = document.getElementById("bk-bar");
 
     status.hidden = true;
     sending.hidden = false;
     btn.disabled = true;
-    /* La barre est lancee a la frame suivante : posee a 100 % dans le
-       meme cycle, la transition ne demarrerait pas. */
+
+    bar.style.transition = 'none';
     bar.style.width = '0%';
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { bar.style.width = '100%'; });
-    });
-    try { sending.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e0) {}
+    void bar.offsetWidth;
+    bar.style.transition = 'width 2.95s cubic-bezier(0.25, 0.1, 0.25, 1)';
+    bar.style.width = '100%';
 
-    var FALLBACK_ENDPOINT = 'https://formsubmit.co/ajax/' +
-      atob('bGFjb2xsaW5lZ2FtYmV0dGFAbWFpbG8uY29t');
-    var ENDPOINT = CAPACITY_ENDPOINT || FALLBACK_ENDPOINT;
-    var CENTRAL_CAPACITY = !!CAPACITY_ENDPOINT;
-    /* La barre dure cinq secondes pleines : la reponse arrive souvent
-       avant, mais on ne coupe pas l'animation en cours de route. */
+    try { sending.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e0) {}
+
+    var targetRestaurantEmail = (
+      (window.LCG_EMAIL_CONFIG && window.LCG_EMAIL_CONFIG.restaurantEmail) ||
+      window.LCG_RESTAURANT_EMAIL ||
+      "restaurant@lacollinegambetta.com"
+    ).trim();
+
+    var FALLBACK_ENDPOINT = "https://formsubmit.co/ajax/" + encodeURIComponent(targetRestaurantEmail);
     var started = Date.now();
-    var MIN_MS = 5000;
-
-    function capacityCopy(kind) {
-      var langNow = (document.documentElement.getAttribute('lang') || 'fr').split('-')[0];
-      var copy = {
-        fr: {
-          full: 'Ce créneau est complet (15 tables ou 30 couverts). Choisissez une autre heure ou appelez-nous au 01 43 49 05 93.',
-          error: 'La disponibilité de ce créneau ne peut pas être vérifiée pour le moment. Appelez-nous au 01 43 49 05 93 pour réserver.'
-        },
-        en: {
-          full: 'This time slot is full (15 tables or 30 guests). Please choose another time or call us on 01 43 49 05 93.',
-          error: 'This time slot could not be checked. Please call 01 43 49 05 93 to book.'
-        },
-        es: {
-          full: 'Este horario está completo (15 mesas o 30 comensales). Elija otra hora o llámenos al 01 43 49 05 93.',
-          error: 'No se puede comprobar este horario. Llámenos al 01 43 49 05 93 para reservar.'
-        },
-        de: {
-          full: 'Dieser Zeitraum ist voll (15 Tische oder 30 Gäste). Bitte wählen Sie eine andere Uhrzeit oder rufen Sie uns unter 01 43 49 05 93 an.',
-          error: 'Die Verfügbarkeit konnte nicht geprüft werden. Bitte rufen Sie für eine Reservierung 01 43 49 05 93 an.'
-        },
-        it: {
-          full: 'Questa fascia oraria è completa (15 tavoli o 30 coperti). Scelga un altro orario o chiami lo 01 43 49 05 93.',
-          error: 'Impossibile verificare la disponibilità. Chiami lo 01 43 49 05 93 per prenotare.'
-        },
-        pt: {
-          full: 'Este horário está completo (15 mesas ou 30 pessoas). Escolha outra hora ou ligue para 01 43 49 05 93.',
-          error: 'Não foi possível verificar a disponibilidade. Ligue para 01 43 49 05 93 para reservar.'
-        },
-        nl: {
-          full: 'Dit tijdslot is vol (15 tafels of 30 gasten). Kies een ander tijdstip of bel 01 43 49 05 93.',
-          error: 'De beschikbaarheid kon niet worden gecontroleerd. Bel 01 43 49 05 93 om te reserveren.'
-        },
-        ar: {
-          full: 'هذا الموعد ممتلئ (15 طاولة أو 30 شخصاً). اختر وقتاً آخر أو اتصل بنا على 01 43 49 05 93.',
-          error: 'تعذر التحقق من توفر هذا الموعد. اتصل بنا على 01 43 49 05 93 للحجز.'
-        },
-        zh: {
-          full: '该时段已满（15 张桌子或 30 位客人）。请选择其他时间，或致电 01 43 49 05 93。',
-          error: '暂时无法确认该时段的可用性。请致电 01 43 49 05 93 预订。'
-        },
-        ja: {
-          full: 'この時間帯は満席です（15卓または30名）。別の時間を選ぶか、01 43 49 05 93までお電話ください。',
-          error: '空席状況を確認できません。ご予約は01 43 49 05 93までお電話ください。'
-        },
-        ko: {
-          full: '이 시간대는 마감되었습니다(테이블 15개 또는 30명). 다른 시간을 선택하거나 01 43 49 05 93으로 전화해 주세요.',
-          error: '이 시간대의 예약 가능 여부를 확인할 수 없습니다. 예약은 01 43 49 05 93으로 전화해 주세요.'
-        },
-        pl: {
-          full: 'Ten przedział jest pełny (15 stolików lub 30 osób). Wybierz inną godzinę albo zadzwoń pod numer 01 43 49 05 93.',
-          error: 'Nie można sprawdzić dostępności. Aby zarezerwować, zadzwoń pod numer 01 43 49 05 93.'
-        },
-        tr: {
-          full: 'Bu saat aralığı dolu (15 masa veya 30 kişi). Başka bir saat seçin ya da 01 43 49 05 93 numarasını arayın.',
-          error: 'Bu saat aralığının uygunluğu kontrol edilemedi. Rezervasyon için 01 43 49 05 93 numarasını arayın.'
-        },
-        uk: {
-          full: 'Цей час уже заповнений (15 столів або 30 гостей). Виберіть інший час або зателефонуйте за номером 01 43 49 05 93.',
-          error: 'Не вдалося перевірити доступність. Для бронювання зателефонуйте за номером 01 43 49 05 93.'
-        },
-        hi: {
-          full: 'यह समय पूरी तरह बुक है (15 टेबल या 30 मेहमान)। कोई दूसरा समय चुनें या 01 43 49 05 93 पर कॉल करें।',
-          error: 'इस समय की उपलब्धता की जाँच नहीं हो सकी। बुकिंग के लिए 01 43 49 05 93 पर कॉल करें।'
-        }
-      };
-      return (copy[langNow] || copy.fr)[kind];
-    }
-
-    function showCapacityError(message, openMail) {
-      status.textContent = '';
-      status.classList.remove('form-status--thanks');
-      var w = document.createElement('p');
-      w.className = 'thanks__line';
-      w.textContent = message;
-      var w2 = document.createElement('p');
-      w2.className = 'thanks__tel';
-      w2.appendChild(document.createTextNode(th('tel') + ' '));
-      var wa2 = document.createElement('a');
-      wa2.href = 'tel:+33143490593';
-      wa2.textContent = '01 43 49 05 93';
-      w2.appendChild(wa2);
-      status.appendChild(w);
-      status.appendChild(w2);
-      status.hidden = false;
-      try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e2) {}
-      if (openMail) {
-        window.location.href = 'mailto:lacollinegambetta@mailo.com?subject=' +
-          encodeURIComponent(sujet) + '&body=' + encodeURIComponent(corps);
-      }
-    }
+    var MIN_MS = 3000;
 
     function finish(ok, failure) {
       var rest = Math.max(0, MIN_MS - (Date.now() - started));
       setTimeout(function () {
         sending.hidden = true;
         btn.disabled = false;
+        bar.style.transition = 'none';
         bar.style.width = '0%';
         if (ok) {
+          activeStatusState = {
+            type: "success",
+            name: savedNomComplet,
+            date: savedDate,
+            time: savedTime,
+            nb: savedNb
+          };
+          renderStatusCard(activeStatusState);
           status.hidden = false;
-          try { status.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e1) {}
+          try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e1) {}
           form.reset();
-          refreshTimes();
-        } else if (CENTRAL_CAPACITY) {
-          /* En mode capacité, ne jamais ouvrir un mail de secours : il ne
-             serait pas compté et contournerait la limite. */
-          showCapacityError(
-            failure && failure.capacityFull ? capacityCopy('full') : capacityCopy('error'),
-            false
-          );
+          userSelectedDate = false;
+          userSelectedTime = false;
+          if (timeHintEl) timeHintEl.hidden = true;
+          var nowAfter = parisNow();
+          var nextAfter = calculateNextSlot(nowAfter);
+          if (dateEl) {
+            dateEl.min = nowAfter.date;
+            dateEl.removeAttribute('max');
+            dateEl.value = nextAfter.date;
+            updateDateDisplay();
+          }
+          updateAvailability();
+        } else if (failure && (failure.capacityFull || failure.code === "CAPACITY_FULL")) {
+          activeStatusState = {
+            type: "capacity",
+            name: savedNomComplet
+          };
+          renderStatusCard(activeStatusState);
+          status.hidden = false;
+          try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e2) {}
+          updateAvailability();
         } else {
-          /* Mode statique historique : le relais peut échouer, on bascule
-             sur la messagerie du client, pré-remplie. */
-          showCapacityError(th('fail'), true);
+          activeStatusState = {
+            type: "error",
+            name: savedNomComplet
+          };
+          renderStatusCard(activeStatusState);
+          status.hidden = false;
+          try { status.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e2) {}
+          updateAvailability();
         }
       }, rest);
     }
 
+    function sendDirect() {
+      dispatchNotificationEmail(function () {
+        finish(true);
+      });
+    }
+
     function notifyRestaurant() {
-      /* Cette notification est volontairement découplée de la capacité :
-         l'API a déjà enregistré la demande avant cet appel. */
-      try {
-        fetch(FALLBACK_ENDPOINT, {
-          method: 'POST',
-          body: payload,
-          headers: { 'Accept': 'application/json' },
+      dispatchNotificationEmail(function () {});
+    }
+
+    function dispatchNotificationEmail(callback) {
+      var cfg = window.LCG_EMAIL_CONFIG || {};
+      var googleScriptUrl = cfg.googleScriptUrl && typeof cfg.googleScriptUrl === 'string' && cfg.googleScriptUrl.trim().length > 0 ? cfg.googleScriptUrl.trim() : null;
+      var web3Key = cfg.web3formsKey && typeof cfg.web3formsKey === 'string' && cfg.web3formsKey.trim().length > 0 ? cfg.web3formsKey.trim() : null;
+
+      if (googleScriptUrl) {
+        var clientMail = mail.value.trim();
+        var clientSubjectMap = {
+          fr: "Confirmation de votre réservation — La Colline Gambetta",
+          en: "Booking confirmation — La Colline Gambetta",
+          es: "Confirmación de su reserva — La Colline Gambetta",
+          de: "Bestätigung Ihrer Reservierung — La Colline Gambetta",
+          it: "Conferma della prenotazione — La Colline Gambetta",
+          pt: "Confirmação da sua reserva — La Colline Gambetta",
+          nl: "Bevestiging van uw reservering — La Colline Gambetta",
+          ar: "تأكيد حجزك — La Colline Gambetta",
+          zh: "预订确认 — La Colline Gambetta",
+          ja: "ご予約確認 — La Colline Gambetta",
+          ko: "예약 확인 — La Colline Gambetta",
+          pl: "Potwierdzenie rezerwacji — La Colline Gambetta",
+          tr: "Rezervasyon onayı — La Colline Gambetta",
+          uk: "Підтвердження бронювання — La Colline Gambetta",
+          hi: "आरक्षण की पुष्टि — La Colline Gambetta"
+        };
+        var localizedClientSubject = clientSubjectMap[lang] || "Confirmation de votre réservation — La Colline Gambetta";
+
+        var gsPayload = {
+          action: "reservation",
+          restaurantEmail: targetRestaurantEmail,
+          restaurantSubject: sujetRestaurant,
+          restaurantBody: corpsRestaurant,
+          clientEmail: clientMail || "",
+          clientName: savedNomComplet,
+          clientSubject: localizedClientSubject,
+          clientBody: autoresponseBody,
+          details: {
+            nom: savedNomComplet,
+            telephone: phone.value.trim(),
+            email: clientMail || "Non renseigné",
+            date: dateFr,
+            dateIso: savedDate,
+            heure: heureFr,
+            heureIso: savedTime,
+            couverts: couvertsFr,
+            couvertsNb: savedNb,
+            preference: prefFr,
+            message: msg || "—",
+            langue: langueClient
+          }
+        };
+        /* La requête part en mode CORS, PAS en no-cors : une réponse opaque
+           (no-cors) est toujours considérée comme réussie par le navigateur,
+           même quand Google renvoie « Access Denied » parce que le script
+           n'est pas déployé en accès public. Résultat : aucun e-mail, aucun
+           événement d'agenda, et un faux « envoyé » côté client. En CORS,
+           l'échec est visible et le repli FormSubmit prend vraiment le relais. */
+        fetch(googleScriptUrl, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(gsPayload),
+          redirect: "follow",
           keepalive: true
-        }).catch(function () {});
-      } catch (notifyError) {}
+        })
+          .then(function (r) {
+            if (!r || !r.ok) throw new Error('Google Apps Script HTTP ' + (r ? r.status : '?'));
+            return r.text().catch(function () { return ''; });
+          })
+          .then(function (body) {
+            /* Le script déployé « Tout le monde » répond en JSON/texte.
+               Une page de connexion Google signale un déploiement privé. */
+            if (/accounts\.google\.com|Access Denied|Autorisation requise/i.test(body || '')) {
+              throw new Error('Google Apps Script non public (déploiement restreint)');
+            }
+            /* Compte rendu détaillé du script : indique mail restaurant,
+               mail client et création de l'événement d'agenda. */
+            var report = null;
+            try { report = JSON.parse(body); } catch (eJson) {}
+            /* Mode dépannage : reservation.html?debug=1 affiche à l'écran le
+               compte rendu renvoyé par le script, pour pouvoir le recopier
+               sans ouvrir la console. Invisible en usage normal. */
+            if (/[?&]debug=1/.test(location.search)) {
+              var boite = document.createElement('pre');
+              boite.style.cssText = 'position:fixed;left:10px;right:10px;bottom:10px;z-index:99999;max-height:45vh;overflow:auto;background:#111;color:#0f0;padding:12px;border-radius:8px;font-size:12px;white-space:pre-wrap;';
+              boite.textContent = 'Compte rendu du script :\n' + (body || '(réponse vide)');
+              document.body.appendChild(boite);
+            }
+            if (report) {
+              console.log('[Notification Google Apps Script] Compte rendu', report);
+              if (report.clientMail === false && mail.value.trim()) {
+                console.warn('[Notification] Mail client NON envoyé par le script. Adresse vue par le script :', report.clientEmailUsed, '— erreurs :', report.errors);
+              }
+              if (report.calendar === false) {
+                console.warn('[Notification] Événement Google Agenda non créé —', report.errors);
+              }
+            } else {
+              console.log('[Notification Google Apps Script] Envoyée avec succès', body);
+            }
+            if (callback) callback(true);
+          })
+          .catch(function (err) {
+            /* Google Apps Script répond par une redirection 302 vers
+               script.googleusercontent.com. Certains navigateurs refusent
+               cette redirection en mode CORS : la requête est alors bloquée
+               côté lecture, alors que le script l'aurait parfaitement
+               traitée. On la renvoie donc en mode no-cors, qui ne permet pas
+               de lire la réponse mais achemine bien la réservation : c'est
+               ce canal qui déclenche le mail restaurant, le mail client et
+               l'événement d'agenda. FormSubmit ne sert que si Google est
+               réellement injoignable. */
+            console.warn('[Notification Google Apps Script] Lecture CORS impossible, nouvel envoi en no-cors', err);
+            if (/[?&]debug=1/.test(location.search)) {
+              var boiteErr = document.createElement('pre');
+              boiteErr.style.cssText = 'position:fixed;left:10px;right:10px;bottom:10px;z-index:99999;max-height:45vh;overflow:auto;background:#111;color:#f90;padding:12px;border-radius:8px;font-size:12px;white-space:pre-wrap;';
+              boiteErr.textContent = 'Réponse du script illisible (CORS) : ' + err +
+                '\nLa réservation est renvoyée en mode no-cors ; le compte rendu ne peut pas être lu depuis le navigateur.';
+              document.body.appendChild(boiteErr);
+            }
+            fetch(googleScriptUrl, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: JSON.stringify(gsPayload),
+              keepalive: true
+            })
+              .then(function () {
+                console.log('[Notification Google Apps Script] Envoi no-cors transmis');
+                if (callback) callback(true);
+              })
+              .catch(function (err2) {
+                console.warn('[Notification Google Apps Script injoignable, repli FormSubmit]', err2);
+                sendViaFormSubmit(callback);
+              });
+          });
+      } else if (web3Key) {
+        var web3Payload = {
+          access_key: web3Key,
+          subject: sujetRestaurant,
+          from_name: "La Colline Gambetta",
+          "Nom pour la réservation": savedNomComplet,
+          "Téléphone": phone.value.trim(),
+          "E-mail": mail.value.trim() || "Non renseigné",
+          "Date": dateFr,
+          "Heure": heureFr,
+          "Couverts": couvertsFr,
+          "Préférence": prefFr,
+          "Message": msg || "—",
+          "Langue du client": langueClient,
+          "Récapitulatif": corpsRestaurant
+        };
+        if (mail.value.trim()) {
+          web3Payload.email = mail.value.trim();
+          web3Payload.replyto = mail.value.trim();
+        }
+
+        fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(web3Payload),
+          keepalive: true
+        })
+          .then(function (r) { return r.json().catch(function () { return {}; }); })
+          .then(function (data) {
+            console.log('[Notification Web3Forms]', data);
+            if (mail.value.trim()) {
+              sendViaFormSubmit(callback);
+            } else if (callback) {
+              callback(true);
+            }
+          })
+          .catch(function (err) {
+            console.warn('[Notification Web3Forms error, repli FormSubmit]', err);
+            sendViaFormSubmit(callback);
+          });
+      } else {
+        sendViaFormSubmit(callback);
+      }
+    }
+
+    function sendViaFormSubmit(callback) {
+      var fsData = {
+        name: savedNomComplet,
+        _subject: sujetRestaurant,
+        _template: "box",
+        _captcha: "false",
+        "Nom pour la réservation": savedNomComplet,
+        "Téléphone": phone.value.trim(),
+        "Date": dateFr,
+        "Heure": heureFr,
+        "Couverts": couvertsFr,
+        "Préférence": prefFr,
+        "Message": msg || "—",
+        "Langue du client": langueClient,
+        "Récapitulatif": corpsRestaurant
+      };
+      if (mail.value.trim()) {
+        fsData.email = mail.value.trim();
+        fsData._replyto = mail.value.trim();
+        fsData._autoresponse = autoresponseBody;
+      }
+
+      fetch(FALLBACK_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(fsData),
+        keepalive: true
+      })
+        .then(function (r) { return r.json().catch(function () { return {}; }); })
+        .then(function (data) {
+          console.log('[Notification FormSubmit]', data);
+          if (callback) callback(true);
+        })
+        .catch(function (err) {
+          console.warn('[Notification FormSubmit error]', err);
+          if (callback) callback(false);
+        });
     }
 
     if (FIREBASE_CAPACITY) {
-      /* Firebase Spark ne nécessite pas de Cloud Function : le SDK du
-         navigateur réalise une transaction Firestore atomique. */
       function waitForFirebaseApi() {
         if (window.LCGFirebaseReservation) return Promise.resolve(window.LCGFirebaseReservation);
         return new Promise(function (resolve, reject) {
           var timer = setTimeout(function () {
             window.removeEventListener('lcg-firebase-ready', ready);
-            reject(new Error('Firebase is not ready'));
-          }, 10000);
+            if (window.LCGFirebaseReservation) resolve(window.LCGFirebaseReservation);
+            else reject(new Error('Firebase timeout'));
+          }, 1500);
           function ready() {
             clearTimeout(timer);
             window.removeEventListener('lcg-firebase-ready', ready);
@@ -2356,16 +4441,17 @@ html[lang="uk"] .thanks__sign {
           window.addEventListener('lcg-firebase-ready', ready);
         });
       }
+
       waitForFirebaseApi()
         .then(function (firebaseApi) {
           return firebaseApi.reserve({
-            date: dateEl.value,
-            heure: timeEl.value,
-            couverts: guestsEl.value,
-            nom: name.value.trim(),
+            date: savedDate,
+            heure: savedTime,
+            couverts: savedNb,
+            nom: savedNomComplet,
             telephone: phone.value.trim(),
             email: mail.value.trim(),
-            preference: pref,
+            preference: prefFr,
             message: msg
           });
         })
@@ -2374,89 +4460,78 @@ html[lang="uk"] .thanks__sign {
           finish(true);
         })
         .catch(function (err) {
-          err.capacityFull = err.capacityFull || err.code === 'CAPACITY_FULL';
-          console.error('[réservation]', err);
-          finish(false, err);
+          if (err && (err.code === 'CAPACITY_FULL' || err.capacityFull)) {
+            err.capacityFull = true;
+            finish(false, err);
+          } else {
+            /* Never bypass the atomic capacity check with a direct email:
+               a Firebase failure is not a validated booking. */
+            console.warn('[réservation] Validation Firebase impossible; aucune réservation confirmée:', err);
+            finish(false, err);
+          }
         });
-    } else if (CENTRAL_CAPACITY) {
-      /* Mode API HTTP optionnel : réponse dans une iframe cachée. */
-      var responseFrame = document.createElement('iframe');
-      var responseName = 'lcg-reservation-response-' + Date.now();
-      responseFrame.name = responseName;
-      responseFrame.title = 'Réponse de réservation';
-      responseFrame.setAttribute('aria-hidden', 'true');
-      responseFrame.style.cssText = 'position:absolute;width:1px;height:1px;border:0;opacity:0;pointer-events:none;';
-      document.body.appendChild(responseFrame);
-
-      var transport = document.createElement('form');
-      transport.method = 'POST';
-      transport.action = ENDPOINT;
-      transport.target = responseName;
-      transport.style.display = 'none';
-      payload.forEach(function (value, key) {
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = value;
-        transport.appendChild(input);
-      });
-      document.body.appendChild(transport);
-
-      var received = false;
-      function cleanTransport() {
-        window.removeEventListener('message', receiveCapacityMessage);
-        if (transport.parentNode) transport.parentNode.removeChild(transport);
-        if (responseFrame.parentNode) responseFrame.parentNode.removeChild(responseFrame);
-      }
-      function receiveCapacityMessage(event) {
-        var data = event.data || {};
-        if (event.source !== responseFrame.contentWindow ||
-            data.source !== 'lcg-reservation-capacity' || !data.payload) return;
-        received = true;
-        cleanTransport();
-        var result = data.payload;
-        if (result.ok === true) {
-          notifyRestaurant();
-          finish(true);
-        } else {
-          var err = new Error(result.message || 'reservation failed');
-          err.capacityFull = result.code === 'CAPACITY_FULL';
-          finish(false, err);
-        }
-      }
-      window.addEventListener('message', receiveCapacityMessage);
-      transport.submit();
-
-      /* Une réponse bloquée ne doit pas laisser la barre indéfiniment en
-         mouvement. Surtout, aucun fallback courriel ne contourne alors la
-         capacité centrale. */
-      setTimeout(function () {
-        if (received) return;
-        cleanTransport();
-        finish(false, new Error('capacity endpoint timeout'));
-      }, 15000);
     } else {
-      fetch(ENDPOINT, {
-        method: 'POST',
-        body: payload,
-        headers: { 'Accept': 'application/json' }
-      })
-        .then(function (r) {
-          return r.json().catch(function () { return {}; }).then(function (data) {
-            if (!r.ok) {
-              var err = new Error(data.message || 'reservation failed');
-              throw err;
-            }
-            return data;
-          });
-        })
-        .then(function () { finish(true); })
-        .catch(function (err) { finish(false, err); });
+      sendDirect();
     }
   });
 })();
 </script>
 
 
+  <script src="assets/js/map-links.js"></script>
+<!-- quartier:js:debut -->
+<script>
+/* Itineraire RATP : arrivee = le restaurant, depart = la position exacte du
+   visiteur. La geolocalisation n'est demandee qu'au clic ; si elle est refusee,
+   indisponible ou trop lente, l'itineraire s'ouvre avec la seule arrivee. */
+(function () {
+  var ARRIVEE = '4, Rue Belgrand, 75, Paris';
+  var BASE = 'https://www.ratp.fr/itineraires?end=' + encodeURIComponent(ARRIVEE);
+  var liens = document.querySelectorAll('[data-ratp-itineraire]');
+  if (!liens.length) { return; }
+  Array.prototype.forEach.call(liens, function (lien) {
+    lien.setAttribute('href', BASE);
+    if (!navigator.geolocation) { return; }
+    lien.addEventListener('click', function (ev) {
+      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button) { return; }
+      ev.preventDefault();
+
+      var onglet = null;
+      try { onglet = window.open('about:blank', '_blank'); } catch (e) { onglet = null; }
+      if (onglet) { try { onglet.opener = null; } catch (e) {} }
+
+      var parti = false;
+      function ouvrir(url) {
+        if (parti) { return; }
+        parti = true;
+        if (onglet && !onglet.closed) { onglet.location.replace(url); }
+        else { window.open(url, '_blank', 'noopener'); }
+      }
+      var secours = setTimeout(function () { ouvrir(BASE); }, 9000);
+
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        var lat = pos.coords.latitude, lon = pos.coords.longitude;
+        fetch('https://api-adresse.data.gouv.fr/reverse/?lat=' + lat + '&lon=' + lon)
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) {
+            var p = d && d.features && d.features[0] && d.features[0].properties;
+            var depart = '';
+            if (p) {
+              var dep = String(p.postcode || '').slice(0, 2);
+              depart = [p.housenumber, p.street || p.name, dep, p.city]
+                .filter(function (x) { return x; }).join(', ');
+            }
+            clearTimeout(secours);
+            ouvrir(depart ? BASE + '&start=' + encodeURIComponent(depart) : BASE);
+          })
+          .catch(function () { clearTimeout(secours); ouvrir(BASE); });
+      }, function () {
+        clearTimeout(secours); ouvrir(BASE);
+      }, { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
+    });
+  });
+})();
+</script>
+<!-- quartier:js:fin -->
 </body>
 </html>

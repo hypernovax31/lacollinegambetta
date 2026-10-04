@@ -66,14 +66,14 @@ export function localFontCss(root) {
   return { css, files, faces: faces.map(f => f.match(/font-family:'([^']+)';font-style:(\w+);font-weight:(\d+)/).slice(1, 4).join(' ')) };
 }
 
-/** Intercepte les requêtes Google Fonts du contexte et répond avec @fontsource. */
+/** Intercepte les requêtes Google Fonts et les fichiers de polices locales du contexte et répond avec @fontsource. */
 export async function installLocalFonts(context, root) {
   const local = localFontCss(root);
   if (!local) {
     console.warn(`⚠ @fontsource absent de node_modules : les rendus sortiront en police de repli.\n  Installons les mêmes fontes que le site : npm install`);
     return 0;
   }
-  await context.route(/fonts\.(googleapis|gstatic)\.com/, async (route) => {
+  await context.route(/(fonts\.(googleapis|gstatic)\.com|__localfont)/, async (route) => {
     const url = route.request().url();
     const cut = url.indexOf(MARKER);
     if (cut > -1) {

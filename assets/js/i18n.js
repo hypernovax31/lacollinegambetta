@@ -25,6 +25,9 @@
   var STORE_KEY = 'lcg-lang';
   var DICTS = {
     en: {
+      "Nom pour la réservation": "Reservation name",
+      "Nom de la réservation": "Reservation name",
+
       'pour': 'for',
       'Envoi de votre réservation…': 'Sending your reservation…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'Automatic sending did not go through: your mail app opens with the request, or call us directly.',
@@ -34,6 +37,11 @@
       'Au plaisir de vous recevoir très prochainement,': 'We look forward to welcoming you very soon,',
       'L’équipe de La Colline Gambetta': 'The team at La Colline Gambetta',
       'Une question ? Appelez-nous au': 'A question? Call us on',
+      'Toutes nos excuses': 'Our sincere apologies',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': 'All our tables are already fully booked for this time slot.',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': 'We would be delighted to welcome you a little earlier, a little later, or on another date!',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': 'Feel free to choose another time slot or reach out to us directly.',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': 'Prefer to book by phone or have a question? Call us on',
       'Votre nom': 'Your name',
       "Fermer": "Close",
       "Photo précédente": "Previous photo",
@@ -47,6 +55,10 @@
       "✦ 17h → 23h ✦": "✦ 5 PM → 11 PM ✦",
       "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Directions",
+      "Appeler le restaurant": "Call the restaurant",
+      "Ouvrir Instagram": "Open Instagram",
+      "Instagram": "Instagram",
+      "Envoyer un e-mail": "Send an email",
       "Recentrer sur le restaurant": "Recentre on the restaurant",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — Gambetta metro",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "Map: 4 rue Belgrand, Paris 20th",
@@ -64,13 +76,13 @@
       "Retour à la carte": "Back to the menu",
       "RÉSERVATION": "BOOKING",
       "Réserver ma table": "Book a table",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "Tell us when, and for how many — we confirm by phone or email.",
       "Nom": "Name",
       "Votre nom": "Your name",
       "Merci d’indiquer votre nom.": "Please enter your name.",
       "Téléphone": "Phone",
       "Merci d’indiquer un numéro où vous joindre.": "Please enter a number where we can reach you.",
-      "Mail": "Email",
+      "E-mail": "Email",
+      "Email": "Email",
       "(facultatif)": "(optional)",
       "Cette adresse ne semble pas valide.": "This address does not look valid.",
       "Date": "Date",
@@ -79,7 +91,7 @@
       "Choisir…": "Choose…",
       "Merci de choisir une heure.": "Please choose a time.",
       "Nombre de personnes": "Number of guests",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1 guest = 1 table • 2 guests = 1 table • 3 or 4 guests = 2 tables. For more than 10 guests, please call us: we will arrange it with you.",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "For more than 10 guests, please call us: we will arrange it with you.",
       "Préférence": "Preference",
       "Sans préférence": "No preference",
       "En terrasse": "On the terrace",
@@ -94,6 +106,17 @@
       "Samedi": "Saturday",
       "Dimanche": "Sunday",
       "Cuisine": "Kitchen",
+      "Mentions légales": "Legal notice",
+      "Confidentialité": "Privacy",
+      "Accueil": "Home",
+      "Réserver": "Book",
+      "Réserver une table": "Book a table",
+      "Informations légales": "Legal information",
+      "Navigation secondaire": "Secondary navigation",
+      "Langue": "Language",
+      "Choisir la langue": "Choose language",
+      "Horaires de cuisine et menu petit-déjeuner": "Kitchen hours and breakfast menu",
+      "Menu petit-déjeuner jusqu’à 12h": "Breakfast menu until 12 PM",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — Book a table",
       "Page de Garde": "Home",
       "Menu & Carte": "Menu & Drinks",
@@ -184,8 +207,8 @@
       "Riz basmati": "Basmati rice",
       "Fleur de sel, sauce au choix": "Fleur de sel, sauce of your choice",
       "Sauce au choix": "Sauce of your choice",
-      "Selon arrivage": "According to the daily catch",
-      "selon arrivage": "according to the daily catch",
+      "Selon l'arrivage": "According to the daily catch",
+      "selon l'arrivage": "according to the daily catch",
       "Sauce champignons, pâtes": "Mushroom sauce, pasta",
       "Burger La Colline": "La Colline Burger",
       "Burger Chicken Croustillant": "Crispy Chicken Burger",
@@ -297,11 +320,13 @@
       "FAIT MAISON • SERVICE CONTINU • TERRASSE": "HOMEMADE FOOD • ALL-DAY SERVICE • TERRACE",
       "BAR • RESTAURANT • PARIS 20ᵉ": "BAR • RESTAURANT • PARIS 20TH ARR.",
       "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta": "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta",
-      "MÉTRO GAMBETTA": "GAMBETTA METRO",
+      "MÉTRO GAMBETTA • LIGNE 3": "Gambetta metro • Line 3",
       "Photographies non contractuelles, suggestions de présentation • Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé": "Photographs are for illustration only, serving suggestions • Allergen information available on request • Alcohol abuse is dangerous for your health",
       "Photographie non contractuelle — suggestion de présentation.": "Photograph for illustration only — serving suggestion.",
       "Tout voir": "Show all",
       "Tout masquer": "Hide all",
+      "Voir plus": "Show all",
+      "Voir moins": "Hide all",
       "Voir les photos": "Show photos",
       "Masquer les photos": "Hide photos",
       "Photographies non contractuelles, suggestions de présentation": "Photographs are for illustration only, serving suggestions",
@@ -470,6 +495,9 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ NET PRICES IN EUROS • SERVICE INCLUDED ✦"
     },
     es: {
+      "Nom pour la réservation": "Nombre de la reserva",
+      "Nom de la réservation": "Nombre de la reserva",
+
       'pour': 'para',
       'Envoi de votre réservation…': 'Enviando su reserva…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'El envío automático no se completó: su correo se abre con la solicitud, o llámenos directamente.',
@@ -479,6 +507,11 @@
       'Au plaisir de vous recevoir très prochainement,': 'Con mucho gusto le recibiremos muy pronto,',
       'L’équipe de La Colline Gambetta': 'El equipo de La Colline Gambetta',
       'Une question ? Appelez-nous au': '¿Alguna pregunta? Llámenos al',
+      'Toutes nos excuses': 'Nuestras más sinceras disculpas',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': 'Todas nuestras mesas ya están reservadas para este horario.',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': '¡Estaremos encantados de recibirle un poco antes, un poco más tarde o en otra fecha!',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': 'No dude en elegir otro horario o ponerse en contacto con nosotros.',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': '¿Desea reservar por teléfono o tiene alguna consulta? Llámenos al',
       'Votre nom': 'Su nombre',
       "Fermer": "Cerrar",
       "Photo précédente": "Foto anterior",
@@ -492,6 +525,10 @@
       "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
       "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Cómo llegar",
+      "Appeler le restaurant": "Llamar al restaurante",
+      "Ouvrir Instagram": "Abrir Instagram",
+      "Instagram": "Instagram",
+      "Envoyer un e-mail": "Enviar un correo electrónico",
       "Recentrer sur le restaurant": "Centrar en el restaurante",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 París — metro Gambetta",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "Plano: 4 rue Belgrand, París 20",
@@ -509,13 +546,13 @@
       "Retour à la carte": "Volver a la carta",
       "RÉSERVATION": "RESERVA",
       "Réserver ma table": "Reservar mesa",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "Díganos cuándo y para cuántos: confirmamos por teléfono o correo.",
       "Nom": "Nombre",
       "Votre nom": "Su nombre",
       "Merci d’indiquer votre nom.": "Indique su nombre, por favor.",
       "Téléphone": "Teléfono",
       "Merci d’indiquer un numéro où vous joindre.": "Indique un número donde localizarle.",
-      "Mail": "Correo electrónico",
+      "E-mail": "Correo electrónico",
+      "Email": "Correo electrónico",
       "(facultatif)": "(opcional)",
       "Cette adresse ne semble pas valide.": "Esta dirección no parece válida.",
       "Date": "Fecha",
@@ -524,7 +561,7 @@
       "Choisir…": "Elegir…",
       "Merci de choisir une heure.": "Elija una hora.",
       "Nombre de personnes": "Número de personas",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1 persona = 1 mesa • 2 personas = 1 mesa • 3 o 4 personas = 2 mesas. Para más de 10 personas, llámenos: lo organizamos con usted.",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "Para más de 10 personas, llámenos: lo organizamos con usted.",
       "Préférence": "Preferencia",
       "Sans préférence": "Sin preferencia",
       "En terrasse": "En la terraza",
@@ -539,6 +576,17 @@
       "Samedi": "Sábado",
       "Dimanche": "Domingo",
       "Cuisine": "Cocina",
+      "Mentions légales": "Aviso legal",
+      "Confidentialité": "Privacidad",
+      "Accueil": "Inicio",
+      "Réserver": "Reservar",
+      "Réserver une table": "Reservar una mesa",
+      "Informations légales": "Información legal",
+      "Navigation secondaire": "Navegación secundaria",
+      "Langue": "Idioma",
+      "Choisir la langue": "Elegir idioma",
+      "Horaires de cuisine et menu petit-déjeuner": "Horarios de cocina y menú de desayuno",
+      "Menu petit-déjeuner jusqu’à 12h": "Menú de desayuno hasta las 12:00",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — Reservar mesa",
       "Page de Garde": "Inicio",
       "Menu & Carte": "Carta y menús",
@@ -628,8 +676,8 @@
       "Riz basmati": "Arroz basmati",
       "Fleur de sel, sauce au choix": "Flor de sal, salsa a elegir",
       "Sauce au choix": "Salsa a elegir",
-      "Selon arrivage": "Según la pesca del día",
-      "selon arrivage": "según la pesca del día",
+      "Selon l'arrivage": "Según la pesca del día",
+      "selon l'arrivage": "según la pesca del día",
       "Sauce champignons, pâtes": "Salsa de champiñones, pasta",
       "Burger La Colline": "Burger La Colline",
       "Burger Chicken Croustillant": "Burger de pollo crujiente",
@@ -728,6 +776,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Fotografía no contractual — sugerencia de presentación.",
       "Tout voir": "Ver todo",
       "Tout masquer": "Ocultar todo",
+      "Voir plus": "Ver todo",
+      "Voir moins": "Ocultar todo",
       "Voir les photos": "Ver las fotos",
       "Masquer les photos": "Ocultar las fotos",
       "Photographies non contractuelles, suggestions de présentation": "Fotografías no contractuales, sugerencias de presentación",
@@ -912,9 +962,12 @@
       "4 RUE BELGRAND, 75020 PARIS": "4 RUE BELGRAND, 75020 PARIS",
       "✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦": "✦ COMIDA CASERA • SERVICIO CONTINUO • TERRAZA ✦",
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ PRECIOS NETOS EN EUROS • SERVICIO INCLUIDO ✦",
-      "MÉTRO GAMBETTA": "Metro Gambetta"
+      "MÉTRO GAMBETTA • LIGNE 3": "Metro Gambetta • Línea 3"
     },
     de: {
+      "Nom pour la réservation": "Name der Reservierung",
+      "Nom de la réservation": "Name der Reservierung",
+
       'pour': 'für',
       'Envoi de votre réservation…': 'Ihre Reservierung wird gesendet…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'Der automatische Versand ist fehlgeschlagen: Ihr Mailprogramm öffnet sich mit der Anfrage, oder rufen Sie uns direkt an.',
@@ -924,6 +977,11 @@
       'Au plaisir de vous recevoir très prochainement,': 'Wir freuen uns darauf, Sie sehr bald zu empfangen,',
       'L’équipe de La Colline Gambetta': 'Das Team von La Colline Gambetta',
       'Une question ? Appelez-nous au': 'Eine Frage? Rufen Sie uns an unter',
+      'Toutes nos excuses': 'Bitte entschuldigen Sie',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': 'Für diesen Zeitraum sind bereits alle Tische reserviert.',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': 'Wir würden uns sehr freuen, Sie etwas früher, etwas später oder an einem anderen Wunschtermin zu begrüßen!',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': 'Wählen Sie gerne einen anderen Zeitraum oder kontaktieren Sie uns direkt.',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': 'Möchten Sie telefonisch reservieren oder haben Sie Fragen? Rufen Sie uns an unter',
       'Votre nom': 'Ihr Name',
       "Fermer": "Schließen",
       "Photo précédente": "Vorheriges Foto",
@@ -937,6 +995,10 @@
       "✦ 17h → 23h ✦": "✦ 17 → 23 Uhr ✦",
       "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Route",
+      "Appeler le restaurant": "Restaurant anrufen",
+      "Ouvrir Instagram": "Instagram öffnen",
+      "Instagram": "Instagram",
+      "Envoyer un e-mail": "E-Mail senden",
       "Recentrer sur le restaurant": "Auf das Restaurant zentrieren",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — Metro Gambetta",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "Karte: 4 rue Belgrand, Paris 20.",
@@ -954,13 +1016,13 @@
       "Retour à la carte": "Zurück zur Karte",
       "RÉSERVATION": "RESERVIERUNG",
       "Réserver ma table": "Tisch reservieren",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "Sagen Sie uns wann und für wie viele — wir bestätigen per Telefon oder E-Mail.",
       "Nom": "Name",
       "Votre nom": "Ihr Name",
       "Merci d’indiquer votre nom.": "Bitte geben Sie Ihren Namen an.",
       "Téléphone": "Telefon",
       "Merci d’indiquer un numéro où vous joindre.": "Bitte geben Sie eine Nummer an, unter der wir Sie erreichen.",
-      "Mail": "E-Mail",
+      "E-mail": "E-Mail",
+      "Email": "E-Mail",
       "(facultatif)": "(optional)",
       "Cette adresse ne semble pas valide.": "Diese Adresse scheint ungültig zu sein.",
       "Date": "Datum",
@@ -969,7 +1031,7 @@
       "Choisir…": "Wählen…",
       "Merci de choisir une heure.": "Bitte wählen Sie eine Uhrzeit.",
       "Nombre de personnes": "Anzahl der Gäste",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1 Gast = 1 Tisch • 2 Gäste = 1 Tisch • 3 oder 4 Gäste = 2 Tische. Ab 10 Gästen rufen Sie uns bitte an: Wir planen es gemeinsam.",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "Ab 10 Gästen rufen Sie uns bitte an: Wir planen es gemeinsam.",
       "Préférence": "Wunsch",
       "Sans préférence": "Keine Präferenz",
       "En terrasse": "Auf der Terrasse",
@@ -984,6 +1046,17 @@
       "Samedi": "Samstag",
       "Dimanche": "Sonntag",
       "Cuisine": "Küche",
+      "Mentions légales": "Impressum",
+      "Confidentialité": "Datenschutz",
+      "Accueil": "Startseite",
+      "Réserver": "Reservieren",
+      "Réserver une table": "Tisch reservieren",
+      "Informations légales": "Rechtliche Informationen",
+      "Navigation secondaire": "Sekundärnavigation",
+      "Langue": "Sprache",
+      "Choisir la langue": "Sprache wählen",
+      "Horaires de cuisine et menu petit-déjeuner": "Küchenzeiten und Frühstücksmenü",
+      "Menu petit-déjeuner jusqu’à 12h": "Frühstücksmenü bis 12 Uhr",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — Tisch reservieren",
       "Page de Garde": "Startseite",
       "Menu & Carte": "Speise- & Getränkekarte",
@@ -1073,8 +1146,8 @@
       "Riz basmati": "Basmatireis",
       "Fleur de sel, sauce au choix": "Fleur de Sel, Sauce nach Wahl",
       "Sauce au choix": "Sauce nach Wahl",
-      "Selon arrivage": "Je nach Tagesfang",
-      "selon arrivage": "je nach Tagesfang",
+      "Selon l'arrivage": "Je nach Tagesfang",
+      "selon l'arrivage": "je nach Tagesfang",
       "Sauce champignons, pâtes": "Pilzsauce, Teigwaren",
       "Burger La Colline": "Burger La Colline",
       "Burger Chicken Croustillant": "Crispy-Chicken-Burger",
@@ -1175,6 +1248,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Abbildung unverbindlich — Serviervorschlag.",
       "Tout voir": "Alle anzeigen",
       "Tout masquer": "Alle ausblenden",
+      "Voir plus": "Alle anzeigen",
+      "Voir moins": "Alle ausblenden",
       "Voir les photos": "Fotos anzeigen",
       "Masquer les photos": "Fotos ausblenden",
       "Photographies non contractuelles, suggestions de présentation": "Abbildungen unverbindlich, Serviervorschläge",
@@ -1357,9 +1432,12 @@
       "4 RUE BELGRAND, 75020 PARIS": "4 RUE BELGRAND, 75020 PARIS",
       "✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦": "✦ HAUSGEMACHT • DURCHGEHENDER SERVICE • TERRASSE ✦",
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ NETTOPREISE IN EURO • SERVICE INKLUSIVE ✦",
-      "MÉTRO GAMBETTA": "U-Bahnhof Gambetta"
+      "MÉTRO GAMBETTA • LIGNE 3": "U-Bahn Gambetta • Linie 3"
     },
     it: {
+      "Nom pour la réservation": "Nome della prenotazione",
+      "Nom de la réservation": "Nome della prenotazione",
+
       'pour': 'per',
       'Envoi de votre réservation…': 'Invio della prenotazione…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'L\'invio automatico non è riuscito: la sua posta si apre con la richiesta, oppure ci chiami direttamente.',
@@ -1369,6 +1447,11 @@
       'Au plaisir de vous recevoir très prochainement,': 'Con il piacere di accoglierla molto presto,',
       'L’équipe de La Colline Gambetta': 'Il team de La Colline Gambetta',
       'Une question ? Appelez-nous au': 'Una domanda? Ci chiami al',
+      'Toutes nos excuses': 'Le nostre più sincere scuse',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': 'Tutti i nostri tavoli sono già occupati per questa fascia oraria.',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': 'Saremo felicissimi di accogliervi un po’ prima, un po’ più tardi o in un’altra data!',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': 'Non esiti a scegliere un altro orario o a contattarci direttamente.',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': 'Desidera prenotare telefonicamente o ha una domanda? Ci chiami al',
       'Votre nom': 'Il suo nome',
       "Fermer": "Chiudi",
       "Photo précédente": "Foto precedente",
@@ -1382,6 +1465,10 @@
       "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
       "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Itinerario",
+      "Appeler le restaurant": "Chiama il ristorante",
+      "Ouvrir Instagram": "Apri Instagram",
+      "Instagram": "Instagram",
+      "Envoyer un e-mail": "Invia un’e-mail",
       "Recentrer sur le restaurant": "Centra sul ristorante",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Parigi — metrò Gambetta",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "Mappa: 4 rue Belgrand, Parigi 20",
@@ -1399,13 +1486,13 @@
       "Retour à la carte": "Torna al menù",
       "RÉSERVATION": "PRENOTAZIONE",
       "Réserver ma table": "Prenota un tavolo",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "Diteci quando e per quante persone — confermiamo per telefono o e-mail.",
       "Nom": "Nome",
       "Votre nom": "Il vostro nome",
       "Merci d’indiquer votre nom.": "Indicate il vostro nome.",
       "Téléphone": "Telefono",
       "Merci d’indiquer un numéro où vous joindre.": "Indicate un numero dove possiamo raggiungervi.",
-      "Mail": "E-mail",
+      "E-mail": "E-mail",
+      "Email": "E-mail",
       "(facultatif)": "(facoltativo)",
       "Cette adresse ne semble pas valide.": "Questo indirizzo non sembra valido.",
       "Date": "Data",
@@ -1414,7 +1501,7 @@
       "Choisir…": "Scegliere…",
       "Merci de choisir une heure.": "Scegliete un orario.",
       "Nombre de personnes": "Numero di persone",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1 persona = 1 tavolo • 2 persone = 1 tavolo • 3 o 4 persone = 2 tavoli. Oltre le 10 persone chiamateci: organizziamo tutto insieme.",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "Oltre le 10 persone chiamateci: organizziamo tutto insieme.",
       "Préférence": "Preferenza",
       "Sans préférence": "Nessuna preferenza",
       "En terrasse": "In terrazza",
@@ -1429,6 +1516,17 @@
       "Samedi": "Sabato",
       "Dimanche": "Domenica",
       "Cuisine": "Cucina",
+      "Mentions légales": "Note legali",
+      "Confidentialité": "Privacy",
+      "Accueil": "Home",
+      "Réserver": "Prenota",
+      "Réserver une table": "Prenota un tavolo",
+      "Informations légales": "Informazioni legali",
+      "Navigation secondaire": "Navigazione secondaria",
+      "Langue": "Lingua",
+      "Choisir la langue": "Scegli la lingua",
+      "Horaires de cuisine et menu petit-déjeuner": "Orari della cucina e menu della colazione",
+      "Menu petit-déjeuner jusqu’à 12h": "Menu colazione fino alle 12:00",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — Prenota un tavolo",
       "Page de Garde": "Home",
       "Menu & Carte": "Menù e carta",
@@ -1518,8 +1616,8 @@
       "Riz basmati": "Riso basmati",
       "Fleur de sel, sauce au choix": "Fleur de sel, salsa a scelta",
       "Sauce au choix": "Salsa a scelta",
-      "Selon arrivage": "Secondo la pesca del giorno",
-      "selon arrivage": "secondo la pesca del giorno",
+      "Selon l'arrivage": "Secondo la pesca del giorno",
+      "selon l'arrivage": "secondo la pesca del giorno",
       "Sauce champignons, pâtes": "Salsa ai funghi, pasta",
       "Burger La Colline": "Burger La Colline",
       "Burger Chicken Croustillant": "Burger di pollo croccante",
@@ -1619,6 +1717,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Fotografia non contrattuale — suggerimento di presentazione.",
       "Tout voir": "Mostra tutto",
       "Tout masquer": "Nascondi tutto",
+      "Voir plus": "Mostra tutto",
+      "Voir moins": "Nascondi tutto",
       "Voir les photos": "Mostra le foto",
       "Masquer les photos": "Nascondi le foto",
       "Photographies non contractuelles, suggestions de présentation": "Fotografie non contrattuali, suggerimenti di presentazione",
@@ -1802,9 +1902,12 @@
       "4 RUE BELGRAND, 75020 PARIS": "4 RUE BELGRAND, 75020 PARIS",
       "✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦": "✦ CUCINA CASARECCIA • SERVIZIO CONTINUO • TERRAZZA ✦",
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ PREZZI NETTI IN EURO • SERVIZIO INCLUSO ✦",
-      "MÉTRO GAMBETTA": "Metro Gambetta"
+      "MÉTRO GAMBETTA • LIGNE 3": "Metro Gambetta • Linea 3"
     },
     pt: {
+      "Nom pour la réservation": "Nome da reserva",
+      "Nom de la réservation": "Nome da reserva",
+
       'pour': 'para',
       'Envoi de votre réservation…': 'A enviar a sua reserva…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'O envio automático não foi concluído: o seu email abre com o pedido, ou ligue-nos diretamente.',
@@ -1814,6 +1917,11 @@
       'Au plaisir de vous recevoir très prochainement,': 'Com o prazer de o receber muito em breve,',
       'L’équipe de La Colline Gambetta': 'A equipa de La Colline Gambetta',
       'Une question ? Appelez-nous au': 'Alguma questão? Ligue-nos para',
+      'Toutes nos excuses': 'As nossas sinceras desculpas',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': 'Todas as nossas mesas já se encontram reservadas para este horário.',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': 'Teremos todo o prazer em recebê-lo um pouco mais cedo, mais tarde ou noutra data!',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': 'Não hesite em escolher outro horário ou em contactar-nos.',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': 'Prefere reservar por telefone ou tem alguma dúvida? Ligue-nos para',
       'Votre nom': 'O seu nome',
       "Fermer": "Fechar",
       "Photo précédente": "Foto anterior",
@@ -1827,6 +1935,10 @@
       "✦ 17h → 23h ✦": "✦ 17h → 23h ✦",
       "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Como chegar",
+      "Appeler le restaurant": "Ligar para o restaurante",
+      "Ouvrir Instagram": "Abrir o Instagram",
+      "Instagram": "Instagram",
+      "Envoyer un e-mail": "Enviar um e-mail",
       "Recentrer sur le restaurant": "Centrar no restaurante",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — metro Gambetta",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "Mapa: 4 rue Belgrand, Paris 20",
@@ -1844,13 +1956,13 @@
       "Retour à la carte": "Voltar ao menu",
       "RÉSERVATION": "RESERVA",
       "Réserver ma table": "Reservar mesa",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "Diga-nos quando e para quantos — confirmamos por telefone ou e-mail.",
       "Nom": "Nome",
       "Votre nom": "O seu nome",
       "Merci d’indiquer votre nom.": "Indique o seu nome.",
       "Téléphone": "Telefone",
       "Merci d’indiquer un numéro où vous joindre.": "Indique um número onde o possamos contactar.",
-      "Mail": "E-mail",
+      "E-mail": "E-mail",
+      "Email": "E-mail",
       "(facultatif)": "(opcional)",
       "Cette adresse ne semble pas valide.": "Este endereço não parece válido.",
       "Date": "Data",
@@ -1859,7 +1971,7 @@
       "Choisir…": "Escolher…",
       "Merci de choisir une heure.": "Escolha uma hora.",
       "Nombre de personnes": "Número de pessoas",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1 pessoa = 1 mesa • 2 pessoas = 1 mesa • 3 ou 4 pessoas = 2 mesas. Acima de 10 pessoas, ligue-nos: organizamos consigo.",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "Acima de 10 pessoas, ligue-nos: organizamos consigo.",
       "Préférence": "Preferência",
       "Sans préférence": "Sem preferência",
       "En terrasse": "Na esplanada",
@@ -1874,6 +1986,17 @@
       "Samedi": "Sábado",
       "Dimanche": "Domingo",
       "Cuisine": "Cozinha",
+      "Mentions légales": "Aviso legal",
+      "Confidentialité": "Privacidade",
+      "Accueil": "Início",
+      "Réserver": "Reservar",
+      "Réserver une table": "Reservar uma mesa",
+      "Informations légales": "Informações legais",
+      "Navigation secondaire": "Navegação secundária",
+      "Langue": "Idioma",
+      "Choisir la langue": "Escolher idioma",
+      "Horaires de cuisine et menu petit-déjeuner": "Horário da cozinha e menu de pequeno-almoço",
+      "Menu petit-déjeuner jusqu’à 12h": "Menu de pequeno-almoço até às 12h00",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — Reservar mesa",
       "Page de Garde": "Início",
       "Menu & Carte": "Carta e menus",
@@ -1963,8 +2086,8 @@
       "Riz basmati": "Arroz basmati",
       "Fleur de sel, sauce au choix": "Flor de sal, molho à escolha",
       "Sauce au choix": "Molho à escolha",
-      "Selon arrivage": "Conforme a pesca do dia",
-      "selon arrivage": "conforme a pesca do dia",
+      "Selon l'arrivage": "Conforme a pesca do dia",
+      "selon l'arrivage": "conforme a pesca do dia",
       "Sauce champignons, pâtes": "Molho de cogumelos, massa",
       "Burger La Colline": "Burger La Colline",
       "Burger Chicken Croustillant": "Burger de frango crocante",
@@ -2064,6 +2187,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Fotografia não contratual — sugestão de apresentação.",
       "Tout voir": "Ver tudo",
       "Tout masquer": "Ocultar tudo",
+      "Voir plus": "Ver tudo",
+      "Voir moins": "Ocultar tudo",
       "Voir les photos": "Ver as fotos",
       "Masquer les photos": "Ocultar as fotos",
       "Photographies non contractuelles, suggestions de présentation": "Fotografias não contratuais, sugestões de apresentação",
@@ -2247,9 +2372,12 @@
       "4 RUE BELGRAND, 75020 PARIS": "4 RUE BELGRAND, 75020 PARIS",
       "✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦": "✦ COMIDA CASEIRA • SERVIÇO CONTÍNUO • ESPLANADA ✦",
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ PREÇOS LÍQUIDOS EM EUROS • SERVIÇO INCLUÍDO ✦",
-      "MÉTRO GAMBETTA": "Metro Gambetta"
+      "MÉTRO GAMBETTA • LIGNE 3": "Metro Gambetta • Linha 3"
     },
     nl: {
+      "Nom pour la réservation": "Naam van de reservering",
+      "Nom de la réservation": "Naam van de reservering",
+
       'pour': 'voor',
       'Envoi de votre réservation…': 'Uw reservering wordt verstuurd…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'Automatisch versturen is mislukt: uw mailprogramma opent met de aanvraag, of bel ons direct.',
@@ -2259,6 +2387,11 @@
       'Au plaisir de vous recevoir très prochainement,': 'Wij verheugen ons erop u zeer binnenkort te ontvangen,',
       'L’équipe de La Colline Gambetta': 'Het team van La Colline Gambetta',
       'Une question ? Appelez-nous au': 'Een vraag? Bel ons op',
+      'Toutes nos excuses': 'Onze welgemeende excuses',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': 'Al onze tafels zijn al gereserveerd voor dit tijdslot.',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': 'We verwelkomen u heel graag iets eerder, iets later of op een andere datum!',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': 'Kies gerust een ander tijdstip of neem rechtstreeks contact met ons op.',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': 'Wilt u telefonisch reserveren of heeft u een vraag? Bel ons op',
       'Votre nom': 'Uw naam',
       "Fermer": "Sluiten",
       "Photo précédente": "Vorige foto",
@@ -2272,6 +2405,10 @@
       "✦ 17h → 23h ✦": "✦ 17.00 → 23.00 uur ✦",
       "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Route",
+      "Appeler le restaurant": "Bel het restaurant",
+      "Ouvrir Instagram": "Instagram openen",
+      "Instagram": "Instagram",
+      "Envoyer un e-mail": "Een e-mail sturen",
       "Recentrer sur le restaurant": "Centreren op het restaurant",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Parijs — metro Gambetta",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "Kaart: 4 rue Belgrand, Parijs 20",
@@ -2289,13 +2426,13 @@
       "Retour à la carte": "Terug naar de kaart",
       "RÉSERVATION": "RESERVEREN",
       "Réserver ma table": "Tafel reserveren",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "Zeg ons wanneer en voor hoeveel — wij bevestigen per telefoon of e-mail.",
       "Nom": "Naam",
       "Votre nom": "Uw naam",
       "Merci d’indiquer votre nom.": "Vul uw naam in.",
       "Téléphone": "Telefoon",
       "Merci d’indiquer un numéro où vous joindre.": "Geef een nummer waarop wij u kunnen bereiken.",
-      "Mail": "E-mail",
+      "E-mail": "E-mail",
+      "Email": "E-mail",
       "(facultatif)": "(optioneel)",
       "Cette adresse ne semble pas valide.": "Dit adres lijkt niet geldig.",
       "Date": "Datum",
@@ -2304,7 +2441,7 @@
       "Choisir…": "Kiezen…",
       "Merci de choisir une heure.": "Kies een tijd.",
       "Nombre de personnes": "Aantal personen",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1 persoon = 1 tafel • 2 personen = 1 tafel • 3 of 4 personen = 2 tafels. Voor meer dan 10 personen: bel ons, wij regelen het samen.",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "Voor meer dan 10 personen: bel ons, wij regelen het samen.",
       "Préférence": "Voorkeur",
       "Sans préférence": "Geen voorkeur",
       "En terrasse": "Op het terras",
@@ -2319,6 +2456,17 @@
       "Samedi": "Zaterdag",
       "Dimanche": "Zondag",
       "Cuisine": "Keuken",
+      "Mentions légales": "Juridische informatie",
+      "Confidentialité": "Privacy",
+      "Accueil": "Home",
+      "Réserver": "Reserveren",
+      "Réserver une table": "Een tafel reserveren",
+      "Informations légales": "Juridische informatie",
+      "Navigation secondaire": "Secundaire navigatie",
+      "Langue": "Taal",
+      "Choisir la langue": "Taal kiezen",
+      "Horaires de cuisine et menu petit-déjeuner": "Keukenuren en ontbijtmenu",
+      "Menu petit-déjeuner jusqu’à 12h": "Ontbijtmenu tot 12.00 uur",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — Tafel reserveren",
       "Page de Garde": "Startpagina",
       "Menu & Carte": "Menu & kaart",
@@ -2408,8 +2556,8 @@
       "Riz basmati": "Basmatirijst",
       "Fleur de sel, sauce au choix": "Fleur de sel, saus naar keuze",
       "Sauce au choix": "Saus naar keuze",
-      "Selon arrivage": "Volgens de vangst van de dag",
-      "selon arrivage": "volgens de vangst van de dag",
+      "Selon l'arrivage": "Volgens de vangst van de dag",
+      "selon l'arrivage": "volgens de vangst van de dag",
       "Sauce champignons, pâtes": "Champignonsaus, pasta",
       "Burger La Colline": "Burger La Colline",
       "Burger Chicken Croustillant": "Knapperige kipburger",
@@ -2510,6 +2658,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Foto niet bindend — serveersuggestie.",
       "Tout voir": "Alles tonen",
       "Tout masquer": "Alles verbergen",
+      "Voir plus": "Alles tonen",
+      "Voir moins": "Alles verbergen",
       "Voir les photos": "Foto’s tonen",
       "Masquer les photos": "Foto’s verbergen",
       "Photographies non contractuelles, suggestions de présentation": "Foto’s zijn niet bindend, serveersuggesties",
@@ -2692,10 +2842,13 @@
       "4 RUE BELGRAND, 75020 PARIS": "4 RUE BELGRAND, 75020 PARIS",
       "✦ FAIT MAISON • SERVICE CONTINU • TERRASSE ✦": "✦ VERSENSE GERECHTEN • DOORLOPEN SERVICE • TERRAS ✦",
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ NETTOPRIJZEN IN EURO • SERVICE INBEGREPEN ✦",
-      "MÉTRO GAMBETTA": "Metro Gambetta"
+      "MÉTRO GAMBETTA • LIGNE 3": "Metro Gambetta • Lijn 3"
     },
   
     ar: {
+      "Nom pour la réservation": "اسم الحجز",
+      "Nom de la réservation": "اسم الحجز",
+
       'pour': 'لـ',
       'Envoi de votre réservation…': 'جارٍ إرسال حجزك…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'لم يكتمل الإرسال التلقائي: سيفتح بريدك بالطلب، أو اتصل بنا مباشرة.',
@@ -2705,6 +2858,11 @@
       'Au plaisir de vous recevoir très prochainement,': 'يسعدنا أن نستقبلك قريباً جداً،',
       'L’équipe de La Colline Gambetta': 'فريق لا كولين غامبيتا',
       'Une question ? Appelez-nous au': 'لديك سؤال؟ اتصل بنا على',
+      'Toutes nos excuses': 'نعتذر منكم بشدة',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': 'جميع طاولاتنا محجوزة بالكامل في هذا الموعد.',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': 'يسعدنا جداً استقبالكم في وقت أبكر قليلاً أو لاحقاً، أو في أي يوم آخر يناسبكم!',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': 'لا تترددوا في اختيار موعد آخر أو التواصل معنا مباشرة.',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': 'هل ترغبون في الحجز هاتفياً أو لديكم أي استفسار؟ اتصلوا بنا على',
       'Votre nom': 'اسمك',
       "Fermer": "إغلاق",
       "Photo précédente": "الصورة السابقة",
@@ -2718,30 +2876,34 @@
       "✦ 17h → 23h ✦": "✦ ٥ م ← ١١ م ✦",
       "HAPPY HOUR": "ساعة السعادة",
       "Itinéraire": "الاتجاهات",
+      "Appeler le restaurant": "الاتصال بالمطعم",
+      "Ouvrir Instagram": "فتح إنستغرام",
+      "Instagram": "إنستغرام",
+      "Envoyer un e-mail": "إرسال بريد إلكتروني",
       "Recentrer sur le restaurant": "التوسيط على المطعم",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 باريس — مترو Gambetta",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "خريطة: 4 rue Belgrand، باريس 20",
-      "1 personne": "شخص واحد",
-      "2 personnes": "2 أشخاص",
-      "3 personnes": "3 أشخاص",
-      "4 personnes": "4 أشخاص",
-      "5 personnes": "5 أشخاص",
-      "6 personnes": "6 أشخاص",
-      "7 personnes": "7 أشخاص",
-      "8 personnes": "8 أشخاص",
-      "9 personnes": "9 أشخاص",
-      "10 personnes": "10 أشخاص",
+      "1 personne": "شخص واحد (١)",
+      "2 personnes": "شخصان (٢)",
+      "3 personnes": "٣ أشخاص",
+      "4 personnes": "٤ أشخاص",
+      "5 personnes": "٥ أشخاص",
+      "6 personnes": "٦ أشخاص",
+      "7 personnes": "٧ أشخاص",
+      "8 personnes": "٨ أشخاص",
+      "9 personnes": "٩ أشخاص",
+      "10 personnes": "١٠ أشخاص",
       /* --- Page de réservation --- */
       "Retour à la carte": "العودة إلى القائمة",
       "RÉSERVATION": "الحجز",
       "Réserver ma table": "احجز طاولتي",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "أخبرنا متى ولكم شخصًا — نؤكد الحجز هاتفيًا أو بالبريد.",
       "Nom": "الاسم",
       "Votre nom": "اسمك",
       "Merci d’indiquer votre nom.": "يرجى إدخال اسمك.",
       "Téléphone": "الهاتف",
       "Merci d’indiquer un numéro où vous joindre.": "يرجى إدخال رقم للتواصل معك.",
-      "Mail": "البريد الإلكتروني",
+      "E-mail": "البريد الإلكتروني",
+      "Email": "البريد الإلكتروني",
       "(facultatif)": "(اختياري)",
       "Cette adresse ne semble pas valide.": "لا يبدو هذا العنوان صالحًا.",
       "Date": "التاريخ",
@@ -2750,7 +2912,7 @@
       "Choisir…": "اختر…",
       "Merci de choisir une heure.": "يرجى اختيار الوقت.",
       "Nombre de personnes": "عدد الأشخاص",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "شخص واحد = طاولة واحدة • شخصان = طاولة واحدة • 3 أو 4 أشخاص = طاولتان. لأكثر من 10 أشخاص، اتصل بنا: ننظّم ذلك معك.",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "لأكثر من ١٠ أشخاص، اتصل بنا: ننظّم ذلك معك.",
       "Préférence": "التفضيل",
       "Sans préférence": "بدون تفضيل",
       "En terrasse": "في الشرفة",
@@ -2765,6 +2927,17 @@
       "Samedi": "السبت",
       "Dimanche": "الأحد",
       "Cuisine": "المطبخ",
+      "Mentions légales": "إشعار قانوني",
+      "Confidentialité": "الخصوصية",
+      "Accueil": "الرئيسية",
+      "Réserver": "احجز",
+      "Réserver une table": "احجز طاولة",
+      "Informations légales": "المعلومات القانونية",
+      "Navigation secondaire": "التنقل الثانوي",
+      "Langue": "اللغة",
+      "Choisir la langue": "اختيار اللغة",
+      "Horaires de cuisine et menu petit-déjeuner": "ساعات المطبخ وقائمة الإفطار",
+      "Menu petit-déjeuner jusqu’à 12h": "قائمة الإفطار حتى الساعة ١٢",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — احجز طاولتي",
       "Page de Garde": "الصفحة الرئيسية",
       "Menu & Carte": "القائمة والبطاقة",
@@ -2854,8 +3027,8 @@
       "Riz basmati": "أرز بسمتي",
       "Fleur de sel, sauce au choix": "ملح البحر، الصوص حسب الاختيار",
       "Sauce au choix": "الصوص حسب الاختيار",
-      "Selon arrivage": "حسب الوارد اليومي",
-      "selon arrivage": "حسب الوارد اليومي",
+      "Selon l'arrivage": "حسب الوارد اليومي",
+      "selon l'arrivage": "حسب الوارد اليومي",
       "Sauce champignons, pâtes": "صوص الفطر، معكرونة",
       "Burger La Colline": "برغر لا كولين",
       "Burger Chicken Croustillant": "برغر دجاج مقرمش",
@@ -2970,6 +3143,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "صورة غير تعاقدية — اقتراح للتقديم.",
       "Tout voir": "عرض الكل",
       "Tout masquer": "إخفاء الكل",
+      "Voir plus": "عرض الكل",
+      "Voir moins": "إخفاء الكل",
       "Voir les photos": "عرض الصور",
       "Masquer les photos": "إخفاء الصور",
       "Photographies non contractuelles, suggestions de présentation": "الصور غير تعاقدية، اقتراحات للتقديم",
@@ -3022,7 +3197,7 @@
       "PINTE": "بينت",
       "Madeleine": "مادلين",
       "HH": "س.س.",
-      "MÉTRO GAMBETTA": "ميترو غامبيتا",
+      "MÉTRO GAMBETTA • LIGNE 3": "مترو غامبيتا • الخط 3",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "4 شارع بيلغراند • 75020 باريس • ساحة غامبيتا",
       "COLLINE": "كولين",
       "GAMBETTA": "غامبيتا",
@@ -3159,6 +3334,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ساندويتش جمبون وجبنة مع بيضة مقلية"
     },
     zh: {
+      "Nom pour la réservation": "预订人姓名",
+      "Nom de la réservation": "预订人姓名",
+
       'pour': '共',
       'Envoi de votre réservation…': '正在發送您的訂位…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': '自動發送未成功：您的郵件將開啟並附上申請，或直接致電我們。',
@@ -3168,6 +3346,11 @@
       'Au plaisir de vous recevoir très prochainement,': '期待很快迎接您的光臨，',
       'L’équipe de La Colline Gambetta': 'La Colline Gambetta 團隊',
       'Une question ? Appelez-nous au': '有疑問嗎？請致電',
+      'Toutes nos excuses': '非常抱歉',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': '该时段的所有餐桌均已被预订满。',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': '我们非常期待稍早、稍晚或在其他方便的日期欢迎您的光临！',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': '欢迎选择其他时段或直接与我们联系。',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': '想直接电话预订或有疑问？欢迎致电',
       'Votre nom': '您的姓名',
       "Fermer": "关闭",
       "Photo précédente": "上一张",
@@ -3181,6 +3364,10 @@
       "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
       "HAPPY HOUR": "欢乐时光",
       "Itinéraire": "路线",
+      "Appeler le restaurant": "致电餐厅",
+      "Ouvrir Instagram": "打开照片墙",
+      "Instagram": "照片墙",
+      "Envoyer un e-mail": "发送电子邮件",
       "Recentrer sur le restaurant": "回到餐厅位置",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 巴黎 — Gambetta 地铁站",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "地图：4 rue Belgrand，巴黎 20 区",
@@ -3198,13 +3385,13 @@
       "Retour à la carte": "返回菜单",
       "RÉSERVATION": "预订",
       "Réserver ma table": "预订餐桌",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "告诉我们时间和人数——我们将通过电话或邮件确认。",
       "Nom": "姓名",
       "Votre nom": "您的姓名",
       "Merci d’indiquer votre nom.": "请填写您的姓名。",
       "Téléphone": "电话",
       "Merci d’indiquer un numéro où vous joindre.": "请填写可以联系到您的号码。",
-      "Mail": "电子邮箱",
+      "E-mail": "电子邮箱",
+      "Email": "电子邮箱",
       "(facultatif)": "（选填）",
       "Cette adresse ne semble pas valide.": "该邮箱地址似乎无效。",
       "Date": "日期",
@@ -3213,7 +3400,7 @@
       "Choisir…": "请选择…",
       "Merci de choisir une heure.": "请选择时间。",
       "Nombre de personnes": "人数",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1 人 = 1 张桌子 • 2 人 = 1 张桌子 • 3 或 4 人 = 2 张桌子。超过 10 人请致电我们，我们与您一同安排。",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "超过 10 人请致电我们，我们与您一同安排。",
       "Préférence": "偏好",
       "Sans préférence": "无偏好",
       "En terrasse": "露台",
@@ -3228,6 +3415,17 @@
       "Samedi": "周六",
       "Dimanche": "周日",
       "Cuisine": "厨房",
+      "Mentions légales": "法律声明",
+      "Confidentialité": "隐私",
+      "Accueil": "首页",
+      "Réserver": "预订",
+      "Réserver une table": "预订餐桌",
+      "Informations légales": "法律信息",
+      "Navigation secondaire": "次级导航",
+      "Langue": "语言",
+      "Choisir la langue": "选择语言",
+      "Horaires de cuisine et menu petit-déjeuner": "厨房营业时间和早餐菜单",
+      "Menu petit-déjeuner jusqu’à 12h": "早餐菜单供应至中午十二点",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — 预订餐桌",
       "Page de Garde": "首页",
       "Menu & Carte": "菜单与酒单",
@@ -3317,8 +3515,8 @@
       "Riz basmati": "印度香米",
       "Fleur de sel, sauce au choix": "海盐花，酱汁任选",
       "Sauce au choix": "酱汁任选",
-      "Selon arrivage": "视当日到货",
-      "selon arrivage": "视当日到货",
+      "Selon l'arrivage": "视当日到货",
+      "selon l'arrivage": "视当日到货",
       "Sauce champignons, pâtes": "蘑菇酱，意面",
       "Burger La Colline": "拉科林汉堡",
       "Burger Chicken Croustillant": "香脆鸡肉堡",
@@ -3433,6 +3631,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "图片仅供参考 — 摆盘建议。",
       "Tout voir": "全部显示",
       "Tout masquer": "全部隐藏",
+      "Voir plus": "全部显示",
+      "Voir moins": "全部隐藏",
       "Voir les photos": "显示照片",
       "Masquer les photos": "隐藏照片",
       "Photographies non contractuelles, suggestions de présentation": "图片仅供参考，为摆盘建议",
@@ -3485,7 +3685,7 @@
       "PINTE": "品脱",
       "Madeleine": "玛德琳",
       "HH": "欢时",
-      "MÉTRO GAMBETTA": "甘贝塔地铁站",
+      "MÉTRO GAMBETTA • LIGNE 3": "甘贝塔地铁站 • 3号线",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "贝勒格朗街4号 • 75020 巴黎 • 甘贝塔广场",
       "COLLINE": "拉科林",
       "GAMBETTA": "冈贝塔",
@@ -3622,6 +3822,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "烤火腿奶酪三明治，上加煎蛋"
     },
     uk: {
+      "Nom pour la réservation": "Ім’я для бронювання",
+      "Nom de la réservation": "Ім’я для бронювання",
+
       'pour': 'на',
       'Envoi de votre réservation…': 'Надсилаємо ваше бронювання…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'Автоматичне надсилання не вдалося: ваша пошта відкриється із запитом, або зателефонуйте нам напряму.',
@@ -3631,6 +3834,11 @@
       'Au plaisir de vous recevoir très prochainement,': 'Із задоволенням приймемо вас дуже скоро,',
       'L’équipe de La Colline Gambetta': 'Команда La Colline Gambetta',
       'Une question ? Appelez-nous au': 'Маєте запитання? Телефонуйте',
+      'Toutes nos excuses': 'Щиро перепрошуємо',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': 'Усі наші столики на цей час уже заброньовано.',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': 'Ми з радістю зустрінемо вас трохи раніше, трохи пізніше або в інший день!',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': 'Будь ласка, оберіть інший час або зв’яжіться з нами напряму.',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': 'Бажаєте забронювати телефоном або маєте запитання? Зателефонуйте нам:',
       'Votre nom': 'Ваше ім\'я',
       "Fermer": "Закрити",
       "Photo précédente": "Попереднє фото",
@@ -3644,6 +3852,10 @@
       "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
       "HAPPY HOUR": "ЩАСЛИВА ГОДИНА",
       "Itinéraire": "Маршрут",
+      "Appeler le restaurant": "Зателефонувати до ресторану",
+      "Ouvrir Instagram": "Відкрити Інстаграм",
+      "Instagram": "Інстаграм",
+      "Envoyer un e-mail": "Надіслати електронний лист",
       "Recentrer sur le restaurant": "Центрувати на ресторані",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Париж — метро Gambetta",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "Мапа: 4 rue Belgrand, Париж 20",
@@ -3661,13 +3873,13 @@
       "Retour à la carte": "Повернутися до меню",
       "RÉSERVATION": "БРОНЮВАННЯ",
       "Réserver ma table": "Забронювати стіл",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "Скажіть нам коли і на скількох — ми підтвердимо телефоном або поштою.",
       "Nom": "Ім’я",
       "Votre nom": "Ваше ім’я",
       "Merci d’indiquer votre nom.": "Будь ласка, вкажіть ваше ім’я.",
       "Téléphone": "Телефон",
       "Merci d’indiquer un numéro où vous joindre.": "Вкажіть номер, за яким з вами зв’язатися.",
-      "Mail": "Електронна пошта",
+      "E-mail": "Електронна пошта",
+      "Email": "Електронна пошта",
       "(facultatif)": "(необов’язково)",
       "Cette adresse ne semble pas valide.": "Ця адреса виглядає недійсною.",
       "Date": "Дата",
@@ -3676,7 +3888,7 @@
       "Choisir…": "Обрати…",
       "Merci de choisir une heure.": "Оберіть час.",
       "Nombre de personnes": "Кількість гостей",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1 гість = 1 стіл • 2 гості = 1 стіл • 3 або 4 гості = 2 столи. Понад 10 осіб — зателефонуйте нам, ми все організуємо разом.",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "Понад 10 осіб — зателефонуйте нам, ми все організуємо разом.",
       "Préférence": "Побажання",
       "Sans préférence": "Без побажань",
       "En terrasse": "На терасі",
@@ -3691,6 +3903,17 @@
       "Samedi": "Субота",
       "Dimanche": "Неділя",
       "Cuisine": "Кухня",
+      "Mentions légales": "Юридична інформація",
+      "Confidentialité": "Конфіденційність",
+      "Accueil": "Головна",
+      "Réserver": "Забронювати",
+      "Réserver une table": "Забронювати столик",
+      "Informations légales": "Юридична інформація",
+      "Navigation secondaire": "Другорядна навігація",
+      "Langue": "Мова",
+      "Choisir la langue": "Обрати мову",
+      "Horaires de cuisine et menu petit-déjeuner": "Часы работы кухни и меню завтрака",
+      "Menu petit-déjeuner jusqu’à 12h": "Меню завтрака до 12:00",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — Забронювати стіл",
       "Page de Garde": "Головна",
       "Menu & Carte": "Меню та карта",
@@ -3780,8 +4003,8 @@
       "Riz basmati": "Рис басматі",
       "Fleur de sel, sauce au choix": "Квітка солі, соус на вибір",
       "Sauce au choix": "Соус на вибір",
-      "Selon arrivage": "Залежно від надходження",
-      "selon arrivage": "залежно від надходження",
+      "Selon l'arrivage": "Залежно від надходження",
+      "selon l'arrivage": "залежно від надходження",
       "Sauce champignons, pâtes": "Грибний соус, паста",
       "Burger La Colline": "Бургер «Ла Коллін»",
       "Burger Chicken Croustillant": "Хрусткий курячий бургер",
@@ -3895,6 +4118,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "Фотографія не є договірною — приклад подачі.",
       "Tout voir": "Показати все",
       "Tout masquer": "Сховати все",
+      "Voir plus": "Показати все",
+      "Voir moins": "Сховати все",
       "Voir les photos": "Показати фото",
       "Masquer les photos": "Сховати фото",
       "Photographies non contractuelles, suggestions de présentation": "Фотографії не є договірними, приклади подачі",
@@ -3947,7 +4172,7 @@
       "PINTE": "ПІНТА",
       "Madeleine": "Мадлен",
       "HH": "Щ.Г.",
-      "MÉTRO GAMBETTA": "МЕТРО ГАМБЕТТА",
+      "MÉTRO GAMBETTA • LIGNE 3": "метро Gambetta • Лінія 3",
       "Salade verte, tomate, escalope de poulet pané, œuf mimosa, croûton, toast de chèvre.": "Зелений салат, помідор, панірована куряча відбивна, яйце мімоза, крутон, тост із козячого сиру.",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "4 вул. Бельгран • 75020 Париж • площа Гамбетта",
       "COLLINE": "КОЛЛІН",
@@ -4085,6 +4310,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "Підсмажений сендвіч із шинкою та сиром, зверху яєчня"
     },
     ja: {
+      "Nom pour la réservation": "ご予約のお名前",
+      "Nom de la réservation": "ご予約のお名前",
+
       'pour': '·',
       'Envoi de votre réservation…': 'ご予約を送信しています…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': '自動送信に失敗しました。メールソフトが依頼内容とともに開きます。お電話でも承ります。',
@@ -4094,6 +4322,11 @@
       'Au plaisir de vous recevoir très prochainement,': '近日中にお迎えできますことを楽しみに、',
       'L’équipe de La Colline Gambetta': 'ラ・コリーヌ・ガンベッタ一同',
       'Une question ? Appelez-nous au': 'ご不明な点は、こちらまで',
+      'Toutes nos excuses': '誠に申し訳ございません',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': 'この時間帯はすべてのテーブルがすでにご予約済みとなっております。',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': '少し早めのお時間やお遅めのお時間、または別の日程でお迎えできれば大変嬉しく存じます！',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': '別のお時間をお選びいただくか、直接お問い合わせください。',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': 'お電話でのご予約やご質問がございましたら、お気軽にどうぞ：',
       'Votre nom': 'お名前',
       "Fermer": "閉じる",
       "Photo précédente": "前の写真",
@@ -4107,6 +4340,10 @@
       "✦ 17h → 23h ✦": "✦ 17時 → 23時 ✦",
       "HAPPY HOUR": "ハッピーアワー",
       "Itinéraire": "経路",
+      "Appeler le restaurant": "レストランに電話する",
+      "Ouvrir Instagram": "インスタグラムを開く",
+      "Instagram": "インスタグラム",
+      "Envoyer un e-mail": "メールを送る",
       "Recentrer sur le restaurant": "レストランに戻す",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 パリ — メトロ Gambetta",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "地図：4 rue Belgrand、パリ20区",
@@ -4124,13 +4361,13 @@
       "Retour à la carte": "メニューに戻る",
       "RÉSERVATION": "ご予約",
       "Réserver ma table": "テーブルを予約",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "日時と人数をお知らせください。お電話またはメールで確認いたします。",
       "Nom": "お名前",
       "Votre nom": "お名前",
       "Merci d’indiquer votre nom.": "お名前をご入力ください。",
       "Téléphone": "電話番号",
       "Merci d’indiquer un numéro où vous joindre.": "ご連絡先の電話番号をご入力ください。",
-      "Mail": "メール",
+      "E-mail": "メール",
+      "Email": "メール",
       "(facultatif)": "（任意）",
       "Cette adresse ne semble pas valide.": "このアドレスは正しくないようです。",
       "Date": "日付",
@@ -4139,7 +4376,7 @@
       "Choisir…": "選択…",
       "Merci de choisir une heure.": "時間をお選びください。",
       "Nombre de personnes": "人数",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1名様 = 1卓 • 2名様 = 1卓 • 3名様または4名様 = 2卓。10名様を超える場合はお電話ください。ご一緒に手配いたします。",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "10名様を超える場合はお電話ください。ご一緒に手配いたします。",
       "Préférence": "ご希望",
       "Sans préférence": "指定なし",
       "En terrasse": "テラス席",
@@ -4154,6 +4391,17 @@
       "Samedi": "土曜",
       "Dimanche": "日曜",
       "Cuisine": "キッチン",
+      "Mentions légales": "法的事項",
+      "Confidentialité": "プライバシー",
+      "Accueil": "ホーム",
+      "Réserver": "予約",
+      "Réserver une table": "テーブルを予約",
+      "Informations légales": "法的情報",
+      "Navigation secondaire": "サブナビゲーション",
+      "Langue": "言語",
+      "Choisir la langue": "言語を選択",
+      "Horaires de cuisine et menu petit-déjeuner": "キッチン営業時間と朝食メニュー",
+      "Menu petit-déjeuner jusqu’à 12h": "朝食メニューは12時まで",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — テーブルを予約",
       "Page de Garde": "ホーム",
       "Menu & Carte": "メニューとドリンク",
@@ -4243,8 +4491,8 @@
       "Riz basmati": "バスマティライス",
       "Fleur de sel, sauce au choix": "フルールドゥセル、お好みのソース",
       "Sauce au choix": "お好みのソース",
-      "Selon arrivage": "その日の仕入れによります",
-      "selon arrivage": "その日の仕入れによります",
+      "Selon l'arrivage": "その日の仕入れによります",
+      "selon l'arrivage": "その日の仕入れによります",
       "Sauce champignons, pâtes": "キノコソース、パスタ",
       "Burger La Colline": "ラ・コリーヌバーガー",
       "Burger Chicken Croustillant": "クリスピーチキンバーガー",
@@ -4359,6 +4607,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "写真はイメージです — 盛り付け例。",
       "Tout voir": "すべて表示",
       "Tout masquer": "すべて隠す",
+      "Voir plus": "すべて表示",
+      "Voir moins": "すべて隠す",
       "Voir les photos": "写真を表示",
       "Masquer les photos": "写真を隠す",
       "Photographies non contractuelles, suggestions de présentation": "写真はイメージです（盛り付け例）",
@@ -4411,7 +4661,7 @@
       "PINTE": "パイント",
       "Madeleine": "マドレーヌ",
       "HH": "ハピアワ",
-      "MÉTRO GAMBETTA": "ガンベッタ駅",
+      "MÉTRO GAMBETTA • LIGNE 3": "ガンベッタ駅 • 3号線",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "ベルグラン通り4番 • 75020パリ • ガンベッタ広場",
       "COLLINE": "コリーヌ",
       "GAMBETTA": "ガンベッタ",
@@ -4548,6 +4798,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ハムとチーズのグリルサンド、ベシャメルソース、目玉焼きのせ",
     },
     ko: {
+      "Nom pour la réservation": "예약자 성함",
+      "Nom de la réservation": "예약자 성함",
+
       'pour': '·',
       'Envoi de votre réservation…': '예약을 보내는 중…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': '자동 전송에 실패했습니다: 메일 앱이 요청과 함께 열립니다. 또는 직접 전화 주세요.',
@@ -4557,6 +4810,11 @@
       'Au plaisir de vous recevoir très prochainement,': '머지않아 모시게 되기를 기대하며,',
       'L’équipe de La Colline Gambetta': '라 콜린 감베타 팀',
       'Une question ? Appelez-nous au': '문의사항은 다음으로 전화 주세요',
+      'Toutes nos excuses': '대단히 죄송합니다',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': '이 시간대의 모든 테이블이 이미 예약되었습니다.',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': '조금 더 이르거나 늦은 시간, 또는 편하신 다른 날짜에 모실 수 있기를 진심으로 바랍니다!',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': '다른 시간을 선택하시거나 편하게 문의해 주세요.',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': '전화로 직접 예약하시거나 문의 사항이 있으신가요? 전화해 주세요:',
       'Votre nom': '성함',
       "Fermer": "닫기",
       "Photo précédente": "이전 사진",
@@ -4570,6 +4828,10 @@
       "✦ 17h → 23h ✦": "✦ 17시 → 23시 ✦",
       "HAPPY HOUR": "해피아워",
       "Itinéraire": "길찾기",
+      "Appeler le restaurant": "레스토랑에 전화하기",
+      "Ouvrir Instagram": "인스타그램 열기",
+      "Instagram": "인스타그램",
+      "Envoyer un e-mail": "이메일 보내기",
       "Recentrer sur le restaurant": "레스토랑으로 중심 이동",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 파리 — Gambetta 역",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "지도: 4 rue Belgrand, 파리 20구",
@@ -4587,13 +4849,13 @@
       "Retour à la carte": "메뉴로 돌아가기",
       "RÉSERVATION": "예약",
       "Réserver ma table": "테이블 예약",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "언제, 몇 분이신지 알려주세요 — 전화나 이메일로 확인해 드립니다.",
       "Nom": "성함",
       "Votre nom": "성함",
       "Merci d’indiquer votre nom.": "성함을 입력해 주세요.",
       "Téléphone": "전화번호",
       "Merci d’indiquer un numéro où vous joindre.": "연락 가능한 번호를 입력해 주세요.",
-      "Mail": "이메일",
+      "E-mail": "이메일",
+      "Email": "이메일",
       "(facultatif)": "(선택)",
       "Cette adresse ne semble pas valide.": "이 주소는 올바르지 않은 것 같습니다.",
       "Date": "날짜",
@@ -4602,7 +4864,7 @@
       "Choisir…": "선택…",
       "Merci de choisir une heure.": "시간을 선택해 주세요.",
       "Nombre de personnes": "인원",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1명 = 1테이블 • 2명 = 1테이블 • 3명 또는 4명 = 2테이블. 10명이 넘으면 전화 주세요. 함께 준비해 드립니다.",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "10명이 넘으면 전화 주세요. 함께 준비해 드립니다.",
       "Préférence": "선호",
       "Sans préférence": "상관없음",
       "En terrasse": "테라스",
@@ -4617,6 +4879,17 @@
       "Samedi": "토요일",
       "Dimanche": "일요일",
       "Cuisine": "주방",
+      "Mentions légales": "법적 고지",
+      "Confidentialité": "개인정보 보호",
+      "Accueil": "홈",
+      "Réserver": "예약",
+      "Réserver une table": "테이블 예약",
+      "Informations légales": "법률 정보",
+      "Navigation secondaire": "보조 탐색",
+      "Langue": "언어",
+      "Choisir la langue": "언어 선택",
+      "Horaires de cuisine et menu petit-déjeuner": "주방 운영 시간 및 아침 메뉴",
+      "Menu petit-déjeuner jusqu’à 12h": "아침 메뉴는 12시까지",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — 테이블 예약",
       "Page de Garde": "홈",
       "Menu & Carte": "메뉴와 음료",
@@ -4706,8 +4979,8 @@
       "Riz basmati": "바스마티 쌀",
       "Fleur de sel, sauce au choix": "천일염, 취향에 맞는 소스",
       "Sauce au choix": "취향에 맞는 소스",
-      "Selon arrivage": "그날의 어획에 따라",
-      "selon arrivage": "그날의 어획에 따라",
+      "Selon l'arrivage": "그날의 어획에 따라",
+      "selon l'arrivage": "그날의 어획에 따라",
       "Sauce champignons, pâtes": "버섯 소스, 파스타",
       "Burger La Colline": "라 콜린 버거",
       "Burger Chicken Croustillant": "크리스피 치킨 버거",
@@ -4822,6 +5095,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "사진은 이미지 컷입니다 — 연출된 예시.",
       "Tout voir": "모두 보기",
       "Tout masquer": "모두 숨기기",
+      "Voir plus": "모두 보기",
+      "Voir moins": "모두 숨기기",
       "Voir les photos": "사진 보기",
       "Masquer les photos": "사진 숨기기",
       "Photographies non contractuelles, suggestions de présentation": "사진은 연출된 이미지입니다",
@@ -4874,7 +5149,7 @@
       "PINTE": "파인트",
       "Madeleine": "마들렌",
       "HH": "해피아워",
-      "MÉTRO GAMBETTA": "감베타 역",
+      "MÉTRO GAMBETTA • LIGNE 3": "감베타역 • 3호선",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "벨그랑 거리 4 • 75020 파리 • 감베타 광장",
       "COLLINE": "콜린",
       "GAMBETTA": "감베타",
@@ -5011,6 +5286,9 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "구운 햄과 치즈 샌드위치, 베샤멜 소스, 맨 위에 프라이 에그",
     },
     pl: {
+      "Nom pour la réservation": "Nazwisko do rezerwacji",
+      "Nom de la réservation": "Nazwisko do rezerwacji",
+
       'pour': 'dla',
       'Envoi de votre réservation…': 'Wysyłanie rezerwacji…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'Automatyczna wysyłka nie powiodła się: Twoja poczta otworzy się z prośbą, albo zadzwoń do nas.',
@@ -5020,6 +5298,11 @@
       'Au plaisir de vous recevoir très prochainement,': 'Z przyjemnością powitamy Państwa już wkrótce,',
       'L’équipe de La Colline Gambetta': 'Zespół La Colline Gambetta',
       'Une question ? Appelez-nous au': 'Masz pytanie? Zadzwoń pod numer',
+      'Toutes nos excuses': 'Bardzo przepraszamy',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': 'Wszystkie stoliki na tę godzinę są już zajęte.',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': 'Z przyjemnością ugościmy Państwa nieco wcześniej, później lub w innym dogodnym terminie!',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': 'Zachęcamy do wyboru innej godziny lub bezpośredniego kontaktu.',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': 'Chcą Państwo zarezerwować telefonicznie lub mają pytania? Zadzwońcie pod numer',
       'Votre nom': 'Imię i nazwisko',
       "Fermer": "Zamknij",
       "Photo précédente": "Poprzednie zdjęcie",
@@ -5033,6 +5316,10 @@
       "✦ 17h → 23h ✦": "✦ 17:00 → 23:00 ✦",
       "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Trasa",
+      "Appeler le restaurant": "Zadzwoń do restauracji",
+      "Ouvrir Instagram": "Otwórz Instagram",
+      "Instagram": "Instagram",
+      "Envoyer un e-mail": "Wyślij e-mail",
       "Recentrer sur le restaurant": "Wyśrodkuj na restauracji",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paryż — metro Gambetta",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "Mapa: 4 rue Belgrand, Paryż 20",
@@ -5050,13 +5337,13 @@
       "Retour à la carte": "Powrót do karty",
       "RÉSERVATION": "REZERWACJA",
       "Réserver ma table": "Zarezerwuj stolik",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "Podaj termin i liczbę osób — potwierdzimy telefonicznie lub mailowo.",
       "Nom": "Imię i nazwisko",
       "Votre nom": "Twoje imię",
       "Merci d’indiquer votre nom.": "Podaj swoje imię.",
       "Téléphone": "Telefon",
       "Merci d’indiquer un numéro où vous joindre.": "Podaj numer, pod którym możemy się skontaktować.",
-      "Mail": "E-mail",
+      "E-mail": "E-mail",
+      "Email": "E-mail",
       "(facultatif)": "(opcjonalnie)",
       "Cette adresse ne semble pas valide.": "Ten adres wygląda na nieprawidłowy.",
       "Date": "Data",
@@ -5065,7 +5352,7 @@
       "Choisir…": "Wybierz…",
       "Merci de choisir une heure.": "Wybierz godzinę.",
       "Nombre de personnes": "Liczba osób",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1 osoba = 1 stolik • 2 osoby = 1 stolik • 3 lub 4 osoby = 2 stoliki. Powyżej 10 osób prosimy o telefon — zorganizujemy to razem.",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "Powyżej 10 osób prosimy o telefon — zorganizujemy to razem.",
       "Préférence": "Preferencja",
       "Sans préférence": "Bez preferencji",
       "En terrasse": "Na tarasie",
@@ -5080,6 +5367,17 @@
       "Samedi": "Sobota",
       "Dimanche": "Niedziela",
       "Cuisine": "Kuchnia",
+      "Mentions légales": "Nota prawna",
+      "Confidentialité": "Prywatność",
+      "Accueil": "Strona główna",
+      "Réserver": "Rezerwuj",
+      "Réserver une table": "Zarezerwuj stolik",
+      "Informations légales": "Informacje prawne",
+      "Navigation secondaire": "Nawigacja dodatkowa",
+      "Langue": "Język",
+      "Choisir la langue": "Wybierz język",
+      "Horaires de cuisine et menu petit-déjeuner": "Godziny pracy kuchni i menu śniadaniowe",
+      "Menu petit-déjeuner jusqu’à 12h": "Menu śniadaniowe do 12:00",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — Zarezerwuj stolik",
       "Page de Garde": "Strona główna",
       "Menu & Carte": "Menu i napoje",
@@ -5170,8 +5468,8 @@
       "Riz basmati": "Ryż basmati",
       "Fleur de sel, sauce au choix": "Sól morska, sos do wyboru",
       "Sauce au choix": "Sos do wyboru",
-      "Selon arrivage": "Zależnie od połowu",
-      "selon arrivage": "zależnie od połowu",
+      "Selon l'arrivage": "Zależnie od połowu",
+      "selon l'arrivage": "zależnie od połowu",
       "Sauce champignons, pâtes": "Sos pieczarkowy, makaron",
       "Burger La Colline": "Burger La Colline",
       "Burger Chicken Croustillant": "Burger z chrupiącym kurczakiem",
@@ -5283,11 +5581,13 @@
       "FAIT MAISON • SERVICE CONTINU • TERRASSE": "KUCHNIA DOMOWA • SERWIS CAŁODNIOWY • TARAS",
       "BAR • RESTAURANT • PARIS 20ᵉ": "BAR • RESTAURACJA • PARYŻ 20. DZIELNICA",
       "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta": "BAR • RESTAURACJA · 01 43 49 05 93 · ◎ lacolline.gambetta",
-      "MÉTRO GAMBETTA": "METRO GAMBETTA",
+      "MÉTRO GAMBETTA • LIGNE 3": "Metro Gambetta • Linia 3",
       "Photographies non contractuelles, suggestions de présentation • Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé": "Zdjęcia niewiążące, propozycje podania • Informacje o alergenach na życzenie • Nadużywanie alkoholu jest szkodliwe dla zdrowia",
       "Photographie non contractuelle — suggestion de présentation.": "Zdjęcie niewiążące — propozycja podania.",
       "Tout voir": "Pokaż wszystko",
       "Tout masquer": "Ukryj wszystko",
+      "Voir plus": "Pokaż wszystko",
+      "Voir moins": "Ukryj wszystko",
       "Voir les photos": "Pokaż zdjęcia",
       "Masquer les photos": "Ukryj zdjęcia",
       "Photographies non contractuelles, suggestions de présentation": "Zdjęcia niewiążące, propozycje podania",
@@ -5456,6 +5756,9 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ CENY W EURO • SERWIS WLICZONY ✦",
     },
     tr: {
+      "Nom pour la réservation": "Rezervasyon adı",
+      "Nom de la réservation": "Rezervasyon adı",
+
       'pour': '·',
       'Envoi de votre réservation…': 'Rezervasyonunuz gönderiliyor…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'Otomatik gönderim tamamlanmadı: e-posta uygulamanız talebinizle açılacak veya bizi doğrudan arayın.',
@@ -5465,6 +5768,11 @@
       'Au plaisir de vous recevoir très prochainement,': 'Sizi çok yakında ağırlamaktan mutluluk duyacağız,',
       'L’équipe de La Colline Gambetta': 'La Colline Gambetta ekibi',
       'Une question ? Appelez-nous au': 'Sorunuz mu var? Bizi arayın',
+      'Toutes nos excuses': 'Çok özür dileriz',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': 'Bu saat dilimindeki tüm masalarımız dolmuştur.',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': 'Sizi biraz daha erken, biraz daha geç veya başka bir tarihte ağırlamaktan mutluluk duyarız!',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': 'Farklı bir saat seçebilir veya doğrudan bizimle iletişime geçebilirsiniz.',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': 'Doğrudan telefonla rezervasyon yapmak veya soru sormak için bizi arayın:',
       'Votre nom': 'Adınız',
       "Fermer": "Kapat",
       "Photo précédente": "Önceki fotoğraf",
@@ -5478,6 +5786,10 @@
       "✦ 17h → 23h ✦": "✦ 17.00 → 23.00 ✦",
       "HAPPY HOUR": "HAPPY HOUR",
       "Itinéraire": "Yol tarifi",
+      "Appeler le restaurant": "Restoranı ara",
+      "Ouvrir Instagram": "Instagram’ı aç",
+      "Instagram": "Instagram",
+      "Envoyer un e-mail": "E-posta gönder",
       "Recentrer sur le restaurant": "Restorana ortala",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 Paris — Gambetta metrosu",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "Harita: 4 rue Belgrand, Paris 20",
@@ -5495,13 +5807,13 @@
       "Retour à la carte": "Menüye dön",
       "RÉSERVATION": "REZERVASYON",
       "Réserver ma table": "Masa ayırt",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "Ne zaman ve kaç kişi olduğunuzu bildirin — telefon veya e-posta ile onaylıyoruz.",
       "Nom": "Ad",
       "Votre nom": "Adınız",
       "Merci d’indiquer votre nom.": "Lütfen adınızı girin.",
       "Téléphone": "Telefon",
       "Merci d’indiquer un numéro où vous joindre.": "Size ulaşabileceğimiz bir numara girin.",
-      "Mail": "E-posta",
+      "E-mail": "E-posta",
+      "Email": "E-posta",
       "(facultatif)": "(isteğe bağlı)",
       "Cette adresse ne semble pas valide.": "Bu adres geçerli görünmüyor.",
       "Date": "Tarih",
@@ -5510,7 +5822,7 @@
       "Choisir…": "Seçiniz…",
       "Merci de choisir une heure.": "Lütfen bir saat seçin.",
       "Nombre de personnes": "Kişi sayısı",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1 kişi = 1 masa • 2 kişi = 1 masa • 3 veya 4 kişi = 2 masa. 10 kişiden fazlaysa bizi arayın: birlikte düzenleyelim.",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "10 kişiden fazlaysa bizi arayın: birlikte düzenleyelim.",
       "Préférence": "Tercih",
       "Sans préférence": "Fark etmez",
       "En terrasse": "Terasta",
@@ -5525,6 +5837,17 @@
       "Samedi": "Cumartesi",
       "Dimanche": "Pazar",
       "Cuisine": "Mutfak",
+      "Mentions légales": "Yasal bilgiler",
+      "Confidentialité": "Gizlilik",
+      "Accueil": "Ana sayfa",
+      "Réserver": "Rezervasyon yap",
+      "Réserver une table": "Masa ayırt",
+      "Informations légales": "Hukuki bilgiler",
+      "Navigation secondaire": "İkincil gezinme",
+      "Langue": "Dil",
+      "Choisir la langue": "Dil seçin",
+      "Horaires de cuisine et menu petit-déjeuner": "Mutfak saatleri ve kahvaltı menüsü",
+      "Menu petit-déjeuner jusqu’à 12h": "Kahvaltı menüsü 12.00’ye kadar",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — Masa ayırt",
       "Page de Garde": "Ana Sayfa",
       "Menu & Carte": "Menü ve İçecekler",
@@ -5615,8 +5938,8 @@
       "Riz basmati": "Basmati pirinç",
       "Fleur de sel, sauce au choix": "Kaya tuzu, dilediğiniz sos",
       "Sauce au choix": "Dilediğiniz sos",
-      "Selon arrivage": "Günlük ava göre",
-      "selon arrivage": "günlük ava göre",
+      "Selon l'arrivage": "Günlük ava göre",
+      "selon l'arrivage": "günlük ava göre",
       "Sauce champignons, pâtes": "Mantar soslu, makarna",
       "Burger La Colline": "La Colline Burger",
       "Burger Chicken Croustillant": "Çıtır Tavuk Burger",
@@ -5728,11 +6051,13 @@
       "FAIT MAISON • SERVICE CONTINU • TERRASSE": "EV YAPIMI • GÜN BOYU SERVİS • TERAS",
       "BAR • RESTAURANT • PARIS 20ᵉ": "BAR • RESTORAN • PARİS 20. BÖLGE",
       "BAR • RESTAURANT · 01 43 49 05 93 · ◎ lacolline.gambetta": "BAR • RESTORAN · 01 43 49 05 93 · ◎ lacolline.gambetta",
-      "MÉTRO GAMBETTA": "GAMBETTA METROSU",
+      "MÉTRO GAMBETTA • LIGNE 3": "Gambetta metrosu • 3. Hat",
       "Photographies non contractuelles, suggestions de présentation • Allergènes : informations sur demande • L’abus d’alcool est dangereux pour la santé": "Fotoğraflar temsilidir, sunum önerisidir • Alerjen bilgisi talep üzerine • Aşırı alkol tüketimi sağlığa zararlıdır",
       "Photographie non contractuelle — suggestion de présentation.": "Fotoğraf temsilidir — sunum önerisi.",
       "Tout voir": "Tümünü göster",
       "Tout masquer": "Tümünü gizle",
+      "Voir plus": "Tümünü göster",
+      "Voir moins": "Tümünü gizle",
       "Voir les photos": "Fotoğrafları göster",
       "Masquer les photos": "Fotoğrafları gizle",
       "Photographies non contractuelles, suggestions de présentation": "Fotoğraflar temsilidir, sunum önerisidir",
@@ -5901,6 +6226,9 @@
       "✦ PRIX NETS EN EUROS • SERVICE COMPRIS ✦": "✦ EURO CİNSİNDEN NET FİYATLAR • SERVİS DAHİL ✦",
     },
     hi: {
+      "Nom pour la réservation": "बुकिंग का नाम",
+      "Nom de la réservation": "बुकिंग का नाम",
+
       'pour': 'के लिए',
       'Envoi de votre réservation…': 'आपका आरक्षण भेजा जा रहा है…',
       'L’envoi automatique n’a pas abouti : votre messagerie s’ouvre avec la demande, ou appelez-nous directement.': 'स्वचालित प्रेषण पूरा नहीं हुआ: आपका मेल अनुरोध के साथ खुलेगा, या हमें सीधे कॉल करें।',
@@ -5910,6 +6238,11 @@
       'Au plaisir de vous recevoir très prochainement,': 'बहुत जल्द आपका स्वागत करने की प्रतीक्षा में,',
       'L’équipe de La Colline Gambetta': 'ला कोलीन गंबेटा की टीम',
       'Une question ? Appelez-nous au': 'कोई प्रश्न? हमें कॉल करें',
+      'Toutes nos excuses': 'हमें खेद है',
+      'Toutes nos tables sont déjà retenues pour ce créneau.': 'इस समय के लिए हमारे सभी टेबल पहले से बुक हैं।',
+      'Nous serions enchantés de vous recevoir un peu plus tôt, un peu plus tard ou à une autre date !': 'हम थोड़ा पहले, थोड़ा बाद में या किसी अन्य तिथि पर आपका स्वागत करने में खुशी महसूस करेंगे!',
+      'N’hésitez pas à choisir un autre créneau ou à nous contacter.': 'कृपया कोई अन्य समय चुनें या हमसे सीधे संपर्क करें।',
+      'Une envie de réserver de vive voix ou une question ? Appelez-nous au': 'सीधे फोन पर बुक करना चाहते हैं या कोई प्रश्न है? हमें कॉल करें:',
       'Votre nom': 'आपका नाम',
       "Fermer": "बंद करें",
       "Photo précédente": "पिछली तस्वीर",
@@ -5923,30 +6256,34 @@
       "✦ 17h → 23h ✦": "✦ शाम 5 → रात 11 ✦",
       "HAPPY HOUR": "हैप्पी आवर",
       "Itinéraire": "रास्ता",
+      "Appeler le restaurant": "रेस्तराँ को कॉल करें",
+      "Ouvrir Instagram": "इंस्टाग्राम खोलें",
+      "Instagram": "इंस्टाग्राम",
+      "Envoyer un e-mail": "ई-मेल भेजें",
       "Recentrer sur le restaurant": "रेस्तरां पर केंद्रित करें",
       "4 rue Belgrand, 75020 Paris — métro Gambetta": "4 rue Belgrand, 75020 पेरिस — Gambetta मेट्रो",
       "Plan : 4 rue Belgrand, Paris 20ᵉ": "नक्शा: 4 rue Belgrand, पेरिस 20",
-      "1 personne": "1 व्यक्ति",
-      "2 personnes": "2 व्यक्ति",
-      "3 personnes": "3 व्यक्ति",
-      "4 personnes": "4 व्यक्ति",
-      "5 personnes": "5 व्यक्ति",
-      "6 personnes": "6 व्यक्ति",
-      "7 personnes": "7 व्यक्ति",
-      "8 personnes": "8 व्यक्ति",
-      "9 personnes": "9 व्यक्ति",
-      "10 personnes": "10 व्यक्ति",
+      "1 personne": "१ व्यक्ति",
+      "2 personnes": "२ व्यक्ति",
+      "3 personnes": "३ व्यक्ति",
+      "4 personnes": "४ व्यक्ति",
+      "5 personnes": "५ व्यक्ति",
+      "6 personnes": "६ व्यक्ति",
+      "7 personnes": "७ व्यक्ति",
+      "8 personnes": "८ व्यक्ति",
+      "9 personnes": "९ व्यक्ति",
+      "10 personnes": "१० व्यक्ति",
       /* --- Page de réservation --- */
       "Retour à la carte": "मेन्यू पर वापस",
       "RÉSERVATION": "आरक्षण",
       "Réserver ma table": "टेबल बुक करें",
-      "Dites-nous quand, et pour combien — nous confirmons par téléphone ou par mail.": "हमें बताएं कब और कितने लोग — हम फ़ोन या ईमेल से पुष्टि करेंगे।",
       "Nom": "नाम",
       "Votre nom": "आपका नाम",
       "Merci d’indiquer votre nom.": "कृपया अपना नाम भरें।",
       "Téléphone": "फ़ोन",
       "Merci d’indiquer un numéro où vous joindre.": "कृपया संपर्क हेतु एक नंबर भरें।",
-      "Mail": "ईमेल",
+      "E-mail": "ईमेल",
+      "Email": "ईमेल",
       "(facultatif)": "(वैकल्पिक)",
       "Cette adresse ne semble pas valide.": "यह पता मान्य नहीं लगता।",
       "Date": "तारीख़",
@@ -5955,7 +6292,7 @@
       "Choisir…": "चुनें…",
       "Merci de choisir une heure.": "कृपया समय चुनें।",
       "Nombre de personnes": "व्यक्तियों की संख्या",
-      "1 personne = 1 table • 2 personnes = 1 table • 3 ou 4 personnes = 2 tables. Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "1 व्यक्ति = 1 टेबल • 2 व्यक्ति = 1 टेबल • 3 या 4 व्यक्ति = 2 टेबल। 10 से अधिक लोगों के लिए हमें कॉल करें: हम आपके साथ व्यवस्था करेंगे.",
+      "Au-delà de 10 personnes, appelez-nous : nous organisons cela avec vous.": "१० से अधिक लोगों के लिए हमें कॉल करें: हम आपके साथ व्यवस्था करेंगे.",
       "Préférence": "पसंद",
       "Sans préférence": "कोई पसंद नहीं",
       "En terrasse": "छत पर",
@@ -5970,6 +6307,17 @@
       "Samedi": "शनिवार",
       "Dimanche": "रविवार",
       "Cuisine": "रसोई",
+      "Mentions légales": "कानूनी सूचना",
+      "Confidentialité": "गोपनीयता",
+      "Accueil": "होम",
+      "Réserver": "बुक करें",
+      "Réserver une table": "टेबल बुक करें",
+      "Informations légales": "कानूनी जानकारी",
+      "Navigation secondaire": "द्वितीयक नेविगेशन",
+      "Langue": "भाषा",
+      "Choisir la langue": "भाषा चुनें",
+      "Horaires de cuisine et menu petit-déjeuner": "रसोई के समय और नाश्ते का मेन्यू",
+      "Menu petit-déjeuner jusqu’à 12h": "नाश्ते का मेन्यू दोपहर १२ बजे तक",
       "La Colline Gambetta — Réserver ma table": "La Colline Gambetta — टेबल बुक करें",
       "Page de Garde": "होम",
       "Menu & Carte": "मेन्यू और पेय",
@@ -6059,8 +6407,8 @@
       "Riz basmati": "बासमती राइस",
       "Fleur de sel, sauce au choix": "फ़्लर द सेल, पसंदीदा सॉस",
       "Sauce au choix": "पसंदीदा सॉस",
-      "Selon arrivage": "उस दिन के कैच के अनुसार",
-      "selon arrivage": "उस दिन के कैच के अनुसार",
+      "Selon l'arrivage": "उस दिन के कैच के अनुसार",
+      "selon l'arrivage": "उस दिन के कैच के अनुसार",
       "Sauce champignons, pâtes": "मशरूम सॉस, पास्ता",
       "Burger La Colline": "ला कोलीन बर्गर",
       "Burger Chicken Croustillant": "क्रिस्पी चिकन बर्गर",
@@ -6175,6 +6523,8 @@
       "Photographie non contractuelle — suggestion de présentation.": "तस्वीर केवल उदाहरण है — प्रस्तुति का सुझाव।",
       "Tout voir": "सब दिखाएँ",
       "Tout masquer": "सब छिपाएँ",
+      "Voir plus": "सब दिखाएँ",
+      "Voir moins": "सब छिपाएँ",
       "Voir les photos": "तस्वीरें दिखाएँ",
       "Masquer les photos": "तस्वीरें छिपाएँ",
       "Photographies non contractuelles, suggestions de présentation": "तस्वीरें केवल उदाहरण हैं, प्रस्तुति के सुझाव",
@@ -6227,7 +6577,7 @@
       "PINTE": "पिंट",
       "Madeleine": "मैडलीन",
       "HH": "है.आ.",
-      "MÉTRO GAMBETTA": "गांबेता मेट्रो",
+      "MÉTRO GAMBETTA • LIGNE 3": "गांबेता मेट्रो • लाइन 3",
       "4 rue Belgrand • 75020 Paris • Place Gambetta": "रू बेलग्रां 4 • 75020 पेरिस • प्लास गांबेता",
       "COLLINE": "कोलीन",
       "GAMBETTA": "गांबेता",
@@ -6364,6 +6714,10 @@
       "Sandwich grillé jambon-fromage, sauce béchamel, œuf au plat": "ग्रिल्ड हैम-चीज़ सैंडविच, बेशामेल सॉस, ऊपर तला अंडा",
     },
   };
+  /* Expose le dictionnaire avant le premier applyLang : plusieurs éléments
+     (dépliants photo, visionneuse, sélecteurs de réservation) sont créés ou
+     resynchronisés au même moment que l'événement de changement de langue. */
+  window.__i18nDicts = DICTS;
   /* Attributs traduits (title, aria-label) : sélecteur, attribut, valeur française */
   var ATTRS = [
     /* Visionneuse : construite par script, donc absente du DOM initial.
@@ -6383,15 +6737,41 @@
     /* Page de réservation : indications de saisie et libellés d'accès.
        Ces sélecteurs ne matchent rien sur index.html — querySelectorAll
        renvoie une liste vide et la boucle ne fait rien. */
+    ['.hours', 'aria-label', 'Horaires de cuisine et menu petit-déjeuner'],
     ['#bk-name', 'placeholder', 'Votre nom'],
-    ['#bk-phone', 'placeholder', '06 12 34 56 78'],
+    ['#bk-phone', 'placeholder', '+33600000000'],
     ['#bk-mail', 'placeholder', 'vous@exemple.fr'],
     ['#bk-msg', 'placeholder', 'Anniversaire, allergie, poussette, ami à quatre pattes…'],
     ['#map-recenter', 'title', 'Recentrer sur le restaurant'],
     ['#map-recenter', 'aria-label', 'Recentrer sur le restaurant'],
+    /* Les valeurs des coordonnées restent visibles telles quelles, mais
+       chaque bouton de contact reçoit un nom traduit pour le survol, le
+       lecteur d'écran et les contrôles tactiles. */
+    ['a[href^="tel:+33143490593"]', 'title', 'Appeler le restaurant'],
+    ['a[href^="tel:+33143490593"]', 'aria-label', 'Appeler le restaurant'],
+    ['a[href^="https://www.instagram.com/lacolline.gambetta"]', 'title', 'Ouvrir Instagram'],
+    ['a[href^="https://www.instagram.com/lacolline.gambetta"]', 'aria-label', 'Ouvrir Instagram'],
+    ['.footer .footer-link--mail', 'title', 'restaurant@lacollinegambetta.com'],
+    ['.footer .footer-link--mail', 'aria-label', 'restaurant@lacollinegambetta.com'],
+    ['#cover-section .contact-link--mail', 'title', 'restaurant@lacollinegambetta.com'],
+    ['#cover-section .contact-link--mail', 'aria-label', 'restaurant@lacollinegambetta.com'],
+    ['.info-link[href^="mailto:restaurant@lacollinegambetta.com"]', 'title', 'Envoyer un e-mail'],
+    ['.info-link[href^="mailto:restaurant@lacollinegambetta.com"]', 'aria-label', 'Envoyer un e-mail'],
     ['#book-map', 'aria-label', 'Plan : 4 rue Belgrand, Paris 20ᵉ'],
   ];
   function norm(t) { return String(t).replace(/\s+/g, ' ').trim(); }
+  /* Une quantité est une seule information : ne jamais laisser le moteur
+     ou la largeur mobile séparer le nombre de son unité. Cette normalisation
+     ne traduit pas l’unité et ne modifie aucune valeur technique ; elle pose
+     seulement un espace insécable entre « 190 » et « g », « 140 » et « mL »,
+     etc. */
+  function keepMeasuresTogether(value) {
+    return String(value == null ? '' : value).replace(
+      /(\d+(?:[.,]\d+)?)\s+(mL|ml|ML|cL|cl|L|l|g|gr|kg|مل|ملل|毫升|мл|мл|л|ミリリットル|밀리리터)/g,
+      '$1\u00a0$2'
+    );
+  }
+  window.LCGKeepMeasuresTogether = keepMeasuresTogether;
   var SKIP_TAGS = { SCRIPT: 1, STYLE: 1, NOSCRIPT: 1, CODE: 1, PRE: 1, TEXTAREA: 1 };
   var nodes = null;
   function collect() {
@@ -6402,7 +6782,7 @@
         var p = n.parentElement;
         while (p && p !== document.body) {
           if (SKIP_TAGS[p.tagName]) return NodeFilter.FILTER_REJECT;
-          if (p.classList && p.classList.contains('lang-menu')) return NodeFilter.FILTER_REJECT;
+          if (p.classList && (p.classList.contains('lang-menu') || p.classList.contains('foldall'))) return NodeFilter.FILTER_REJECT;
           p = p.parentElement;
         }
         return NodeFilter.FILTER_ACCEPT;
@@ -6427,13 +6807,648 @@
     document.querySelectorAll('[data-label]'),
     function (el) { return { el: el, fr: el.getAttribute('data-label') }; }
   );
+  /* Données créées dynamiquement après le chargement de la traduction :
+     les fiches vins restent ainsi traduites, y compris dans leurs tiroirs. */
+  var WINE_LABELS = {
+  "en": {
+    "DÉGUSTATION :": "TASTING:",
+    "Suggestions d’accords :": "PAIRING SUGGESTIONS:"
+  },
+  "es": {
+    "DÉGUSTATION :": "CATA:",
+    "Suggestions d’accords :": "SUGERENCIAS DE MARIDAJE:"
+  },
+  "de": {
+    "DÉGUSTATION :": "VERKOSTUNG:",
+    "Suggestions d’accords :": "PASSENDE SPEISEN:"
+  },
+  "it": {
+    "DÉGUSTATION :": "DEGUSTAZIONE:",
+    "Suggestions d’accords :": "SUGGERIMENTI DI ABBINAMENTO:"
+  },
+  "pt": {
+    "DÉGUSTATION :": "PROVA:",
+    "Suggestions d’accords :": "SUGESTÕES DE HARMONIZAÇÃO:"
+  },
+  "nl": {
+    "DÉGUSTATION :": "PROEVERIJ:",
+    "Suggestions d’accords :": "WIJNSPIJSUGGESTIES:"
+  },
+  "ar": {
+    "DÉGUSTATION :": "التذوق:",
+    "Suggestions d’accords :": "اقتراحات التوافق:"
+  },
+  "zh": {
+    "DÉGUSTATION :": "品鉴：",
+    "Suggestions d’accords :": "搭配建议："
+  },
+  "uk": {
+    "DÉGUSTATION :": "ДЕГУСТАЦІЯ:",
+    "Suggestions d’accords :": "ПОРАДИ ЩОДО ПОЄДНАННЯ:"
+  },
+  "ja": {
+    "DÉGUSTATION :": "テイスティング：",
+    "Suggestions d’accords :": "おすすめのペアリング："
+  },
+  "ko": {
+    "DÉGUSTATION :": "시음:",
+    "Suggestions d’accords :": "페어링 추천:"
+  },
+  "pl": {
+    "DÉGUSTATION :": "DEGUSTACJA:",
+    "Suggestions d’accords :": "SUGESTIE DOBORU DAŃ:"
+  },
+  "tr": {
+    "DÉGUSTATION :": "TADIM:",
+    "Suggestions d’accords :": "EŞLEŞTİRME ÖNERİLERİ:"
+  },
+  "hi": {
+    "DÉGUSTATION :": "चखना:",
+    "Suggestions d’accords :": "मेल सुझाव:"
+  }
+};
+  var WINE_TASTINGS = {
+  "en": [
+    "A concentrated body led by red and black fruit, with present but structured tannins and a persistent finish.",
+    "Round and full, dominated by black fruit and spices, with supple tannins and a fresh, spicy finish.",
+    "Fresh, fruity and juicy, with Gamay’s suppleness, fine tannins and a clean finish.",
+    "Soft, light and fruity, with fresh acidity, fine tannins and a generous black-cherry finish.",
+    "A light, fresh red centred on red fruit, with a supple, refreshing structure.",
+    "Round, full-bodied and fleshy, dominated by black cherry and spices, with a peppery finish and retained freshness.",
+    "Balanced, silky and elegant, with ripe fruit, spices and pepper, and a finish lightly marked by eucalyptus.",
+    "Deep and structured, with red and black fruit, pepper and garrigue herbs; tannins give depth to a long, spicy finish.",
+    "Lively and direct, with citrus, saline minerality and a fresh finish.",
+    "Fresh and lively, driven by lime, with crisp acidity and a clean, mineral finish without heaviness.",
+    "Dry, supple and tender, with pear and apple, citrus, a mineral touch and a fresh finish.",
+    "Fresh and lively, driven by exotic fruit, with slight sweetness that rounds the whole and a clean finish.",
+    "Delicate and fresh, with citrus and floral notes, a tender texture and a light finish.",
+    "Crisp and thirst-quenching, pale, citrusy and mineral, without heaviness.",
+    "Fresh attack, fine bubbles, white fruit and citrus, with a light, fresh palate and a clean finish.",
+    "Fine, creamy mousse, apple, pear and apricot notes supported by lively acidity and a fresh, slightly biscuity finish.",
+    "Fresh, fruity and light, carried by fine bubbles; Extra Dry style brings a softer feel than a very dry brut."
+  ],
+  "es": [
+    "Una materia concentrada, marcada por los frutos rojos y negros, con taninos presentes pero estructurados y un final persistente.",
+    "Redonda y amplia, dominada por la fruta negra y las especias, con taninos suaves y un final fresco y especiado.",
+    "Fresca, afrutada y jugosa, con la suavidad del Gamay, taninos finos y un final limpio.",
+    "Suave, ligera y afrutada, con una acidez fresca, taninos finos y un final goloso de cereza negra.",
+    "Un tinto ligero y fresco, centrado en la fruta roja, de estructura suave y refrescante.",
+    "Redonda, plena y carnosa, dominada por la cereza negra y las especias, con un final especiado y una frescura conservada.",
+    "Equilibrada, sedosa y elegante, con fruta madura, especias y pimienta, y un final ligeramente marcado por el eucalipto.",
+    "Estructurada y profunda, con frutos rojos y negros, pimienta y hierbas de garriga; los taninos dan relieve a un final largo y especiado.",
+    "Viva y directa, con cítricos, mineralidad salina y un final fresco.",
+    "Fresca y viva, marcada por la lima, con una acidez nítida y un final limpio y mineral, sin pesadez.",
+    "Seca, suave y tierna, con pera y manzana, cítricos, un toque mineral y un final fresco.",
+    "Fresca y viva, marcada por frutas exóticas, con una ligera dulzura que redondea el conjunto y un final limpio.",
+    "Delicada y fresca, con cítricos y notas florales, una textura tierna y un final ligero.",
+    "Crocante y refrescante, de perfil pálido, cítrico y mineral, sin pesadez.",
+    "Ataque fresco, burbuja fina, fruta blanca y cítricos, para una boca ligera y fresca y un final limpio.",
+    "Espuma fina y cremosa, notas de manzana, pera y albaricoque, sostenidas por una acidez viva y un final fresco, ligeramente abizcochado.",
+    "Fresca, afrutada y ligera, con una burbuja fina; el estilo Extra Dry aporta una sensación más tierna que un brut muy seco."
+  ],
+  "de": [
+    "Konzentriert und geprägt von roten und schwarzen Früchten, mit präsenten, aber strukturierten Tanninen und langem Abgang.",
+    "Rund und voll, von schwarzen Früchten und Gewürzen geprägt, mit weichen Tanninen sowie einem frischen, würzigen Abgang.",
+    "Frisch, fruchtig und saftig, mit der Geschmeidigkeit des Gamay, feinen Tanninen und einem klaren Abgang.",
+    "Weich, leicht und fruchtig, mit frischer Säure, feinen Tanninen und einem großzügigen Abgang von Schwarzkirsche.",
+    "Ein leichter, frischer Rotwein mit roter Frucht, geschmeidiger und erfrischender Struktur.",
+    "Rund, voll und fleischig, geprägt von Schwarzkirsche und Gewürzen, mit pfeffrigem Abgang und bewahrter Frische.",
+    "Ausgewogen, seidig und elegant, mit reifen Früchten, Gewürzen und Pfeffer sowie einem leicht von Eukalyptus geprägten Abgang.",
+    "Tief und kraftvoll, mit roten und schwarzen Früchten, Pfeffer und Garrigue-Kräutern; die Tannine geben dem langen, würzigen Abgang Struktur.",
+    "Lebhaft und geradlinig, mit Zitrusfrüchten, salziger Mineralität und frischem Abgang.",
+    "Frisch und lebhaft, von Limette getragen, mit klarer Säure und einem sauberen, mineralischen Abgang ohne Schwere.",
+    "Trocken, geschmeidig und zart, mit Birne und Apfel, Zitrusfrüchten, mineralischer Note und frischem Abgang.",
+    "Frisch und lebhaft, von exotischen Früchten getragen, mit leichter Süße, die das Ganze abrundet, und klarem Abgang.",
+    "Zart und frisch, mit Zitrusfrüchten und floralen Noten, zarter Textur und leichtem Abgang.",
+    "Knackig und erfrischend, hell, zitrisch und mineralisch, ohne Schwere.",
+    "Frischer Auftakt, feine Perlage, weiße Früchte und Zitrus, mit leichtem, frischem Mundgefühl und klarem Abgang.",
+    "Feiner, cremiger Schaum, Apfel-, Birnen- und Aprikosennoten, getragen von lebhafter Säure und frischem, leicht biscuitartigem Abgang.",
+    "Frisch, fruchtig und leicht, mit feiner Perlage; der Extra-Dry-Stil wirkt milder als ein sehr trockener Brut."
+  ],
+  "it": [
+    "Concentrato e sostenuto da frutti rossi e neri, con tannini presenti ma strutturati e un finale persistente.",
+    "Rotondo e ampio, dominato dalla frutta nera e dalle spezie, con tannini morbidi e un finale fresco e speziato.",
+    "Fresco, fruttato e succoso, con la morbidezza del Gamay, tannini fini e un finale netto.",
+    "Morbido, leggero e fruttato, con acidità fresca, tannini fini e un finale goloso di ciliegia nera.",
+    "Un rosso leggero e fresco, centrato sulla frutta rossa, dalla trama morbida e dissetante.",
+    "Rotondo, pieno e carnoso, dominato da ciliegia nera e spezie, con finale pepato e freschezza conservata.",
+    "Equilibrato, setoso ed elegante, con frutti maturi, spezie e pepe, e un finale leggermente segnato dall’eucalipto.",
+    "Strutturato e profondo, su frutti rossi e neri, pepe ed erbe di gariga; i tannini danno rilievo a un finale lungo e speziato.",
+    "Vivace e diretto, con agrumi, mineralità salina e un finale fresco.",
+    "Fresco e vivace, sostenuto dal lime, con acidità netta e un finale pulito e minerale, senza pesantezza.",
+    "Secco, morbido e delicato, su pera e mela, con agrumi, una nota minerale e un finale fresco.",
+    "Fresco e vivace, sostenuto dalla frutta esotica, con una lieve dolcezza che arrotonda l’insieme e un finale netto.",
+    "Delicato e fresco, con agrumi e note floreali, una trama morbida e un finale leggero.",
+    "Croccante e dissetante, dal profilo chiaro, agrumato e minerale, senza pesantezza.",
+    "Attacco fresco, bollicina fine, frutti bianchi e agrumi, per un sorso leggero e fresco e un finale netto.",
+    "Spuma fine e cremosa, note di mela, pera e albicocca, sostenute da acidità vivace e un finale fresco, leggermente biscottato.",
+    "Fresco, fruttato e leggero, con bollicina fine; lo stile Extra Dry offre una sensazione più morbida di un brut molto secco."
+  ],
+  "pt": [
+    "Concentrado, marcado por frutos vermelhos e pretos, com taninos presentes mas estruturados e um final persistente.",
+    "Redondo e amplo, dominado pela fruta preta e pelas especiarias, com taninos suaves e um final fresco e especiado.",
+    "Fresco, frutado e sumarento, com a suavidade do Gamay, taninos finos e um final limpo.",
+    "Suave, leve e frutado, com acidez fresca, taninos finos e um final guloso de cereja preta.",
+    "Um tinto leve e fresco, centrado na fruta vermelha, de estrutura suave e refrescante.",
+    "Redondo, cheio e carnudo, dominado pela cereja preta e pelas especiarias, com final apimentado e frescura preservada.",
+    "Equilibrado, sedoso e elegante, com fruta madura, especiarias e pimenta, e um final ligeiramente marcado pelo eucalipto.",
+    "Estruturado e profundo, com frutos vermelhos e pretos, pimenta e ervas da garrigue; os taninos dão relevo a um final longo e especiado.",
+    "Vivo e direto, com citrinos, mineralidade salina e um final fresco.",
+    "Fresco e vivo, marcado pela lima, com acidez nítida e um final limpo e mineral, sem peso.",
+    "Seco, suave e delicado, com pera e maçã, citrinos, uma nota mineral e um final fresco.",
+    "Fresco e vivo, marcado por frutos exóticos, com uma ligeira doçura que arredonda o conjunto e um final limpo.",
+    "Delicado e fresco, com citrinos e notas florais, textura suave e um final leve.",
+    "Crocante e refrescante, de perfil pálido, cítrico e mineral, sem peso.",
+    "Ataque fresco, bolha fina, fruta branca e citrinos, para uma boca leve e fresca e um final limpo.",
+    "Espuma fina e cremosa, notas de maçã, pera e alperce, apoiadas por acidez viva e um final fresco, ligeiramente biscoitado.",
+    "Fresco, frutado e leve, com bolha fina; o estilo Extra Dry é mais macio do que um brut muito seco."
+  ],
+  "nl": [
+    "Geconcentreerd en gedragen door rood en zwart fruit, met aanwezige maar gestructureerde tannines en een aanhoudende afdronk.",
+    "Rond en vol, gedomineerd door zwart fruit en specerijen, met soepele tannines en een frisse, kruidige afdronk.",
+    "Fris, fruitig en sappig, met de soepelheid van Gamay, fijne tannines en een zuivere afdronk.",
+    "Zacht, licht en fruitig, met frisse zuren, fijne tannines en een gulle afdronk van zwarte kers.",
+    "Een lichte, frisse rode wijn met rood fruit en een soepele, verfrissende structuur.",
+    "Rond, vol en vlezig, gedomineerd door zwarte kers en specerijen, met een peperige afdronk en behouden frisheid.",
+    "Evenwichtig, zijdeachtig en elegant, met rijp fruit, specerijen en peper, en een afdronk met een lichte toets eucalyptus.",
+    "Krachtig en diep, met rood en zwart fruit, peper en garriguekruiden; de tannines geven diepte aan een lange, kruidige afdronk.",
+    "Levendig en rechtlijnig, met citrus, ziltige mineraliteit en een frisse afdronk.",
+    "Fris en levendig, gedragen door limoen, met heldere zuren en een schone, minerale afdronk zonder zwaarte.",
+    "Droog, soepel en zacht, met peer en appel, citrus, een minerale toets en een frisse afdronk.",
+    "Fris en levendig, gedragen door exotisch fruit, met een lichte zoetheid die het geheel afrondt en een zuivere afdronk.",
+    "Fijn en fris, met citrus en florale tonen, een zachte textuur en een lichte afdronk.",
+    "Knisperend en dorstlessend, bleek, citrusachtig en mineraal, zonder zwaarte.",
+    "Frisse aanzet, fijne belletjes, wit fruit en citrus, met een lichte, frisse smaak en een zuivere afdronk.",
+    "Fijn en romig schuim, tonen van appel, peer en abrikoos, gedragen door levendige zuren en een frisse, licht biscuitachtige afdronk.",
+    "Fris, fruitig en licht, met fijne belletjes; Extra Dry voelt zachter aan dan een zeer droge brut."
+  ],
+  "ar": [
+    "قوام مركز تحمله الفواكه الحمراء والسوداء، مع تانينات واضحة لكنها متوازنة ونهاية طويلة.",
+    "مستدير وواسع، تهيمن عليه الفواكه السوداء والتوابل، مع تانينات ناعمة ونهاية منعشة ومتبهرة.",
+    "منعش وفاكهي وعصيري، مع نعومة غاماي وتانينات دقيقة ونهاية نظيفة.",
+    "ناعم وخفيف وفاكهي، بحموضة منعشة وتانينات دقيقة ونهاية غنية بنكهة الكرز الأسود.",
+    "نبيذ أحمر خفيف ومنعش، يتركز على الفاكهة الحمراء بقوام ناعم ومنعش.",
+    "مستدير وممتلئ وغني، تهيمن عليه الكرز الأسود والتوابل، مع نهاية فلفلية وانتعاش محفوظ.",
+    "متوازن وحريري وأنيق، مع فواكه ناضجة وتوابل وفلفل ونهاية تحمل لمسة خفيفة من الأوكالبتوس.",
+    "عميق ومهيكل، مع فواكه حمراء وسوداء وفلفل وأعشاب برية؛ تمنح التانينات عمقاً لنهاية طويلة ومتبهرة.",
+    "حيوي ومباشر، مع حمضيات ومعدنية مالحة ونهاية منعشة.",
+    "منعش وحيوي تحمله الليمون الأخضر، بحموضة واضحة ونهاية نظيفة ومعدنية من دون ثقل.",
+    "جاف وناعم ورقيق، مع الكمثرى والتفاح والحمضيات ولمسة معدنية ونهاية منعشة.",
+    "منعش وحيوي تحمله الفواكه الاستوائية، مع حلاوة خفيفة توازن المزيج ونهاية نظيفة.",
+    "رقيق ومنعش، مع الحمضيات والنفحات الزهرية وقوام طري ونهاية خفيفة.",
+    "مقرمش ومنعش، بلون فاتح وطابع حمضي ومعدني من دون ثقل.",
+    "بداية منعشة، فقاعات دقيقة، فواكه بيضاء وحمضيات، بفم خفيف ومنعش ونهاية نظيفة.",
+    "رغوة دقيقة وكريمية، ونفحات تفاح وكمثرى ومشمش تدعمها حموضة حيوية ونهاية منعشة بلمسة بسكويتية.",
+    "منعش وفاكهي وخفيف، تحمله فقاعات دقيقة؛ يمنح أسلوب Extra Dry إحساساً أكثر نعومة من بروت شديد الجفاف."
+  ],
+  "zh": [
+    "口感集中，红色与黑色水果风味突出，单宁明显而有结构，余味持久。",
+    "圆润饱满，以黑色水果和香料为主，单宁柔和，收尾清新而辛香。",
+    "清新、多汁且果味充沛，带有佳美的柔和感、细腻单宁和干净余味。",
+    "柔和、轻盈而果香浓郁，酸度清新，单宁细致，收尾带有黑樱桃的甜美。",
+    "一款轻盈清新的红葡萄酒，以红色水果为中心，结构柔和爽口。",
+    "圆润、饱满而丰厚，以黑樱桃和香料为主，带有胡椒般的收尾与持久清新感。",
+    "平衡、丝滑而优雅，呈现成熟水果、香料和胡椒气息，余味带有淡淡桉树香。",
+    "深邃而有结构，带有红黑水果、胡椒和灌木香草；单宁让悠长辛香的余味更有层次。",
+    "活泼而直接，带有柑橘、咸鲜矿物感和清新余味。",
+    "清新活泼，以青柠为主，酸度明快，余味干净矿物感十足且不显厚重。",
+    "干爽、柔和而细腻，呈现梨、苹果、柑橘、矿物触感和清新余味。",
+    "清新活泼，热带水果突出，轻微甜感让整体更圆润，余味干净。",
+    "细腻清新，带有柑橘和花香，质地柔和，余味轻盈。",
+    "清脆解渴，色泽淡雅，带有柑橘和矿物气息，毫不厚重。",
+    "入口清新，气泡细腻，白色水果与柑橘交织，口感轻盈清爽，余味干净。",
+    "泡沫细腻而绵密，带有苹果、梨和杏的香气，明快酸度支撑着清新、略带饼干感的余味。",
+    "清新、果味浓郁而轻盈，气泡细腻；Extra Dry风格比非常干型的起泡酒更柔和。"
+  ],
+  "uk": [
+    "Концентрований, із червоними та чорними ягодами, виразними, але структурованими танінами й тривалим післясмаком.",
+    "Округлий і повний, із чорними фруктами та спеціями, м’якими танінами й свіжим пряним післясмаком.",
+    "Свіжий, фруктовий і соковитий, із м’якістю Гаме, тонкими танінами та чистим післясмаком.",
+    "М’який, легкий і фруктовий, зі свіжою кислотністю, тонкими танінами та щедрим післясмаком чорної вишні.",
+    "Легке й свіже червоне вино з акцентом на червоні ягоди, м’яке та освіжаюче.",
+    "Округлий, повний і м’ясистий, із чорною вишнею та спеціями, перцевим післясмаком і збереженою свіжістю.",
+    "Збалансований, шовковистий та елегантний, зі стиглими фруктами, спеціями й перцем, із легкою нотою евкаліпта.",
+    "Глибокий і структурований, із червоними та чорними фруктами, перцем і травами гариги; таніни надають глибини довгому пряному післясмаку.",
+    "Жвавий і прямий, із цитрусами, солонуватою мінеральністю та свіжим післясмаком.",
+    "Свіжий і жвавий, із лаймом, чіткою кислотністю та чистим мінеральним післясмаком без важкості.",
+    "Сухий, м’який і ніжний, із грушею, яблуком, цитрусами, мінеральним відтінком і свіжим післясмаком.",
+    "Свіжий і жвавий, з екзотичними фруктами; легка солодкість округлює смак, а післясмак залишається чистим.",
+    "Делікатний і свіжий, із цитрусами та квітковими нотами, ніжною текстурою і легким післясмаком.",
+    "Хрусткий і освіжаючий, світлий, цитрусовий та мінеральний, без важкості.",
+    "Свіжий початок, тонкі бульбашки, білі фрукти й цитруси, легкий свіжий смак і чистий післясмак.",
+    "Тонка кремова піна, ноти яблука, груші та абрикоса, жива кислотність і свіжий, трохи бісквітний післясмак.",
+    "Свіжий, фруктовий і легкий, із тонкими бульбашками; Extra Dry м’якший за дуже сухий брют."
+  ],
+  "ja": [
+    "赤系と黒系の果実が広がる凝縮感。存在感のある構造的なタンニンと長い余韻。",
+    "丸みがあり、黒い果実とスパイスが中心。しなやかなタンニンと爽やかでスパイシーな余韻。",
+    "フレッシュで果実味豊か。ガメイのしなやかさ、きめ細かなタンニン、すっきりした余韻。",
+    "柔らかく軽やかで果実味豊か。爽やかな酸、細かなタンニン、黒いチェリーの甘やかな余韻。",
+    "赤い果実を中心とした軽やかで爽やかな赤。しなやかで飲みやすい味わい。",
+    "丸みがあり豊かで肉厚。黒いチェリーとスパイスが主役で、胡椒のような余韻と爽やかさが続く。",
+    "バランスがよく、シルキーでエレガント。熟した果実、スパイス、胡椒、ほのかなユーカリの余韻。",
+    "深みと構造があり、赤黒い果実、胡椒、ガリーグのハーブ。タンニンが長くスパイシーな余韻に奥行きを与える。",
+    "生き生きとして直線的。柑橘、塩味を帯びたミネラル感、爽やかな余韻。",
+    "ライムが主役の爽やかで快活な味わい。明確な酸と、重さのないクリーンでミネラルな余韻。",
+    "辛口でしなやか、やさしい味わい。洋梨、りんご、柑橘、ミネラル感、爽やかな余韻。",
+    "エキゾチックな果実が広がる爽やかな味わい。軽い甘みが全体を丸くし、きれいな余韻へ続く。",
+    "繊細で爽やか。柑橘と花の香り、やわらかな質感、軽い余韻。",
+    "キレがあり喉を潤す味わい。淡く、柑橘とミネラルを感じ、重さがない。",
+    "爽やかなアタック、きめ細かな泡、白い果実と柑橘。軽くフレッシュで、きれいな余韻。",
+    "きめ細かくクリーミーな泡。りんご、洋梨、あんずの香り、爽やかな酸、ややビスケットの余韻。",
+    "爽やかで果実味があり軽やか。きめ細かな泡と、非常に辛口のブリュットより柔らかなExtra Dryの味わい。"
+  ],
+  "ko": [
+    "붉은 과일과 검은 과일이 이끄는 집중감 있는 맛. 탄탄하지만 균형 잡힌 탄닌과 긴 여운.",
+    "둥글고 풍부하며 검은 과일과 향신료가 중심. 부드러운 탄닌과 신선하고 스파이시한 여운.",
+    "신선하고 과일 향이 풍부하며 즙이 많다. 가메의 부드러움, 섬세한 탄닌과 깔끔한 여운.",
+    "부드럽고 가벼우며 과일 향이 풍부하다. 신선한 산도와 섬세한 탄닌, 검은 체리의 달콤한 여운.",
+    "붉은 과일을 중심으로 한 가볍고 신선한 레드. 부드럽고 상쾌한 구조.",
+    "둥글고 풍부하며 육감적이다. 검은 체리와 향신료, 후추 같은 여운과 남아 있는 신선함.",
+    "균형 잡히고 실키하며 우아하다. 잘 익은 과일, 향신료, 후추와 은은한 유칼립투스 여운.",
+    "깊고 구조감 있다. 붉고 검은 과일, 후추와 가리그 허브, 긴 스파이시한 여운을 살리는 탄닌.",
+    "생기 있고 직선적이며 시트러스, 짭짤한 미네랄감과 신선한 여운.",
+    "라임이 이끄는 신선하고 생기 있는 맛. 선명한 산도와 무겁지 않은 깨끗한 미네랄 여운.",
+    "드라이하고 부드러우며 섬세하다. 배, 사과, 시트러스, 미네랄 터치와 신선한 여운.",
+    "열대 과일이 이끄는 신선하고 생기 있는 맛. 은은한 단맛이 전체를 둥글게 하고 깨끗한 여운.",
+    "섬세하고 신선하다. 시트러스와 꽃 향, 부드러운 질감과 가벼운 여운.",
+    "아삭하고 갈증을 풀어준다. 옅고 시트러스와 미네랄이 느껴지며 무겁지 않다.",
+    "신선한 첫맛, 고운 기포, 흰 과일과 시트러스. 가볍고 산뜻하며 깨끗한 여운.",
+    "곱고 크리미한 거품, 사과·배·살구 향. 생생한 산도와 신선하고 살짝 비스킷 같은 여운.",
+    "신선하고 과일 향이 풍부하며 가볍다. 고운 기포와 매우 드라이한 브뤼보다 부드러운 Extra Dry 스타일."
+  ],
+  "pl": [
+    "Skoncentrowane, z czerwonymi i czarnymi owocami, wyraźnymi, lecz uporządkowanymi taninami i długim finiszem.",
+    "Zaokrąglone i pełne, zdominowane przez czarne owoce i przyprawy, z miękkimi taninami oraz świeżym, korzennym finiszem.",
+    "Świeże, owocowe i soczyste, z miękkością Gamay, delikatnymi taninami i czystym finiszem.",
+    "Miękkie, lekkie i owocowe, ze świeżą kwasowością, delikatnymi taninami i szlachetnym finiszem czarnej wiśni.",
+    "Lekkie i świeże czerwone wino skupione na czerwonych owocach, o miękkiej i orzeźwiającej strukturze.",
+    "Zaokrąglone, pełne i mięsiste, z czarną wiśnią i przyprawami, pieprznym finiszem oraz zachowaną świeżością.",
+    "Zrównoważone, jedwabiste i eleganckie, z dojrzałymi owocami, przyprawami, pieprzem i lekką nutą eukaliptusa.",
+    "Głębokie i strukturalne, z czerwonymi i czarnymi owocami, pieprzem oraz ziołami garigu; taniny nadają głębi długiemu, korzennemu finiszowi.",
+    "Żywe i bezpośrednie, z cytrusami, słoną mineralnością i świeżym finiszem.",
+    "Świeże i żywe, z limonką, wyraźną kwasowością oraz czystym, mineralnym finiszem bez ciężkości.",
+    "Wytrawne, miękkie i delikatne, z gruszką, jabłkiem, cytrusami, mineralnym akcentem i świeżym finiszem.",
+    "Świeże i żywe, z egzotycznymi owocami; lekka słodycz zaokrągla całość, pozostawiając czysty finisz.",
+    "Delikatne i świeże, z cytrusami, kwiatowymi nutami, miękką teksturą i lekkim finiszem.",
+    "Rześkie i orzeźwiające, jasne, cytrusowe i mineralne, bez ciężkości.",
+    "Świeży początek, drobne bąbelki, białe owoce i cytrusy, lekki, świeży smak i czysty finisz.",
+    "Drobna, kremowa piana, nuty jabłka, gruszki i moreli, żywa kwasowość oraz świeży, lekko biszkoptowy finisz.",
+    "Świeże, owocowe i lekkie, z drobnymi bąbelkami; Extra Dry jest łagodniejsze niż bardzo wytrawny brut."
+  ],
+  "tr": [
+    "Kırmızı ve siyah meyvelerin taşıdığı yoğun yapı; belirgin ama dengeli tanenler ve kalıcı bir bitiş.",
+    "Yuvarlak ve dolgun; siyah meyve ile baharatlar önde, yumuşak tanenler ve taze, baharatlı bir bitiş.",
+    "Taze, meyvemsi ve sulu; Gamay’nin yumuşaklığı, ince tanenler ve temiz bir bitiş.",
+    "Yumuşak, hafif ve meyvemsi; taze asidite, ince tanenler ve siyah kirazın hoş bitişi.",
+    "Kırmızı meyve odaklı, hafif ve taze bir kırmızı; yumuşak ve ferahlatıcı yapıda.",
+    "Yuvarlak, dolgun ve etli; siyah kiraz ve baharatlar önde, biberimsi bitiş ve korunan tazelik.",
+    "Dengeli, ipeksi ve zarif; olgun meyve, baharat, biber ve hafif okaliptüs izli bir bitiş.",
+    "Güçlü ve derin; kırmızı-siyah meyveler, biber ve garig otları, uzun baharatlı bitişe derinlik veren tanenler.",
+    "Canlı ve doğrudan; narenciye, tuzlu mineralite ve taze bir bitiş.",
+    "Taze ve canlı; misket limonu, belirgin asidite ve ağırlık vermeyen temiz, mineral bir bitiş.",
+    "Kuru, yumuşak ve narin; armut, elma, narenciye, mineral dokunuş ve taze bitiş.",
+    "Taze ve canlı; egzotik meyveler, bütünü yuvarlayan hafif tatlılık ve temiz bir bitiş.",
+    "Nazik ve taze; narenciye, çiçeksi notalar, yumuşak doku ve hafif bitiş.",
+    "Çıtır ve ferahlatıcı; açık renkli, narenciyeli ve mineral, ağır değil.",
+    "Taze başlangıç, ince köpük, beyaz meyveler ve narenciye; hafif, taze bir damak ve temiz bitiş.",
+    "İnce ve kremamsı köpük; elma, armut ve kayısı notaları, canlı asidite ve taze, hafif bisküvimsi bitiş.",
+    "Taze, meyvemsi ve hafif; ince köpüklü Extra Dry tarzı, çok kuru bir brutdan daha yumuşak."
+  ],
+  "hi": [
+    "लाल और काले फलों से भरपूर गाढ़ा स्वाद, स्पष्ट लेकिन संतुलित टैनिन और टिकाऊ फिनिश के साथ।",
+    "गोल और भरपूर, काले फलों व मसालों का प्रभाव, मुलायम टैनिन और ताज़ी मसालेदार फिनिश।",
+    "ताज़ा, फलदार और रसदार, गामे की कोमलता, महीन टैनिन और साफ़ फिनिश के साथ।",
+    "कोमल, हल्का और फलदार, ताज़ी अम्लता, महीन टैनिन और काली चेरी की मधुर फिनिश।",
+    "लाल फलों पर केंद्रित हल्की और ताज़ा रेड वाइन, मुलायम व स्फूर्तिदायक संरचना के साथ।",
+    "गोल, भरपूर और गाढ़ी, काली चेरी व मसालों का प्रभाव, काली मिर्च जैसी फिनिश और बनी हुई ताज़गी।",
+    "संतुलित, रेशमी और सुरुचिपूर्ण, पके फलों, मसालों, काली मिर्च और हल्की यूकेलिप्टस फिनिश के साथ।",
+    "गहरी और संरचित, लाल-काले फल, काली मिर्च और जंगली जड़ी-बूटियाँ; टैनिन लंबी मसालेदार फिनिश को गहराई देते हैं।",
+    "जीवंत और सीधी, खट्टे फलों, नमकीन खनिजता और ताज़ी फिनिश के साथ।",
+    "ताज़ा और जीवंत, नींबू की सुगंध, स्पष्ट अम्लता और बिना भारीपन की साफ़ खनिज फिनिश।",
+    "सूखी, मुलायम और नाज़ुक, नाशपाती, सेब, खट्टे फल, खनिज स्पर्श और ताज़ी फिनिश के साथ।",
+    "ताज़ा और जीवंत, उष्णकटिबंधीय फलों से भरपूर; हल्की मिठास पूरे स्वाद को गोल बनाती है और फिनिश साफ़ रहती है।",
+    "नाज़ुक और ताज़ा, खट्टे फलों व फूलों की सुगंध, मुलायम बनावट और हल्की फिनिश।",
+    "कुरकुरी और प्यास बुझाने वाली, हल्की, खट्टे फलों और खनिज स्वाद वाली, बिना भारीपन के।",
+    "ताज़ी शुरुआत, महीन बुलबुले, सफ़ेद फल और खट्टे फल; हल्का, ताज़ा स्वाद और साफ़ फिनिश।",
+    "महीन और क्रीमी झाग, सेब, नाशपाती और खुबानी के स्वाद, जीवंत अम्लता और ताज़ी, हल्की बिस्कुट जैसी फिनिश।",
+    "ताज़ा, फलदार और हल्की, महीन बुलबुलों के साथ; Extra Dry शैली बहुत सूखे ब्रूट से अधिक मुलायम लगती है।"
+  ]
+};
+  Object.keys(WINE_LABELS).forEach(function (lang) {
+    if (!DICTS[lang]) DICTS[lang] = {};
+    Object.keys(WINE_LABELS[lang]).forEach(function (key) {
+      DICTS[lang][key] = WINE_LABELS[lang][key];
+    });
+  });
+  var EXTRA_COPY = {
+  "en": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Vanilla, salted butter caramel, chocolate, coffee, pistachio, hazelnut — extra scoop 2.90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Lime, strawberry, raspberry — extra scoop 2.90",
+    "Supplément Sirop": "Extra syrup",
+    "Supplément Picon": "Extra Picon",
+    "Happy Hour": "Happy Hour",
+    "Ouvert maintenant": "Open now",
+    "25 cl / PINTE / HH": "25 cl / PINT / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20th (Gambetta Metro)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20th",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, a friendly bar-brasserie at 4 rue Belgrand, Paris 20 (Gambetta Metro). All-day homemade food (12:00–00:00), Happy Hour every day from 17:00 to 23:00, sharing boards, wines and cocktails."
+  },
+  "es": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Vainilla, caramelo de mantequilla salada, chocolate, café, pistacho, avellana — suplemento por bola 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Lima, fresa, frambuesa — suplemento por bola 2,90",
+    "Supplément Sirop": "Suplemento de sirope",
+    "Supplément Picon": "Picon extra",
+    "Happy Hour": "Hora feliz",
+    "Ouvert maintenant": "Abierto ahora",
+    "25 cl / PINTE / HH": "25 cl / PINTA / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Bar, restaurante y brasserie París 20 (Metro Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Bar, restaurante y brasserie París 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, bar-brasserie acogedor en 4 rue Belgrand, París 20 (Metro Gambetta). Cocina casera todo el día (12:00–00:00), Hora feliz todos los días de 17:00 a 23:00, tablas, vinos y cócteles."
+  },
+  "de": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Vanille, Salzkaramell, Schokolade, Kaffee, Pistazie, Haselnuss — Kugel extra 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Limette, Erdbeere, Himbeere — Kugel extra 2,90",
+    "Supplément Sirop": "Extra-Sirup",
+    "Supplément Picon": "Extra Picon",
+    "Happy Hour": "Happy Hour",
+    "Ouvert maintenant": "Jetzt geöffnet",
+    "25 cl / PINTE / HH": "25 cl / PINT / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20 (Metro Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, gemütliche Bar-Brasserie in der 4 rue Belgrand, Paris 20 (Metro Gambetta). Durchgehend hausgemachte Küche (12:00–00:00), täglich Happy Hour von 17:00 bis 23:00, Bretter, Weine und Cocktails."
+  },
+  "it": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Vaniglia, caramello al burro salato, cioccolato, caffè, pistacchio, nocciola — pallina supplementare 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Lime, fragola, lampone — pallina supplementare 2,90",
+    "Supplément Sirop": "Supplemento sciroppo",
+    "Supplément Picon": "Picon extra",
+    "Happy Hour": "Happy Hour",
+    "Ouvert maintenant": "Aperto ora",
+    "25 cl / PINTE / HH": "25 cl / PINTA / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Bar, ristorante e brasserie Parigi 20 (Metro Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Bar, ristorante e brasserie Parigi 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, bar-brasserie conviviale al 4 rue Belgrand, Parigi 20 (Metro Gambetta). Cucina casalinga continuata (12:00–00:00), Happy Hour ogni giorno dalle 17:00 alle 23:00, taglieri, vini e cocktail."
+  },
+  "pt": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Baunilha, caramelo de manteiga salgada, chocolate, café, pistácio, avelã — bola extra 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Lima, morango, framboesa — bola extra 2,90",
+    "Supplément Sirop": "Xarope extra",
+    "Supplément Picon": "Picon extra",
+    "Happy Hour": "Happy Hour",
+    "Ouvert maintenant": "Aberto agora",
+    "25 cl / PINTE / HH": "25 cl / CANECA / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Bar, restaurante e brasserie Paris 20 (Metro Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Bar, restaurante e brasserie Paris 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, bar-brasserie acolhedor na 4 rue Belgrand, Paris 20 (Metro Gambetta). Cozinha caseira contínua (12:00–00:00), Happy Hour todos os dias das 17:00 às 23:00, tábuas, vinhos e cocktails."
+  },
+  "nl": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Vanille, gezouten boterkaramel, chocolade, koffie, pistache, hazelnoot — extra bolletje 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Limoen, aardbei, framboos — extra bolletje 2,90",
+    "Supplément Sirop": "Extra siroop",
+    "Supplément Picon": "Extra Picon",
+    "Happy Hour": "Happy hour",
+    "Ouvert maintenant": "Nu open",
+    "25 cl / PINTE / HH": "25 cl / PINT / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Bar, restaurant & brasserie Parijs 20 (metro Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Bar, restaurant & brasserie Parijs 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, gezellige bar-brasserie aan 4 rue Belgrand, Parijs 20 (metro Gambetta). Doorlopend huisgemaakt eten (12:00–00:00), elke dag Happy Hour van 17:00 tot 23:00, borrelplanken, wijn en cocktails."
+  },
+  "ar": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "فانيليا، كراميل بالزبدة المالحة، شوكولاتة، قهوة، فستق، بندق — كرة إضافية ٢٫٩٠",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "ليمون أخضر، فراولة، توت العليق — كرة إضافية ٢٫٩٠",
+    "Supplément Sirop": "شراب إضافي",
+    "Supplément Picon": "بيكون إضافي",
+    "Happy Hour": "ساعة السعادة",
+    "Ouvert maintenant": "مفتوح الآن",
+    "25 cl / PINTE / HH": "٢٥ مل / نصف لتر / ساعة السعادة",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — بار ومطعم وبراسيري باريس ٢٠ (مترو غامبيتا)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — بار ومطعم وبراسيري باريس ٢٠",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta، بار وبراسيري ودود في 4 شارع بيلغراند، باريس ٢٠ (مترو غامبيتا). مأكولات منزلية طوال اليوم (١٢:٠٠–٠٠:٠٠)، وساعة سعادة يومياً من ١٧:٠٠ إلى ٢٣:٠٠، وألواح مشاركة ونبيذ وكوكتيلات."
+  },
+  "zh": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "香草、咸黄油焦糖、巧克力、咖啡、开心果、榛子 — 加球 2.90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "青柠、草莓、覆盆子 — 加球 2.90",
+    "Supplément Sirop": "加糖浆",
+    "Supplément Picon": "加 Picon",
+    "Happy Hour": "欢乐时光",
+    "Ouvert maintenant": "现在营业",
+    "25 cl / PINTE / HH": "250 毫升 / 品脱 / 欢乐时光",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — 巴黎20区酒吧、餐厅与法式小餐馆（甘贝塔地铁站）",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — 巴黎20区酒吧、餐厅与法式小餐馆",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta，位于巴黎20区贝勒格朗街4号的友好酒吧餐厅（甘贝塔地铁站）。全天供应家常菜（12:00–00:00），每日17:00至23:00欢乐时光，并提供分享拼盘、葡萄酒和鸡尾酒。"
+  },
+  "uk": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Ваніль, солона карамель, шоколад, кава, фісташка, фундук — додаткова кулька 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Лайм, полуниця, малина — додаткова кулька 2,90",
+    "Supplément Sirop": "Додатковий сироп",
+    "Supplément Picon": "Додатковий Picon",
+    "Happy Hour": "Щаслива година",
+    "Ouvert maintenant": "Зараз відчинено",
+    "25 cl / PINTE / HH": "25 мл / ПІНТА / ЩАСЛИВА ГОДИНА",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — бар, ресторан і брасері, Париж 20 (метро Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — бар, ресторан і брасері, Париж 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta — затишний бар-брасері на 4 rue Belgrand, Париж 20 (метро Gambetta). Домашня кухня весь день (12:00–00:00), щодня щаслива година з 17:00 до 23:00, закусочні дошки, вина й коктейлі."
+  },
+  "ja": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "バニラ、塩バターキャラメル、チョコレート、コーヒー、ピスタチオ、ヘーゼルナッツ — 追加1玉 2.90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "ライム、いちご、ラズベリー — 追加1玉 2.90",
+    "Supplément Sirop": "シロップ追加",
+    "Supplément Picon": "Picon追加",
+    "Happy Hour": "ハッピーアワー",
+    "Ouvert maintenant": "現在営業中",
+    "25 cl / PINTE / HH": "25 cl / パイント / ハッピーアワー",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — パリ20区のバー・レストラン・ブラッスリー（ガンベッタ駅）",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — パリ20区のバー・レストラン・ブラッスリー",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta、パリ20区ベルグラン通り4番地の居心地のよいバー・ブラッスリー（ガンベッタ駅）。終日手作り料理（12:00–00:00）、毎日17:00〜23:00のハッピーアワー、シェアプレート、ワイン、カクテル。"
+  },
+  "ko": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "바닐라, 소금 버터 캐러멜, 초콜릿, 커피, 피스타치오, 헤이즐넛 — 아이스크림 한 스쿱 추가 2.90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "라임, 딸기, 라즈베리 — 아이스크림 한 스쿱 추가 2.90",
+    "Supplément Sirop": "시럽 추가",
+    "Supplément Picon": "Picon 추가",
+    "Happy Hour": "해피아워",
+    "Ouvert maintenant": "현재 영업 중",
+    "25 cl / PINTE / HH": "25 cl / 파인트 / 해피아워",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — 파리 20구 바·레스토랑·브라세리(감베타역)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — 파리 20구 바·레스토랑·브라세리",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, 파리 20구 벨그랑 거리 4번지의 편안한 바·브라세리(감베타역). 종일 제공하는 홈메이드 요리(12:00–00:00), 매일 17:00–23:00 해피아워, 플래터·와인·칵테일."
+  },
+  "pl": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Wanilia, solony karmel maślany, czekolada, kawa, pistacja, orzech laskowy — dodatkowa gałka 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Limonka, truskawka, malina — dodatkowa gałka 2,90",
+    "Supplément Sirop": "Dodatkowy syrop",
+    "Supplément Picon": "Dodatkowy Picon",
+    "Happy Hour": "Happy Hour",
+    "Ouvert maintenant": "Otwarte teraz",
+    "25 cl / PINTE / HH": "25 cl / PINTA / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — bar, restauracja i brasserie, Paryż 20 (metro Gambetta)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — bar, restauracja i brasserie, Paryż 20",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, przyjazny bar-brasserie przy 4 rue Belgrand, Paryż 20 (metro Gambetta). Domowa kuchnia przez cały dzień (12:00–00:00), Happy Hour codziennie 17:00–23:00, deski przekąsek, wina i koktajle."
+  },
+  "tr": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "Vanilya, tuzlu tereyağlı karamel, çikolata, kahve, Antep fıstığı, fındık — ilave top 2,90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "Misket limonu, çilek, ahududu — ilave top 2,90",
+    "Supplément Sirop": "Ek şurup",
+    "Supplément Picon": "Ek Picon",
+    "Happy Hour": "Happy Hour",
+    "Ouvert maintenant": "Şimdi açık",
+    "25 cl / PINTE / HH": "25 cl / PINT / HH",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — Paris 20 barı, restoranı ve brasserie’si (Gambetta metrosu)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — Paris 20 barı, restoranı ve brasserie’si",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, 4 rue Belgrand, Paris 20’de (Gambetta metrosu) samimi bir bar-brasserie. Gün boyu ev yapımı yemekler (12:00–00:00), her gün 17:00–23:00 Happy Hour, paylaşım tabakları, şaraplar ve kokteyller."
+  },
+  "hi": {
+    "Vanille, caramel beurre salé, chocolat, café, pistache, noisette — supplément boule 2,90": "वनीला, नमकीन मक्खन कारमेल, चॉकलेट, कॉफी, पिस्ता, हेज़लनट — अतिरिक्त स्कूप 2.90",
+    "Citron vert, fraise, framboise — supplément boule 2,90": "नींबू, स्ट्रॉबेरी, रास्पबेरी — अतिरिक्त स्कूप 2.90",
+    "Supplément Sirop": "अतिरिक्त सिरप",
+    "Supplément Picon": "अतिरिक्त Picon",
+    "Happy Hour": "हैप्पी आवर",
+    "Ouvert maintenant": "अभी खुला है",
+    "25 cl / PINTE / HH": "२५० मिली / पिंट / हैप्पी आवर",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ (Métro Gambetta)": "La Colline Gambetta — पेरिस 20 का बार, रेस्तरां और ब्रासरी (गांबेता मेट्रो)",
+    "La Colline Gambetta — Bar, Restaurant & Brasserie Paris 20ᵉ": "La Colline Gambetta — पेरिस 20 का बार, रेस्तरां और ब्रासरी",
+    "La Colline Gambetta, bar-brasserie convivial au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta). Cuisine maison en continu (12h-00h), Happy Hour tous les jours de 17h à 23h, planches, vins et cocktails.": "La Colline Gambetta, 4 rue Belgrand, पेरिस 20 (गांबेता मेट्रो) में एक दोस्ताना बार-ब्रासरी। पूरे दिन घर का खाना (12:00–00:00), हर दिन 17:00 से 23:00 तक हैप्पी आवर, प्लैटर, वाइन और कॉकटेल।"
+  }
+};
+  Object.keys(EXTRA_COPY).forEach(function (lang) {
+    Object.keys(EXTRA_COPY[lang]).forEach(function (key) {
+      DICTS[lang][key] = EXTRA_COPY[lang][key];
+    });
+  });
+  var DYNAMIC_LABELS = {
+    en: { 'L’Happy Hour est lancée !': 'Happy Hour is on!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    es: { 'L’Happy Hour est lancée !': '¡La Happy Hour está en marcha!', 'HAPPY HOUR': 'HORA FELIZ' },
+    de: { 'L’Happy Hour est lancée !': 'Die Happy Hour läuft!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    it: { 'L’Happy Hour est lancée !': 'La Happy Hour è partita!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    pt: { 'L’Happy Hour est lancée !': 'A Happy Hour começou!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    nl: { 'L’Happy Hour est lancée !': 'De Happy Hour is van start!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    ar: { 'L’Happy Hour est lancée !': 'انطلقت ساعة السعادة!', 'HAPPY HOUR': 'ساعة السعادة' },
+    zh: { 'L’Happy Hour est lancée !': '欢乐时光，正式开启！', 'HAPPY HOUR': '欢乐时光' },
+    uk: { 'L’Happy Hour est lancée !': 'Щасливі години розпочалися!', 'HAPPY HOUR': 'ЩАСЛИВА ГОДИНА' },
+    ja: { 'L’Happy Hour est lancée !': 'ハッピーアワー スタート！', 'HAPPY HOUR': 'ハッピーアワー' },
+    ko: { 'L’Happy Hour est lancée !': '해피아워 시작!', 'HAPPY HOUR': '해피아워' },
+    pl: { 'L’Happy Hour est lancée !': 'Happy Hour ruszyło!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    tr: { 'L’Happy Hour est lancée !': 'Happy Hour başladı!', 'HAPPY HOUR': 'HAPPY HOUR' },
+    hi: { 'L’Happy Hour est lancée !': 'हैप्पी आवर शुरू!', 'HAPPY HOUR': 'हैप्पी आवर' }
+  };
+  Object.keys(DYNAMIC_LABELS).forEach(function (lang) {
+    Object.keys(DYNAMIC_LABELS[lang]).forEach(function (key) {
+      DICTS[lang][key] = DYNAMIC_LABELS[lang][key];
+    });
+  });
+  window.__i18nWineTastings = WINE_TASTINGS;
   var LANG = 'fr';
+
+  function syncLanguageOptionLabels() {
+    var menu = document.getElementById('lang-menu');
+    if (!menu) return;
+    var options = menu.querySelectorAll('.lang-option');
+    for (var i = 0; i < options.length; i++) {
+      var label = options[i].querySelector('span:not(.lang-check)') || options[i];
+      if (!label.getAttribute('data-native-label')) {
+        label.setAttribute('data-native-label', label.textContent.trim());
+      }
+      /* Le modal affiche toujours le nom propre de chaque langue,
+         jamais sa traduction dans la langue actuellement sélectionnée. */
+      label.textContent = label.getAttribute('data-native-label');
+    }
+  }
+
+  function syncFoldAllButtons(lang) {
+    var d = DICTS[lang] || {};
+    var tplOpen = document.getElementById('foldall-open-tpl');
+    var tplShut = document.getElementById('foldall-shut-tpl');
+    var txtOpen = (lang === 'fr') ? 'Tout voir' : (d['Tout voir'] || d['Voir plus'] || (tplOpen ? tplOpen.textContent.trim() : 'Tout voir'));
+    var txtShut = (lang === 'fr') ? 'Tout masquer' : (d['Tout masquer'] || d['Voir moins'] || (tplShut ? tplShut.textContent.trim() : 'Tout masquer'));
+    var btns = document.querySelectorAll('.foldall__btn');
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      var isPressed = b.getAttribute('aria-pressed') === 'true';
+      var text = isPressed ? txtShut : txtOpen;
+      b.title = text;
+      b.setAttribute('aria-label', text);
+      var lab = b.querySelector('.foldall__label');
+      if (lab) lab.textContent = text;
+    }
+  }
+
+  /* localized-digits.js est chargé avant ce fichier. Conserver sa référence
+     avant d’exposer le relais i18n : sinon le relais se rappellerait lui-même
+     au premier applyLang() et interromprait tout le script de traduction. */
+  var baseLocalizeDisplayDigits = window.LCGLocalizeDisplayDigits;
+  var baseLocalizeAllDisplayDigits = window.LCGLocalizeAllDisplayDigits;
+  function localizeDisplayDigits(value, lang) {
+    return baseLocalizeDisplayDigits
+      ? baseLocalizeDisplayDigits(value, lang)
+      : String(value == null ? '' : value);
+  }
+  function localizeAllDisplayDigits(lang) {
+    if (baseLocalizeAllDisplayDigits) {
+      baseLocalizeAllDisplayDigits(document.body, lang);
+    }
+  }
+  function contactKind(anchor) {
+    var href = anchor.getAttribute('href') || '';
+    if (href.indexOf('tel:+33143490593') === 0) return 'phone';
+    if (href.indexOf('https://www.instagram.com/lacolline.gambetta') === 0) return 'instagram';
+    if (href.indexOf('mailto:restaurant@lacollinegambetta.com') === 0) return 'email';
+    return '';
+  }
+  function contactValue(kind) {
+    if (kind === 'phone') return '01 43 49 05 93';
+    if (kind === 'instagram') return 'lacolline.gambetta';
+    if (kind === 'email') return 'restaurant@lacollinegambetta.com';
+    return '';
+  }
+  function contactTextNode(anchor) {
+    for (var i = 0; i < anchor.childNodes.length; i++) {
+      var node = anchor.childNodes[i];
+      if (node.nodeType === 3 && node.nodeValue.trim()) return node;
+    }
+    return null;
+  }
+  function syncContactButtons(lang) {
+    var d = DICTS[lang] || {};
+    var labels = {
+      phone: d['Téléphone'] || 'Téléphone',
+      instagram: d['Instagram'] || 'Instagram',
+      email: d['E-mail'] || 'E-mail'
+    };
+    var links = document.querySelectorAll('a[href^="tel:+33143490593"], a[href^="https://www.instagram.com/lacolline.gambetta"], a[href^="mailto:restaurant@lacollinegambetta.com"]');
+    for (var i = 0; i < links.length; i++) {
+      var kind = contactKind(links[i]);
+      if (!kind) continue;
+      var value = localizeDisplayDigits(contactValue(kind), lang);
+      var emailPillKeepsOnlyAddress = kind === 'email' && (
+        links[i].classList.contains('footer-link--mail') ||
+        links[i].classList.contains('contact-link--mail') ||
+        links[i].classList.contains('info-link')
+      );
+      var text = emailPillKeepsOnlyAddress ? value : labels[kind] + ' · ' + value;
+      var node = contactTextNode(links[i]);
+      if (node) node.nodeValue = text;
+    }
+    var addressNodes = document.querySelectorAll('.cover-footer-address, .footer-details, .map-address, .map-fallback, .map-error');
+    for (var j = 0; j < addressNodes.length; j++) {
+      var walker = document.createTreeWalker(addressNodes[j], NodeFilter.SHOW_TEXT);
+      var textNode;
+      while ((textNode = walker.nextNode())) {
+        if (/[0-9]/.test(textNode.nodeValue)) {
+          textNode.nodeValue = localizeDisplayDigits(textNode.nodeValue, lang);
+        }
+      }
+    }
+  }
+  window.LCGLocalizeDisplayDigits = localizeDisplayDigits;
+  window.LCGSyncContactButtons = syncContactButtons;
+
   function applyLang(lang, save) {
     LANG = lang;
     var d = DICTS[lang] || {};
     nodes.forEach(function (e) {
       var t = (lang === 'fr') ? e.key : (d[e.key] != null ? d[e.key] : e.key);
-      e.node.nodeValue = e.pre + t + e.post;
+      e.node.nodeValue = e.pre + keepMeasuresTogether(t) + e.post;
     });
     document.documentElement.setAttribute('lang', lang);
     /* L'arabe s'écrit de droite à gauche : toute la page bascule en
@@ -6447,14 +7462,25 @@
       });
     });
     DATALABELS.forEach(function (e) {
-      e.el.setAttribute('data-label', (lang === 'fr') ? e.fr : (d[e.fr] != null ? d[e.fr] : e.fr));
+      var dataLabel = (lang === 'fr') ? e.fr : (d[e.fr] != null ? d[e.fr] : e.fr);
+      e.el.setAttribute('data-label', keepMeasuresTogether(localizeDisplayDigits(dataLabel, lang)));
     });
+    syncContactButtons(lang);
     var menu = document.getElementById('lang-menu');
     if (menu) {
       Array.prototype.forEach.call(menu.querySelectorAll('.lang-option'), function (b) {
         b.setAttribute('aria-checked', b.getAttribute('data-lang') === lang ? 'true' : 'false');
       });
     }
+    syncLanguageOptionLabels();
+    syncFoldAllButtons(lang);
+    try {
+      window.dispatchEvent(new CustomEvent('lcg-lang-changed', { detail: { lang: lang } }));
+    } catch (e) {}
+    /* Les scripts de la page (horaires, carte, réservation, messages)
+       peuvent réécrire des nombres pendant l’événement : le passage final
+       garantit que tout ce qui est visible adopte aussi les chiffres locaux. */
+    localizeAllDisplayDigits(lang);
     if (save) { try { localStorage.setItem(STORE_KEY, lang); } catch (e) {} }
     /* Les libellés traduits changent les largeurs et les hauteurs :
        recalage des bandeaux, du ruban d'onglets et du médaillon. */
@@ -6518,25 +7544,19 @@
   /* ---- Choix de la langue de départ ----
      Ordre de précédence :
        1. ?lang= dans l'URL (partage de lien, tests) — jamais mémorisé ;
-       2. choix mémorisé (clic au globe) : la détection automatique ne
-          joue que pour un visiteur qui n'a jamais choisi ;
-       3. langue de l'appareil — la première langue soutenue de
-          navigator.languages, dans l'ordre de préférence. L'anglais y
-          est traité comme un réglage « par défaut » (beaucoup
-          d'appareils sont réglés EN sans que ce soit la langue de
-          l'usager) : on écarte l'anglais et on retient la première
-          autre langue de la liste — un appareil [en, ja] révèle
-          souvent un usager japonais, sans aucune requête externe ;
-       4. pays de l'opérateur (géolocalisation IP) : affine l'anglais.
-          En itinérance l'adresse IP suit le pays de la SIM, d'où le
-          nom « opérateur » — c'est le cas visé : le touriste dont le
-          téléphone est resté en anglais ;
+       2. choix mémorisé (clic au globe) : il reste prioritaire ;
+       3. repli immédiat sur la locale primaire de l'appareil, afin de
+          afficher une langue utilisable sans attendre le réseau ;
+       4. pays détecté par le réseau (géolocalisation IP) : lorsqu'il est
+          fiable et associé à une langue du site, il devient la langue
+          automatique, même si la locale du navigateur était générique ;
        5. repli final : anglais.
-     La langue détectée n'est JAMAIS mémorisée (seul un clic au globe
-     l'est) : un changement de langue de l'appareil est suivi dès la
-     visite suivante. Le pays opérateur, lui, est mis en cache le
-     temps de la session (sessionStorage) pour ne pas réinterroger le
-     service à chaque chargement. */
+     Une page web ne peut pas lire le pays d'origine de la carte SIM : le
+     navigateur ne donne ni son IMSI ni son MCC. La locale régionale et le
+     pays du réseau sont donc les seuls signaux accessibles sans demander
+     une permission sensible. La langue détectée n'est JAMAIS mémorisée
+     (seul un clic au globe l'est) ; le pays réseau est mis en cache le
+     temps de la session. */
   var userPicked = false;
   var GEO_KEY = 'lcg-geo';
   var GEO_TTL = 8 * 60 * 60 * 1000; /* 8 h : une session de visite */
@@ -6566,6 +7586,39 @@
     TR: 'tr',
     IN: 'hi'
   };
+  function primaryDeviceLocale() {
+    try {
+      /* navigator.language est la locale active ; languages[0] n'est qu'un
+         repli lorsque le navigateur ne renseigne pas cette valeur. */
+      return String(navigator.language ||
+        (navigator.languages && navigator.languages.length ? navigator.languages[0] : '') || '');
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function regionFromLocale(locale) {
+    var parts = String(locale || '').replace(/_/g, '-').split('-');
+    for (var i = 1; i < parts.length; i++) {
+      if (/^[A-Za-z]{2}$/.test(parts[i]) || /^\\d{3}$/.test(parts[i])) {
+        return parts[i].toUpperCase();
+      }
+    }
+    return '';
+  }
+
+  function languageFromDeviceFallback() {
+    var locale = primaryDeviceLocale();
+    var base = locale.toLowerCase().split(/[-_]/)[0];
+    /* Une langue explicitement choisie dans la locale passe avant la
+       majorité supposée du pays : fr-CA reste français, fr-CH reste
+       français, etc. */
+    if (base === 'fr' || DICTS[base]) return base;
+    var regionalLanguage = COUNTRY_LANG[regionFromLocale(locale)];
+    if (regionalLanguage) return regionalLanguage;
+    return 'en';
+  }
+
   var initial = null;
   try { initial = new URLSearchParams(location.search).get('lang'); } catch (e) {}
   /* Valeur d'URL illisible (ex. ?lang=xx) : traitée comme absente. */
@@ -6575,39 +7628,29 @@
     /* 1-2. préférence explicite : pas de détection, pas de requête. */
     applyLang(initial, false);
   } else {
-    /* 3. langue de l'appareil (l'anglais « par défaut » écarté). */
-    var navList = [];
-    try {
-      navList = (navigator.languages && navigator.languages.length)
-        ? navigator.languages
-        : [navigator.language || ''];
-    } catch (e) {}
-    var pick = null;
-    for (var ni = 0; ni < navList.length; ni++) {
-      var nb = String(navList[ni] || '').toLowerCase().split('-')[0];
-      if (nb !== 'en' && (nb === 'fr' || DICTS[nb])) { pick = nb; break; }
-    }
-    if (pick) {
-      applyLang(pick, false);
-    } else {
-      /* 4-5. anglais immédiat — c'est le repli final, appliqué avant
-         réponse pour ne jamais retarder l'affichage — puis pays de
-         l'opérateur : appareil réglé EN seul, ou écriture non
-         soutenue (thaï, russe…). */
-      applyLang('en', false);
-      operatorCountry(function (lang) {
-        /* Un clic au globe en cours de vol gagne toujours ; la langue
-           de l'URL ou mémorisée n'arrive jamais ici. */
-        if (lang && !userPicked && lang !== LANG) applyLang(lang, false);
-      });
-    }
+    /* 3. Affichage immédiat sur la locale primaire, puis confirmation ou
+       correction par le pays du réseau. */
+    applyLang(languageFromDeviceFallback(), false);
+    operatorCountry(function (lang) {
+      /* Un clic au globe en cours de route gagne toujours ; une réponse
+         réseau tardive ne peut jamais écraser un choix volontaire. */
+      if (lang && !userPicked && lang !== LANG) applyLang(lang, false);
+    });
   }
+  if (window.LCGInstallDisplayDigitObserver) {
+    window.LCGInstallDisplayDigitObserver(function () { return LANG; });
+  }
+  /* Les composants créés dynamiquement (notamment les tiroirs vins
+     mobiles) peuvent s'initialiser après le premier applyLang. Exposer un
+     signal explicite évite de dépendre de l'ordre defer/DOMContentLoaded. */
+  window.__i18nReady = true;
+  try { window.dispatchEvent(new CustomEvent('lcg-i18n-ready', { detail: { lang: LANG } })); } catch (e) {}
 
-  /* Pays de l'opérateur : géolocalisation IP au nom du visiteur par
-     un service tiers gratuit sans clé — ipwho.is, repli geojs.io
-     (tous deux renvoient le code pays à deux lettres). Échec ou
-     lenteur : silencieux, l'anglais reste. N'est appelé que pour un
-     premier visiteur sans préférence lisible sur l'appareil. */
+  /* Pays du réseau : géolocalisation IP au nom du visiteur par un service
+     tiers gratuit sans clé — ipwho.is, repli geojs.io (tous deux renvoient
+     le code pays à deux lettres). Échec ou lenteur : silencieux, la locale
+     primaire déjà affichée reste en place. Cette information décrit le
+     réseau actuel, pas la carte SIM, que le Web ne peut pas inspecter. */
   function operatorCountry(then) {
     var cached = null;
     try { cached = JSON.parse(sessionStorage.getItem(GEO_KEY) || 'null'); } catch (e) {}

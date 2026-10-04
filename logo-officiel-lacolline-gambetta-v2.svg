@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-labelledby="title desc">
+  <title id="title">La Colline Gambetta</title>
+  <desc id="desc">Logo circulaire minimaliste en traits représentant une colline et un arbre, dans les couleurs violet royal, jaune et or de La Colline Gambetta.</desc>
+  <defs>
+    <clipPath id="circle-clip"><circle cx="500" cy="500" r="464"/></clipPath>
+  </defs>
+
+  <!-- Médaillon circulaire 1:1 -->
+  <circle cx="500" cy="500" r="480" fill="#24102E"/>
+  <circle cx="500" cy="500" r="464" fill="#F8D77A" stroke="#D8B257" stroke-width="12"/>
+  <circle cx="500" cy="500" r="426" fill="none" stroke="#432155" stroke-width="3" opacity=".7"/>
+
+  <g clip-path="url(#circle-clip)">
+    <!-- Symbole monoline : colline, tronc et branches volontairement aérés -->
+    <g fill="none" stroke="#432155" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M500 704 C499 636 500 564 500 491 C500 421 500 353 500 290" stroke-width="16"/>
+      <path d="M500 530 C465 489 424 455 373 425 C329 399 293 371 260 336" stroke-width="10"/>
+      <path d="M500 510 C535 472 577 440 626 408 C673 378 713 345 744 307" stroke-width="10"/>
+      <path d="M500 426 C466 390 439 353 424 313 C413 284 407 255 407 224" stroke-width="9"/>
+      <path d="M500 407 C536 372 561 337 575 296 C584 268 588 239 588 210" stroke-width="9"/>
+      <path d="M500 354 C479 324 465 293 462 260 C460 238 462 216 467 195" stroke-width="7"/>
+      <path d="M501 347 C523 319 537 289 542 258 C545 236 544 216 540 196" stroke-width="7"/>
+    </g>
+
+    <!-- Feuilles réduites : une signature visuelle lisible à petite taille -->
+    <g fill="none" stroke="#432155" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M255 336 C232 331 218 315 217 294 C240 293 257 308 255 336Z"/>
+      <path d="M322 397 C300 399 282 388 275 368 C298 363 316 375 322 397Z"/>
+      <path d="M391 431 C370 437 350 428 341 409 C362 401 383 411 391 431Z"/>
+      <path d="M407 224 C389 211 384 190 391 173 C410 179 418 198 407 224Z"/>
+      <path d="M461 260 C441 252 431 234 435 216 C456 217 468 236 461 260Z"/>
+      <path d="M588 210 C608 198 628 203 638 220 C620 234 599 229 588 210Z"/>
+      <path d="M575 296 C597 286 618 293 628 311 C608 325 587 317 575 296Z"/>
+      <path d="M626 408 C647 402 667 412 674 431 C653 439 634 428 626 408Z"/>
+      <path d="M704 350 C725 339 746 346 756 365 C736 378 715 370 704 350Z"/>
+      <path d="M744 307 C763 292 785 295 798 313 C780 330 758 326 744 307Z"/>
+    </g>
+
+    <!-- Nom : verrouillage typographique clair et professionnel -->
+    <g fill="#432155" text-anchor="middle" font-family="Cinzel, Georgia, serif">
+      <text x="500" y="590" font-size="79" font-weight="700" letter-spacing="8">LA COLLINE</text>
+      <text x="500" y="671" font-size="88" font-weight="700" letter-spacing="6">GAMBETTA</text>
+    </g>
+    <g fill="#432155" text-anchor="middle" font-family="Montserrat, Arial, sans-serif">
+      <text x="500" y="735" font-size="25" font-weight="700" letter-spacing="7">BAR • RESTAURANT</text>
+    </g>
+
+    <!-- Ligne de colline, clin d’œil discret au nom -->
+    <path d="M247 779 C337 748 414 751 500 771 C586 791 663 794 753 763"
+          fill="none" stroke="#D8B257" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="218" cy="779" r="6" fill="#D8B257"/>
+    <circle cx="782" cy="763" r="6" fill="#D8B257"/>
+  </g>
+
+  <!-- Cercle de finition -->
+  <circle cx="500" cy="500" r="480" fill="none" stroke="#D8B257" stroke-width="10"/>
+</svg>

@@ -2,6 +2,7 @@
 .browser-print/
 .carte-shots/
 .carte-pdf/
+.carte-imprimeur-pdf/
 node_modules/
 __pycache__/
 tools/__pycache__/
@@ -15,9 +16,24 @@ carte.html
 # feuilles A4 intermédiaires (regénérées par la pipeline ; le PDF final
 # versionné est Carte_LaCollineGambetta.pdf)
 carte-a4-pages/
+carte-imprimeur-pages/
 
 # PDF intermédiaire assemblé (le PDF versionné est Carte_LaCollineGambetta.pdf)
 carte-a4.pdf
 
 # harnais de vérification éphémère (R20)
 .tmpverify/
+
+# références d'images récupérées sur le web (travail de génération)
+image-search/
+
+# essais de logos et QR codes à la racine (les versions utilisées vivent
+# dans assets/vector/ et assets/cover/)
+/logo-carre-toile-jaune-canard*
+/logo-minimaliste-la-colline-gambetta*
+/logo-officiel-lacolline-gambetta*
+/medallion-facade.png
+/qr-*.png
+/qr_code_*.png
+/chateau-la-gabare-cave-bokeh.jpg
+/cotes-du-rhone-les-3-garcons-cave-bokeh.jpg

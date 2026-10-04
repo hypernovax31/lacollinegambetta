@@ -1,16 +1,31 @@
-name: Mettre à jour les règles Firestore
+name: Règles Firestore
 
+# Déploie uniquement les règles et index Firestore, et seulement quand ces
+# fichiers changent sur la branche principale. Le site lui-même est publié
+# par GitHub Pages, sans workflow.
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - firestore.rules
+      - firestore.indexes.json
+      - firebase.json
+      - package-lock.json
+      - .github/workflows/firebase-deploy.yml
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: firestore-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  deploy-firestore-rules:
+  regles-firestore:
+    name: Déployer les règles
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Récupérer le dépôt
         uses: actions/checkout@v4
@@ -24,5 +39,13 @@ jobs:
       - name: Installer les dépendances
         run: npm ci
 
-      - name: Déployer les règles Firestore du projet partagé
-        run: npx firebase-tools deploy --project "${{ secrets.FIREBASE_PROJECT_ID }}" --only firestore --token "${{ secrets.FIREBASE_TOKEN }}"
+      - name: Déployer les règles Firestore
+        env:
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: >-
+          npx firebase-tools deploy
+          --project "$FIREBASE_PROJECT_ID"
+          --only firestore
+          --token "$FIREBASE_TOKEN"
+          --non-interactive

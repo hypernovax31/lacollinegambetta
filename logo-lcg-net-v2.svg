@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000" role="img" aria-labelledby="logo-title logo-description">
+  <title id="logo-title">Logo La Colline Gambetta — arbre, colline et G</title>
+  <desc id="logo-description">Arbre stylisé violet et vert au-dessus d’un monogramme violet et or, dans un cercle clair bordé d’or.</desc>
+
+  <defs>
+    <clipPath id="circle-only">
+      <circle cx="500" cy="500" r="493"/>
+    </clipPath>
+  </defs>
+
+  <!-- Cercle propre : tout ce qui est extérieur reste transparent. -->
+  <circle cx="500" cy="500" r="493" fill="#FCFAF7"/>
+  <circle cx="500" cy="500" r="493" fill="none" stroke="#D0AC4D" stroke-width="8"/>
+  <circle cx="500" cy="500" r="479" fill="none" stroke="#E8D9A7" stroke-width="2"/>
+
+  <g clip-path="url(#circle-only)">
+    <!-- Arbre principal : tronc et branches en violet profond -->
+    <g fill="none" stroke="#481747" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M500 714 C500 650 501 580 500 514 C499 446 500 378 500 303" stroke-width="20"/>
+      <path d="M500 535 C474 491 439 449 397 421 C368 402 342 383 318 357" stroke-width="12"/>
+      <path d="M500 506 C531 466 567 432 610 403 C641 382 668 354 690 324" stroke-width="12"/>
+      <path d="M500 430 C468 393 444 357 431 320 C422 294 418 270 420 245" stroke-width="10"/>
+      <path d="M500 411 C532 377 555 343 568 306 C577 279 580 255 578 231" stroke-width="10"/>
+      <path d="M500 353 C482 324 472 295 473 266 C474 246 478 228 485 211" stroke-width="8"/>
+      <path d="M500 347 C520 320 531 291 531 264 C531 244 528 227 522 211" stroke-width="8"/>
+    </g>
+
+    <!-- Feuilles : formes pleines, sans points parasites -->
+    <g fill="#5D8D2F" stroke="#5D8D2F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M485 227 C468 214 466 194 476 181 C492 190 496 208 485 227Z"/>
+      <path d="M522 227 C535 210 553 207 566 217 C556 233 538 237 522 227Z"/>
+      <path d="M437 276 C416 268 409 250 416 234 C436 238 446 256 437 276Z"/>
+      <path d="M558 278 C578 267 597 273 605 289 C587 300 568 295 558 278Z"/>
+      <path d="M399 328 C380 320 372 302 378 286 C398 290 407 307 399 328Z"/>
+      <path d="M600 329 C619 318 638 324 646 341 C628 352 609 347 600 329Z"/>
+      <path d="M359 382 C339 376 329 359 334 342 C354 345 365 362 359 382Z"/>
+      <path d="M642 386 C662 376 681 383 688 400 C669 410 650 403 642 386Z"/>
+      <path d="M408 421 C390 413 383 397 389 383 C407 386 416 402 408 421Z"/>
+      <path d="M586 420 C604 411 621 417 628 433 C611 443 594 437 586 420Z"/>
+      <path d="M466 326 C449 316 445 299 452 286 C469 290 476 308 466 326Z"/>
+      <path d="M539 329 C554 318 571 321 579 335 C564 347 547 343 539 329Z"/>
+    </g>
+
+    <!-- Monogramme inférieur, fidèle au signe violet et or de l’original -->
+    <g>
+      <!-- Colline violette, placée clairement à gauche du tronc -->
+      <path d="M184 846 C199 796 233 755 282 731 C332 706 389 710 445 738 C403 753 361 782 327 826 C293 846 239 857 184 846Z" fill="#481747"/>
+      <path d="M229 843 C272 819 319 781 357 742 C383 731 413 733 444 741 C399 757 359 788 327 828 C295 842 262 848 229 843Z" fill="#5B2057"/>
+      <path d="M243 838 C291 812 335 773 367 735" fill="none" stroke="#FCFAF7" stroke-width="12" stroke-linecap="round"/>
+      <!-- G doré, immédiatement à droite du tronc -->
+      <text x="484" y="852" fill="#D0AC4D" font-family="Georgia, 'Times New Roman', serif" font-size="204" font-weight="500" letter-spacing="-12">G</text>
+    </g>
+  </g>
+
+  <!-- Rebord final pour une découpe nette du cercle -->
+  <circle cx="500" cy="500" r="493" fill="none" stroke="#D0AC4D" stroke-width="8"/>
+</svg>

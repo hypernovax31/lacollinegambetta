@@ -58,11 +58,11 @@ export function jpegInfo(path) {
 }
 
 /**
- * @param {{ images: string[], out: string, pageWidth?: number, pageHeight?: number, tolerate?: number }} o
+ * @param {{ images: string[], out: string, pageWidth?: number, pageHeight?: number, tolerate?: number, annotations?: Array<{ page: number, rect: number[], url: string }> }} o
  *   `images` : JPEG dans l'ordre des pages. `tolerate` : écart d'aspect toléré (fraction).
  */
 export function imagesToPdf(o) {
-  const { images, out } = o;
+  const { images, out, annotations } = o;
   if (!images?.length) throw new Error('imagesToPdf : aucune image');
   const W = o.pageWidth ?? A4_PT.width;
   const H = o.pageHeight ?? A4_PT.height;
@@ -84,7 +84,6 @@ export function imagesToPdf(o) {
   let pos = 0;
   const push = (part) => { const b = Buffer.isBuffer(part) ? part : Buffer.from(part, 'binary'); chunks.push(b); pos += b.length; return pos - b.length; };
 
-  const offsets = [];
   const objects = [];                      // [numéro, function d'écriture]
   let next = 1;
   const catalog = next++;
@@ -94,13 +93,27 @@ export function imagesToPdf(o) {
     perImage.push({ page: next++, content: next++, image: next++ });
   }
 
+  const pageAnnotsMap = new Map();
+  if (annotations && annotations.length) {
+    for (const ann of annotations) {
+      const annNum = next++;
+      objects.push([annNum, () => `<< /Type /Annot /Subtype /Link /Rect [${ann.rect.map(round).join(' ')}] /Border [0 0 0] /A << /Type /Action /S /URI /URI (${ann.url}) >> >>`]);
+      const list = pageAnnotsMap.get(ann.page) || [];
+      list.push(annNum);
+      pageAnnotsMap.set(ann.page, list);
+    }
+  }
+
   objects.push([catalog, () => `<< /Type /Catalog /Pages ${pages} 0 R >>`]);
   objects.push([pages, () => `<< /Type /Pages /Count ${infos.length} /Kids [${perImage.map(p => `${p.page} 0 R`).join(' ')}] >>`]);
 
   infos.forEach((info, i) => {
+    const pageNum = i + 1;
     const { page, content, image } = perImage[i];
+    const annotsList = pageAnnotsMap.get(pageNum);
+    const annotsRef = annotsList ? ` /Annots [${annotsList.map(n => `${n} 0 R`).join(' ')}]` : '';
     objects.push([page, () => `<< /Type /Page /Parent ${pages} 0 R /MediaBox [0 0 ${round(W)} ${round(H)}] `
-      + `/Resources << /XObject << /Im0 ${image} 0 R >> >> /Contents ${content} 0 R >>`]);
+      + `/Resources << /XObject << /Im0 ${image} 0 R >> >> /Contents ${content} 0 R${annotsRef} >>`]);
     objects.push([content, () => {
       const stream = `q ${round(W)} 0 0 ${round(H)} 0 0 cm /Im0 Do Q`;
       return `<< /Length ${Buffer.byteLength(stream, 'binary')} >>\nstream\n${stream}\nendstream`;

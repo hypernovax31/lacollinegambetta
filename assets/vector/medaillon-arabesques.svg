@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="2000" height="2000" fill="none" role="img" aria-label="Arabesques du medaillon">
+  <title>Arabesques du medaillon - La Colline Gambetta</title>
+  <desc>Encadrement du medaillon, formes vectorielles, canevas 2000x2000 px (169,3 mm a 300 dpi).</desc>
+  <defs>
+    <linearGradient id="or" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#bf953f"/>
+      <stop offset="20%" stop-color="#fcf6ba"/>
+      <stop offset="45%" stop-color="#d8b257"/>
+      <stop offset="75%" stop-color="#b38728"/>
+      <stop offset="100%" stop-color="#fef9db"/>
+    </linearGradient>
+    <filter id="ombre" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+                    <g filter="url(#ombre)">
+                        <circle cx="200" cy="200" r="192" stroke="url(#or)" stroke-width="5" />
+                        <circle cx="200" cy="200" r="184" stroke="url(#or)" stroke-width="1.8" stroke-dasharray="8 4" />
+                        <circle cx="200" cy="200" r="133" stroke="url(#or)" stroke-width="4.5" />
+                        <circle cx="200" cy="200" r="127" stroke="url(#or)" stroke-width="1" opacity="0.8" />
+
+                        <path d="M 200 12 C 185 12, 178 28, 178 42 C 178 56, 185 70, 200 70 C 215 70, 222 56, 222 42 C 222 28, 215 12, 200 12 Z" fill="url(#or)" />
+                        <path d="M 200 16 C 196 28, 204 42, 200 66" stroke="#23102e" stroke-width="2.5" stroke-linecap="round" fill="none" />
+
+                        <path d="M 178 40 C 150 42, 120 58, 100 80 C 82 100, 72 125, 68 150 C 78 135, 95 120, 115 115 C 130 112, 148 118, 160 130 C 145 132, 130 145, 125 160 C 120 172, 128 188, 140 192" stroke="url(#or)" stroke-width="3" stroke-linecap="round" fill="none" />
+                        <path d="M 222 40 C 250 42, 280 58, 300 80 C 318 100, 328 125, 332 150 C 322 135, 305 120, 285 115 C 270 112, 252 118, 240 130 C 255 132, 270 145, 275 160 C 280 172, 272 188, 260 192" stroke="url(#or)" stroke-width="3" stroke-linecap="round" fill="none" />
+
+                        <path d="M 200 388 C 170 388, 145 375, 130 355 C 145 340, 168 335, 185 345 C 200 355, 195 375, 180 378 C 168 380, 155 370, 158 358" stroke="url(#or)" stroke-width="3.2" stroke-linecap="round" fill="none" />
+                        <path d="M 200 388 C 230 388, 255 375, 270 355 C 255 340, 232 335, 215 345 C 200 355, 205 375, 220 378 C 232 380, 245 370, 242 358" stroke="url(#or)" stroke-width="3.2" stroke-linecap="round" fill="none" />
+                        <path d="M 200 330 C 190 345, 190 365, 200 378 C 210 365, 210 345, 200 330 Z" fill="url(#or)" />
+
+                        <!-- Treillis & Losanges Kabyles géométriques subtils -->
+                        <path d="M 68 150 L 52 165 L 68 180 L 52 195 L 68 210 L 52 225 L 68 240" stroke="url(#or)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.85" />
+                        <path d="M 52 195 L 28 175 M 52 195 L 28 215 M 20 195 L 60 195" stroke="url(#or)" stroke-width="2" stroke-linecap="round" opacity="0.9" />
+                        <circle cx="52" cy="195" r="3.5" fill="url(#or)" />
+                        <path d="M 332 150 L 348 165 L 332 180 L 348 195 L 332 210 L 348 225 L 332 240" stroke="url(#or)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.85" />
+                        <path d="M 348 195 L 372 175 M 348 195 L 372 215 M 340 195 L 380 195" stroke="url(#or)" stroke-width="2" stroke-linecap="round" opacity="0.9" />
+                        <circle cx="348" cy="195" r="3.5" fill="url(#or)" />
+                    </g>
+                </svg>

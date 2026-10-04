@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lacollinegambetta.com/sitemap.xml
+Sitemap: https://lacollinegambetta.com/sitemap-images.xml

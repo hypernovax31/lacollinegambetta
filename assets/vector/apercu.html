@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Colline Gambetta — bibliothèque vectorielle</title>
+<style>
+  :root { --or:#e9c368; --nuit:#0b0709; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:linear-gradient(160deg,#120c11,#05040a 60%); color:#f3e9d6;
+         font-family:"Helvetica Neue",Arial,sans-serif; padding:48px 24px 90px; }
+  h1 { font-size:clamp(1.5rem,3vw,2.3rem); letter-spacing:.14em; text-transform:uppercase;
+       text-align:center; color:var(--or); margin:0 0 6px; font-weight:600; }
+  .sub { text-align:center; opacity:.72; margin:0 0 42px; font-size:.95rem; }
+  h2 { font-size:1rem; letter-spacing:.22em; text-transform:uppercase; color:var(--or);
+       border-bottom:1px solid rgba(233,195,104,.28); padding-bottom:10px; margin:56px auto 26px;
+       max-width:1180px; font-weight:600; }
+  .grid { display:grid; gap:22px; max-width:1180px; margin:0 auto;
+          grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); }
+  .card { background:rgba(255,255,255,.04); border:1px solid rgba(233,195,104,.22);
+          border-radius:16px; padding:18px; text-align:center; }
+  .card.glossy { background:
+      linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,0) 42%), #050505;
+      border-color:rgba(255,255,255,.12); }
+  .card img { width:100%; height:190px; object-fit:contain; display:block; }
+  .card b { display:block; margin-top:14px; font-size:.82rem; letter-spacing:.06em; }
+  .card span { display:block; margin-top:4px; font-size:.72rem; opacity:.6; }
+  .card a { display:inline-block; margin-top:10px; font-size:.72rem; color:var(--or);
+            text-decoration:none; border:1px solid rgba(233,195,104,.4); border-radius:999px;
+            padding:5px 12px; }
+  .note { max-width:1180px; margin:50px auto 0; font-size:.82rem; line-height:1.7; opacity:.75;
+          border-top:1px solid rgba(233,195,104,.2); padding-top:18px; }
+</style>
+</head>
+<body>
+<h1>Bibliothèque vectorielle</h1>
+<p class="sub">La Colline Gambetta — tous les fichiers sont des SVG vectoriels, canevas 2000 × 2000 px, soit 169,3 mm à 300 dpi, agrandissables sans perte. Le trio de feuilles du bas est désormais un trio de grains de café. Contours relissés : cercles mathématiques, lettres issues des contours de la police Cinzel, illustration retracée en lissage maximal.</p>
+
+<h2>Modèles de logo principal</h2>
+<div class="grid" id="logos"></div>
+
+<h2>Série minimaliste</h2>
+<div class="grid" id="minimal"></div>
+
+<h2>Série minimaliste sur fond transparent</h2>
+<div class="grid" id="transparent"></div>
+
+<h2>Arabesques du médaillon</h2>
+<div class="grid" id="arabesques"></div>
+
+<h2>Logos des menus et médailles de sections</h2>
+<div class="grid" id="menus"></div>
+
+<p class="note">Chaque fichier contient de vraies courbes de Bézier, les dégradés sont vectoriels et modifiables, les textes sont vectorisés en contours afin d’éviter tout problème de police chez l’imprimeur. Les cartes sur fond noir laqué simulent le rendu sur une surface noire brillante.</p>
+
+<script>
+const logos = [
+  ["logo-or-violet-relief.svg","Or et violet — relief bombé","ombre portée douce", true],
+  ["logo-or-noir-grave.svg","Or sur noir profond","effet gravé", true],
+  ["logo-or-halo-neon.svg","Or lumineux — halo néon","pensé pour le noir brillant", true],
+  ["logo-argent-nuit.svg","Argent et bleu nuit","relief biseauté", true],
+  ["logo-cuivre-vert-sapin.svg","Cuivre et vert sapin","ombre longue", false],
+  ["logo-creme-aubergine-plat.svg","Crème et aubergine","style plat mat, sans ombre", false],
+  ["logo-or-monochrome-estampe.svg","Or monochrome","relief estampé, fond transparent", true],
+  ["logo-blanc-decoupe.svg","Blanc monochrome","découpe vinyle, sans ombre", true],
+];
+const minimal = [
+  ["logo-minimal-epure.svg","Épure","filet fin, arbre et grains, sans texte", true],
+  ["logo-minimal-negatif-or.svg","Négatif or","disque plein, motifs évidés", true],
+  ["logo-minimal-noir-mat.svg","Encre noire mate","sur crème, sans anneau", false],
+  ["logo-minimal-grains.svg","Grains","arbre, ligne d’horizon, trois grains", true],
+  ["logo-minimal-cercle-ouvert.svg","Cercle ouvert","anneau interrompu", true],
+  ["logo-minimal-duotone.svg","Duotone anthracite","or et blanc cassé, ombre très douce", true],
+];
+const transparent = [
+  ["logo-t-tampon-circulaire.svg","Tampon circulaire","textes courbés le long du cadre", true],
+  ["logo-t-embleme-compact.svg","Emblème compact","sans texte, pour favicon et tampon", true],
+  ["logo-t-monogramme-lcg.svg","Monogramme LCG","initiales et filet fin", true],
+  ["logo-t-trait-fin.svg","Trait fin","filets très fins, composition aérée", true],
+  ["logo-t-epure-or.svg","Épure or","médaillon complet sans disque", true],
+  ["logo-t-blanc-pur.svg","Blanc pur","pour fonds sombres", true],
+  ["logo-t-bicolore-encre.svg","Bicolore encre","arbre or, texte encre, grains verts", false],
+  ["logo-t-signature-horizontale.svg","Signature horizontale","emblème et texte côte à côte", true],
+  ["logo-t-anneau-negatif.svg","Anneau négatif","nom évidé dans un bandeau doré", true],
+  ["logo-t-anneau-segmente.svg","Anneau segmenté","cadre en tirets vectoriels", true],
+  ["logo-t-hexagone.svg","Hexagone","cadre géométrique contemporain", true],
+  ["logo-t-carre-arrondi.svg","Carré arrondi","signalétique moderne", true],
+  ["logo-t-arc-couronne.svg","Couronne d’arc","arc plein et anneau segmenté", true],
+];
+const menus = [
+  ["menu-duo.svg","Menu Duo",""],
+  ["menu-complet.svg","Menu Complet",""],
+  ["menu-enfant.svg","Menu Enfant",""],
+  ["menu-petit-dejeuner.svg","Petit-déjeuner",""],
+  ["medaille-entree.svg","Entrées",""],
+  ["medaille-plat.svg","Plats",""],
+  ["medaille-dessert.svg","Desserts",""],
+  ["etoile.svg","Étoile décorative",""],
+  ["motif-couverts.svg","Motif couverts",""],
+];
+const arabesques = [["medaillon-arabesques.svg","Arabesques du médaillon","encadrement de la page de garde", true]];
+
+function card([file,name,desc,glossy]) {
+  return `<figure class="card${glossy?' glossy':''}">
+    <img src="${file}" alt="${name}" loading="lazy">
+    <b>${name}</b><span>${desc||'&nbsp;'}</span>
+    <a href="${file}" download>Télécharger le SVG</a>
+  </figure>`;
+}
+document.getElementById('logos').innerHTML = logos.map(card).join('');
+document.getElementById('minimal').innerHTML = minimal.map(card).join('');
+document.getElementById('transparent').innerHTML = transparent.map(card).join('');
+document.getElementById('menus').innerHTML = menus.map(m => card([...m,true])).join('');
+document.getElementById('arabesques').innerHTML = arabesques.map(card).join('');
+</script>
+</body>
+</html>
