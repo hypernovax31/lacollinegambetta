@@ -663,7 +663,7 @@ html.carte-doc .download-btn { display: none !important; }
 
 /* Typographie officielle Cinzel / Montserrat pour la carte A4 */
 html.carte-doc .cover-brand h1,
-html.carte-doc .cover-brand h2,
+html.carte-doc .cover-brand :is(h1,h2),
 html.carte-doc .cover-brand .eyebrow,
 html.carte-doc .cover-brand .leader-title,
 html.carte-doc .cover-brand .leader-meta,
@@ -879,8 +879,8 @@ html.carte-doc #print-document .print-page--cover .cover-brand .leader-title {
   text-transform: uppercase !important;
   margin: 0 0 1.5mm 0 !important;
 }
-html.carte-doc #print-document .print-page--cover .titre-principal h2,
-html.carte-doc #print-document .print-page--cover .cover-brand h2 {
+html.carte-doc #print-document .print-page--cover .titre-principal :is(h1,h2),
+html.carte-doc #print-document .print-page--cover .cover-brand :is(h1,h2) {
   font-family: 'Cinzel', serif !important;
   font-size: 38pt !important;
   font-weight: 700 !important;
@@ -892,8 +892,8 @@ html.carte-doc #print-document .print-page--cover .cover-brand h2 {
   text-align: center !important;
   display: block !important;
 }
-html.carte-doc #print-document .print-page--cover .titre-principal h2 span,
-html.carte-doc #print-document .print-page--cover .cover-brand h2 span {
+html.carte-doc #print-document .print-page--cover .titre-principal :is(h1,h2) span,
+html.carte-doc #print-document .print-page--cover .cover-brand :is(h1,h2) span {
   display: block !important;
   font-family: 'Cinzel', serif !important;
   font-size: 25pt !important;

@@ -1,0 +1,18 @@
+{
+  "_mode_emploi": [
+    "Renseignez ici les avis de la fiche Google La Colline Gambetta,",
+    "puis passez publie a true : le bloc apparait sur la page de garde.",
+    "N'y mettez que de vrais avis de votre fiche."
+  ],
+  "publie": false,
+  "note": null,
+  "nombre_avis": null,
+  "url": "",
+  "avis": [
+    {
+      "auteur": "",
+      "note": 5,
+      "texte": ""
+    }
+  ]
+}

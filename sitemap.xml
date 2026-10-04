@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://lacollinegambetta.com/</loc>
     <lastmod>2026-10-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+   <xhtml:link rel="alternate" hreflang="fr" href="https://lacollinegambetta.com/"/>
+      <xhtml:link rel="alternate" hreflang="en" href="https://lacollinegambetta.com/?lang=en"/>
+      <xhtml:link rel="alternate" hreflang="es" href="https://lacollinegambetta.com/?lang=es"/>
+      <xhtml:link rel="alternate" hreflang="de" href="https://lacollinegambetta.com/?lang=de"/>
+      <xhtml:link rel="alternate" hreflang="it" href="https://lacollinegambetta.com/?lang=it"/>
+      <xhtml:link rel="alternate" hreflang="pt" href="https://lacollinegambetta.com/?lang=pt"/>
+      <xhtml:link rel="alternate" hreflang="nl" href="https://lacollinegambetta.com/?lang=nl"/>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://lacollinegambetta.com/?lang=pl"/>
+      <xhtml:link rel="alternate" hreflang="zh" href="https://lacollinegambetta.com/?lang=zh"/>
+      <xhtml:link rel="alternate" hreflang="uk" href="https://lacollinegambetta.com/?lang=uk"/>
+      <xhtml:link rel="alternate" hreflang="ja" href="https://lacollinegambetta.com/?lang=ja"/>
+      <xhtml:link rel="alternate" hreflang="ko" href="https://lacollinegambetta.com/?lang=ko"/>
+      <xhtml:link rel="alternate" hreflang="ar" href="https://lacollinegambetta.com/?lang=ar"/>
+      <xhtml:link rel="alternate" hreflang="tr" href="https://lacollinegambetta.com/?lang=tr"/>
+      <xhtml:link rel="alternate" hreflang="hi" href="https://lacollinegambetta.com/?lang=hi"/>
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://lacollinegambetta.com/"/>
   </url>
   <url>
     <loc>https://lacollinegambetta.com/reservation.html</loc>

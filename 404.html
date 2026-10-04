@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="theme-color" content="#24102e">
+<meta name="color-scheme" content="dark light">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page introuvable — La Colline Gambetta</title>
+<meta name="description" content="Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon.png?v=20260926">
+<link rel="shortcut icon" href="/favicon.ico?v=20260926">
+<link rel="manifest" href="/site.webmanifest">
+<style>
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:700;font-display:swap;src:url('assets/fonts/cinzel-700.woff2') format('woff2');}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:400;font-display:swap;src:url('assets/fonts/montserrat-400.woff2') format('woff2');}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:600;font-display:swap;src:url('assets/fonts/montserrat-600.woff2') format('woff2');}
+:root{--violet:#24102e;--violet-clair:#3b1340;--or:#d8b257;--or-clair:#fcf6ba;}
+*{box-sizing:border-box;}
+body{
+  margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:6vh 5vw;text-align:center;
+  background:radial-gradient(circle at 50% 38%,var(--violet-clair) 0%,var(--violet) 62%,#150a19 100%);
+  color:#f6eee9;font-family:'Montserrat',system-ui,sans-serif;
+}
+main{max-width:34rem;display:flex;flex-direction:column;align-items:center;gap:1.1rem;}
+.medaillon{width:min(188px,42vw);height:auto;}
+h1{
+  margin:0;font-family:'Cinzel',Georgia,serif;font-weight:700;
+  font-size:clamp(1.5rem,5vw,2.1rem);letter-spacing:.17em;text-transform:uppercase;
+  color:var(--or);line-height:1.25;
+}
+p{margin:0;font-size:.95rem;line-height:1.65;color:rgba(246,238,233,.82);}
+.liens{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-top:.5rem;}
+a.bouton{
+  display:inline-flex;align-items:center;gap:.5rem;padding:.62rem 1.15rem;
+  border:1px solid rgba(216,178,87,.55);border-radius:999px;
+  color:var(--or-clair);text-decoration:none;font-size:.8rem;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;transition:background .2s,border-color .2s;
+}
+a.bouton:hover{background:rgba(216,178,87,.14);border-color:var(--or);}
+.adresse{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(246,238,233,.55);}
+.adresse a{color:inherit;}
+</style>
+</head>
+<body>
+<main>
+  <img class="medaillon" src="assets/cover/medaillon-logo-noir-brillant.svg" width="400" height="400"
+       alt="Médaillon doré de La Colline Gambetta">
+  <h1>Cette page n’existe pas</h1>
+  <p>Le lien que vous avez suivi ne mène nulle part — mais la table, elle, vous attend.</p>
+  <div class="liens">
+    <a class="bouton" href="/">Accueil</a>
+    <a class="bouton" href="/#menu-nav-anchor">La carte</a>
+    <a class="bouton" href="/reservation.html">Réserver</a>
+    <a class="bouton" href="tel:+33143490593">01 43 49 05 93</a>
+  </div>
+  <p class="adresse">
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris"
+       target="_blank" rel="noopener">4 rue Belgrand • 75020 Paris • Métro Gambetta</a>
+  </p>
+</main>
+</body>
+</html>
