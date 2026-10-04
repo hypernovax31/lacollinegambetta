@@ -153,11 +153,33 @@ python3 tools/avis_google.py     # (re)pose le bandeau : styles, balisage, charg
 python3 tools/pied_quartier.py   # ligne « Dans le quartier » du pied de page
 ```
 
+### Repères du quartier et itinéraire RATP
+
+`tools/pied_quartier.py` pose, sous l'adresse, une ligne très discrète mais
+bien visible (jamais de lien dissimulé) vers huit repères du 20ᵉ et du 11ᵉ :
+Père-Lachaise, parc de Belleville, Carré de Baudouin, Théâtre de la Colline,
+mairie du 20ᵉ, Cirque d'Hiver, Bataclan, Opéra Bastille. La liste se modifie
+dans la constante `LIENS` du script.
+
+Le dernier lien ouvre un **itinéraire RATP** : l'arrivée est toujours
+`4, Rue Belgrand, 75, Paris` (format attendu par `ratp.fr/itineraires?end=…`)
+et le départ est la **position exacte du visiteur**. Au clic, le navigateur
+demande la géolocalisation, les coordonnées sont converties en adresse postale
+par l'API Adresse de l'État (`api-adresse.data.gouv.fr`, gratuite et sans clé),
+puis l'itinéraire s'ouvre avec `&start=…`. Si la géolocalisation est refusée,
+indisponible ou trop lente (9 s), l'itinéraire s'ouvre quand même avec la seule
+arrivée pré-remplie.
+
 ### Vérification
 
 ```bash
 node tools/verifier_site.mjs   # CSS, HTML, h1 unique, JSON-LD, bloc avis, liens
 ```
+
+Le dernier contrôle **audite tous les liens externes** des cinq pages : chacun
+doit figurer dans la liste `autorises` du script, c'est-à-dire avoir été
+ouvert et vérifié (bon site, en ligne, à jour). Avant d'ajouter un lien au
+site, on le vérifie puis on l'inscrit dans cette liste.
 
 Ces trois scripts sont **idempotents** : on peut les relancer après toute
 modification du site.

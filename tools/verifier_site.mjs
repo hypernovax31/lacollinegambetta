@@ -125,9 +125,19 @@ const t2 = live.window.document.getElementById('cover-reviews').textContent.repl
 
 // ------------------------------------------- 4 ter. reperes du quartier ---
 const quartier = [...d.querySelectorAll('.footer-quartier a')];
-quartier.length === 4 && quartier.every((a) => a.href.startsWith('https://'))
+quartier.length >= 9 && quartier.every((a) => a.href.startsWith('https://'))
   ? ok(`pied de page : ${quartier.length} reperes de quartier (${quartier.map((a) => a.textContent).join(', ')})`)
   : ko(`pied de page : ${quartier.length} lien(s) de quartier`);
+quartier.some((a) => /mairie11|mairie\.?11/i.test(a.href))
+  ? ko('la mairie du 11e ne doit pas figurer dans les reperes')
+  : ok('aucun lien vers la mairie du 11e');
+const ratp = d.querySelector('[data-ratp-itineraire]');
+ratp && ratp.href.startsWith('https://www.ratp.fr/itineraires?end=') && ratp.href.includes('Belgrand')
+  ? ok('lien RATP : itineraire avec le restaurant en arrivee')
+  : ko('lien RATP : ce n\'est pas un itineraire vers le restaurant');
+/navigator\.geolocation/.test(index) && /api-adresse\.data\.gouv\.fr\/reverse/.test(index)
+  ? ok('itineraire RATP : depart pris sur la position du visiteur, avec repli')
+  : ko('itineraire RATP : la geolocalisation du visiteur est absente');
 d.querySelector('.footer-quartier').previousElementSibling.classList.contains('footer-details')
   ? ok('la ligne de quartier est bien placee sous l\'adresse')
   : ko('la ligne de quartier n\'est pas sous l\'adresse');
@@ -142,6 +152,63 @@ const liens = [...index.matchAll(/(?:src|href)="(?!https?:|mailto:|tel:|data:|#)
 const absents = liens.filter((f) => !existsSync(racine + f.replace(/^\//, '')));
 absents.length === 0 ? ok(`${liens.length} ressources locales toutes presentes`)
                      : ko('ressources absentes : ' + absents.join(', '));
+
+// ------------------------------------------- 6. audit des liens externes ---
+// Liste des domaines/URL verifies un a un (reponse 200, bon site, a jour).
+// Tout lien externe absent de cette liste fait echouer le controle : il faut
+// d'abord le verifier, puis l'ajouter ici.
+const autorises = [
+  'https://www.paris.fr/lieux/cimetiere-du-pere-lachaise-4080',
+  'https://www.paris.fr/lieux/parc-de-belleville-1777',
+  'https://www.pavilloncarredebaudouin.fr/',
+  'https://www.colline.fr/',
+  'https://mairie20.paris.fr/',
+  'https://www.cirquedhiver.com/',
+  'https://www.bataclan.fr/',
+  'https://www.operadeparis.fr/visites/opera-bastille',
+  'https://www.ratp.fr/itineraires',
+  'https://api-adresse.data.gouv.fr/reverse/',
+  'https://www.instagram.com/lacolline.gambetta',
+  'https://www.google.com/maps/search/',
+  'https://www.openstreetmap.org/',
+  'https://www.openmaptiles.org/',
+  'https://openfreemap.org/',
+  'https://tiles.openfreemap.org/styles/positron',
+  'https://unpkg.com/maplibre-gl@4.7.1/',
+  'https://www.cnil.fr/fr/plaintes',
+  'https://docs.github.com/fr/pages',
+  'https://api.web3forms.com/submit',
+  'https://formsubmit.co/ajax/',
+  'https://script.google.com/macros/s/',
+  'https://places.googleapis.com/v1/places/',
+  'https://get.geojs.io/v1/ip/country.json',
+  'https://ipwho.is/',
+  'https://www.gstatic.com/firebasejs/10.12.5/',
+  'https://firestore.googleapis.com',
+  'https://identitytoolkit.googleapis.com',
+  'https://schema.org',
+  'https://www.lacollinegambetta.com',
+  'https://lacollinegambetta.com',
+  'https://www.gstatic.com',
+  'http://127.0.0.1:9099',
+];
+const pages = ['index.html', 'reservation.html', 'mentions-legales.html',
+  'confidentialite.html', '404.html'];
+const externes = new Set();
+for (const f of pages) {
+  for (const m of lire(f).matchAll(/https?:\/\/[^"'\s<)]+/g)) {
+    const u = m[0].replace(/&amp;/g, '&').replace(/[.,;]$/, '');
+    if (/^https?:\/\/(www\.)?(w3|schema|sitemaps)\.org/.test(u)) continue;
+    externes.add(u);
+  }
+}
+const inconnus = [...externes].filter((u) => !autorises.some((a) => u.startsWith(a)));
+inconnus.length === 0
+  ? ok(`${externes.size} liens externes, tous sur des adresses verifiees`)
+  : ko('liens externes non verifies : ' + inconnus.join(' | '));
+const enClair = [...externes].filter((u) => u.startsWith('http://') && !u.includes('127.0.0.1'));
+enClair.length === 0 ? ok('aucun lien externe en http non securise')
+                     : ko('liens en http : ' + enClair.join(' | '));
 
 console.log(erreurs ? `\n${erreurs} controle(s) en echec` : '\nTous les controles sont au vert');
 process.exit(erreurs ? 1 : 0);
