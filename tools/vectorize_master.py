@@ -32,6 +32,8 @@ ALPHAMAX = 1.334  # lissage maximal des coins par potrace
 OPTTOL = 1.0     # tolerance d'optimisation des courbes
 TURD = 40        # suppression des poussieres
 
+# Image d'origine du logo : elle n'est plus versionnee (le site n'utilise que
+# les SVG), on la relit dans l'historique Git du depot.
 SOURCE_COMMIT = "9f6f460"
 SOURCE_PATH = "assets/cover/medaillon-logo-noir-brillant.png"
 
@@ -48,6 +50,10 @@ def source_image() -> Image.Image:
         tmp.write_bytes(data)
         return Image.open(tmp).convert("RGB")
     except Exception:
+        if not local.exists():
+            raise SystemExit(
+                f"Image source introuvable : ni {SOURCE_COMMIT}:{SOURCE_PATH} "
+                f"dans l'historique Git, ni {local}")
         return Image.open(local).convert("RGB")
 
 

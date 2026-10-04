@@ -166,7 +166,18 @@ if __name__ == "__main__":
 
     grand = master.resize((2000, 2000), Image.LANCZOS)
     grand.save(cover / "medaillon-logo-noir-brillant-transparent.png")
-    noir = Image.new("RGBA", grand.size, (0, 0, 0, 255))
-    noir.alpha_composite(grand)
-    noir.convert("RGB").save(cover / "medaillon-logo-noir-brillant.png")
-    print("assets/cover/medaillon-logo-noir-brillant[-transparent].png  2000x2000")
+    print("assets/cover/medaillon-logo-noir-brillant-transparent.png  2000x2000")
+
+    # image de partage (Open Graph / Twitter) : 1200x630, medaillon sur un
+    # fond aubergine, legere pour ne pas ralentir les apercus de lien.
+    w, h = 1200, 630
+    yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+    r = np.sqrt(((xx - w / 2) / (w / 2)) ** 2 + ((yy - h / 2) / (h / 2)) ** 2)
+    r = np.clip(r / 1.25, 0, 1)[..., None]
+    fond = np.array([0x3B, 0x13, 0x40], np.float32) * (1 - r) + \
+        np.array([0x15, 0x0A, 0x19], np.float32) * r
+    og = Image.fromarray(fond.astype("uint8"), "RGB")
+    vignette = grand.resize((520, 520), Image.LANCZOS)
+    og.paste(vignette, ((w - 520) // 2, (h - 520) // 2), vignette)
+    og.save(cover / "og-cover.jpg", quality=86, optimize=True, progressive=True)
+    print("assets/cover/og-cover.jpg  1200x630")

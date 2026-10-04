@@ -69,9 +69,16 @@ main.
 ## Carte imprimable et PDF
 
 ```bash
-npm run build:carte           # carte.html puis Carte_LaCollineGambetta.pdf
-npm run build:carte-imprimeur # version 300 dpi pour l'imprimeur
+npm run build:carte            # carte.html puis Carte_LaCollineGambetta.pdf
+npm run build:carte-imprimeur  # version 300 dpi pour l'imprimeur
+python3 tools/comparer_cartes.py  # controle : memes 8 pages, meme contenu
 ```
+
+Les deux PDF sont **versionnés** et composés depuis le même `carte.html` :
+8 pages A4 identiques au contenu près du rendu, en 180 dpi (1488 × 2105 px par
+page, 2,4 Mo) pour la diffusion et en **300 dpi** (2480 × 3508 px par page,
+17,5 Mo) pour l'imprimeur. `tools/comparer_cartes.py` vérifie page à page que
+les deux versions disent exactement la même chose.
 
 La composition reprend exactement la mise en page du site (fontes, pastilles,
 colonnes, interlignes) et mesure le rendu réel sous Chromium. Toutes les règles
@@ -88,8 +95,12 @@ python3 tools/vectorize_master.py          # tracé maître du médaillon
 python3 tools/logo_variants.py             # déclinaisons sur fond
 python3 tools/logo_variants_transparent.py # déclinaisons transparentes
 python3 tools/vectorize_logos.py
-python3 tools/render_medaillon_png.py      # PNG utilisés par le site
+python3 tools/render_medaillon_png.py      # PNG du site + image de partage
 ```
+
+Le site n'affiche que les SVG : le PNG opaque 2000 × 2000 du médaillon noir
+brillant (4 Mo) n'est plus versionné, il reste régénérable par
+`tools/render_medaillon_png.py`.
 
 Galerie de la bibliothèque : `assets/vector/apercu.html`.
 
