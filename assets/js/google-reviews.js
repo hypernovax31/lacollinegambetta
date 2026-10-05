@@ -90,8 +90,8 @@
   var placeUrl = allReviews.href;
   var place = null;
   var sdkPromise = null;
+  var requestPromise = null;
   var pointerStart = null;
-  var loadOnVisibility = null;
 
   function lang() {
     var value = String(document.documentElement.lang || 'fr').toLowerCase().split('-')[0];
@@ -131,6 +131,7 @@
     loadButton.textContent = state === 'loading' ? c.loading : (state === 'error' ? c.retry : c.load);
     loadButton.hidden = state === 'loaded' || state === 'empty';
     loadButton.disabled = state === 'loading';
+    loadButton.setAttribute('aria-busy', state === 'loading' ? 'true' : 'false');
     loadButton.setAttribute('aria-label', state === 'error' ? c.retry : c.load);
     privacyHint.textContent = c.privacy;
     privacyHint.hidden = state === 'loaded' || state === 'empty';
@@ -341,6 +342,8 @@
       next.hidden = true;
       state = 'empty';
       loadButton.hidden = true;
+      loadButton.disabled = false;
+      loadButton.setAttribute('aria-busy', 'false');
       privacyHint.hidden = true;
       intro.hidden = true;
       setStatus();
@@ -365,6 +368,8 @@
     }
     state = 'loaded';
     loadButton.hidden = true;
+    loadButton.disabled = false;
+    loadButton.setAttribute('aria-busy', 'false');
     privacyHint.hidden = true;
     intro.hidden = true;
     setStatus();
@@ -394,33 +399,33 @@
     attributions.hidden = usable.length === 0;
   }
   function loadMapsLibrary(key, language) {
-    if (window.google && window.google.maps && typeof window.google.maps.importLibrary === 'function') {
-      return window.google.maps.importLibrary('places');
-    }
     if (sdkPromise) return sdkPromise;
     sdkPromise = new Promise(function (resolve, reject) {
+      function importPlaces() {
+        var maps = window.google && window.google.maps;
+        if (!maps || typeof maps.importLibrary !== 'function') return false;
+        try {
+          Promise.resolve(maps.importLibrary('places')).then(resolve, reject);
+        } catch (error) {
+          reject(error);
+        }
+        return true;
+      }
+      if (importPlaces()) return;
+
       var script = document.createElement('script');
       script.async = true;
-      script.defer = true;
       script.dataset.googleReviewsSdk = 'true';
       var params = new URLSearchParams({ key:key, v:'weekly', loading:'async', language:language, region:'FR' });
       script.src = 'https://maps.googleapis.com/maps/api/js?' + params.toString();
       script.onload = function () {
-        if (!window.google || !window.google.maps || typeof window.google.maps.importLibrary !== 'function') {
-          sdkPromise = null;
-          reject(new Error('sdk'));
-          return;
-        }
-        window.google.maps.importLibrary('places').then(resolve, function () {
-          sdkPromise = null;
-          reject(new Error('places'));
-        });
+        if (!importPlaces()) reject(new Error('sdk'));
       };
-      script.onerror = function () {
-        sdkPromise = null;
-        reject(new Error('network'));
-      };
+      script.onerror = function () { reject(new Error('network')); };
       document.head.appendChild(script);
+    }).catch(function (error) {
+      sdkPromise = null;
+      throw error;
     });
     return sdkPromise;
   }
@@ -438,12 +443,14 @@
       });
   }
   function loadReviews() {
-    if (state === 'loading' || state === 'loaded' || state === 'empty') return;
+    if (requestPromise) return requestPromise;
+    if (state === 'loaded' || state === 'empty') return Promise.resolve();
     state = 'loading';
     loadButton.disabled = true;
+    loadButton.setAttribute('aria-busy', 'true');
     loadButton.textContent = copy().loading;
     setStatus();
-    Promise.resolve()
+    requestPromise = Promise.resolve()
       .then(fetchConfiguration)
       .then(function (config) {
         return loadMapsLibrary(config.cle_api, lang()).then(function (library) {
@@ -466,13 +473,19 @@
       })
       .catch(function () {
         state = 'error';
-        loadButton.disabled = false;
-        loadButton.hidden = false;
         intro.hidden = false;
         privacyHint.hidden = false;
-        setStatus();
-        loadButton.textContent = copy().retry;
+        loadButton.hidden = false;
+        applyLanguage();
+      })
+      .then(function (result) {
+        requestPromise = null;
+        return result;
+      }, function (error) {
+        requestPromise = null;
+        throw error;
       });
+    return requestPromise;
   }
 
   previous.addEventListener('click', function () { goTo(current - 1, -1); });

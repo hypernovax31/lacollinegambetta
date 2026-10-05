@@ -84,11 +84,11 @@ const zoneCommentaires = d.getElementById('google-reviews-slide');
 const scriptAvisGoogle = lire('assets/js/google-reviews.js');
 let configurationAvis = null;
 try { configurationAvis = JSON.parse(lire('assets/data/avis-google.json')); } catch (e) {}
-blocAvisGoogle && boutonAvisGoogle && attributionMaps &&
+blocAvisGoogle && boutonAvisGoogle && boutonAvisGoogle.disabled && attributionMaps &&
   attributionMaps.textContent.trim() === 'Google Maps' && attributionMaps.getAttribute('translate') === 'no' &&
   !zoneCommentaires?.querySelector('blockquote')
-  ? ok('avis Google : bloc distinct sous la couverture, attribution visible et aucun commentaire statique')
-  : ko('avis Google : emplacement, attribution ou contenu statique incorrect');
+  ? ok('avis Google : bloc distinct, attribution visible, aucun avis statique et bouton protégé avant l’initialisation')
+  : ko('avis Google : emplacement, attribution, état initial ou contenu statique incorrect');
 configurationAvis && typeof configurationAvis.place_id === 'string' &&
   configurationAvis.place_id.startsWith('ChIJ') && typeof configurationAvis.cle_api === 'string' &&
   configurationAvis.cle_api.length > 20 && !('avis' in configurationAvis) &&
@@ -99,10 +99,13 @@ scriptAvisGoogle.includes("fields:['rating','userRatingCount','googleMapsURI','r
   !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
   ? ok('avis Google : données chargées depuis Places sans cache persistant')
   : ko('avis Google : champs Places ou absence de cache persistant non garantis');
-index.includes('assets/css/google-reviews.css?v=2026100501') &&
-  index.includes('assets/js/google-reviews.js?v=2026100501')
-  ? ok('avis Google : styles et carrousel reliés à la page de garde')
-  : ko('avis Google : styles ou script manquant sur la page de garde');
+index.includes('assets/css/google-reviews.css?v=2026100502') &&
+  index.includes('assets/js/google-reviews.js?v=2026100502') &&
+  d.querySelector('script[src^="assets/js/i18n.js"]')?.closest('head') &&
+  d.querySelector('script[src^="assets/js/google-reviews.js"]')?.closest('head') &&
+  d.querySelector('script[src^="assets/js/google-reviews.js"]')?.defer
+  ? ok('avis Google : assets mis en cache, scripts chargés tôt et avis reliés à la page de garde')
+  : ko('avis Google : assets, chargement anticipé ou script manquant sur la page de garde');
 
 // --------------------------------- 4 ter. pied de page et alentours ------
 const navs = [...d.querySelectorAll('.footer-quartier')];

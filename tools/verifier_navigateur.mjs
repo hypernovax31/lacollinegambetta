@@ -101,7 +101,12 @@ try {
   const widgetAccueil = await page.evaluate(() => ({
     heading: document.getElementById('cover-reviews-title')?.textContent.trim(),
     button: document.getElementById('google-reviews-load')?.textContent.trim(),
+    buttonDisabled: document.getElementById('google-reviews-load')?.disabled,
+    buttonBusy: document.getElementById('google-reviews-load')?.getAttribute('aria-busy'),
     visible: getComputedStyle(document.getElementById('cover-reviews-section')).display !== 'none',
+    sectionBackground: getComputedStyle(document.getElementById('cover-reviews-section')).backgroundColor,
+    cardShadow: getComputedStyle(document.querySelector('.google-reviews-card')).boxShadow,
+    cardBorder: getComputedStyle(document.querySelector('.google-reviews-card')).borderTopWidth,
     staticQuotes: document.querySelectorAll('#google-reviews-slide blockquote').length,
     sectionWidth: document.getElementById('cover-reviews-section').clientWidth,
     sectionScroll: document.getElementById('cover-reviews-section').scrollWidth,
@@ -114,6 +119,11 @@ try {
     visible: true,
     staticQuotes: 0,
   });
+  assert.equal(widgetAccueil.buttonDisabled, false, 'le clic doit être actif dès l’initialisation du script');
+  assert.equal(widgetAccueil.buttonBusy, 'false');
+  assert.equal(widgetAccueil.sectionBackground, 'rgb(252, 251, 247)', 'le bloc doit rester léger sur fond clair');
+  assert.equal(widgetAccueil.cardShadow, 'none', 'la carte ne doit pas avoir d’ombre lourde');
+  assert.equal(widgetAccueil.cardBorder, '0px', 'la carte ne doit pas avoir de cadre épais');
   assert.ok(widgetAccueil.sectionScroll <= widgetAccueil.sectionWidth + 1, 'le bloc d’avis déborde horizontalement à 320 px');
   assert.ok(widgetAccueil.cardScroll <= widgetAccueil.cardWidth + 1, 'la carte d’avis déborde à 320 px');
   assert.deepEqual(requetesGooglePlaces, [], 'l’API Google ne doit pas être appelée avant la demande du visiteur');
@@ -236,7 +246,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100501'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100502'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');
