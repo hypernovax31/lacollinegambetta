@@ -108,6 +108,8 @@ try {
     cardBackground: getComputedStyle(document.querySelector('.google-reviews-card')).backgroundColor,
     cardShadow: getComputedStyle(document.querySelector('.google-reviews-card')).boxShadow,
     cardBorder: getComputedStyle(document.querySelector('.google-reviews-card')).borderTopWidth,
+    titlePosition: getComputedStyle(document.getElementById('cover-reviews-title')).position,
+    titleWidth: getComputedStyle(document.getElementById('cover-reviews-title')).width,
     ratingDisplay: (() => {
       const summary = document.getElementById('google-reviews-rating');
       summary.hidden = false;
@@ -132,11 +134,13 @@ try {
   });
   assert.equal(widgetAccueil.buttonDisabled, false, 'le bouton de secours doit être actif après un échec');
   assert.equal(widgetAccueil.buttonBusy, 'false');
-  assert.equal(widgetAccueil.sectionBackground, 'rgb(245, 241, 233)', 'le bloc doit se détacher sur un fond doux');
-  assert.equal(widgetAccueil.cardBackground, 'rgb(255, 254, 250)');
-  assert.notEqual(widgetAccueil.cardShadow, 'none', 'la carte doit avoir une ombre discrète');
-  assert.equal(widgetAccueil.cardBorder, '1px', 'la carte doit garder un contour fin');
-  assert.equal(widgetAccueil.ratingDisplay, 'grid', 'la note et les étoiles doivent former un résumé dédié');
+  assert.equal(widgetAccueil.sectionBackground, 'rgba(0, 0, 0, 0)', 'le fond du bloc doit rester transparent');
+  assert.equal(widgetAccueil.cardBackground, 'rgba(0, 0, 0, 0)');
+  assert.equal(widgetAccueil.cardShadow, 'none', 'le bloc ne doit pas avoir d’ombre');
+  assert.equal(widgetAccueil.cardBorder, '0px', 'le bloc ne doit pas avoir de cadre');
+  assert.equal(widgetAccueil.titlePosition, 'absolute', 'le titre doit rester accessible sans être visible');
+  assert.equal(widgetAccueil.titleWidth, '1px');
+  assert.equal(widgetAccueil.ratingDisplay, 'flex', 'note, étoiles et nombre d’avis doivent rester groupés');
   assert.equal(widgetAccueil.carouselDisplay, 'grid', 'les commentaires doivent être dans un vrai carrousel');
   assert.ok(widgetAccueil.sectionScroll <= widgetAccueil.sectionWidth + 1, 'le bloc d’avis déborde horizontalement à 320 px');
   assert.ok(widgetAccueil.cardScroll <= widgetAccueil.cardWidth + 1, 'la carte d’avis déborde à 320 px');
@@ -262,7 +266,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100505'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100506'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');
@@ -364,16 +368,20 @@ try {
 
   for (const largeur of [280, 320, 390, 430]) {
     await pageAvis.setViewportSize({ width:largeur, height:720 });
-    const debordementsAvis = await pageAvis.evaluate(() => {
+    const layoutAvis = await pageAvis.evaluate(() => {
       const ids = ['cover-reviews-section', 'google-reviews-card', 'google-reviews-carousel', 'google-reviews-viewport'];
-      return ids.filter((id) => {
-        const element = id === 'google-reviews-card'
-          ? document.querySelector('.google-reviews-card')
-          : document.getElementById(id);
-        return element.scrollWidth > element.clientWidth + 1;
-      });
+      return {
+        overflows:ids.filter((id) => {
+          const element = id === 'google-reviews-card'
+            ? document.querySelector('.google-reviews-card')
+            : document.getElementById(id);
+          return element.scrollWidth > element.clientWidth + 1;
+        }),
+        height:document.getElementById('cover-reviews-section').getBoundingClientRect().height,
+      };
     });
-    assert.deepEqual(debordementsAvis, [], `le bloc ou le carrousel déborde à ${largeur}px`);
+    assert.deepEqual(layoutAvis.overflows, [], `le bloc ou le carrousel déborde à ${largeur}px`);
+    assert.ok(layoutAvis.height <= 280, `le bloc reste trop haut (${layoutAvis.height}px à ${largeur}px)`);
   }
   await pageAvis.getByRole('button', { name:'Avis suivant' }).click();
   await pageAvis.waitForFunction(() =>

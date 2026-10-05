@@ -126,7 +126,7 @@ assert.equal(requestedFields.includes('attributions'), false, 'les attributions 
 assert.equal(window.document.getElementById('google-reviews-score').textContent, '4,8/5');
 assert.equal(window.document.getElementById('google-reviews-count').textContent, '28 avis');
 assert.equal(window.document.getElementById('google-reviews-dots').children.length, 2);
-assert.ok(window.document.getElementById('google-reviews-disclosure-text').textContent.includes('sans filtre de note'));
+assert.ok(window.document.getElementById('google-reviews-disclosure-text').textContent.includes('sans filtre par note'));
 assert.equal(status.textContent, '', 'le statut de chargement ne doit pas se confondre avec le compteur du carrousel');
 assert.ok(position.textContent.includes('1 sur 2'));
 assert.equal(position.hidden, false);
