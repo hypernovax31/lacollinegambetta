@@ -25,6 +25,12 @@ A4 générée depuis les mêmes données.
 | `reservation.html` | Formulaire de réservation relié à Firestore et à Google Apps Script. |
 | `mentions-legales.html`, `confidentialite.html` | Pages légales et RGPD. |
 
+La page de garde comprend aussi un carrousel d’avis Google. Les commentaires
+sont demandés à Places uniquement après action du visiteur, affichés avec leur
+attribution et lien source, puis gardés seulement en mémoire pendant la visite.
+La configuration navigateur se trouve dans `assets/data/avis-google.json` ; sa
+clé publique doit rester restreinte au domaine du site et aux API Maps autorisées.
+
 Le site est statique : aucun build n'est nécessaire pour le publier, les
 fichiers HTML/CSS/JS sont servis tels quels.
 
@@ -37,6 +43,9 @@ assets/
   plats/ boissons/ cocktails/   photographies de la carte
   fonts/                        fontes auto-hébergées (woff2)
   cover/                        médaillon de la page de garde
+  css/google-reviews.css        style du carrousel d’avis
+  data/avis-google.json         configuration Places, sans cache des commentaires
+  js/google-reviews.js          chargeur et carrousel d’avis Places
   vector/                       bibliothèque de logos vectoriels + apercu.html
   js/i18n.js                    traductions du site
 tools/                     scripts de génération (carte, logos, images, SEO)

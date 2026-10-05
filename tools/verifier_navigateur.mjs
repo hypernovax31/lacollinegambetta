@@ -85,15 +85,39 @@ try {
   });
 
   const scriptsDemandes = new Set();
+  const requetesGooglePlaces = [];
   page.on('request', (request) => {
     const url = new URL(request.url());
-    if (/\/assets\/js\/(localized-digits|i18n)\.js$/.test(url.pathname)) {
+    if (/\/assets\/js\/(localized-digits|i18n|google-reviews)\.js$/.test(url.pathname)) {
       scriptsDemandes.add(`${url.pathname}?${url.searchParams.toString()}`);
     }
+    if (url.hostname === 'maps.googleapis.com') requetesGooglePlaces.push(url.pathname);
   });
 
   await page.goto(`${origineLocale}/index.html?lang=uk`, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => window.__i18nReady === true && document.documentElement.lang === 'uk');
+  await page.waitForFunction(() =>
+    document.getElementById('google-reviews-load')?.textContent.trim() === 'Показати відгуки Google');
+  const widgetAccueil = await page.evaluate(() => ({
+    heading: document.getElementById('cover-reviews-title')?.textContent.trim(),
+    button: document.getElementById('google-reviews-load')?.textContent.trim(),
+    visible: getComputedStyle(document.getElementById('cover-reviews-section')).display !== 'none',
+    staticQuotes: document.querySelectorAll('#google-reviews-slide blockquote').length,
+    sectionWidth: document.getElementById('cover-reviews-section').clientWidth,
+    sectionScroll: document.getElementById('cover-reviews-section').scrollWidth,
+    cardWidth: document.querySelector('.google-reviews-card').clientWidth,
+    cardScroll: document.querySelector('.google-reviews-card').scrollWidth,
+  }));
+  assert.deepEqual({ heading:widgetAccueil.heading, button:widgetAccueil.button, visible:widgetAccueil.visible, staticQuotes:widgetAccueil.staticQuotes }, {
+    heading: 'Відгуки Google',
+    button: 'Показати відгуки Google',
+    visible: true,
+    staticQuotes: 0,
+  });
+  assert.ok(widgetAccueil.sectionScroll <= widgetAccueil.sectionWidth + 1, 'le bloc d’avis déborde horizontalement à 320 px');
+  assert.ok(widgetAccueil.cardScroll <= widgetAccueil.cardWidth + 1, 'la carte d’avis déborde à 320 px');
+  assert.deepEqual(requetesGooglePlaces, [], 'l’API Google ne doit pas être appelée avant la demande du visiteur');
+  console.log('  ok   Chromium : bloc traduit en ukrainien, sans avis inventé ni requête Google avant action');
   const piedUk = await page.evaluate(() => {
     const nav = document.querySelector('.footer .footer-quartier');
     const metro = document.querySelector('.footer-details__metro');
@@ -126,6 +150,8 @@ try {
     showMenuSection('vins', bouton);
   });
   await page.waitForFunction(() => document.querySelectorAll('#vins .wine-row').length === 17);
+  assert.equal(await page.evaluate(() => getComputedStyle(document.getElementById('cover-reviews-section')).display), 'none');
+  assert.deepEqual(requetesGooglePlaces, [], 'aucune requête Places ne doit être faite en ouvrant le menu');
   const categories = ['Червоне вино', 'Біле вино', 'Рожеве вино', 'Ігристі'];
   const tailles = [280, 320, 360, 375, 390, 420, 430];
   for (const largeur of tailles) {
@@ -210,6 +236,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100501'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');

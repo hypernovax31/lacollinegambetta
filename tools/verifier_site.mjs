@@ -22,6 +22,12 @@ for (const [i, bloc] of [...index.matchAll(/<style>([\s\S]*?)<\/style>/g)].entri
     ok(`feuille de style ${i + 1} : ${regles} regles analysees sans erreur`);
   } catch (e) { ko(`feuille de style ${i + 1} : ${e.message}`); }
 }
+try {
+  const reviewCss = postcss.parse(lire('assets/css/google-reviews.css'));
+  let regles = 0;
+  reviewCss.walkRules(() => regles++);
+  ok(`avis Google : feuille responsive ${regles} regles validee`);
+} catch (e) { ko(`avis Google : feuille responsive invalide (${e.message})`); }
 
 // --------------------------------------------------- 2. structure du HTML ---
 const dom = new JSDOM(index);
@@ -69,6 +75,34 @@ for (const sec of menu.hasMenuSection)
 ok(`carte balisee : ${items} articles`);
 sansPrix.length === 0 ? ok('tous les articles ont un prix valide')
                       : ko(`${sansPrix.length} article(s) sans prix : ${sansPrix.slice(0, 5)}`);
+
+// ------------------------------------- 3 bis. avis Google de la couverture
+const blocAvisGoogle = d.getElementById('cover-reviews-section');
+const boutonAvisGoogle = d.getElementById('google-reviews-load');
+const attributionMaps = d.getElementById('google-reviews-maps');
+const zoneCommentaires = d.getElementById('google-reviews-slide');
+const scriptAvisGoogle = lire('assets/js/google-reviews.js');
+let configurationAvis = null;
+try { configurationAvis = JSON.parse(lire('assets/data/avis-google.json')); } catch (e) {}
+blocAvisGoogle && boutonAvisGoogle && attributionMaps &&
+  attributionMaps.textContent.trim() === 'Google Maps' && attributionMaps.getAttribute('translate') === 'no' &&
+  !zoneCommentaires?.querySelector('blockquote')
+  ? ok('avis Google : bloc distinct sous la couverture, attribution visible et aucun commentaire statique')
+  : ko('avis Google : emplacement, attribution ou contenu statique incorrect');
+configurationAvis && typeof configurationAvis.place_id === 'string' &&
+  configurationAvis.place_id.startsWith('ChIJ') && typeof configurationAvis.cle_api === 'string' &&
+  configurationAvis.cle_api.length > 20 && !('avis' in configurationAvis) &&
+  !('note' in configurationAvis) && !('nombre_avis' in configurationAvis)
+  ? ok('avis Google : configuration Places présente, sans note ni avis mis en cache')
+  : ko('avis Google : configuration Places absente ou contenant des données statiques');
+scriptAvisGoogle.includes("fields:['rating','userRatingCount','googleMapsURI','reviews','attributions']") &&
+  !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
+  ? ok('avis Google : données chargées depuis Places sans cache persistant')
+  : ko('avis Google : champs Places ou absence de cache persistant non garantis');
+index.includes('assets/css/google-reviews.css?v=2026100501') &&
+  index.includes('assets/js/google-reviews.js?v=2026100501')
+  ? ok('avis Google : styles et carrousel reliés à la page de garde')
+  : ko('avis Google : styles ou script manquant sur la page de garde');
 
 // --------------------------------- 4 ter. pied de page et alentours ------
 const navs = [...d.querySelectorAll('.footer-quartier')];
@@ -317,7 +351,7 @@ cacheChiffres
 ['index.html', 'reservation.html'].every((f) => lire(f).includes('i18n.js?v=2026100502'))
   ? ok('i18n : scripts actualisés sur la page d’accueil et la réservation')
   : ko('i18n : une page conserve l’ancienne version en cache');
-['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100502'))
+['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100503'))
   ? ok('i18n légal : scripts actualisés sur les pages juridiques')
   : ko('i18n légal : une page conserve l’ancienne version en cache');
 
@@ -333,14 +367,20 @@ ratp && ratp.href.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=') &&
 const garde = d.querySelector('#cover-more .footer-quartier--cover');
 const couverture = d.getElementById('cover-section');
 const sousCouverture = d.getElementById('cover-more');
+const sectionAvisGoogle = d.getElementById('cover-reviews-section');
 const mailCouverture = d.querySelector('#cover-section .contact-link--mail');
 garde && d.querySelector('#cover-more .legal-bottom-nav--cover')
   ? ok('page de garde : alentours et mentions legales apres la premiere vue')
   : ko('page de garde : bloc d’informations du quartier incomplet');
-couverture && sousCouverture && couverture.nextElementSibling === sousCouverture &&
+couverture && sectionAvisGoogle && sousCouverture &&
+  couverture.nextElementSibling === sectionAvisGoogle && sectionAvisGoogle.nextElementSibling === sousCouverture &&
   mailCouverture
-  ? ok('page de garde : le bouton e-mail precede les alentours et les liens legaux')
-  : ko('page de garde : les informations de quartier sont mal placées');
+  ? ok('page de garde : avis juste après la couverture, avant les alentours et les liens légaux')
+  : ko('page de garde : ordre de la couverture, des avis et des informations de quartier incorrect');
+index.includes("if (coverReviewsSection) coverReviewsSection.style.display = 'none';") &&
+  index.includes("if (coverReviewsSection) coverReviewsSection.style.display = '';")
+  ? ok('page de garde : le bloc avis suit les vues garde/menu')
+  : ko('page de garde : le bloc avis reste visible dans la vue menu');
 
 // -------------------------------------------------------- 5. fichiers ------
 for (const f of ['404.html', 'sitemap.xml', 'sitemap-images.xml', 'robots.txt',
@@ -380,6 +420,7 @@ const autorises = [
   'https://formsubmit.co/ajax/',
   'https://script.google.com/macros/s/',
   'https://policies.google.com/privacy',
+  'https://support.google.com/contributionpolicy/answer/7422880',
   'https://get.geojs.io/v1/ip/country.json',
   'https://ipwho.is/',
   'https://www.gstatic.com/firebasejs/10.12.5/',
@@ -422,12 +463,36 @@ const disclosureGoogle = [...legalEn.window.document.querySelectorAll('.legal-ca
   .find((p) => p.querySelector('a[href^="https://policies.google.com/privacy"]'));
 const liensGoogle = disclosureGoogle ? [...disclosureGoogle.querySelectorAll('a')].map((a) => a.textContent.trim()) : [];
 disclosureGoogle && disclosureGoogle.textContent.startsWith('The site contains external links') &&
+  disclosureGoogle.textContent.includes('If you choose to display Google reviews on the home page') &&
+  disclosureGoogle.textContent.includes('Maps JavaScript API and Places API') &&
   liensGoogle.length === 1 && liensGoogle[0] === 'Google Privacy Policy'
-  ? ok('confidentialite : liens externes et politique Google traduits en anglais')
-  : ko('confidentialite : traduction de la declaration sur les liens externes incomplete');
-legalEn.window.document.querySelector('time[datetime="2026-10-04"]')?.textContent.trim() === '4 October 2026'
+  ? ok('confidentialite : affichage des avis Places et politique Google traduits en anglais')
+  : ko('confidentialite : traduction de la declaration sur les liens Google incomplete');
+legalEn.window.document.querySelector('time[datetime="2026-10-05"]')?.textContent.trim() === '5 October 2026'
   ? ok('confidentialite : date de mise a jour traduite')
   : ko('confidentialite : date de mise a jour non traduite');
+const traductionsGoogle = {
+  ar: 'يحتوي الموقع على روابط خارجية',
+  zh: '本网站包含外部链接',
+  uk: 'Сайт містить зовнішні посилання',
+  ja: 'サイトには、レストランの場所を確認するための',
+  ko: '사이트에는 레스토랑 위치를 찾기 위한',
+  hi: 'साइट में रेस्तरां का स्थान बताने के लिए'
+};
+for (const [lang, debutAttendu] of Object.entries(traductionsGoogle)) {
+  const legal = new JSDOM(lire('confidentialite.html'), {
+    runScripts: 'outside-only', url: `https://lacollinegambetta.com/confidentialite.html?lang=${lang}`
+  });
+  legal.window.eval(lire('assets/js/legal-i18n.js'));
+  const paragraphe = [...legal.window.document.querySelectorAll('.legal-card p')]
+    .find((p) => p.querySelector('a[href^="https://policies.google.com/privacy"]'));
+  paragraphe && paragraphe.textContent.includes(debutAttendu) &&
+    paragraphe.textContent.includes('Maps JavaScript API')
+    ? ok(`confidentialite : déclaration Places en écriture native (${lang})`)
+    : ko(`confidentialite : déclaration Places non traduite en écriture native (${lang})`);
+  legal.window.close();
+}
+legalEn.window.close();
 
 console.log(erreurs ? `\n${erreurs} controle(s) en echec` : '\nTous les controles sont au vert');
 process.exit(erreurs ? 1 : 0);
