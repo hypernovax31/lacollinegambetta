@@ -2,6 +2,7 @@
 // structurees conformes, bloc d'avis fonctionnel. A lancer avec :
 //   node tools/verifier_site.mjs
 import { readFileSync, existsSync } from 'node:fs';
+import vm from 'node:vm';
 import postcss from 'postcss';
 import { JSDOM } from 'jsdom';
 
@@ -437,6 +438,159 @@ adresseAr.window.document.querySelector('.footer-address-link')?.textContent.tri
   : ko('i18n : traduction arabe de l’adresse perdue');
 adresseAr.window.close();
 
+// Vérifie que les éléments visibles du pied et leurs libellés accessibles
+// utilisent bien l’écriture native dans les six langues non latines proposées.
+const piedsLocaux = {
+  ar: {
+    heading: 'الأماكن القريبة',
+    brand: 'لا كولين غامبيتا',
+    addressMain: '4 شارع بيلغراند، 75020 باريس',
+    addressLegal: '4 شارع بيلغراند، 75020 باريس',
+    coverAddress: '4 شارع بيلغراند • 75020 باريس',
+    metro: 'مترو غامبيتا • الخط 3',
+    places: ['بلدية الدائرة العشرين', 'مسرح لا كولين', 'مقبرة بير لاشيز', 'مركز كاريه دو بودوان الثقافي', 'حديقة بيلفيل', 'قاعة باتاكلان', 'سيرك الشتاء', 'أوبرا الباستيل'],
+    distance: 'على بُعد 100 متر من المطعم',
+    addressTitle: 'فتح العنوان على الخريطة',
+    metroTitle: 'افتح تطبيق بونجور راتب لعرض المسار'
+  },
+  zh: {
+    heading: '附近景点',
+    brand: '拉科林·冈贝塔',
+    addressMain: '贝勒格朗街4号，75020 巴黎',
+    addressLegal: '贝勒格朗街4号，75020 巴黎',
+    coverAddress: '贝勒格朗街4号 • 75020 巴黎',
+    metro: '甘贝塔地铁站 • 3号线',
+    places: ['巴黎第二十区市政厅', '拉科利讷剧院', '拉雪兹神父公墓', '博杜安文化中心', '贝尔维尔公园', '巴塔克兰演出厅', '冬季马戏团', '巴士底歌剧院'],
+    distance: '距餐厅100米',
+    addressTitle: '在地图中打开地址',
+    metroTitle: '打开 Bonjour RATP 查看路线'
+  },
+  uk: {
+    heading: 'Поблизу',
+    brand: 'ЛА КОЛЛІН ҐАМБЕТТА',
+    addressMain: '4 ВУЛ. БЕЛЬГРАН, 75020 ПАРИЖ',
+    addressLegal: '4 вул. Бельгран, 75020 Париж',
+    coverAddress: '4 вул. Бельгран • 75020 Париж',
+    metro: 'метро Ґамбетта • Лінія 3',
+    places: ['Мерія 20-го округу', 'Театр «Ла Коллін»', 'Кладовище Пер-Лашез', 'Культурний центр «Карре-де-Бодуен»', 'Парк Бельвіль', 'Батаклан', 'Зимовий цирк', 'Опера Бастилії'],
+    distance: 'За 100 м від ресторану',
+    addressTitle: 'Відкрити адресу на мапі',
+    metroTitle: 'Відкрити Bonjour RATP для маршруту'
+  },
+  ja: {
+    heading: '近隣スポット',
+    brand: 'ラ・コリーヌ・ガンベッタ',
+    addressMain: 'ベルグラン通り4番、75020パリ',
+    addressLegal: 'ベルグラン通り4番、75020 パリ',
+    coverAddress: 'ベルグラン通り4番 • 75020パリ',
+    metro: 'ガンベッタ駅 • 3号線',
+    places: ['パリ20区役所', 'ラ・コリーヌ劇場', 'ペール・ラシェーズ墓地', 'カレ・ド・ボードゥアン文化センター', 'ベルヴィル公園', 'バタクラン', '冬のサーカス', 'バスティーユ・オペラ'],
+    distance: 'レストランから100メートル',
+    addressTitle: '地図で住所を開く',
+    metroTitle: 'Bonjour RATPでルートを表示'
+  },
+  ko: {
+    heading: '주변 명소',
+    brand: '라 콜린 감베타',
+    addressMain: '벨그랑 거리 4, 75020 파리',
+    addressLegal: '벨그랑 거리 4, 75020 파리',
+    coverAddress: '벨그랑 거리 4 • 75020 파리',
+    metro: '감베타역 • 3호선',
+    places: ['파리 20구청', '라 콜린 극장', '페르 라셰즈 묘지', '카레 드 보두앵 문화센터', '벨빌 공원', '바타클랑', '겨울 서커스', '바스티유 오페라'],
+    distance: '식당에서 100미터',
+    addressTitle: '지도에서 주소 열기',
+    metroTitle: 'Bonjour RATP에서 경로 확인'
+  },
+  hi: {
+    heading: 'आस-पास के स्थल',
+    brand: 'ला कोलीन गांबेता',
+    addressMain: 'रू बेलग्रां 4, 75020 पेरिस',
+    addressLegal: 'बेलग्रां सड़क 4, 75020 पेरिस',
+    coverAddress: 'रू बेलग्रां 4 • 75020 पेरिस',
+    metro: 'गांबेता मेट्रो • लाइन 3',
+    places: ['पेरिस के 20वें ज़िले का नगर भवन', 'ला कोलीन थिएटर', 'पेरे लाशेज़ कब्रिस्तान', 'कारे द बोदुआँ सांस्कृतिक केंद्र', 'बेलविल पार्क', 'बताक्लां', 'शीतकालीन सर्कस', 'बास्तील ओपेरा'],
+    distance: 'रेस्तरां से 100 मीटर दूर',
+    addressTitle: 'मानचित्र पर पता खोलें',
+    metroTitle: 'मार्ग देखने के लिए Bonjour RATP खोलें'
+  }
+};
+for (const [lang, expected] of Object.entries(piedsLocaux)) {
+  const siteLocal = new JSDOM(lire('reservation.html'), {
+    runScripts: 'outside-only', url: `https://lacollinegambetta.com/reservation.html?lang=${lang}`
+  });
+  siteLocal.window.eval(lire('assets/js/i18n.js'));
+  const siteDoc = siteLocal.window.document;
+  const siteNav = siteDoc.querySelector('.footer .footer-quartier');
+  const siteLinks = siteNav ? [...siteNav.querySelectorAll('a')] : [];
+  const siteMetro = siteDoc.querySelector('.footer-details__metro');
+  const siteAdresse = siteDoc.querySelector('.footer-address-link');
+  const siteBrand = siteDoc.querySelector('.footer .footer-details > span:first-child');
+  const siteOk = siteDoc.documentElement.lang === lang &&
+    siteNav?.getAttribute('aria-label') === expected.heading &&
+    siteNav?.querySelector('span')?.textContent.trim() === expected.heading &&
+    siteLinks.length === expected.places.length &&
+    siteLinks.every((a, i) => a.textContent.trim() === expected.places[i]) &&
+    siteLinks[0]?.title === expected.distance &&
+    siteBrand?.textContent.trim() === expected.brand &&
+    siteMetro?.textContent.trim() === expected.metro && siteMetro.title === expected.metroTitle &&
+    siteAdresse?.textContent.trim() === expected.addressMain && siteAdresse.title === expected.addressTitle;
+  siteOk ? ok(`i18n ${lang} : pied de page, itinéraire et adresse en écriture native`)
+         : ko(`i18n ${lang} : traduction du pied de page incomplète`);
+  siteLocal.window.close();
+
+  const coverLocal = new JSDOM(lire('index.html'), {
+    runScripts: 'outside-only', url: `https://lacollinegambetta.com/?lang=${lang}`
+  });
+  coverLocal.window.eval(lire('assets/js/i18n.js'));
+  const coverAdresse = coverLocal.window.document.querySelector('.cover-footer-address a[data-default-map]');
+  const coverMetro = coverLocal.window.document.querySelector('.cover-footer-address [data-ratp-itineraire]');
+  const coverOk = coverAdresse?.textContent.trim() === expected.coverAddress &&
+    coverAdresse.title === expected.addressTitle &&
+    coverMetro?.textContent.trim() === expected.metro && coverMetro.title === expected.metroTitle;
+  coverOk ? ok(`couverture ${lang} : adresse et métro en écriture native`)
+          : ko(`couverture ${lang} : traduction de l’adresse ou du métro incomplète`);
+  coverLocal.window.close();
+
+  const legalLocal = new JSDOM(lire('confidentialite.html'), {
+    runScripts: 'outside-only', url: `https://lacollinegambetta.com/confidentialite.html?lang=${lang}`
+  });
+  legalLocal.window.eval(lire('assets/js/legal-i18n.js'));
+  const legalDoc = legalLocal.window.document;
+  const legalNavLocal = legalDoc.querySelector('.footer .footer-quartier');
+  const legalLinksLocal = legalNavLocal ? [...legalNavLocal.querySelectorAll('a')] : [];
+  const legalMetro = legalDoc.querySelector('.footer-details__metro');
+  const legalAdresse = legalDoc.querySelector('.footer-address-link');
+  const legalBrand = legalDoc.querySelector('.footer .footer-details > span:first-child');
+  const legalOk = legalDoc.documentElement.lang === lang &&
+    legalNavLocal?.getAttribute('aria-label') === expected.heading &&
+    legalNavLocal?.querySelector('span')?.textContent.trim() === expected.heading &&
+    legalLinksLocal.length === expected.places.length &&
+    legalLinksLocal.every((a, i) => a.textContent.trim() === expected.places[i]) &&
+    legalLinksLocal[0]?.title === expected.distance &&
+    legalBrand?.textContent.trim() === expected.brand &&
+    legalMetro?.textContent.trim() === expected.metro && legalMetro.title === expected.metroTitle &&
+    legalAdresse?.textContent.trim() === expected.addressLegal && legalAdresse.title === expected.addressTitle;
+  legalOk ? ok(`pages légales ${lang} : pied de page en écriture native`)
+          : ko(`pages légales ${lang} : traduction du pied de page incomplète`);
+  legalLocal.window.close();
+}
+const extraireObjetPied = (fichier, nom) => {
+  const source = lire(fichier);
+  const correspondance = source.match(new RegExp('var ' + nom + ' = (\\{[\\s\\S]*?\\n  \\});'));
+  if (!correspondance) throw new Error(`objet ${nom} absent dans ${fichier}`);
+  return { valeur: vm.runInNewContext(`(${correspondance[1]})`), source: correspondance[1] };
+};
+try {
+  const copieAccueil = extraireObjetPied('assets/js/i18n.js', 'FOOTER_COPY');
+  const copieLegale = extraireObjetPied('assets/js/legal-i18n.js', 'FOOTER_COPY');
+  const distancesAccueil = extraireObjetPied('assets/js/i18n.js', 'FOOTER_DISTANCE_FORMATS');
+  const distancesLegales = extraireObjetPied('assets/js/legal-i18n.js', 'FOOTER_DISTANCE_FORMATS');
+  JSON.stringify(copieAccueil.valeur) === JSON.stringify(copieLegale.valeur) &&
+    distancesAccueil.source === distancesLegales.source
+    ? ok('i18n : mêmes traductions et infobulles sur les pages classiques et légales')
+    : ko('i18n : les traductions du pied divergent entre les pages classiques et légales');
+} catch (e) { ko(`i18n : comparaison des traductions de pied impossible (${e.message})`); }
+
 const chiffres = new JSDOM('<!doctype html><html><body></body></html>', {
   runScripts: 'outside-only'
 });
@@ -452,9 +606,12 @@ const cacheChiffres = ['index.html', 'reservation.html', 'mentions-legales.html'
 cacheChiffres
   ? ok('chiffres : toutes les pages invalidant l’ancien cache du script localisé')
   : ko('chiffres : une page sert encore une version en cache du script localisé');
-['index.html', 'reservation.html'].every((f) => lire(f).includes('i18n.js?v=2026100501'))
+['index.html', 'reservation.html'].every((f) => lire(f).includes('i18n.js?v=2026100502'))
   ? ok('i18n : scripts actualisés sur la page d’accueil et la réservation')
   : ko('i18n : une page conserve l’ancienne version en cache');
+['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100502'))
+  ? ok('i18n légal : scripts actualisés sur les pages juridiques')
+  : ko('i18n légal : une page conserve l’ancienne version en cache');
 
 const ratp = d.querySelector('[data-ratp-itineraire]');
 ratp && ratp.href.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=') &&

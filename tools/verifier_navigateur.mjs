@@ -149,6 +149,31 @@ try {
 
   await page.goto(`${origineLocale}/index.html?lang=uk`, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => window.__i18nReady === true && document.documentElement.lang === 'uk');
+  const piedUk = await page.evaluate(() => {
+    const nav = document.querySelector('.footer .footer-quartier');
+    const metro = document.querySelector('.footer-details__metro');
+    const adresse = document.querySelector('.footer-address-link');
+    const brand = document.querySelector('.footer .footer-details > span:first-child');
+    return {
+      aria: nav?.getAttribute('aria-label'),
+      lieux: [...(nav?.querySelectorAll('a') || [])].map((link) => link.textContent.trim()),
+      distance: nav?.querySelector('a')?.title,
+      metro: metro?.textContent.trim(),
+      address: adresse?.textContent.trim(),
+      brand: brand?.textContent.trim(),
+    };
+  });
+  assert.equal(piedUk.aria, 'Поблизу');
+  assert.deepEqual(piedUk.lieux, [
+    'Мерія 20-го округу', 'Театр «Ла Коллін»', 'Кладовище Пер-Лашез',
+    'Культурний центр «Карре-де-Бодуен»', 'Парк Бельвіль', 'Батаклан',
+    'Зимовий цирк', 'Опера Бастилії',
+  ]);
+  assert.equal(piedUk.distance, 'За 100 м від ресторану');
+  assert.equal(piedUk.metro, 'метро Ґамбетта • Лінія 3');
+  assert.equal(piedUk.address, '4 ВУЛ. БЕЛЬГРАН, 75020 ПАРИЖ');
+  assert.equal(piedUk.brand, 'ЛА КОЛЛІН ҐАМБЕТТА');
+  console.log('  ok   Chromium ukrainien : adresse, métro et navigation de proximité en cyrillique');
 
   // Le secours apparaît après 20 ms, puis la réponse Places arrive à 140 ms.
   // Ce contrôle échoue avec l'ancien Promise.race qui ignorait la réponse tardive.
@@ -300,7 +325,7 @@ try {
     assert.ok(detail.text.length > 40, `texte de dégustation ${categories[index]} absent`);
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
-  assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100501'), 'le navigateur a servi l’ancienne version i18n');
+  assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');

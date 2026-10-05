@@ -125,11 +125,11 @@
     ['Navigation secondaire','Secondary navigation','Navegación secundaria','Sekundärnavigation','Navigazione secondaria','Navegação secundária','Secundaire navigatie','التنقل الثانوي','次级导航','Другорядна навігація','サブナビゲーション','보조 탐색','Nawigacja dodatkowa','İkincil gezinme','द्वितीयक नेविगेशन'],
     ['Informations légales','Legal information','Información legal','Rechtliche Informationen','Informazioni legali','Informações legais','Juridische informatie','المعلومات القانونية','法律信息','Юридична інформація','法的情報','법률 정보','Informacje prawne','Hukuki bilgiler','कानूनी जानकारी'],
     ['Télécharger la carte (PDF)','Download the menu (PDF)','Descargar la carta (PDF)','Speisekarte herunterladen (PDF)','Scarica la carta (PDF)','Descarregar a carta (PDF)','Menu downloaden (PDF)','تنزيل القائمة (PDF)','下载菜单（PDF）','Завантажити меню (PDF)','メニューをダウンロード（PDF）','메뉴 다운로드(PDF)','Pobierz kartę (PDF)','Menüyü indir (PDF)','मेन्यू डाउनलोड करें (PDF)'],
-    ['4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND, 75020 PARÍS','4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND, 75020 PARIGI','4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND, 75020 PARIJS','4 RUE BELGRAND، 75020 باريس','4 RUE BELGRAND，75020 巴黎','4 RUE BELGRAND, 75020 ПАРИЖ','4 RUE BELGRAND、75020 PARIS','4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND, 75020 PARYŻ','4 RUE BELGRAND, 75020 PARİS','4 RUE BELGRAND, 75020 पेरिस'],
+    ['4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND, 75020 PARÍS','4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND, 75020 PARIGI','4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND, 75020 PARIJS','4 شارع بيلغراند، 75020 باريس','贝勒格朗街4号，75020 巴黎','4 вул. Бельгран, 75020 Париж','ベルグラン通り4番、75020 パリ','벨그랑 거리 4, 75020 파리','4 RUE BELGRAND, 75020 PARYŻ','4 RUE BELGRAND, 75020 PARİS','बेलग्रां सड़क 4, 75020 पेरिस'],
     ['Télécharger la carte au format PDF','Download the menu as a PDF','Descargar la carta en PDF','Speisekarte als PDF herunterladen','Scarica la carta in PDF','Descarregar a carta em PDF','Menu als pdf downloaden','تنزيل القائمة بصيغة PDF','以 PDF 格式下载菜单','Завантажити меню у форматі PDF','メニューをPDFでダウンロード','메뉴를 PDF로 다운로드','Pobierz kartę w formacie PDF','Menüyü PDF olarak indir','मेन्यू को PDF के रूप में डाउनलोड करें'],
     ['Ouvrir Instagram','Open Instagram','Abrir Instagram','Instagram öffnen','Apri Instagram','Abrir o Instagram','Instagram openen','فتح إنستغرام','打开照片墙','Відкрити Інстаграм','インスタグラムを開く','인스타그램 열기','Otwórz Instagram','Instagram’ı aç','इंस्टाग्राम खोलें'],
     ['Appeler le restaurant','Call the restaurant','Llamar al restaurante','Restaurant anrufen','Chiama il ristorante','Ligar para o restaurante','Restaurant bellen','الاتصال بالمطعم','致电餐厅','Зателефонувати до ресторану','レストランに電話','레스토랑에 전화','Zadzwoń do restauracji','Restoranı ara','रेस्तरां को कॉल करें'],
-    ['MÉTRO GAMBETTA • LIGNE 3','Gambetta metro • Line 3','Metro Gambetta • Línea 3','U-Bahn Gambetta • Linie 3','Metro Gambetta • Linea 3','Metro Gambetta • Linha 3','Metro Gambetta • Lijn 3','مترو غامبيتا • الخط 3','甘贝塔地铁站 • 3号线','метро Gambetta • Лінія 3','ガンベッタ駅 • 3号線','감베타역 • 3호선','Metro Gambetta • Linia 3','Gambetta metrosu • 3. Hat','गांबेता मेट्रो • लाइन 3'],
+    ['MÉTRO GAMBETTA • LIGNE 3','Gambetta metro • Line 3','Metro Gambetta • Línea 3','U-Bahn Gambetta • Linie 3','Metro Gambetta • Linea 3','Metro Gambetta • Linha 3','Metro Gambetta • Lijn 3','مترو غامبيتا • الخط 3','甘贝塔地铁站 • 3号线','метро Ґамбетта • Лінія 3','ガンベッタ駅 • 3号線','감베타역 • 3호선','Metro Gambetta • Linia 3','Gambetta metrosu • 3. Hat','गांबेता मेट्रो • लाइन 3'],
     ['RCS','Trade and Companies Register','Registro Mercantil','Handelsregister','Registro delle imprese','Registo Comercial','Handelsregister','السجل التجاري والشركات','商业和公司登记处','Реєстр торгівлі та компаній','商業・会社登記所','상업·회사 등록부','Rejestr handlowy i spółek','Ticaret ve Şirketler Sicili','व्यापार और कंपनी रजिस्टर'],
     ['24 juillet 2026','24 July 2026','24 de julio de 2026','24. Juli 2026','24 luglio 2026','24 de julho de 2026','24 juli 2026','٢٤ يوليو ٢٠٢٦','2026年7月24日','24 липня 2026','2026年7月24日','2026년 7월 24일','24 lipca 2026','24 Temmuz 2026','24 जुलाई 2026'],
     ['Le nom de domaine public utilisé par le site est','The public domain name used by the website is','El nombre de dominio público utilizado por el sitio es','Der von der Website verwendete öffentliche Domainname ist','Il nome di dominio pubblico utilizzato dal sito è','O nome de domínio público utilizado pelo site é','De openbare domeinnaam van de website is','اسم النطاق العام المستخدم للموقع هو','网站使用的公共域名是','Публічне доменне ім’я сайту:','本サイトで使用する公開ドメイン名は','사이트에서 사용하는 공개 도메인은','Publiczna nazwa domeny używana przez stronę to','Sitenin kullandığı herkese açık alan adı','वेबसाइट द्वारा उपयोग किया जाने वाला सार्वजनिक डोमेन है'],
@@ -150,8 +150,269 @@
       if (row[i] !== undefined && row[i] !== '') DICTS[lang][row[0]] = row[i];
     });
   });
+  /* Même traduction localisée que sur les pages d'accueil et de réservation. */
+  var FOOTER_COPY = {
+    en: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
+      'Métro Gambetta • Ligne 3': 'Gambetta metro • Line 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'Nearby',
+      'Mairie du 20ᵉ': '20th arrondissement town hall',
+      'Théâtre de la Colline': 'La Colline Theatre',
+      'Père-Lachaise': 'Père-Lachaise Cemetery',
+      'Carré de Baudouin': 'Carré de Baudouin Cultural Centre',
+      'Parc de Belleville': 'Belleville Park',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Winter Circus',
+      'Opéra Bastille': 'Bastille Opera',
+      'Ouvrir l’adresse dans le plan': 'Open the address on the map',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Open Bonjour RATP for directions'
+    },
+    es: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 París',
+      'Métro Gambetta • Ligne 3': 'Metro Gambetta • Línea 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'Cerca',
+      'Mairie du 20ᵉ': 'Ayuntamiento del distrito 20',
+      'Théâtre de la Colline': 'Teatro de la Colline',
+      'Père-Lachaise': 'Cementerio de Père-Lachaise',
+      'Carré de Baudouin': 'Centro cultural Carré de Baudouin',
+      'Parc de Belleville': 'Parque de Belleville',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Circo de Invierno',
+      'Opéra Bastille': 'Ópera Bastille',
+      'Ouvrir l’adresse dans le plan': 'Abrir la dirección en el mapa',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Abrir Bonjour RATP para consultar la ruta'
+    },
+    de: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
+      'Métro Gambetta • Ligne 3': 'U-Bahn Gambetta • Linie 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'In der Nähe',
+      'Mairie du 20ᵉ': 'Rathaus des 20. Arrondissements',
+      'Théâtre de la Colline': 'Theater La Colline',
+      'Père-Lachaise': 'Friedhof Père-Lachaise',
+      'Carré de Baudouin': 'Kulturzentrum Carré de Baudouin',
+      'Parc de Belleville': 'Belleville-Park',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Winterzirkus',
+      'Opéra Bastille': 'Bastille-Oper',
+      'Ouvrir l’adresse dans le plan': 'Adresse auf der Karte öffnen',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP für die Route öffnen'
+    },
+    it: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Parigi',
+      'Métro Gambetta • Ligne 3': 'Metro Gambetta • Linea 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'Nei dintorni',
+      'Mairie du 20ᵉ': 'Municipio del 20º arrondissement',
+      'Théâtre de la Colline': 'Teatro della Colline',
+      'Père-Lachaise': 'Cimitero di Père-Lachaise',
+      'Carré de Baudouin': 'Centro culturale Carré de Baudouin',
+      'Parc de Belleville': 'Parco di Belleville',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Circo d’inverno',
+      'Opéra Bastille': 'Opera Bastille',
+      'Ouvrir l’adresse dans le plan': 'Apri l’indirizzo sulla mappa',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Apri Bonjour RATP per il percorso'
+    },
+    pt: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
+      'Métro Gambetta • Ligne 3': 'Metro Gambetta • Linha 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'Nas proximidades',
+      'Mairie du 20ᵉ': 'Câmara municipal do 20.º bairro',
+      'Théâtre de la Colline': 'Teatro da Colline',
+      'Père-Lachaise': 'Cemitério do Père-Lachaise',
+      'Carré de Baudouin': 'Centro cultural Carré de Baudouin',
+      'Parc de Belleville': 'Parque de Belleville',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Circo de Inverno',
+      'Opéra Bastille': 'Ópera da Bastilha',
+      'Ouvrir l’adresse dans le plan': 'Abrir o endereço no mapa',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Abrir o Bonjour RATP para consultar o percurso'
+    },
+    nl: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Parijs',
+      'Métro Gambetta • Ligne 3': 'Metro Gambetta • Lijn 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'In de buurt',
+      'Mairie du 20ᵉ': 'Stadhuis van het 20e arrondissement',
+      'Théâtre de la Colline': 'Theater La Colline',
+      'Père-Lachaise': 'Begraafplaats Père-Lachaise',
+      'Carré de Baudouin': 'Cultureel centrum Carré de Baudouin',
+      'Parc de Belleville': 'Park van Belleville',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Wintercircus',
+      'Opéra Bastille': 'Bastilleopera',
+      'Ouvrir l’adresse dans le plan': 'Adres op de kaart openen',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP openen voor de route'
+    },
+    ar: {
+      '4 rue Belgrand • 75020 Paris': '4 شارع بيلغراند • 75020 باريس',
+      'Métro Gambetta • Ligne 3': 'مترو غامبيتا • الخط 3',
+      'LA COLLINE GAMBETTA': 'لا كولين غامبيتا',
+      'Dans les alentours': 'الأماكن القريبة',
+      'Mairie du 20ᵉ': 'بلدية الدائرة العشرين',
+      'Théâtre de la Colline': 'مسرح لا كولين',
+      'Père-Lachaise': 'مقبرة بير لاشيز',
+      'Carré de Baudouin': 'مركز كاريه دو بودوان الثقافي',
+      'Parc de Belleville': 'حديقة بيلفيل',
+      'Le Bataclan': 'قاعة باتاكلان',
+      "Cirque d'Hiver": 'سيرك الشتاء',
+      'Opéra Bastille': 'أوبرا الباستيل',
+      'Ouvrir l’adresse dans le plan': 'فتح العنوان على الخريطة',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'افتح تطبيق بونجور راتب لعرض المسار'
+    },
+    zh: {
+      '4 rue Belgrand • 75020 Paris': '贝勒格朗街4号 • 75020 巴黎',
+      'Métro Gambetta • Ligne 3': '甘贝塔地铁站 • 3号线',
+      'LA COLLINE GAMBETTA': '拉科林·冈贝塔',
+      'Dans les alentours': '附近景点',
+      'Mairie du 20ᵉ': '巴黎第二十区市政厅',
+      'Théâtre de la Colline': '拉科利讷剧院',
+      'Père-Lachaise': '拉雪兹神父公墓',
+      'Carré de Baudouin': '博杜安文化中心',
+      'Parc de Belleville': '贝尔维尔公园',
+      'Le Bataclan': '巴塔克兰演出厅',
+      "Cirque d'Hiver": '冬季马戏团',
+      'Opéra Bastille': '巴士底歌剧院',
+      'Ouvrir l’adresse dans le plan': '在地图中打开地址',
+      'Ouvrir Bonjour RATP pour l’itinéraire': '打开 Bonjour RATP 查看路线'
+    },
+    uk: {
+      '4 rue Belgrand • 75020 Paris': '4 вул. Бельгран • 75020 Париж',
+      'Métro Gambetta • Ligne 3': 'метро Ґамбетта • Лінія 3',
+      'LA COLLINE GAMBETTA': 'ЛА КОЛЛІН ҐАМБЕТТА',
+      'Dans les alentours': 'Поблизу',
+      'Mairie du 20ᵉ': 'Мерія 20-го округу',
+      'Théâtre de la Colline': 'Театр «Ла Коллін»',
+      'Père-Lachaise': 'Кладовище Пер-Лашез',
+      'Carré de Baudouin': 'Культурний центр «Карре-де-Бодуен»',
+      'Parc de Belleville': 'Парк Бельвіль',
+      'Le Bataclan': 'Батаклан',
+      "Cirque d'Hiver": 'Зимовий цирк',
+      'Opéra Bastille': 'Опера Бастилії',
+      'Ouvrir l’adresse dans le plan': 'Відкрити адресу на мапі',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Відкрити Bonjour RATP для маршруту'
+    },
+    ja: {
+      '4 rue Belgrand • 75020 Paris': 'ベルグラン通り4番 • 75020パリ',
+      'Métro Gambetta • Ligne 3': 'ガンベッタ駅 • 3号線',
+      'LA COLLINE GAMBETTA': 'ラ・コリーヌ・ガンベッタ',
+      'Dans les alentours': '近隣スポット',
+      'Mairie du 20ᵉ': 'パリ20区役所',
+      'Théâtre de la Colline': 'ラ・コリーヌ劇場',
+      'Père-Lachaise': 'ペール・ラシェーズ墓地',
+      'Carré de Baudouin': 'カレ・ド・ボードゥアン文化センター',
+      'Parc de Belleville': 'ベルヴィル公園',
+      'Le Bataclan': 'バタクラン',
+      "Cirque d'Hiver": '冬のサーカス',
+      'Opéra Bastille': 'バスティーユ・オペラ',
+      'Ouvrir l’adresse dans le plan': '地図で住所を開く',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATPでルートを表示'
+    },
+    ko: {
+      '4 rue Belgrand • 75020 Paris': '벨그랑 거리 4 • 75020 파리',
+      'Métro Gambetta • Ligne 3': '감베타역 • 3호선',
+      'LA COLLINE GAMBETTA': '라 콜린 감베타',
+      'Dans les alentours': '주변 명소',
+      'Mairie du 20ᵉ': '파리 20구청',
+      'Théâtre de la Colline': '라 콜린 극장',
+      'Père-Lachaise': '페르 라셰즈 묘지',
+      'Carré de Baudouin': '카레 드 보두앵 문화센터',
+      'Parc de Belleville': '벨빌 공원',
+      'Le Bataclan': '바타클랑',
+      "Cirque d'Hiver": '겨울 서커스',
+      'Opéra Bastille': '바스티유 오페라',
+      'Ouvrir l’adresse dans le plan': '지도에서 주소 열기',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP에서 경로 확인'
+    },
+    pl: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paryż',
+      'Métro Gambetta • Ligne 3': 'Metro Gambetta • Linia 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'W pobliżu',
+      'Mairie du 20ᵉ': 'Ratusz 20. dzielnicy',
+      'Théâtre de la Colline': 'Teatr La Colline',
+      'Père-Lachaise': 'Cmentarz Père-Lachaise',
+      'Carré de Baudouin': 'Centrum kultury Carré de Baudouin',
+      'Parc de Belleville': 'Park Belleville',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Cyrk Zimowy',
+      'Opéra Bastille': 'Opera Bastille',
+      'Ouvrir l’adresse dans le plan': 'Otwórz adres na mapie',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Otwórz Bonjour RATP, aby wyznaczyć trasę'
+    },
+    tr: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
+      'Métro Gambetta • Ligne 3': 'Gambetta metrosu • 3. Hat',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'Yakınlarda',
+      'Mairie du 20ᵉ': '20. bölge belediye binası',
+      'Théâtre de la Colline': 'La Colline Tiyatrosu',
+      'Père-Lachaise': 'Père-Lachaise Mezarlığı',
+      'Carré de Baudouin': 'Carré de Baudouin Kültür Merkezi',
+      'Parc de Belleville': 'Belleville Parkı',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Kış Sirki',
+      'Opéra Bastille': 'Bastille Operası',
+      'Ouvrir l’adresse dans le plan': 'Adresi haritada aç',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Rota için Bonjour RATP’yi aç'
+    },
+    hi: {
+      '4 rue Belgrand • 75020 Paris': 'रू बेलग्रां 4 • 75020 पेरिस',
+      'Métro Gambetta • Ligne 3': 'गांबेता मेट्रो • लाइन 3',
+      'LA COLLINE GAMBETTA': 'ला कोलीन गांबेता',
+      'Dans les alentours': 'आस-पास के स्थल',
+      'Mairie du 20ᵉ': 'पेरिस के 20वें ज़िले का नगर भवन',
+      'Théâtre de la Colline': 'ला कोलीन थिएटर',
+      'Père-Lachaise': 'पेरे लाशेज़ कब्रिस्तान',
+      'Carré de Baudouin': 'कारे द बोदुआँ सांस्कृतिक केंद्र',
+      'Parc de Belleville': 'बेलविल पार्क',
+      'Le Bataclan': 'बताक्लां',
+      "Cirque d'Hiver": 'शीतकालीन सर्कस',
+      'Opéra Bastille': 'बास्तील ओपेरा',
+      'Ouvrir l’adresse dans le plan': 'मानचित्र पर पता खोलें',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'मार्ग देखने के लिए Bonjour RATP खोलें'
+    }
+  };
+  Object.keys(FOOTER_COPY).forEach(function (lang) {
+    Object.keys(FOOTER_COPY[lang]).forEach(function (key) {
+      DICTS[lang][key] = FOOTER_COPY[lang][key];
+    });
+  });
+  var FOOTER_DISTANCE_FORMATS = {
+    en: { decimal: '.', units: { m: 'm', km: 'km' }, format: function (v, u) { return v + ' ' + u + ' from the restaurant'; } },
+    es: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return 'A ' + v + ' ' + u + ' del restaurante'; } },
+    de: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return v + ' ' + u + ' vom Restaurant'; } },
+    it: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return 'A ' + v + ' ' + u + ' dal ristorante'; } },
+    pt: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return 'A ' + v + ' ' + u + ' do restaurante'; } },
+    nl: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return 'Op ' + v + ' ' + u + ' van het restaurant'; } },
+    ar: { decimal: ',', units: { m: 'متر', km: 'كم' }, format: function (v, u) { return 'على بُعد ' + v + ' ' + u + ' من المطعم'; } },
+    zh: { decimal: '.', units: { m: '米', km: '千米' }, format: function (v, u) { return '距餐厅' + v + u; } },
+    uk: { decimal: ',', units: { m: 'м', km: 'км' }, format: function (v, u) { return 'За ' + v + ' ' + u + ' від ресторану'; } },
+    ja: { decimal: '.', units: { m: 'メートル', km: 'キロメートル' }, format: function (v, u) { return 'レストランから' + v + u; } },
+    ko: { decimal: '.', units: { m: '미터', km: '킬로미터' }, format: function (v, u) { return '식당에서 ' + v + u; } },
+    pl: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return v + ' ' + u + ' od restauracji'; } },
+    tr: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return 'Restorana ' + v + ' ' + u; } },
+    hi: { decimal: '.', units: { m: 'मीटर', km: 'किमी' }, format: function (v, u) { return 'रेस्तरां से ' + v + ' ' + u + ' दूर'; } }
+  };
   function norm(text) { return String(text).replace(/\s+/g, ' ').trim(); }
   var nodes = [];
+  var footerDistanceTitleNodes = [];
+  function applyFooterDistanceTitles(lang) {
+    var format = FOOTER_DISTANCE_FORMATS[lang];
+    footerDistanceTitleNodes.forEach(function (entry) {
+      if (!format) {
+        entry.element.setAttribute('title', entry.original);
+        return;
+      }
+      var value = entry.value;
+      if (format.decimal === '.') value = value.replace(',', '.');
+      entry.element.setAttribute('title', format.format(value, format.units[entry.unit] || entry.unit));
+    });
+  }
   function collect() {
     var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
       acceptNode: function (node) {
@@ -165,6 +426,13 @@
     while ((node = walker.nextNode())) {
       var match = node.nodeValue.match(/^(\s*)([\s\S]*?)(\s*)$/);
       nodes.push({ node:node, pre:match[1], post:match[3], key:norm(match[2]) });
+    }
+    footerDistanceTitleNodes = [];
+    var footerLinks = document.querySelectorAll('.footer-quartier a[title]');
+    for (var fi = 0; fi < footerLinks.length; fi++) {
+      var original = footerLinks[fi].getAttribute('title') || '';
+      var distance = original.match(/^À\s+([\d,.]+)\s+(m|km)\s+du restaurant$/);
+      if (distance) footerDistanceTitleNodes.push({ element:footerLinks[fi], original:original, value:distance[1], unit:distance[2] });
     }
     var title = document.querySelector('title');
     if (title && title.firstChild) {
@@ -212,6 +480,9 @@
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     if (descriptionNode && descriptionKey) descriptionNode.setAttribute('content', dict[descriptionKey] || descriptionKey);
     var footerAttrs = [
+      ['.footer-address-link', 'title', 'Ouvrir l’adresse dans le plan'],
+      ['.footer-details__metro', 'title', 'Ouvrir Bonjour RATP pour l’itinéraire'],
+      ['.footer-quartier', 'aria-label', 'Dans les alentours'],
       ['.footer-download', 'title', 'Télécharger la carte au format PDF'],
       ['.footer-links a[href^="https://www.instagram.com"]', 'title', 'Ouvrir Instagram'],
       ['.footer-links a[href^="https://www.instagram.com"]', 'aria-label', 'Ouvrir Instagram'],
@@ -225,6 +496,7 @@
       var footerNodes = document.querySelectorAll(attr[0]);
       for (var fj = 0; fj < footerNodes.length; fj++) footerNodes[fj].setAttribute(attr[1], dict[attr[2]] || attr[2]);
     }
+    applyFooterDistanceTitles(lang);
     var button = document.getElementById('legal-lang-btn');
     var menu = document.getElementById('legal-lang-menu');
     if (button) {
