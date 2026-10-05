@@ -226,6 +226,10 @@ try {
           const status=document.querySelector('#cover-section [data-hours-status]').getBoundingClientRect();
           return status.left>=range.left-1 && status.right<=range.right+1;
         })(),
+        statusFontSize:parseFloat(getComputedStyle(document.querySelector('#cover-section [data-hours-status]')).fontSize),
+        addressFontSize:parseFloat(getComputedStyle(document.querySelector('#cover-section .cover-footer-address [data-default-map]')).fontSize),
+        metroFontSize:parseFloat(getComputedStyle(document.querySelector('#cover-section [data-ratp-itineraire]')).fontSize),
+        metroTarget:document.querySelector('#cover-section [data-ratp-itineraire]').target,
         addressChildrenTop:[...address.children].map((element)=>element.getBoundingClientRect().top),
         addressItems:[...address.children].map((element)=>{
           const rect=element.getBoundingClientRect();
@@ -239,6 +243,10 @@ try {
 
   for (const [largeur, hauteur] of [[1365,768], [390,844], [320,640], [300,640], [280,640], [844,390], [667,375]]) {
     const disposition=await mesurerLignesCouverture(largeur, hauteur);
+    assert.equal(disposition.metroTarget, '_blank', `le lien Bonjour RATP doit permettre l’ouverture native ou un onglet web à ${largeur}×${hauteur}px`);
+    assert.equal(disposition.addressFontSize, disposition.metroFontSize, `l’adresse et le métro doivent garder la même taille à ${largeur}×${hauteur}px`);
+    assert.ok(Math.abs(disposition.statusFontSize/disposition.addressFontSize-1.5)<.01,
+      `« Ouvert » doit être 1,5× plus grand que l’adresse/le métro à ${largeur}×${hauteur}px (${disposition.statusFontSize}/${disposition.addressFontSize})`);
     for (const ligne of disposition.lines) {
       assert.ok(Math.abs(ligne.center-disposition.pageCenter)<=2,
         `${ligne.selector} n’est pas centré sur la couverture à ${largeur}×${hauteur}px`);
@@ -471,7 +479,7 @@ try {
             fetchFields() {
               this.rating = 4.8;
               this.googleMapsURI = 'https://www.google.com/maps/search/?api=1&query=test-place';
-              this.attributions = [];
+              this.attributions = [{ provider:'TEST ONLY — attribution fictive', providerURI:'https://www.openstreetmap.org/' }];
               this.reviews = [
                 {
                   rating:5,
@@ -592,7 +600,10 @@ try {
           return quoteBox.left >= viewportBox.left - 1 && quoteBox.right <= viewportBox.right + 1;
         })(),
         height:section.getBoundingClientRect().height,
+        sectionWidth:rect(section).width,
+        cardWidth:rect(card).width,
         viewportHeight:rect(viewport).height,
+        viewportMinHeight:parseFloat(getComputedStyle(viewport).minHeight),
         slideHeight:rect(slide).height,
         slideFits:slide.getBoundingClientRect().height<=viewport.clientHeight+1,
         slideAnimation:getComputedStyle(slide).animationName,
@@ -668,6 +679,10 @@ try {
     assert.equal(layoutAvis.disclosureTextAlign, 'center', `la notice n’est pas centrée ${contexte}`);
     assert.equal(layoutAvis.footerJustify, 'center', `les liens du pied ne sont pas centrés ${contexte}`);
     assert.equal(layoutAvis.summaryCentered, true, `la note globale n’est pas centrée ${contexte}`);
+    assert.ok(layoutAvis.cardWidth>=layoutAvis.sectionWidth-32,
+      `le bloc d’avis n’utilise pas toute la largeur disponible ${contexte}`);
+    assert.ok(layoutAvis.viewportMinHeight<=(layoutAvis.landscape?56:96)+.1,
+      `la réserve verticale du carrousel n’est pas resserrée ${contexte} (${layoutAvis.viewportMinHeight}px)`);
     assert.equal(layoutAvis.slideFits, true, `le carrousel ne s’adapte pas à la hauteur du commentaire ${contexte}`);
     assert.ok(parseFloat(layoutAvis.viewportTransitionDuration)>=.3,
       `la hauteur du carrousel n’est pas animée avec fluidité ${contexte}`);

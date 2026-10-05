@@ -53,7 +53,7 @@ window.document.head.appendChild = (element) => {
               requestedFields.push(...options.fields);
               this.rating = 4.8;
               this.googleMapsURI = 'https://www.google.com/maps/search/?api=1&query=test-place';
-              this.attributions = [];
+              this.attributions = [{ provider:'TEST ONLY — attribution fictive', providerURI:'https://www.openstreetmap.org/' }];
               // Fixtures artificielles — ne jamais reprendre dans les contenus du site.
               this.reviews = [
                 {
@@ -146,7 +146,13 @@ assert.ok(auteur && auteur.tagName === 'SPAN' && !auteur.closest('a'),
   'le nom reste du texte même quand Google fournit une URI de profil');
 const lienProfil = window.document.querySelector('.google-reviews-author-profile');
 assert.ok(lienProfil && lienProfil.href.endsWith('/fixture-1'));
+assert.equal(lienProfil.target, '_blank', 'les profils Google externes doivent s’ouvrir dans un nouvel onglet');
+assert.ok(lienProfil.rel.split(/\s+/).includes('noopener'));
 assert.equal(lienProfil.contains(auteur), false, 'le lien de profil doit être séparé du nom');
+const lienAttribution = window.document.querySelector('.google-reviews-attributions a');
+assert.ok(lienAttribution && lienAttribution.href.startsWith('https://www.openstreetmap.org/'));
+assert.equal(lienAttribution.target, '_blank', 'les fournisseurs d’attribution externes doivent s’ouvrir dans un nouvel onglet');
+assert.ok(lienAttribution.rel.split(/\s+/).includes('noopener'));
 assert.equal(window.document.querySelectorAll('.google-reviews-author[href]').length, 0);
 const tousLesAvis = window.document.getElementById('google-reviews-all');
 const attributionMaps = window.document.getElementById('google-reviews-maps');

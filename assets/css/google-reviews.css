@@ -4,7 +4,7 @@
 #cover-reviews-section {
   box-sizing:border-box;
   width:100%;
-  padding:6px 12px 5px;
+  padding:3px 4px 2px;
   background:#fcfbf7;
   color:#24102e;
   font-family:'Montserrat',Arial,sans-serif;
@@ -13,9 +13,10 @@
 #cover-reviews-section *::before,
 #cover-reviews-section *::after { box-sizing:border-box; }
 #cover-reviews-section .google-reviews-card {
-  width:min(100%,900px);
+  width:100%;
+  max-width:none;
   margin:0 auto;
-  padding:2px 8px 3px;
+  padding:0 2px 1px;
   background:transparent;
   text-align:center;
 }
@@ -24,7 +25,7 @@
   align-items:center;
   justify-content:center;
   gap:7px 12px;
-  margin:0 auto 3px;
+  margin:0 auto 1px;
   padding:0;
   border:0;
 }
@@ -159,7 +160,7 @@
   white-space:nowrap;
 }
 #cover-reviews-section .google-reviews-status {
-  margin:0 auto 5px;
+  margin:0 auto 3px;
   color:#746c76;
   font-size:.68rem;
   line-height:1.4;
@@ -186,7 +187,7 @@
   grid-template-areas:'previous dots next' 'viewport viewport viewport';
   grid-template-rows:36px auto;
   align-items:center;
-  gap:4px 7px;
+  gap:2px 4px;
   width:100%;
   margin:0 auto;
 }
@@ -223,8 +224,8 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
 #cover-reviews-section .google-reviews-viewport {
   display:grid;
   min-width:0;
-  height:8rem;
-  min-height:8rem;
+  height:7rem;
+  min-height:7rem;
   overflow:hidden;
   touch-action:pan-y;
   outline-offset:3px;
@@ -254,7 +255,7 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   min-height:0;
   flex-direction:column;
   justify-content:center;
-  padding:5px 14px 3px;
+  padding:2px 6px 1px;
   background:transparent;
   text-align:center;
   animation-duration:.46s;
@@ -285,7 +286,7 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   line-clamp:5;
   overflow:hidden;
   font-style:normal;
-  line-height:1.5;
+  line-height:1.35;
   overflow-wrap:anywhere;
   white-space:pre-line;
   text-align:center;
@@ -297,10 +298,10 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   align-items:center;
   justify-content:center;
   gap:2px 6px;
-  margin-top:4px;
+  margin-top:2px;
   color:#77707a;
   font-size:.6rem;
-  line-height:1.15;
+  line-height:1.1;
 }
 #cover-reviews-section .google-reviews-author-wrap { display:inline-flex; align-items:center; gap:6px; min-width:0; }
 #cover-reviews-section .google-reviews-avatar {
@@ -359,7 +360,7 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   flex-wrap:wrap;
   justify-content:center;
   gap:6px;
-  margin:5px 0 0;
+  margin:2px 0 0;
 }
 #cover-reviews-section .google-reviews-dot {
   width:7px;
@@ -409,7 +410,7 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
 }
 #cover-reviews-section .google-reviews-disclosure {
   max-width:78ch;
-  margin:4px auto 0;
+  margin:1px auto 0;
   color:#817983;
   font-size:.6rem;
   line-height:1.2;
@@ -417,7 +418,7 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
 }
 #cover-reviews-section .google-reviews-policy { color:#5d3f68; text-underline-offset:2px; }
 #cover-reviews-section .google-reviews-attributions {
-  margin:3px auto 0;
+  margin:1px auto 0;
   color:#77707a;
   font-size:.6rem;
   line-height:1.2;
@@ -429,8 +430,8 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   flex-wrap:wrap;
   align-items:center;
   justify-content:center;
-  gap:2px 8px;
-  margin-top:3px;
+  gap:1px 6px;
+  margin-top:1px;
 }
 #cover-reviews-section .google-reviews-all {
   color:#5d3f68;
@@ -458,9 +459,9 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   white-space:nowrap;
 }
 @media (max-width:600px) {
-  #cover-reviews-section { padding:6px 10px 5px; }
-  #cover-reviews-section .google-reviews-card { padding:0; text-align:center; }
-  #cover-reviews-section .google-reviews-heading { justify-content:center; margin-bottom:4px; }
+  #cover-reviews-section { padding:3px 4px 2px; }
+  #cover-reviews-section .google-reviews-card { padding:0 2px 1px; text-align:center; }
+  #cover-reviews-section .google-reviews-heading { justify-content:center; margin-bottom:1px; }
   #cover-reviews-section .google-reviews-rating { gap:2px 9px; }
   #cover-reviews-section .google-reviews-score { font-size:1.46rem; }
   #cover-reviews-section .google-reviews-stars { font-size:1.34rem; }
@@ -470,20 +471,20 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
     grid-template-rows:44px auto;
     gap:2px 4px;
   }
-  #cover-reviews-section .google-reviews-viewport { height:8rem; min-height:8rem; }
+  #cover-reviews-section .google-reviews-viewport { height:6rem; min-height:6rem; }
   #cover-reviews-section .google-reviews-nav { width:44px; height:44px; }
   #cover-reviews-section .google-reviews-nav svg { width:17px; height:17px; }
-  #cover-reviews-section .google-reviews-slide { padding:3px 2px 1px; text-align:center; }
+  #cover-reviews-section .google-reviews-slide { padding:1px 2px 0; text-align:center; }
   #cover-reviews-section .google-reviews-quote {
     max-width:none;
     margin:0;
     font-size:.96rem;
-    line-height:1.45;
+    line-height:1.3;
     text-align:center;
     -webkit-line-clamp:5;
     line-clamp:5;
   }
-  #cover-reviews-section .google-reviews-meta { justify-content:center; gap:2px 5px; margin-top:4px; font-size:.6rem; line-height:1.15; }
+  #cover-reviews-section .google-reviews-meta { justify-content:center; gap:1px 4px; margin-top:2px; font-size:.6rem; line-height:1.1; }
   #cover-reviews-section .google-reviews-author-wrap { max-width:100%; gap:7px; }
   #cover-reviews-section .google-reviews-avatar { flex-basis:26px; width:26px; height:26px; }
   #cover-reviews-section .google-reviews-author { font-size:.73rem; }
@@ -513,13 +514,13 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   #cover-reviews-section .google-reviews-dot[aria-current="true"] { border-color:transparent; background:transparent; }
   #cover-reviews-section .google-reviews-dot[aria-current="true"]::before { border-color:#634b6b; background:#634b6b; }
   #cover-reviews-section .google-reviews-load { min-height:44px; margin-top:5px; font-size:.72rem; }
-  #cover-reviews-section .google-reviews-disclosure { max-width:58ch; margin-top:3px; font-size:.6rem; line-height:1.2; }
-  #cover-reviews-section .google-reviews-attributions { margin-top:2px; font-size:.6rem; line-height:1.2; }
-  #cover-reviews-section .google-reviews-footer { gap:2px 8px; margin-top:3px; }
+  #cover-reviews-section .google-reviews-disclosure { max-width:58ch; margin-top:1px; font-size:.6rem; line-height:1.15; }
+  #cover-reviews-section .google-reviews-attributions { margin-top:1px; font-size:.6rem; line-height:1.15; }
+  #cover-reviews-section .google-reviews-footer { gap:1px 6px; margin-top:1px; }
   #cover-reviews-section .google-reviews-all { font-size:.6rem; }
 }
 @media (max-width:360px) {
-  #cover-reviews-section { padding-inline:9px; }
+  #cover-reviews-section { padding-inline:4px; }
   #cover-reviews-section .google-reviews-quote { -webkit-line-clamp:4; line-clamp:4; }
   #cover-reviews-section .google-reviews-carousel { grid-template-columns:44px minmax(0,1fr) 44px; gap:2px; }
   #cover-reviews-section .google-reviews-dots { justify-content:center; }
@@ -563,11 +564,11 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
     gap:1px 4px;
     align-self:center;
   }
-  #cover-reviews-section .google-reviews-viewport { height:4rem; min-height:4rem; }
+  #cover-reviews-section .google-reviews-viewport { height:3.5rem; min-height:3.5rem; }
   #cover-reviews-section .google-reviews-nav { width:44px; height:44px; }
-  #cover-reviews-section .google-reviews-slide { padding:2px 5px 0; text-align:center; }
-  #cover-reviews-section .google-reviews-quote { max-width:none; margin:0; font-size:.9rem; line-height:1.35; text-align:center; -webkit-line-clamp:2; line-clamp:2; }
-  #cover-reviews-section .google-reviews-meta { justify-content:center; gap:2px 6px; margin-top:3px; font-size:.6rem; line-height:1.15; }
+  #cover-reviews-section .google-reviews-slide { padding:1px 3px 0; text-align:center; }
+  #cover-reviews-section .google-reviews-quote { max-width:none; margin:0; font-size:.9rem; line-height:1.25; text-align:center; -webkit-line-clamp:2; line-clamp:2; }
+  #cover-reviews-section .google-reviews-meta { justify-content:center; gap:1px 4px; margin-top:1px; font-size:.6rem; line-height:1.1; }
   #cover-reviews-section .google-reviews-avatar { flex-basis:22px; width:22px; height:22px; }
   #cover-reviews-section .google-reviews-author { font-size:.66rem; }
   #cover-reviews-section .google-reviews-translated { margin-top:2px !important; font-size:.6rem !important; }
@@ -595,10 +596,10 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   }
   #cover-reviews-section .google-reviews-dot[aria-current="true"] { border-color:transparent; background:transparent; }
   #cover-reviews-section .google-reviews-dot[aria-current="true"]::before { border-color:#634b6b; background:#634b6b; }
-  #cover-reviews-section .google-reviews-disclosure { grid-area:disclosure; max-width:none; margin:0; font-size:.6rem; line-height:1.15; text-align:center; }
-  #cover-reviews-section .google-reviews-attributions { grid-area:attributions; max-width:none; margin:0; font-size:.6rem; line-height:1.15; text-align:center; }
+  #cover-reviews-section .google-reviews-disclosure { grid-area:disclosure; max-width:none; margin:0; font-size:.6rem; line-height:1.1; text-align:center; }
+  #cover-reviews-section .google-reviews-attributions { grid-area:attributions; max-width:none; margin:0; font-size:.6rem; line-height:1.1; text-align:center; }
   #cover-reviews-section .google-reviews-load { grid-area:load; justify-self:center; min-height:36px; margin:0; font-size:.65rem; }
-  #cover-reviews-section .google-reviews-footer { grid-area:footer; justify-content:center; gap:2px 8px; margin-top:0; }
+  #cover-reviews-section .google-reviews-footer { grid-area:footer; justify-content:center; gap:1px 6px; margin-top:0; }
   #cover-reviews-section .google-reviews-all { font-size:.6rem; }
 }
 

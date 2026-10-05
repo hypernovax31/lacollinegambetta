@@ -121,7 +121,7 @@ scriptAvisGoogle.includes("fields:['rating','googleMapsURI','reviews']") &&
   !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
   ? ok('avis Google : affichage auto, attribution Places et absence de cache vérifiés')
   : ko('avis Google : affichage automatique, champs Places ou absence de cache non garantis');
-index.includes('assets/css/google-reviews.css?v=2026100521') &&
+index.includes('assets/css/google-reviews.css?v=2026100522') &&
   index.includes('assets/js/google-reviews.js?v=2026100515') &&
   d.querySelector('script[src^="assets/js/i18n.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.closest('head') &&
@@ -170,9 +170,10 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
     : ko(`${f} : ${metros.length} mention(s) du metro dans le pied, ou redite`);
   metros[0].tagName === 'A' && metros[0].hasAttribute('data-ratp-itineraire') &&
     metros[0].href.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=') &&
-    metros[0].href.includes('Belgrand') && !metros[0].hasAttribute('target')
-    ? ok(`${f} : lien direct Bonjour RATP, sans onglet provisoire`)
-    : ko(`${f} : le lien app/web Bonjour RATP est incomplet ou s'ouvre en nouvel onglet`);
+    metros[0].href.includes('Belgrand') && metros[0].target === '_blank' &&
+    metros[0].rel.split(/\s+/).includes('noopener')
+    ? ok(`${f} : lien universel Bonjour RATP, application si disponible et site en nouvel onglet sinon`)
+    : ko(`${f} : le lien app/web Bonjour RATP doit préserver la nouvelle fenêtre de secours`);
   adresse && adresse.textContent.trim() === '4 RUE BELGRAND • 75020 PARIS' &&
     localisation && localisation.contains(adresse) && localisation.contains(metros[0]) &&
     separateurAdresseMetro &&
@@ -382,9 +383,30 @@ cacheChiffres
 
 const ratp = d.querySelector('[data-ratp-itineraire]');
 ratp && ratp.href.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=') &&
-  ratp.href.includes('Belgrand') && !ratp.hasAttribute('target')
-  ? ok('lien Bonjour RATP : app prioritaire, web en secours, sans nouvel onglet')
-  : ko('lien Bonjour RATP : URL de destination ou ouverture directe incorrecte');
+  ratp.href.includes('Belgrand') && ratp.target === '_blank' && ratp.rel.split(/\s+/).includes('noopener')
+  ? ok('lien Bonjour RATP : application via lien universel, site en secours dans un nouvel onglet')
+  : ko('lien Bonjour RATP : URL de destination ou ouverture app/web incorrecte');
+const fichiersLiensExternes = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html'];
+const liensExternesSansNouvelOnglet = [];
+for (const fichier of fichiersLiensExternes) {
+  const pageLiens = new JSDOM(lire(fichier), { url:`https://lacollinegambetta.com/${fichier}` });
+  for (const lien of pageLiens.window.document.querySelectorAll('a[href]')) {
+    let destination;
+    try { destination = new URL(lien.getAttribute('href'), `https://lacollinegambetta.com/${fichier}`); }
+    catch (e) { continue; }
+    const hote = destination.hostname.toLowerCase().replace(/^www\./, '');
+    if (!['http:', 'https:'].includes(destination.protocol) || hote === 'lacollinegambetta.com') continue;
+    const relations = lien.rel.toLowerCase().split(/\s+/);
+    if (lien.target !== '_blank' || !relations.includes('noopener')) {
+      liensExternesSansNouvelOnglet.push(`${fichier}: ${lien.textContent.trim().slice(0, 36) || destination.hostname}`);
+    }
+  }
+  pageLiens.window.close();
+}
+liensExternesSansNouvelOnglet.length === 0
+  ? ok(`liens externes : toutes les ancres HTTP(S) s’ouvrent dans un nouvel onglet (${fichiersLiensExternes.length} pages)`)
+  : ko(`liens externes sans nouvel onglet/rel noopener : ${liensExternesSansNouvelOnglet.slice(0, 8).join(' | ')}`);
+
 !index.includes("window.open('about:blank'") &&
   !index.includes('api-adresse.data.gouv.fr/reverse/')
   ? ok('métro : aucune page blanche ni demande de géolocalisation')
