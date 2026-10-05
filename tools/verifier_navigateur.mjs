@@ -134,7 +134,7 @@ try {
   });
   assert.equal(widgetAccueil.buttonDisabled, false, 'le bouton de secours doit être actif après un échec');
   assert.equal(widgetAccueil.buttonBusy, 'false');
-  assert.equal(widgetAccueil.sectionBackground, 'rgba(0, 0, 0, 0)', 'le fond du bloc doit rester transparent');
+  assert.equal(widgetAccueil.sectionBackground, 'rgb(252, 251, 247)', 'les étoiles, la note et les avis doivent rester sur le même fond crème');
   assert.equal(widgetAccueil.cardBackground, 'rgba(0, 0, 0, 0)');
   assert.equal(widgetAccueil.cardShadow, 'none', 'le bloc ne doit pas avoir d’ombre');
   assert.equal(widgetAccueil.cardBorder, '0px', 'le bloc ne doit pas avoir de cadre');
@@ -340,7 +340,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100511'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100512'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');
@@ -349,6 +349,7 @@ try {
   // interceptées localement : aucune requête réelle n'est envoyée à Google.
   const pageAvis = await contexte.newPage();
   await pageAvis.setViewportSize({ width: 320, height: 720 });
+  await pageAvis.emulateMedia({ reducedMotion:'no-preference' });
   let sdkFictifIntercepte = false;
   await pageAvis.route('**/*', async (route) => {
     const url = new URL(route.request().url());
@@ -413,6 +414,10 @@ try {
   await pageAvis.waitForFunction(() =>
     document.querySelector('#google-reviews-slide article') &&
     document.getElementById('google-reviews-position')?.textContent.includes('1 sur 2'));
+  await pageAvis.locator('#google-reviews-rating').scrollIntoViewIfNeeded();
+  await pageAvis.waitForFunction(() =>
+    document.getElementById('google-reviews-rating')?.classList.contains('is-animating'));
+  await pageAvis.evaluate(() => new Promise(requestAnimationFrame));
   assert.equal(sdkFictifIntercepte, true);
   const renduAvis = await pageAvis.evaluate(() => ({
     title:document.getElementById('cover-reviews-title').textContent.trim(),
@@ -420,8 +425,13 @@ try {
     score:document.getElementById('google-reviews-score').textContent,
     reviewCountPresent:document.getElementById('google-reviews-count') !== null,
     stars:document.getElementById('google-reviews-stars').getAttribute('aria-label'),
+    ratingAnimationTriggered:document.getElementById('google-reviews-rating').classList.contains('is-animating'),
     starsAnimation:getComputedStyle(document.getElementById('google-reviews-stars')).animationName,
     starsFillAnimation:getComputedStyle(document.getElementById('google-reviews-stars-fill')).animationName,
+    starsAnimationRunning:[...document.getElementById('google-reviews-stars').getAnimations()]
+      .some((animation)=>animation.animationName==='google-review-stars-appear' && animation.playState==='running'),
+    starsFillAnimationRunning:[...document.getElementById('google-reviews-stars-fill').getAnimations()]
+      .some((animation)=>animation.animationName==='google-review-stars-reveal' && animation.playState==='running'),
     quote:document.querySelector('.google-reviews-quote').textContent,
     carousel:getComputedStyle(document.getElementById('google-reviews-carousel')).display,
     previousHidden:document.getElementById('google-reviews-previous').hidden,
@@ -434,8 +444,11 @@ try {
   assert.equal(renduAvis.score, '4,8/5');
   assert.equal(renduAvis.reviewCountPresent, false, 'le nombre d’avis ne doit pas apparaître dans le bloc');
   assert.equal(renduAvis.stars, 'Note moyenne Google : 4,8 sur 5');
+  assert.equal(renduAvis.ratingAnimationTriggered, true, 'l’animation de la note doit attendre son entrée dans l’écran');
   assert.equal(renduAvis.starsAnimation, 'google-review-stars-appear', 'l’apparition des étoiles doit être animée');
   assert.equal(renduAvis.starsFillAnimation, 'google-review-stars-reveal', 'le remplissage doré des étoiles doit être animé');
+  assert.equal(renduAvis.starsAnimationRunning, true, 'l’apparition des étoiles doit être visible quand le bloc entre dans l’écran');
+  assert.equal(renduAvis.starsFillAnimationRunning, true, 'le remplissage des étoiles doit être actif quand le bloc entre dans l’écran');
   assert.ok(renduAvis.quote.startsWith('TEST ONLY'));
   assert.equal(renduAvis.carousel, 'grid');
   assert.equal(renduAvis.previousHidden, false);
@@ -536,12 +549,23 @@ try {
       `la hauteur du carrousel n’est pas animée avec fluidité ${contexte}`);
   }
 
+  async function verifierAnimationCarrousel(name, contexte) {
+    await pageAvis.evaluate(() => new Promise(requestAnimationFrame));
+    const animation = await pageAvis.locator('.google-reviews-slide').evaluate((element, animationName) => {
+      const active = element.getAnimations().find((item) => item.animationName === animationName);
+      return active ? { name:active.animationName, state:active.playState, duration:active.effect.getTiming().duration } : null;
+    }, name);
+    assert.ok(animation && animation.state === 'running' && animation.duration >= 400,
+      `la transition ${name} doit être réellement visible (${contexte}; ${JSON.stringify(animation)})`);
+  }
+
   async function verifierStabiliteFleches(layoutInitial, largeur, hauteur, contexte) {
     assert.ok(Math.abs(layoutInitial.navCentersY[0] - layoutInitial.navCentersY[1]) <= 1,
       `les deux flèches ne sont pas au même niveau ${contexte}`);
     await pageAvis.getByRole('button', { name:'Avis suivant' }).click();
     await pageAvis.waitForFunction(() =>
       document.getElementById('google-reviews-position')?.textContent.includes('2 sur 2'));
+    await verifierAnimationCarrousel('google-review-enter-next', contexte);
     const layoutSuivant = await mesurerMiseEnPage(largeur, hauteur);
     assert.ok(layoutSuivant.navCentersY.every((y, index) => Math.abs(y - layoutInitial.navCentersY[index]) <= 1),
       `les flèches changent de niveau vertical en passant à l’avis suivant ${contexte} (${layoutInitial.navCentersY.map((y) => y.toFixed(1)).join('/')} → ${layoutSuivant.navCentersY.map((y) => y.toFixed(1)).join('/')})`);
@@ -560,6 +584,7 @@ try {
     await pageAvis.getByRole('button', { name:'Avis précédent' }).click();
     await pageAvis.waitForFunction(() =>
       document.getElementById('google-reviews-position')?.textContent.includes('1 sur 2'));
+    await verifierAnimationCarrousel('google-review-enter-previous', contexte);
     await attendreAnimationsAvis();
     const animationRetour=await pageAvis.locator('.google-reviews-slide').evaluate((element)=>getComputedStyle(element).animationName);
     assert.equal(animationRetour, 'google-review-enter-previous', `le retour à l’avis précédent n’est pas animé ${contexte}`);
@@ -611,6 +636,14 @@ try {
   await pageAvis.getByRole('button', { name:'Avis suivant' }).click();
   await pageAvis.waitForFunction(() =>
     document.getElementById('google-reviews-position')?.textContent.includes('2 sur 2'));
+  await pageAvis.emulateMedia({ reducedMotion:'reduce' });
+  const mouvementsReduits=await pageAvis.evaluate(() => ({
+    stars:getComputedStyle(document.getElementById('google-reviews-stars')).animationName,
+    starsFill:getComputedStyle(document.getElementById('google-reviews-stars-fill')).animationName,
+    slide:getComputedStyle(document.querySelector('.google-reviews-slide')).animationName,
+  }));
+  assert.deepEqual(mouvementsReduits, { stars:'none', starsFill:'none', slide:'none' },
+    'les animations doivent respecter prefers-reduced-motion');
   console.log('  ok   Chromium : note, étoiles, commentaires et carrousel responsives (fixtures synthétiques uniquement)');
 
   await contexte.close();

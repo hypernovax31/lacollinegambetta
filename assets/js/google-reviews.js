@@ -91,6 +91,8 @@
   var requestPromise = null;
   var pointerStart = null;
   var carouselResizeObserver = null;
+  var ratingAnimationObserver = null;
+  var ratingAnimationStarted = false;
   var measurementFrame = 0;
   var measuredViewportWidth = 0;
 
@@ -201,6 +203,29 @@
     allReviews.href = trusted;
     mapsAttribution.href = trusted;
   }
+  function startRatingAnimation() {
+    if (ratingAnimationStarted || summary.hidden) return;
+    ratingAnimationStarted = true;
+    summary.classList.add('is-animating');
+  }
+  function animateRatingWhenVisible() {
+    if (ratingAnimationStarted || summary.hidden || ratingAnimationObserver) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      ratingAnimationStarted = true;
+      return;
+    }
+    if (!('IntersectionObserver' in window)) {
+      startRatingAnimation();
+      return;
+    }
+    ratingAnimationObserver = new window.IntersectionObserver(function (entries, observer) {
+      if (!entries.some(function (entry) { return entry.isIntersecting; })) return;
+      observer.disconnect();
+      ratingAnimationObserver = null;
+      startRatingAnimation();
+    }, { threshold:0.35 });
+    ratingAnimationObserver.observe(summary);
+  }
   function renderSummary(value) {
     var rating = Number(value.rating);
     if (!Number.isFinite(rating) || rating < 0 || rating > 5) return;
@@ -209,6 +234,7 @@
     starsFill.style.width = (Math.max(0, Math.min(5, rating)) / 5 * 100).toFixed(1) + '%';
     stars.setAttribute('aria-label', copy().rating(formatted));
     summary.hidden = false;
+    animateRatingWhenVisible();
   }
   function makeAuthor(review) {
     var wrap = document.createElement('span');

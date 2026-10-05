@@ -5,7 +5,7 @@
   box-sizing:border-box;
   width:100%;
   padding:8px 14px 7px;
-  background:transparent;
+  background:#fcfbf7;
   color:#24102e;
   font-family:'Montserrat',Arial,sans-serif;
 }
@@ -80,11 +80,11 @@
   background-size:1.05em 1em;
   transform-origin:left center;
 }
-#cover-reviews-section .google-reviews-rating:not([hidden]) .google-reviews-stars {
+#cover-reviews-section .google-reviews-rating.is-animating .google-reviews-stars {
   animation:google-review-stars-appear .52s cubic-bezier(.2,.75,.25,1.15) both;
   transform-origin:center;
 }
-#cover-reviews-section .google-reviews-rating:not([hidden]) .google-reviews-stars-fill {
+#cover-reviews-section .google-reviews-rating.is-animating .google-reviews-stars-fill {
   animation:google-review-stars-reveal .68s cubic-bezier(.2,.7,.25,1) .06s both;
 }
 @keyframes google-review-stars-appear {
@@ -203,7 +203,7 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   padding:5px 14px 3px;
   background:transparent;
   text-align:center;
-  animation-duration:.34s;
+  animation-duration:.46s;
   animation-timing-function:cubic-bezier(.22,.61,.36,1);
   animation-fill-mode:both;
   will-change:opacity,transform;
@@ -212,11 +212,11 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
 #cover-reviews-section .google-reviews-slide.is-entering-previous { animation-name:google-review-enter-previous; }
 #cover-reviews-section .google-reviews-slide[dir="rtl"] { text-align:center; }
 @keyframes google-review-enter-next {
-  from { opacity:0; transform:translateX(14px); }
+  from { opacity:0; transform:translateX(28px); }
   to { opacity:1; transform:translateX(0); }
 }
 @keyframes google-review-enter-previous {
-  from { opacity:0; transform:translateX(-14px); }
+  from { opacity:0; transform:translateX(-28px); }
   to { opacity:1; transform:translateX(0); }
 }
 #cover-reviews-section .google-reviews-quote {
@@ -526,8 +526,9 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   #cover-reviews-section .google-reviews-nav,
   #cover-reviews-section .google-reviews-viewport { transition:none; }
   #cover-reviews-section[data-reviews-state="loading"] .google-reviews-status::before { animation:none; }
-  #cover-reviews-section .google-reviews-slide,
-  #cover-reviews-section .google-reviews-rating:not([hidden]) .google-reviews-stars,
-  #cover-reviews-section .google-reviews-rating:not([hidden]) .google-reviews-stars-fill { animation:none; }
+  #cover-reviews-section .google-reviews-slide.is-entering-next,
+  #cover-reviews-section .google-reviews-slide.is-entering-previous,
+  #cover-reviews-section .google-reviews-rating.is-animating .google-reviews-stars,
+  #cover-reviews-section .google-reviews-rating.is-animating .google-reviews-stars-fill { animation:none; }
 }
 @media print { #cover-reviews-section { display:none !important; } }
