@@ -266,7 +266,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100508'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100509'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');
@@ -381,9 +381,14 @@ try {
       const next = document.getElementById('google-reviews-next');
       const dot = document.querySelector('.google-reviews-dot');
       return {
-        overflows:[section, card, carousel, document.getElementById('google-reviews-viewport'), quote]
+        overflows:[section, card, carousel, document.getElementById('google-reviews-viewport')]
           .filter((element) => element.scrollWidth > element.clientWidth + 1)
           .map((element) => element.id || element.className),
+        quoteWithinViewport:(() => {
+          const quoteBox=quote.getBoundingClientRect();
+          const viewportBox=document.getElementById('google-reviews-viewport').getBoundingClientRect();
+          return quoteBox.left >= viewportBox.left - 1 && quoteBox.right <= viewportBox.right + 1;
+        })(),
         height:section.getBoundingClientRect().height,
         cardDisplay:getComputedStyle(card).display,
         cardColumns:getComputedStyle(card).gridTemplateColumns,
@@ -391,6 +396,17 @@ try {
         landscape:matchMedia('(orientation:landscape)').matches,
         quoteWidth:rect(quote).width,
         quoteFontSize:parseFloat(getComputedStyle(quote).fontSize),
+        cardTextAlign:getComputedStyle(card).textAlign,
+        quoteTextAlign:getComputedStyle(quote).textAlign,
+        metaJustify:getComputedStyle(document.querySelector('.google-reviews-meta')).justifyContent,
+        sourceAlign:getComputedStyle(document.querySelector('.google-reviews-source')).alignSelf,
+        disclosureTextAlign:getComputedStyle(document.getElementById('google-reviews-disclosure')).textAlign,
+        footerJustify:getComputedStyle(document.querySelector('.google-reviews-footer')).justifyContent,
+        summaryCentered:(() => {
+          const heading=document.querySelector('.google-reviews-heading').getBoundingClientRect();
+          const rating=document.getElementById('google-reviews-rating').getBoundingClientRect();
+          return Math.abs((heading.left + heading.width / 2) - (rating.left + rating.width / 2)) < 1;
+        })(),
         quoteLineClamp:parseInt(getComputedStyle(quote).webkitLineClamp, 10),
         averageStarsWidth:rect(document.getElementById('google-reviews-stars')).width,
         averageStarsImage:getComputedStyle(document.getElementById('google-reviews-stars')).backgroundImage,
@@ -409,9 +425,21 @@ try {
     });
   }
 
+  function verifierCentrageAvis(layoutAvis, contexte) {
+    assert.equal(layoutAvis.cardTextAlign, 'center', `le bloc n’est pas centré ${contexte}`);
+    assert.equal(layoutAvis.quoteTextAlign, 'center', `le commentaire n’est pas centré ${contexte}`);
+    assert.equal(layoutAvis.metaJustify, 'center', `l’auteur et la date ne sont pas centrés ${contexte}`);
+    assert.equal(layoutAvis.sourceAlign, 'center', `le lien source n’est pas centré ${contexte}`);
+    assert.equal(layoutAvis.disclosureTextAlign, 'center', `la notice n’est pas centrée ${contexte}`);
+    assert.equal(layoutAvis.footerJustify, 'center', `les liens du pied ne sont pas centrés ${contexte}`);
+    assert.equal(layoutAvis.summaryCentered, true, `la note globale n’est pas centrée ${contexte}`);
+  }
+
   for (const [largeur, hauteur] of [[280,640], [320,568], [375,667], [390,844], [430,932]]) {
     const layoutAvis = await mesurerMiseEnPage(largeur, hauteur);
+    verifierCentrageAvis(layoutAvis, `en portrait à ${largeur}px`);
     assert.deepEqual(layoutAvis.overflows, [], `le bloc ou le carrousel déborde en portrait à ${largeur}px`);
+    assert.equal(layoutAvis.quoteWithinViewport, true, `le commentaire dépasse le cadre en portrait à ${largeur}px`);
     assert.equal(layoutAvis.landscape, false, `le test portrait est dans la mauvaise orientation à ${largeur}px`);
     assert.ok(layoutAvis.height <= 360, `le bloc reste trop haut en portrait (${layoutAvis.height}px à ${largeur}px)`);
     assert.ok(layoutAvis.quoteWidth >= largeur - 48, `le commentaire manque de largeur à ${largeur}px`);
@@ -431,7 +459,9 @@ try {
   }
   for (const [largeur, hauteur] of [[568,320], [667,375], [844,390]]) {
     const layoutAvis = await mesurerMiseEnPage(largeur, hauteur);
+    verifierCentrageAvis(layoutAvis, `en paysage à ${largeur}×${hauteur}px`);
     assert.deepEqual(layoutAvis.overflows, [], `le bloc ou le carrousel déborde en paysage à ${largeur}×${hauteur}px`);
+    assert.equal(layoutAvis.quoteWithinViewport, true, `le commentaire dépasse le cadre en paysage à ${largeur}×${hauteur}px`);
     assert.equal(layoutAvis.landscape, true, `le test paysage est dans la mauvaise orientation à ${largeur}×${hauteur}px`);
     assert.equal(layoutAvis.cardDisplay, 'grid', `la disposition paysage en colonnes n’est pas activée à ${largeur}×${hauteur}px`);
     assert.equal(layoutAvis.quoteLineClamp, 2, `le commentaire n’est pas compact en paysage à ${largeur}×${hauteur}px`);
