@@ -282,10 +282,10 @@ try {
     const disposition=await mesurerLignesCouverture(largeur, hauteur);
     assert.equal(disposition.metroTarget, '_blank', `le lien Bonjour RATP doit permettre l’ouverture native ou un onglet web à ${largeur}×${hauteur}px`);
     assert.equal(disposition.addressFontSize, disposition.metroFontSize, `l’adresse et le métro doivent garder la même taille à ${largeur}×${hauteur}px`);
-    assert.ok(Math.abs(disposition.hoursLineFontSize/disposition.addressFontSize-1.5)<.01 &&
-      Math.abs(disposition.statusFontSize/disposition.addressFontSize-1.5)<.01 &&
-      disposition.hoursItemFontSizes.every((size)=>Math.abs(size/disposition.addressFontSize-1.5)<.01),
-      `toute la ligne horaire, badge compris, doit être 1,5× l’adresse à ${largeur}×${hauteur}px ` +
+    assert.ok(Math.abs(disposition.hoursLineFontSize/disposition.addressFontSize-1.2)<.01 &&
+      Math.abs(disposition.statusFontSize/disposition.addressFontSize-1.2)<.01 &&
+      disposition.hoursItemFontSizes.every((size)=>Math.abs(size/disposition.addressFontSize-1.2)<.01),
+      `toute la ligne horaire, badge compris, doit être 1,2× l’adresse à ${largeur}×${hauteur}px ` +
       `(ligne ${disposition.hoursLineFontSize}, badge ${disposition.statusFontSize}, adresse ${disposition.addressFontSize})`);
     assert.equal(disposition.neighborhoodOverflow,false,
       `la ligne « Dans les alentours » déborde ou coupe un lien à ${largeur}×${hauteur}px`);

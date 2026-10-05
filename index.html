@@ -10759,11 +10759,11 @@ html:not(.carte-doc) #cover-section .medallion-frame:focus-visible::after {
   }
 }
 
-/* Toute la ligne « Tous les jours · horaires · Ouvert » fait 1,5× la taille
+/* Toute la ligne « Tous les jours · horaires · Ouvert » fait 1,2× la taille
    de l’adresse. Les bornes et l’échelle sont coordonnées à chaque breakpoint. */
 html:not(.carte-doc) #cover-section .cover-hours {
   --cover-address-font-size:clamp(.68rem,1.15vw,.86rem);
-  --cover-hours-line-font-size:clamp(1.02rem,1.725vw,1.29rem);
+  --cover-hours-line-font-size:clamp(.816rem,1.38vw,1.032rem);
 }
 html:not(.carte-doc) #cover-section .cover-hours .cover-footer-address {
   font-size:var(--cover-address-font-size) !important;
@@ -10777,7 +10777,7 @@ html:not(.carte-doc) #cover-section .cover-hours .cover-hours__range > .cover-ho
 @media (max-width:440px) {
   html:not(.carte-doc) #cover-section .cover-hours {
     --cover-address-font-size:clamp(.5rem,2.1vw,.66rem);
-    --cover-hours-line-font-size:clamp(.75rem,3.15vw,.99rem);
+    --cover-hours-line-font-size:clamp(.6rem,2.52vw,.792rem);
   }
 }
 </style>

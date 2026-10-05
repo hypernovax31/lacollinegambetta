@@ -53,11 +53,11 @@ ligneHoraires?.contains(libelleHeures) && ligneHoraires.contains(statutHoraires)
   ? ok('horaires : le statut suit la plage horaire dans la même ligne')
   : ko('horaires : le statut doit suivre la plage horaire dans la même ligne');
 index.includes('--cover-address-font-size:clamp(.68rem,1.15vw,.86rem)') &&
-  index.includes('--cover-hours-line-font-size:clamp(1.02rem,1.725vw,1.29rem)') &&
+  index.includes('--cover-hours-line-font-size:clamp(.816rem,1.38vw,1.032rem)') &&
   index.includes('--cover-address-font-size:clamp(.5rem,2.1vw,.66rem)') &&
-  index.includes('--cover-hours-line-font-size:clamp(.75rem,3.15vw,.99rem)')
+  index.includes('--cover-hours-line-font-size:clamp(.6rem,2.52vw,.792rem)')
   ? ok('horaires : police de toute la ligne, badge compris, proportionnelle à l’adresse')
-  : ko('horaires : rapport de taille 1,5× non défini sur tous les écrans');
+  : ko('horaires : rapport de taille 1,2× non défini sur tous les écrans');
 index.includes('.medallion-frame.is-load-reflection::after') &&
   index.includes("window.addEventListener('load'") &&
   index.includes("'(prefers-reduced-motion: reduce)'") &&
