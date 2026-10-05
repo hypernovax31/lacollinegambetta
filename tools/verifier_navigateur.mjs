@@ -97,7 +97,7 @@ try {
   await page.goto(`${origineLocale}/index.html?lang=uk`, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => window.__i18nReady === true && document.documentElement.lang === 'uk');
   await page.waitForFunction(() =>
-    document.getElementById('google-reviews-load')?.textContent.trim() === 'Показати відгуки Google');
+    document.getElementById('google-reviews-load')?.textContent.trim() === 'Спробувати ще раз');
   const widgetAccueil = await page.evaluate(() => ({
     heading: document.getElementById('cover-reviews-title')?.textContent.trim(),
     button: document.getElementById('google-reviews-load')?.textContent.trim(),
@@ -115,19 +115,20 @@ try {
   }));
   assert.deepEqual({ heading:widgetAccueil.heading, button:widgetAccueil.button, visible:widgetAccueil.visible, staticQuotes:widgetAccueil.staticQuotes }, {
     heading: 'Відгуки Google',
-    button: 'Показати відгуки Google',
+    button: 'Спробувати ще раз',
     visible: true,
     staticQuotes: 0,
   });
-  assert.equal(widgetAccueil.buttonDisabled, false, 'le clic doit être actif dès l’initialisation du script');
+  assert.equal(widgetAccueil.buttonDisabled, false, 'le bouton de secours doit être actif après un échec');
   assert.equal(widgetAccueil.buttonBusy, 'false');
   assert.equal(widgetAccueil.sectionBackground, 'rgb(252, 251, 247)', 'le bloc doit rester léger sur fond clair');
   assert.equal(widgetAccueil.cardShadow, 'none', 'la carte ne doit pas avoir d’ombre lourde');
   assert.equal(widgetAccueil.cardBorder, '0px', 'la carte ne doit pas avoir de cadre épais');
   assert.ok(widgetAccueil.sectionScroll <= widgetAccueil.sectionWidth + 1, 'le bloc d’avis déborde horizontalement à 320 px');
   assert.ok(widgetAccueil.cardScroll <= widgetAccueil.cardWidth + 1, 'la carte d’avis déborde à 320 px');
-  assert.deepEqual(requetesGooglePlaces, [], 'l’API Google ne doit pas être appelée avant la demande du visiteur');
-  console.log('  ok   Chromium : bloc traduit en ukrainien, sans avis inventé ni requête Google avant action');
+  assert.equal(requetesGooglePlaces.filter((path) => path === '/maps/api/js').length, 1,
+    'Places doit être demandé automatiquement une seule fois au chargement');
+  console.log('  ok   Chromium : avis autochargés au chargement, sans avis statique; secours disponible hors ligne');
   const piedUk = await page.evaluate(() => {
     const nav = document.querySelector('.footer .footer-quartier');
     const metro = document.querySelector('.footer-details__metro');
@@ -154,6 +155,7 @@ try {
   assert.equal(piedUk.brand, 'ЛА КОЛЛІН ҐАМБЕТТА');
   console.log('  ok   Chromium ukrainien : adresse, métro et navigation de proximité en cyrillique');
 
+  const requetesAvantMenu = requetesGooglePlaces.length;
   await page.evaluate(() => {
     showView('menu');
     const bouton = [...document.querySelectorAll('.nav-btn')].find((node) => /вина/i.test(node.textContent));
@@ -161,7 +163,7 @@ try {
   });
   await page.waitForFunction(() => document.querySelectorAll('#vins .wine-row').length === 17);
   assert.equal(await page.evaluate(() => getComputedStyle(document.getElementById('cover-reviews-section')).display), 'none');
-  assert.deepEqual(requetesGooglePlaces, [], 'aucune requête Places ne doit être faite en ouvrant le menu');
+  assert.equal(requetesGooglePlaces.length, requetesAvantMenu, 'ouvrir le menu ne doit pas relancer le chargement Places');
   const categories = ['Червоне вино', 'Біле вино', 'Рожеве вино', 'Ігристі'];
   const tailles = [280, 320, 360, 375, 390, 420, 430];
   for (const largeur of tailles) {
@@ -246,7 +248,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100502'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100503'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');

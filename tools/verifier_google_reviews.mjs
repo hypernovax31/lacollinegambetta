@@ -95,27 +95,26 @@ window.eval(read('assets/js/google-reviews.js'));
 
 const button = window.document.getElementById('google-reviews-load');
 const status = window.document.getElementById('google-reviews-status');
-assert.equal(button.textContent, 'Afficher les avis Google');
-assert.equal(button.disabled, false, 'le bouton doit être prêt quand son script est initialisé');
-assert.equal(button.getAttribute('aria-busy'), 'false');
-assert.equal(fetchCalls.length, 0, 'Google ne doit pas être appelé avant une demande');
-assert.equal(sdkScriptLoads, 0, 'la bibliothèque Google ne doit pas être chargée avant le clic');
+assert.equal(button.textContent, 'Chargement des avis Google…');
+assert.equal(button.hidden, true, 'le bouton de secours ne doit pas remplacer le chargement automatique');
+assert.equal(button.disabled, true, 'la requête automatique doit signaler son état');
+assert.equal(button.getAttribute('aria-busy'), 'true');
+assert.equal(fetchCalls.length, 0, 'la configuration est demandée de façon asynchrone au démarrage');
+assert.equal(sdkScriptLoads, 0, 'le SDK attend la lecture de la configuration');
 assert.equal(window.document.getElementById('google-reviews-rating').hidden, true);
 
 window.document.documentElement.lang = 'uk';
 window.dispatchEvent(new window.CustomEvent('lcg-lang-changed', { detail: { lang: 'uk' } }));
-assert.equal(button.textContent, 'Показати відгуки Google');
+assert.equal(button.textContent, 'Спробувати ще раз');
 window.document.documentElement.lang = 'fr';
 window.dispatchEvent(new window.CustomEvent('lcg-lang-changed', { detail: { lang: 'fr' } }));
 
-button.click();
-assert.equal(button.disabled, true, 'un seul chargement doit être en cours');
-assert.equal(button.getAttribute('aria-busy'), 'true');
 await new Promise((resolve) => setTimeout(resolve, 25));
 assert.deepEqual(fetchCalls, ['assets/data/avis-google.json']);
-assert.equal(sdkScriptLoads, 1, 'une seule action doit aussi initialiser Google');
-assert.equal(sdkLibraryImports, 1, 'Places doit être importé sans second clic');
-assert.equal(button.hidden, true, 'les avis doivent apparaître après un seul clic');
+assert.equal(sdkScriptLoads, 1, 'la bibliothèque Google doit démarrer automatiquement');
+assert.equal(sdkLibraryImports, 1, 'Places doit être importé sans clic du visiteur');
+assert.equal(button.hidden, true, 'le bouton de secours reste masqué lorsque les avis sont chargés');
+assert.equal(button.disabled, false);
 assert.equal(button.getAttribute('aria-busy'), 'false');
 assert.ok(requestedFields.includes('reviews'));
 assert.ok(requestedFields.includes('rating'));
@@ -131,5 +130,5 @@ assert.ok(status.textContent.includes('2 sur 2'));
 assert.ok(window.document.querySelector('.google-reviews-source').href.endsWith('/fixture-2'));
 assert.ok(window.document.querySelector('.google-reviews-review-rating span:last-child').textContent === '2/5');
 
-console.log('  ok   Carrousel : un clic initialise Places et affiche les avis, sans requête avant action; navigation vérifiée sur fixtures synthétiques (pas de validation Google en direct)');
+console.log('  ok   Carrousel : chargement automatique et navigation vérifiés sur fixtures synthétiques (pas de validation Google en direct)');
 window.close();

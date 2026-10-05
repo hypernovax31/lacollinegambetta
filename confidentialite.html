@@ -821,7 +821,7 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:focus-visible {
     <section class="legal-card" aria-labelledby="prestataires">
       <h2 id="prestataires">5. Firebase, notifications et destinataires</h2>
       <p>Le service de réservation utilise <strong>Firebase Authentication</strong> pour une authentification anonyme technique et <strong>Cloud Firestore</strong> pour enregistrer la demande et le registre de capacité. Ces services sont fournis par Google LLC et peuvent traiter les données sur l’infrastructure de Google selon leurs propres conditions et engagements.</p>
-      <p>Le site contient des liens externes, notamment vers Google Maps pour localiser le restaurant. Si vous choisissez d’afficher les avis Google sur la page de garde, le bloc charge alors les services Google Maps Platform (Maps JavaScript API et Places API). Google peut recevoir à ce moment des données techniques de connexion, notamment l’adresse IP, le site référent et des informations sur le navigateur. Aucune donnée du formulaire de réservation n’est transmise à Google Maps Platform. Consultez la <a href="https://policies.google.com/privacy" rel="noopener">politique de confidentialité de Google</a>.</p>
+      <p>Le site contient des liens externes, notamment vers Google Maps pour localiser le restaurant. Sur la page de garde, le bloc charge automatiquement les services Google Maps Platform (Maps JavaScript API et Places API) à l’ouverture de la page afin d’afficher les avis Google. Google peut alors recevoir des données techniques de connexion, notamment l’adresse IP, le site référent et des informations sur le navigateur. Aucune donnée du formulaire de réservation n’est transmise à Google Maps Platform. Consultez la <a href="https://policies.google.com/privacy" rel="noopener">politique de confidentialité de Google</a>.</p>
       <p>Une notification e-mail est envoyée à <a href="mailto:restaurant@lacollinegambetta.com">restaurant@lacollinegambetta.com</a> par <strong>Google Apps Script</strong>, solution actuellement configurée en priorité. En cas d’échec ou selon la configuration active, le site peut utiliser <strong>FormSubmit</strong> ou <strong>Web3Forms</strong> comme solution de repli. Ces prestataires ne doivent être conservés dans la configuration que si leurs garanties, leurs rôles et leurs durées de conservation ont été vérifiés par l’exploitant.</p>
       <p>Les données sont accessibles aux personnes du restaurant qui traitent les réservations et aux prestataires techniques strictement nécessaires à ces finalités. Elles ne sont pas vendues.</p>
     </section>
@@ -870,7 +870,7 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:focus-visible {
     </footer>
 
   <script src="assets/js/localized-digits.js?v=2026100501"></script>
-  <script src="assets/js/legal-i18n.js?v=2026100503"></script>
+  <script src="assets/js/legal-i18n.js?v=2026100504"></script>
   <script src="assets/js/map-links.js"></script>
 
 </body>

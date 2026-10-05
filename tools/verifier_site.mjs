@@ -84,11 +84,11 @@ const zoneCommentaires = d.getElementById('google-reviews-slide');
 const scriptAvisGoogle = lire('assets/js/google-reviews.js');
 let configurationAvis = null;
 try { configurationAvis = JSON.parse(lire('assets/data/avis-google.json')); } catch (e) {}
-blocAvisGoogle && boutonAvisGoogle && boutonAvisGoogle.disabled && attributionMaps &&
+blocAvisGoogle && boutonAvisGoogle && boutonAvisGoogle.hidden && boutonAvisGoogle.disabled && attributionMaps &&
   attributionMaps.textContent.trim() === 'Google Maps' && attributionMaps.getAttribute('translate') === 'no' &&
   !zoneCommentaires?.querySelector('blockquote')
-  ? ok('avis Google : bloc distinct, attribution visible, aucun avis statique et bouton protégé avant l’initialisation')
-  : ko('avis Google : emplacement, attribution, état initial ou contenu statique incorrect');
+  ? ok('avis Google : bloc minimal, attribution visible, aucun avis statique et secours masqué par défaut')
+  : ko('avis Google : emplacement, attribution, secours initial ou contenu statique incorrect');
 configurationAvis && typeof configurationAvis.place_id === 'string' &&
   configurationAvis.place_id.startsWith('ChIJ') && typeof configurationAvis.cle_api === 'string' &&
   configurationAvis.cle_api.length > 20 && !('avis' in configurationAvis) &&
@@ -96,16 +96,17 @@ configurationAvis && typeof configurationAvis.place_id === 'string' &&
   ? ok('avis Google : configuration Places présente, sans note ni avis mis en cache')
   : ko('avis Google : configuration Places absente ou contenant des données statiques');
 scriptAvisGoogle.includes("fields:['rating','userRatingCount','googleMapsURI','reviews','attributions']") &&
+  scriptAvisGoogle.includes('  loadReviews();') &&
   !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
-  ? ok('avis Google : données chargées depuis Places sans cache persistant')
-  : ko('avis Google : champs Places ou absence de cache persistant non garantis');
-index.includes('assets/css/google-reviews.css?v=2026100502') &&
-  index.includes('assets/js/google-reviews.js?v=2026100502') &&
+  ? ok('avis Google : affichage automatique depuis Places, sans cache persistant')
+  : ko('avis Google : affichage automatique, champs Places ou absence de cache non garantis');
+index.includes('assets/css/google-reviews.css?v=2026100503') &&
+  index.includes('assets/js/google-reviews.js?v=2026100503') &&
   d.querySelector('script[src^="assets/js/i18n.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.defer
-  ? ok('avis Google : assets mis en cache, scripts chargés tôt et avis reliés à la page de garde')
-  : ko('avis Google : assets, chargement anticipé ou script manquant sur la page de garde');
+  ? ok('avis Google : assets mis en cache, chargement automatique dès la page et affichage relié')
+  : ko('avis Google : assets, auto-chargement ou script manquant sur la page de garde');
 
 // --------------------------------- 4 ter. pied de page et alentours ------
 const navs = [...d.querySelectorAll('.footer-quartier')];
@@ -354,7 +355,7 @@ cacheChiffres
 ['index.html', 'reservation.html'].every((f) => lire(f).includes('i18n.js?v=2026100502'))
   ? ok('i18n : scripts actualisés sur la page d’accueil et la réservation')
   : ko('i18n : une page conserve l’ancienne version en cache');
-['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100503'))
+['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100504'))
   ? ok('i18n légal : scripts actualisés sur les pages juridiques')
   : ko('i18n légal : une page conserve l’ancienne version en cache');
 
@@ -466,7 +467,8 @@ const disclosureGoogle = [...legalEn.window.document.querySelectorAll('.legal-ca
   .find((p) => p.querySelector('a[href^="https://policies.google.com/privacy"]'));
 const liensGoogle = disclosureGoogle ? [...disclosureGoogle.querySelectorAll('a')].map((a) => a.textContent.trim()) : [];
 disclosureGoogle && disclosureGoogle.textContent.startsWith('The site contains external links') &&
-  disclosureGoogle.textContent.includes('If you choose to display Google reviews on the home page') &&
+  disclosureGoogle.textContent.includes('automatically loads Google Maps Platform services') &&
+  disclosureGoogle.textContent.includes('as the page opens') &&
   disclosureGoogle.textContent.includes('Maps JavaScript API and Places API') &&
   liensGoogle.length === 1 && liensGoogle[0] === 'Google Privacy Policy'
   ? ok('confidentialite : affichage des avis Places et politique Google traduits en anglais')
@@ -475,14 +477,14 @@ legalEn.window.document.querySelector('time[datetime="2026-10-05"]')?.textConten
   ? ok('confidentialite : date de mise a jour traduite')
   : ko('confidentialite : date de mise a jour non traduite');
 const traductionsGoogle = {
-  ar: 'يحتوي الموقع على روابط خارجية',
-  zh: '本网站包含外部链接',
-  uk: 'Сайт містить зовнішні посилання',
-  ja: 'サイトには、レストランの場所を確認するための',
-  ko: '사이트에는 레스토랑 위치를 찾기 위한',
-  hi: 'साइट में रेस्तरां का स्थान बताने के लिए'
+  ar: ['يحتوي الموقع على روابط خارجية', 'يحمّل قسم التقييمات تلقائيًا'],
+  zh: ['本网站包含外部链接', '评价区块会自动加载'],
+  uk: ['Сайт містить зовнішні посилання', 'блок відгуків автоматично завантажує'],
+  ja: ['サイトには、レストランの場所を確認するための', 'ウィジェットが Google Maps Platform（Maps JavaScript API と Places API）を自動的に読み込みます'],
+  ko: ['사이트에는 레스토랑 위치를 찾기 위한', '리뷰 영역이 Google Maps Platform 서비스(Maps JavaScript API 및 Places API)를 자동으로 불러옵니다'],
+  hi: ['साइट में रेस्तरां का स्थान बताने के लिए', 'यह अनुभाग Google Maps Platform सेवाएँ (Maps JavaScript API और Places API) अपने आप लोड करता है']
 };
-for (const [lang, debutAttendu] of Object.entries(traductionsGoogle)) {
+for (const [lang, [debutAttendu, mentionAuto]] of Object.entries(traductionsGoogle)) {
   const legal = new JSDOM(lire('confidentialite.html'), {
     runScripts: 'outside-only', url: `https://lacollinegambetta.com/confidentialite.html?lang=${lang}`
   });
@@ -490,9 +492,10 @@ for (const [lang, debutAttendu] of Object.entries(traductionsGoogle)) {
   const paragraphe = [...legal.window.document.querySelectorAll('.legal-card p')]
     .find((p) => p.querySelector('a[href^="https://policies.google.com/privacy"]'));
   paragraphe && paragraphe.textContent.includes(debutAttendu) &&
+    paragraphe.textContent.includes(mentionAuto) &&
     paragraphe.textContent.includes('Maps JavaScript API')
-    ? ok(`confidentialite : déclaration Places en écriture native (${lang})`)
-    : ko(`confidentialite : déclaration Places non traduite en écriture native (${lang})`);
+    ? ok(`confidentialite : chargement automatique traduit en écriture native (${lang})`)
+    : ko(`confidentialite : déclaration Places automatique non traduite en écriture native (${lang})`);
   legal.window.close();
 }
 legalEn.window.close();

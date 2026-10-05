@@ -26,10 +26,10 @@ A4 générée depuis les mêmes données.
 | `mentions-legales.html`, `confidentialite.html` | Pages légales et RGPD. |
 
 La page de garde comprend aussi un carrousel d’avis Google. Les commentaires
-sont demandés à Places uniquement après action du visiteur, affichés avec leur
-attribution et lien source, puis gardés seulement en mémoire pendant la visite.
-La configuration navigateur se trouve dans `assets/data/avis-google.json` ; sa
-clé publique doit rester restreinte au domaine du site et aux API Maps autorisées.
+sont chargés automatiquement à l’ouverture de la page via Places, affichés avec
+leur attribution et lien source, puis gardés seulement en mémoire pendant la
+visite. La configuration navigateur se trouve dans `assets/data/avis-google.json` ;
+sa clé publique doit rester restreinte au domaine du site et aux API Maps autorisées.
 
 Le site est statique : aucun build n'est nécessaire pour le publier, les
 fichiers HTML/CSS/JS sont servis tels quels.
