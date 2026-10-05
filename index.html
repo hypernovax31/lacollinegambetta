@@ -10698,10 +10698,48 @@ html:not(.carte-doc) #cover-section .cover-hours__range > .cover-hours__status {
     font-size:clamp(.58rem, 2.8vw, .68rem) !important;
   }
 }
+
+/* Balayage de reflet doré sur le médaillon au survol ou au focus clavier. */
+html:not(.carte-doc) #cover-section .medallion-frame::after {
+  position:absolute;
+  inset:0;
+  z-index:5;
+  border-radius:50%;
+  background:linear-gradient(112deg,
+    transparent 41%,
+    rgba(255,255,255,.04) 45%,
+    rgba(255,249,219,.88) 49%,
+    rgba(216,178,87,.72) 52%,
+    rgba(255,255,255,.16) 56%,
+    transparent 61%);
+  background-position:100% 0;
+  background-size:220% 100%;
+  clip-path:ellipse(50% 50% at 50% 50%);
+  content:'';
+  mix-blend-mode:screen;
+  opacity:0;
+  pointer-events:none;
+}
+html:not(.carte-doc) #cover-section .medallion-frame:hover::after,
+html:not(.carte-doc) #cover-section .medallion-frame:focus-visible::after {
+  animation:cover-medallion-gold-reflection 1.15s cubic-bezier(.22,.61,.36,1) both !important;
+}
+@keyframes cover-medallion-gold-reflection {
+  0% { background-position:100% 0; opacity:0; }
+  16% { opacity:.92; }
+  84% { opacity:.72; }
+  100% { background-position:0 0; opacity:0; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html:not(.carte-doc) #cover-section .medallion-frame:hover::after,
+  html:not(.carte-doc) #cover-section .medallion-frame:focus-visible::after {
+    animation:none !important;
+  }
+}
 </style>
-<link rel="stylesheet" href="assets/css/google-reviews.css?v=2026100520">
+<link rel="stylesheet" href="assets/css/google-reviews.css?v=2026100521">
 <script src="assets/js/i18n.js?v=2026100502" defer></script>
-<script src="assets/js/google-reviews.js?v=2026100514" defer></script>
+<script src="assets/js/google-reviews.js?v=2026100515" defer></script>
 <script>
 /* Les traductions sont servies par ?lang= : chaque version linguistique doit
    se declarer canonique d'elle-meme, sinon Google ignore les hreflang. */
@@ -10899,7 +10937,7 @@ html:not(.carte-doc) #cover-section .cover-hours__range > .cover-hours__status {
       <p id="google-reviews-attributions" class="google-reviews-attributions" hidden></p>
       <footer class="google-reviews-footer">
         <a id="google-reviews-all" class="google-reviews-all" href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" target="_blank" rel="noopener noreferrer">Tous les avis</a>
-        <a id="google-reviews-maps" class="google-reviews-attribution" href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" target="_blank" rel="noopener noreferrer" lang="en" translate="no" aria-label="Google Maps">Google Maps</a>
+        <span id="google-reviews-maps" class="google-reviews-attribution" lang="en" translate="no">Google Maps</span>
       </footer>
     </div>
   </section>

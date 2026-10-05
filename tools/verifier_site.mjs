@@ -95,8 +95,8 @@ let configurationAvis = null;
 try { configurationAvis = JSON.parse(lire('assets/data/avis-google.json')); } catch (e) {}
 blocAvisGoogle && boutonAvisGoogle && boutonAvisGoogle.hidden && boutonAvisGoogle.disabled &&
   positionAvisGoogle?.getAttribute('role') === 'status' && attributionMaps && tousLesAvisGoogle &&
-  attributionMaps.textContent.trim() === 'Google Maps' && attributionMaps.getAttribute('translate') === 'no' &&
-  attributionMaps.href.startsWith('https://www.google.com/maps/') &&
+  attributionMaps.tagName === 'SPAN' && attributionMaps.textContent.trim() === 'Google Maps' &&
+  attributionMaps.getAttribute('translate') === 'no' && !attributionMaps.hasAttribute('href') &&
   tousLesAvisGoogle.href.startsWith('https://www.google.com/maps/') &&
   !d.getElementById('google-reviews-count') && !zoneCommentaires?.querySelector('blockquote')
   ? ok('avis Google : note sans nombre d’avis visible, navigation accessible et secours sans avis statique')
@@ -121,8 +121,8 @@ scriptAvisGoogle.includes("fields:['rating','googleMapsURI','reviews']") &&
   !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
   ? ok('avis Google : affichage auto, attribution Places et absence de cache vérifiés')
   : ko('avis Google : affichage automatique, champs Places ou absence de cache non garantis');
-index.includes('assets/css/google-reviews.css?v=2026100520') &&
-  index.includes('assets/js/google-reviews.js?v=2026100514') &&
+index.includes('assets/css/google-reviews.css?v=2026100521') &&
+  index.includes('assets/js/google-reviews.js?v=2026100515') &&
   d.querySelector('script[src^="assets/js/i18n.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.defer

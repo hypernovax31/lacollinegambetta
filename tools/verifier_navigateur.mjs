@@ -148,6 +148,33 @@ try {
     'Places doit être demandé automatiquement une seule fois au chargement');
   console.log('  ok   Chromium : avis autochargés au chargement, sans avis statique; secours disponible hors ligne');
 
+  const contexteSurvol=await navigateur.newContext({ viewport:{width:1280,height:800}, deviceScaleFactor:1 });
+  const pageSurvol=await contexteSurvol.newPage();
+  pageSurvol.setDefaultTimeout(10000);
+  await pageSurvol.emulateMedia({ reducedMotion:'no-preference' });
+  await pageSurvol.route('**/*', async (route) => {
+    const url=new URL(route.request().url());
+    if (url.origin===origineLocale) await route.continue();
+    else await route.abort();
+  });
+  await pageSurvol.goto(`${origineLocale}/index.html`, { waitUntil:'domcontentloaded' });
+  const medaillon=pageSurvol.locator('#cover-section .medallion-frame');
+  await medaillon.waitFor({ state:'visible' });
+  await medaillon.hover();
+  const refletMedallion=await medaillon.evaluate((element)=>({
+    animation:getComputedStyle(element,'::after').animationName,
+    duration:parseFloat(getComputedStyle(element,'::after').animationDuration),
+  }));
+  assert.equal(refletMedallion.animation,'cover-medallion-gold-reflection',
+    'le médaillon doit déclencher le reflet doré au survol');
+  assert.ok(refletMedallion.duration>=1,'le reflet doré doit être perceptible');
+  await pageSurvol.emulateMedia({ reducedMotion:'reduce' });
+  const animationAvecMouvementReduit=await medaillon.evaluate((element)=>
+    getComputedStyle(element,'::after').animationName);
+  assert.equal(animationAvecMouvementReduit,'none','le reflet doit respecter la préférence de mouvement réduit');
+  await contexteSurvol.close();
+  console.log('  ok   Chromium : reflet doré au survol, avec respect du mouvement réduit');
+
   async function mesurerLignesCouverture(largeur, hauteur) {
     await page.setViewportSize({ width:largeur, height:hauteur });
     await page.waitForTimeout(25);
@@ -403,7 +430,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100514'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100515'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');
@@ -584,7 +611,11 @@ try {
           .filter((name)=>name.closest('a')).length,
         authorProfileLinks:document.querySelectorAll('.google-reviews-author-profile').length,
         globalGoogleMapsLinks:[...document.querySelectorAll('#google-reviews-all, #google-reviews-maps')]
-          .filter((link)=>link.href.startsWith('https://www.google.com/maps/')).length,
+          .filter((link)=>link.tagName==='A' && link.href.startsWith('https://www.google.com/maps/')).length,
+        googleDateFontSize:parseFloat(getComputedStyle(document.querySelector('.google-reviews-date')).fontSize),
+        googleDisclosureFontSize:parseFloat(getComputedStyle(document.getElementById('google-reviews-disclosure')).fontSize),
+        googlePolicyFontSize:parseFloat(getComputedStyle(document.getElementById('google-reviews-policy')).fontSize),
+        googleAllReviewsFontSize:parseFloat(getComputedStyle(document.getElementById('google-reviews-all')).fontSize),
         disclosureTextAlign:getComputedStyle(document.getElementById('google-reviews-disclosure')).textAlign,
         footerJustify:getComputedStyle(document.querySelector('.google-reviews-footer')).justifyContent,
         summaryCentered:(() => {
@@ -630,7 +661,10 @@ try {
     assert.equal(layoutAvis.individualReviewSourceLinks, 0, `un lien individuel vers un avis est encore affiché ${contexte}`);
     assert.equal(layoutAvis.authorNamesLinked, 0, `un nom d’auteur est encore cliquable ${contexte}`);
     assert.equal(layoutAvis.authorProfileLinks, 1, `le profil auteur requis par Google manque ${contexte}`);
-    assert.equal(layoutAvis.globalGoogleMapsLinks, 2, `les deux liens Google globaux doivent rester présents ${contexte}`);
+    assert.equal(layoutAvis.globalGoogleMapsLinks, 1, `seul le lien « Tous les avis » doit rester cliquable ${contexte}`);
+    assert.ok(layoutAvis.googleDateFontSize<=10 && layoutAvis.googleDisclosureFontSize<=10 &&
+      layoutAvis.googlePolicyFontSize<=10 && layoutAvis.googleAllReviewsFontSize<=10,
+      `les lignes d’information Google ne sont pas assez compactes ${contexte}`);
     assert.equal(layoutAvis.disclosureTextAlign, 'center', `la notice n’est pas centrée ${contexte}`);
     assert.equal(layoutAvis.footerJustify, 'center', `les liens du pied ne sont pas centrés ${contexte}`);
     assert.equal(layoutAvis.summaryCentered, true, `la note globale n’est pas centrée ${contexte}`);

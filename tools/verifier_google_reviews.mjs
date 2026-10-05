@@ -151,7 +151,8 @@ assert.equal(window.document.querySelectorAll('.google-reviews-author[href]').le
 const tousLesAvis = window.document.getElementById('google-reviews-all');
 const attributionMaps = window.document.getElementById('google-reviews-maps');
 assert.ok(tousLesAvis.href.endsWith('query=test-place'));
-assert.ok(attributionMaps.href.endsWith('query=test-place'));
+assert.equal(attributionMaps.tagName, 'SPAN');
+assert.equal(attributionMaps.hasAttribute('href'), false, 'le libellé Google ne doit plus être un lien global');
 assert.equal(attributionMaps.textContent.trim(), 'Google Maps', 'l’attribution Google globale doit rester visible');
 assert.equal(window.document.querySelectorAll('.google-reviews-review-rating, .google-reviews-review-stars').length, 0,
   'les étoiles par avis ne doivent pas doubler la note globale');

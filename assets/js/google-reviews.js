@@ -199,7 +199,6 @@
     if (!trusted) return;
     placeUrl = trusted;
     allReviews.href = trusted;
-    mapsAttribution.href = trusted;
   }
   function startRatingAnimation() {
     if (ratingAnimationStarted || summary.hidden) return;
