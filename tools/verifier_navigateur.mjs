@@ -403,7 +403,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100513'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100514'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');
@@ -580,7 +580,9 @@ try {
         quoteTextAlign:getComputedStyle(quote).textAlign,
         metaJustify:getComputedStyle(document.querySelector('.google-reviews-meta')).justifyContent,
         individualReviewSourceLinks:document.querySelectorAll('.google-reviews-source').length,
-        authorLinks:document.querySelectorAll('.google-reviews-author[href], .google-reviews-author-wrap a').length,
+        authorNamesLinked:[...document.querySelectorAll('.google-reviews-author')]
+          .filter((name)=>name.closest('a')).length,
+        authorProfileLinks:document.querySelectorAll('.google-reviews-author-profile').length,
         globalGoogleMapsLinks:[...document.querySelectorAll('#google-reviews-all, #google-reviews-maps')]
           .filter((link)=>link.href.startsWith('https://www.google.com/maps/')).length,
         disclosureTextAlign:getComputedStyle(document.getElementById('google-reviews-disclosure')).textAlign,
@@ -626,7 +628,8 @@ try {
     assert.equal(layoutAvis.quoteTextAlign, 'center', `le commentaire n’est pas centré ${contexte}`);
     assert.equal(layoutAvis.metaJustify, 'center', `l’auteur et la date ne sont pas centrés ${contexte}`);
     assert.equal(layoutAvis.individualReviewSourceLinks, 0, `un lien individuel vers un avis est encore affiché ${contexte}`);
-    assert.equal(layoutAvis.authorLinks, 0, `un nom d’auteur est encore cliquable ${contexte}`);
+    assert.equal(layoutAvis.authorNamesLinked, 0, `un nom d’auteur est encore cliquable ${contexte}`);
+    assert.equal(layoutAvis.authorProfileLinks, 1, `le profil auteur requis par Google manque ${contexte}`);
     assert.equal(layoutAvis.globalGoogleMapsLinks, 2, `les deux liens Google globaux doivent rester présents ${contexte}`);
     assert.equal(layoutAvis.disclosureTextAlign, 'center', `la notice n’est pas centrée ${contexte}`);
     assert.equal(layoutAvis.footerJustify, 'center', `les liens du pied ne sont pas centrés ${contexte}`);

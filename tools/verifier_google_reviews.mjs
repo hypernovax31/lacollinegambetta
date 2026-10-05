@@ -138,11 +138,16 @@ assert.equal(window.document.querySelectorAll('.google-reviews-source').length, 
   'aucun avis ne doit avoir de lien source individuel');
 let auteur = window.document.querySelector('.google-reviews-author');
 assert.ok(auteur && auteur.tagName === 'SPAN' && !auteur.closest('a'));
+assert.equal(window.document.querySelectorAll('.google-reviews-author-profile').length, 0,
+  'aucun lien de profil ne doit être créé si Google ne fournit pas d’URI');
 window.document.getElementById('google-reviews-previous').click();
 auteur = window.document.querySelector('.google-reviews-author');
 assert.ok(auteur && auteur.tagName === 'SPAN' && !auteur.closest('a'),
   'le nom reste du texte même quand Google fournit une URI de profil');
-assert.equal(window.document.querySelectorAll('.google-reviews-author-wrap a').length, 0);
+const lienProfil = window.document.querySelector('.google-reviews-author-profile');
+assert.ok(lienProfil && lienProfil.href.endsWith('/fixture-1'));
+assert.equal(lienProfil.contains(auteur), false, 'le lien de profil doit être séparé du nom');
+assert.equal(window.document.querySelectorAll('.google-reviews-author[href]').length, 0);
 const tousLesAvis = window.document.getElementById('google-reviews-all');
 const attributionMaps = window.document.getElementById('google-reviews-maps');
 assert.ok(tousLesAvis.href.endsWith('query=test-place'));
