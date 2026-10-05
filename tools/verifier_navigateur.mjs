@@ -147,6 +147,80 @@ try {
   assert.equal(requetesGooglePlaces.filter((path) => path === '/maps/api/js').length, 1,
     'Places doit être demandé automatiquement une seule fois au chargement');
   console.log('  ok   Chromium : avis autochargés au chargement, sans avis statique; secours disponible hors ligne');
+
+  async function mesurerLignesCouverture(largeur, hauteur) {
+    await page.setViewportSize({ width:largeur, height:hauteur });
+    await page.waitForTimeout(25);
+    return page.evaluate(() => {
+      const coverPage=document.querySelector('#cover-section .cover-page');
+      const footer=document.querySelector('#cover-section .cover-footer');
+      const hours=document.querySelector('#cover-section .cover-hours');
+      const address=document.querySelector('#cover-section .cover-footer-address');
+      const selectors=[
+        '.cover-brand', '.cover-brand .leader-title', '.cover-brand h1',
+        '.cover-brand .leader-meta', '.cover-brand .menu-leader-subline',
+        '.cover-action', '.cover-footer', '.cover-hours', '.cover-hours__range',
+        '.cover-hours__status', '.cover-footer-address', '.cover-links'
+      ];
+      const box=(element) => {
+        const rect=element.getBoundingClientRect();
+        const style=getComputedStyle(element);
+        return {
+          left:rect.left, width:rect.width, center:rect.left+rect.width/2,
+          parentWidth:element.parentElement.getBoundingClientRect().width,
+          cssWidth:style.width, cssMaxWidth:style.maxWidth,
+          textAlign:style.textAlign, whiteSpace:style.whiteSpace
+        };
+      };
+      const pageRect=coverPage.getBoundingClientRect();
+      const pageStyle=getComputedStyle(coverPage);
+      const hoursStyle=getComputedStyle(hours);
+      return {
+        pageCenter:pageRect.left+pageRect.width/2,
+        pageContentWidth:coverPage.clientWidth-parseFloat(pageStyle.paddingLeft)-parseFloat(pageStyle.paddingRight),
+        footerWidth:footer.getBoundingClientRect().width,
+        hoursWidth:hours.getBoundingClientRect().width,
+        hoursPadding:parseFloat(hoursStyle.paddingLeft)+parseFloat(hoursStyle.paddingRight),
+        addressChildrenTop:[...address.children].map((element)=>element.getBoundingClientRect().top),
+        lines:selectors.map((selector)=>({selector,...box(document.querySelector('#cover-section '+selector))}))
+      };
+    });
+  }
+
+  for (const [largeur, hauteur] of [[1365,768], [390,844], [844,390], [667,375]]) {
+    const disposition=await mesurerLignesCouverture(largeur, hauteur);
+    for (const ligne of disposition.lines) {
+      assert.ok(Math.abs(ligne.center-disposition.pageCenter)<=2,
+        `${ligne.selector} n’est pas centré sur la couverture à ${largeur}×${hauteur}px`);
+      assert.equal(ligne.textAlign, 'center', `${ligne.selector} n’aligne pas son texte au centre à ${largeur}×${hauteur}px`);
+    }
+    const largeurAttendue=new Map([
+      ['.cover-brand', Math.min(disposition.pageContentWidth,1280)],
+      ['.cover-footer', Math.min(disposition.pageContentWidth,1320)],
+      ['.cover-hours', Math.min(disposition.footerWidth,1100)],
+      ['.cover-links', Math.min(disposition.footerWidth,1240)],
+    ]);
+    for (const [selector, largeurLigne] of largeurAttendue) {
+      const ligne=disposition.lines.find((element)=>element.selector===selector);
+      assert.ok(ligne.width>=largeurLigne-2,
+        `${selector} n’utilise pas la largeur disponible à ${largeur}×${hauteur}px (${ligne.width.toFixed(1)}/${largeurLigne.toFixed(1)}px; parent ${ligne.parentWidth.toFixed(1)}, CSS ${ligne.cssWidth}, max ${ligne.cssMaxWidth})`);
+    }
+    const largeurAdresseAttendue=disposition.hoursWidth-disposition.hoursPadding;
+    const adresse=disposition.lines.find((ligne)=>ligne.selector==='.cover-footer-address');
+    assert.ok(adresse.width>=largeurAdresseAttendue-2,
+      `l’adresse ne s’étale pas sur la ligne à ${largeur}×${hauteur}px`);
+    assert.equal(adresse.whiteSpace, 'nowrap', `l’adresse n’est pas conservée sur une seule ligne à ${largeur}×${hauteur}px`);
+    for (const selector of ['.cover-hours__range','.cover-hours__status']) {
+      const ligne=disposition.lines.find((element)=>element.selector===selector);
+      assert.ok(ligne.width>=largeurAdresseAttendue-2,
+        `${selector} n’occupe pas la largeur de la ligne à ${largeur}×${hauteur}px`);
+    }
+    assert.equal(Math.max(...disposition.addressChildrenTop)-Math.min(...disposition.addressChildrenTop)<=1, true,
+      `l’adresse et le métro ne restent pas sur une seule ligne à ${largeur}×${hauteur}px`);
+  }
+  await page.setViewportSize({ width:320, height:640 });
+  console.log('  ok   Chromium : lignes de couverture centrées et larges, y compris en paysage mobile');
+
   const piedUk = await page.evaluate(() => {
     const nav = document.querySelector('.footer .footer-quartier');
     const metro = document.querySelector('.footer-details__metro');
