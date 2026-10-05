@@ -95,13 +95,18 @@ configurationAvis && typeof configurationAvis.place_id === 'string' &&
   !('note' in configurationAvis) && !('nombre_avis' in configurationAvis)
   ? ok('avis Google : configuration Places présente, sans note ni avis mis en cache')
   : ko('avis Google : configuration Places absente ou contenant des données statiques');
-scriptAvisGoogle.includes("fields:['rating','userRatingCount','googleMapsURI','reviews','attributions']") &&
+scriptAvisGoogle.includes("fields:['rating','userRatingCount','googleMapsURI','reviews']") &&
+  !scriptAvisGoogle.includes("fields:['rating','userRatingCount','googleMapsURI','reviews','attributions']") &&
+  scriptAvisGoogle.includes('renderAttributions(target.attributions)') &&
+  scriptAvisGoogle.includes('callback:callbackName') &&
+  scriptAvisGoogle.includes('window[callbackName] = function ()') &&
+  !scriptAvisGoogle.includes('script.onload') &&
   scriptAvisGoogle.includes('  loadReviews();') &&
   !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
-  ? ok('avis Google : affichage automatique depuis Places, sans cache persistant')
+  ? ok('avis Google : affichage auto, attribution Places et absence de cache vérifiés')
   : ko('avis Google : affichage automatique, champs Places ou absence de cache non garantis');
 index.includes('assets/css/google-reviews.css?v=2026100503') &&
-  index.includes('assets/js/google-reviews.js?v=2026100503') &&
+  index.includes('assets/js/google-reviews.js?v=2026100504') &&
   d.querySelector('script[src^="assets/js/i18n.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.defer

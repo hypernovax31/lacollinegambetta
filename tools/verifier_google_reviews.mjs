@@ -40,6 +40,9 @@ const originalAppendChild = window.document.head.appendChild.bind(window.documen
 window.document.head.appendChild = (element) => {
   if (element.dataset && element.dataset.googleReviewsSdk === 'true') {
     sdkScriptLoads += 1;
+    const sdkUrl = new URL(element.src);
+    assert.equal(sdkUrl.searchParams.get('callback'), '__lcgGoogleReviewsReady');
+    assert.equal(sdkUrl.searchParams.get('libraries'), 'places');
     setTimeout(() => {
       window.google = { maps: { importLibrary: (name) => {
         assert.equal(name, 'places');
@@ -85,7 +88,7 @@ window.document.head.appendChild = (element) => {
           }
         });
       } } };
-      element.dispatchEvent(new window.Event('load'));
+      window.__lcgGoogleReviewsReady();
     }, 0);
     return element;
   }
@@ -118,6 +121,7 @@ assert.equal(button.disabled, false);
 assert.equal(button.getAttribute('aria-busy'), 'false');
 assert.ok(requestedFields.includes('reviews'));
 assert.ok(requestedFields.includes('rating'));
+assert.equal(requestedFields.includes('attributions'), false, 'les attributions Place sont disponibles sans les demander dans le masque de champs');
 assert.equal(window.document.getElementById('google-reviews-score').textContent, '4,8/5');
 assert.equal(window.document.getElementById('google-reviews-count').textContent, '28 avis');
 assert.equal(window.document.getElementById('google-reviews-dots').children.length, 2);

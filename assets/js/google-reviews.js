@@ -403,15 +403,32 @@
       }
       if (importPlaces()) return;
 
+      var callbackName = '__lcgGoogleReviewsReady';
       var script = document.createElement('script');
       script.async = true;
       script.dataset.googleReviewsSdk = 'true';
-      var params = new URLSearchParams({ key:key, v:'weekly', loading:'async', language:language, region:'FR' });
-      script.src = 'https://maps.googleapis.com/maps/api/js?' + params.toString();
-      script.onload = function () {
+      function clearCallback() {
+        try { delete window[callbackName]; }
+        catch (error) { window[callbackName] = undefined; }
+      }
+      window[callbackName] = function () {
+        clearCallback();
         if (!importPlaces()) reject(new Error('sdk'));
       };
-      script.onerror = function () { reject(new Error('network')); };
+      var params = new URLSearchParams({
+        key:key,
+        v:'weekly',
+        loading:'async',
+        libraries:'places',
+        language:language,
+        region:'FR',
+        callback:callbackName
+      });
+      script.src = 'https://maps.googleapis.com/maps/api/js?' + params.toString();
+      script.onerror = function () {
+        clearCallback();
+        reject(new Error('network'));
+      };
       document.head.appendChild(script);
     }).catch(function (error) {
       sdkPromise = null;
@@ -447,7 +464,7 @@
           if (!library || !library.Place) throw new Error('places');
           var target = new library.Place({ id:config.place_id });
           return target.fetchFields({
-            fields:['rating','userRatingCount','googleMapsURI','reviews','attributions']
+            fields:['rating','userRatingCount','googleMapsURI','reviews']
           }).then(function () {
             place = target;
             setPlaceLinks(target.googleMapsURI || config.url || placeUrl);
