@@ -52,7 +52,6 @@ window.document.head.appendChild = (element) => {
             fetchFields(options) {
               requestedFields.push(...options.fields);
               this.rating = 4.8;
-              this.userRatingCount = 28;
               this.googleMapsURI = 'https://www.google.com/maps/search/?api=1&query=test-place';
               this.attributions = [];
               // Fixtures artificielles — ne jamais reprendre dans les contenus du site.
@@ -122,9 +121,10 @@ assert.equal(button.disabled, false);
 assert.equal(button.getAttribute('aria-busy'), 'false');
 assert.ok(requestedFields.includes('reviews'));
 assert.ok(requestedFields.includes('rating'));
+assert.equal(requestedFields.includes('userRatingCount'), false, 'le nombre d’avis ne doit plus être demandé ni affiché');
 assert.equal(requestedFields.includes('attributions'), false, 'les attributions Place sont disponibles sans les demander dans le masque de champs');
 assert.equal(window.document.getElementById('google-reviews-score').textContent, '4,8/5');
-assert.equal(window.document.getElementById('google-reviews-count').textContent, '28 avis');
+assert.equal(window.document.getElementById('google-reviews-count'), null, 'le nombre d’avis doit être absent du bloc');
 assert.equal(window.document.getElementById('google-reviews-dots').children.length, 2);
 assert.ok(window.document.getElementById('google-reviews-disclosure-text').textContent.includes('sans filtre par note'));
 assert.equal(status.textContent, '', 'le statut de chargement ne doit pas se confondre avec le compteur du carrousel');

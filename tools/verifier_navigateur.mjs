@@ -340,7 +340,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100510'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100511'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');
@@ -379,7 +379,6 @@ try {
             constructor(options) { this.id = options.id; }
             fetchFields() {
               this.rating = 4.8;
-              this.userRatingCount = 28;
               this.googleMapsURI = 'https://www.google.com/maps/search/?api=1&query=test-place';
               this.attributions = [];
               this.reviews = [
@@ -419,7 +418,7 @@ try {
     title:document.getElementById('cover-reviews-title').textContent.trim(),
     ratingHidden:document.getElementById('google-reviews-rating').hidden,
     score:document.getElementById('google-reviews-score').textContent,
-    count:document.getElementById('google-reviews-count').textContent,
+    reviewCountPresent:document.getElementById('google-reviews-count') !== null,
     stars:document.getElementById('google-reviews-stars').getAttribute('aria-label'),
     starsAnimation:getComputedStyle(document.getElementById('google-reviews-stars')).animationName,
     starsFillAnimation:getComputedStyle(document.getElementById('google-reviews-stars-fill')).animationName,
@@ -433,7 +432,7 @@ try {
   assert.equal(renduAvis.title, 'Avis Google');
   assert.equal(renduAvis.ratingHidden, false);
   assert.equal(renduAvis.score, '4,8/5');
-  assert.equal(renduAvis.count, '28 avis');
+  assert.equal(renduAvis.reviewCountPresent, false, 'le nombre d’avis ne doit pas apparaître dans le bloc');
   assert.equal(renduAvis.stars, 'Note moyenne Google : 4,8 sur 5');
   assert.equal(renduAvis.starsAnimation, 'google-review-stars-appear', 'l’apparition des étoiles doit être animée');
   assert.equal(renduAvis.starsFillAnimation, 'google-review-stars-reveal', 'le remplissage doré des étoiles doit être animé');
@@ -511,8 +510,7 @@ try {
         averageScoreFontSize:parseFloat(getComputedStyle(document.getElementById('google-reviews-score')).fontSize),
         starsBeforeScore:document.getElementById('google-reviews-stars').getBoundingClientRect().left <
           document.getElementById('google-reviews-score').getBoundingClientRect().left,
-        countBelowScore:document.getElementById('google-reviews-count').getBoundingClientRect().top >=
-          document.getElementById('google-reviews-score').getBoundingClientRect().bottom,
+        reviewCountAbsent:document.getElementById('google-reviews-count')===null,
         duplicateReviewStars:document.querySelectorAll('.google-reviews-review-rating, .google-reviews-review-stars').length,
         navTargets:[rect(previous), rect(next)],
         navCentersY:[previous, next].map((element) => {
@@ -547,8 +545,14 @@ try {
     const layoutSuivant = await mesurerMiseEnPage(largeur, hauteur);
     assert.ok(layoutSuivant.navCentersY.every((y, index) => Math.abs(y - layoutInitial.navCentersY[index]) <= 1),
       `les flèches changent de niveau vertical en passant à l’avis suivant ${contexte} (${layoutInitial.navCentersY.map((y) => y.toFixed(1)).join('/')} → ${layoutSuivant.navCentersY.map((y) => y.toFixed(1)).join('/')})`);
-    assert.ok(layoutSuivant.viewportHeight + 5 < layoutInitial.viewportHeight,
-      `la hauteur du carrousel ne s’adapte pas du commentaire long au court ${contexte} (${layoutInitial.viewportHeight}px → ${layoutSuivant.viewportHeight}px)`);
+    assert.ok(Math.abs(layoutSuivant.viewportHeight-layoutInitial.viewportHeight)<=1,
+      `la hauteur du carrousel change entre deux avis ${contexte} (${layoutInitial.viewportHeight}px → ${layoutSuivant.viewportHeight}px)`);
+    assert.ok(Math.abs(layoutSuivant.height-layoutInitial.height)<=1,
+      `la hauteur du bloc complet change entre deux avis ${contexte} (${layoutInitial.height}px → ${layoutSuivant.height}px)`);
+    assert.ok(layoutInitial.slideHeight > layoutSuivant.slideHeight + 5,
+      `les fixtures ne vérifient pas deux commentaires de longueurs différentes ${contexte}`);
+    assert.ok(layoutInitial.viewportHeight+1>=Math.max(layoutInitial.slideHeight,layoutSuivant.slideHeight),
+      `le cadre fixe ne réserve pas la place nécessaire à l’avis le plus long ${contexte}`);
     assert.ok(layoutInitial.slideFits && layoutSuivant.slideFits,
       `le texte ou les attributions sont coupés dans le carrousel ${contexte}`);
     assert.equal(layoutSuivant.slideAnimation, 'google-review-enter-next',
@@ -575,8 +579,8 @@ try {
       `la note globale n’a pas ses étoiles dorées à ${largeur}px`);
     assert.ok(layoutAvis.averageStarsFontSize >= 20 && layoutAvis.averageScoreFontSize >= 22,
       `les étoiles et la note globale ne sont pas assez mises en avant à ${largeur}px`);
-    assert.ok(layoutAvis.starsBeforeScore && layoutAvis.countBelowScore,
-      `la hiérarchie de la note globale n’est pas respectée à ${largeur}px`);
+    assert.ok(layoutAvis.starsBeforeScore && layoutAvis.reviewCountAbsent,
+      `la note globale n’est pas affichée sans compteur à ${largeur}px`);
     assert.equal(layoutAvis.duplicateReviewStars, 0, `des étoiles par avis doublent la note globale à ${largeur}px`);
     assert.ok(layoutAvis.navTargets.every((target) => target.width >= 44 && target.height >= 44),
       `les commandes du carrousel sont trop petites en portrait à ${largeur}px`);
@@ -596,8 +600,8 @@ try {
     assert.ok(layoutAvis.quoteWidth > 200, `le commentaire manque de largeur en paysage à ${largeur}px`);
     assert.ok(layoutAvis.averageStarsFontSize >= 17 && layoutAvis.averageScoreFontSize >= 19,
       `la note globale est reléguée en paysage à ${largeur}px`);
-    assert.ok(layoutAvis.starsBeforeScore && layoutAvis.countBelowScore && layoutAvis.duplicateReviewStars === 0,
-      `la hiérarchie des étoiles et de la note n’est pas respectée en paysage à ${largeur}px`);
+    assert.ok(layoutAvis.starsBeforeScore && layoutAvis.reviewCountAbsent && layoutAvis.duplicateReviewStars === 0,
+      `la note globale doit rester sans compteur en paysage à ${largeur}px`);
     assert.ok(layoutAvis.navTargets.every((target) => target.width >= 44 && target.height >= 44),
       `les commandes du carrousel sont trop petites en paysage à ${largeur}px`);
     assert.ok(layoutAvis.dotTarget && layoutAvis.dotTarget.height >= 36,

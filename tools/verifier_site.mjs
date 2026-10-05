@@ -88,8 +88,8 @@ try { configurationAvis = JSON.parse(lire('assets/data/avis-google.json')); } ca
 blocAvisGoogle && boutonAvisGoogle && boutonAvisGoogle.hidden && boutonAvisGoogle.disabled &&
   positionAvisGoogle?.getAttribute('role') === 'status' && attributionMaps &&
   attributionMaps.textContent.trim() === 'Google Maps' && attributionMaps.getAttribute('translate') === 'no' &&
-  !zoneCommentaires?.querySelector('blockquote')
-  ? ok('avis Google : note, carrousel, compteur accessible, attribution et secours sans avis statique')
+  !d.getElementById('google-reviews-count') && !zoneCommentaires?.querySelector('blockquote')
+  ? ok('avis Google : note sans nombre d’avis visible, navigation accessible et secours sans avis statique')
   : ko('avis Google : structure du bloc, attribution ou contenu statique incorrect');
 configurationAvis && typeof configurationAvis.place_id === 'string' &&
   configurationAvis.place_id.startsWith('ChIJ') && typeof configurationAvis.cle_api === 'string' &&
@@ -97,8 +97,9 @@ configurationAvis && typeof configurationAvis.place_id === 'string' &&
   !('note' in configurationAvis) && !('nombre_avis' in configurationAvis)
   ? ok('avis Google : configuration Places présente, sans note ni avis mis en cache')
   : ko('avis Google : configuration Places absente ou contenant des données statiques');
-scriptAvisGoogle.includes("fields:['rating','userRatingCount','googleMapsURI','reviews']") &&
-  !scriptAvisGoogle.includes("fields:['rating','userRatingCount','googleMapsURI','reviews','attributions']") &&
+scriptAvisGoogle.includes("fields:['rating','googleMapsURI','reviews']") &&
+  !scriptAvisGoogle.includes('userRatingCount') &&
+  !scriptAvisGoogle.includes("fields:['rating','googleMapsURI','reviews','attributions']") &&
   scriptAvisGoogle.includes('renderAttributions(target.attributions)') &&
   scriptAvisGoogle.includes('callback:callbackName') &&
   scriptAvisGoogle.includes('window[callbackName] = function ()') &&
@@ -107,8 +108,8 @@ scriptAvisGoogle.includes("fields:['rating','userRatingCount','googleMapsURI','r
   !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
   ? ok('avis Google : affichage auto, attribution Places et absence de cache vérifiés')
   : ko('avis Google : affichage automatique, champs Places ou absence de cache non garantis');
-index.includes('assets/css/google-reviews.css?v=2026100513') &&
-  index.includes('assets/js/google-reviews.js?v=2026100510') &&
+index.includes('assets/css/google-reviews.css?v=2026100514') &&
+  index.includes('assets/js/google-reviews.js?v=2026100511') &&
   d.querySelector('script[src^="assets/js/i18n.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.defer

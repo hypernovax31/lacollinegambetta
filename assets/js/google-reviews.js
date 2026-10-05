@@ -14,7 +14,6 @@
   var stars = $('google-reviews-stars');
   var starsFill = $('google-reviews-stars-fill');
   var score = $('google-reviews-score');
-  var count = $('google-reviews-count');
   var carousel = $('google-reviews-carousel');
   var viewport = $('google-reviews-viewport');
   var slide = $('google-reviews-slide');
@@ -28,7 +27,7 @@
   var attributions = $('google-reviews-attributions');
   var allReviews = $('google-reviews-all');
   var mapsAttribution = $('google-reviews-maps');
-  if ([title, status, loadButton, summary, stars, starsFill, score, count,
+  if ([title, status, loadButton, summary, stars, starsFill, score,
     carousel, viewport, slide, previous, next, dots, position, disclosure, disclosureText,
     policy, attributions, allReviews, mapsAttribution].some(function (el) { return !el; })) return;
 
@@ -91,7 +90,9 @@
   var sdkPromise = null;
   var requestPromise = null;
   var pointerStart = null;
-  var slideResizeObserver = null;
+  var carouselResizeObserver = null;
+  var measurementFrame = 0;
+  var measuredViewportWidth = 0;
 
   function lang() {
     var value = String(document.documentElement.lang || 'fr').toLowerCase().split('-')[0];
@@ -143,7 +144,10 @@
     allReviews.textContent = c.all;
     setStatus();
     if (place) renderSummary(place);
-    if (reviews.length) renderSlide(0);
+    if (reviews.length) {
+      renderSlide(0);
+      scheduleCarouselMeasurement();
+    }
   }
   function visitDate(review) {
     var year = Number(review.visitDateYear || (review.visitDate && review.visitDate.year) || 0);
@@ -199,14 +203,9 @@
   }
   function renderSummary(value) {
     var rating = Number(value.rating);
-    var total = Number(value.userRatingCount);
     if (!Number.isFinite(rating) || rating < 0 || rating > 5) return;
     var formatted = number(rating, { minimumFractionDigits:1, maximumFractionDigits:1 });
     score.textContent = formatted + '/5';
-    count.textContent = Number.isFinite(total) && total > 0
-      ? number(total) + ' ' + copy().reviewWord
-      : '';
-    count.hidden = !(Number.isFinite(total) && total > 0);
     starsFill.style.width = (Math.max(0, Math.min(5, rating)) / 5 * 100).toFixed(1) + '%';
     stars.setAttribute('aria-label', copy().rating(formatted));
     summary.hidden = false;
@@ -243,36 +242,13 @@
     wrap.appendChild(name);
     return wrap;
   }
-  function fitViewportToReview(article) {
-    if (slideResizeObserver) {
-      slideResizeObserver.disconnect();
-      slideResizeObserver = null;
-    }
-    function updateHeight() {
-      if (!article.isConnected) return;
-      var contentHeight = article.getBoundingClientRect().height;
-      if (!Number.isFinite(contentHeight) || contentHeight <= 0) return;
-      var minimum = parseFloat(window.getComputedStyle(viewport).minHeight) || 0;
-      viewport.style.height = Math.ceil(Math.max(contentHeight, minimum)) + 'px';
-    }
-    updateHeight();
-    if (typeof window.ResizeObserver === 'function') {
-      slideResizeObserver = new window.ResizeObserver(updateHeight);
-      slideResizeObserver.observe(article);
-    }
-    if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === 'function') {
-      document.fonts.ready.then(updateHeight).catch(function () {});
-    }
-  }
-  function renderSlide(direction) {
-    if (!reviews.length) return;
+  function createReviewSlide(review, index, direction) {
     var c = copy();
-    var review = reviews[current];
     var article = document.createElement('article');
     article.className = 'google-reviews-slide';
     article.setAttribute('role', 'group');
-    article.setAttribute('aria-roledescription', c.position(current + 1, reviews.length));
-    article.setAttribute('aria-label', c.position(current + 1, reviews.length));
+    article.setAttribute('aria-roledescription', c.position(index + 1, reviews.length));
+    article.setAttribute('aria-label', c.position(index + 1, reviews.length));
     article.setAttribute('dir', lang() === 'ar' ? 'rtl' : 'ltr');
 
     var quote = document.createElement('blockquote');
@@ -289,13 +265,13 @@
     if (review.visit) {
       var visit = document.createElement('span');
       visit.className = 'google-reviews-date';
-      visit.textContent = copy().visit + review.visit;
+      visit.textContent = c.visit + review.visit;
       meta.appendChild(visit);
     }
     if (review.published) {
       var published = document.createElement('span');
       published.className = 'google-reviews-date';
-      published.textContent = copy().posted + review.published;
+      published.textContent = c.posted + review.published;
       meta.appendChild(published);
     }
     article.appendChild(meta);
@@ -318,9 +294,56 @@
     source.textContent = c.reviewLink;
     article.appendChild(source);
 
-    article.classList.add(direction < 0 ? 'is-entering-previous' : 'is-entering-next');
-    slide.replaceChildren(article);
-    fitViewportToReview(article);
+    if (direction < 0) article.classList.add('is-entering-previous');
+    else if (direction > 0) article.classList.add('is-entering-next');
+    return article;
+  }
+  function measureCarouselHeight() {
+    if (!reviews.length || carousel.hidden) return;
+    var width = viewport.clientWidth;
+    if (!width) return;
+
+    var measuring = document.createElement('div');
+    measuring.className = 'google-reviews-measure';
+    measuring.setAttribute('aria-hidden', 'true');
+    measuring.style.width = width + 'px';
+    section.appendChild(measuring);
+
+    var maximum = 0;
+    reviews.forEach(function (review, index) {
+      var article = createReviewSlide(review, index, 0);
+      measuring.replaceChildren(article);
+      maximum = Math.max(maximum, article.getBoundingClientRect().height);
+    });
+    measuring.remove();
+
+    var minimum = parseFloat(window.getComputedStyle(viewport).minHeight) || 0;
+    viewport.style.height = Math.ceil(Math.max(maximum, minimum)) + 'px';
+    measuredViewportWidth = width;
+  }
+  function scheduleCarouselMeasurement() {
+    if (!reviews.length || carousel.hidden || measurementFrame) return;
+    var requestFrame = typeof window.requestAnimationFrame === 'function'
+      ? window.requestAnimationFrame.bind(window)
+      : function (callback) { return window.setTimeout(callback, 16); };
+    measurementFrame = requestFrame(function () {
+      measurementFrame = 0;
+      measureCarouselHeight();
+    });
+  }
+  function observeCarouselWidth() {
+    if (typeof window.ResizeObserver === 'function' && !carouselResizeObserver) {
+      carouselResizeObserver = new window.ResizeObserver(function (entries) {
+        var width = Math.round(entries[0].contentRect.width);
+        if (width && Math.abs(width - measuredViewportWidth) > 1) scheduleCarouselMeasurement();
+      });
+      carouselResizeObserver.observe(viewport);
+    }
+  }
+  function renderSlide(direction) {
+    if (!reviews.length) return;
+    var c = copy();
+    slide.replaceChildren(createReviewSlide(reviews[current], current, direction || 0));
     position.textContent = c.position(current + 1, reviews.length);
     position.hidden = false;
     Array.prototype.forEach.call(dots.children, function (dot, index) {
@@ -341,10 +364,11 @@
     position.hidden = true;
     disclosure.hidden = false;
     if (!reviews.length) {
-      if (slideResizeObserver) {
-        slideResizeObserver.disconnect();
-        slideResizeObserver = null;
+      if (carouselResizeObserver) {
+        carouselResizeObserver.disconnect();
+        carouselResizeObserver = null;
       }
+      measuredViewportWidth = 0;
       carousel.hidden = true;
       dots.hidden = true;
       previous.hidden = true;
@@ -379,6 +403,11 @@
     loadButton.setAttribute('aria-busy', 'false');
     setStatus();
     renderSlide(1);
+    observeCarouselWidth();
+    measureCarouselHeight();
+    if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === 'function') {
+      document.fonts.ready.then(scheduleCarouselMeasurement).catch(function () {});
+    }
   }
   function renderAttributions(items) {
     attributions.replaceChildren();
@@ -479,7 +508,7 @@
           if (!library || !library.Place) throw new Error('places');
           var target = new library.Place({ id:config.place_id });
           return target.fetchFields({
-            fields:['rating','userRatingCount','googleMapsURI','reviews']
+            fields:['rating','googleMapsURI','reviews']
           }).then(function () {
             place = target;
             setPlaceLinks(target.googleMapsURI || config.url || placeUrl);
@@ -535,6 +564,7 @@
     goTo(current + (forward ? 1 : -1), forward ? 1 : -1);
   }, { passive:true });
   viewport.addEventListener('pointercancel', function () { pointerStart = null; }, { passive:true });
+  window.addEventListener('resize', scheduleCarouselMeasurement, { passive:true });
 
   window.addEventListener('lcg-lang-changed', applyLanguage);
   window.addEventListener('lcg-i18n-ready', applyLanguage);
