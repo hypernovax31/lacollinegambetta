@@ -9357,11 +9357,17 @@ html:not(.carte-doc) #interior-menu > .interior-header > p {
   }
 
   html:not(.carte-doc) #cover-section .cover-brand > *,
-  html:not(.carte-doc) #cover-section .cover-footer-address,
-  html:not(.carte-doc) #cover-section .cover-footer-address a {
+  html:not(.carte-doc) #cover-section .cover-footer-address {
     margin-left: auto !important;
     margin-right: auto !important;
     text-align: center !important;
+  }
+
+  /* L'adresse et le métro forment une seule ligne : centrer leur conteneur,
+     sans marges automatiques sur les liens qui les écartent l'un de l'autre. */
+  html:not(.carte-doc) #cover-section .cover-footer-address > a {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 
   html:not(.carte-doc) #cover-section .cover-links {
@@ -10648,6 +10654,27 @@ html:not(.carte-doc) #cover-section .cover-links .contact-link {
   html:not(.carte-doc) #cover-section .cover-links {
     width:100% !important;
     max-width:100% !important;
+  }
+}
+/* En dessous de 300 px, la grille d'horaires gardait sa largeur minimale
+   intrinsèque et se décalait à droite. On l'aligne sur l'axe de la couverture,
+   avec juste assez de largeur intérieure pour conserver l'adresse sur une ligne. */
+@media screen and (max-width:300px) {
+  html:not(.carte-doc) #cover-section .cover-footer {
+    min-width:0 !important;
+    grid-template-columns:minmax(0,1fr) !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-hours {
+    width:calc(100% + 10px) !important;
+    max-width:none !important;
+    min-width:0 !important;
+    margin-left:-5px !important;
+    margin-right:-5px !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-hours .cover-footer-address {
+    gap:1px !important;
   }
 }
 </style>

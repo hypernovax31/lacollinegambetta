@@ -182,12 +182,17 @@ try {
         hoursWidth:hours.getBoundingClientRect().width,
         hoursPadding:parseFloat(hoursStyle.paddingLeft)+parseFloat(hoursStyle.paddingRight),
         addressChildrenTop:[...address.children].map((element)=>element.getBoundingClientRect().top),
+        addressItems:[...address.children].map((element)=>{
+          const rect=element.getBoundingClientRect();
+          const style=getComputedStyle(element);
+          return {left:rect.left,right:rect.right,marginLeft:style.marginLeft,marginRight:style.marginRight};
+        }),
         lines:selectors.map((selector)=>({selector,...box(document.querySelector('#cover-section '+selector))}))
       };
     });
   }
 
-  for (const [largeur, hauteur] of [[1365,768], [390,844], [844,390], [667,375]]) {
+  for (const [largeur, hauteur] of [[1365,768], [390,844], [320,640], [300,640], [280,640], [844,390], [667,375]]) {
     const disposition=await mesurerLignesCouverture(largeur, hauteur);
     for (const ligne of disposition.lines) {
       assert.ok(Math.abs(ligne.center-disposition.pageCenter)<=2,
@@ -217,6 +222,15 @@ try {
     }
     assert.equal(Math.max(...disposition.addressChildrenTop)-Math.min(...disposition.addressChildrenTop)<=1, true,
       `l’adresse et le métro ne restent pas sur une seule ligne à ${largeur}×${hauteur}px`);
+    const adresseGauche=Math.min(...disposition.addressItems.map((item)=>item.left));
+    const adresseDroite=Math.max(...disposition.addressItems.map((item)=>item.right));
+    assert.ok(Math.abs((adresseGauche+adresseDroite)/2-disposition.pageCenter)<=2,
+      `l’adresse et le métro ne sont pas centrés ensemble à ${largeur}×${hauteur}px`);
+    assert.ok(disposition.addressItems.every((item)=>item.marginLeft==='0px' && item.marginRight==='0px'),
+      `les liens d’adresse ne doivent pas recevoir de marges automatiques à ${largeur}×${hauteur}px`);
+    const ecartsAdresse=disposition.addressItems.slice(1).map((item,index)=>item.left-disposition.addressItems[index].right);
+    assert.ok(ecartsAdresse.every((ecart)=>ecart>=-0.5 && ecart<=16),
+      `les liens d’adresse sont anormalement espacés à ${largeur}×${hauteur}px (${ecartsAdresse.map((ecart)=>ecart.toFixed(1)).join(', ')}px)`);
   }
   await page.setViewportSize({ width:320, height:640 });
   console.log('  ok   Chromium : lignes de couverture centrées et larges, y compris en paysage mobile');
