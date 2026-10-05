@@ -52,6 +52,18 @@ ligneHoraires?.contains(libelleHeures) && ligneHoraires.contains(statutHoraires)
   libelleHeures.nextElementSibling === statutHoraires
   ? ok('horaires : le statut suit la plage horaire dans la même ligne')
   : ko('horaires : le statut doit suivre la plage horaire dans la même ligne');
+index.includes('--cover-address-font-size:clamp(.68rem,1.15vw,.86rem)') &&
+  index.includes('--cover-hours-line-font-size:clamp(1.02rem,1.725vw,1.29rem)') &&
+  index.includes('--cover-address-font-size:clamp(.5rem,2.1vw,.66rem)') &&
+  index.includes('--cover-hours-line-font-size:clamp(.75rem,3.15vw,.99rem)')
+  ? ok('horaires : police de toute la ligne, badge compris, proportionnelle à l’adresse')
+  : ko('horaires : rapport de taille 1,5× non défini sur tous les écrans');
+index.includes('.medallion-frame.is-load-reflection::after') &&
+  index.includes("window.addEventListener('load'") &&
+  index.includes("'(prefers-reduced-motion: reduce)'") &&
+  index.includes("frame.classList.remove('is-load-reflection')")
+  ? ok('médaillon : reflet après chargement complet, retrait avant le survol suivant')
+  : ko('médaillon : reflet de chargement, fin d’animation ou mouvement réduit absent');
 const sansDim = [...d.querySelectorAll('img')].filter((i) => !i.getAttribute('width'));
 sansDim.length === 0 ? ok('toutes les images ont width/height')
                      : ko(`${sansDim.length} image(s) sans dimensions`);
@@ -183,12 +195,20 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
     : ko(`${f} : le groupe adresse/métro est incomplet`);
   const styleLigne = stylesPied.match(/html:not\(\.carte-doc\)\s*\.footer-details\s*\{([^}]*)\}/);
   const styleLocalisation = stylesPied.match(/html:not\(\.carte-doc\)\s*\.footer-details__location\s*\{([^}]*)\}/);
+  const styleAlentours = stylesPied.match(/html:not\(\.carte-doc\)\s*\.footer-quartier\s*\{([^}]*)\}/);
   styleLigne && /flex-flow:\s*row nowrap/.test(styleLigne[1]) &&
     styleLocalisation && /flex-flow:\s*row nowrap/.test(styleLocalisation[1]) &&
     /color:\s*#fff\s*!important/.test(styleLigne[1]) &&
     stylesPied.includes('border:1px solid rgba(255,255,255,.46)')
     ? ok(`${f} : adresse sur une ligne, blanche, et boutons légaux en pills`)
     : ko(`${f} : styles responsive du pied ou pills légales absents`);
+  styleAlentours && /width:\s*100%/.test(styleAlentours[1]) &&
+    /max-width:\s*none/.test(styleAlentours[1]) &&
+    stylesPied.includes('@media (max-width:860px)') &&
+    stylesPied.includes('html:not(.carte-doc) .footer-details > span:first-child') &&
+    stylesPied.includes('html:not(.carte-doc) .footer-details__location > a')
+    ? ok(`${f} : marque, adresse, métro et alentours reflués sans largeur plafonnée`)
+    : ko(`${f} : reflow mobile ou largeur pleine des alentours absent`);
   alent && legal ? ok(`${f} : alentours + mentions legales en pied de page`)
                  : ko(`${f} : pied de page incomplet`);
   alent.previousElementSibling.classList.contains('footer-details')

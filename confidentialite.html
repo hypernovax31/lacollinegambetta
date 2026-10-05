@@ -601,9 +601,8 @@
    Une ligne en tres petits caracteres sous l'adresse, dans la meme fonte que
    le reste du pied de page. Discrete a l'oeil, parfaitement lisible pour les
    moteurs : ce sont de vrais liens, jamais du texte dissimule. */
-/* Adresse et métro : un seul ruban horizontal, même couleur pour tous les liens.
-   Sur les écrans trop étroits, le ruban se parcourt horizontalement sans couper
-   les libellés ni faire déborder la page. */
+/* Adresse et métro : ligne unique sur grand écran, repli en lignes complètes
+   sur téléphone plutôt qu'un ruban qui masque la fin des liens. */
 html:not(.carte-doc) .footer-details {
   display:flex; flex-flow:row nowrap; align-items:center; justify-content:flex-start;
   gap:clamp(4px,.75vw,12px); width:max-content; max-width:calc(100% - 24px);
@@ -630,10 +629,31 @@ html:not(.carte-doc) .footer-details .footer-details__metro:focus-visible {
   color:#fff !important; text-decoration:underline; text-underline-offset:3px;
 }
 html:not(.carte-doc) .footer-details__separator { color:#fff !important; }
-@media (max-width:420px) {
-  /* Le nom du restaurant est déjà affiché ailleurs : on privilégie l'adresse
-     et le métro pour garder les deux liens entièrement visibles sur téléphone. */
-  html:not(.carte-doc) .footer-details > span:nth-child(-n+2) { display:none; }
+@media (max-width:860px) {
+  html:not(.carte-doc) .footer-details {
+    flex-flow:row wrap; justify-content:center; gap:5px 10px;
+    width:100%; max-width:100%; overflow:visible; white-space:normal;
+    font-size:clamp(.62rem,2.2vw,.76rem); letter-spacing:.035em; line-height:1.45;
+  }
+  html:not(.carte-doc) .footer-details > span:first-child {
+    flex:0 0 100%; text-align:center; white-space:normal;
+  }
+  html:not(.carte-doc) .footer-details > span:nth-child(2) { display:none; }
+  html:not(.carte-doc) .footer-details__location {
+    display:flex; flex:0 1 100%; flex-flow:row wrap; justify-content:center;
+    gap:4px 8px; width:100%; max-width:100%; min-width:0; white-space:normal;
+  }
+  html:not(.carte-doc) .footer-details__location > * {
+    flex:0 1 auto; min-width:0; max-width:100%; white-space:normal;
+  }
+}
+@media (max-width:560px) {
+  html:not(.carte-doc) .footer-details { gap:4px; font-size:clamp(.62rem,3vw,.72rem); letter-spacing:.025em; }
+  html:not(.carte-doc) .footer-details__location { gap:3px; }
+  html:not(.carte-doc) .footer-details__location > a {
+    flex:0 0 100%; max-width:100%; white-space:nowrap; text-align:center;
+  }
+  html:not(.carte-doc) .footer-details__separator { display:none; }
 }
 
 /* Même traitement pour l'adresse affichée sur la couverture. */
@@ -667,7 +687,8 @@ html:not(.carte-doc) #cover-section .cover-hours .cover-footer-address {
 
 html:not(.carte-doc) .footer-quartier {
   display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
-  gap:3px 10px; margin:5px auto 0; max-width:74ch;
+  width:100%; max-width:none; min-width:0; box-sizing:border-box;
+  gap:3px 10px; margin:5px auto 0;
   font-family:'Cinzel',serif; font-size:clamp(.5rem,.95vw,.6rem);
   letter-spacing:.09em; text-transform:uppercase; line-height:1.5;
   color:var(--gold-100,#f0dca8); opacity:.46;
@@ -676,9 +697,10 @@ html:not(.carte-doc) .footer-quartier a { color:inherit; text-decoration:none; }
 html:not(.carte-doc) .footer-quartier a:hover { text-decoration:underline; opacity:1; }
 html:not(.carte-doc) .footer-quartier__sep { opacity:.5; }
 /* Le premier ecran de la couverture s'arrete aux boutons de contact.
-   Avis et reperes restent juste apres, accessibles en faisant defiler. */
+   Les reperes du quartier et les liens legaux suivent en defilant. */
 html:not(.carte-doc) .cover-more {
-  display:grid; justify-items:center; gap:6px; width:100%;
+  display:grid; grid-template-columns:minmax(0,1fr); justify-items:center;
+  gap:6px; width:100%; min-width:0; box-sizing:border-box;
   padding:14px 16px 20px;
   border-top:1px solid rgba(216,178,87,.32);
   background:linear-gradient(180deg,#432155 0%,#24102e 100%);

@@ -160,20 +160,38 @@ try {
   await pageSurvol.goto(`${origineLocale}/index.html`, { waitUntil:'domcontentloaded' });
   const medaillon=pageSurvol.locator('#cover-section .medallion-frame');
   await medaillon.waitFor({ state:'visible' });
+  await pageSurvol.waitForFunction(() => {
+    const frame=document.querySelector('#cover-section .medallion-frame');
+    return document.readyState==='complete' && frame?.classList.contains('is-load-reflection') &&
+      getComputedStyle(frame,'::after').animationName==='cover-medallion-gold-reflection';
+  });
+  const refletAuChargement=await medaillon.evaluate((element)=>({
+    readyState:document.readyState,
+    classActive:element.classList.contains('is-load-reflection'),
+    animation:getComputedStyle(element,'::after').animationName,
+    duration:parseFloat(getComputedStyle(element,'::after').animationDuration),
+  }));
+  assert.equal(refletAuChargement.readyState,'complete','le reflet initial doit attendre la fin du chargement');
+  assert.equal(refletAuChargement.classActive,true,'le reflet initial doit être déclenché après load');
+  assert.equal(refletAuChargement.animation,'cover-medallion-gold-reflection',
+    'le médaillon doit déclencher son reflet doré après le chargement complet');
+  assert.ok(refletAuChargement.duration>=1,'le reflet de chargement doit être perceptible');
+  await pageSurvol.waitForFunction(() =>
+    !document.querySelector('#cover-section .medallion-frame')?.classList.contains('is-load-reflection'));
   await medaillon.hover();
   const refletMedallion=await medaillon.evaluate((element)=>({
     animation:getComputedStyle(element,'::after').animationName,
     duration:parseFloat(getComputedStyle(element,'::after').animationDuration),
   }));
   assert.equal(refletMedallion.animation,'cover-medallion-gold-reflection',
-    'le médaillon doit déclencher le reflet doré au survol');
-  assert.ok(refletMedallion.duration>=1,'le reflet doré doit être perceptible');
+    'le médaillon doit conserver son reflet doré au survol');
+  assert.ok(refletMedallion.duration>=1,'le reflet doré au survol doit être perceptible');
   await pageSurvol.emulateMedia({ reducedMotion:'reduce' });
   const animationAvecMouvementReduit=await medaillon.evaluate((element)=>
     getComputedStyle(element,'::after').animationName);
   assert.equal(animationAvecMouvementReduit,'none','le reflet doit respecter la préférence de mouvement réduit');
   await contexteSurvol.close();
-  console.log('  ok   Chromium : reflet doré au survol, avec respect du mouvement réduit');
+  console.log('  ok   Chromium : reflet au chargement complet et au survol, avec respect du mouvement réduit');
 
   async function mesurerLignesCouverture(largeur, hauteur) {
     await page.setViewportSize({ width:largeur, height:hauteur });
@@ -187,8 +205,9 @@ try {
         '.cover-brand', '.cover-brand .leader-title', '.cover-brand h1',
         '.cover-brand .leader-meta', '.cover-brand .menu-leader-subline',
         '.cover-action', '.cover-footer', '.cover-hours', '.cover-hours__range',
-        '.cover-footer-address', '.cover-links'
+        '.cover-footer-address', '.cover-links', '#cover-more .footer-quartier--cover'
       ];
+      const find=(selector)=>document.querySelector(selector.startsWith('#')?selector:'#cover-section '+selector);
       const box=(element) => {
         const rect=element.getBoundingClientRect();
         const style=getComputedStyle(element);
@@ -226,17 +245,35 @@ try {
           const status=document.querySelector('#cover-section [data-hours-status]').getBoundingClientRect();
           return status.left>=range.left-1 && status.right<=range.right+1;
         })(),
+        hoursLineFontSize:parseFloat(getComputedStyle(document.querySelector('#cover-section .cover-hours__range')).fontSize),
+        hoursItemFontSizes:[...document.querySelectorAll('#cover-section .cover-hours__range > *')]
+          .filter((element)=>getComputedStyle(element).display!=='none')
+          .map((element)=>parseFloat(getComputedStyle(element).fontSize)),
         statusFontSize:parseFloat(getComputedStyle(document.querySelector('#cover-section [data-hours-status]')).fontSize),
         addressFontSize:parseFloat(getComputedStyle(document.querySelector('#cover-section .cover-footer-address [data-default-map]')).fontSize),
         metroFontSize:parseFloat(getComputedStyle(document.querySelector('#cover-section [data-ratp-itineraire]')).fontSize),
         metroTarget:document.querySelector('#cover-section [data-ratp-itineraire]').target,
+        neighborhoodOverflow:(() => {
+          const nav=document.querySelector('#cover-more .footer-quartier--cover');
+          return nav.scrollWidth>nav.clientWidth+1 || [...nav.children].some((item)=>{
+            const itemBox=item.getBoundingClientRect();
+            const navBox=nav.getBoundingClientRect();
+            return itemBox.left<navBox.left-1 || itemBox.right>navBox.right+1;
+          });
+        })(),
+        neighborhoodWidth:document.querySelector('#cover-more .footer-quartier--cover').getBoundingClientRect().width,
+        neighborhoodAvailableWidth:(() => {
+          const section=document.getElementById('cover-more');
+          const style=getComputedStyle(section);
+          return section.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight);
+        })(),
         addressChildrenTop:[...address.children].map((element)=>element.getBoundingClientRect().top),
         addressItems:[...address.children].map((element)=>{
           const rect=element.getBoundingClientRect();
           const style=getComputedStyle(element);
           return {left:rect.left,right:rect.right,marginLeft:style.marginLeft,marginRight:style.marginRight};
         }),
-        lines:selectors.map((selector)=>({selector,...box(document.querySelector('#cover-section '+selector))}))
+        lines:selectors.map((selector)=>({selector,...box(find(selector))}))
       };
     });
   }
@@ -245,8 +282,15 @@ try {
     const disposition=await mesurerLignesCouverture(largeur, hauteur);
     assert.equal(disposition.metroTarget, '_blank', `le lien Bonjour RATP doit permettre l’ouverture native ou un onglet web à ${largeur}×${hauteur}px`);
     assert.equal(disposition.addressFontSize, disposition.metroFontSize, `l’adresse et le métro doivent garder la même taille à ${largeur}×${hauteur}px`);
-    assert.ok(Math.abs(disposition.statusFontSize/disposition.addressFontSize-1.5)<.01,
-      `« Ouvert » doit être 1,5× plus grand que l’adresse/le métro à ${largeur}×${hauteur}px (${disposition.statusFontSize}/${disposition.addressFontSize})`);
+    assert.ok(Math.abs(disposition.hoursLineFontSize/disposition.addressFontSize-1.5)<.01 &&
+      Math.abs(disposition.statusFontSize/disposition.addressFontSize-1.5)<.01 &&
+      disposition.hoursItemFontSizes.every((size)=>Math.abs(size/disposition.addressFontSize-1.5)<.01),
+      `toute la ligne horaire, badge compris, doit être 1,5× l’adresse à ${largeur}×${hauteur}px ` +
+      `(ligne ${disposition.hoursLineFontSize}, badge ${disposition.statusFontSize}, adresse ${disposition.addressFontSize})`);
+    assert.equal(disposition.neighborhoodOverflow,false,
+      `la ligne « Dans les alentours » déborde ou coupe un lien à ${largeur}×${hauteur}px`);
+    assert.ok(disposition.neighborhoodWidth>=disposition.neighborhoodAvailableWidth-2,
+      `la ligne « Dans les alentours » n’utilise pas toute la largeur disponible à ${largeur}×${hauteur}px`);
     for (const ligne of disposition.lines) {
       assert.ok(Math.abs(ligne.center-disposition.pageCenter)<=2,
         `${ligne.selector} n’est pas centré sur la couverture à ${largeur}×${hauteur}px`);
@@ -257,6 +301,7 @@ try {
       ['.cover-footer', Math.min(disposition.pageContentWidth,1320)],
       ['.cover-hours', Math.min(disposition.footerWidth,1100)],
       ['.cover-links', Math.min(disposition.footerWidth,1240)],
+      ['#cover-more .footer-quartier--cover', disposition.neighborhoodAvailableWidth],
     ]);
     for (const [selector, largeurLigne] of largeurAttendue) {
       const ligne=disposition.lines.find((element)=>element.selector===selector);
@@ -354,6 +399,44 @@ try {
   await page.waitForFunction(() => document.querySelectorAll('#vins .wine-row').length === 17);
   assert.equal(await page.evaluate(() => getComputedStyle(document.getElementById('cover-reviews-section')).display), 'none');
   assert.equal(requetesGooglePlaces.length, requetesAvantMenu, 'ouvrir le menu ne doit pas relancer le chargement Places');
+  for (const largeur of [280, 320, 390, 560, 860]) {
+    await page.setViewportSize({ width:largeur, height:720 });
+    const pied=await page.evaluate(() => {
+      const details=document.querySelector('#interior-menu .footer .footer-details');
+      const brand=details.querySelector(':scope > span:first-child');
+      const links=[...details.querySelectorAll('.footer-details__location > a')];
+      const quartier=document.querySelector('#interior-menu .footer .footer-quartier');
+      const bounds=(element) => {
+        const rect=element.getBoundingClientRect();
+        const style=getComputedStyle(element);
+        return {
+          display:style.display, visibility:style.visibility,
+          left:rect.left, right:rect.right, width:rect.width, height:rect.height,
+          clientWidth:element.clientWidth, scrollWidth:element.scrollWidth,
+        };
+      };
+      return {
+        details:bounds(details), brand:{ text:brand.textContent.trim(), ...bounds(brand) },
+        links:links.map((element)=>({ text:element.textContent.trim(), ...bounds(element) })),
+        quartier:bounds(quartier),
+      };
+    });
+    assert.ok(pied.details.width>0 && pied.details.scrollWidth<=pied.details.clientWidth+1,
+      `le ruban du pied déborde à ${largeur}px (${pied.details.scrollWidth}/${pied.details.clientWidth})`);
+    assert.ok(pied.brand.height>0 && pied.brand.display!=='none' && pied.brand.visibility!=='hidden',
+      `la marque du pied est masquée à ${largeur}px`);
+    assert.equal(pied.links.length,2,`l’adresse et le métro doivent tous deux rester présents à ${largeur}px`);
+    for (const lien of pied.links) {
+      assert.ok(lien.width>0 && lien.height>0 && lien.display!=='none' && lien.visibility!=='hidden',
+        `le lien « ${lien.text} » est masqué à ${largeur}px`);
+      assert.ok(lien.scrollWidth<=lien.clientWidth+1 && lien.left>=pied.details.left-1 &&
+        lien.right<=pied.details.right+1,
+        `le lien « ${lien.text} » est rogné ou hors du pied à ${largeur}px`);
+    }
+    assert.ok(pied.quartier.width>=pied.details.width-2 &&
+      pied.quartier.scrollWidth<=pied.quartier.clientWidth+1,
+      `la ligne des alentours n’utilise pas le pied sans débordement à ${largeur}px`);
+  }
   const categories = ['Червоне вино', 'Біле вино', 'Рожеве вино', 'Ігристі'];
   const tailles = [280, 320, 360, 375, 390, 420, 430];
   for (const largeur of tailles) {
