@@ -19,6 +19,8 @@
   var slide = $('google-reviews-slide');
   var previous = $('google-reviews-previous');
   var next = $('google-reviews-next');
+  var rotation = $('google-reviews-rotation');
+  var rotationPath = rotation && rotation.querySelector('path');
   var dots = $('google-reviews-dots');
   var position = $('google-reviews-position');
   var disclosure = $('google-reviews-disclosure');
@@ -28,8 +30,9 @@
   var allReviews = $('google-reviews-all');
   var mapsAttribution = $('google-reviews-maps');
   if ([title, status, loadButton, summary, stars, starsFill, score,
-    carousel, viewport, slide, previous, next, dots, position, disclosure, disclosureText,
-    policy, attributions, allReviews, mapsAttribution].some(function (el) { return !el; })) return;
+    carousel, viewport, slide, previous, next, rotation, rotationPath, dots, position,
+    disclosure, disclosureText, policy, attributions, allReviews, mapsAttribution]
+    .some(function (el) { return !el; })) return;
 
   var COPY = {
     fr: {
@@ -79,6 +82,24 @@
     }
   };
 
+  var ROTATION_COPY = {
+    fr:{ pause:'Mettre en pause le défilement automatique des avis', resume:'Reprendre le défilement automatique des avis', reduced:'Défilement automatique désactivé par la préférence de mouvement réduit' },
+    en:{ pause:'Pause automatic review rotation', resume:'Resume automatic review rotation', reduced:'Automatic review rotation disabled by your reduced-motion preference' },
+    es:{ pause:'Pausar el cambio automático de opiniones', resume:'Reanudar el cambio automático de opiniones', reduced:'Cambio automático desactivado por la preferencia de movimiento reducido' },
+    de:{ pause:'Automatischen Bewertungswechsel pausieren', resume:'Automatischen Bewertungswechsel fortsetzen', reduced:'Automatischer Bewertungswechsel wegen der Einstellung für reduzierte Bewegung deaktiviert' },
+    it:{ pause:'Metti in pausa lo scorrimento automatico delle recensioni', resume:'Riprendi lo scorrimento automatico delle recensioni', reduced:'Rotazione automatica disattivata per la preferenza di movimento ridotto' },
+    pt:{ pause:'Pausar a rotação automática das avaliações', resume:'Retomar a rotação automática das avaliações', reduced:'Rotação automática desativada pela preferência de movimento reduzido' },
+    nl:{ pause:'Automatisch doorschuiven van reviews pauzeren', resume:'Automatisch doorschuiven van reviews hervatten', reduced:'Automatisch doorschuiven uitgeschakeld vanwege de voorkeur voor minder beweging' },
+    ar:{ pause:'إيقاف التبديل التلقائي للتقييمات مؤقتًا', resume:'استئناف التبديل التلقائي للتقييمات', reduced:'التبديل التلقائي معطّل بسبب تفضيل تقليل الحركة' },
+    zh:{ pause:'暂停自动切换评价', resume:'恢复自动切换评价', reduced:'因减少动态效果偏好，已停用自动切换' },
+    uk:{ pause:'Призупинити автоматичне гортання відгуків', resume:'Відновити автоматичне гортання відгуків', reduced:'Автогортання вимкнено через налаштування зменшення руху' },
+    ja:{ pause:'クチコミの自動切り替えを一時停止', resume:'クチコミの自動切り替えを再開', reduced:'動きを抑える設定により自動切り替えを無効にしました' },
+    ko:{ pause:'리뷰 자동 넘기기 일시 정지', resume:'리뷰 자동 넘기기 재개', reduced:'동작 줄이기 설정에 따라 자동 넘기기가 비활성화되었습니다' },
+    pl:{ pause:'Wstrzymaj automatyczne przewijanie opinii', resume:'Wznów automatyczne przewijanie opinii', reduced:'Automatyczne przewijanie wyłączone z powodu ustawienia ograniczenia ruchu' },
+    tr:{ pause:'Yorumların otomatik geçişini duraklat', resume:'Yorumların otomatik geçişini sürdür', reduced:'Hareketi azaltma tercihi nedeniyle otomatik geçiş devre dışı' },
+    hi:{ pause:'समीक्षाओं का स्वचालित बदलाव रोकें', resume:'समीक्षाओं का स्वचालित बदलाव फिर शुरू करें', reduced:'कम गति की प्राथमिकता के कारण स्वचालित बदलाव बंद है' }
+  };
+
   var LOCALES = { fr:'fr-FR', en:'en-GB', es:'es-ES', de:'de-DE', it:'it-IT', pt:'pt-PT', nl:'nl-NL', ar:'ar', zh:'zh-CN', uk:'uk-UA', ja:'ja-JP', ko:'ko-KR', pl:'pl-PL', tr:'tr-TR', hi:'hi-IN' };
   var CAROUSEL_LABELS = { fr:'carrousel', en:'carousel', es:'carrusel', de:'Karussell', it:'carosello', pt:'carrossel', nl:'carrousel', ar:'عرض دوّار', zh:'轮播', uk:'карусель', ja:'カルーセル', ko:'캐러셀', pl:'karuzela', tr:'kaydırmalı liste', hi:'कैरोसेल' };
   var MAP_DATA_LABELS = { fr:'Données cartographiques : ', en:'Map data: ', es:'Datos del mapa: ', de:'Kartendaten: ', it:'Dati cartografici: ', pt:'Dados do mapa: ', nl:'Kaartgegevens: ', ar:'بيانات الخريطة: ', zh:'地图数据：', uk:'Дані карти: ', ja:'地図データ：', ko:'지도 데이터: ', pl:'Dane mapy: ', tr:'Harita verileri: ', hi:'मानचित्र डेटा: ' };
@@ -95,6 +116,14 @@
   var ratingAnimationStarted = false;
   var measurementFrame = 0;
   var measuredViewportWidth = 0;
+  var autoAdvanceTimer = null;
+  var autoRotationObserver = null;
+  var carouselInView = true;
+  var carouselHovered = false;
+  var reducedMotionQuery = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var reducedMotion = !!(reducedMotionQuery && reducedMotionQuery.matches);
+  var rotationEnabled = !reducedMotion;
 
   function lang() {
     var value = String(document.documentElement.lang || 'fr').toLowerCase().split('-')[0];
@@ -145,11 +174,72 @@
     policy.textContent = c.policy;
     allReviews.textContent = c.all;
     setStatus();
+    updateRotationControl();
     if (place) renderSummary(place);
     if (reviews.length) {
       renderSlide(0);
       scheduleCarouselMeasurement();
     }
+  }
+  function updateRotationControl() {
+    var labels = ROTATION_COPY[lang()] || ROTATION_COPY.fr;
+    var multiple = reviews.length > 1;
+    var label = reducedMotion ? labels.reduced : (rotationEnabled ? labels.pause : labels.resume);
+    rotation.hidden = !multiple;
+    rotation.disabled = !!reducedMotion;
+    rotation.setAttribute('aria-label', label);
+    rotation.title = label;
+    rotationPath.setAttribute('d', !reducedMotion && rotationEnabled
+      ? 'M6 4h4v16H6zM14 4h4v16h-4z'
+      : 'M8 5v14l11-7z');
+    position.setAttribute('aria-live', rotationEnabled && !reducedMotion ? 'off' : 'polite');
+  }
+  function clearAutoAdvance() {
+    if (autoAdvanceTimer !== null) {
+      window.clearTimeout(autoAdvanceTimer);
+      autoAdvanceTimer = null;
+    }
+  }
+  function canAutoAdvance() {
+    return reviews.length > 1 && rotationEnabled && !reducedMotion &&
+      !carousel.hidden && carouselInView && !carouselHovered &&
+      (!document.visibilityState || document.visibilityState !== 'hidden');
+  }
+  function readingDuration() {
+    var characters = Array.from(reviews[current].text).length;
+    return Math.max(8000, 6000 + Math.ceil(characters / 14 * 1000));
+  }
+  function scheduleAutoAdvance() {
+    clearAutoAdvance();
+    if (!canAutoAdvance()) return;
+    autoAdvanceTimer = window.setTimeout(function () {
+      autoAdvanceTimer = null;
+      if (!canAutoAdvance()) return;
+      goTo(current + 1, 1, true);
+    }, readingDuration());
+  }
+  function stopRotationForInteraction() {
+    rotationEnabled = false;
+    clearAutoAdvance();
+    updateRotationControl();
+  }
+  function observeCarouselVisibility() {
+    if (typeof window.IntersectionObserver !== 'function' || autoRotationObserver) return;
+    carouselInView = false;
+    autoRotationObserver = new window.IntersectionObserver(function (entries) {
+      if (!entries.length) return;
+      carouselInView = entries.some(function (entry) { return entry.isIntersecting; });
+      if (carouselInView) scheduleAutoAdvance();
+      else clearAutoAdvance();
+    }, { threshold:0 });
+    autoRotationObserver.observe(section);
+  }
+  function handleReducedMotionChange(event) {
+    reducedMotion = event ? !!event.matches : !!(reducedMotionQuery && reducedMotionQuery.matches);
+    if (reducedMotion) rotationEnabled = false;
+    updateRotationControl();
+    if (reducedMotion) clearAutoAdvance();
+    else scheduleAutoAdvance();
   }
   function visitDate(review) {
     var year = Number(review.visitDateYear || (review.visitDate && review.visitDate.year) || 0);
@@ -180,7 +270,7 @@
     var author = raw.authorAttribution || {};
     var authorName = String(author.displayName || '').trim();
     var text = localisedText(raw.text) || localisedText(raw.originalText);
-    text = String(text || '').replace(/\s+/g, ' ').trim();
+    text = String(text || '').replace(/\r\n?/g, '\n').trim();
     if (!authorName || !text) return null;
     return {
       author: authorName,
@@ -381,23 +471,32 @@
       dot.setAttribute('aria-label', c.position(index + 1, reviews.length));
     });
   }
-  function goTo(index, direction) {
+  function goTo(index, direction, automatic) {
     if (!reviews.length) return;
+    if (!automatic) stopRotationForInteraction();
     var total = reviews.length;
     current = (index + total) % total;
     renderSlide(direction || 1);
+    scheduleAutoAdvance();
   }
   function renderCarousel(items) {
+    clearAutoAdvance();
     reviews = items.map(normalizeReview).filter(Boolean);
     current = 0;
     position.textContent = '';
     position.hidden = true;
     disclosure.hidden = false;
+    updateRotationControl();
     if (!reviews.length) {
       if (carouselResizeObserver) {
         carouselResizeObserver.disconnect();
         carouselResizeObserver = null;
       }
+      if (autoRotationObserver) {
+        autoRotationObserver.disconnect();
+        autoRotationObserver = null;
+      }
+      carouselInView = true;
       measuredViewportWidth = 0;
       carousel.hidden = true;
       dots.hidden = true;
@@ -412,6 +511,7 @@
     }
     carousel.hidden = false;
     var multiple = reviews.length > 1;
+    updateRotationControl();
     previous.hidden = !multiple;
     next.hidden = !multiple;
     dots.hidden = !multiple;
@@ -434,7 +534,9 @@
     setStatus();
     renderSlide(1);
     observeCarouselWidth();
+    observeCarouselVisibility();
     measureCarouselHeight();
+    scheduleAutoAdvance();
     if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === 'function') {
       document.fonts.ready.then(scheduleCarouselMeasurement).catch(function () {});
     }
@@ -569,6 +671,35 @@
 
   previous.addEventListener('click', function () { goTo(current - 1, -1); });
   next.addEventListener('click', function () { goTo(current + 1, 1); });
+  rotation.addEventListener('click', function () {
+    if (reducedMotion) return;
+    rotationEnabled = !rotationEnabled;
+    updateRotationControl();
+    if (rotationEnabled) scheduleAutoAdvance();
+    else clearAutoAdvance();
+  });
+  carousel.addEventListener('focusin', stopRotationForInteraction);
+  carousel.addEventListener('pointerenter', function (event) {
+    if (event.pointerType !== 'mouse') return;
+    carouselHovered = true;
+    clearAutoAdvance();
+  });
+  carousel.addEventListener('pointerleave', function (event) {
+    if (event.pointerType !== 'mouse') return;
+    carouselHovered = false;
+    scheduleAutoAdvance();
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') clearAutoAdvance();
+    else scheduleAutoAdvance();
+  });
+  if (reducedMotionQuery) {
+    if (typeof reducedMotionQuery.addEventListener === 'function') {
+      reducedMotionQuery.addEventListener('change', handleReducedMotionChange);
+    } else if (typeof reducedMotionQuery.addListener === 'function') {
+      reducedMotionQuery.addListener(handleReducedMotionChange);
+    }
+  }
   loadButton.addEventListener('click', loadReviews);
   viewport.addEventListener('keydown', function (event) {
     if (event.key === 'ArrowLeft') {
@@ -581,6 +712,7 @@
   });
   viewport.addEventListener('pointerdown', function (event) {
     if (event.pointerType === 'mouse') return;
+    stopRotationForInteraction();
     pointerStart = { x:event.clientX, y:event.clientY };
   }, { passive:true });
   viewport.addEventListener('pointerup', function (event) {

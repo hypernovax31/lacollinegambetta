@@ -22,6 +22,34 @@ const dom = new JSDOM(`<!doctype html><html lang="fr"><body>${section.outerHTML}
 });
 const { window } = dom;
 const fetchCalls = [];
+const scheduledTimers = new Map();
+let nextTimerId = 1;
+let prefersReducedMotion = false;
+const motionListeners = new Set();
+const originalSetTimeout = window.setTimeout.bind(window);
+const originalClearTimeout = window.clearTimeout.bind(window);
+window.setTimeout = (callback, delay, ...args) => {
+  if (Number(delay) >= 5000) {
+    const id = nextTimerId++;
+    scheduledTimers.set(id, { callback, delay:Number(delay), args });
+    return id;
+  }
+  return originalSetTimeout(callback, delay, ...args);
+};
+window.clearTimeout = (id) => {
+  if (scheduledTimers.delete(id)) return;
+  originalClearTimeout(id);
+};
+window.matchMedia = (query) => {
+  if (query !== '(prefers-reduced-motion: reduce)') return { matches:false };
+  return {
+    get matches() { return prefersReducedMotion; },
+    addEventListener: (_type, listener) => motionListeners.add(listener),
+    removeEventListener: (_type, listener) => motionListeners.delete(listener),
+    addListener: (listener) => motionListeners.add(listener),
+    removeListener: (listener) => motionListeners.delete(listener)
+  };
+};
 window.fetch = (url) => {
   fetchCalls.push(String(url));
   return Promise.resolve({
@@ -130,6 +158,36 @@ assert.ok(window.document.getElementById('google-reviews-disclosure-text').textC
 assert.equal(status.textContent, '', 'le statut de chargement ne doit pas se confondre avec le compteur du carrousel');
 assert.ok(position.textContent.includes('1 sur 2'));
 assert.equal(position.hidden, false);
+const rotation = window.document.getElementById('google-reviews-rotation');
+assert.equal(rotation.hidden, false);
+assert.equal(rotation.disabled, false);
+assert.equal(rotation.getAttribute('aria-label'), 'Mettre en pause le défilement automatique des avis');
+assert.equal(position.getAttribute('aria-live'), 'off', 'les changements automatiques ne doivent pas être annoncés à chaque rotation');
+const firstQuote = window.document.querySelector('.google-reviews-quote').textContent;
+assert.ok(firstQuote.includes('fixture fictive'));
+assert.doesNotMatch(read('assets/css/google-reviews.css'), /line-clamp/i,
+  'les avis ne doivent jamais être tronqués par CSS');
+const initialTimer = [...scheduledTimers.entries()].at(-1);
+assert.ok(initialTimer, 'le carrousel doit programmer un changement automatique');
+const [initialTimerId, initialTimerData] = initialTimer;
+const expectedDelay = Math.max(8000, 6000 + Math.ceil(Array.from(firstQuote).length / 14 * 1000));
+assert.equal(initialTimerData.delay, expectedDelay, 'le temps de lecture doit tenir compte de tous les caractères');
+scheduledTimers.delete(initialTimerId);
+initialTimerData.callback(...initialTimerData.args);
+assert.ok(window.document.getElementById('google-reviews-slide').textContent.includes('deuxième fixture fictive'),
+  'le carrousel doit avancer automatiquement après le temps de lecture');
+assert.ok(position.textContent.includes('2 sur 2'));
+rotation.click();
+assert.equal(rotation.getAttribute('aria-label'), 'Reprendre le défilement automatique des avis');
+assert.equal(position.getAttribute('aria-live'), 'polite', 'la navigation redevient annoncée quand la rotation est en pause');
+assert.equal(scheduledTimers.size, 0, 'la pause doit annuler le prochain changement automatique');
+window.document.documentElement.lang = 'uk';
+window.dispatchEvent(new window.CustomEvent('lcg-lang-changed', { detail: { lang: 'uk' } }));
+assert.equal(rotation.getAttribute('aria-label'), 'Відновити автоматичне гортання відгуків');
+window.document.documentElement.lang = 'fr';
+window.dispatchEvent(new window.CustomEvent('lcg-lang-changed', { detail: { lang: 'fr' } }));
+window.document.getElementById('google-reviews-previous').click();
+assert.ok(position.textContent.includes('1 sur 2'));
 
 window.document.getElementById('google-reviews-next').click();
 assert.ok(window.document.getElementById('google-reviews-slide').textContent.includes('deuxième fixture fictive'));
@@ -163,5 +221,19 @@ assert.equal(attributionMaps.textContent.trim(), 'Google Maps', 'l’attribution
 assert.equal(window.document.querySelectorAll('.google-reviews-review-rating, .google-reviews-review-stars').length, 0,
   'les étoiles par avis ne doivent pas doubler la note globale');
 
-console.log('  ok   Carrousel : chargement automatique et navigation vérifiés sur fixtures synthétiques (pas de validation Google en direct)');
+rotation.click();
+assert.equal(rotation.getAttribute('aria-label'), 'Mettre en pause le défilement automatique des avis');
+assert.equal(scheduledTimers.size, 1, 'la rotation peut être relancée explicitement');
+prefersReducedMotion = true;
+for (const listener of motionListeners) listener({ matches:true });
+assert.equal(rotation.disabled, true, 'le contrôle est désactivé en cas de préférence de mouvement réduit');
+assert.equal(rotation.getAttribute('aria-label'), 'Défilement automatique désactivé par la préférence de mouvement réduit');
+assert.equal(scheduledTimers.size, 0, 'la préférence de mouvement réduit doit annuler le minuteur');
+prefersReducedMotion = false;
+for (const listener of motionListeners) listener({ matches:false });
+assert.equal(rotation.disabled, false);
+assert.equal(rotation.getAttribute('aria-label'), 'Reprendre le défilement automatique des avis');
+assert.equal(scheduledTimers.size, 0, 'la suppression de la préférence ne doit pas relancer la rotation sans action');
+
+console.log('  ok   Carrousel : lecture intégrale, rotation temporisée et contrôles accessibles vérifiés sur fixtures synthétiques (pas de validation Google en direct)');
 window.close();

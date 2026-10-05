@@ -102,11 +102,15 @@ const attributionMaps = d.getElementById('google-reviews-maps');
 const positionAvisGoogle = d.getElementById('google-reviews-position');
 const zoneCommentaires = d.getElementById('google-reviews-slide');
 const tousLesAvisGoogle = d.getElementById('google-reviews-all');
+const rotationAvisGoogle = d.getElementById('google-reviews-rotation');
+const cssAvisGoogle = lire('assets/css/google-reviews.css');
 const scriptAvisGoogle = lire('assets/js/google-reviews.js');
 let configurationAvis = null;
 try { configurationAvis = JSON.parse(lire('assets/data/avis-google.json')); } catch (e) {}
 blocAvisGoogle && boutonAvisGoogle && boutonAvisGoogle.hidden && boutonAvisGoogle.disabled &&
   positionAvisGoogle?.getAttribute('role') === 'status' && attributionMaps && tousLesAvisGoogle &&
+  rotationAvisGoogle?.getAttribute('aria-controls') === 'google-reviews-viewport' &&
+  rotationAvisGoogle?.getAttribute('type') === 'button' &&
   attributionMaps.tagName === 'SPAN' && attributionMaps.textContent.trim() === 'Google Maps' &&
   attributionMaps.getAttribute('translate') === 'no' && !attributionMaps.hasAttribute('href') &&
   tousLesAvisGoogle.href.startsWith('https://www.google.com/maps/') &&
@@ -127,14 +131,19 @@ scriptAvisGoogle.includes("fields:['rating','googleMapsURI','reviews']") &&
   scriptAvisGoogle.includes('window[callbackName] = function ()') &&
   !scriptAvisGoogle.includes('script.onload') &&
   scriptAvisGoogle.includes('  loadReviews();') &&
+  scriptAvisGoogle.includes('function scheduleAutoAdvance()') &&
+  scriptAvisGoogle.includes('Math.ceil(characters / 14 * 1000)') &&
+  scriptAvisGoogle.includes('stopRotationForInteraction') &&
+  scriptAvisGoogle.includes('handleReducedMotionChange') &&
+  !cssAvisGoogle.includes('line-clamp') &&
   !scriptAvisGoogle.includes('google-reviews-source') &&
   scriptAvisGoogle.includes('authorUrl') && scriptAvisGoogle.includes('google-reviews-author-profile') &&
   !scriptAvisGoogle.includes('reviewUrl') &&
   !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
-  ? ok('avis Google : affichage auto, attribution Places et absence de cache vérifiés')
-  : ko('avis Google : affichage automatique, champs Places ou absence de cache non garantis');
-index.includes('assets/css/google-reviews.css?v=2026100522') &&
-  index.includes('assets/js/google-reviews.js?v=2026100515') &&
+  ? ok('avis Google : rotation temporisée, texte intégral, attribution Places et absence de cache vérifiés')
+  : ko('avis Google : rotation, lecture intégrale, champs Places ou absence de cache non garantis');
+index.includes('assets/css/google-reviews.css?v=2026100601') &&
+  index.includes('assets/js/google-reviews.js?v=2026100601') &&
   d.querySelector('script[src^="assets/js/i18n.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.defer
