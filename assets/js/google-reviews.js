@@ -21,6 +21,7 @@
   var previous = $('google-reviews-previous');
   var next = $('google-reviews-next');
   var dots = $('google-reviews-dots');
+  var position = $('google-reviews-position');
   var disclosure = $('google-reviews-disclosure');
   var disclosureText = $('google-reviews-disclosure-text');
   var policy = $('google-reviews-policy');
@@ -28,7 +29,7 @@
   var allReviews = $('google-reviews-all');
   var mapsAttribution = $('google-reviews-maps');
   if ([title, status, loadButton, summary, stars, starsFill, score, count,
-    carousel, viewport, slide, previous, next, dots, disclosure, disclosureText,
+    carousel, viewport, slide, previous, next, dots, position, disclosure, disclosureText,
     policy, attributions, allReviews, mapsAttribution].some(function (el) { return !el; })) return;
 
   var COPY = {
@@ -114,10 +115,10 @@
   }
   function setStatus() {
     var c = copy();
+    section.setAttribute('data-reviews-state', state);
     if (state === 'loading') status.textContent = c.loading;
     else if (state === 'error') status.textContent = c.error;
     else if (state === 'empty') status.textContent = c.empty;
-    else if (state === 'loaded') status.textContent = c.loaded(reviews.length);
     else status.textContent = '';
   }
   function applyLanguage() {
@@ -313,7 +314,8 @@
 
     article.classList.add(direction < 0 ? 'is-entering-previous' : 'is-entering-next');
     slide.replaceChildren(article);
-    status.textContent = c.position(current + 1, reviews.length);
+    position.textContent = c.position(current + 1, reviews.length);
+    position.hidden = false;
     Array.prototype.forEach.call(dots.children, function (dot, index) {
       dot.setAttribute('aria-current', index === current ? 'true' : 'false');
       dot.setAttribute('aria-label', c.position(index + 1, reviews.length));
@@ -328,6 +330,8 @@
   function renderCarousel(items) {
     reviews = items.map(normalizeReview).filter(Boolean);
     current = 0;
+    position.textContent = '';
+    position.hidden = true;
     disclosure.hidden = false;
     if (!reviews.length) {
       carousel.hidden = true;

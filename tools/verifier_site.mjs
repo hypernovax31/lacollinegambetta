@@ -80,15 +80,17 @@ sansPrix.length === 0 ? ok('tous les articles ont un prix valide')
 const blocAvisGoogle = d.getElementById('cover-reviews-section');
 const boutonAvisGoogle = d.getElementById('google-reviews-load');
 const attributionMaps = d.getElementById('google-reviews-maps');
+const positionAvisGoogle = d.getElementById('google-reviews-position');
 const zoneCommentaires = d.getElementById('google-reviews-slide');
 const scriptAvisGoogle = lire('assets/js/google-reviews.js');
 let configurationAvis = null;
 try { configurationAvis = JSON.parse(lire('assets/data/avis-google.json')); } catch (e) {}
-blocAvisGoogle && boutonAvisGoogle && boutonAvisGoogle.hidden && boutonAvisGoogle.disabled && attributionMaps &&
+blocAvisGoogle && boutonAvisGoogle && boutonAvisGoogle.hidden && boutonAvisGoogle.disabled &&
+  positionAvisGoogle?.getAttribute('role') === 'status' && attributionMaps &&
   attributionMaps.textContent.trim() === 'Google Maps' && attributionMaps.getAttribute('translate') === 'no' &&
   !zoneCommentaires?.querySelector('blockquote')
-  ? ok('avis Google : bloc minimal, attribution visible, aucun avis statique et secours masqué par défaut')
-  : ko('avis Google : emplacement, attribution, secours initial ou contenu statique incorrect');
+  ? ok('avis Google : note, carrousel, compteur accessible, attribution et secours sans avis statique')
+  : ko('avis Google : structure du bloc, attribution ou contenu statique incorrect');
 configurationAvis && typeof configurationAvis.place_id === 'string' &&
   configurationAvis.place_id.startsWith('ChIJ') && typeof configurationAvis.cle_api === 'string' &&
   configurationAvis.cle_api.length > 20 && !('avis' in configurationAvis) &&
@@ -105,8 +107,8 @@ scriptAvisGoogle.includes("fields:['rating','userRatingCount','googleMapsURI','r
   !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
   ? ok('avis Google : affichage auto, attribution Places et absence de cache vérifiés')
   : ko('avis Google : affichage automatique, champs Places ou absence de cache non garantis');
-index.includes('assets/css/google-reviews.css?v=2026100503') &&
-  index.includes('assets/js/google-reviews.js?v=2026100504') &&
+index.includes('assets/css/google-reviews.css?v=2026100505') &&
+  index.includes('assets/js/google-reviews.js?v=2026100505') &&
   d.querySelector('script[src^="assets/js/i18n.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.defer

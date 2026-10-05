@@ -105,8 +105,19 @@ try {
     buttonBusy: document.getElementById('google-reviews-load')?.getAttribute('aria-busy'),
     visible: getComputedStyle(document.getElementById('cover-reviews-section')).display !== 'none',
     sectionBackground: getComputedStyle(document.getElementById('cover-reviews-section')).backgroundColor,
+    cardBackground: getComputedStyle(document.querySelector('.google-reviews-card')).backgroundColor,
     cardShadow: getComputedStyle(document.querySelector('.google-reviews-card')).boxShadow,
     cardBorder: getComputedStyle(document.querySelector('.google-reviews-card')).borderTopWidth,
+    ratingDisplay: (() => {
+      const summary = document.getElementById('google-reviews-rating');
+      summary.hidden = false;
+      return getComputedStyle(summary).display;
+    })(),
+    carouselDisplay: (() => {
+      const carousel = document.getElementById('google-reviews-carousel');
+      carousel.hidden = false;
+      return getComputedStyle(carousel).display;
+    })(),
     staticQuotes: document.querySelectorAll('#google-reviews-slide blockquote').length,
     sectionWidth: document.getElementById('cover-reviews-section').clientWidth,
     sectionScroll: document.getElementById('cover-reviews-section').scrollWidth,
@@ -121,9 +132,12 @@ try {
   });
   assert.equal(widgetAccueil.buttonDisabled, false, 'le bouton de secours doit être actif après un échec');
   assert.equal(widgetAccueil.buttonBusy, 'false');
-  assert.equal(widgetAccueil.sectionBackground, 'rgb(252, 251, 247)', 'le bloc doit rester léger sur fond clair');
-  assert.equal(widgetAccueil.cardShadow, 'none', 'la carte ne doit pas avoir d’ombre lourde');
-  assert.equal(widgetAccueil.cardBorder, '0px', 'la carte ne doit pas avoir de cadre épais');
+  assert.equal(widgetAccueil.sectionBackground, 'rgb(245, 241, 233)', 'le bloc doit se détacher sur un fond doux');
+  assert.equal(widgetAccueil.cardBackground, 'rgb(255, 254, 250)');
+  assert.notEqual(widgetAccueil.cardShadow, 'none', 'la carte doit avoir une ombre discrète');
+  assert.equal(widgetAccueil.cardBorder, '1px', 'la carte doit garder un contour fin');
+  assert.equal(widgetAccueil.ratingDisplay, 'grid', 'la note et les étoiles doivent former un résumé dédié');
+  assert.equal(widgetAccueil.carouselDisplay, 'grid', 'les commentaires doivent être dans un vrai carrousel');
   assert.ok(widgetAccueil.sectionScroll <= widgetAccueil.sectionWidth + 1, 'le bloc d’avis déborde horizontalement à 320 px');
   assert.ok(widgetAccueil.cardScroll <= widgetAccueil.cardWidth + 1, 'la carte d’avis déborde à 320 px');
   assert.equal(requetesGooglePlaces.filter((path) => path === '/maps/api/js').length, 1,
@@ -248,10 +262,123 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100504'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100505'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');
+
+  // Une seconde page isole le rendu complet avec des fixtures synthétiques,
+  // interceptées localement : aucune requête réelle n'est envoyée à Google.
+  const pageAvis = await contexte.newPage();
+  await pageAvis.setViewportSize({ width: 320, height: 720 });
+  let sdkFictifIntercepte = false;
+  await pageAvis.route('**/*', async (route) => {
+    const url = new URL(route.request().url());
+    if (url.origin === origineLocale) {
+      if (url.pathname === '/assets/data/avis-google.json') {
+        await route.fulfill({
+          status:200,
+          contentType:'application/json; charset=utf-8',
+          body:JSON.stringify({
+            place_id:'TEST_PLACE_ID',
+            cle_api:'TEST-ONLY-NOT-A-REAL-KEY',
+            url:'https://www.google.com/maps/search/?api=1&query=test'
+          }),
+        });
+      } else {
+        await route.continue();
+      }
+      return;
+    }
+    if (url.hostname === 'maps.googleapis.com' && url.pathname === '/maps/api/js') {
+      sdkFictifIntercepte = true;
+      await route.fulfill({
+        status:200,
+        contentType:'application/javascript; charset=utf-8',
+        body:`window.google = { maps: { importLibrary: function (name) {
+          if (name !== 'places') return Promise.reject(new Error('fixture library'));
+          return Promise.resolve({ Place: class {
+            constructor(options) { this.id = options.id; }
+            fetchFields() {
+              this.rating = 4.8;
+              this.userRatingCount = 28;
+              this.googleMapsURI = 'https://www.google.com/maps/search/?api=1&query=test-place';
+              this.attributions = [];
+              this.reviews = [
+                {
+                  rating:5,
+                  text:'TEST ONLY — commentaire synthétique pour vérifier la mise en page responsive.',
+                  textLanguageCode:'fr',
+                  relativePublishTimeDescription:'il y a quelques jours',
+                  googleMapsURI:'https://www.google.com/maps/reviews/fixture-1',
+                  authorAttribution:{ displayName:'TEST ONLY', uri:'https://www.google.com/maps/contrib/fixture-1' }
+                },
+                {
+                  rating:4,
+                  text:'TEST ONLY — deuxième commentaire fictif destiné au test du carrousel.',
+                  textLanguageCode:'fr',
+                  relativePublishTimeDescription:'il y a quelques semaines',
+                  googleMapsURI:'https://www.google.com/maps/reviews/fixture-2',
+                  authorAttribution:{ displayName:'TEST ONLY 2' }
+                }
+              ];
+              return Promise.resolve();
+            }
+          } });
+        } } };
+        window.__lcgGoogleReviewsReady();`,
+      });
+      return;
+    }
+    await route.abort();
+  });
+  await pageAvis.goto(`${origineLocale}/index.html?lang=fr`, { waitUntil:'domcontentloaded' });
+  await pageAvis.waitForFunction(() =>
+    document.querySelector('#google-reviews-slide article') &&
+    document.getElementById('google-reviews-position')?.textContent.includes('1 sur 2'));
+  assert.equal(sdkFictifIntercepte, true);
+  const renduAvis = await pageAvis.evaluate(() => ({
+    title:document.getElementById('cover-reviews-title').textContent.trim(),
+    ratingHidden:document.getElementById('google-reviews-rating').hidden,
+    score:document.getElementById('google-reviews-score').textContent,
+    count:document.getElementById('google-reviews-count').textContent,
+    stars:document.getElementById('google-reviews-stars').getAttribute('aria-label'),
+    quote:document.querySelector('.google-reviews-quote').textContent,
+    carousel:getComputedStyle(document.getElementById('google-reviews-carousel')).display,
+    previousHidden:document.getElementById('google-reviews-previous').hidden,
+    nextHidden:document.getElementById('google-reviews-next').hidden,
+    dots:document.getElementById('google-reviews-dots').children.length,
+    position:document.getElementById('google-reviews-position').textContent,
+  }));
+  assert.equal(renduAvis.title, 'Avis Google');
+  assert.equal(renduAvis.ratingHidden, false);
+  assert.equal(renduAvis.score, '4,8/5');
+  assert.equal(renduAvis.count, '28 avis');
+  assert.equal(renduAvis.stars, 'Note moyenne Google : 4,8 sur 5');
+  assert.ok(renduAvis.quote.startsWith('TEST ONLY'));
+  assert.equal(renduAvis.carousel, 'grid');
+  assert.equal(renduAvis.previousHidden, false);
+  assert.equal(renduAvis.nextHidden, false);
+  assert.equal(renduAvis.dots, 2);
+  assert.ok(renduAvis.position.includes('1 sur 2'));
+
+  for (const largeur of [280, 320, 390, 430]) {
+    await pageAvis.setViewportSize({ width:largeur, height:720 });
+    const debordementsAvis = await pageAvis.evaluate(() => {
+      const ids = ['cover-reviews-section', 'google-reviews-card', 'google-reviews-carousel', 'google-reviews-viewport'];
+      return ids.filter((id) => {
+        const element = id === 'google-reviews-card'
+          ? document.querySelector('.google-reviews-card')
+          : document.getElementById(id);
+        return element.scrollWidth > element.clientWidth + 1;
+      });
+    });
+    assert.deepEqual(debordementsAvis, [], `le bloc ou le carrousel déborde à ${largeur}px`);
+  }
+  await pageAvis.getByRole('button', { name:'Avis suivant' }).click();
+  await pageAvis.waitForFunction(() =>
+    document.getElementById('google-reviews-position')?.textContent.includes('2 sur 2'));
+  console.log('  ok   Chromium : note, étoiles, commentaires et carrousel responsives (fixtures synthétiques uniquement)');
 
   await contexte.close();
 } finally {

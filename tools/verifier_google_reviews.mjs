@@ -98,6 +98,7 @@ window.eval(read('assets/js/google-reviews.js'));
 
 const button = window.document.getElementById('google-reviews-load');
 const status = window.document.getElementById('google-reviews-status');
+const position = window.document.getElementById('google-reviews-position');
 assert.equal(button.textContent, 'Chargement des avis Google…');
 assert.equal(button.hidden, true, 'le bouton de secours ne doit pas remplacer le chargement automatique');
 assert.equal(button.disabled, true, 'la requête automatique doit signaler son état');
@@ -126,11 +127,13 @@ assert.equal(window.document.getElementById('google-reviews-score').textContent,
 assert.equal(window.document.getElementById('google-reviews-count').textContent, '28 avis');
 assert.equal(window.document.getElementById('google-reviews-dots').children.length, 2);
 assert.ok(window.document.getElementById('google-reviews-disclosure-text').textContent.includes('sans filtre de note'));
-assert.ok(status.textContent.includes('1 sur 2'));
+assert.equal(status.textContent, '', 'le statut de chargement ne doit pas se confondre avec le compteur du carrousel');
+assert.ok(position.textContent.includes('1 sur 2'));
+assert.equal(position.hidden, false);
 
 window.document.getElementById('google-reviews-next').click();
 assert.ok(window.document.getElementById('google-reviews-slide').textContent.includes('deuxième fixture fictive'));
-assert.ok(status.textContent.includes('2 sur 2'));
+assert.ok(position.textContent.includes('2 sur 2'));
 assert.ok(window.document.querySelector('.google-reviews-source').href.endsWith('/fixture-2'));
 assert.ok(window.document.querySelector('.google-reviews-review-rating span:last-child').textContent === '2/5');
 
