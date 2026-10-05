@@ -442,10 +442,15 @@ try {
     ratingAnimationTriggered:document.getElementById('google-reviews-rating').classList.contains('is-animating'),
     starsAnimation:getComputedStyle(document.getElementById('google-reviews-stars')).animationName,
     starsFillAnimation:getComputedStyle(document.getElementById('google-reviews-stars-fill')).animationName,
+    starsCometAnimation:getComputedStyle(document.getElementById('google-reviews-stars-fill'),'::before').animationName,
+    starsGlintAnimation:getComputedStyle(document.getElementById('google-reviews-stars-fill'),'::after').animationName,
+    scoreAnimation:getComputedStyle(document.getElementById('google-reviews-score')).animationName,
     starsAnimationRunning:[...document.getElementById('google-reviews-stars').getAnimations()]
-      .some((animation)=>animation.animationName==='google-review-stars-appear' && animation.playState==='running'),
+      .some((animation)=>animation.animationName==='google-review-constellation-ignite' && animation.playState==='running'),
     starsFillAnimationRunning:[...document.getElementById('google-reviews-stars-fill').getAnimations()]
-      .some((animation)=>animation.animationName==='google-review-stars-reveal' && animation.playState==='running'),
+      .some((animation)=>animation.animationName==='google-review-gold-trace' && animation.playState==='running'),
+    scoreAnimationRunning:[...document.getElementById('google-reviews-score').getAnimations()]
+      .some((animation)=>animation.animationName==='google-review-score-reveal' && animation.playState==='running'),
     quote:document.querySelector('.google-reviews-quote').textContent,
     carousel:getComputedStyle(document.getElementById('google-reviews-carousel')).display,
     previousHidden:document.getElementById('google-reviews-previous').hidden,
@@ -459,10 +464,14 @@ try {
   assert.equal(renduAvis.reviewCountPresent, false, 'le nombre d’avis ne doit pas apparaître dans le bloc');
   assert.equal(renduAvis.stars, 'Note moyenne Google : 4,8 sur 5');
   assert.equal(renduAvis.ratingAnimationTriggered, true, 'l’animation de la note doit attendre son entrée dans l’écran');
-  assert.equal(renduAvis.starsAnimation, 'google-review-stars-appear', 'l’apparition des étoiles doit être animée');
-  assert.equal(renduAvis.starsFillAnimation, 'google-review-stars-reveal', 'le remplissage doré des étoiles doit être animé');
+  assert.equal(renduAvis.starsAnimation, 'google-review-constellation-ignite', 'les étoiles doivent s’allumer avec un mouvement maîtrisé');
+  assert.equal(renduAvis.starsFillAnimation, 'google-review-gold-trace', 'le remplissage doré doit se tracer sans déformer les étoiles');
+  assert.equal(renduAvis.starsCometAnimation, 'google-review-comet-core', 'un éclat doit traverser la constellation dorée');
+  assert.equal(renduAvis.starsGlintAnimation, 'google-review-gold-glint', 'un reflet doré doit parcourir les étoiles actives');
+  assert.equal(renduAvis.scoreAnimation, 'google-review-score-reveal', 'la note doit apparaître après les étoiles');
   assert.equal(renduAvis.starsAnimationRunning, true, 'l’apparition des étoiles doit être visible quand le bloc entre dans l’écran');
   assert.equal(renduAvis.starsFillAnimationRunning, true, 'le remplissage des étoiles doit être actif quand le bloc entre dans l’écran');
+  assert.equal(renduAvis.scoreAnimationRunning, true, 'l’apparition de la note doit être active avec l’animation des étoiles');
   assert.ok(renduAvis.quote.startsWith('TEST ONLY'));
   assert.equal(renduAvis.carousel, 'grid');
   assert.equal(renduAvis.previousHidden, false);
@@ -528,6 +537,16 @@ try {
           const heading=document.querySelector('.google-reviews-heading').getBoundingClientRect();
           const rating=document.getElementById('google-reviews-rating').getBoundingClientRect();
           return Math.abs((heading.left + heading.width / 2) - (rating.left + rating.width / 2)) < 1;
+        })(),
+        summaryStacked:(() => {
+          const stars=document.getElementById('google-reviews-stars').getBoundingClientRect();
+          const score=document.getElementById('google-reviews-score').getBoundingClientRect();
+          return stars.bottom<=score.top+1 && Math.abs((stars.left+stars.width/2)-(score.left+score.width/2))<1;
+        })(),
+        summaryCommentCenterDeltaY:(() => {
+          const rating=document.getElementById('google-reviews-rating').getBoundingClientRect();
+          const slideBox=slide.getBoundingClientRect();
+          return rating.top+rating.height/2-(slideBox.top+slideBox.height/2);
         })(),
         quoteLineClamp:parseInt(getComputedStyle(quote).webkitLineClamp, 10),
         averageStarsWidth:rect(document.getElementById('google-reviews-stars')).width,
@@ -639,6 +658,9 @@ try {
     assert.ok(layoutAvis.quoteWidth > 200, `le commentaire manque de largeur en paysage à ${largeur}px`);
     assert.ok(layoutAvis.averageStarsFontSize >= 17 && layoutAvis.averageScoreFontSize >= 19,
       `la note globale est reléguée en paysage à ${largeur}px`);
+    assert.equal(layoutAvis.summaryStacked, true, `les étoiles doivent être au-dessus de la note en paysage à ${largeur}px`);
+    assert.ok(Math.abs(layoutAvis.summaryCommentCenterDeltaY)<=6,
+      `la colonne étoiles/note n’est pas centrée sur les commentaires en paysage à ${largeur}px (écart ${layoutAvis.summaryCommentCenterDeltaY.toFixed(1)}px)`);
     assert.ok(layoutAvis.starsBeforeScore && layoutAvis.reviewCountAbsent && layoutAvis.duplicateReviewStars === 0,
       `la note globale doit rester sans compteur en paysage à ${largeur}px`);
     assert.ok(layoutAvis.navTargets.every((target) => target.width >= 44 && target.height >= 44),
@@ -654,9 +676,12 @@ try {
   const mouvementsReduits=await pageAvis.evaluate(() => ({
     stars:getComputedStyle(document.getElementById('google-reviews-stars')).animationName,
     starsFill:getComputedStyle(document.getElementById('google-reviews-stars-fill')).animationName,
+    starsComet:getComputedStyle(document.getElementById('google-reviews-stars-fill'),'::before').animationName,
+    starsGlint:getComputedStyle(document.getElementById('google-reviews-stars-fill'),'::after').animationName,
+    score:getComputedStyle(document.getElementById('google-reviews-score')).animationName,
     slide:getComputedStyle(document.querySelector('.google-reviews-slide')).animationName,
   }));
-  assert.deepEqual(mouvementsReduits, { stars:'none', starsFill:'none', slide:'none' },
+  assert.deepEqual(mouvementsReduits, { stars:'none', starsFill:'none', starsComet:'none', starsGlint:'none', score:'none', slide:'none' },
     'les animations doivent respecter prefers-reduced-motion');
   console.log('  ok   Chromium : note, étoiles, commentaires et carrousel responsives (fixtures synthétiques uniquement)');
 
