@@ -33,6 +33,9 @@
     var parent = node && node.parentElement;
     while (parent && parent !== document.body) {
       if (/^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|TEXTAREA)$/.test(parent.tagName)) return true;
+      /* Les extraits d’avis et autres contenus signalés translate=no doivent
+         conserver leurs chiffres exactement comme fournis par leur source. */
+      if (parent.getAttribute && String(parent.getAttribute('translate') || '').toLowerCase() === 'no') return true;
       if (parent.classList && (parent.classList.contains('lang-menu') || parent.classList.contains('legal-lang-menu'))) return true;
       parent = parent.parentElement;
     }

@@ -167,7 +167,7 @@ html:not(.carte-doc) .footer-quartier a { color:inherit; text-decoration:none; }
 html:not(.carte-doc) .footer-quartier a:hover { text-decoration:underline; opacity:1; }
 html:not(.carte-doc) .footer-quartier__sep { opacity:.5; }
 /* Le premier ecran de la couverture s'arrete aux boutons de contact.
-   Avis et reperes restent juste apres, accessibles en faisant defiler. */
+   Les reperes du quartier et les liens legaux suivent en defilant. */
 html:not(.carte-doc) .cover-more {
   display:grid; justify-items:center; gap:6px; width:100%;
   padding:14px 16px 20px;
@@ -298,22 +298,13 @@ def poser_nav_pied(s: str) -> str:
 
 
 def poser_bloc_garde(s: str) -> str:
-    """Garde plein ecran; avis, alentours et mentions suivent au defilement."""
+    """Garde plein ecran; alentours et liens legaux suivent au defilement."""
     s = re.sub(r'<div class="cover-footer-address">.*?</div>\s*</div>',
                lambda _m: COVER_ADRESSE + "\n        </div>", s, count=1, flags=re.S)
 
-    # Replacer le bloc d'avis avec son marqueur, quelle que soit sa position
-    # actuelle, pour l'installer sous la couverture (et non dans son premier ecran).
-    avis = re.search(r'<!-- avis-google:html:debut -->.*?<!-- avis-google:html:fin -->',
-                     s, flags=re.S)
-    bloc_avis = avis.group(0) if avis else ""
-    if avis:
-        s = s[:avis.start()] + s[avis.end():]
-
-    # Supprimer l'ancienne ligne du quartier avant de reconstruire son bloc.
+    # Supprimer l'ancienne ligne du quartier avant de reconstruire le bloc.
     s, _ = entre_marqueurs(s, "<!-- quartier:garde:debut -->",
                            "<!-- quartier:garde:fin -->", "")
-    # Le retrait des blocs laisse parfois des lignes vides apres les boutons.
     s = re.sub(
         r'(<div class="cover-links">[\s\S]*?</div>)[ \t]*\n(?:[ \t]*\n)+([ \t]*</div>)',
         r"\1\n\2",
@@ -322,10 +313,8 @@ def poser_bloc_garde(s: str) -> str:
     )
     bloc = (
         "<!-- cover-more:debut -->\n"
-        '<section id="cover-more" class="cover-more" '
-        'aria-label="Avis Google et informations du quartier">\n'
-        + ("        " + bloc_avis + "\n" if bloc_avis else "")
-        + "        <!-- quartier:garde:debut -->\n        "
+        '<section id="cover-more" class="cover-more">\n'
+        "        <!-- quartier:garde:debut -->\n        "
         + nav_alentours(" footer-quartier--cover")
         + "\n        " + LEGAL_COVER + "\n        <!-- quartier:garde:fin -->\n"
         "</section>\n<!-- cover-more:fin -->"

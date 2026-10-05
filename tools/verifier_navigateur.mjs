@@ -1,10 +1,7 @@
 #!/usr/bin/env node
 /**
- * Parcours Chromium des comportements qui ont posé problème sur téléphone :
- * un retour Places tardif, le balayage réel du carrousel et les quatre familles
- * de vins en ukrainien, sur des largeurs étroites. Le SDK externe est remplacé
- * par une réponse différée déterministe ; le HTML, les scripts, le CSS et les
- * interactions testés sont ceux du site, dans un vrai navigateur.
+ * Vérifications Chromium des pieds de page traduits et de l'affichage des vins
+ * sur téléphone : plusieurs largeurs étroites et tiroirs de dégustation.
  */
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
@@ -56,41 +53,6 @@ function lancerServeur() {
   });
 }
 
-const configTest = {
-  place_id: 'ChIJ_TEST', cle_api: 'CLE_DE_TEST', publie: true,
-  note: 4.6, nombre_avis: 128,
-  url: 'https://www.google.com/maps/search/?api=1&query=La%20Colline%20Gambetta',
-  avis: [],
-};
-
-const scriptPlacesDiffere = `
-  window.google = { maps: { importLibrary: function (nom) {
-    window.__placesLibraryDemandee = nom;
-    return Promise.resolve({ Place: class {
-      constructor(options) { this.id = options.id; }
-      fetchFields(options) {
-        window.__placesFieldsDemandes = options.fields;
-        return new Promise((resolve) => window.setTimeout(() => {
-          Object.assign(this, {
-            rating: 4.8, userRatingCount: 57,
-            googleMapsURI: 'https://www.google.com/maps/?cid=test-live',
-            attributions: [],
-            reviews: [
-              { rating: 5, text: 'Terrasse agréable et accueil chaleureux.',
-                googleMapsURI: 'https://www.google.com/maps/reviews/test-1',
-                authorAttribution: { displayName: 'Olena Petrenko' } },
-              { rating: 4, text: 'Très bonne adresse, même sans date de visite.',
-                googleMapsURI: 'https://www.google.com/maps/reviews/test-2',
-                authorAttribution: { displayName: 'Taras Koval' } }
-            ]
-          });
-          resolve();
-        }, 140));
-      }
-    } });
-  } } };
-`;
-
 let serveur;
 let navigateur;
 try {
@@ -112,26 +74,9 @@ try {
   const page = await contexte.newPage();
   page.setDefaultTimeout(10000);
 
-  // Raccourcit uniquement le délai de secours de 8 s, afin de tester le même
-  // chemin de course rapidement, sans retarder la suite de huit secondes.
-  await page.addInitScript(() => {
-    const original = window.setTimeout.bind(window);
-    window.setTimeout = function (callback, delay, ...args) {
-      return original(callback, delay === 8000 ? 20 : delay, ...args);
-    };
-  });
-
   const origineLocale = serveur.origin;
   await page.route('**/*', async (route) => {
     const url = new URL(route.request().url());
-    if (url.hostname === 'maps.googleapis.com' && url.pathname === '/maps/api/js') {
-      await route.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body: scriptPlacesDiffere });
-      return;
-    }
-    if (url.origin === origineLocale && url.pathname === '/assets/data/avis-google.json') {
-      await route.fulfill({ status: 200, contentType: 'application/json; charset=utf-8', body: JSON.stringify(configTest) });
-      return;
-    }
     if (url.origin === origineLocale) {
       await route.continue();
       return;
@@ -174,67 +119,6 @@ try {
   assert.equal(piedUk.address, '4 ВУЛ. БЕЛЬГРАН, 75020 ПАРИЖ');
   assert.equal(piedUk.brand, 'ЛА КОЛЛІН ҐАМБЕТТА');
   console.log('  ok   Chromium ukrainien : adresse, métro et navigation de proximité en cyrillique');
-
-  // Le secours apparaît après 20 ms, puis la réponse Places arrive à 140 ms.
-  // Ce contrôle échoue avec l'ancien Promise.race qui ignorait la réponse tardive.
-  await page.waitForFunction(() => {
-    const bloc = document.getElementById('cover-reviews');
-    const carousel = document.getElementById('cover-reviews-carousel');
-    return bloc && !bloc.hidden &&
-      document.getElementById('cover-reviews-note')?.textContent === '4,6/5' &&
-      carousel?.hidden === true;
-  }, null, { polling: 5, timeout: 5000 });
-  await page.waitForFunction(() => {
-    const bloc = document.getElementById('cover-reviews');
-    const carousel = document.getElementById('cover-reviews-carousel');
-    return bloc && !bloc.hidden &&
-      document.getElementById('cover-reviews-note')?.textContent === '4,8/5' &&
-      document.getElementById('cover-reviews-count')?.textContent.includes('57 avis Google') &&
-      carousel?.hidden === false;
-  }, null, { polling: 10, timeout: 5000 });
-
-  let etatAvis = await page.evaluate(() => ({
-    library: window.__placesLibraryDemandee,
-    fields: window.__placesFieldsDemandes,
-    authors: [...document.querySelectorAll('#cover-reviews .cover-reviews__slide:not([data-carousel-clone]) .cover-reviews__author')]
-      .map((node) => node.textContent.trim()),
-    count: document.querySelectorAll('#cover-reviews .cover-reviews__slide:not([data-carousel-clone])').length,
-    mapsHref: document.getElementById('cover-reviews-maps')?.href,
-  }));
-  assert.equal(etatAvis.library, 'places');
-  assert.ok(['rating', 'userRatingCount', 'googleMapsURI', 'reviews', 'attributions'].every((field) => etatAvis.fields.includes(field)));
-  assert.deepEqual(etatAvis.authors, ['Olena', 'Taras'], 'les clients doivent être affichés par prénom uniquement');
-  assert.equal(etatAvis.count, 2, 'les deux commentaires Places doivent construire les deux diapositives');
-  assert.match(etatAvis.mapsHref, /google\.com\/maps/);
-  console.log('  ok   Chromium : Places tardif remplace le secours et affiche les deux vrais états du bandeau');
-
-  // Geste tactile envoyé au navigateur Chromium (pas un clic sur le bouton).
-  const viewportAvis = page.locator('#cover-reviews-viewport');
-  await viewportAvis.scrollIntoViewIfNeeded();
-  const boiteAvis = await viewportAvis.boundingBox();
-  assert.ok(boiteAvis && boiteAvis.width > 100, 'zone tactile du carrousel introuvable');
-  const session = await contexte.newCDPSession(page);
-  const y = Math.round(boiteAvis.y + boiteAvis.height / 2);
-  await session.send('Input.dispatchTouchEvent', {
-    type: 'touchStart',
-    touchPoints: [{ id: 1, x: Math.round(boiteAvis.x + boiteAvis.width * 0.85), y }],
-  });
-  await session.send('Input.dispatchTouchEvent', {
-    type: 'touchMove',
-    touchPoints: [{ id: 1, x: Math.round(boiteAvis.x + boiteAvis.width * 0.15), y }],
-  });
-  await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-  await page.waitForFunction(() =>
-    document.querySelector('#cover-reviews .cover-reviews__slide[aria-hidden="false"] .cover-reviews__author')?.textContent === 'Taras',
-  null, { polling: 10, timeout: 2000 });
-  assert.equal(await page.locator('#cover-reviews-status').textContent(), 'Avis 2 sur 2');
-  await page.waitForTimeout(380);
-  await page.locator('#cover-reviews-next').click();
-  await page.waitForFunction(() =>
-    document.querySelector('#cover-reviews .cover-reviews__slide[aria-hidden="false"] .cover-reviews__author')?.textContent === 'Olena',
-  null, { polling: 10, timeout: 2000 });
-  assert.equal(await page.locator('#cover-reviews-status').textContent(), 'Avis 1 sur 2');
-  console.log('  ok   Chromium mobile : vrai balayage tactile et boucle du dernier avis au premier');
 
   await page.evaluate(() => {
     showView('menu');
