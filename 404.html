@@ -46,6 +46,70 @@ a.bouton:hover{background:rgba(216,178,87,.14);border-color:var(--or);}
    Une ligne en tres petits caracteres sous l'adresse, dans la meme fonte que
    le reste du pied de page. Discrete a l'oeil, parfaitement lisible pour les
    moteurs : ce sont de vrais liens, jamais du texte dissimule. */
+/* Adresse et métro : un seul ruban horizontal, même couleur pour tous les liens.
+   Sur les écrans trop étroits, le ruban se parcourt horizontalement sans couper
+   les libellés ni faire déborder la page. */
+html:not(.carte-doc) .footer-details {
+  display:flex; flex-flow:row nowrap; align-items:center; justify-content:flex-start;
+  gap:clamp(4px,.75vw,12px); width:max-content; max-width:calc(100% - 24px);
+  margin:0 auto; overflow-x:auto; overflow-y:hidden; white-space:nowrap;
+  scrollbar-width:none; overscroll-behavior-x:contain;
+  font-size:clamp(.52rem,1vw,.68rem); letter-spacing:clamp(.035em,.08vw,.08em);
+  color:#fff !important;
+}
+html:not(.carte-doc) .footer-details::-webkit-scrollbar { display:none; }
+html:not(.carte-doc) .footer-details > * { flex:0 0 auto; white-space:nowrap; }
+html:not(.carte-doc) .footer-details__location {
+  display:inline-flex; flex-flow:row nowrap; align-items:center; gap:clamp(4px,.75vw,10px);
+  flex:0 0 auto; white-space:nowrap;
+}
+html:not(.carte-doc) .footer-details__location > * { flex:0 0 auto; white-space:nowrap; }
+html:not(.carte-doc) .footer-details .footer-address-link,
+html:not(.carte-doc) .footer-details .footer-details__metro {
+  color:#fff !important; text-decoration:none;
+}
+html:not(.carte-doc) .footer-details .footer-address-link:hover,
+html:not(.carte-doc) .footer-details .footer-address-link:focus-visible,
+html:not(.carte-doc) .footer-details .footer-details__metro:hover,
+html:not(.carte-doc) .footer-details .footer-details__metro:focus-visible {
+  color:#fff !important; text-decoration:underline; text-underline-offset:3px;
+}
+html:not(.carte-doc) .footer-details__separator { color:#fff !important; }
+@media (max-width:420px) {
+  /* Le nom du restaurant est déjà affiché ailleurs : on privilégie l'adresse
+     et le métro pour garder les deux liens entièrement visibles sur téléphone. */
+  html:not(.carte-doc) .footer-details > span:nth-child(-n+2) { display:none; }
+}
+
+/* Même traitement pour l'adresse affichée sur la couverture. */
+html:not(.carte-doc) .cover-footer-address {
+  display:flex; flex-flow:row nowrap; align-items:center; justify-content:flex-start;
+  gap:clamp(4px,.75vw,10px); width:max-content; max-width:100%; margin-inline:auto;
+  overflow-x:auto; overflow-y:hidden; white-space:nowrap; scrollbar-width:none;
+  overscroll-behavior-x:contain; font-size:clamp(.58rem,2vw,.92rem);
+  color:#fff !important;
+}
+html:not(.carte-doc) .cover-footer-address::-webkit-scrollbar { display:none; }
+html:not(.carte-doc) .cover-footer-address > * { flex:0 0 auto; white-space:nowrap; }
+html:not(.carte-doc) .cover-footer-address a,
+html:not(.carte-doc) .cover-footer-address .footer-quartier__sep,
+html:not(.carte-doc) .cover-footer-address a:hover,
+html:not(.carte-doc) .cover-footer-address a:focus-visible {
+  color:#fff !important;
+}
+html:not(.carte-doc) .cover-footer-address .footer-quartier__sep { opacity:1; }
+/* La couverture contient des règles spécifiques d'horaires : on garantit aussi
+   le non-retour à la ligne face à ces styles prioritaires. */
+html:not(.carte-doc) #cover-section .cover-hours .cover-footer-address {
+  flex-flow:row nowrap !important; white-space:nowrap !important;
+  overflow-wrap:normal !important; overflow-x:auto !important; overflow-y:hidden !important;
+}
+@media (max-width:440px) {
+  html:not(.carte-doc) #cover-section .cover-hours .cover-footer-address {
+    font-size:clamp(.5rem,2.1vw,.66rem) !important;
+  }
+}
+
 html:not(.carte-doc) .footer-quartier {
   display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
   gap:3px 10px; margin:5px auto 0; max-width:74ch;
@@ -56,8 +120,6 @@ html:not(.carte-doc) .footer-quartier {
 html:not(.carte-doc) .footer-quartier a { color:inherit; text-decoration:none; }
 html:not(.carte-doc) .footer-quartier a:hover { text-decoration:underline; opacity:1; }
 html:not(.carte-doc) .footer-quartier__sep { opacity:.5; }
-html:not(.carte-doc) a.footer-details__metro { color:inherit; text-decoration:none; }
-html:not(.carte-doc) a.footer-details__metro:hover { text-decoration:underline; }
 /* Le premier ecran de la couverture s'arrete aux boutons de contact.
    Avis et reperes restent juste apres, accessibles en faisant defiler. */
 html:not(.carte-doc) .cover-more {
@@ -79,6 +141,39 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a {
   color:inherit; background:none; border:0; padding:0; text-decoration:none; text-shadow:none;
 }
 html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover { text-decoration:underline; }
+
+/* Chaque lien légal est une pill discrète, au contour et au texte blancs. */
+html:not(.carte-doc) .footer .legal-bottom-nav,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover {
+  display:flex; flex-flow:row nowrap; align-items:center; justify-content:center;
+  gap:8px; width:max-content; max-width:calc(100% - 16px);
+  margin:4px auto 0; padding:6px 8px 2px; overflow-x:auto; overflow-y:hidden;
+  white-space:nowrap; scrollbar-width:none; background:transparent;
+  color:#fff; opacity:1;
+}
+html:not(.carte-doc) .footer .legal-bottom-nav::-webkit-scrollbar,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover::-webkit-scrollbar { display:none; }
+html:not(.carte-doc) .footer .legal-bottom-nav > span,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover > span { display:none; }
+html:not(.carte-doc) .footer .legal-bottom-nav a,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a {
+  display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center;
+  min-height:30px; padding:5px 12px; border:1px solid rgba(255,255,255,.46);
+  border-radius:999px; background:rgba(255,255,255,.035); color:#fff !important;
+  font-size:inherit; font-weight:500; line-height:1.2; text-decoration:none;
+  text-shadow:none; white-space:nowrap;
+  transition:background-color .2s ease,border-color .2s ease;
+}
+html:not(.carte-doc) .footer .legal-bottom-nav a:hover,
+html:not(.carte-doc) .footer .legal-bottom-nav a:focus-visible,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:focus-visible {
+  background:rgba(255,255,255,.1); border-color:#fff; color:#fff !important;
+}
+html:not(.carte-doc) .footer .legal-bottom-nav a:focus-visible,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:focus-visible {
+  outline:2px solid rgba(255,255,255,.8); outline-offset:2px;
+}
 @media print {
   .footer-quartier, .cover-more { display:none !important; }
 }

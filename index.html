@@ -10197,6 +10197,26 @@ html:not(.carte-doc) .foldall--hint .foldall__ico {
   }
 }
 
+/* Sur un petit téléphone, les quatre contenances ne sont plus tassées dans
+   quatre colonnes d'environ 40 px. Les vins rouges, blancs et rosés utilisent
+   deux colonnes lisibles sur deux rangées ; les Bulles gardent leurs deux
+   formats sur une rangée. Ce seuil couvre aussi les ukrainiens « 140 мл ». */
+@media screen and (max-width:420px) {
+  html:not(.carte-doc) #interior-menu #vins .wine-table:not(.wine-table--short) tbody tr.wine-row {
+    grid-template-columns:1.8em minmax(0,1fr) minmax(0,1fr) !important;
+    grid-template-rows:auto auto auto auto !important;
+    column-gap:8px !important;
+    row-gap:6px !important;
+  }
+  html:not(.carte-doc) #interior-menu #vins .wine-table:not(.wine-table--short) tbody tr.wine-row > td:nth-of-type(3) { grid-column:2 !important; grid-row:2 !important; }
+  html:not(.carte-doc) #interior-menu #vins .wine-table:not(.wine-table--short) tbody tr.wine-row > td:nth-of-type(4) { grid-column:3 !important; grid-row:2 !important; }
+  html:not(.carte-doc) #interior-menu #vins .wine-table:not(.wine-table--short) tbody tr.wine-row > td:nth-of-type(5) { grid-column:2 !important; grid-row:3 !important; }
+  html:not(.carte-doc) #interior-menu #vins .wine-table:not(.wine-table--short) tbody tr.wine-row > td:nth-of-type(6) { grid-column:3 !important; grid-row:3 !important; }
+  html:not(.carte-doc) #interior-menu #vins .wine-table:not(.wine-table--short) tbody tr.wine-row > td.wine-detail-cell {
+    grid-row:4 !important;
+  }
+}
+
 /* Écran large : la ligne d'en-tête reprend la piste du chevron et les
    25 px effectifs (bordure + padding) des cartes de vins. */
 @media screen and (min-width:861px) {
@@ -10420,10 +10440,10 @@ html.carte-doc .cover-reviews { display:none !important; }
 html:not(.carte-doc) .cover-reviews[hidden] { display:none !important; }
 html:not(.carte-doc) .cover-reviews {
   box-sizing:border-box; display:flex; flex-direction:column; align-items:center;
-  gap:.34rem; margin:.7rem auto 0; padding:.55rem .85rem;
-  max-width:min(560px, 92vw); text-align:center;
-  border:1px solid rgba(240,220,168,.22); border-radius:10px;
-  background:rgba(0,0,0,.16);
+  gap:.42rem; width:100%; max-width:min(560px, 92vw);
+  margin:.7rem auto 0; padding:.7rem .85rem;
+  text-align:center; border:1px solid rgba(240,220,168,.22);
+  border-radius:10px; background:rgba(0,0,0,.16);
 }
 html:not(.carte-doc) .cover-reviews__head {
   display:inline-flex; align-items:center; gap:.5rem; flex-wrap:wrap;
@@ -10443,10 +10463,26 @@ html:not(.carte-doc) .cover-reviews__stars span {
 html:not(.carte-doc) .cover-reviews__stars span::before { content:'\2605\2605\2605\2605\2605'; }
 html:not(.carte-doc) .cover-reviews__note { font-size:.95rem; letter-spacing:.04em; color:#f6e4b8; }
 html:not(.carte-doc) .cover-reviews__count { opacity:.82; font-weight:500; letter-spacing:.05em; }
-html:not(.carte-doc) .cover-reviews__review { max-width:48ch; }
+html:not(.carte-doc) .cover-reviews__carousel {
+  display:grid; grid-template-columns:2.35rem minmax(0,1fr) 2.35rem;
+  align-items:center; gap:.35rem; width:100%;
+}
+html:not(.carte-doc) .cover-reviews__carousel[hidden] { display:none !important; }
+html:not(.carte-doc) .cover-reviews__viewport {
+  min-width:0; overflow:hidden; border-radius:4px; touch-action:pan-y;
+  outline-offset:3px;
+}
+html:not(.carte-doc) .cover-reviews__track {
+  display:flex; width:100%; transform:translate3d(0,0,0);
+  transition:transform .34s cubic-bezier(.22,.68,0,1.02); will-change:transform;
+}
+html:not(.carte-doc) .cover-reviews__slide {
+  box-sizing:border-box; flex:0 0 100%; width:100%; padding:0 .18rem;
+}
+html:not(.carte-doc) .cover-reviews__review { max-width:48ch; margin:0 auto; }
 html:not(.carte-doc) .cover-reviews__quote {
-  margin:.08rem 0 .2rem; font-family:'Montserrat',sans-serif; font-style:italic;
-  font-size:.78rem; line-height:1.45; color:rgba(255,255,255,.86);
+  margin:.08rem 0 .32rem; font-family:'Montserrat',sans-serif; font-style:italic;
+  font-size:.78rem; line-height:1.5; color:rgba(255,255,255,.9);
 }
 html:not(.carte-doc) .cover-reviews__meta {
   display:flex; align-items:center; justify-content:center; flex-wrap:wrap;
@@ -10456,14 +10492,40 @@ html:not(.carte-doc) .cover-reviews__meta {
 html:not(.carte-doc) .cover-reviews__avatar {
   width:1.35rem; height:1.35rem; border-radius:50%; object-fit:cover;
 }
-html:not(.carte-doc) .cover-reviews__author { color:rgba(255,255,255,.92); font-style:normal; }
+html:not(.carte-doc) .cover-reviews__author { color:rgba(255,255,255,.96); font-style:normal; }
 html:not(.carte-doc) .cover-reviews__date { white-space:nowrap; }
 html:not(.carte-doc) .cover-reviews__source {
   color:rgba(255,255,255,.86); text-decoration:underline;
   text-underline-offset:2px;
 }
+html:not(.carte-doc) .cover-reviews__nav {
+  box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center;
+  width:2.35rem; height:2.35rem; padding:0; border:1px solid rgba(240,220,168,.38);
+  border-radius:50%; background:rgba(0,0,0,.18); color:#f0dca8;
+  cursor:pointer; transition:background-color .18s ease, color .18s ease, border-color .18s ease;
+}
+html:not(.carte-doc) .cover-reviews__nav[hidden] { display:none !important; }
+html:not(.carte-doc) .cover-reviews__nav:hover,
+html:not(.carte-doc) .cover-reviews__nav:focus-visible {
+  border-color:rgba(240,220,168,.78); background:rgba(240,220,168,.14); color:#fff;
+}
+html:not(.carte-doc) .cover-reviews__nav:focus-visible,
+html:not(.carte-doc) .cover-reviews__viewport:focus-visible {
+  outline:2px solid #f0dca8;
+}
+html:not(.carte-doc) .cover-reviews__nav:disabled { opacity:.48; cursor:wait; }
+html:not(.carte-doc) .cover-reviews__nav svg {
+  display:block; width:1rem; height:1rem; fill:none; stroke:currentColor;
+  stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+}
+html:not(.carte-doc) .cover-reviews__status {
+  margin:-.12rem 0 0; font-family:'Montserrat',sans-serif; font-size:.62rem;
+  line-height:1.2; letter-spacing:.08em; color:rgba(255,255,255,.66);
+}
+html:not(.carte-doc) .cover-reviews__status[hidden],
+html:not(.carte-doc) .cover-reviews__disclosure[hidden] { display:none !important; }
 html:not(.carte-doc) .cover-reviews__disclosure {
-  max-width:58ch; margin:.08rem 0 0; font-family:'Montserrat',sans-serif;
+  max-width:58ch; margin:.02rem 0 0; font-family:'Montserrat',sans-serif;
   font-size:.62rem; line-height:1.35; color:rgba(255,255,255,.62);
 }
 html:not(.carte-doc) .cover-reviews__data-attribution {
@@ -10486,9 +10548,15 @@ html:not(.carte-doc) .cover-reviews__maps-attribution a:hover { text-decoration:
 html:not(.carte-doc) .cover-reviews a { color:inherit; }
 html:not(.carte-doc) .cover-reviews__head { text-decoration:none; }
 html:not(.carte-doc) .cover-reviews__head:hover .cover-reviews__note { text-decoration:underline; }
-@media (max-height:700px) {
-  html:not(.carte-doc) .cover-reviews__review { display:none !important; }
-  html:not(.carte-doc) .cover-reviews { margin-top:.5rem; }
+@media (max-width:420px) {
+  html:not(.carte-doc) .cover-reviews { padding:.62rem .58rem; }
+  html:not(.carte-doc) .cover-reviews__carousel { grid-template-columns:2.1rem minmax(0,1fr) 2.1rem; gap:.2rem; }
+  html:not(.carte-doc) .cover-reviews__nav { width:2.1rem; height:2.1rem; }
+  html:not(.carte-doc) .cover-reviews__quote { font-size:.74rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html:not(.carte-doc) .cover-reviews__track { transition:none; }
+  html:not(.carte-doc) .cover-reviews__nav { transition:none; }
 }
 /* avis-google:css:fin */
 /* quartier:css:debut */
@@ -10496,6 +10564,70 @@ html:not(.carte-doc) .cover-reviews__head:hover .cover-reviews__note { text-deco
    Une ligne en tres petits caracteres sous l'adresse, dans la meme fonte que
    le reste du pied de page. Discrete a l'oeil, parfaitement lisible pour les
    moteurs : ce sont de vrais liens, jamais du texte dissimule. */
+/* Adresse et métro : un seul ruban horizontal, même couleur pour tous les liens.
+   Sur les écrans trop étroits, le ruban se parcourt horizontalement sans couper
+   les libellés ni faire déborder la page. */
+html:not(.carte-doc) .footer-details {
+  display:flex; flex-flow:row nowrap; align-items:center; justify-content:flex-start;
+  gap:clamp(4px,.75vw,12px); width:max-content; max-width:calc(100% - 24px);
+  margin:0 auto; overflow-x:auto; overflow-y:hidden; white-space:nowrap;
+  scrollbar-width:none; overscroll-behavior-x:contain;
+  font-size:clamp(.52rem,1vw,.68rem); letter-spacing:clamp(.035em,.08vw,.08em);
+  color:#fff !important;
+}
+html:not(.carte-doc) .footer-details::-webkit-scrollbar { display:none; }
+html:not(.carte-doc) .footer-details > * { flex:0 0 auto; white-space:nowrap; }
+html:not(.carte-doc) .footer-details__location {
+  display:inline-flex; flex-flow:row nowrap; align-items:center; gap:clamp(4px,.75vw,10px);
+  flex:0 0 auto; white-space:nowrap;
+}
+html:not(.carte-doc) .footer-details__location > * { flex:0 0 auto; white-space:nowrap; }
+html:not(.carte-doc) .footer-details .footer-address-link,
+html:not(.carte-doc) .footer-details .footer-details__metro {
+  color:#fff !important; text-decoration:none;
+}
+html:not(.carte-doc) .footer-details .footer-address-link:hover,
+html:not(.carte-doc) .footer-details .footer-address-link:focus-visible,
+html:not(.carte-doc) .footer-details .footer-details__metro:hover,
+html:not(.carte-doc) .footer-details .footer-details__metro:focus-visible {
+  color:#fff !important; text-decoration:underline; text-underline-offset:3px;
+}
+html:not(.carte-doc) .footer-details__separator { color:#fff !important; }
+@media (max-width:420px) {
+  /* Le nom du restaurant est déjà affiché ailleurs : on privilégie l'adresse
+     et le métro pour garder les deux liens entièrement visibles sur téléphone. */
+  html:not(.carte-doc) .footer-details > span:nth-child(-n+2) { display:none; }
+}
+
+/* Même traitement pour l'adresse affichée sur la couverture. */
+html:not(.carte-doc) .cover-footer-address {
+  display:flex; flex-flow:row nowrap; align-items:center; justify-content:flex-start;
+  gap:clamp(4px,.75vw,10px); width:max-content; max-width:100%; margin-inline:auto;
+  overflow-x:auto; overflow-y:hidden; white-space:nowrap; scrollbar-width:none;
+  overscroll-behavior-x:contain; font-size:clamp(.58rem,2vw,.92rem);
+  color:#fff !important;
+}
+html:not(.carte-doc) .cover-footer-address::-webkit-scrollbar { display:none; }
+html:not(.carte-doc) .cover-footer-address > * { flex:0 0 auto; white-space:nowrap; }
+html:not(.carte-doc) .cover-footer-address a,
+html:not(.carte-doc) .cover-footer-address .footer-quartier__sep,
+html:not(.carte-doc) .cover-footer-address a:hover,
+html:not(.carte-doc) .cover-footer-address a:focus-visible {
+  color:#fff !important;
+}
+html:not(.carte-doc) .cover-footer-address .footer-quartier__sep { opacity:1; }
+/* La couverture contient des règles spécifiques d'horaires : on garantit aussi
+   le non-retour à la ligne face à ces styles prioritaires. */
+html:not(.carte-doc) #cover-section .cover-hours .cover-footer-address {
+  flex-flow:row nowrap !important; white-space:nowrap !important;
+  overflow-wrap:normal !important; overflow-x:auto !important; overflow-y:hidden !important;
+}
+@media (max-width:440px) {
+  html:not(.carte-doc) #cover-section .cover-hours .cover-footer-address {
+    font-size:clamp(.5rem,2.1vw,.66rem) !important;
+  }
+}
+
 html:not(.carte-doc) .footer-quartier {
   display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
   gap:3px 10px; margin:5px auto 0; max-width:74ch;
@@ -10506,8 +10638,6 @@ html:not(.carte-doc) .footer-quartier {
 html:not(.carte-doc) .footer-quartier a { color:inherit; text-decoration:none; }
 html:not(.carte-doc) .footer-quartier a:hover { text-decoration:underline; opacity:1; }
 html:not(.carte-doc) .footer-quartier__sep { opacity:.5; }
-html:not(.carte-doc) a.footer-details__metro { color:inherit; text-decoration:none; }
-html:not(.carte-doc) a.footer-details__metro:hover { text-decoration:underline; }
 /* Le premier ecran de la couverture s'arrete aux boutons de contact.
    Avis et reperes restent juste apres, accessibles en faisant defiler. */
 html:not(.carte-doc) .cover-more {
@@ -10529,6 +10659,39 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a {
   color:inherit; background:none; border:0; padding:0; text-decoration:none; text-shadow:none;
 }
 html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover { text-decoration:underline; }
+
+/* Chaque lien légal est une pill discrète, au contour et au texte blancs. */
+html:not(.carte-doc) .footer .legal-bottom-nav,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover {
+  display:flex; flex-flow:row nowrap; align-items:center; justify-content:center;
+  gap:8px; width:max-content; max-width:calc(100% - 16px);
+  margin:4px auto 0; padding:6px 8px 2px; overflow-x:auto; overflow-y:hidden;
+  white-space:nowrap; scrollbar-width:none; background:transparent;
+  color:#fff; opacity:1;
+}
+html:not(.carte-doc) .footer .legal-bottom-nav::-webkit-scrollbar,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover::-webkit-scrollbar { display:none; }
+html:not(.carte-doc) .footer .legal-bottom-nav > span,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover > span { display:none; }
+html:not(.carte-doc) .footer .legal-bottom-nav a,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a {
+  display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center;
+  min-height:30px; padding:5px 12px; border:1px solid rgba(255,255,255,.46);
+  border-radius:999px; background:rgba(255,255,255,.035); color:#fff !important;
+  font-size:inherit; font-weight:500; line-height:1.2; text-decoration:none;
+  text-shadow:none; white-space:nowrap;
+  transition:background-color .2s ease,border-color .2s ease;
+}
+html:not(.carte-doc) .footer .legal-bottom-nav a:hover,
+html:not(.carte-doc) .footer .legal-bottom-nav a:focus-visible,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:focus-visible {
+  background:rgba(255,255,255,.1); border-color:#fff; color:#fff !important;
+}
+html:not(.carte-doc) .footer .legal-bottom-nav a:focus-visible,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:focus-visible {
+  outline:2px solid rgba(255,255,255,.8); outline-offset:2px;
+}
 @media print {
   .footer-quartier, .cover-more { display:none !important; }
 }
@@ -10689,7 +10852,7 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover { text-decorat
         <div class="cover-hours" aria-label="Horaires d’ouverture">
           <div class="cover-hours__range"><span data-hours-days>Tous les jours</span><span aria-hidden="true">·</span><span data-hours-range>07h00 — 02h00</span><span aria-hidden="true" data-hours-happy-separator hidden>·</span><a href="index.html#cocktails" id="cover-happy-hour-link" class="cover-hours__happy" data-hours-happy hidden onclick="showView('menu'); setTimeout(function(){ var btn=document.getElementById('btn-show-cocktails'); if(btn) showMenuSection('cocktails', btn); }, 0); return false;">Happy Hour</a></div>
           <div class="cover-hours__status is-open" data-hours-status role="status" aria-live="polite"><span class="cover-hours__dot" aria-hidden="true"></span><span data-hours-status-text>Ouvert maintenant</span></div>
-          <div class="cover-footer-address"><a href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" data-default-map data-map-address="La Colline Gambetta, 4 Rue Belgrand, 75020 Paris" target="_blank" rel="noopener" title="Ouvrir l’adresse dans le plan">4 rue Belgrand • 75020 Paris</a><span class="footer-quartier__sep" aria-hidden="true"> • </span><a data-ratp-itineraire href="https://www.ratp.fr/itineraires?end=4%2C%20Rue%20Belgrand%2C%2075%2C%20Paris" target="_blank" rel="noopener" title="Itinéraire RATP jusqu’au restaurant">Métro Gambetta • Ligne 3</a></div>
+          <div class="cover-footer-address"><a href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" data-default-map data-map-address="La Colline Gambetta, 4 Rue Belgrand, 75020 Paris" target="_blank" rel="noopener" title="Ouvrir l’adresse dans le plan">4 rue Belgrand • 75020 Paris</a><span class="footer-quartier__sep" aria-hidden="true"> • </span><a data-ratp-itineraire href="https://www.bonjour-ratp.fr/itineraires/?end=4%2C%20Rue%20Belgrand%2C%2075%2C%20Paris" title="Ouvrir Bonjour RATP pour l’itinéraire">Métro Gambetta • Ligne 3</a></div>
         </div>
         <div class="cover-links">
           <a href="reservation.html" class="contact-link contact-link--book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 10h17.6"/><path d="M8 3v4M16 3v4"/><path d="M8.6 14.4h6.8"/></svg>Réservation</a>
@@ -10708,16 +10871,19 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover { text-decorat
             <span class="cover-reviews__note" id="cover-reviews-note"></span>
             <span class="cover-reviews__count" id="cover-reviews-count"></span>
           </a>
-          <div class="cover-reviews__review" id="cover-reviews-review" hidden>
-            <blockquote class="cover-reviews__quote" id="cover-reviews-quote"></blockquote>
-            <div class="cover-reviews__meta">
-              <img class="cover-reviews__avatar" id="cover-reviews-avatar" alt="" width="22" height="22" loading="lazy" hidden>
-              <a class="cover-reviews__author" id="cover-reviews-author"></a>
-              <time class="cover-reviews__date" id="cover-reviews-date" hidden></time>
-              <a class="cover-reviews__source" id="cover-reviews-source" target="_blank" rel="noopener noreferrer" hidden>Voir cet avis sur Google Maps</a>
+          <div class="cover-reviews__carousel" id="cover-reviews-carousel" role="region" aria-roledescription="carrousel" aria-label="Avis clients Google" hidden>
+            <button class="cover-reviews__nav cover-reviews__nav--previous" id="cover-reviews-previous" type="button" aria-label="Avis précédent" aria-controls="cover-reviews-viewport" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 4.5-7.5 7.5 7.5 7.5"/></svg>
+            </button>
+            <div class="cover-reviews__viewport" id="cover-reviews-viewport" tabindex="0" aria-label="Avis Google sélectionné. Utilisez les flèches gauche et droite pour parcourir les commentaires.">
+              <div class="cover-reviews__track" id="cover-reviews-track"></div>
             </div>
-            <p class="cover-reviews__disclosure" id="cover-reviews-disclosure"></p>
+            <button class="cover-reviews__nav cover-reviews__nav--next" id="cover-reviews-next" type="button" aria-label="Avis suivant" aria-controls="cover-reviews-viewport" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 4.5 7.5 7.5-7.5 7.5"/></svg>
+            </button>
           </div>
+          <p class="cover-reviews__status" id="cover-reviews-status" aria-live="polite" aria-atomic="true" hidden></p>
+          <p class="cover-reviews__disclosure" id="cover-reviews-disclosure" hidden></p>
           <p class="cover-reviews__data-attribution" id="cover-reviews-data-attribution" hidden></p>
           <div class="cover-reviews__maps-attribution"><a id="cover-reviews-maps" href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" target="_blank" rel="noopener noreferrer" lang="en" translate="no" aria-label="Google Maps">Google Maps</a></div>
         </div><!-- avis-google:html:fin -->
@@ -10893,7 +11059,7 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover { text-decorat
         <a href="tel:+33143490593" class="footer-link" title="Appeler le restaurant" aria-label="Appeler le restaurant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>01 43 49 05 93</a>
         <a href="mailto:restaurant@lacollinegambetta.com" class="footer-link footer-link--mail" title="restaurant@lacollinegambetta.com" aria-label="restaurant@lacollinegambetta.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>restaurant@lacollinegambetta.com</a>
       </div>
-      <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><a class="footer-address-link" href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" data-default-map data-map-address="La Colline Gambetta, 4 Rue Belgrand, 75020 Paris" target="_blank" rel="noopener" title="Ouvrir l’adresse dans le plan">4 RUE BELGRAND, 75020 PARIS</a><a class="footer-details__metro" data-ratp-itineraire href="https://www.ratp.fr/itineraires?end=4%2C%20Rue%20Belgrand%2C%2075%2C%20Paris" target="_blank" rel="noopener" title="Itinéraire RATP jusqu’au restaurant">MÉTRO GAMBETTA • LIGNE 3</a></div>
+      <div class="footer-details"><span>LA COLLINE GAMBETTA</span><span>•</span><span class="footer-details__location"><a class="footer-address-link" href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" data-default-map data-map-address="La Colline Gambetta, 4 Rue Belgrand, 75020 Paris" target="_blank" rel="noopener" title="Ouvrir l’adresse dans le plan">4 RUE BELGRAND • 75020 PARIS</a><span class="footer-details__separator" aria-hidden="true">•</span><a class="footer-details__metro" data-ratp-itineraire href="https://www.bonjour-ratp.fr/itineraires/?end=4%2C%20Rue%20Belgrand%2C%2075%2C%20Paris" title="Ouvrir Bonjour RATP pour l’itinéraire">MÉTRO GAMBETTA • LIGNE 3</a></span></div>
       <!-- quartier:html:debut --><nav class="footer-quartier" aria-label="Dans les alentours"><span>Dans les alentours</span><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://mairie20.paris.fr/" target="_blank" rel="noopener" title="À 100 m du restaurant">Mairie du 20ᵉ</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.colline.fr/" target="_blank" rel="noopener" title="À 300 m du restaurant">Théâtre de la Colline</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.paris.fr/lieux/cimetiere-du-pere-lachaise-4080" target="_blank" rel="noopener" title="À 350 m du restaurant">Père-Lachaise</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.pavilloncarredebaudouin.fr/" target="_blank" rel="noopener" title="À 950 m du restaurant">Carré de Baudouin</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.paris.fr/lieux/parc-de-belleville-1777" target="_blank" rel="noopener" title="À 1,3 km du restaurant">Parc de Belleville</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.bataclan.fr/" target="_blank" rel="noopener" title="À 2,1 km du restaurant">Le Bataclan</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.cirquedhiver.com/" target="_blank" rel="noopener" title="À 2,3 km du restaurant">Cirque d'Hiver</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.operadeparis.fr/visites/opera-bastille" target="_blank" rel="noopener" title="À 2,6 km du restaurant">Opéra Bastille</a></nav><!-- quartier:html:fin -->
       <nav class="legal-bottom-nav" aria-label="Informations légales"><a href="mentions-legales.html">Mentions légales</a><span aria-hidden="true">·</span><a href="confidentialite.html">Confidentialité</a></nav>
     </footer>
@@ -11908,8 +12074,8 @@ else sizeCoverMedallion();
 })();
 </script>
 
-<script src="assets/js/localized-digits.js?v=202609241200"></script>
-<script src="assets/js/i18n.js?v=202609231200" defer></script>
+<script src="assets/js/localized-digits.js?v=2026100501"></script>
+<script src="assets/js/i18n.js?v=2026100501" defer></script>
 
 <!-- ============ Tiroir ouvert : l'intitulé remonte en haut de l'écran ============ -->
 <script>
@@ -13785,61 +13951,10 @@ else sizeCoverMedallion();
 </script>
 
   <script src="assets/js/map-links.js"></script>
-<!-- quartier:js:debut -->
-<script>
-/* Itineraire RATP : arrivee = le restaurant, depart = la position exacte du
-   visiteur. La geolocalisation n'est demandee qu'au clic ; si elle est refusee,
-   indisponible ou trop lente, l'itineraire s'ouvre avec la seule arrivee. */
-(function () {
-  var ARRIVEE = '4, Rue Belgrand, 75, Paris';
-  var BASE = 'https://www.ratp.fr/itineraires?end=' + encodeURIComponent(ARRIVEE);
-  var liens = document.querySelectorAll('[data-ratp-itineraire]');
-  if (!liens.length) { return; }
-  Array.prototype.forEach.call(liens, function (lien) {
-    lien.setAttribute('href', BASE);
-    if (!navigator.geolocation) { return; }
-    lien.addEventListener('click', function (ev) {
-      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button) { return; }
-      ev.preventDefault();
 
-      var onglet = null;
-      try { onglet = window.open('about:blank', '_blank'); } catch (e) { onglet = null; }
-      if (onglet) { try { onglet.opener = null; } catch (e) {} }
 
-      var parti = false;
-      function ouvrir(url) {
-        if (parti) { return; }
-        parti = true;
-        if (onglet && !onglet.closed) { onglet.location.replace(url); }
-        else { window.open(url, '_blank', 'noopener'); }
-      }
-      var secours = setTimeout(function () { ouvrir(BASE); }, 9000);
 
-      navigator.geolocation.getCurrentPosition(function (pos) {
-        var lat = pos.coords.latitude, lon = pos.coords.longitude;
-        fetch('https://api-adresse.data.gouv.fr/reverse/?lat=' + lat + '&lon=' + lon)
-          .then(function (r) { return r.ok ? r.json() : null; })
-          .then(function (d) {
-            var p = d && d.features && d.features[0] && d.features[0].properties;
-            var depart = '';
-            if (p) {
-              var dep = String(p.postcode || '').slice(0, 2);
-              depart = [p.housenumber, p.street || p.name, dep, p.city]
-                .filter(function (x) { return x; }).join(', ');
-            }
-            clearTimeout(secours);
-            ouvrir(depart ? BASE + '&start=' + encodeURIComponent(depart) : BASE);
-          })
-          .catch(function () { clearTimeout(secours); ouvrir(BASE); });
-      }, function () {
-        clearTimeout(secours); ouvrir(BASE);
-      }, { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
-    });
-  });
-})();
-</script>
-<!-- quartier:js:fin -->
-\n\n<!-- avis-google:js:debut --><script>
+<!-- avis-google:js:debut --><script>
 /* Le SDK Places de Maps JavaScript est utilisé côté navigateur. La clé
    associée est une clé publique restreinte au site et aux API autorisées.
    Ce chargeur n'enregistre aucun contenu Places. */
@@ -13847,8 +13962,24 @@ else sizeCoverMedallion();
   var bloc = document.getElementById('cover-reviews');
   if (!bloc || !window.fetch) return;
 
+  var carousel = document.getElementById('cover-reviews-carousel');
+  var viewport = document.getElementById('cover-reviews-viewport');
+  var piste = document.getElementById('cover-reviews-track');
+  var precedent = document.getElementById('cover-reviews-previous');
+  var suivant = document.getElementById('cover-reviews-next');
+  var position = document.getElementById('cover-reviews-status');
+  var divulgation = document.getElementById('cover-reviews-disclosure');
+  if (!carousel || !viewport || !piste || !precedent || !suivant || !position || !divulgation) return;
+
   var URL_CARTE = 'https://www.google.com/maps/search/?api=1&query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris';
   var bibliothequePlaces = null;
+  var avisAffichables = [];
+  var indiceActif = 0;
+  var indicePiste = 0;
+  var sourceAvis = 'places';
+  var transitionEnCours = false;
+  var minuteurTransition = null;
+  var departGeste = null;
 
   function lienSecurise(valeur) {
     if (!valeur) return '';
@@ -13869,7 +14000,7 @@ else sizeCoverMedallion();
 
   function afficher(data, source) {
     var note = Number(String(data && data.note).replace(',', '.'));
-    if (!(note > 0 && note <= 5) || !isFinite(note)) return;
+    if (!(note > 0 && note <= 5) || !isFinite(note)) return false;
 
     document.getElementById('cover-reviews-stars-fill').style.width =
       (Math.max(0, Math.min(5, note)) / 5 * 100).toFixed(2) + '%';
@@ -13888,17 +14019,16 @@ else sizeCoverMedallion();
     lienMaps.href = urlFiche;
     afficherAttributions(data.attributions);
 
-    var avis = Array.isArray(data.avis) ? data.avis : [];
-    var avisAffiche = false;
-    for (var i = 0; i < avis.length; i++) {
-      if (afficherAvis(avis[i], source)) {
-        avisAffiche = true;
-        break;
-      }
+    var recus = Array.isArray(data.avis) ? data.avis : [];
+    var admissibles = [];
+    for (var i = 0; i < recus.length; i++) {
+      var avis = normaliserAvis(recus[i]);
+      if (avis) admissibles.push(avis);
     }
-    document.getElementById('cover-reviews-review').hidden = !avisAffiche;
+    installerCarrousel(admissibles, source);
     bloc.hidden = false;
     ajusterPage();
+    return true;
   }
 
   function afficherAttributions(attributions) {
@@ -13925,62 +14055,254 @@ else sizeCoverMedallion();
     element.hidden = sources.length === 0;
   }
 
-  function afficherAvis(avis, source) {
-    if (!avis) return false;
-    var auteur = String(avis.auteur || '').trim();
+  function normaliserAvis(avis) {
+    if (!avis) return null;
+    var auteurComplet = String(avis.auteur || '').trim();
+    var auteur = premierPrenom(auteurComplet);
     var texte = String(avis.texte || '').replace(/\s+/g, ' ').trim();
     var noteAvis = Number(String(avis.note || '').replace(',', '.'));
     var lienAvis = lienSecurise(avis.url_avis || avis.googleMapsURI);
     var photo = lienSecurise(avis.photo || avis.photoURI);
+    var profil = lienSecurise(avis.profil || avis.authorURI);
     var date = dateVisite(avis);
-    if (!(noteAvis >= 4 && noteAvis <= 5) || !texte || !auteur || !date || !lienAvis || !lienAvis.startsWith('https://')) return false;
+    if (!(noteAvis >= 4 && noteAvis <= 5) || !texte || !auteur || !lienAvis) return null;
 
     if (texte.length > 150) {
       texte = texte.slice(0, 147).replace(/[\s,;:.]+$/, '') + '\u2026';
     }
-    document.getElementById('cover-reviews-quote').textContent =
-      '\u00ab\u202f' + texte + '\u202f\u00bb';
-
-    var auteurEl = document.getElementById('cover-reviews-author');
-    var profil = lienSecurise(avis.profil || avis.authorURI);
-    auteurEl.textContent = auteur;
-    if (profil) {
-      auteurEl.href = profil;
-      auteurEl.target = '_blank';
-      auteurEl.rel = 'noopener noreferrer';
-    } else {
-      auteurEl.removeAttribute('href');
-      auteurEl.removeAttribute('target');
-      auteurEl.removeAttribute('rel');
-    }
-
-    var avatar = document.getElementById('cover-reviews-avatar');
-    if (photo) {
-      avatar.src = photo;
-      avatar.alt = 'Photo de ' + auteur;
-      avatar.hidden = false;
-    } else {
-      avatar.removeAttribute('src');
-      avatar.alt = '';
-      avatar.hidden = true;
-    }
-
-    var dateEl = document.getElementById('cover-reviews-date');
-    dateEl.textContent = 'Visite : ' + date;
-    dateEl.hidden = false;
-
-    var sourceEl = document.getElementById('cover-reviews-source');
-    sourceEl.href = lienAvis;
-    sourceEl.textContent = 'Voir cet avis sur Google Maps';
-    sourceEl.hidden = false;
-
-    var mention = source === 'places'
-      ? 'Un seul avis est présenté à la fois : le premier avis de 4 ou 5 étoiles parmi ceux classés par pertinence par Google. Seuls les avis avec date de visite, texte et attribution disponibles sont affichés. Les avis ne sont pas vérifiés par Google ; les faux contenus identifiés sont retirés.'
-      : 'Le premier extrait admissible de 4 ou 5 étoiles avec date et attribution de la liste, sélectionné par La Colline Gambetta. Les avis ne sont pas vérifiés par Google ; les faux contenus identifiés sont retirés.';
-    if (avis.traduit) mention += ' Le texte a été traduit par Google ; le lien ouvre l’avis source.';
-    document.getElementById('cover-reviews-disclosure').textContent = mention;
-    return true;
+    return {
+      auteur: auteur,
+      profil: profil,
+      photo: photo,
+      note: noteAvis,
+      texte: texte,
+      date: date,
+      url: lienAvis,
+      traduit: !!avis.traduit
+    };
   }
+
+  function premierPrenom(nom) {
+    return String(nom || '').trim().split(/\s+/)[0] || '';
+  }
+
+  function creerLien(url, classe, texte) {
+    var element = document.createElement(url ? 'a' : 'span');
+    element.className = classe;
+    element.textContent = texte;
+    if (url) {
+      element.href = url;
+      element.target = '_blank';
+      element.rel = 'noopener noreferrer';
+    }
+    return element;
+  }
+
+  function creerDiapositive(avis, index, clone) {
+    var slide = document.createElement('article');
+    slide.className = 'cover-reviews__slide';
+    slide.setAttribute('role', 'group');
+    slide.setAttribute('aria-roledescription', 'avis');
+    if (clone) {
+      slide.setAttribute('data-carousel-clone', 'true');
+      slide.setAttribute('aria-hidden', 'true');
+      slide.setAttribute('inert', '');
+    } else {
+      slide.setAttribute('data-review-index', String(index));
+    }
+
+    var review = document.createElement('div');
+    review.className = 'cover-reviews__review';
+    var quote = document.createElement('blockquote');
+    quote.className = 'cover-reviews__quote';
+    quote.textContent = '\u00ab\u202f' + avis.texte + '\u202f\u00bb';
+    review.appendChild(quote);
+
+    var meta = document.createElement('div');
+    meta.className = 'cover-reviews__meta';
+    if (avis.photo) {
+      var avatar = document.createElement('img');
+      avatar.className = 'cover-reviews__avatar';
+      avatar.alt = 'Avatar de ' + avis.auteur;
+      avatar.width = 22;
+      avatar.height = 22;
+      avatar.loading = 'lazy';
+      avatar.decoding = 'async';
+      avatar.addEventListener('error', function () {
+        avatar.hidden = true;
+        avatar.removeAttribute('src');
+        avatar.alt = '';
+      }, { once: true });
+      avatar.src = avis.photo;
+      meta.appendChild(avatar);
+    }
+    var auteur = creerLien(avis.profil, 'cover-reviews__author', avis.auteur);
+    if (avis.profil) auteur.setAttribute('aria-label', 'Profil Google de ' + avis.auteur);
+    meta.appendChild(auteur);
+
+    if (avis.date) {
+      var date = document.createElement('time');
+      date.className = 'cover-reviews__date';
+      date.textContent = 'Visite : ' + avis.date;
+      meta.appendChild(date);
+    }
+
+    var source = creerLien(avis.url, 'cover-reviews__source', 'Voir cet avis sur Google Maps');
+    meta.appendChild(source);
+    review.appendChild(meta);
+    slide.appendChild(review);
+    return slide;
+  }
+
+  function installerCarrousel(avis, source) {
+    avisAffichables = avis;
+    sourceAvis = source;
+    indiceActif = 0;
+    indicePiste = avis.length > 1 ? 1 : 0;
+    transitionEnCours = false;
+    if (minuteurTransition !== null) {
+      window.clearTimeout(minuteurTransition);
+      minuteurTransition = null;
+    }
+    while (piste.firstChild) piste.removeChild(piste.firstChild);
+
+    if (!avis.length) {
+      carousel.hidden = true;
+      position.hidden = true;
+      divulgation.hidden = true;
+      return;
+    }
+
+    carousel.hidden = false;
+    var plusieurs = avis.length > 1;
+    precedent.hidden = !plusieurs;
+    suivant.hidden = !plusieurs;
+    precedent.disabled = false;
+    suivant.disabled = false;
+
+    if (plusieurs) piste.appendChild(creerDiapositive(avis[avis.length - 1], avis.length - 1, true));
+    avis.forEach(function (item, index) {
+      piste.appendChild(creerDiapositive(item, index, false));
+    });
+    if (plusieurs) piste.appendChild(creerDiapositive(avis[0], 0, true));
+
+    piste.style.transition = 'none';
+    placerPiste();
+    void piste.offsetWidth;
+    piste.style.transition = '';
+    actualiserAccessibilite();
+    actualiserPositionEtMention();
+  }
+
+  function actualiserAccessibilite() {
+    Array.prototype.forEach.call(piste.children, function (slide) {
+      var clone = slide.getAttribute('data-carousel-clone') === 'true';
+      var actif = !clone && Number(slide.getAttribute('data-review-index')) === indiceActif;
+      slide.setAttribute('aria-hidden', actif ? 'false' : 'true');
+      if (actif) {
+        slide.removeAttribute('inert');
+        slide.setAttribute('aria-label', 'Avis ' + (indiceActif + 1) + ' sur ' + avisAffichables.length);
+      } else {
+        slide.setAttribute('inert', '');
+        slide.removeAttribute('aria-label');
+      }
+    });
+  }
+
+  function actualiserPositionEtMention() {
+    var avis = avisAffichables[indiceActif];
+    if (!avis) return;
+    position.hidden = avisAffichables.length < 2;
+    position.textContent = avisAffichables.length > 1
+      ? 'Avis ' + (indiceActif + 1) + ' sur ' + avisAffichables.length
+      : '';
+    var mention = sourceAvis === 'places'
+      ? 'Avis de 4 ou 5 étoiles affichés dans l’ordre de pertinence de Google. Seuls ceux avec texte et lien direct disponibles sont présentés ; la date de visite est affichée lorsqu’elle est fournie. Les avis ne sont pas vérifiés par Google ; les faux contenus identifiés sont retirés.'
+      : 'Avis de 4 ou 5 étoiles avec texte et lien direct, sélectionnés par La Colline Gambetta ; la date de visite est affichée lorsqu’elle est fournie. Les avis ne sont pas vérifiés par Google ; les faux contenus identifiés sont retirés.';
+    if (avis.traduit) mention += ' Le texte a été traduit par Google ; le lien ouvre l’avis source.';
+    divulgation.textContent = mention;
+    divulgation.hidden = false;
+    actualiserAccessibilite();
+  }
+
+  function placerPiste() {
+    piste.style.transform = 'translate3d(-' + (indicePiste * 100) + '%,0,0)';
+  }
+
+  function mouvementReduit() {
+    try {
+      return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    } catch (e) { return false; }
+  }
+
+  function naviguer(direction) {
+    var total = avisAffichables.length;
+    if (total < 2 || transitionEnCours) return;
+
+    indiceActif = (indiceActif + direction + total) % total;
+    indicePiste += direction;
+    actualiserPositionEtMention();
+
+    if (mouvementReduit()) {
+      indicePiste = indiceActif + 1;
+      piste.style.transition = 'none';
+      placerPiste();
+      void piste.offsetWidth;
+      piste.style.transition = '';
+      return;
+    }
+
+    transitionEnCours = true;
+    precedent.disabled = true;
+    suivant.disabled = true;
+    placerPiste();
+    minuteurTransition = window.setTimeout(terminerTransition, 480);
+  }
+
+  function terminerTransition() {
+    if (!transitionEnCours) return;
+    transitionEnCours = false;
+    if (minuteurTransition !== null) {
+      window.clearTimeout(minuteurTransition);
+      minuteurTransition = null;
+    }
+
+    if (indicePiste === 0 || indicePiste === avisAffichables.length + 1) {
+      indicePiste = indiceActif + 1;
+      piste.style.transition = 'none';
+      placerPiste();
+      void piste.offsetWidth;
+      piste.style.transition = '';
+    }
+    precedent.disabled = false;
+    suivant.disabled = false;
+  }
+
+  precedent.addEventListener('click', function () { naviguer(-1); });
+  suivant.addEventListener('click', function () { naviguer(1); });
+  piste.addEventListener('transitionend', function (event) {
+    if (event.target === piste && event.propertyName === 'transform') terminerTransition();
+  });
+  viewport.addEventListener('keydown', function (event) {
+    if (event.target !== viewport) return;
+    if (event.key === 'ArrowLeft') { event.preventDefault(); naviguer(-1); }
+    else if (event.key === 'ArrowRight') { event.preventDefault(); naviguer(1); }
+  });
+  viewport.addEventListener('touchstart', function (event) {
+    if (!event.touches || event.touches.length !== 1) { departGeste = null; return; }
+    departGeste = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+  }, { passive: true });
+  viewport.addEventListener('touchend', function (event) {
+    if (!departGeste || !event.changedTouches || !event.changedTouches.length) return;
+    var fin = event.changedTouches[0];
+    var deltaX = departGeste.x - fin.clientX;
+    var deltaY = departGeste.y - fin.clientY;
+    departGeste = null;
+    if (Math.abs(deltaX) > 42 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15) {
+      naviguer(deltaX > 0 ? 1 : -1);
+    }
+  }, { passive: true });
+  viewport.addEventListener('touchcancel', function () { departGeste = null; }, { passive: true });
 
   function dateVisite(avis) {
     var annee = Number(avis.visitDateYear || avis.annee_visite || 0);
@@ -14073,7 +14395,51 @@ else sizeCoverMedallion();
   }
 
   function afficherSecours(data) {
-    if (data && data.publie === true && data.note) afficher(data, 'manuel');
+    if (data && data.publie === true && data.note) return afficher(data, 'manuel');
+    return false;
+  }
+
+  function chargerEtAfficher(data) {
+    var placesAffichees = false;
+    var secoursAffiche = false;
+    var minuteur = window.setTimeout(function () {
+      minuteur = null;
+      if (!placesAffichees && !secoursAffiche) {
+        secoursAffiche = afficherSecours(data);
+      }
+    }, 8000);
+
+    function annulerMinuteur() {
+      if (minuteur === null) return;
+      window.clearTimeout(minuteur);
+      minuteur = null;
+    }
+
+    function afficherSecoursUneFois() {
+      if (placesAffichees || secoursAffiche) return;
+      secoursAffiche = afficherSecours(data);
+    }
+
+    /* Ne pas abandonner Places au terme du délai de secours : sur mobile,
+       le SDK ou fetchFields peut arriver après huit secondes. Le secours
+       s'affiche alors tout de suite, puis les données live le remplacent dès
+       qu'elles arrivent, avec le carrousel complet. */
+    Promise.resolve()
+      .then(function () { return recupererPlaces(data.place_id, data.cle_api); })
+      .then(function (place) {
+        var live = depuisPlaces(place, data);
+        if (live && afficher(live, 'places')) {
+          placesAffichees = true;
+          annulerMinuteur();
+        } else {
+          annulerMinuteur();
+          afficherSecoursUneFois();
+        }
+      })
+      .catch(function () {
+        annulerMinuteur();
+        afficherSecoursUneFois();
+      });
   }
 
   fetch('assets/data/avis-google.json', { cache: 'no-cache' })
@@ -14081,18 +14447,8 @@ else sizeCoverMedallion();
     .then(function (data) {
       if (!data) return;
       if (data.place_id && data.cle_api) {
-        var demande = recupererPlaces(data.place_id, data.cle_api)
-          .then(function (place) { return depuisPlaces(place, data); })
-          .catch(function () { return null; });
-        var minuteur;
-        var delai = new Promise(function (resolve) {
-          minuteur = window.setTimeout(function () { resolve(null); }, 8000);
-        });
-        return Promise.race([demande, delai]).then(function (live) {
-          window.clearTimeout(minuteur);
-          if (live) afficher(live, 'places');
-          else afficherSecours(data);
-        });
+        chargerEtAfficher(data);
+        return;
       }
       afficherSecours(data);
     })

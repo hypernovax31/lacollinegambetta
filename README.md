@@ -147,17 +147,22 @@ Platform](https://developers.google.com/maps/api-security-best-practices).
 
 La note et le nombre d'avis sont lus à l'ouverture de la page ; aucun contenu
 Places n'est conservé dans `localStorage` ou `sessionStorage`. En cas d'échec
-du SDK, la valeur manuelle ci-dessous sert de secours. L'extrait affiché est
-le premier avis admissible de 4 ou 5 étoiles dans l'ordre de pertinence renvoyé
-par Google ; le filtre et l'ordre sont indiqués aux visiteurs. L'auteur (photo,
-nom et lien de profil lorsqu'ils sont disponibles), le lien direct vers l'avis,
-la date de visite retournée pour les avis en France et l'attribution **Google
-Maps** et les éventuelles attributions de fournisseurs sont affichés avec
-l'extrait. Si Google renvoie une traduction, le bandeau le signale et le lien
-direct permet de consulter l'avis source.
+du SDK, la valeur manuelle ci-dessous sert de secours. Le carrousel affiche les
+avis admissibles de 4 ou 5 étoiles dans l'ordre de pertinence renvoyé par
+Google. Il se parcourt avec les flèches, les touches gauche/droite ou le geste
+horizontal sur mobile, et boucle du dernier au premier sans lecture automatique.
+Le prénom affiché correspond au premier élément du nom public fourni par Google ;
+la photo et le lien de profil, lorsqu'ils sont disponibles, restent associés à
+l'avis. Le lien direct vers l'avis, la date de visite retournée pour les avis
+en France et l'attribution **Google Maps** (ainsi que les éventuelles
+attributions de fournisseurs) sont également affichés. Le filtre et l'ordre
+sont indiqués aux visiteurs. Si Google renvoie une traduction, le bandeau le
+signale et le lien direct permet de consulter l'avis source.
 
 **B — manuel.** Passez `publie` à `true` et recopiez la note, le nombre d'avis
-et, si vous affichez un extrait, ses attributions :
+et, si vous affichez des extraits, leurs attributions. Plusieurs avis peuvent
+être ajoutés au tableau `avis` ; le carrousel boucle sur ceux qui sont
+admissibles :
 
 ```json
 {
@@ -196,7 +201,7 @@ npm run test:site               # vérifications HTML, CSS, avis et liens
 page de garde comprise :
 
 ```
-LA COLLINE GAMBETTA • 4 RUE BELGRAND, 75020 PARIS • MÉTRO GAMBETTA • LIGNE 3
+LA COLLINE GAMBETTA • 4 RUE BELGRAND • 75020 PARIS • MÉTRO GAMBETTA • LIGNE 3
 Dans les alentours • Mairie du 20ᵉ • Théâtre de la Colline • Père-Lachaise • …
 Mentions légales · Confidentialité
 ```
@@ -209,14 +214,11 @@ modifier la liste `POINTS` (libellé, adresse, latitude, longitude) : le tri se
 refait tout seul.
 
 Plus de redite : « MÉTRO GAMBETTA • LIGNE 3 » n'apparaît **qu'une fois par
-page**, et c'est cette mention qui porte l'**itinéraire RATP**. L'arrivée est
-toujours `4, Rue Belgrand, 75, Paris` (format attendu par
-`ratp.fr/itineraires?end=…`) et le départ est la **position exacte du
-visiteur** : au clic, le navigateur demande la géolocalisation, les
-coordonnées sont converties en adresse postale par l'API Adresse de l'État
-(`api-adresse.data.gouv.fr`, gratuite et sans clé), puis l'itinéraire s'ouvre
-avec `&start=…`. Si elle est refusée, indisponible ou trop lente (9 s),
-l'itinéraire s'ouvre avec la seule arrivée pré-remplie.
+page**. Le lien direct vers Bonjour RATP ouvre l'**application en priorité**
+si elle est installée sur mobile ; sinon, la page web officielle d'itinéraire
+s'ouvre. La destination reste l'adresse du restaurant (`4, Rue Belgrand,
+75, Paris`). Le site ne demande pas la géolocalisation et n'ouvre plus d'onglet
+provisoire vide.
 
 ### Vérification
 

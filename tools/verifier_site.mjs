@@ -97,10 +97,15 @@ function reponseJson(value) {
 const manuel = {
   publie: true, note: 4.6, nombre_avis: 128,
   url: 'https://www.google.com/maps/search/?api=1&query=restaurant',
-  avis: [{ auteur: 'Claire D.', profil: 'https://www.google.com/maps/contrib/1',
-    photo: 'https://lh3.googleusercontent.com/a/test', note: 5,
-    texte: 'Accueil parfait et cuisine maison.',
-    url_avis: 'https://www.google.com/maps/reviews/data=1', date_visite: '2026-09' }]
+  avis: [
+    { auteur: 'Claire D.', profil: 'https://www.google.com/maps/contrib/1',
+      photo: 'https://lh3.googleusercontent.com/a/test', note: 5,
+      texte: 'Accueil parfait et cuisine maison.',
+      url_avis: 'https://www.google.com/maps/reviews/data=1', date_visite: '2026-09' },
+    { auteur: 'Marc L.', profil: 'https://www.google.com/maps/contrib/2',
+      note: 4, texte: 'Très bonne adresse dans le quartier.',
+      url_avis: 'https://www.google.com/maps/reviews/data=2', date_visite: '2026-08' }
+  ]
 };
 const essai = domAvis(() => reponseJson(manuel));
 essai.window.eval(script);
@@ -108,16 +113,67 @@ await new Promise((r) => setTimeout(r, 30));
 const b = essai.window.document.getElementById('cover-reviews');
 !b.hidden ? ok('bloc avis : affiche la source manuelle publiee') : ko('bloc avis manuel : reste masque');
 const texte = b.textContent.replace(/\s+/g, ' ').trim();
-texte.includes('4,6/5') && texte.includes('128 avis Google') && texte.includes('Claire D.')
-  ? ok(`bloc avis manuel : "${texte.slice(0, 80)}"`) : ko('bloc avis manuel : contenu inattendu : ' + texte);
-const dateManuelle = essai.window.document.getElementById('cover-reviews-date').textContent;
+const slidesManuels = [...b.querySelectorAll('.cover-reviews__slide:not([data-carousel-clone])')];
+const avisActif = b.querySelector('.cover-reviews__slide[aria-hidden="false"]');
+texte.includes('4,6/5') && texte.includes('128 avis Google') && texte.includes('Claire') &&
+  !texte.includes('Claire D.') && !texte.includes('Marc L.') &&
+  slidesManuels.length === 2 && avisActif
+  ? ok(`bloc avis manuel : prénom seul et ${slidesManuels.length} diapos`)
+  : ko('bloc avis manuel : contenu inattendu : ' + texte);
+const dateManuelle = avisActif && avisActif.querySelector('.cover-reviews__date')?.textContent;
 dateManuelle === 'Visite : septembre 2026'
   ? ok('avis manuel : mois et annee de visite affiches')
   : ko('avis manuel : date de visite inattendue : ' + dateManuelle);
 essai.window.document.getElementById('cover-reviews-maps').textContent === 'Google Maps'
   ? ok('attribution Google Maps visible') : ko('attribution Google Maps absente');
-essai.window.document.getElementById('cover-reviews-source').href.includes('/reviews/data=1')
+const lienAvisManuel = avisActif && avisActif.querySelector('.cover-reviews__source');
+lienAvisManuel?.href.includes('/reviews/data=1')
   ? ok('avis manuel : lien direct vers l’avis conserve') : ko('avis manuel : lien direct absent');
+const suivantManuel = essai.window.document.getElementById('cover-reviews-next');
+const precedentManuel = essai.window.document.getElementById('cover-reviews-previous');
+const pisteManuelle = essai.window.document.getElementById('cover-reviews-track');
+function terminerTransitionAvis(dom, piste) {
+  const ev = new dom.window.Event('transitionend');
+  Object.defineProperty(ev, 'propertyName', { value: 'transform' });
+  piste.dispatchEvent(ev);
+}
+suivantManuel.hidden === false && precedentManuel.hidden === false
+  ? ok('carrousel : commandes visibles pour plusieurs avis')
+  : ko('carrousel : commandes manquantes');
+suivantManuel.click();
+const secondManuel = b.querySelector('.cover-reviews__slide[aria-hidden="false"]');
+secondManuel?.querySelector('.cover-reviews__author')?.textContent === 'Marc' &&
+  essai.window.document.getElementById('cover-reviews-status').textContent === 'Avis 2 sur 2'
+  ? ok('carrousel : avance horizontalement vers le prénom suivant')
+  : ko('carrousel : avis suivant inattendu');
+terminerTransitionAvis(essai.window, pisteManuelle);
+suivantManuel.click();
+b.querySelector('.cover-reviews__slide[aria-hidden="false"]')?.querySelector('.cover-reviews__author')?.textContent === 'Claire' &&
+  essai.window.document.getElementById('cover-reviews-status').textContent === 'Avis 1 sur 2'
+  ? ok('carrousel : boucle du dernier avis vers le premier')
+  : ko('carrousel : retour au premier avis absent');
+terminerTransitionAvis(essai.window, pisteManuelle);
+precedentManuel.click();
+b.querySelector('.cover-reviews__slide[aria-hidden="false"]')?.querySelector('.cover-reviews__author')?.textContent === 'Marc'
+  ? ok('carrousel : boucle du premier avis vers le dernier')
+  : ko('carrousel : retour au dernier avis absent');
+terminerTransitionAvis(essai.window, pisteManuelle);
+const viewportManuel = essai.window.document.getElementById('cover-reviews-viewport');
+const debutBalayage = new essai.window.Event('touchstart');
+Object.defineProperty(debutBalayage, 'touches', { value: [{ clientX: 150, clientY: 20 }] });
+viewportManuel.dispatchEvent(debutBalayage);
+const finBalayage = new essai.window.Event('touchend');
+Object.defineProperty(finBalayage, 'changedTouches', { value: [{ clientX: 75, clientY: 24 }] });
+viewportManuel.dispatchEvent(finBalayage);
+b.querySelector('.cover-reviews__slide[aria-hidden="false"]')?.querySelector('.cover-reviews__author')?.textContent === 'Claire'
+  ? ok('carrousel : balayage horizontal sur mobile')
+  : ko('carrousel : balayage mobile inactif');
+terminerTransitionAvis(essai.window, pisteManuelle);
+viewportManuel.dispatchEvent(new essai.window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+b.querySelector('.cover-reviews__slide[aria-hidden="false"]')?.querySelector('.cover-reviews__author')?.textContent === 'Marc'
+  ? ok('carrousel : navigation au clavier')
+  : ko('carrousel : navigation clavier inactive');
+terminerTransitionAvis(essai.window, pisteManuelle);
 
 const vide = domAvis(() => reponseJson({ publie: false }));
 vide.window.eval(script);
@@ -150,13 +206,13 @@ live.window.google = { maps: { importLibrary: (nom) => {
         reviews: [
           { rating: 3, text: 'Avis moyen a ne pas afficher.', googleMapsURI: 'https://www.google.com/maps/reviews/3',
             authorAttribution: { displayName: 'Alex R.' }, visitDateMonth: 0, visitDateYear: 2026 },
-          { rating: 4, text: 'Avis sans date à écarter.', googleMapsURI: 'https://www.google.com/maps/reviews/4',
-            authorAttribution: { displayName: 'Sans Date' } },
           { rating: 5, text: 'Terrasse agreable et planches genereuses.',
             googleMapsURI: 'https://www.google.com/maps/reviews/5', visitDateMonth: 8, visitDateYear: 2026,
             textLanguageCode: 'fr', originalTextLanguageCode: 'en',
             authorAttribution: { displayName: 'Marc L.', uri: 'https://www.google.com/maps/contrib/2',
-              photoURI: 'https://lh3.googleusercontent.com/a/marc' } }
+              photoURI: 'https://lh3.googleusercontent.com/a/marc' } },
+          { rating: 4, text: 'Avis sans date à afficher.', googleMapsURI: 'https://www.google.com/maps/reviews/4',
+            authorAttribution: { displayName: 'Sans Date' } }
         ]
       });
       return Promise.resolve();
@@ -165,10 +221,14 @@ live.window.google = { maps: { importLibrary: (nom) => {
 } } };
 live.window.eval(script);
 await new Promise((r) => setTimeout(r, 50));
-const t2 = live.window.document.getElementById('cover-reviews').textContent.replace(/\s+/g, ' ').trim();
-t2.includes('4,8/5') && t2.includes('57 avis Google') && t2.includes('Marc L.') &&
-  !t2.includes('Avis moyen') && !t2.includes('Avis sans date')
-  ? ok(`mode Places : note live et premier avis admissible (${t2.slice(0, 90)})`)
+const blocLive = live.window.document.getElementById('cover-reviews');
+const t2 = blocLive.textContent.replace(/\s+/g, ' ').trim();
+const premierLive = blocLive.querySelector('.cover-reviews__slide[aria-hidden="false"]');
+const slidesLive = [...blocLive.querySelectorAll('.cover-reviews__slide:not([data-carousel-clone])')];
+t2.includes('4,8/5') && t2.includes('57 avis Google') && t2.includes('Marc') &&
+  t2.includes('Avis sans date à afficher.') && !t2.includes('Marc L.') && !t2.includes('Avis moyen') &&
+  premierLive?.querySelector('.cover-reviews__author')?.textContent === 'Marc' && slidesLive.length === 2
+  ? ok(`mode Places : note live, prénoms seuls et ${slidesLive.length} avis admissibles`)
   : ko('mode Places : ' + t2);
 nomLieu === 'places' && ['rating', 'userRatingCount', 'googleMapsURI', 'reviews', 'attributions'].every((f) => champsPlaces.includes(f))
   ? ok('Places Library : charge la note, les avis, les attributions et les liens Google Maps')
@@ -178,9 +238,13 @@ attributionDonnee.textContent.includes('Source des données') &&
   attributionDonnee.querySelector('a')?.href === 'https://www.example.com/attribution'
   ? ok('avis Places : attributions de fournisseurs affichées')
   : ko('avis Places : attribution de fournisseur absente');
-live.window.document.getElementById('cover-reviews-date').textContent === 'Visite : septembre 2026'
+premierLive?.querySelector('.cover-reviews__date')?.textContent === 'Visite : septembre 2026'
   ? ok('avis Places : date de visite francaise affichee')
   : ko('avis Places : date de visite absente');
+!live.window.document.getElementById('cover-reviews-next').hidden &&
+!live.window.document.getElementById('cover-reviews-previous').hidden
+  ? ok('carrousel Places : commandes visibles pour les deux avis admissibles')
+  : ko('carrousel Places : commandes masquees malgré deux avis admissibles');
 const divulgation = live.window.document.getElementById('cover-reviews-disclosure').textContent;
 divulgation.includes('4 ou 5 étoiles')
   ? ok('avis Places : filtre et ordre de pertinence declares')
@@ -188,6 +252,14 @@ divulgation.includes('4 ou 5 étoiles')
 divulgation.includes('traduit par Google')
   ? ok('avis Places : traduction signalee avec lien vers la source')
   : ko('avis Places : traduction non signalee');
+live.window.document.getElementById('cover-reviews-next').click();
+const avisSansDate = blocLive.querySelector('.cover-reviews__slide[aria-hidden="false"]');
+avisSansDate?.querySelector('.cover-reviews__author')?.textContent === 'Sans' &&
+  !avisSansDate.querySelector('.cover-reviews__date') &&
+  avisSansDate.querySelector('.cover-reviews__source')?.href.endsWith('/reviews/4')
+  ? ok('avis Places : commentaire conservé si Google ne fournit pas de date')
+  : ko('avis Places : commentaire sans date filtré ou mal lié');
+terminerTransitionAvis(live.window, live.window.document.getElementById('cover-reviews-track'));
 !script.includes('places.googleapis.com/v1') && !script.includes('sessionStorage.') && !script.includes('localStorage.')
   ? ok('avis Places : pas de REST navigateur ni de cache de contenu Google')
   : ko('avis Places : REST ou cache de contenu detecte');
@@ -225,6 +297,70 @@ secours.window.document.getElementById('cover-reviews').textContent.includes('4,
   ? ok('mode Places : secours manuel si le SDK est indisponible')
   : ko('mode Places : secours manuel absent');
 
+// Une réponse Places qui dépasse le délai de secours doit quand même remplacer
+// le bandeau manuel lorsqu'elle finit par arriver (cas observé sur mobile).
+const placesTardifs = domAvis(() => reponseJson({
+  ...manuel, place_id: 'ChIJxxxx', cle_api: 'CLE_DE_TEST', avis: []
+}));
+const vraiSetTimeout = placesTardifs.window.setTimeout.bind(placesTardifs.window);
+const vraiClearTimeout = placesTardifs.window.clearTimeout.bind(placesTardifs.window);
+let declencherSecoursTardif = null;
+let idSecoursTardif = null;
+let prochainIdTardif = 1000;
+placesTardifs.window.setTimeout = function (callback, delay, ...args) {
+  if (delay === 8000) {
+    idSecoursTardif = prochainIdTardif++;
+    declencherSecoursTardif = callback;
+    return idSecoursTardif;
+  }
+  return vraiSetTimeout(callback, delay, ...args);
+};
+placesTardifs.window.clearTimeout = function (id) {
+  if (id === idSecoursTardif) return;
+  return vraiClearTimeout(id);
+};
+let finirFetchPlacesTardif = null;
+placesTardifs.window.google = { maps: { importLibrary: () => Promise.resolve({ Place: class {
+  fetchFields() {
+    return new Promise((resolve) => {
+      finirFetchPlacesTardif = () => {
+        Object.assign(this, {
+          rating: 4.8, userRatingCount: 57,
+          googleMapsURI: 'https://www.google.com/maps/?cid=late',
+          reviews: [
+            { rating: 5, text: 'Commentaire Places arrivé après le secours.',
+              googleMapsURI: 'https://www.google.com/maps/reviews/late-1',
+              authorAttribution: { displayName: 'Olena Petrenko' } },
+            { rating: 4, text: 'Avis conservé sans date de visite.',
+              googleMapsURI: 'https://www.google.com/maps/reviews/late-2',
+              authorAttribution: { displayName: 'Taras Koval' } }
+          ]
+        });
+        resolve();
+      };
+    });
+  }
+} }) } };
+placesTardifs.window.eval(script);
+await new Promise((r) => setTimeout(r, 30));
+const bandeauTardif = placesTardifs.window.document.getElementById('cover-reviews');
+if (declencherSecoursTardif) declencherSecoursTardif();
+const secoursAvantPlaces = !bandeauTardif.hidden &&
+  bandeauTardif.querySelector('#cover-reviews-note').textContent === '4,6/5' &&
+  bandeauTardif.querySelector('#cover-reviews-carousel').hidden;
+if (finirFetchPlacesTardif) finirFetchPlacesTardif();
+await new Promise((r) => setTimeout(r, 40));
+const slidesTardifs = [...bandeauTardif.querySelectorAll('.cover-reviews__slide:not([data-carousel-clone])')];
+const premierTardif = bandeauTardif.querySelector('.cover-reviews__slide[aria-hidden="false"]');
+const liveApresSecours = bandeauTardif.querySelector('#cover-reviews-note').textContent === '4,8/5' &&
+  bandeauTardif.querySelector('#cover-reviews-count').textContent.includes('57 avis Google') &&
+  !bandeauTardif.querySelector('#cover-reviews-carousel').hidden &&
+  slidesTardifs.length === 2 && premierTardif?.querySelector('.cover-reviews__author')?.textContent === 'Olena';
+secoursAvantPlaces && liveApresSecours
+  ? ok('Places tardif : le secours s’affiche puis les commentaires live réactivent le carrousel')
+  : ko('Places tardif : le secours initial ou le carrousel après réponse live est absent');
+placesTardifs.window.close();
+
 // --------------------------------- 4 ter. pied de page et alentours ------
 const navs = [...d.querySelectorAll('.footer-quartier')];
 navs.length === 2 ? ok('index.html : ligne des alentours sur la page de garde et dans le pied')
@@ -255,14 +391,35 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
   const t = lire(f);
   const dom = new JSDOM(t).window.document;
   const metros = [...dom.querySelectorAll('.footer-details__metro')];
+  const adresse = dom.querySelector('.footer .footer-address-link');
+  const localisation = dom.querySelector('.footer .footer-details__location');
+  const separateurAdresseMetro = dom.querySelector('.footer .footer-details__separator');
   const alent = dom.querySelector('.footer .footer-quartier');
   const legal = dom.querySelector('.footer .legal-bottom-nav');
+  const stylesPied = [...dom.querySelectorAll('style')].map((style) => style.textContent).join('\n');
   metros.length === 1 && !/gambetta|ratp|m\u00e9tro/i.test(alent.textContent)
     ? ok(`${f} : mention du metro une seule fois, sans redite dans les alentours`)
     : ko(`${f} : ${metros.length} mention(s) du metro dans le pied, ou redite`);
-  metros[0].tagName === 'A' && metros[0].hasAttribute('data-ratp-itineraire')
-    ? ok(`${f} : la mention du metro ouvre l'itineraire RATP`)
-    : ko(`${f} : la mention du metro n'est pas un itineraire`);
+  metros[0].tagName === 'A' && metros[0].hasAttribute('data-ratp-itineraire') &&
+    metros[0].href.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=') &&
+    metros[0].href.includes('Belgrand') && !metros[0].hasAttribute('target')
+    ? ok(`${f} : lien direct Bonjour RATP, sans onglet provisoire`)
+    : ko(`${f} : le lien app/web Bonjour RATP est incomplet ou s'ouvre en nouvel onglet`);
+  adresse && adresse.textContent.trim() === '4 RUE BELGRAND • 75020 PARIS' &&
+    localisation && localisation.contains(adresse) && localisation.contains(metros[0]) &&
+    separateurAdresseMetro &&
+    separateurAdresseMetro.previousElementSibling === adresse &&
+    separateurAdresseMetro.nextElementSibling === metros[0]
+    ? ok(`${f} : adresse et métro groupés sans retour à la ligne`)
+    : ko(`${f} : le groupe adresse/métro est incomplet`);
+  const styleLigne = stylesPied.match(/html:not\(\.carte-doc\)\s*\.footer-details\s*\{([^}]*)\}/);
+  const styleLocalisation = stylesPied.match(/html:not\(\.carte-doc\)\s*\.footer-details__location\s*\{([^}]*)\}/);
+  styleLigne && /flex-flow:\s*row nowrap/.test(styleLigne[1]) &&
+    styleLocalisation && /flex-flow:\s*row nowrap/.test(styleLocalisation[1]) &&
+    /color:\s*#fff\s*!important/.test(styleLigne[1]) &&
+    stylesPied.includes('border:1px solid rgba(255,255,255,.46)')
+    ? ok(`${f} : adresse sur une ligne, blanche, et boutons légaux en pills`)
+    : ko(`${f} : styles responsive du pied ou pills légales absents`);
   alent && legal ? ok(`${f} : alentours + mentions legales en pied de page`)
                  : ko(`${f} : pied de page incomplet`);
   alent.previousElementSibling.classList.contains('footer-details')
@@ -270,13 +427,44 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
     : ko(`${f} : la ligne des alentours n'est pas sous l'adresse`);
 }
 
+const adresseAr = new JSDOM(lire('reservation.html'), {
+  runScripts: 'outside-only', url: 'https://lacollinegambetta.com/reservation.html?lang=ar'
+});
+adresseAr.window.eval(lire('assets/js/i18n.js'));
+adresseAr.window.document.querySelector('.footer-address-link')?.textContent.trim() ===
+  '4 شارع بيلغراند، 75020 باريس'
+  ? ok('i18n : traduction arabe de l’adresse conservée avec la nouvelle clé')
+  : ko('i18n : traduction arabe de l’adresse perdue');
+adresseAr.window.close();
+
+const chiffres = new JSDOM('<!doctype html><html><body></body></html>', {
+  runScripts: 'outside-only'
+});
+chiffres.window.eval(lire('assets/js/localized-digits.js'));
+const exempleNumerique = '07:00 • 75020 • 01 43 49 05 93';
+chiffres.window.LCGLocalizeDisplayDigits(exempleNumerique, 'uk') === exempleNumerique &&
+  chiffres.window.LCGLocalizeDisplayDigits('07:00', 'ar') === '٠٧:٠٠'
+  ? ok('chiffres : numéraux ukrainiens compacts, chiffres arabes toujours localisés')
+  : ko('chiffres : localisation compacte ukrainienne ou arabe incorrecte');
+chiffres.window.close();
+const cacheChiffres = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html']
+  .every((f) => lire(f).includes('localized-digits.js?v=2026100501'));
+cacheChiffres
+  ? ok('chiffres : toutes les pages invalidant l’ancien cache du script localisé')
+  : ko('chiffres : une page sert encore une version en cache du script localisé');
+['index.html', 'reservation.html'].every((f) => lire(f).includes('i18n.js?v=2026100501'))
+  ? ok('i18n : scripts actualisés sur la page d’accueil et la réservation')
+  : ko('i18n : une page conserve l’ancienne version en cache');
+
 const ratp = d.querySelector('[data-ratp-itineraire]');
-ratp && ratp.href.startsWith('https://www.ratp.fr/itineraires?end=') && ratp.href.includes('Belgrand')
-  ? ok('lien RATP : itineraire avec le restaurant en arrivee')
-  : ko('lien RATP : ce n\'est pas un itineraire vers le restaurant');
-/navigator\.geolocation/.test(index) && /api-adresse\.data\.gouv\.fr\/reverse/.test(index)
-  ? ok('itineraire RATP : depart pris sur la position du visiteur, avec repli')
-  : ko('itineraire RATP : la geolocalisation du visiteur est absente');
+ratp && ratp.href.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=') &&
+  ratp.href.includes('Belgrand') && !ratp.hasAttribute('target')
+  ? ok('lien Bonjour RATP : app prioritaire, web en secours, sans nouvel onglet')
+  : ko('lien Bonjour RATP : URL de destination ou ouverture directe incorrecte');
+!index.includes("window.open('about:blank'") &&
+  !index.includes('api-adresse.data.gouv.fr/reverse/')
+  ? ok('métro : aucune page blanche ni demande de géolocalisation')
+  : ko('métro : ancien intercepteur de géolocalisation encore présent');
 const garde = d.querySelector('#cover-more .footer-quartier--cover');
 const couverture = d.getElementById('cover-section');
 const sousCouverture = d.getElementById('cover-more');
@@ -314,8 +502,7 @@ const autorises = [
   'https://www.cirquedhiver.com/',
   'https://www.bataclan.fr/',
   'https://www.operadeparis.fr/visites/opera-bastille',
-  'https://www.ratp.fr/itineraires',
-  'https://api-adresse.data.gouv.fr/reverse/',
+  'https://www.bonjour-ratp.fr/itineraires/',
   'https://www.instagram.com/lacolline.gambetta',
   'https://www.google.com/maps/search/',
   'https://www.openstreetmap.org/',
@@ -366,6 +553,10 @@ const legalEn = new JSDOM(lire('confidentialite.html'), {
   runScripts: 'outside-only', url: 'https://lacollinegambetta.com/confidentialite.html?lang=en'
 });
 legalEn.window.eval(lire('assets/js/legal-i18n.js'));
+legalEn.window.document.querySelector('.footer-address-link')?.textContent.trim() ===
+  '4 RUE BELGRAND • 75020 PARIS'
+  ? ok('confidentialite : traduction de l’adresse conservée avec le nouveau libellé')
+  : ko('confidentialite : libellé traduit de l’adresse incomplet');
 const disclosureGoogle = [...legalEn.window.document.querySelectorAll('.legal-card p')]
   .find((p) => p.querySelector('a[href^="https://policies.google.com/privacy"]'));
 const liensGoogle = disclosureGoogle ? [...disclosureGoogle.querySelectorAll('a')].map((a) => a.textContent.trim()) : [];

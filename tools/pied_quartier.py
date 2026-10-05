@@ -3,7 +3,7 @@
 
 Le m\u00eame bloc est pos\u00e9 sur toutes les pages, page de garde comprise :
 
-    LA COLLINE GAMBETTA \u2022 4 RUE BELGRAND, 75020 PARIS \u2022 M\u00c9TRO GAMBETTA \u2022 LIGNE 3
+    LA COLLINE GAMBETTA \u2022 4 RUE BELGRAND \u2022 75020 PARIS \u2022 M\u00c9TRO GAMBETTA \u2022 LIGNE 3
     Dans les alentours \u2022 Mairie du 20e \u2022 Th\u00e9\u00e2tre de la Colline \u2022 P\u00e8re-Lachaise ...
     Mentions l\u00e9gales \u00b7 Confidentialit\u00e9
 
@@ -12,9 +12,9 @@ Le m\u00eame bloc est pos\u00e9 sur toutes les pages, page de garde comprise :
   rappel\u00e9e dans l'infobulle de chaque lien).
 \u2022 Plus de redondance : la mention \u00ab M\u00c9TRO GAMBETTA \u2022 LIGNE 3 \u00bb n'appara\u00eet
   qu'une fois par page et c'est elle qui porte l'itin\u00e9raire RATP.
-\u2022 L'itin\u00e9raire a pour arriv\u00e9e le restaurant et pour d\u00e9part la position exacte
-  du visiteur (g\u00e9olocalisation du navigateur + API Adresse de l'\u00c9tat), avec un
-  repli propre si elle est refus\u00e9e ou indisponible.
+\u2022 Le lien ouvre directement Bonjour RATP : l'application est prioritaire sur
+  mobile si elle est install\u00e9e, sinon le site web d'itin\u00e9raire s'ouvre. Aucun
+  onglet vide n'est cr\u00e9\u00e9 et la g\u00e9olocalisation n'est pas demand\u00e9e par le site.
 \u2022 Les liens sont discrets mais bien visibles : jamais de texte dissimul\u00e9.
 
 Toutes les adresses ont \u00e9t\u00e9 ouvertes et v\u00e9rifi\u00e9es une \u00e0 une (octobre 2026).
@@ -31,8 +31,8 @@ ROOT = Path(__file__).resolve().parent.parent
 
 # Le restaurant
 LAT, LON = 48.8647788, 2.3993777
-ARRIVEE_RATP = "4, Rue Belgrand, 75, Paris"   # format attendu par ratp.fr
-URL_RATP = "https://www.ratp.fr/itineraires?end=" + quote(ARRIVEE_RATP)
+ARRIVEE_RATP = "4, Rue Belgrand, 75, Paris"   # destination transmise à Bonjour RATP
+URL_RATP = "https://www.bonjour-ratp.fr/itineraires/?end=" + quote(ARRIVEE_RATP)
 URL_PLAN = ("https://www.google.com/maps/search/?api=1&amp;query="
             "La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris")
 
@@ -84,8 +84,7 @@ def nav_alentours(classe: str) -> str:
 
 
 LIEN_METRO = (f'<a class="footer-details__metro" data-ratp-itineraire href="{URL_RATP}"'
-              ' target="_blank" rel="noopener"'
-              ' title="Itin\u00e9raire RATP jusqu\u2019au restaurant">'
+              ' title="Ouvrir Bonjour RATP pour l\u2019itin\u00e9raire">'
               'M\u00c9TRO GAMBETTA \u2022 LIGNE 3</a>')
 
 CSS = """/* quartier:css:debut */
@@ -93,6 +92,70 @@ CSS = """/* quartier:css:debut */
    Une ligne en tres petits caracteres sous l'adresse, dans la meme fonte que
    le reste du pied de page. Discrete a l'oeil, parfaitement lisible pour les
    moteurs : ce sont de vrais liens, jamais du texte dissimule. */
+/* Adresse et métro : un seul ruban horizontal, même couleur pour tous les liens.
+   Sur les écrans trop étroits, le ruban se parcourt horizontalement sans couper
+   les libellés ni faire déborder la page. */
+html:not(.carte-doc) .footer-details {
+  display:flex; flex-flow:row nowrap; align-items:center; justify-content:flex-start;
+  gap:clamp(4px,.75vw,12px); width:max-content; max-width:calc(100% - 24px);
+  margin:0 auto; overflow-x:auto; overflow-y:hidden; white-space:nowrap;
+  scrollbar-width:none; overscroll-behavior-x:contain;
+  font-size:clamp(.52rem,1vw,.68rem); letter-spacing:clamp(.035em,.08vw,.08em);
+  color:#fff !important;
+}
+html:not(.carte-doc) .footer-details::-webkit-scrollbar { display:none; }
+html:not(.carte-doc) .footer-details > * { flex:0 0 auto; white-space:nowrap; }
+html:not(.carte-doc) .footer-details__location {
+  display:inline-flex; flex-flow:row nowrap; align-items:center; gap:clamp(4px,.75vw,10px);
+  flex:0 0 auto; white-space:nowrap;
+}
+html:not(.carte-doc) .footer-details__location > * { flex:0 0 auto; white-space:nowrap; }
+html:not(.carte-doc) .footer-details .footer-address-link,
+html:not(.carte-doc) .footer-details .footer-details__metro {
+  color:#fff !important; text-decoration:none;
+}
+html:not(.carte-doc) .footer-details .footer-address-link:hover,
+html:not(.carte-doc) .footer-details .footer-address-link:focus-visible,
+html:not(.carte-doc) .footer-details .footer-details__metro:hover,
+html:not(.carte-doc) .footer-details .footer-details__metro:focus-visible {
+  color:#fff !important; text-decoration:underline; text-underline-offset:3px;
+}
+html:not(.carte-doc) .footer-details__separator { color:#fff !important; }
+@media (max-width:420px) {
+  /* Le nom du restaurant est déjà affiché ailleurs : on privilégie l'adresse
+     et le métro pour garder les deux liens entièrement visibles sur téléphone. */
+  html:not(.carte-doc) .footer-details > span:nth-child(-n+2) { display:none; }
+}
+
+/* Même traitement pour l'adresse affichée sur la couverture. */
+html:not(.carte-doc) .cover-footer-address {
+  display:flex; flex-flow:row nowrap; align-items:center; justify-content:flex-start;
+  gap:clamp(4px,.75vw,10px); width:max-content; max-width:100%; margin-inline:auto;
+  overflow-x:auto; overflow-y:hidden; white-space:nowrap; scrollbar-width:none;
+  overscroll-behavior-x:contain; font-size:clamp(.58rem,2vw,.92rem);
+  color:#fff !important;
+}
+html:not(.carte-doc) .cover-footer-address::-webkit-scrollbar { display:none; }
+html:not(.carte-doc) .cover-footer-address > * { flex:0 0 auto; white-space:nowrap; }
+html:not(.carte-doc) .cover-footer-address a,
+html:not(.carte-doc) .cover-footer-address .footer-quartier__sep,
+html:not(.carte-doc) .cover-footer-address a:hover,
+html:not(.carte-doc) .cover-footer-address a:focus-visible {
+  color:#fff !important;
+}
+html:not(.carte-doc) .cover-footer-address .footer-quartier__sep { opacity:1; }
+/* La couverture contient des règles spécifiques d'horaires : on garantit aussi
+   le non-retour à la ligne face à ces styles prioritaires. */
+html:not(.carte-doc) #cover-section .cover-hours .cover-footer-address {
+  flex-flow:row nowrap !important; white-space:nowrap !important;
+  overflow-wrap:normal !important; overflow-x:auto !important; overflow-y:hidden !important;
+}
+@media (max-width:440px) {
+  html:not(.carte-doc) #cover-section .cover-hours .cover-footer-address {
+    font-size:clamp(.5rem,2.1vw,.66rem) !important;
+  }
+}
+
 html:not(.carte-doc) .footer-quartier {
   display:flex; flex-wrap:wrap; justify-content:center; align-items:center;
   gap:3px 10px; margin:5px auto 0; max-width:74ch;
@@ -103,8 +166,6 @@ html:not(.carte-doc) .footer-quartier {
 html:not(.carte-doc) .footer-quartier a { color:inherit; text-decoration:none; }
 html:not(.carte-doc) .footer-quartier a:hover { text-decoration:underline; opacity:1; }
 html:not(.carte-doc) .footer-quartier__sep { opacity:.5; }
-html:not(.carte-doc) a.footer-details__metro { color:inherit; text-decoration:none; }
-html:not(.carte-doc) a.footer-details__metro:hover { text-decoration:underline; }
 /* Le premier ecran de la couverture s'arrete aux boutons de contact.
    Avis et reperes restent juste apres, accessibles en faisant defiler. */
 html:not(.carte-doc) .cover-more {
@@ -126,65 +187,43 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a {
   color:inherit; background:none; border:0; padding:0; text-decoration:none; text-shadow:none;
 }
 html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover { text-decoration:underline; }
+
+/* Chaque lien légal est une pill discrète, au contour et au texte blancs. */
+html:not(.carte-doc) .footer .legal-bottom-nav,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover {
+  display:flex; flex-flow:row nowrap; align-items:center; justify-content:center;
+  gap:8px; width:max-content; max-width:calc(100% - 16px);
+  margin:4px auto 0; padding:6px 8px 2px; overflow-x:auto; overflow-y:hidden;
+  white-space:nowrap; scrollbar-width:none; background:transparent;
+  color:#fff; opacity:1;
+}
+html:not(.carte-doc) .footer .legal-bottom-nav::-webkit-scrollbar,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover::-webkit-scrollbar { display:none; }
+html:not(.carte-doc) .footer .legal-bottom-nav > span,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover > span { display:none; }
+html:not(.carte-doc) .footer .legal-bottom-nav a,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a {
+  display:inline-flex; flex:0 0 auto; align-items:center; justify-content:center;
+  min-height:30px; padding:5px 12px; border:1px solid rgba(255,255,255,.46);
+  border-radius:999px; background:rgba(255,255,255,.035); color:#fff !important;
+  font-size:inherit; font-weight:500; line-height:1.2; text-decoration:none;
+  text-shadow:none; white-space:nowrap;
+  transition:background-color .2s ease,border-color .2s ease;
+}
+html:not(.carte-doc) .footer .legal-bottom-nav a:hover,
+html:not(.carte-doc) .footer .legal-bottom-nav a:focus-visible,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:focus-visible {
+  background:rgba(255,255,255,.1); border-color:#fff; color:#fff !important;
+}
+html:not(.carte-doc) .footer .legal-bottom-nav a:focus-visible,
+html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:focus-visible {
+  outline:2px solid rgba(255,255,255,.8); outline-offset:2px;
+}
 @media print {
   .footer-quartier, .cover-more { display:none !important; }
 }
 /* quartier:css:fin */"""
-
-JS = """<!-- quartier:js:debut -->
-<script>
-/* Itineraire RATP : arrivee = le restaurant, depart = la position exacte du
-   visiteur. La geolocalisation n'est demandee qu'au clic ; si elle est refusee,
-   indisponible ou trop lente, l'itineraire s'ouvre avec la seule arrivee. */
-(function () {
-  var ARRIVEE = '%(arrivee)s';
-  var BASE = 'https://www.ratp.fr/itineraires?end=' + encodeURIComponent(ARRIVEE);
-  var liens = document.querySelectorAll('[data-ratp-itineraire]');
-  if (!liens.length) { return; }
-  Array.prototype.forEach.call(liens, function (lien) {
-    lien.setAttribute('href', BASE);
-    if (!navigator.geolocation) { return; }
-    lien.addEventListener('click', function (ev) {
-      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button) { return; }
-      ev.preventDefault();
-
-      var onglet = null;
-      try { onglet = window.open('about:blank', '_blank'); } catch (e) { onglet = null; }
-      if (onglet) { try { onglet.opener = null; } catch (e) {} }
-
-      var parti = false;
-      function ouvrir(url) {
-        if (parti) { return; }
-        parti = true;
-        if (onglet && !onglet.closed) { onglet.location.replace(url); }
-        else { window.open(url, '_blank', 'noopener'); }
-      }
-      var secours = setTimeout(function () { ouvrir(BASE); }, 9000);
-
-      navigator.geolocation.getCurrentPosition(function (pos) {
-        var lat = pos.coords.latitude, lon = pos.coords.longitude;
-        fetch('https://api-adresse.data.gouv.fr/reverse/?lat=' + lat + '&lon=' + lon)
-          .then(function (r) { return r.ok ? r.json() : null; })
-          .then(function (d) {
-            var p = d && d.features && d.features[0] && d.features[0].properties;
-            var depart = '';
-            if (p) {
-              var dep = String(p.postcode || '').slice(0, 2);
-              depart = [p.housenumber, p.street || p.name, dep, p.city]
-                .filter(function (x) { return x; }).join(', ');
-            }
-            clearTimeout(secours);
-            ouvrir(depart ? BASE + '&start=' + encodeURIComponent(depart) : BASE);
-          })
-          .catch(function () { clearTimeout(secours); ouvrir(BASE); });
-      }, function () {
-        clearTimeout(secours); ouvrir(BASE);
-      }, { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
-    });
-  });
-})();
-</script>
-<!-- quartier:js:fin -->""" % {"arrivee": ARRIVEE_RATP}
 
 COVER_ADRESSE = (
     '<div class="cover-footer-address">'
@@ -193,8 +232,8 @@ COVER_ADRESSE = (
     ' target="_blank" rel="noopener" title="Ouvrir l\u2019adresse dans le plan">'
     '4 rue Belgrand \u2022 75020 Paris</a>'
     '<span class="footer-quartier__sep" aria-hidden="true"> \u2022 </span>'
-    f'<a data-ratp-itineraire href="{URL_RATP}" target="_blank" rel="noopener"'
-    ' title="Itin\u00e9raire RATP jusqu\u2019au restaurant">M\u00e9tro Gambetta \u2022 Ligne 3</a>'
+    f'<a data-ratp-itineraire href="{URL_RATP}"'
+    ' title="Ouvrir Bonjour RATP pour l\u2019itin\u00e9raire">M\u00e9tro Gambetta \u2022 Ligne 3</a>'
     '</div>')
 
 LEGAL_COVER = ('<nav class="legal-bottom-nav legal-bottom-nav--cover"'
@@ -221,18 +260,29 @@ def poser_css(s: str) -> str:
 
 
 def poser_js(s: str) -> str:
-    s, fait = entre_marqueurs(s, "<!-- quartier:js:debut -->", "<!-- quartier:js:fin -->", JS)
-    if fait:
-        return s
-    i = s.index("</body>")
-    return s[:i] + JS + "\n" + s[i:]
+    """Retire l'ancien intercepteur qui ouvrait une page vide et demandait le GPS."""
+    s, _ = entre_marqueurs(s, "<!-- quartier:js:debut -->",
+                            "<!-- quartier:js:fin -->", "")
+    return s
 
 
 def poser_metro(s: str) -> str:
     """La mention du metro devient le lien d'itineraire (une seule par page)."""
     motif = re.compile(
         r'<(?:span|a)[^>]*class="footer-details__metro"[^>]*>.*?</(?:span|a)>', re.S)
-    return motif.sub(lambda _m: LIEN_METRO, s)
+    s = motif.sub(lambda _m: LIEN_METRO, s)
+    s = s.replace('>4 RUE BELGRAND, 75020 PARIS</a>',
+                  '>4 RUE BELGRAND • 75020 PARIS</a>')
+    if 'class="footer-details__location"' in s:
+        return s
+    separateur = '<span class="footer-details__separator" aria-hidden="true">•</span>'
+    adresse_metro = re.compile(
+        r'(<a class="footer-address-link"[^>]*>.*?</a>)\s*'
+        r'(?:<span class="footer-details__separator"[^>]*>.*?</span>\s*)?'
+        r'(<a class="footer-details__metro"[^>]*>.*?</a>)', re.S)
+    return adresse_metro.sub(
+        lambda m: '<span class="footer-details__location">'
+        + m.group(1) + separateur + m.group(2) + '</span>', s)
 
 
 def poser_nav_pied(s: str) -> str:
