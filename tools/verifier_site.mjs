@@ -45,6 +45,13 @@ desc.length <= 160 ? ok(`meta description : ${desc.length} caracteres`)
 const alts = [...d.querySelectorAll('link[rel=alternate][hreflang]')];
 alts.length === 16 ? ok(`hreflang : ${alts.length} declarations (15 langues + x-default)`)
                    : ko(`hreflang : ${alts.length} declarations`);
+const ligneHoraires = d.querySelector('#cover-section .cover-hours__range');
+const libelleHeures = d.querySelector('#cover-section [data-hours-range]');
+const statutHoraires = d.querySelector('#cover-section [data-hours-status]');
+ligneHoraires?.contains(libelleHeures) && ligneHoraires.contains(statutHoraires) &&
+  libelleHeures.nextElementSibling === statutHoraires
+  ? ok('horaires : le statut suit la plage horaire dans la même ligne')
+  : ko('horaires : le statut doit suivre la plage horaire dans la même ligne');
 const sansDim = [...d.querySelectorAll('img')].filter((i) => !i.getAttribute('width'));
 sansDim.length === 0 ? ok('toutes les images ont width/height')
                      : ko(`${sansDim.length} image(s) sans dimensions`);
@@ -82,12 +89,15 @@ const boutonAvisGoogle = d.getElementById('google-reviews-load');
 const attributionMaps = d.getElementById('google-reviews-maps');
 const positionAvisGoogle = d.getElementById('google-reviews-position');
 const zoneCommentaires = d.getElementById('google-reviews-slide');
+const tousLesAvisGoogle = d.getElementById('google-reviews-all');
 const scriptAvisGoogle = lire('assets/js/google-reviews.js');
 let configurationAvis = null;
 try { configurationAvis = JSON.parse(lire('assets/data/avis-google.json')); } catch (e) {}
 blocAvisGoogle && boutonAvisGoogle && boutonAvisGoogle.hidden && boutonAvisGoogle.disabled &&
-  positionAvisGoogle?.getAttribute('role') === 'status' && attributionMaps &&
+  positionAvisGoogle?.getAttribute('role') === 'status' && attributionMaps && tousLesAvisGoogle &&
   attributionMaps.textContent.trim() === 'Google Maps' && attributionMaps.getAttribute('translate') === 'no' &&
+  attributionMaps.href.startsWith('https://www.google.com/maps/') &&
+  tousLesAvisGoogle.href.startsWith('https://www.google.com/maps/') &&
   !d.getElementById('google-reviews-count') && !zoneCommentaires?.querySelector('blockquote')
   ? ok('avis Google : note sans nombre d’avis visible, navigation accessible et secours sans avis statique')
   : ko('avis Google : structure du bloc, attribution ou contenu statique incorrect');
@@ -105,11 +115,13 @@ scriptAvisGoogle.includes("fields:['rating','googleMapsURI','reviews']") &&
   scriptAvisGoogle.includes('window[callbackName] = function ()') &&
   !scriptAvisGoogle.includes('script.onload') &&
   scriptAvisGoogle.includes('  loadReviews();') &&
+  !scriptAvisGoogle.includes('google-reviews-source') &&
+  !scriptAvisGoogle.includes('authorUrl') && !scriptAvisGoogle.includes('reviewUrl') &&
   !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
   ? ok('avis Google : affichage auto, attribution Places et absence de cache vérifiés')
   : ko('avis Google : affichage automatique, champs Places ou absence de cache non garantis');
-index.includes('assets/css/google-reviews.css?v=2026100518') &&
-  index.includes('assets/js/google-reviews.js?v=2026100512') &&
+index.includes('assets/css/google-reviews.css?v=2026100519') &&
+  index.includes('assets/js/google-reviews.js?v=2026100513') &&
   d.querySelector('script[src^="assets/js/i18n.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.defer

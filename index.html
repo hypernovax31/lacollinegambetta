@@ -10619,7 +10619,6 @@ html:not(.carte-doc) #cover-section .cover-hours {
   text-align:center !important;
 }
 html:not(.carte-doc) #cover-section .cover-hours__range,
-html:not(.carte-doc) #cover-section .cover-hours__status,
 html:not(.carte-doc) #cover-section .cover-footer-address {
   width:100% !important;
   max-width:100% !important;
@@ -10677,10 +10676,32 @@ html:not(.carte-doc) #cover-section .cover-links .contact-link {
     gap:1px !important;
   }
 }
+
+/* Le statut fait partie de la ligne d’horaires, juste après la plage affichée. */
+html:not(.carte-doc) #cover-section .cover-hours__range > .cover-hours__status {
+  display:inline-flex !important;
+  flex:0 0 auto !important;
+  width:auto !important;
+  max-width:none !important;
+  margin:0 !important;
+  justify-content:flex-start !important;
+  white-space:nowrap !important;
+}
+@media (max-width:420px) {
+  html:not(.carte-doc) #cover-section .cover-hours__range {
+    gap:2px 5px !important;
+    font-size:clamp(.67rem, 3.8vw, .78rem) !important;
+    letter-spacing:.04em !important;
+  }
+  html:not(.carte-doc) #cover-section .cover-hours__range > .cover-hours__status {
+    gap:4px;
+    font-size:clamp(.58rem, 2.8vw, .68rem) !important;
+  }
+}
 </style>
-<link rel="stylesheet" href="assets/css/google-reviews.css?v=2026100518">
+<link rel="stylesheet" href="assets/css/google-reviews.css?v=2026100519">
 <script src="assets/js/i18n.js?v=2026100502" defer></script>
-<script src="assets/js/google-reviews.js?v=2026100512" defer></script>
+<script src="assets/js/google-reviews.js?v=2026100513" defer></script>
 <script>
 /* Les traductions sont servies par ?lang= : chaque version linguistique doit
    se declarer canonique d'elle-meme, sinon Google ignore les hreflang. */
@@ -10834,8 +10855,7 @@ html:not(.carte-doc) #cover-section .cover-links .contact-link {
       </div>
       <div class="cover-footer">
         <div class="cover-hours" aria-label="Horaires d’ouverture">
-          <div class="cover-hours__range"><span data-hours-days>Tous les jours</span><span aria-hidden="true">·</span><span data-hours-range>07h00 — 02h00</span><span aria-hidden="true" data-hours-happy-separator hidden>·</span><a href="index.html#cocktails" id="cover-happy-hour-link" class="cover-hours__happy" data-hours-happy hidden onclick="showView('menu'); setTimeout(function(){ var btn=document.getElementById('btn-show-cocktails'); if(btn) showMenuSection('cocktails', btn); }, 0); return false;">Happy Hour</a></div>
-          <div class="cover-hours__status is-open" data-hours-status role="status" aria-live="polite"><span class="cover-hours__dot" aria-hidden="true"></span><span data-hours-status-text>Ouvert maintenant</span></div>
+          <div class="cover-hours__range"><span data-hours-days>Tous les jours</span><span aria-hidden="true">·</span><span data-hours-range>07h00 — 02h00</span><div class="cover-hours__status is-open" data-hours-status role="status" aria-live="polite"><span class="cover-hours__dot" aria-hidden="true"></span><span data-hours-status-text>Ouvert</span></div><span aria-hidden="true" data-hours-happy-separator hidden>·</span><a href="index.html#cocktails" id="cover-happy-hour-link" class="cover-hours__happy" data-hours-happy hidden onclick="showView('menu'); setTimeout(function(){ var btn=document.getElementById('btn-show-cocktails'); if(btn) showMenuSection('cocktails', btn); }, 0); return false;">Happy Hour</a></div>
           <div class="cover-footer-address"><a href="https://www.google.com/maps/search/?api=1&amp;query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris" data-default-map data-map-address="La Colline Gambetta, 4 Rue Belgrand, 75020 Paris" target="_blank" rel="noopener" title="Ouvrir l’adresse dans le plan">4 rue Belgrand • 75020 Paris</a><span class="footer-quartier__sep" aria-hidden="true"> • </span><a data-ratp-itineraire href="https://www.bonjour-ratp.fr/itineraires/?end=4%2C%20Rue%20Belgrand%2C%2075%2C%20Paris" title="Ouvrir Bonjour RATP pour l’itinéraire">Métro Gambetta • Ligne 3</a></div>
         </div>
         <div class="cover-links">
@@ -13874,21 +13894,21 @@ else sizeCoverMedallion();
 (function () {
   'use strict';
   var copy = {
-    fr: { label:'Horaires', days:'Tous les jours', range:'07h00 — 02h00', happy:'Happy Hour', open:'Ouvert maintenant', openAfterHour:'Ouvert', closingSoon:'Ouvert · ferme à 02h00', openingSoon:'Ouvre bientôt · à 07h00', closed:'Fermé · ouvre à 07h00' },
-    en: { label:'Opening hours', days:'Every day', range:'07:00 — 02:00', happy:'Happy Hour', open:'Open now', openAfterHour:'Open', closingSoon:'Open · closes at 02:00', openingSoon:'Opening soon · at 07:00', closed:'Closed · opens at 07:00' },
-    es: { label:'Horario', days:'Todos los días', range:'07:00 — 02:00', happy:'Happy Hour', open:'Abierto ahora', openAfterHour:'Abierto', closingSoon:'Abierto · cierra a las 02:00', openingSoon:'Abre pronto · a las 07:00', closed:'Cerrado · abre a las 07:00' },
-    de: { label:'Öffnungszeiten', days:'Jeden Tag', range:'07:00 — 02:00', happy:'Happy Hour', open:'Jetzt geöffnet', openAfterHour:'Geöffnet', closingSoon:'Geöffnet · schließt um 02:00', openingSoon:'Öffnet bald · um 07:00', closed:'Geschlossen · öffnet um 07:00' },
-    it: { label:'Orari', days:'Tutti i giorni', range:'07:00 — 02:00', happy:'Happy Hour', open:'Aperto ora', openAfterHour:'Aperto', closingSoon:'Aperto · chiude alle 02:00', openingSoon:'Apre presto · alle 07:00', closed:'Chiuso · apre alle 07:00' },
-    pt: { label:'Horário', days:'Todos os dias', range:'07:00 — 02:00', happy:'Happy Hour', open:'Aberto agora', openAfterHour:'Aberto', closingSoon:'Aberto · fecha às 02:00', openingSoon:'Abre em breve · às 07:00', closed:'Fechado · abre às 07:00' },
-    nl: { label:'Openingsuren', days:'Elke dag', range:'07:00 — 02:00', happy:'Happy Hour', open:'Nu open', openAfterHour:'Open', closingSoon:'Open · sluit om 02:00', openingSoon:'Gaat bijna open · om 07:00', closed:'Gesloten · opent om 07:00' },
-    ar: { label:'ساعات العمل', days:'كل يوم', range:'٧:٠٠ — ٢:٠٠', happy:'ساعة السعادة', open:'مفتوح الآن', openAfterHour:'مفتوح', closingSoon:'مفتوح · يغلق الساعة ٠٢:٠٠', openingSoon:'يفتح قريبًا · الساعة ٠٧:٠٠', closed:'مغلق · يفتح الساعة ٠٧:٠٠' },
-    zh: { label:'营业时间', days:'每天', range:'07:00 — 02:00', happy:'欢乐时光', open:'现在营业', openAfterHour:'营业中', closingSoon:'营业中 · 02:00关门', openingSoon:'即将营业 · 07:00开始', closed:'歇业 · 07:00开始营业' },
-    ja: { label:'営業時間', days:'毎日', range:'07:00 — 02:00', happy:'ハッピーアワー', open:'現在営業中', openAfterHour:'営業中', closingSoon:'営業中 · 02:00閉店', openingSoon:'まもなく営業開始 · 07:00', closed:'休業中 · 07:00開店' },
-    ko: { label:'영업시간', days:'매일', range:'07:00 — 02:00', happy:'해피아워', open:'현재 영업 중', openAfterHour:'영업 중', closingSoon:'영업 중 · 02:00에 마감', openingSoon:'곧 영업 시작 · 07:00', closed:'영업 종료 · 07:00에 시작' },
-    pl: { label:'Godziny otwarcia', days:'Codziennie', range:'07:00 — 02:00', happy:'Happy Hour', open:'Otwarte teraz', openAfterHour:'Otwarte', closingSoon:'Otwarte · zamyka o 02:00', openingSoon:'Wkrótce otwarcie · o 07:00', closed:'Zamknięte · otwarcie o 07:00' },
-    tr: { label:'Çalışma saatleri', days:'Her gün', range:'07:00 — 02:00', happy:'Happy Hour', open:'Şimdi açık', openAfterHour:'Açık', closingSoon:'Açık · kapanış 02:00', openingSoon:'Yakında açılıyor · 07:00', closed:'Kapalı · açılış 07:00' },
-    uk: { label:'Години роботи', days:'Щодня', range:'07:00 — 02:00', happy:'Щаслива година', open:'Зараз відчинено', openAfterHour:'Відчинено', closingSoon:'Відчинено · зачинення о 02:00', openingSoon:'Незабаром відкриття · о 07:00', closed:'Зачинено · відкриття о 07:00' },
-    hi: { label:'खुलने का समय', days:'हर दिन', range:'सुबह 7:00 — रात 2:00', happy:'हैप्पी आवर', open:'अभी खुला है', openAfterHour:'खुला है', closingSoon:'खुला है · 02:00 बजे बंद', openingSoon:'जल्द खुलेगा · 07:00 बजे', closed:'बंद है · 07:00 बजे खुलेगा' }
+    fr: { label:'Horaires', days:'Tous les jours', range:'07h00 — 02h00', happy:'Happy Hour', open:'Ouvert', closingSoon:'Ferme bientôt', openingSoon:'Ouvre bientôt', closed:'Fermé' },
+    en: { label:'Opening hours', days:'Every day', range:'07:00 — 02:00', happy:'Happy Hour', open:'Open', closingSoon:'Closing soon', openingSoon:'Opening soon', closed:'Closed' },
+    es: { label:'Horario', days:'Todos los días', range:'07:00 — 02:00', happy:'Happy Hour', open:'Abierto', closingSoon:'Cierra pronto', openingSoon:'Abre pronto', closed:'Cerrado' },
+    de: { label:'Öffnungszeiten', days:'Jeden Tag', range:'07:00 — 02:00', happy:'Happy Hour', open:'Geöffnet', closingSoon:'Schließt bald', openingSoon:'Öffnet bald', closed:'Geschlossen' },
+    it: { label:'Orari', days:'Tutti i giorni', range:'07:00 — 02:00', happy:'Happy Hour', open:'Aperto', closingSoon:'Chiude presto', openingSoon:'Apre presto', closed:'Chiuso' },
+    pt: { label:'Horário', days:'Todos os dias', range:'07:00 — 02:00', happy:'Happy Hour', open:'Aberto', closingSoon:'Fecha em breve', openingSoon:'Abre em breve', closed:'Fechado' },
+    nl: { label:'Openingsuren', days:'Elke dag', range:'07:00 — 02:00', happy:'Happy Hour', open:'Open', closingSoon:'Sluit bijna', openingSoon:'Opent bijna', closed:'Gesloten' },
+    ar: { label:'ساعات العمل', days:'كل يوم', range:'٧:٠٠ — ٢:٠٠', happy:'ساعة السعادة', open:'مفتوح', closingSoon:'سيغلق قريبًا', openingSoon:'سيفتح قريبًا', closed:'مغلق' },
+    zh: { label:'营业时间', days:'每天', range:'07:00 — 02:00', happy:'欢乐时光', open:'营业中', closingSoon:'即将打烊', openingSoon:'即将营业', closed:'已打烊' },
+    ja: { label:'営業時間', days:'毎日', range:'07:00 — 02:00', happy:'ハッピーアワー', open:'営業中', closingSoon:'まもなく閉店', openingSoon:'まもなく開店', closed:'休業中' },
+    ko: { label:'영업시간', days:'매일', range:'07:00 — 02:00', happy:'해피아워', open:'영업 중', closingSoon:'곧 마감', openingSoon:'곧 영업 시작', closed:'영업 종료' },
+    pl: { label:'Godziny otwarcia', days:'Codziennie', range:'07:00 — 02:00', happy:'Happy Hour', open:'Otwarte', closingSoon:'Zamyka się', openingSoon:'Otwiera się', closed:'Zamknięte' },
+    tr: { label:'Çalışma saatleri', days:'Her gün', range:'07:00 — 02:00', happy:'Happy Hour', open:'Açık', closingSoon:'Yakında kapanır', openingSoon:'Yakında açılır', closed:'Kapalı' },
+    uk: { label:'Години роботи', days:'Щодня', range:'07:00 — 02:00', happy:'Щаслива година', open:'Відчинено', closingSoon:'Зачиняється', openingSoon:'Відчиняється', closed:'Зачинено' },
+    hi: { label:'खुलने का समय', days:'हर दिन', range:'सुबह 7:00 — रात 2:00', happy:'हैप्पी आवर', open:'खुला है', closingSoon:'जल्द बंद होगा', openingSoon:'जल्द खुलेगा', closed:'बंद है' }
   };
   function currentLanguage() {
     return (document.documentElement.getAttribute('lang') || 'fr').slice(0, 2).toLowerCase();
@@ -13916,9 +13936,6 @@ else sizeCoverMedallion();
     var minutes = parisMinutes();
     var isOpen = minutes === null ? true : (minutes >= 7 * 60 || minutes < 2 * 60);
     var isClosingSoon = minutes !== null && minutes >= 60 && minutes < 2 * 60;
-    /* Après 08h00, l’ouverture dure depuis au moins une heure. Après
-       minuit, il s’agit toujours de la même ouverture commencée à 07h00. */
-    var isOpenForMoreThanHour = minutes !== null && (minutes >= 8 * 60 || minutes < 2 * 60);
     var isOpeningSoon = minutes !== null && minutes >= 6 * 60 && minutes < 7 * 60;
     /* Le Happy Hour est proposé chaque jour de 17h00 à 23h00, heure de Paris.
        En dehors de cette fenêtre, le libellé et son séparateur disparaissent
@@ -13935,8 +13952,8 @@ else sizeCoverMedallion();
     status.classList.toggle('is-closed', !isOpen && !isOpeningSoon);
     status.classList.toggle('is-opening-soon', isOpeningSoon);
     status.classList.toggle('is-closing-soon', isClosingSoon);
-    var openLabel = isOpenForMoreThanHour ? text.openAfterHour : text.open;
-    statusText.textContent = isClosingSoon ? text.closingSoon : (isOpeningSoon ? text.openingSoon : (isOpen ? openLabel : text.closed));
+    statusText.textContent = isClosingSoon ? text.closingSoon
+      : (isOpeningSoon ? text.openingSoon : (isOpen ? text.open : text.closed));
     status.setAttribute('aria-label', statusText.textContent);
   }
   updateHours();

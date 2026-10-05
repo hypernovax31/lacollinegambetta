@@ -160,13 +160,13 @@ try {
         '.cover-brand', '.cover-brand .leader-title', '.cover-brand h1',
         '.cover-brand .leader-meta', '.cover-brand .menu-leader-subline',
         '.cover-action', '.cover-footer', '.cover-hours', '.cover-hours__range',
-        '.cover-hours__status', '.cover-footer-address', '.cover-links'
+        '.cover-footer-address', '.cover-links'
       ];
       const box=(element) => {
         const rect=element.getBoundingClientRect();
         const style=getComputedStyle(element);
         return {
-          left:rect.left, width:rect.width, center:rect.left+rect.width/2,
+          left:rect.left, top:rect.top, width:rect.width, height:rect.height, center:rect.left+rect.width/2,
           parentWidth:element.parentElement.getBoundingClientRect().width,
           cssWidth:style.width, cssMaxWidth:style.maxWidth,
           textAlign:style.textAlign, whiteSpace:style.whiteSpace
@@ -181,6 +181,24 @@ try {
         footerWidth:footer.getBoundingClientRect().width,
         hoursWidth:hours.getBoundingClientRect().width,
         hoursPadding:parseFloat(hoursStyle.paddingLeft)+parseFloat(hoursStyle.paddingRight),
+        scheduleCenterDelta:(() => {
+          const centers=['[data-hours-days]','[data-hours-range]','[data-hours-status]'].map((selector)=>{
+            const rect=document.querySelector('#cover-section '+selector).getBoundingClientRect();
+            return rect.top+rect.height/2;
+          });
+          return Math.max(...centers)-Math.min(...centers);
+        })(),
+        statusTextLines:(() => {
+          const text=document.querySelector('#cover-section [data-hours-status-text]');
+          const range=document.createRange();
+          range.selectNodeContents(text);
+          return range.getClientRects().length;
+        })(),
+        statusWithinRange:(() => {
+          const range=document.querySelector('#cover-section .cover-hours__range').getBoundingClientRect();
+          const status=document.querySelector('#cover-section [data-hours-status]').getBoundingClientRect();
+          return status.left>=range.left-1 && status.right<=range.right+1;
+        })(),
         addressChildrenTop:[...address.children].map((element)=>element.getBoundingClientRect().top),
         addressItems:[...address.children].map((element)=>{
           const rect=element.getBoundingClientRect();
@@ -215,10 +233,41 @@ try {
     assert.ok(adresse.width>=largeurAdresseAttendue-2,
       `l’adresse ne s’étale pas sur la ligne à ${largeur}×${hauteur}px`);
     assert.equal(adresse.whiteSpace, 'nowrap', `l’adresse n’est pas conservée sur une seule ligne à ${largeur}×${hauteur}px`);
-    for (const selector of ['.cover-hours__range','.cover-hours__status']) {
-      const ligne=disposition.lines.find((element)=>element.selector===selector);
-      assert.ok(ligne.width>=largeurAdresseAttendue-2,
-        `${selector} n’occupe pas la largeur de la ligne à ${largeur}×${hauteur}px`);
+    const ligneHoraires=disposition.lines.find((element)=>element.selector==='.cover-hours__range');
+    assert.ok(ligneHoraires.width>=largeurAdresseAttendue-2,
+      `.cover-hours__range n’occupe pas la largeur de la ligne à ${largeur}×${hauteur}px`);
+    assert.ok(disposition.scheduleCenterDelta<=1.5,
+      `le statut ne suit pas les horaires sur la même ligne à ${largeur}×${hauteur}px`);
+    assert.equal(disposition.statusTextLines,1,
+      `le statut d’ouverture se coupe sur plusieurs lignes à ${largeur}×${hauteur}px`);
+    assert.equal(disposition.statusWithinRange,true,
+      `le statut sort de la ligne horaire à ${largeur}×${hauteur}px`);
+    const statutsTransitions=await page.evaluate((libelles) => {
+      const node=document.querySelector('#cover-section [data-hours-status-text]');
+      const original=node.textContent;
+      const mesures=libelles.map((libelle) => {
+        node.textContent=libelle;
+        const centers=['[data-hours-days]','[data-hours-range]','[data-hours-status]'].map((selector)=>{
+          const rect=document.querySelector('#cover-section '+selector).getBoundingClientRect();
+          return rect.top+rect.height/2;
+        });
+        const textRange=document.createRange();
+        textRange.selectNodeContents(node);
+        const lineRect=node.closest('.cover-hours__range').getBoundingClientRect();
+        const statusRect=document.querySelector('#cover-section [data-hours-status]').getBoundingClientRect();
+        return {
+          label:libelle,
+          centerDelta:Math.max(...centers)-Math.min(...centers),
+          lines:textRange.getClientRects().length,
+          inside:statusRect.left>=lineRect.left-1 && statusRect.right<=lineRect.right+1
+        };
+      });
+      node.textContent=original;
+      return mesures;
+    }, ['Зачиняється','Відчиняється']);
+    for (const statut of statutsTransitions) {
+      assert.ok(statut.centerDelta<=1.5 && statut.lines===1 && statut.inside,
+        `le statut « ${statut.label} » doit rester sur la ligne horaire à ${largeur}×${hauteur}px`);
     }
     assert.equal(Math.max(...disposition.addressChildrenTop)-Math.min(...disposition.addressChildrenTop)<=1, true,
       `l’adresse et le métro ne restent pas sur une seule ligne à ${largeur}×${hauteur}px`);
@@ -354,7 +403,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100512'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100513'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');
@@ -530,7 +579,10 @@ try {
         cardTextAlign:getComputedStyle(card).textAlign,
         quoteTextAlign:getComputedStyle(quote).textAlign,
         metaJustify:getComputedStyle(document.querySelector('.google-reviews-meta')).justifyContent,
-        sourceAlign:getComputedStyle(document.querySelector('.google-reviews-source')).alignSelf,
+        individualReviewSourceLinks:document.querySelectorAll('.google-reviews-source').length,
+        authorLinks:document.querySelectorAll('.google-reviews-author[href], .google-reviews-author-wrap a').length,
+        globalGoogleMapsLinks:[...document.querySelectorAll('#google-reviews-all, #google-reviews-maps')]
+          .filter((link)=>link.href.startsWith('https://www.google.com/maps/')).length,
         disclosureTextAlign:getComputedStyle(document.getElementById('google-reviews-disclosure')).textAlign,
         footerJustify:getComputedStyle(document.querySelector('.google-reviews-footer')).justifyContent,
         summaryCentered:(() => {
@@ -573,7 +625,9 @@ try {
     assert.equal(layoutAvis.cardTextAlign, 'center', `le bloc n’est pas centré ${contexte}`);
     assert.equal(layoutAvis.quoteTextAlign, 'center', `le commentaire n’est pas centré ${contexte}`);
     assert.equal(layoutAvis.metaJustify, 'center', `l’auteur et la date ne sont pas centrés ${contexte}`);
-    assert.equal(layoutAvis.sourceAlign, 'center', `le lien source n’est pas centré ${contexte}`);
+    assert.equal(layoutAvis.individualReviewSourceLinks, 0, `un lien individuel vers un avis est encore affiché ${contexte}`);
+    assert.equal(layoutAvis.authorLinks, 0, `un nom d’auteur est encore cliquable ${contexte}`);
+    assert.equal(layoutAvis.globalGoogleMapsLinks, 2, `les deux liens Google globaux doivent rester présents ${contexte}`);
     assert.equal(layoutAvis.disclosureTextAlign, 'center', `la notice n’est pas centrée ${contexte}`);
     assert.equal(layoutAvis.footerJustify, 'center', `les liens du pied ne sont pas centrés ${contexte}`);
     assert.equal(layoutAvis.summaryCentered, true, `la note globale n’est pas centrée ${contexte}`);

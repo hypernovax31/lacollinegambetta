@@ -134,7 +134,20 @@ assert.equal(position.hidden, false);
 window.document.getElementById('google-reviews-next').click();
 assert.ok(window.document.getElementById('google-reviews-slide').textContent.includes('deuxième fixture fictive'));
 assert.ok(position.textContent.includes('2 sur 2'));
-assert.ok(window.document.querySelector('.google-reviews-source').href.endsWith('/fixture-2'));
+assert.equal(window.document.querySelectorAll('.google-reviews-source').length, 0,
+  'aucun avis ne doit avoir de lien source individuel');
+let auteur = window.document.querySelector('.google-reviews-author');
+assert.ok(auteur && auteur.tagName === 'SPAN' && !auteur.closest('a'));
+window.document.getElementById('google-reviews-previous').click();
+auteur = window.document.querySelector('.google-reviews-author');
+assert.ok(auteur && auteur.tagName === 'SPAN' && !auteur.closest('a'),
+  'le nom reste du texte même quand Google fournit une URI de profil');
+assert.equal(window.document.querySelectorAll('.google-reviews-author-wrap a').length, 0);
+const tousLesAvis = window.document.getElementById('google-reviews-all');
+const attributionMaps = window.document.getElementById('google-reviews-maps');
+assert.ok(tousLesAvis.href.endsWith('query=test-place'));
+assert.ok(attributionMaps.href.endsWith('query=test-place'));
+assert.equal(attributionMaps.textContent.trim(), 'Google Maps', 'l’attribution Google globale doit rester visible');
 assert.equal(window.document.querySelectorAll('.google-reviews-review-rating, .google-reviews-review-stars').length, 0,
   'les étoiles par avis ne doivent pas doubler la note globale');
 
