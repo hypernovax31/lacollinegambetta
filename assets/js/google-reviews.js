@@ -175,13 +175,11 @@
     var text = localisedText(raw.text) || localisedText(raw.originalText);
     text = String(text || '').replace(/\s+/g, ' ').trim();
     var reviewUrl = safeUrl(raw.googleMapsURI || raw.googleMapsUri);
-    var rating = Number(raw.rating);
     if (!authorName || !text || !reviewUrl) return null;
     return {
       author: authorName,
       authorUrl: safeUrl(author.uri),
       photoUrl: safeUrl(author.photoURI || author.photoUri),
-      rating: Number.isFinite(rating) && rating >= 1 && rating <= 5 ? rating : null,
       text: text,
       textLanguage: String(raw.textLanguageCode || raw.originalTextLanguageCode || lang()),
       translated: !!(raw.textLanguageCode && raw.originalTextLanguageCode &&
@@ -254,20 +252,6 @@
     article.setAttribute('aria-roledescription', c.position(current + 1, reviews.length));
     article.setAttribute('aria-label', c.position(current + 1, reviews.length));
     article.setAttribute('dir', lang() === 'ar' ? 'rtl' : 'ltr');
-
-    if (review.rating !== null) {
-      var ratingLine = document.createElement('p');
-      ratingLine.className = 'google-reviews-review-rating';
-      var ratingStars = document.createElement('span');
-      ratingStars.className = 'google-reviews-review-stars';
-      ratingStars.textContent = '★'.repeat(Math.round(review.rating)) + '☆'.repeat(5 - Math.round(review.rating));
-      ratingStars.setAttribute('aria-hidden', 'true');
-      var ratingText = document.createElement('span');
-      ratingText.textContent = number(review.rating, { minimumFractionDigits:0, maximumFractionDigits:1 }) + '/5';
-      ratingLine.appendChild(ratingStars);
-      ratingLine.appendChild(ratingText);
-      article.appendChild(ratingLine);
-    }
 
     var quote = document.createElement('blockquote');
     quote.className = 'google-reviews-quote';

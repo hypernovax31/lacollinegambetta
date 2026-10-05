@@ -107,8 +107,8 @@ scriptAvisGoogle.includes("fields:['rating','userRatingCount','googleMapsURI','r
   !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
   ? ok('avis Google : affichage auto, attribution Places et absence de cache vérifiés')
   : ko('avis Google : affichage automatique, champs Places ou absence de cache non garantis');
-index.includes('assets/css/google-reviews.css?v=2026100508') &&
-  index.includes('assets/js/google-reviews.js?v=2026100506') &&
+index.includes('assets/css/google-reviews.css?v=2026100510') &&
+  index.includes('assets/js/google-reviews.js?v=2026100508') &&
   d.querySelector('script[src^="assets/js/i18n.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.defer

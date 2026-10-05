@@ -135,7 +135,8 @@ window.document.getElementById('google-reviews-next').click();
 assert.ok(window.document.getElementById('google-reviews-slide').textContent.includes('deuxième fixture fictive'));
 assert.ok(position.textContent.includes('2 sur 2'));
 assert.ok(window.document.querySelector('.google-reviews-source').href.endsWith('/fixture-2'));
-assert.ok(window.document.querySelector('.google-reviews-review-rating span:last-child').textContent === '2/5');
+assert.equal(window.document.querySelectorAll('.google-reviews-review-rating, .google-reviews-review-stars').length, 0,
+  'les étoiles par avis ne doivent pas doubler la note globale');
 
 console.log('  ok   Carrousel : chargement automatique et navigation vérifiés sur fixtures synthétiques (pas de validation Google en direct)');
 window.close();

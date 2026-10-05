@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Vérifications Chromium des pieds de page traduits et de l'affichage des vins
- * sur téléphone : plusieurs largeurs étroites et tiroirs de dégustation.
+ * Vérifications Chromium des traductions, des vins et du bloc d'avis Google
+ * sur petits écrans, en portrait comme en paysage. Les avis de test sont fictifs.
  */
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
@@ -140,7 +140,7 @@ try {
   assert.equal(widgetAccueil.cardBorder, '0px', 'le bloc ne doit pas avoir de cadre');
   assert.equal(widgetAccueil.titlePosition, 'absolute', 'le titre doit rester accessible sans être visible');
   assert.equal(widgetAccueil.titleWidth, '1px');
-  assert.equal(widgetAccueil.ratingDisplay, 'flex', 'note, étoiles et nombre d’avis doivent rester groupés');
+  assert.equal(widgetAccueil.ratingDisplay, 'grid', 'étoiles et note globale doivent dominer le compteur d’avis');
   assert.equal(widgetAccueil.carouselDisplay, 'grid', 'les commentaires doivent être dans un vrai carrousel');
   assert.ok(widgetAccueil.sectionScroll <= widgetAccueil.sectionWidth + 1, 'le bloc d’avis déborde horizontalement à 320 px');
   assert.ok(widgetAccueil.cardScroll <= widgetAccueil.cardWidth + 1, 'la carte d’avis déborde à 320 px');
@@ -266,7 +266,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100506'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100508'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');
@@ -311,11 +311,11 @@ try {
               this.reviews = [
                 {
                   rating:5,
-                  text:'TEST ONLY — commentaire synthétique pour vérifier la mise en page responsive.',
+                  text:'TEST ONLY — ce commentaire fictif est réservé au test de mise en page. Il contient plusieurs phrases pour contrôler les retours à la ligne, la lisibilité sur petit écran, la place laissée aux commandes tactiles et le rendu du carrousel en portrait et en paysage. Il ne s’agit pas d’un avis client.',
                   textLanguageCode:'fr',
                   relativePublishTimeDescription:'il y a quelques jours',
                   googleMapsURI:'https://www.google.com/maps/reviews/fixture-1',
-                  authorAttribution:{ displayName:'TEST ONLY', uri:'https://www.google.com/maps/contrib/fixture-1' }
+                  authorAttribution:{ displayName:'TEST ONLY — nom fictif de démonstration long pour écran mobile', uri:'https://www.google.com/maps/contrib/fixture-1' }
                 },
                 {
                   rating:4,
@@ -366,22 +366,85 @@ try {
   assert.equal(renduAvis.dots, 2);
   assert.ok(renduAvis.position.includes('1 sur 2'));
 
-  for (const largeur of [280, 320, 390, 430]) {
-    await pageAvis.setViewportSize({ width:largeur, height:720 });
-    const layoutAvis = await pageAvis.evaluate(() => {
-      const ids = ['cover-reviews-section', 'google-reviews-card', 'google-reviews-carousel', 'google-reviews-viewport'];
+  async function mesurerMiseEnPage(largeur, hauteur) {
+    await pageAvis.setViewportSize({ width:largeur, height:hauteur });
+    return pageAvis.evaluate(() => {
+      const section = document.getElementById('cover-reviews-section');
+      const card = document.querySelector('.google-reviews-card');
+      const carousel = document.getElementById('google-reviews-carousel');
+      const quote = document.querySelector('.google-reviews-quote');
+      const rect = (element) => {
+        const box = element.getBoundingClientRect();
+        return { width:box.width, height:box.height };
+      };
+      const previous = document.getElementById('google-reviews-previous');
+      const next = document.getElementById('google-reviews-next');
+      const dot = document.querySelector('.google-reviews-dot');
       return {
-        overflows:ids.filter((id) => {
-          const element = id === 'google-reviews-card'
-            ? document.querySelector('.google-reviews-card')
-            : document.getElementById(id);
-          return element.scrollWidth > element.clientWidth + 1;
-        }),
-        height:document.getElementById('cover-reviews-section').getBoundingClientRect().height,
+        overflows:[section, card, carousel, document.getElementById('google-reviews-viewport'), quote]
+          .filter((element) => element.scrollWidth > element.clientWidth + 1)
+          .map((element) => element.id || element.className),
+        height:section.getBoundingClientRect().height,
+        cardDisplay:getComputedStyle(card).display,
+        cardColumns:getComputedStyle(card).gridTemplateColumns,
+        carouselAreas:getComputedStyle(carousel).gridTemplateAreas,
+        landscape:matchMedia('(orientation:landscape)').matches,
+        quoteWidth:rect(quote).width,
+        quoteFontSize:parseFloat(getComputedStyle(quote).fontSize),
+        quoteLineClamp:parseInt(getComputedStyle(quote).webkitLineClamp, 10),
+        averageStarsWidth:rect(document.getElementById('google-reviews-stars')).width,
+        averageStarsImage:getComputedStyle(document.getElementById('google-reviews-stars')).backgroundImage,
+        averageStarsFillImage:getComputedStyle(document.getElementById('google-reviews-stars-fill')).backgroundImage,
+        averageStarsFontSize:parseFloat(getComputedStyle(document.getElementById('google-reviews-stars')).fontSize),
+        averageScoreFontSize:parseFloat(getComputedStyle(document.getElementById('google-reviews-score')).fontSize),
+        starsBeforeScore:document.getElementById('google-reviews-stars').getBoundingClientRect().left <
+          document.getElementById('google-reviews-score').getBoundingClientRect().left,
+        countBelowScore:document.getElementById('google-reviews-count').getBoundingClientRect().top >=
+          document.getElementById('google-reviews-score').getBoundingClientRect().bottom,
+        duplicateReviewStars:document.querySelectorAll('.google-reviews-review-rating, .google-reviews-review-stars').length,
+        navTargets:[rect(previous), rect(next)],
+
+        dotTarget:dot ? rect(dot) : null,
       };
     });
-    assert.deepEqual(layoutAvis.overflows, [], `le bloc ou le carrousel déborde à ${largeur}px`);
-    assert.ok(layoutAvis.height <= 280, `le bloc reste trop haut (${layoutAvis.height}px à ${largeur}px)`);
+  }
+
+  for (const [largeur, hauteur] of [[280,640], [320,568], [375,667], [390,844], [430,932]]) {
+    const layoutAvis = await mesurerMiseEnPage(largeur, hauteur);
+    assert.deepEqual(layoutAvis.overflows, [], `le bloc ou le carrousel déborde en portrait à ${largeur}px`);
+    assert.equal(layoutAvis.landscape, false, `le test portrait est dans la mauvaise orientation à ${largeur}px`);
+    assert.ok(layoutAvis.height <= 360, `le bloc reste trop haut en portrait (${layoutAvis.height}px à ${largeur}px)`);
+    assert.ok(layoutAvis.quoteWidth >= largeur - 48, `le commentaire manque de largeur à ${largeur}px`);
+    assert.ok(layoutAvis.quoteFontSize >= 14.5, `le texte est trop petit en portrait (${layoutAvis.quoteFontSize}px à ${largeur}px)`);
+    assert.ok(layoutAvis.averageStarsWidth > 20, `les étoiles de la note moyenne sont invisibles à ${largeur}px`);
+    assert.ok(layoutAvis.averageStarsImage.includes('data:image/svg+xml') && layoutAvis.averageStarsFillImage.includes('data:image/svg+xml'),
+      `la note globale n’a pas ses étoiles dorées à ${largeur}px`);
+    assert.ok(layoutAvis.averageStarsFontSize >= 20 && layoutAvis.averageScoreFontSize >= 22,
+      `les étoiles et la note globale ne sont pas assez mises en avant à ${largeur}px`);
+    assert.ok(layoutAvis.starsBeforeScore && layoutAvis.countBelowScore,
+      `la hiérarchie de la note globale n’est pas respectée à ${largeur}px`);
+    assert.equal(layoutAvis.duplicateReviewStars, 0, `des étoiles par avis doublent la note globale à ${largeur}px`);
+    assert.ok(layoutAvis.navTargets.every((target) => target.width >= 44 && target.height >= 44),
+      `les commandes du carrousel sont trop petites en portrait à ${largeur}px`);
+    assert.ok(layoutAvis.dotTarget && layoutAvis.dotTarget.height >= 40,
+      `les commandes de position sont trop petites en portrait à ${largeur}px`);
+  }
+  for (const [largeur, hauteur] of [[568,320], [667,375], [844,390]]) {
+    const layoutAvis = await mesurerMiseEnPage(largeur, hauteur);
+    assert.deepEqual(layoutAvis.overflows, [], `le bloc ou le carrousel déborde en paysage à ${largeur}×${hauteur}px`);
+    assert.equal(layoutAvis.landscape, true, `le test paysage est dans la mauvaise orientation à ${largeur}×${hauteur}px`);
+    assert.equal(layoutAvis.cardDisplay, 'grid', `la disposition paysage en colonnes n’est pas activée à ${largeur}×${hauteur}px`);
+    assert.equal(layoutAvis.quoteLineClamp, 2, `le commentaire n’est pas compact en paysage à ${largeur}×${hauteur}px`);
+    assert.ok(layoutAvis.height <= 300, `le bloc déborde en hauteur paysage (${layoutAvis.height}px à ${largeur}×${hauteur}px)`);
+    assert.ok(layoutAvis.quoteWidth > 200, `le commentaire manque de largeur en paysage à ${largeur}px`);
+    assert.ok(layoutAvis.averageStarsFontSize >= 17 && layoutAvis.averageScoreFontSize >= 19,
+      `la note globale est reléguée en paysage à ${largeur}px`);
+    assert.ok(layoutAvis.starsBeforeScore && layoutAvis.countBelowScore && layoutAvis.duplicateReviewStars === 0,
+      `la hiérarchie des étoiles et de la note n’est pas respectée en paysage à ${largeur}px`);
+    assert.ok(layoutAvis.navTargets.every((target) => target.width >= 44 && target.height >= 44),
+      `les commandes du carrousel sont trop petites en paysage à ${largeur}px`);
+    assert.ok(layoutAvis.dotTarget && layoutAvis.dotTarget.height >= 36,
+      `les commandes de position sont trop petites en paysage à ${largeur}px`);
   }
   await pageAvis.getByRole('button', { name:'Avis suivant' }).click();
   await pageAvis.waitForFunction(() =>
