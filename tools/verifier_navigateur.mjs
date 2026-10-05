@@ -419,7 +419,11 @@ try {
           document.getElementById('google-reviews-score').getBoundingClientRect().bottom,
         duplicateReviewStars:document.querySelectorAll('.google-reviews-review-rating, .google-reviews-review-stars').length,
         navTargets:[rect(previous), rect(next)],
-
+        navCentersY:[previous, next].map((element) => {
+          const box=element.getBoundingClientRect();
+          const carouselBox=carousel.getBoundingClientRect();
+          return box.top - carouselBox.top + box.height / 2;
+        }),
         dotTarget:dot ? rect(dot) : null,
       };
     });
@@ -433,6 +437,20 @@ try {
     assert.equal(layoutAvis.disclosureTextAlign, 'center', `la notice n’est pas centrée ${contexte}`);
     assert.equal(layoutAvis.footerJustify, 'center', `les liens du pied ne sont pas centrés ${contexte}`);
     assert.equal(layoutAvis.summaryCentered, true, `la note globale n’est pas centrée ${contexte}`);
+  }
+
+  async function verifierStabiliteFleches(layoutInitial, largeur, hauteur, contexte) {
+    assert.ok(Math.abs(layoutInitial.navCentersY[0] - layoutInitial.navCentersY[1]) <= 1,
+      `les deux flèches ne sont pas au même niveau ${contexte}`);
+    await pageAvis.getByRole('button', { name:'Avis suivant' }).click();
+    await pageAvis.waitForFunction(() =>
+      document.getElementById('google-reviews-position')?.textContent.includes('2 sur 2'));
+    const layoutSuivant = await mesurerMiseEnPage(largeur, hauteur);
+    assert.ok(layoutSuivant.navCentersY.every((y, index) => Math.abs(y - layoutInitial.navCentersY[index]) <= 1),
+      `les flèches changent de niveau vertical en passant à l’avis suivant ${contexte} (${layoutInitial.navCentersY.map((y) => y.toFixed(1)).join('/')} → ${layoutSuivant.navCentersY.map((y) => y.toFixed(1)).join('/')})`);
+    await pageAvis.getByRole('button', { name:'Avis précédent' }).click();
+    await pageAvis.waitForFunction(() =>
+      document.getElementById('google-reviews-position')?.textContent.includes('1 sur 2'));
   }
 
   for (const [largeur, hauteur] of [[280,640], [320,568], [375,667], [390,844], [430,932]]) {
@@ -456,6 +474,7 @@ try {
       `les commandes du carrousel sont trop petites en portrait à ${largeur}px`);
     assert.ok(layoutAvis.dotTarget && layoutAvis.dotTarget.height >= 40,
       `les commandes de position sont trop petites en portrait à ${largeur}px`);
+    await verifierStabiliteFleches(layoutAvis, largeur, hauteur, `en portrait à ${largeur}px`);
   }
   for (const [largeur, hauteur] of [[568,320], [667,375], [844,390]]) {
     const layoutAvis = await mesurerMiseEnPage(largeur, hauteur);
@@ -475,6 +494,7 @@ try {
       `les commandes du carrousel sont trop petites en paysage à ${largeur}px`);
     assert.ok(layoutAvis.dotTarget && layoutAvis.dotTarget.height >= 36,
       `les commandes de position sont trop petites en paysage à ${largeur}px`);
+    await verifierStabiliteFleches(layoutAvis, largeur, hauteur, `en paysage à ${largeur}×${hauteur}px`);
   }
   await pageAvis.getByRole('button', { name:'Avis suivant' }).click();
   await pageAvis.waitForFunction(() =>

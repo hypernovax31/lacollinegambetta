@@ -121,7 +121,7 @@
   display:grid;
   grid-template-columns:28px minmax(0,1fr) 28px;
   grid-template-areas:'previous viewport next' '. dots .';
-  grid-template-rows:auto auto;
+  grid-template-rows:12rem auto;
   align-items:center;
   gap:4px 7px;
   width:100%;
@@ -159,12 +159,15 @@
 html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scaleX(-1); }
 #cover-reviews-section .google-reviews-viewport {
   min-width:0;
+  height:12rem;
+  min-height:0;
   overflow:hidden;
   touch-action:pan-y;
   outline-offset:3px;
 }
 #cover-reviews-section .google-reviews-slide {
   display:flex;
+  height:100%;
   min-height:0;
   flex-direction:column;
   justify-content:center;
@@ -359,8 +362,10 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   #cover-reviews-section .google-reviews-carousel {
     grid-template-columns:44px minmax(0,1fr) 44px;
     grid-template-areas:'viewport viewport viewport' 'previous dots next';
+    grid-template-rows:11.25rem 44px;
     gap:2px 4px;
   }
+  #cover-reviews-section .google-reviews-viewport { height:11.25rem; }
   #cover-reviews-section .google-reviews-nav { width:44px; height:44px; }
   #cover-reviews-section .google-reviews-nav svg { width:17px; height:17px; }
   #cover-reviews-section .google-reviews-slide { padding:3px 2px 1px; text-align:center; }
@@ -436,9 +441,11 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
     grid-area:carousel;
     grid-template-columns:44px minmax(0,1fr) 44px;
     grid-template-areas:'previous viewport next' 'dots dots dots';
+    grid-template-rows:6.5rem 40px;
     gap:1px 4px;
     align-self:center;
   }
+  #cover-reviews-section .google-reviews-viewport { height:6.5rem; }
   #cover-reviews-section .google-reviews-nav { width:44px; height:44px; }
   #cover-reviews-section .google-reviews-slide { padding:2px 5px 0; text-align:center; }
   #cover-reviews-section .google-reviews-quote { max-width:none; margin:0; font-size:.9rem; line-height:1.35; text-align:center; -webkit-line-clamp:2; line-clamp:2; }
