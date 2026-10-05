@@ -340,7 +340,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100509'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100510'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');
@@ -393,7 +393,7 @@ try {
                 },
                 {
                   rating:4,
-                  text:'TEST ONLY — deuxième commentaire fictif destiné au test du carrousel.',
+                  text:'TEST ONLY — fixture courte.',
                   textLanguageCode:'fr',
                   relativePublishTimeDescription:'il y a quelques semaines',
                   googleMapsURI:'https://www.google.com/maps/reviews/fixture-2',
@@ -421,6 +421,8 @@ try {
     score:document.getElementById('google-reviews-score').textContent,
     count:document.getElementById('google-reviews-count').textContent,
     stars:document.getElementById('google-reviews-stars').getAttribute('aria-label'),
+    starsAnimation:getComputedStyle(document.getElementById('google-reviews-stars')).animationName,
+    starsFillAnimation:getComputedStyle(document.getElementById('google-reviews-stars-fill')).animationName,
     quote:document.querySelector('.google-reviews-quote').textContent,
     carousel:getComputedStyle(document.getElementById('google-reviews-carousel')).display,
     previousHidden:document.getElementById('google-reviews-previous').hidden,
@@ -433,6 +435,8 @@ try {
   assert.equal(renduAvis.score, '4,8/5');
   assert.equal(renduAvis.count, '28 avis');
   assert.equal(renduAvis.stars, 'Note moyenne Google : 4,8 sur 5');
+  assert.equal(renduAvis.starsAnimation, 'google-review-stars-appear', 'l’apparition des étoiles doit être animée');
+  assert.equal(renduAvis.starsFillAnimation, 'google-review-stars-reveal', 'le remplissage doré des étoiles doit être animé');
   assert.ok(renduAvis.quote.startsWith('TEST ONLY'));
   assert.equal(renduAvis.carousel, 'grid');
   assert.equal(renduAvis.previousHidden, false);
@@ -440,12 +444,25 @@ try {
   assert.equal(renduAvis.dots, 2);
   assert.ok(renduAvis.position.includes('1 sur 2'));
 
+  async function attendreAnimationsAvis() {
+    await pageAvis.evaluate(() => new Promise((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await pageAvis.waitForFunction(() => {
+      const viewport=document.getElementById('google-reviews-viewport');
+      const slide=document.querySelector('.google-reviews-slide');
+      return [...viewport.getAnimations(), ...slide.getAnimations()]
+        .every((animation)=>animation.playState==='finished' || animation.playState==='idle');
+    }, undefined, { polling:20, timeout:2000 });
+  }
   async function mesurerMiseEnPage(largeur, hauteur) {
     await pageAvis.setViewportSize({ width:largeur, height:hauteur });
+    await attendreAnimationsAvis();
     return pageAvis.evaluate(() => {
       const section = document.getElementById('cover-reviews-section');
       const card = document.querySelector('.google-reviews-card');
       const carousel = document.getElementById('google-reviews-carousel');
+      const viewport = document.getElementById('google-reviews-viewport');
+      const slide = document.querySelector('.google-reviews-slide');
       const quote = document.querySelector('.google-reviews-quote');
       const rect = (element) => {
         const box = element.getBoundingClientRect();
@@ -455,7 +472,7 @@ try {
       const next = document.getElementById('google-reviews-next');
       const dot = document.querySelector('.google-reviews-dot');
       return {
-        overflows:[section, card, carousel, document.getElementById('google-reviews-viewport')]
+        overflows:[section, card, carousel, viewport]
           .filter((element) => element.scrollWidth > element.clientWidth + 1)
           .map((element) => element.id || element.className),
         quoteWithinViewport:(() => {
@@ -464,6 +481,11 @@ try {
           return quoteBox.left >= viewportBox.left - 1 && quoteBox.right <= viewportBox.right + 1;
         })(),
         height:section.getBoundingClientRect().height,
+        viewportHeight:rect(viewport).height,
+        slideHeight:rect(slide).height,
+        slideFits:slide.getBoundingClientRect().height<=viewport.clientHeight+1,
+        slideAnimation:getComputedStyle(slide).animationName,
+        viewportTransitionDuration:getComputedStyle(viewport).transitionDuration,
         cardDisplay:getComputedStyle(card).display,
         cardColumns:getComputedStyle(card).gridTemplateColumns,
         carouselAreas:getComputedStyle(carousel).gridTemplateAreas,
@@ -511,6 +533,9 @@ try {
     assert.equal(layoutAvis.disclosureTextAlign, 'center', `la notice n’est pas centrée ${contexte}`);
     assert.equal(layoutAvis.footerJustify, 'center', `les liens du pied ne sont pas centrés ${contexte}`);
     assert.equal(layoutAvis.summaryCentered, true, `la note globale n’est pas centrée ${contexte}`);
+    assert.equal(layoutAvis.slideFits, true, `le carrousel ne s’adapte pas à la hauteur du commentaire ${contexte}`);
+    assert.ok(parseFloat(layoutAvis.viewportTransitionDuration)>=.3,
+      `la hauteur du carrousel n’est pas animée avec fluidité ${contexte}`);
   }
 
   async function verifierStabiliteFleches(layoutInitial, largeur, hauteur, contexte) {
@@ -522,9 +547,18 @@ try {
     const layoutSuivant = await mesurerMiseEnPage(largeur, hauteur);
     assert.ok(layoutSuivant.navCentersY.every((y, index) => Math.abs(y - layoutInitial.navCentersY[index]) <= 1),
       `les flèches changent de niveau vertical en passant à l’avis suivant ${contexte} (${layoutInitial.navCentersY.map((y) => y.toFixed(1)).join('/')} → ${layoutSuivant.navCentersY.map((y) => y.toFixed(1)).join('/')})`);
+    assert.ok(layoutSuivant.viewportHeight + 5 < layoutInitial.viewportHeight,
+      `la hauteur du carrousel ne s’adapte pas du commentaire long au court ${contexte} (${layoutInitial.viewportHeight}px → ${layoutSuivant.viewportHeight}px)`);
+    assert.ok(layoutInitial.slideFits && layoutSuivant.slideFits,
+      `le texte ou les attributions sont coupés dans le carrousel ${contexte}`);
+    assert.equal(layoutSuivant.slideAnimation, 'google-review-enter-next',
+      `le défilement vers l’avis suivant n’est pas animé ${contexte}`);
     await pageAvis.getByRole('button', { name:'Avis précédent' }).click();
     await pageAvis.waitForFunction(() =>
       document.getElementById('google-reviews-position')?.textContent.includes('1 sur 2'));
+    await attendreAnimationsAvis();
+    const animationRetour=await pageAvis.locator('.google-reviews-slide').evaluate((element)=>getComputedStyle(element).animationName);
+    assert.equal(animationRetour, 'google-review-enter-previous', `le retour à l’avis précédent n’est pas animé ${contexte}`);
   }
 
   for (const [largeur, hauteur] of [[280,640], [320,568], [375,667], [390,844], [430,932]]) {

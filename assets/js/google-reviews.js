@@ -91,6 +91,7 @@
   var sdkPromise = null;
   var requestPromise = null;
   var pointerStart = null;
+  var slideResizeObserver = null;
 
   function lang() {
     var value = String(document.documentElement.lang || 'fr').toLowerCase().split('-')[0];
@@ -242,6 +243,27 @@
     wrap.appendChild(name);
     return wrap;
   }
+  function fitViewportToReview(article) {
+    if (slideResizeObserver) {
+      slideResizeObserver.disconnect();
+      slideResizeObserver = null;
+    }
+    function updateHeight() {
+      if (!article.isConnected) return;
+      var contentHeight = article.getBoundingClientRect().height;
+      if (!Number.isFinite(contentHeight) || contentHeight <= 0) return;
+      var minimum = parseFloat(window.getComputedStyle(viewport).minHeight) || 0;
+      viewport.style.height = Math.ceil(Math.max(contentHeight, minimum)) + 'px';
+    }
+    updateHeight();
+    if (typeof window.ResizeObserver === 'function') {
+      slideResizeObserver = new window.ResizeObserver(updateHeight);
+      slideResizeObserver.observe(article);
+    }
+    if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === 'function') {
+      document.fonts.ready.then(updateHeight).catch(function () {});
+    }
+  }
   function renderSlide(direction) {
     if (!reviews.length) return;
     var c = copy();
@@ -298,6 +320,7 @@
 
     article.classList.add(direction < 0 ? 'is-entering-previous' : 'is-entering-next');
     slide.replaceChildren(article);
+    fitViewportToReview(article);
     position.textContent = c.position(current + 1, reviews.length);
     position.hidden = false;
     Array.prototype.forEach.call(dots.children, function (dot, index) {
@@ -318,6 +341,10 @@
     position.hidden = true;
     disclosure.hidden = false;
     if (!reviews.length) {
+      if (slideResizeObserver) {
+        slideResizeObserver.disconnect();
+        slideResizeObserver = null;
+      }
       carousel.hidden = true;
       dots.hidden = true;
       previous.hidden = true;

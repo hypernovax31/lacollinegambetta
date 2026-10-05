@@ -78,6 +78,23 @@
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.5 15.2 8 22.4 9 17.2 14.2 18.4 21.5 12 17.9 5.6 21.5 6.8 14.2 1.6 9 8.8 8Z' fill='%239c7a2d'/%3E%3C/svg%3E");
   background-repeat:repeat-x;
   background-size:1.05em 1em;
+  transform-origin:left center;
+}
+#cover-reviews-section .google-reviews-rating:not([hidden]) .google-reviews-stars {
+  animation:google-review-stars-appear .52s cubic-bezier(.2,.75,.25,1.15) both;
+  transform-origin:center;
+}
+#cover-reviews-section .google-reviews-rating:not([hidden]) .google-reviews-stars-fill {
+  animation:google-review-stars-reveal .68s cubic-bezier(.2,.7,.25,1) .06s both;
+}
+@keyframes google-review-stars-appear {
+  from { opacity:0; transform:scale(.88); }
+  68% { opacity:1; transform:scale(1.045); }
+  to { opacity:1; transform:scale(1); }
+}
+@keyframes google-review-stars-reveal {
+  from { transform:scaleX(0); }
+  to { transform:scaleX(1); }
 }
 #cover-reviews-section .google-reviews-score {
   grid-area:score;
@@ -120,8 +137,8 @@
 #cover-reviews-section .google-reviews-carousel {
   display:grid;
   grid-template-columns:28px minmax(0,1fr) 28px;
-  grid-template-areas:'previous viewport next' '. dots .';
-  grid-template-rows:12rem auto;
+  grid-template-areas:'previous dots next' 'viewport viewport viewport';
+  grid-template-rows:36px auto;
   align-items:center;
   gap:4px 7px;
   width:100%;
@@ -158,28 +175,47 @@
 }
 html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scaleX(-1); }
 #cover-reviews-section .google-reviews-viewport {
+  display:grid;
   min-width:0;
-  height:12rem;
-  min-height:0;
+  height:8rem;
+  min-height:8rem;
   overflow:hidden;
   touch-action:pan-y;
   outline-offset:3px;
+  transition:height .32s cubic-bezier(.22,.61,.36,1);
+}
+#cover-reviews-section #google-reviews-slide {
+  display:grid;
+  align-content:center;
+  width:100%;
+  min-height:100%;
 }
 #cover-reviews-section .google-reviews-slide {
   display:flex;
-  height:100%;
+  align-self:center;
+  width:100%;
+  height:auto;
   min-height:0;
   flex-direction:column;
   justify-content:center;
   padding:5px 14px 3px;
   background:transparent;
   text-align:center;
-  animation:google-review-enter .16s ease both;
+  animation-duration:.34s;
+  animation-timing-function:cubic-bezier(.22,.61,.36,1);
+  animation-fill-mode:both;
+  will-change:opacity,transform;
 }
+#cover-reviews-section .google-reviews-slide.is-entering-next { animation-name:google-review-enter-next; }
+#cover-reviews-section .google-reviews-slide.is-entering-previous { animation-name:google-review-enter-previous; }
 #cover-reviews-section .google-reviews-slide[dir="rtl"] { text-align:center; }
-@keyframes google-review-enter {
-  from { opacity:.45; transform:translateY(3px); }
-  to { opacity:1; transform:translateY(0); }
+@keyframes google-review-enter-next {
+  from { opacity:0; transform:translateX(14px); }
+  to { opacity:1; transform:translateX(0); }
+}
+@keyframes google-review-enter-previous {
+  from { opacity:0; transform:translateX(-14px); }
+  to { opacity:1; transform:translateX(0); }
 }
 #cover-reviews-section .google-reviews-quote {
   max-width:64ch;
@@ -361,11 +397,11 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   #cover-reviews-section .google-reviews-count { font-size:.72rem; }
   #cover-reviews-section .google-reviews-carousel {
     grid-template-columns:44px minmax(0,1fr) 44px;
-    grid-template-areas:'viewport viewport viewport' 'previous dots next';
-    grid-template-rows:11.25rem 44px;
+    grid-template-areas:'previous dots next' 'viewport viewport viewport';
+    grid-template-rows:44px auto;
     gap:2px 4px;
   }
-  #cover-reviews-section .google-reviews-viewport { height:11.25rem; }
+  #cover-reviews-section .google-reviews-viewport { height:8rem; min-height:8rem; }
   #cover-reviews-section .google-reviews-nav { width:44px; height:44px; }
   #cover-reviews-section .google-reviews-nav svg { width:17px; height:17px; }
   #cover-reviews-section .google-reviews-slide { padding:3px 2px 1px; text-align:center; }
@@ -440,12 +476,12 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
   #cover-reviews-section .google-reviews-carousel {
     grid-area:carousel;
     grid-template-columns:44px minmax(0,1fr) 44px;
-    grid-template-areas:'previous viewport next' 'dots dots dots';
-    grid-template-rows:6.5rem 40px;
+    grid-template-areas:'previous dots next' 'viewport viewport viewport';
+    grid-template-rows:44px auto;
     gap:1px 4px;
     align-self:center;
   }
-  #cover-reviews-section .google-reviews-viewport { height:6.5rem; }
+  #cover-reviews-section .google-reviews-viewport { height:4rem; min-height:4rem; }
   #cover-reviews-section .google-reviews-nav { width:44px; height:44px; }
   #cover-reviews-section .google-reviews-slide { padding:2px 5px 0; text-align:center; }
   #cover-reviews-section .google-reviews-quote { max-width:none; margin:0; font-size:.9rem; line-height:1.35; text-align:center; -webkit-line-clamp:2; line-clamp:2; }
@@ -487,8 +523,11 @@ html[dir="rtl"] #cover-reviews-section .google-reviews-nav svg { transform:scale
 
 @media (prefers-reduced-motion:reduce) {
   #cover-reviews-section .google-reviews-load,
-  #cover-reviews-section .google-reviews-nav { transition:none; }
+  #cover-reviews-section .google-reviews-nav,
+  #cover-reviews-section .google-reviews-viewport { transition:none; }
   #cover-reviews-section[data-reviews-state="loading"] .google-reviews-status::before { animation:none; }
-  #cover-reviews-section .google-reviews-slide { animation:none; }
+  #cover-reviews-section .google-reviews-slide,
+  #cover-reviews-section .google-reviews-rating:not([hidden]) .google-reviews-stars,
+  #cover-reviews-section .google-reviews-rating:not([hidden]) .google-reviews-stars-fill { animation:none; }
 }
 @media print { #cover-reviews-section { display:none !important; } }
