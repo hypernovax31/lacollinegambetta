@@ -1,7 +1,8 @@
 // Controles automatiques du site : CSS valide, HTML coherent, donnees
-// structurees conformes, bloc d'avis fonctionnel. A lancer avec :
+// structurees conformes et navigation. A lancer avec :
 //   node tools/verifier_site.mjs
 import { readFileSync, existsSync } from 'node:fs';
+import vm from 'node:vm';
 import postcss from 'postcss';
 import { JSDOM } from 'jsdom';
 
@@ -21,6 +22,12 @@ for (const [i, bloc] of [...index.matchAll(/<style>([\s\S]*?)<\/style>/g)].entri
     ok(`feuille de style ${i + 1} : ${regles} regles analysees sans erreur`);
   } catch (e) { ko(`feuille de style ${i + 1} : ${e.message}`); }
 }
+try {
+  const reviewCss = postcss.parse(lire('assets/css/google-reviews.css'));
+  let regles = 0;
+  reviewCss.walkRules(() => regles++);
+  ok(`avis Google : feuille responsive ${regles} regles validee`);
+} catch (e) { ko(`avis Google : feuille responsive invalide (${e.message})`); }
 
 // --------------------------------------------------- 2. structure du HTML ---
 const dom = new JSDOM(index);
@@ -38,6 +45,25 @@ desc.length <= 160 ? ok(`meta description : ${desc.length} caracteres`)
 const alts = [...d.querySelectorAll('link[rel=alternate][hreflang]')];
 alts.length === 16 ? ok(`hreflang : ${alts.length} declarations (15 langues + x-default)`)
                    : ko(`hreflang : ${alts.length} declarations`);
+const ligneHoraires = d.querySelector('#cover-section .cover-hours__range');
+const libelleHeures = d.querySelector('#cover-section [data-hours-range]');
+const statutHoraires = d.querySelector('#cover-section [data-hours-status]');
+ligneHoraires?.contains(libelleHeures) && ligneHoraires.contains(statutHoraires) &&
+  libelleHeures.nextElementSibling === statutHoraires
+  ? ok('horaires : le statut suit la plage horaire dans la même ligne')
+  : ko('horaires : le statut doit suivre la plage horaire dans la même ligne');
+index.includes('--cover-address-font-size:clamp(.68rem,1.15vw,.86rem)') &&
+  index.includes('--cover-hours-line-font-size:clamp(.816rem,1.38vw,1.032rem)') &&
+  index.includes('--cover-address-font-size:clamp(.5rem,2.1vw,.66rem)') &&
+  index.includes('--cover-hours-line-font-size:clamp(.6rem,2.52vw,.792rem)')
+  ? ok('horaires : police de toute la ligne, badge compris, proportionnelle à l’adresse')
+  : ko('horaires : rapport de taille 1,2× non défini sur tous les écrans');
+index.includes('.medallion-frame.is-load-reflection::after') &&
+  index.includes("window.addEventListener('load'") &&
+  index.includes("'(prefers-reduced-motion: reduce)'") &&
+  index.includes("frame.classList.remove('is-load-reflection')")
+  ? ok('médaillon : reflet après chargement complet, retrait avant le survol suivant')
+  : ko('médaillon : reflet de chargement, fin d’animation ou mouvement réduit absent');
 const sansDim = [...d.querySelectorAll('img')].filter((i) => !i.getAttribute('width'));
 sansDim.length === 0 ? ok('toutes les images ont width/height')
                      : ko(`${sansDim.length} image(s) sans dimensions`);
@@ -69,161 +95,60 @@ ok(`carte balisee : ${items} articles`);
 sansPrix.length === 0 ? ok('tous les articles ont un prix valide')
                       : ko(`${sansPrix.length} article(s) sans prix : ${sansPrix.slice(0, 5)}`);
 
-// --------------------------------------------------- 4. bloc d'avis --------
-const marqueurDebut = index.indexOf('<!-- avis-google:js:debut -->');
-const marqueurFin = index.indexOf('<!-- avis-google:js:fin -->', marqueurDebut);
-const baliseOuverture = index.indexOf('<script>', marqueurDebut);
-const baliseFermeture = index.indexOf('</script>', baliseOuverture);
-const script = marqueurDebut >= 0 && marqueurFin > baliseFermeture
-  ? index.slice(baliseOuverture + 8, baliseFermeture) : '';
-script ? ok('chargeur des avis place dans le body') : ko('chargeur des avis absent ou hors du body');
-const occurrences = (texte, motif) => texte.split(motif).length - 1;
-occurrences(index.toLowerCase(), '<body') === 1 && occurrences(index.toLowerCase(), '</body>') === 1
-  ? ok('index.html : une seule ouverture et fermeture du body')
-  : ko('index.html : balises body dupliquees');
-const gabarit = d.getElementById('cover-reviews').outerHTML;
-function domAvis(fetchConfig) {
-  const dom = new JSDOM(`<body>${gabarit}</body>`, {
-    runScripts: 'outside-only', pretendToBeVisual: true,
-    url: 'https://lacollinegambetta.com/'
-  });
-  dom.window.fetch = fetchConfig;
-  return dom;
-}
-function reponseJson(value) {
-  return Promise.resolve({ ok: true, json: () => Promise.resolve(value) });
-}
-
-const manuel = {
-  publie: true, note: 4.6, nombre_avis: 128,
-  url: 'https://www.google.com/maps/search/?api=1&query=restaurant',
-  avis: [{ auteur: 'Claire D.', profil: 'https://www.google.com/maps/contrib/1',
-    photo: 'https://lh3.googleusercontent.com/a/test', note: 5,
-    texte: 'Accueil parfait et cuisine maison.',
-    url_avis: 'https://www.google.com/maps/reviews/data=1', date_visite: '2026-09' }]
-};
-const essai = domAvis(() => reponseJson(manuel));
-essai.window.eval(script);
-await new Promise((r) => setTimeout(r, 30));
-const b = essai.window.document.getElementById('cover-reviews');
-!b.hidden ? ok('bloc avis : affiche la source manuelle publiee') : ko('bloc avis manuel : reste masque');
-const texte = b.textContent.replace(/\s+/g, ' ').trim();
-texte.includes('4,6/5') && texte.includes('128 avis Google') && texte.includes('Claire D.')
-  ? ok(`bloc avis manuel : "${texte.slice(0, 80)}"`) : ko('bloc avis manuel : contenu inattendu : ' + texte);
-const dateManuelle = essai.window.document.getElementById('cover-reviews-date').textContent;
-dateManuelle === 'Visite : septembre 2026'
-  ? ok('avis manuel : mois et annee de visite affiches')
-  : ko('avis manuel : date de visite inattendue : ' + dateManuelle);
-essai.window.document.getElementById('cover-reviews-maps').textContent === 'Google Maps'
-  ? ok('attribution Google Maps visible') : ko('attribution Google Maps absente');
-essai.window.document.getElementById('cover-reviews-source').href.includes('/reviews/data=1')
-  ? ok('avis manuel : lien direct vers l’avis conserve') : ko('avis manuel : lien direct absent');
-
-const vide = domAvis(() => reponseJson({ publie: false }));
-vide.window.eval(script);
-await new Promise((r) => setTimeout(r, 30));
-vide.window.document.getElementById('cover-reviews').hidden
-  ? ok('bloc avis : invisible sans donnees reelles')
-  : ko('bloc avis : visible alors qu’il est vide');
-
-const remplissage = essai.window.document.getElementById('cover-reviews-stars-fill').style.width;
-remplissage === '92%' ? ok(`etoiles : remplissage exact pour 4,6/5 (${remplissage})`)
-                         : ko(`etoiles : remplissage inattendu (${remplissage})`);
-
-// Places Library : aucune requete REST cross-origin, aucun cache Places.
-const live = domAvis(() => reponseJson({
-  place_id: 'ChIJxxxx', cle_api: 'CLE_DE_TEST', publie: true,
-  note: 5, nombre_avis: 4, url: 'https://www.google.com/maps/search/?api=1&query=restaurant',
-}));
-let champsPlaces = [];
-let nomLieu = '';
-live.window.google = { maps: { importLibrary: (nom) => {
-  nomLieu = nom;
-  return Promise.resolve({ Place: class {
-    constructor(options) { this.id = options.id; }
-    fetchFields(options) {
-      champsPlaces = options.fields;
-      Object.assign(this, {
-        rating: 4.8, userRatingCount: 57,
-        googleMapsURI: 'https://www.google.com/maps?cid=1',
-        attributions: [{ provider: 'Source des données', providerURI: 'https://www.example.com/attribution' }],
-        reviews: [
-          { rating: 3, text: 'Avis moyen a ne pas afficher.', googleMapsURI: 'https://www.google.com/maps/reviews/3',
-            authorAttribution: { displayName: 'Alex R.' }, visitDateMonth: 0, visitDateYear: 2026 },
-          { rating: 4, text: 'Avis sans date à écarter.', googleMapsURI: 'https://www.google.com/maps/reviews/4',
-            authorAttribution: { displayName: 'Sans Date' } },
-          { rating: 5, text: 'Terrasse agreable et planches genereuses.',
-            googleMapsURI: 'https://www.google.com/maps/reviews/5', visitDateMonth: 8, visitDateYear: 2026,
-            textLanguageCode: 'fr', originalTextLanguageCode: 'en',
-            authorAttribution: { displayName: 'Marc L.', uri: 'https://www.google.com/maps/contrib/2',
-              photoURI: 'https://lh3.googleusercontent.com/a/marc' } }
-        ]
-      });
-      return Promise.resolve();
-    }
-  } });
-} } };
-live.window.eval(script);
-await new Promise((r) => setTimeout(r, 50));
-const t2 = live.window.document.getElementById('cover-reviews').textContent.replace(/\s+/g, ' ').trim();
-t2.includes('4,8/5') && t2.includes('57 avis Google') && t2.includes('Marc L.') &&
-  !t2.includes('Avis moyen') && !t2.includes('Avis sans date')
-  ? ok(`mode Places : note live et premier avis admissible (${t2.slice(0, 90)})`)
-  : ko('mode Places : ' + t2);
-nomLieu === 'places' && ['rating', 'userRatingCount', 'googleMapsURI', 'reviews', 'attributions'].every((f) => champsPlaces.includes(f))
-  ? ok('Places Library : charge la note, les avis, les attributions et les liens Google Maps')
-  : ko('Places Library : champs Places incomplets');
-const attributionDonnee = live.window.document.getElementById('cover-reviews-data-attribution');
-attributionDonnee.textContent.includes('Source des données') &&
-  attributionDonnee.querySelector('a')?.href === 'https://www.example.com/attribution'
-  ? ok('avis Places : attributions de fournisseurs affichées')
-  : ko('avis Places : attribution de fournisseur absente');
-live.window.document.getElementById('cover-reviews-date').textContent === 'Visite : septembre 2026'
-  ? ok('avis Places : date de visite francaise affichee')
-  : ko('avis Places : date de visite absente');
-const divulgation = live.window.document.getElementById('cover-reviews-disclosure').textContent;
-divulgation.includes('4 ou 5 étoiles')
-  ? ok('avis Places : filtre et ordre de pertinence declares')
-  : ko('avis Places : filtre non declare');
-divulgation.includes('traduit par Google')
-  ? ok('avis Places : traduction signalee avec lien vers la source')
-  : ko('avis Places : traduction non signalee');
-!script.includes('places.googleapis.com/v1') && !script.includes('sessionStorage.') && !script.includes('localStorage.')
-  ? ok('avis Places : pas de REST navigateur ni de cache de contenu Google')
-  : ko('avis Places : REST ou cache de contenu detecte');
-
-const chargementSdk = domAvis(() => reponseJson({
-  place_id: 'ChIJxxxx', cle_api: 'CLE_DE_TEST', publie: true, note: 5, nombre_avis: 4,
-}));
-let urlSdk = '', sdkAsync = false;
-const appendReel = chargementSdk.window.document.head.appendChild.bind(chargementSdk.window.document.head);
-chargementSdk.window.document.head.appendChild = function (element) {
-  if (element.tagName === 'SCRIPT' && element.src.includes('maps.googleapis.com/maps/api/js')) {
-    urlSdk = element.src;
-    sdkAsync = element.async;
-    chargementSdk.window.google = { maps: { importLibrary: () => Promise.resolve({ Place: class {
-      constructor() { this.rating = 4.9; this.userRatingCount = 58; this.googleMapsURI = 'https://www.google.com/maps/?cid=2'; this.reviews = []; }
-      fetchFields() { return Promise.resolve(); }
-    } }) } };
-    chargementSdk.window.setTimeout(() => element.onload(), 0);
-    return element;
-  }
-  return appendReel(element);
-};
-chargementSdk.window.eval(script);
-await new Promise((r) => setTimeout(r, 50));
-urlSdk.startsWith('https://maps.googleapis.com/maps/api/js?') && urlSdk.includes('key=CLE_DE_TEST') &&
-  urlSdk.includes('language=fr') && urlSdk.includes('region=FR') && sdkAsync
-  ? ok('Maps JavaScript : SDK charge de facon asynchrone en francais')
-  : ko('Maps JavaScript : URL ou chargement du SDK invalide');
-
-const secours = domAvis(() => reponseJson({ ...manuel, place_id: 'ChIJxxxx', cle_api: 'CLE_DE_TEST' }));
-secours.window.google = { maps: { importLibrary: () => Promise.reject(new Error('API indisponible')) } };
-secours.window.eval(script);
-await new Promise((r) => setTimeout(r, 50));
-secours.window.document.getElementById('cover-reviews').textContent.includes('4,6/5')
-  ? ok('mode Places : secours manuel si le SDK est indisponible')
-  : ko('mode Places : secours manuel absent');
+// ------------------------------------- 3 bis. avis Google de la couverture
+const blocAvisGoogle = d.getElementById('cover-reviews-section');
+const boutonAvisGoogle = d.getElementById('google-reviews-load');
+const attributionMaps = d.getElementById('google-reviews-maps');
+const positionAvisGoogle = d.getElementById('google-reviews-position');
+const zoneCommentaires = d.getElementById('google-reviews-slide');
+const tousLesAvisGoogle = d.getElementById('google-reviews-all');
+const rotationAvisGoogle = d.getElementById('google-reviews-rotation');
+const cssAvisGoogle = lire('assets/css/google-reviews.css');
+const scriptAvisGoogle = lire('assets/js/google-reviews.js');
+let configurationAvis = null;
+try { configurationAvis = JSON.parse(lire('assets/data/avis-google.json')); } catch (e) {}
+blocAvisGoogle && boutonAvisGoogle && boutonAvisGoogle.hidden && boutonAvisGoogle.disabled &&
+  positionAvisGoogle?.getAttribute('role') === 'status' && attributionMaps && tousLesAvisGoogle &&
+  rotationAvisGoogle?.getAttribute('aria-controls') === 'google-reviews-viewport' &&
+  rotationAvisGoogle?.getAttribute('type') === 'button' &&
+  attributionMaps.tagName === 'SPAN' && attributionMaps.textContent.trim() === 'Google Maps' &&
+  attributionMaps.getAttribute('translate') === 'no' && !attributionMaps.hasAttribute('href') &&
+  tousLesAvisGoogle.href.startsWith('https://www.google.com/maps/') &&
+  !d.getElementById('google-reviews-count') && !zoneCommentaires?.querySelector('blockquote')
+  ? ok('avis Google : note sans nombre d’avis visible, navigation accessible et secours sans avis statique')
+  : ko('avis Google : structure du bloc, attribution ou contenu statique incorrect');
+configurationAvis && typeof configurationAvis.place_id === 'string' &&
+  configurationAvis.place_id.startsWith('ChIJ') && typeof configurationAvis.cle_api === 'string' &&
+  configurationAvis.cle_api.length > 20 && !('avis' in configurationAvis) &&
+  !('note' in configurationAvis) && !('nombre_avis' in configurationAvis)
+  ? ok('avis Google : configuration Places présente, sans note ni avis mis en cache')
+  : ko('avis Google : configuration Places absente ou contenant des données statiques');
+scriptAvisGoogle.includes("fields:['rating','googleMapsURI','reviews']") &&
+  !scriptAvisGoogle.includes('userRatingCount') &&
+  !scriptAvisGoogle.includes("fields:['rating','googleMapsURI','reviews','attributions']") &&
+  scriptAvisGoogle.includes('renderAttributions(target.attributions)') &&
+  scriptAvisGoogle.includes('callback:callbackName') &&
+  scriptAvisGoogle.includes('window[callbackName] = function ()') &&
+  !scriptAvisGoogle.includes('script.onload') &&
+  scriptAvisGoogle.includes('  loadReviews();') &&
+  scriptAvisGoogle.includes('function scheduleAutoAdvance()') &&
+  scriptAvisGoogle.includes('Math.ceil(characters / 14 * 1000)') &&
+  scriptAvisGoogle.includes('stopRotationForInteraction') &&
+  scriptAvisGoogle.includes('handleReducedMotionChange') &&
+  !cssAvisGoogle.includes('line-clamp') &&
+  !scriptAvisGoogle.includes('google-reviews-source') &&
+  scriptAvisGoogle.includes('authorUrl') && scriptAvisGoogle.includes('google-reviews-author-profile') &&
+  !scriptAvisGoogle.includes('reviewUrl') &&
+  !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
+  ? ok('avis Google : rotation temporisée, texte intégral, attribution Places et absence de cache vérifiés')
+  : ko('avis Google : rotation, lecture intégrale, champs Places ou absence de cache non garantis');
+index.includes('assets/css/google-reviews.css?v=2026100601') &&
+  index.includes('assets/js/google-reviews.js?v=2026100601') &&
+  d.querySelector('script[src^="assets/js/i18n.js"]')?.closest('head') &&
+  d.querySelector('script[src^="assets/js/google-reviews.js"]')?.closest('head') &&
+  d.querySelector('script[src^="assets/js/google-reviews.js"]')?.defer
+  ? ok('avis Google : assets mis en cache, chargement automatique dès la page et affichage relié')
+  : ko('avis Google : assets, auto-chargement ou script manquant sur la page de garde');
 
 // --------------------------------- 4 ter. pied de page et alentours ------
 const navs = [...d.querySelectorAll('.footer-quartier')];
@@ -255,16 +180,47 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
   const t = lire(f);
   const dom = new JSDOM(t).window.document;
   const metros = [...dom.querySelectorAll('.footer-details__metro')];
+  const adresse = dom.querySelector('.footer .footer-address-link');
+  const localisation = dom.querySelector('.footer .footer-details__location');
+  const separateurAdresseMetro = dom.querySelector('.footer .footer-details__separator');
   const alent = dom.querySelector('.footer .footer-quartier');
   const legal = dom.querySelector('.footer .legal-bottom-nav');
+  const stylesPied = [...dom.querySelectorAll('style')].map((style) => style.textContent).join('\n');
   metros.length === 1 && !/gambetta|ratp|m\u00e9tro/i.test(alent.textContent)
     ? ok(`${f} : mention du metro une seule fois, sans redite dans les alentours`)
     : ko(`${f} : ${metros.length} mention(s) du metro dans le pied, ou redite`);
   metros[0].tagName === 'A' && metros[0].hasAttribute('data-ratp-itineraire') &&
+    metros[0].href.startsWith('https://www.ratp.fr/itineraires?end=') &&
+    new URL(metros[0].href).searchParams.get('end') === '4 Rue Belgrand, 75020 Paris' &&
+    metros[0].getAttribute('data-ratp-app-href')?.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=') &&
+    new URL(metros[0].getAttribute('data-ratp-app-href')).searchParams.get('end') === '4 Rue Belgrand, 75020 Paris' &&
     metros[0].getAttribute('data-ratp-fallback-path') === '/ratp-fallback.html' &&
-    metros[0].getAttribute('data-ratp-app-href')?.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=')
-    ? ok(`${f} : lien d’application RATP et secours local présents`)
-    : ko(`${f} : lien RATP ou page de secours absents`);
+    metros[0].target === '_blank' && metros[0].rel.split(/\s+/).includes('noopener')
+    ? ok(`${f} : lien web RATP, Universal Link Bonjour RATP et secours local Android`)
+    : ko(`${f} : liens ou secours RATP incomplets`);
+  adresse && adresse.textContent.trim() === '4 RUE BELGRAND • 75020 PARIS' &&
+    localisation && localisation.contains(adresse) && localisation.contains(metros[0]) &&
+    separateurAdresseMetro &&
+    separateurAdresseMetro.previousElementSibling === adresse &&
+    separateurAdresseMetro.nextElementSibling === metros[0]
+    ? ok(`${f} : adresse et métro groupés sans retour à la ligne`)
+    : ko(`${f} : le groupe adresse/métro est incomplet`);
+  const styleLigne = stylesPied.match(/html:not\(\.carte-doc\)\s*\.footer-details\s*\{([^}]*)\}/);
+  const styleLocalisation = stylesPied.match(/html:not\(\.carte-doc\)\s*\.footer-details__location\s*\{([^}]*)\}/);
+  const styleAlentours = stylesPied.match(/html:not\(\.carte-doc\)\s*\.footer-quartier\s*\{([^}]*)\}/);
+  styleLigne && /flex-flow:\s*row nowrap/.test(styleLigne[1]) &&
+    styleLocalisation && /flex-flow:\s*row nowrap/.test(styleLocalisation[1]) &&
+    /color:\s*#fff\s*!important/.test(styleLigne[1]) &&
+    stylesPied.includes('border:1px solid rgba(255,255,255,.46)')
+    ? ok(`${f} : adresse sur une ligne, blanche, et boutons légaux en pills`)
+    : ko(`${f} : styles responsive du pied ou pills légales absents`);
+  styleAlentours && /width:\s*100%/.test(styleAlentours[1]) &&
+    /max-width:\s*none/.test(styleAlentours[1]) &&
+    stylesPied.includes('@media (max-width:860px)') &&
+    stylesPied.includes('html:not(.carte-doc) .footer-details > span:first-child') &&
+    stylesPied.includes('html:not(.carte-doc) .footer-details__location > a')
+    ? ok(`${f} : marque, adresse, métro et alentours reflués sans largeur plafonnée`)
+    : ko(`${f} : reflow mobile ou largeur pleine des alentours absent`);
   alent && legal ? ok(`${f} : alentours + mentions legales en pied de page`)
                  : ko(`${f} : pied de page incomplet`);
   alent.previousElementSibling.classList.contains('footer-details')
@@ -272,13 +228,199 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
     : ko(`${f} : la ligne des alentours n'est pas sous l'adresse`);
 }
 
+const adresseAr = new JSDOM(lire('reservation.html'), {
+  runScripts: 'outside-only', url: 'https://lacollinegambetta.com/reservation.html?lang=ar'
+});
+adresseAr.window.eval(lire('assets/js/i18n.js'));
+adresseAr.window.document.querySelector('.footer-address-link')?.textContent.trim() ===
+  '4 شارع بيلغراند، 75020 باريس'
+  ? ok('i18n : traduction arabe de l’adresse conservée avec la nouvelle clé')
+  : ko('i18n : traduction arabe de l’adresse perdue');
+adresseAr.window.close();
+
+// Vérifie que les éléments visibles du pied et leurs libellés accessibles
+// utilisent bien l’écriture native dans les six langues non latines proposées.
+const piedsLocaux = {
+  ar: {
+    heading: 'الأماكن القريبة',
+    brand: 'لا كولين غامبيتا',
+    addressMain: '4 شارع بيلغراند، 75020 باريس',
+    addressLegal: '4 شارع بيلغراند، 75020 باريس',
+    coverAddress: '4 شارع بيلغراند • 75020 باريس',
+    metro: 'مترو غامبيتا • الخط 3',
+    places: ['بلدية الدائرة العشرين', 'مسرح لا كولين', 'مقبرة بير لاشيز', 'مركز كاريه دو بودوان الثقافي', 'حديقة بيلفيل', 'قاعة باتاكلان', 'سيرك الشتاء', 'أوبرا الباستيل'],
+    distance: 'على بُعد 100 متر من المطعم',
+    addressTitle: 'فتح العنوان على الخريطة',
+    metroTitle: 'افتح تطبيق بونجور راتب لعرض المسار'
+  },
+  zh: {
+    heading: '附近景点',
+    brand: '拉科林·冈贝塔',
+    addressMain: '贝勒格朗街4号，75020 巴黎',
+    addressLegal: '贝勒格朗街4号，75020 巴黎',
+    coverAddress: '贝勒格朗街4号 • 75020 巴黎',
+    metro: '甘贝塔地铁站 • 3号线',
+    places: ['巴黎第二十区市政厅', '拉科利讷剧院', '拉雪兹神父公墓', '博杜安文化中心', '贝尔维尔公园', '巴塔克兰演出厅', '冬季马戏团', '巴士底歌剧院'],
+    distance: '距餐厅100米',
+    addressTitle: '在地图中打开地址',
+    metroTitle: '打开 Bonjour RATP 查看路线'
+  },
+  uk: {
+    heading: 'Поблизу',
+    brand: 'ЛА КОЛЛІН ҐАМБЕТТА',
+    addressMain: '4 ВУЛ. БЕЛЬГРАН, 75020 ПАРИЖ',
+    addressLegal: '4 вул. Бельгран, 75020 Париж',
+    coverAddress: '4 вул. Бельгран • 75020 Париж',
+    metro: 'метро Ґамбетта • Лінія 3',
+    places: ['Мерія 20-го округу', 'Театр «Ла Коллін»', 'Кладовище Пер-Лашез', 'Культурний центр «Карре-де-Бодуен»', 'Парк Бельвіль', 'Батаклан', 'Зимовий цирк', 'Опера Бастилії'],
+    distance: 'За 100 м від ресторану',
+    addressTitle: 'Відкрити адресу на мапі',
+    metroTitle: 'Відкрити Bonjour RATP для маршруту'
+  },
+  ja: {
+    heading: '近隣スポット',
+    brand: 'ラ・コリーヌ・ガンベッタ',
+    addressMain: 'ベルグラン通り4番、75020パリ',
+    addressLegal: 'ベルグラン通り4番、75020 パリ',
+    coverAddress: 'ベルグラン通り4番 • 75020パリ',
+    metro: 'ガンベッタ駅 • 3号線',
+    places: ['パリ20区役所', 'ラ・コリーヌ劇場', 'ペール・ラシェーズ墓地', 'カレ・ド・ボードゥアン文化センター', 'ベルヴィル公園', 'バタクラン', '冬のサーカス', 'バスティーユ・オペラ'],
+    distance: 'レストランから100メートル',
+    addressTitle: '地図で住所を開く',
+    metroTitle: 'Bonjour RATPでルートを表示'
+  },
+  ko: {
+    heading: '주변 명소',
+    brand: '라 콜린 감베타',
+    addressMain: '벨그랑 거리 4, 75020 파리',
+    addressLegal: '벨그랑 거리 4, 75020 파리',
+    coverAddress: '벨그랑 거리 4 • 75020 파리',
+    metro: '감베타역 • 3호선',
+    places: ['파리 20구청', '라 콜린 극장', '페르 라셰즈 묘지', '카레 드 보두앵 문화센터', '벨빌 공원', '바타클랑', '겨울 서커스', '바스티유 오페라'],
+    distance: '식당에서 100미터',
+    addressTitle: '지도에서 주소 열기',
+    metroTitle: 'Bonjour RATP에서 경로 확인'
+  },
+  hi: {
+    heading: 'आस-पास के स्थल',
+    brand: 'ला कोलीन गांबेता',
+    addressMain: 'रू बेलग्रां 4, 75020 पेरिस',
+    addressLegal: 'बेलग्रां सड़क 4, 75020 पेरिस',
+    coverAddress: 'रू बेलग्रां 4 • 75020 पेरिस',
+    metro: 'गांबेता मेट्रो • लाइन 3',
+    places: ['पेरिस के 20वें ज़िले का नगर भवन', 'ला कोलीन थिएटर', 'पेरे लाशेज़ कब्रिस्तान', 'कारे द बोदुआँ सांस्कृतिक केंद्र', 'बेलविल पार्क', 'बताक्लां', 'शीतकालीन सर्कस', 'बास्तील ओपेरा'],
+    distance: 'रेस्तरां से 100 मीटर दूर',
+    addressTitle: 'मानचित्र पर पता खोलें',
+    metroTitle: 'मार्ग देखने के लिए Bonjour RATP खोलें'
+  }
+};
+for (const [lang, expected] of Object.entries(piedsLocaux)) {
+  const siteLocal = new JSDOM(lire('reservation.html'), {
+    runScripts: 'outside-only', url: `https://lacollinegambetta.com/reservation.html?lang=${lang}`
+  });
+  siteLocal.window.eval(lire('assets/js/i18n.js'));
+  const siteDoc = siteLocal.window.document;
+  const siteNav = siteDoc.querySelector('.footer .footer-quartier');
+  const siteLinks = siteNav ? [...siteNav.querySelectorAll('a')] : [];
+  const siteMetro = siteDoc.querySelector('.footer-details__metro');
+  const siteAdresse = siteDoc.querySelector('.footer-address-link');
+  const siteBrand = siteDoc.querySelector('.footer .footer-details > span:first-child');
+  const siteOk = siteDoc.documentElement.lang === lang &&
+    siteNav?.getAttribute('aria-label') === expected.heading &&
+    siteNav?.querySelector('span')?.textContent.trim() === expected.heading &&
+    siteLinks.length === expected.places.length &&
+    siteLinks.every((a, i) => a.textContent.trim() === expected.places[i]) &&
+    siteLinks[0]?.title === expected.distance &&
+    siteBrand?.textContent.trim() === expected.brand &&
+    siteMetro?.textContent.trim() === expected.metro && siteMetro.title === expected.metroTitle &&
+    siteAdresse?.textContent.trim() === expected.addressMain && siteAdresse.title === expected.addressTitle;
+  siteOk ? ok(`i18n ${lang} : pied de page, itinéraire et adresse en écriture native`)
+         : ko(`i18n ${lang} : traduction du pied de page incomplète`);
+  siteLocal.window.close();
+
+  const coverLocal = new JSDOM(lire('index.html'), {
+    runScripts: 'outside-only', url: `https://lacollinegambetta.com/?lang=${lang}`
+  });
+  coverLocal.window.eval(lire('assets/js/i18n.js'));
+  const coverAdresse = coverLocal.window.document.querySelector('.cover-footer-address a[data-default-map]');
+  const coverMetro = coverLocal.window.document.querySelector('.cover-footer-address [data-ratp-itineraire]');
+  const coverOk = coverAdresse?.textContent.trim() === expected.coverAddress &&
+    coverAdresse.title === expected.addressTitle &&
+    coverMetro?.textContent.trim() === expected.metro && coverMetro.title === expected.metroTitle;
+  coverOk ? ok(`couverture ${lang} : adresse et métro en écriture native`)
+          : ko(`couverture ${lang} : traduction de l’adresse ou du métro incomplète`);
+  coverLocal.window.close();
+
+  const legalLocal = new JSDOM(lire('confidentialite.html'), {
+    runScripts: 'outside-only', url: `https://lacollinegambetta.com/confidentialite.html?lang=${lang}`
+  });
+  legalLocal.window.eval(lire('assets/js/legal-i18n.js'));
+  const legalDoc = legalLocal.window.document;
+  const legalNavLocal = legalDoc.querySelector('.footer .footer-quartier');
+  const legalLinksLocal = legalNavLocal ? [...legalNavLocal.querySelectorAll('a')] : [];
+  const legalMetro = legalDoc.querySelector('.footer-details__metro');
+  const legalAdresse = legalDoc.querySelector('.footer-address-link');
+  const legalBrand = legalDoc.querySelector('.footer .footer-details > span:first-child');
+  const legalOk = legalDoc.documentElement.lang === lang &&
+    legalNavLocal?.getAttribute('aria-label') === expected.heading &&
+    legalNavLocal?.querySelector('span')?.textContent.trim() === expected.heading &&
+    legalLinksLocal.length === expected.places.length &&
+    legalLinksLocal.every((a, i) => a.textContent.trim() === expected.places[i]) &&
+    legalLinksLocal[0]?.title === expected.distance &&
+    legalBrand?.textContent.trim() === expected.brand &&
+    legalMetro?.textContent.trim() === expected.metro && legalMetro.title === expected.metroTitle &&
+    legalAdresse?.textContent.trim() === expected.addressLegal && legalAdresse.title === expected.addressTitle;
+  legalOk ? ok(`pages légales ${lang} : pied de page en écriture native`)
+          : ko(`pages légales ${lang} : traduction du pied de page incomplète`);
+  legalLocal.window.close();
+}
+const extraireObjetPied = (fichier, nom) => {
+  const source = lire(fichier);
+  const correspondance = source.match(new RegExp('var ' + nom + ' = (\\{[\\s\\S]*?\\n  \\});'));
+  if (!correspondance) throw new Error(`objet ${nom} absent dans ${fichier}`);
+  return { valeur: vm.runInNewContext(`(${correspondance[1]})`), source: correspondance[1] };
+};
+try {
+  const copieAccueil = extraireObjetPied('assets/js/i18n.js', 'FOOTER_COPY');
+  const copieLegale = extraireObjetPied('assets/js/legal-i18n.js', 'FOOTER_COPY');
+  const distancesAccueil = extraireObjetPied('assets/js/i18n.js', 'FOOTER_DISTANCE_FORMATS');
+  const distancesLegales = extraireObjetPied('assets/js/legal-i18n.js', 'FOOTER_DISTANCE_FORMATS');
+  JSON.stringify(copieAccueil.valeur) === JSON.stringify(copieLegale.valeur) &&
+    distancesAccueil.source === distancesLegales.source
+    ? ok('i18n : mêmes traductions et infobulles sur les pages classiques et légales')
+    : ko('i18n : les traductions du pied divergent entre les pages classiques et légales');
+} catch (e) { ko(`i18n : comparaison des traductions de pied impossible (${e.message})`); }
+
+const chiffres = new JSDOM('<!doctype html><html><body></body></html>', {
+  runScripts: 'outside-only'
+});
+chiffres.window.eval(lire('assets/js/localized-digits.js'));
+const exempleNumerique = '07:00 • 75020 • 01 43 49 05 93';
+chiffres.window.LCGLocalizeDisplayDigits(exempleNumerique, 'uk') === exempleNumerique &&
+  chiffres.window.LCGLocalizeDisplayDigits('07:00', 'ar') === '٠٧:٠٠'
+  ? ok('chiffres : numéraux ukrainiens compacts, chiffres arabes toujours localisés')
+  : ko('chiffres : localisation compacte ukrainienne ou arabe incorrecte');
+chiffres.window.close();
+const cacheChiffres = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html']
+  .every((f) => lire(f).includes('localized-digits.js?v=2026100501'));
+cacheChiffres
+  ? ok('chiffres : toutes les pages invalidant l’ancien cache du script localisé')
+  : ko('chiffres : une page sert encore une version en cache du script localisé');
+['index.html', 'reservation.html'].every((f) => lire(f).includes('i18n.js?v=2026100502'))
+  ? ok('i18n : scripts actualisés sur la page d’accueil et la réservation')
+  : ko('i18n : une page conserve l’ancienne version en cache');
+['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100504'))
+  ? ok('i18n légal : scripts actualisés sur les pages juridiques')
+  : ko('i18n légal : une page conserve l’ancienne version en cache');
+
 const ratp = d.querySelector('[data-ratp-itineraire]');
 ratp && ratp.href.startsWith('https://www.ratp.fr/itineraires?end=') &&
   new URL(ratp.href).searchParams.get('end') === '4 Rue Belgrand, 75020 Paris' &&
   ratp.getAttribute('data-ratp-fallback-path') === '/ratp-fallback.html' &&
-  new URL(ratp.getAttribute('data-ratp-app-href')).searchParams.get('end') === '4 Rue Belgrand, 75020 Paris'
-  ? ok('lien RATP : application, secours local et adresse complète du restaurant')
-  : ko('lien RATP : URL d’application, secours ou arrivée invalide');
+  new URL(ratp.getAttribute('data-ratp-app-href')).searchParams.get('end') === '4 Rue Belgrand, 75020 Paris' &&
+  ratp.target === '_blank' && ratp.rel.split(/\s+/).includes('noopener')
+  ? ok('lien RATP : arrivée complète, Universal Link et secours local')
+  : ko('lien RATP : arrivée, Universal Link ou page de secours incorrects');
 const ratpFallbackHtml = lire('ratp-fallback.html');
 const ratpFallbackScript = lire('assets/js/ratp-fallback.js');
 index.includes('intent://') && index.includes('package=com.fabernovel.ratp') &&
@@ -288,24 +430,54 @@ index.includes('intent://') && index.includes('package=com.fabernovel.ratp') &&
   ratpFallbackScript.includes('navigator.geolocation.getCurrentPosition') &&
   ratpFallbackScript.includes('https://api-adresse.data.gouv.fr/reverse/') &&
   ratpFallbackScript.includes("'4 Rue Belgrand 75020 Paris'")
-  ? ok('métro : Intent Android et géolocalisation consentie dans la page de secours')
+  ? ok('métro : Intent Android, géolocalisation consentie et destination complète')
   : ko('métro : handoff, départ géolocalisé ou confidentialité incomplets');
+const fichiersLiensExternes = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html'];
+const liensExternesSansNouvelOnglet = [];
+for (const fichier of fichiersLiensExternes) {
+  const pageLiens = new JSDOM(lire(fichier), { url:`https://lacollinegambetta.com/${fichier}` });
+  for (const lien of pageLiens.window.document.querySelectorAll('a[href]')) {
+    let destination;
+    try { destination = new URL(lien.getAttribute('href'), `https://lacollinegambetta.com/${fichier}`); }
+    catch (e) { continue; }
+    const hote = destination.hostname.toLowerCase().replace(/^www\./, '');
+    if (!['http:', 'https:'].includes(destination.protocol) || hote === 'lacollinegambetta.com') continue;
+    const relations = lien.rel.toLowerCase().split(/\s+/);
+    if (lien.target !== '_blank' || !relations.includes('noopener')) {
+      liensExternesSansNouvelOnglet.push(`${fichier}: ${lien.textContent.trim().slice(0, 36) || destination.hostname}`);
+    }
+  }
+  pageLiens.window.close();
+}
+liensExternesSansNouvelOnglet.length === 0
+  ? ok(`liens externes : toutes les ancres HTTP(S) s’ouvrent dans un nouvel onglet (${fichiersLiensExternes.length} pages)`)
+  : ko(`liens externes sans nouvel onglet/rel noopener : ${liensExternesSansNouvelOnglet.slice(0, 8).join(' | ')}`);
+
+!index.includes("window.open('about:blank'") &&
+  !index.includes('api-adresse.data.gouv.fr/reverse/')
+  ? ok('métro : aucune page blanche ni demande de géolocalisation')
+  : ko('métro : ancien intercepteur de géolocalisation encore présent');
 const garde = d.querySelector('#cover-more .footer-quartier--cover');
 const couverture = d.getElementById('cover-section');
 const sousCouverture = d.getElementById('cover-more');
+const sectionAvisGoogle = d.getElementById('cover-reviews-section');
 const mailCouverture = d.querySelector('#cover-section .contact-link--mail');
-const avisSousCouverture = d.querySelector('#cover-more #cover-reviews');
 garde && d.querySelector('#cover-more .legal-bottom-nav--cover')
   ? ok('page de garde : alentours et mentions legales apres la premiere vue')
   : ko('page de garde : bloc d’informations du quartier incomplet');
-couverture && sousCouverture && couverture.nextElementSibling === sousCouverture &&
-  mailCouverture && avisSousCouverture && !couverture.querySelector('#cover-reviews')
-  ? ok('page de garde : le bouton e-mail precede les avis et les alentours')
-  : ko('page de garde : avis ou alentours encore melanges aux boutons de contact');
+couverture && sectionAvisGoogle && sousCouverture &&
+  couverture.nextElementSibling === sectionAvisGoogle && sectionAvisGoogle.nextElementSibling === sousCouverture &&
+  mailCouverture
+  ? ok('page de garde : avis juste après la couverture, avant les alentours et les liens légaux')
+  : ko('page de garde : ordre de la couverture, des avis et des informations de quartier incorrect');
+index.includes("if (coverReviewsSection) coverReviewsSection.style.display = 'none';") &&
+  index.includes("if (coverReviewsSection) coverReviewsSection.style.display = '';")
+  ? ok('page de garde : le bloc avis suit les vues garde/menu')
+  : ko('page de garde : le bloc avis reste visible dans la vue menu');
 
 // -------------------------------------------------------- 5. fichiers ------
 for (const f of ['404.html', 'sitemap.xml', 'sitemap-images.xml', 'robots.txt',
-  'assets/data/avis-google.json', 'assets/cover/og-cover.jpg']) {
+  'assets/cover/og-cover.jpg']) {
   existsSync(racine + f) ? ok(`${f} present`) : ko(`${f} manquant`);
 }
 const liens = [...index.matchAll(/(?:src|href)="(?!https?:|mailto:|tel:|data:|#)([^"]+)"/g)]
@@ -327,9 +499,8 @@ const autorises = [
   'https://www.cirquedhiver.com/',
   'https://www.bataclan.fr/',
   'https://www.operadeparis.fr/visites/opera-bastille',
-  'https://www.ratp.fr/itineraires',
   'https://www.bonjour-ratp.fr/itineraires/',
-  'https://api-adresse.data.gouv.fr/reverse/',
+  'https://www.ratp.fr/itineraires',
   'https://www.instagram.com/lacolline.gambetta',
   'https://www.google.com/maps/search/',
   'https://www.openstreetmap.org/',
@@ -342,9 +513,8 @@ const autorises = [
   'https://api.web3forms.com/submit',
   'https://formsubmit.co/ajax/',
   'https://script.google.com/macros/s/',
-  'https://maps.googleapis.com/maps/api/js',
-  'https://developers.google.com/maps/documentation/places/web-service/policies',
   'https://policies.google.com/privacy',
+  'https://support.google.com/contributionpolicy/answer/7422880',
   'https://get.geojs.io/v1/ip/country.json',
   'https://ipwho.is/',
   'https://www.gstatic.com/firebasejs/10.12.5/',
@@ -374,22 +544,51 @@ const enClair = [...externes].filter((u) => u.startsWith('http://') && !u.includ
 enClair.length === 0 ? ok('aucun lien externe en http non securise')
                      : ko('liens en http : ' + enClair.join(' | '));
 
-// La nouvelle information Google Maps de la politique de confidentialité doit
-// aussi rester traduite dans une langue proposée par l'interface.
+// L'information sur les liens externes doit rester traduite dans la politique de confidentialité.
 const legalEn = new JSDOM(lire('confidentialite.html'), {
   runScripts: 'outside-only', url: 'https://lacollinegambetta.com/confidentialite.html?lang=en'
 });
 legalEn.window.eval(lire('assets/js/legal-i18n.js'));
+legalEn.window.document.querySelector('.footer-address-link')?.textContent.trim() ===
+  '4 RUE BELGRAND • 75020 PARIS'
+  ? ok('confidentialite : traduction de l’adresse conservée avec le nouveau libellé')
+  : ko('confidentialite : libellé traduit de l’adresse incomplet');
 const disclosureGoogle = [...legalEn.window.document.querySelectorAll('.legal-card p')]
   .find((p) => p.querySelector('a[href^="https://policies.google.com/privacy"]'));
 const liensGoogle = disclosureGoogle ? [...disclosureGoogle.querySelectorAll('a')].map((a) => a.textContent.trim()) : [];
-disclosureGoogle && disclosureGoogle.textContent.startsWith('The homepage') &&
-  liensGoogle[0] === 'Google Privacy Policy' && liensGoogle[1] === 'Places API attribution requirements'
-  ? ok('confidentialite : services Google Maps et liens traduits en anglais')
-  : ko('confidentialite : traduction de la declaration Google Maps incomplete');
-legalEn.window.document.querySelector('time[datetime="2026-10-04"]')?.textContent.trim() === '4 October 2026'
+disclosureGoogle && disclosureGoogle.textContent.startsWith('The site contains external links') &&
+  disclosureGoogle.textContent.includes('automatically loads Google Maps Platform services') &&
+  disclosureGoogle.textContent.includes('as the page opens') &&
+  disclosureGoogle.textContent.includes('Maps JavaScript API and Places API') &&
+  liensGoogle.length === 1 && liensGoogle[0] === 'Google Privacy Policy'
+  ? ok('confidentialite : affichage des avis Places et politique Google traduits en anglais')
+  : ko('confidentialite : traduction de la declaration sur les liens Google incomplete');
+legalEn.window.document.querySelector('time[datetime="2026-10-05"]')?.textContent.trim() === '5 October 2026'
   ? ok('confidentialite : date de mise a jour traduite')
   : ko('confidentialite : date de mise a jour non traduite');
+const traductionsGoogle = {
+  ar: ['يحتوي الموقع على روابط خارجية', 'يحمّل قسم التقييمات تلقائيًا'],
+  zh: ['本网站包含外部链接', '评价区块会自动加载'],
+  uk: ['Сайт містить зовнішні посилання', 'блок відгуків автоматично завантажує'],
+  ja: ['サイトには、レストランの場所を確認するための', 'ウィジェットが Google Maps Platform（Maps JavaScript API と Places API）を自動的に読み込みます'],
+  ko: ['사이트에는 레스토랑 위치를 찾기 위한', '리뷰 영역이 Google Maps Platform 서비스(Maps JavaScript API 및 Places API)를 자동으로 불러옵니다'],
+  hi: ['साइट में रेस्तरां का स्थान बताने के लिए', 'यह अनुभाग Google Maps Platform सेवाएँ (Maps JavaScript API और Places API) अपने आप लोड करता है']
+};
+for (const [lang, [debutAttendu, mentionAuto]] of Object.entries(traductionsGoogle)) {
+  const legal = new JSDOM(lire('confidentialite.html'), {
+    runScripts: 'outside-only', url: `https://lacollinegambetta.com/confidentialite.html?lang=${lang}`
+  });
+  legal.window.eval(lire('assets/js/legal-i18n.js'));
+  const paragraphe = [...legal.window.document.querySelectorAll('.legal-card p')]
+    .find((p) => p.querySelector('a[href^="https://policies.google.com/privacy"]'));
+  paragraphe && paragraphe.textContent.includes(debutAttendu) &&
+    paragraphe.textContent.includes(mentionAuto) &&
+    paragraphe.textContent.includes('Maps JavaScript API')
+    ? ok(`confidentialite : chargement automatique traduit en écriture native (${lang})`)
+    : ko(`confidentialite : déclaration Places automatique non traduite en écriture native (${lang})`);
+  legal.window.close();
+}
+legalEn.window.close();
 
 console.log(erreurs ? `\n${erreurs} controle(s) en echec` : '\nTous les controles sont au vert');
 process.exit(erreurs ? 1 : 0);

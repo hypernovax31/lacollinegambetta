@@ -9,10 +9,7 @@ apres n'importe quelle modification du site.
 2. meta description ramenee sous 160 caracteres ;
 3. liens hreflang vers les 15 langues servies par ?lang= ;
 4. donnees structurees enrichies : Restaurant complet, carte Menu avec les
-   prix, action de reservation, site web, fil d'Ariane sur les pages annexes ;
-5. bloc d'avis Google sur la page de garde, alimente par
-   assets/data/avis-google.json (rien ne s'affiche tant que le fichier n'est
-   pas rempli avec de vrais avis).
+   prix, action de reservation, site web et fil d'Ariane sur les pages annexes.
 """
 from __future__ import annotations
 
@@ -259,14 +256,7 @@ def donnees_structurees(s: str) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# 5. bloc d'avis Google sur la page de garde
-# --------------------------------------------------------------------------- #
-# Le bandeau d'avis Google est gere par tools/avis_google.py et la ligne de
-# reperes du quartier par tools/pied_quartier.py : scripts independants et
-# idempotents eux aussi.
-
-# --------------------------------------------------------------------------- #
-# 6. fil d'Ariane sur les pages annexes
+# 5. fil d'Ariane sur les pages annexes
 # --------------------------------------------------------------------------- #
 ANNEXES = {"reservation.html": "R\u00e9servation",
            "mentions-legales.html": "Mentions l\u00e9gales",

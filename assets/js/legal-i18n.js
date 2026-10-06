@@ -125,11 +125,11 @@
     ['Navigation secondaire','Secondary navigation','Navegación secundaria','Sekundärnavigation','Navigazione secondaria','Navegação secundária','Secundaire navigatie','التنقل الثانوي','次级导航','Другорядна навігація','サブナビゲーション','보조 탐색','Nawigacja dodatkowa','İkincil gezinme','द्वितीयक नेविगेशन'],
     ['Informations légales','Legal information','Información legal','Rechtliche Informationen','Informazioni legali','Informações legais','Juridische informatie','المعلومات القانونية','法律信息','Юридична інформація','法的情報','법률 정보','Informacje prawne','Hukuki bilgiler','कानूनी जानकारी'],
     ['Télécharger la carte (PDF)','Download the menu (PDF)','Descargar la carta (PDF)','Speisekarte herunterladen (PDF)','Scarica la carta (PDF)','Descarregar a carta (PDF)','Menu downloaden (PDF)','تنزيل القائمة (PDF)','下载菜单（PDF）','Завантажити меню (PDF)','メニューをダウンロード（PDF）','메뉴 다운로드(PDF)','Pobierz kartę (PDF)','Menüyü indir (PDF)','मेन्यू डाउनलोड करें (PDF)'],
-    ['4 RUE BELGRAND, 75020 PARIS','4 RUE BELGRAND, 75020 PARIS','4 RUE BELGRAND, 75020 PARÍS','4 RUE BELGRAND, 75020 PARIS','4 RUE BELGRAND, 75020 PARIGI','4 RUE BELGRAND, 75020 PARIS','4 RUE BELGRAND, 75020 PARIJS','4 RUE BELGRAND، 75020 باريس','4 RUE BELGRAND，75020 巴黎','4 RUE BELGRAND, 75020 ПАРИЖ','4 RUE BELGRAND、75020 PARIS','4 RUE BELGRAND, 75020 PARIS','4 RUE BELGRAND, 75020 PARYŻ','4 RUE BELGRAND, 75020 PARİS','4 RUE BELGRAND, 75020 पेरिस'],
+    ['4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND, 75020 PARÍS','4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND, 75020 PARIGI','4 RUE BELGRAND • 75020 PARIS','4 RUE BELGRAND, 75020 PARIJS','4 شارع بيلغراند، 75020 باريس','贝勒格朗街4号，75020 巴黎','4 вул. Бельгран, 75020 Париж','ベルグラン通り4番、75020 パリ','벨그랑 거리 4, 75020 파리','4 RUE BELGRAND, 75020 PARYŻ','4 RUE BELGRAND, 75020 PARİS','बेलग्रां सड़क 4, 75020 पेरिस'],
     ['Télécharger la carte au format PDF','Download the menu as a PDF','Descargar la carta en PDF','Speisekarte als PDF herunterladen','Scarica la carta in PDF','Descarregar a carta em PDF','Menu als pdf downloaden','تنزيل القائمة بصيغة PDF','以 PDF 格式下载菜单','Завантажити меню у форматі PDF','メニューをPDFでダウンロード','메뉴를 PDF로 다운로드','Pobierz kartę w formacie PDF','Menüyü PDF olarak indir','मेन्यू को PDF के रूप में डाउनलोड करें'],
     ['Ouvrir Instagram','Open Instagram','Abrir Instagram','Instagram öffnen','Apri Instagram','Abrir o Instagram','Instagram openen','فتح إنستغرام','打开照片墙','Відкрити Інстаграм','インスタグラムを開く','인스타그램 열기','Otwórz Instagram','Instagram’ı aç','इंस्टाग्राम खोलें'],
     ['Appeler le restaurant','Call the restaurant','Llamar al restaurante','Restaurant anrufen','Chiama il ristorante','Ligar para o restaurante','Restaurant bellen','الاتصال بالمطعم','致电餐厅','Зателефонувати до ресторану','レストランに電話','레스토랑에 전화','Zadzwoń do restauracji','Restoranı ara','रेस्तरां को कॉल करें'],
-    ['MÉTRO GAMBETTA • LIGNE 3','Gambetta metro • Line 3','Metro Gambetta • Línea 3','U-Bahn Gambetta • Linie 3','Metro Gambetta • Linea 3','Metro Gambetta • Linha 3','Metro Gambetta • Lijn 3','مترو غامبيتا • الخط 3','甘贝塔地铁站 • 3号线','метро Gambetta • Лінія 3','ガンベッタ駅 • 3号線','감베타역 • 3호선','Metro Gambetta • Linia 3','Gambetta metrosu • 3. Hat','गांबेता मेट्रो • लाइन 3'],
+    ['MÉTRO GAMBETTA • LIGNE 3','Gambetta metro • Line 3','Metro Gambetta • Línea 3','U-Bahn Gambetta • Linie 3','Metro Gambetta • Linea 3','Metro Gambetta • Linha 3','Metro Gambetta • Lijn 3','مترو غامبيتا • الخط 3','甘贝塔地铁站 • 3号线','метро Ґамбетта • Лінія 3','ガンベッタ駅 • 3号線','감베타역 • 3호선','Metro Gambetta • Linia 3','Gambetta metrosu • 3. Hat','गांबेता मेट्रो • लाइन 3'],
     ['RCS','Trade and Companies Register','Registro Mercantil','Handelsregister','Registro delle imprese','Registo Comercial','Handelsregister','السجل التجاري والشركات','商业和公司登记处','Реєстр торгівлі та компаній','商業・会社登記所','상업·회사 등록부','Rejestr handlowy i spółek','Ticaret ve Şirketler Sicili','व्यापार और कंपनी रजिस्टर'],
     ['24 juillet 2026','24 July 2026','24 de julio de 2026','24. Juli 2026','24 luglio 2026','24 de julho de 2026','24 juli 2026','٢٤ يوليو ٢٠٢٦','2026年7月24日','24 липня 2026','2026年7月24日','2026년 7월 24일','24 lipca 2026','24 Temmuz 2026','24 जुलाई 2026'],
     ['Le nom de domaine public utilisé par le site est','The public domain name used by the website is','El nombre de dominio público utilizado por el sitio es','Der von der Website verwendete öffentliche Domainname ist','Il nome di dominio pubblico utilizzato dal sito è','O nome de domínio público utilizado pelo site é','De openbare domeinnaam van de website is','اسم النطاق العام المستخدم للموقع هو','网站使用的公共域名是','Публічне доменне ім’я сайту:','本サイトで使用する公開ドメイン名は','사이트에서 사용하는 공개 도메인은','Publiczna nazwa domeny używana przez stronę to','Sitenin kullandığı herkese açık alan adı','वेबसाइट द्वारा उपयोग किया जाने वाला सार्वजनिक डोमेन है'],
@@ -137,11 +137,9 @@
     ['ou','or','o','oder','o','ou','of','أو','或','або','または','또는','lub','veya','या'],
     ['La Colline Gambetta · 4 rue Belgrand · 75020 Paris','La Colline Gambetta · 4 rue Belgrand · 75020 Paris','La Colline Gambetta · 4 rue Belgrand · 75020 París','La Colline Gambetta · 4 rue Belgrand · 75020 Paris','La Colline Gambetta · 4 rue Belgrand · 75020 Parigi','La Colline Gambetta · 4 rue Belgrand · 75020 Paris','La Colline Gambetta · 4 rue Belgrand · 75020 Parijs','La Colline Gambetta · 4 rue Belgrand · 75020 باريس','La Colline Gambetta · 4 rue Belgrand · 75020 巴黎','La Colline Gambetta · 4 rue Belgrand · 75020 Париж','La Colline Gambetta · 4 rue Belgrand · 75020 Paris','La Colline Gambetta · 4 rue Belgrand · 75020 Paris','La Colline Gambetta · 4 rue Belgrand · 75020 Paryż','La Colline Gambetta · 4 rue Belgrand · 75020 Paris','La Colline Gambetta · 4 rue Belgrand · 75020 पेरिस'],
     ['24 septembre 2026','24 September 2026','24 de septiembre de 2026','24. September 2026','24 settembre 2026','24 de setembro de 2026','24 september 2026','٢٤ سبتمبر ٢٠٢٦','2026年9月24日','24 вересня 2026','2026年9月24日','2026년 9월 24일','24 września 2026','24 Eylül 2026','24 सितंबर 2026'],
-    ['La page d’accueil peut aussi charger les services Google Maps Platform (Maps JavaScript API et Places API) pour afficher la note et un extrait d’avis de la fiche publique du restaurant. Lors de ces requêtes, Google peut recevoir des données techniques de connexion, notamment l’adresse IP, le site référent et des informations sur le navigateur ; aucune donnée du formulaire de réservation n’est envoyée à ces services. Consultez la','The homepage may also load Google Maps Platform services (Maps JavaScript API and Places API) to display the rating and an excerpt from the restaurant’s public listing. During these requests, Google may receive technical connection data, including the IP address, referring site and browser information; no data entered in the reservation form is sent to these services. See the','La página de inicio también puede cargar los servicios de Google Maps Platform (Maps JavaScript API y Places API) para mostrar la valoración y un extracto de la ficha pública del restaurante. En estas solicitudes, Google puede recibir datos técnicos de conexión, como la dirección IP, el sitio de referencia y datos del navegador; no se envía a estos servicios ningún dato del formulario de reserva. Consulte la','Die Startseite kann außerdem Google-Maps-Platform-Dienste (Maps JavaScript API und Places API) laden, um die Bewertung und einen Auszug aus dem öffentlichen Unternehmenseintrag anzuzeigen. Bei diesen Anfragen kann Google technische Verbindungsdaten erhalten, darunter IP-Adresse, verweisende Website und Browserinformationen; Daten aus dem Reservierungsformular werden nicht an diese Dienste übermittelt. Weitere Informationen finden Sie in der','La homepage può inoltre caricare i servizi Google Maps Platform (Maps JavaScript API e Places API) per mostrare la valutazione e un estratto della scheda pubblica del ristorante. Durante queste richieste Google può ricevere dati tecnici di connessione, tra cui l’indirizzo IP, il sito di provenienza e informazioni sul browser; nessun dato del modulo di prenotazione viene inviato a questi servizi. Consultare l’','A página inicial também pode carregar os serviços Google Maps Platform (Maps JavaScript API e Places API) para apresentar a classificação e um excerto da ficha pública do restaurante. Durante estes pedidos, a Google pode receber dados técnicos de ligação, incluindo o endereço IP, o site de referência e informações do navegador; nenhum dado do formulário de reserva é enviado para estes serviços. Consulte a','De startpagina kan ook Google Maps Platform-diensten (Maps JavaScript API en Places API) laden om de beoordeling en een fragment uit de openbare bedrijfsvermelding te tonen. Bij deze verzoeken kan Google technische verbindingsgegevens ontvangen, waaronder het IP-adres, de verwijzende website en browsergegevens; gegevens uit het reserveringsformulier worden niet naar deze diensten verzonden. Raadpleeg het','قد تحمّل الصفحة الرئيسية أيضًا خدمات Google Maps Platform (Maps JavaScript API وPlaces API) لعرض التقييم ومقتطف من الملفّ العام للمطعم. أثناء هذه الطلبات، قد تتلقى Google بيانات اتصال تقنية، منها عنوان IP والموقع المُحيل ومعلومات المتصفح؛ ولا تُرسل أي بيانات من نموذج الحجز إلى هذه الخدمات. يُرجى الاطلاع على','首页还可能加载 Google Maps Platform 服务（Maps JavaScript API 和 Places API），以显示评分和餐厅公开商家资料中的摘录。在这些请求中，Google 可能会收到技术连接数据，包括 IP 地址、来源网站和浏览器信息；预订表单中填写的数据不会发送给这些服务。请参阅','На головній сторінці також можуть завантажуватися сервіси Google Maps Platform (Maps JavaScript API і Places API), щоб показувати оцінку та уривок із публічного профілю ресторану. Під час цих запитів Google може отримувати технічні дані з’єднання, зокрема IP-адресу, сайт-джерело та інформацію про браузер; дані з форми бронювання цим сервісам не передаються. Докладніше — у','トップページでは、評価とレストランの公開プロフィールの一部を表示するため、Google Maps Platform（Maps JavaScript API と Places API）のサービスを読み込む場合があります。これらのリクエストで、Google は IP アドレス、参照元サイト、ブラウザー情報などの技術的な接続データを受け取る場合があります。予約フォームに入力されたデータはこれらのサービスに送信されません。詳しくは、','홈페이지는 평점과 레스토랑의 공개 업체 정보 일부를 표시하기 위해 Google Maps Platform 서비스(Maps JavaScript API 및 Places API)를 불러올 수 있습니다. 요청 과정에서 Google은 IP 주소, 참조 사이트, 브라우저 정보 등 기술적 연결 데이터를 받을 수 있으며, 예약 양식에 입력한 데이터는 이러한 서비스로 전송되지 않습니다. 자세한 내용은','Strona główna może również wczytywać usługi Google Maps Platform (Maps JavaScript API i Places API), aby wyświetlać ocenę i fragment publicznego profilu restauracji. Podczas tych żądań Google może otrzymywać techniczne dane połączenia, w tym adres IP, witrynę odsyłającą i informacje o przeglądarce; dane z formularza rezerwacji nie są przekazywane tym usługom. Więcej informacji zawiera','Ana sayfa, puanı ve restoranın herkese açık işletme profilinden bir alıntıyı göstermek için Google Maps Platform hizmetlerini (Maps JavaScript API ve Places API) yükleyebilir. Bu istekler sırasında Google IP adresi, yönlendiren site ve tarayıcı bilgileri gibi teknik bağlantı verilerini alabilir; rezervasyon formuna girilen veriler bu hizmetlere gönderilmez. Ayrıntılar için','मुखपृष्ठ रेटिंग और रेस्तरां की सार्वजनिक प्रोफ़ाइल का एक अंश दिखाने के लिए Google Maps Platform सेवाएँ (Maps JavaScript API और Places API) लोड कर सकता है। इन अनुरोधों के दौरान Google को तकनीकी कनेक्शन डेटा मिल सकता है, जिसमें IP पता, रेफ़र करने वाली साइट और ब्राउज़र की जानकारी शामिल है; आरक्षण फ़ॉर्म का डेटा इन सेवाओं को नहीं भेजा जाता। अधिक जानकारी के लिए देखें'],
+    ["Le site contient des liens externes, notamment vers Google Maps pour localiser le restaurant. Sur la page de garde, le bloc charge automatiquement les services Google Maps Platform (Maps JavaScript API et Places API) à l’ouverture de la page afin d’afficher les avis Google. Google peut alors recevoir des données techniques de connexion, notamment l’adresse IP, le site référent et des informations sur le navigateur. Aucune donnée du formulaire de réservation n’est transmise à Google Maps Platform. Consultez la", "The site contains external links, including Google Maps to locate the restaurant. On the home page, the review widget automatically loads Google Maps Platform services (Maps JavaScript API and Places API) as the page opens to display Google reviews. Google may then receive technical connection data, including your IP address, referring site and browser information. No reservation form data is sent to Google Maps Platform. See the", "El sitio contiene enlaces externos, incluido Google Maps para localizar el restaurante. En la página de inicio, el bloque carga automáticamente los servicios de Google Maps Platform (Maps JavaScript API y Places API) al abrirse la página para mostrar las opiniones de Google. Google puede recibir entonces datos técnicos de conexión, como la dirección IP, el sitio de referencia y la información del navegador. No se envían datos del formulario de reserva a Google Maps Platform. Consulte la", "Die Website enthält externe Links, unter anderem zu Google Maps, um das Restaurant zu finden. Auf der Startseite lädt der Bewertungsbereich beim Öffnen der Seite automatisch die Dienste der Google Maps Platform (Maps JavaScript API und Places API), um Google-Bewertungen anzuzeigen. Google kann dabei technische Verbindungsdaten wie IP-Adresse, verweisende Website und Browserinformationen erhalten. Daten aus dem Reservierungsformular werden nicht an Google Maps Platform gesendet. Lesen Sie die", "Il sito contiene link esterni, tra cui Google Maps per localizzare il ristorante. Nella pagina iniziale, il riquadro carica automaticamente i servizi Google Maps Platform (Maps JavaScript API e Places API) all’apertura della pagina per mostrare le recensioni Google. Google può allora ricevere dati tecnici di connessione, tra cui l’indirizzo IP, il sito di provenienza e informazioni sul browser. Nessun dato del modulo di prenotazione viene inviato a Google Maps Platform. Consulta l’", "O site contém ligações externas, incluindo para o Google Maps, para localizar o restaurante. Na página inicial, o bloco carrega automaticamente os serviços Google Maps Platform (Maps JavaScript API e Places API) quando a página é aberta, para apresentar as avaliações do Google. A Google pode então receber dados técnicos de ligação, incluindo o endereço IP, o site de referência e informações do navegador. Nenhum dado do formulário de reserva é enviado para a Google Maps Platform. Consulte a", "De website bevat externe links, waaronder Google Maps om het restaurant te vinden. Op de startpagina laadt het reviewblok automatisch diensten van Google Maps Platform (Maps JavaScript API en Places API) wanneer de pagina wordt geopend, zodat Google-reviews worden getoond. Google kan dan technische verbindingsgegevens ontvangen, zoals uw IP-adres, de verwijzende website en browserinformatie. Gegevens uit het reserveringsformulier worden niet naar Google Maps Platform verzonden. Raadpleeg het", "يحتوي الموقع على روابط خارجية، منها Google Maps لتحديد موقع المطعم. عند فتح الصفحة الرئيسية، يحمّل قسم التقييمات تلقائيًا خدمات Google Maps Platform (Maps JavaScript API وPlaces API) لعرض تقييمات Google. وقد تتلقى Google حينها بيانات اتصال تقنية، مثل عنوان IP والموقع المُحيل ومعلومات المتصفح. لا تُرسل بيانات نموذج الحجز إلى Google Maps Platform. يُرجى الاطلاع على", "本网站包含外部链接，包括用于定位餐厅的 Google 地图。首页打开时，评价区块会自动加载 Google Maps Platform 服务（Maps JavaScript API 和 Places API）以显示 Google 评价。Google 可能因此收到技术连接数据，包括 IP 地址、来源网站和浏览器信息。预订表单数据不会发送给 Google Maps Platform。请参阅", "Сайт містить зовнішні посилання, зокрема на Google Maps, щоб знайти ресторан. Під час відкриття головної сторінки блок відгуків автоматично завантажує сервіси Google Maps Platform (Maps JavaScript API і Places API), щоб показати відгуки Google. Google може отримувати технічні дані з’єднання, зокрема IP-адресу, сайт-джерело та інформацію про браузер. Дані з форми бронювання не надсилаються до Google Maps Platform. Докладніше — у", "サイトには、レストランの場所を確認するための Google マップなど、外部リンクが含まれています。トップページを開くと、クチコミを表示するため、ウィジェットが Google Maps Platform（Maps JavaScript API と Places API）を自動的に読み込みます。その際、Google は IP アドレス、参照元サイト、ブラウザー情報などの技術的な接続データを受け取る場合があります。予約フォームのデータは Google Maps Platform に送信されません。詳しくは、", "사이트에는 레스토랑 위치를 찾기 위한 Google 지도 등 외부 링크가 포함되어 있습니다. 홈페이지를 열면 Google 리뷰를 표시하기 위해 리뷰 영역이 Google Maps Platform 서비스(Maps JavaScript API 및 Places API)를 자동으로 불러옵니다. 이때 Google은 IP 주소, 참조 사이트, 브라우저 정보 등 기술적 연결 데이터를 받을 수 있습니다. 예약 양식 데이터는 Google Maps Platform으로 전송되지 않습니다. 자세한 내용은", "Strona zawiera linki zewnętrzne, w tym do Google Maps, aby wskazać lokalizację restauracji. Po otwarciu strony głównej blok opinii automatycznie wczytuje usługi Google Maps Platform (Maps JavaScript API i Places API), aby wyświetlić opinie Google. Google może wtedy otrzymywać techniczne dane połączenia, w tym adres IP, witrynę odsyłającą i informacje o przeglądarce. Dane z formularza rezerwacji nie są wysyłane do Google Maps Platform. Więcej informacji zawiera", "Sitede, restoranın konumunu bulmak için Google Maps dahil harici bağlantılar bulunur. Ana sayfa açıldığında yorum bölümü, Google yorumlarını göstermek için Google Maps Platform hizmetlerini (Maps JavaScript API ve Places API) otomatik olarak yükler. Google bu sırada IP adresi, yönlendiren site ve tarayıcı bilgileri gibi teknik bağlantı verilerini alabilir. Rezervasyon formu verileri Google Maps Platform’a gönderilmez. Ayrıntılar için", "साइट में रेस्तरां का स्थान बताने के लिए Google Maps सहित बाहरी लिंक हैं। मुखपृष्ठ खुलने पर Google समीक्षाएँ दिखाने के लिए यह अनुभाग Google Maps Platform सेवाएँ (Maps JavaScript API और Places API) अपने आप लोड करता है। इस दौरान Google को IP पता, रेफ़र करने वाली साइट और ब्राउज़र जानकारी जैसे तकनीकी कनेक्शन डेटा मिल सकते हैं। आरक्षण फ़ॉर्म का डेटा Google Maps Platform को नहीं भेजा जाता। अधिक जानकारी के लिए देखें"],
     ['politique de confidentialité de Google','Google Privacy Policy','Política de privacidad de Google','Google-Datenschutzerklärung','Informativa sulla privacy di Google','Política de Privacidade do Google','privacybeleid van Google','سياسة خصوصية Google','Google 隐私权政策','Політика конфіденційності Google','Google のプライバシー ポリシー','Google 개인정보처리방침','Polityka prywatności Google','Google Gizlilik Politikası','Google की गोपनीयता नीति'],
-    ['et les','and the','y los','und die','e i','e os','en de','وقواعد','以及','та','および','및','oraz','ve','और'],
-    ['règles d’attribution de l’API Places','Places API attribution requirements','requisitos de atribución de Places API','Attributionsvorgaben der Places API','requisiti di attribuzione di Places API','requisitos de atribuição da Places API','vereisten voor naamsvermelding van de Places API','متطلبات الإسناد في Places API','Places API 署名要求','вимоги до атрибуції Places API','Places API の帰属表示要件','Places API 저작자 표시 요구사항','wymagania dotyczące atrybucji Places API','Places API ilişkilendirme gereksinimleri','Places API के एट्रिब्यूशन संबंधी आवश्यकताएँ'],
-    ['4 octobre 2026','4 October 2026','4 de octubre de 2026','4. Oktober 2026','4 ottobre 2026','4 de outubro de 2026','4 oktober 2026','٤ أكتوبر ٢٠٢٦','2026年10月4日','4 жовтня 2026','2026年10月4日','2026년 10월 4일','4 października 2026','4 Ekim 2026','4 अक्टूबर 2026']
+    ["5 octobre 2026", "5 October 2026", "5 de octubre de 2026", "5. Oktober 2026", "5 ottobre 2026", "5 de outubro de 2026", "5 oktober 2026", "٥ أكتوبر ٢٠٢٦", "2026年10月5日", "5 жовтня 2026", "2026年10月5日", "2026년 10월 5일", "5 października 2026", "5 Ekim 2026", "5 अक्टूबर 2026"]
   ];
   var DICTS = {};
   LANGS.forEach(function (lang, i) {
@@ -150,8 +148,269 @@
       if (row[i] !== undefined && row[i] !== '') DICTS[lang][row[0]] = row[i];
     });
   });
+  /* Même traduction localisée que sur les pages d'accueil et de réservation. */
+  var FOOTER_COPY = {
+    en: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
+      'Métro Gambetta • Ligne 3': 'Gambetta metro • Line 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'Nearby',
+      'Mairie du 20ᵉ': '20th arrondissement town hall',
+      'Théâtre de la Colline': 'La Colline Theatre',
+      'Père-Lachaise': 'Père-Lachaise Cemetery',
+      'Carré de Baudouin': 'Carré de Baudouin Cultural Centre',
+      'Parc de Belleville': 'Belleville Park',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Winter Circus',
+      'Opéra Bastille': 'Bastille Opera',
+      'Ouvrir l’adresse dans le plan': 'Open the address on the map',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Open Bonjour RATP for directions'
+    },
+    es: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 París',
+      'Métro Gambetta • Ligne 3': 'Metro Gambetta • Línea 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'Cerca',
+      'Mairie du 20ᵉ': 'Ayuntamiento del distrito 20',
+      'Théâtre de la Colline': 'Teatro de la Colline',
+      'Père-Lachaise': 'Cementerio de Père-Lachaise',
+      'Carré de Baudouin': 'Centro cultural Carré de Baudouin',
+      'Parc de Belleville': 'Parque de Belleville',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Circo de Invierno',
+      'Opéra Bastille': 'Ópera Bastille',
+      'Ouvrir l’adresse dans le plan': 'Abrir la dirección en el mapa',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Abrir Bonjour RATP para consultar la ruta'
+    },
+    de: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
+      'Métro Gambetta • Ligne 3': 'U-Bahn Gambetta • Linie 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'In der Nähe',
+      'Mairie du 20ᵉ': 'Rathaus des 20. Arrondissements',
+      'Théâtre de la Colline': 'Theater La Colline',
+      'Père-Lachaise': 'Friedhof Père-Lachaise',
+      'Carré de Baudouin': 'Kulturzentrum Carré de Baudouin',
+      'Parc de Belleville': 'Belleville-Park',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Winterzirkus',
+      'Opéra Bastille': 'Bastille-Oper',
+      'Ouvrir l’adresse dans le plan': 'Adresse auf der Karte öffnen',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP für die Route öffnen'
+    },
+    it: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Parigi',
+      'Métro Gambetta • Ligne 3': 'Metro Gambetta • Linea 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'Nei dintorni',
+      'Mairie du 20ᵉ': 'Municipio del 20º arrondissement',
+      'Théâtre de la Colline': 'Teatro della Colline',
+      'Père-Lachaise': 'Cimitero di Père-Lachaise',
+      'Carré de Baudouin': 'Centro culturale Carré de Baudouin',
+      'Parc de Belleville': 'Parco di Belleville',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Circo d’inverno',
+      'Opéra Bastille': 'Opera Bastille',
+      'Ouvrir l’adresse dans le plan': 'Apri l’indirizzo sulla mappa',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Apri Bonjour RATP per il percorso'
+    },
+    pt: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
+      'Métro Gambetta • Ligne 3': 'Metro Gambetta • Linha 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'Nas proximidades',
+      'Mairie du 20ᵉ': 'Câmara municipal do 20.º bairro',
+      'Théâtre de la Colline': 'Teatro da Colline',
+      'Père-Lachaise': 'Cemitério do Père-Lachaise',
+      'Carré de Baudouin': 'Centro cultural Carré de Baudouin',
+      'Parc de Belleville': 'Parque de Belleville',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Circo de Inverno',
+      'Opéra Bastille': 'Ópera da Bastilha',
+      'Ouvrir l’adresse dans le plan': 'Abrir o endereço no mapa',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Abrir o Bonjour RATP para consultar o percurso'
+    },
+    nl: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Parijs',
+      'Métro Gambetta • Ligne 3': 'Metro Gambetta • Lijn 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'In de buurt',
+      'Mairie du 20ᵉ': 'Stadhuis van het 20e arrondissement',
+      'Théâtre de la Colline': 'Theater La Colline',
+      'Père-Lachaise': 'Begraafplaats Père-Lachaise',
+      'Carré de Baudouin': 'Cultureel centrum Carré de Baudouin',
+      'Parc de Belleville': 'Park van Belleville',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Wintercircus',
+      'Opéra Bastille': 'Bastilleopera',
+      'Ouvrir l’adresse dans le plan': 'Adres op de kaart openen',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP openen voor de route'
+    },
+    ar: {
+      '4 rue Belgrand • 75020 Paris': '4 شارع بيلغراند • 75020 باريس',
+      'Métro Gambetta • Ligne 3': 'مترو غامبيتا • الخط 3',
+      'LA COLLINE GAMBETTA': 'لا كولين غامبيتا',
+      'Dans les alentours': 'الأماكن القريبة',
+      'Mairie du 20ᵉ': 'بلدية الدائرة العشرين',
+      'Théâtre de la Colline': 'مسرح لا كولين',
+      'Père-Lachaise': 'مقبرة بير لاشيز',
+      'Carré de Baudouin': 'مركز كاريه دو بودوان الثقافي',
+      'Parc de Belleville': 'حديقة بيلفيل',
+      'Le Bataclan': 'قاعة باتاكلان',
+      "Cirque d'Hiver": 'سيرك الشتاء',
+      'Opéra Bastille': 'أوبرا الباستيل',
+      'Ouvrir l’adresse dans le plan': 'فتح العنوان على الخريطة',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'افتح تطبيق بونجور راتب لعرض المسار'
+    },
+    zh: {
+      '4 rue Belgrand • 75020 Paris': '贝勒格朗街4号 • 75020 巴黎',
+      'Métro Gambetta • Ligne 3': '甘贝塔地铁站 • 3号线',
+      'LA COLLINE GAMBETTA': '拉科林·冈贝塔',
+      'Dans les alentours': '附近景点',
+      'Mairie du 20ᵉ': '巴黎第二十区市政厅',
+      'Théâtre de la Colline': '拉科利讷剧院',
+      'Père-Lachaise': '拉雪兹神父公墓',
+      'Carré de Baudouin': '博杜安文化中心',
+      'Parc de Belleville': '贝尔维尔公园',
+      'Le Bataclan': '巴塔克兰演出厅',
+      "Cirque d'Hiver": '冬季马戏团',
+      'Opéra Bastille': '巴士底歌剧院',
+      'Ouvrir l’adresse dans le plan': '在地图中打开地址',
+      'Ouvrir Bonjour RATP pour l’itinéraire': '打开 Bonjour RATP 查看路线'
+    },
+    uk: {
+      '4 rue Belgrand • 75020 Paris': '4 вул. Бельгран • 75020 Париж',
+      'Métro Gambetta • Ligne 3': 'метро Ґамбетта • Лінія 3',
+      'LA COLLINE GAMBETTA': 'ЛА КОЛЛІН ҐАМБЕТТА',
+      'Dans les alentours': 'Поблизу',
+      'Mairie du 20ᵉ': 'Мерія 20-го округу',
+      'Théâtre de la Colline': 'Театр «Ла Коллін»',
+      'Père-Lachaise': 'Кладовище Пер-Лашез',
+      'Carré de Baudouin': 'Культурний центр «Карре-де-Бодуен»',
+      'Parc de Belleville': 'Парк Бельвіль',
+      'Le Bataclan': 'Батаклан',
+      "Cirque d'Hiver": 'Зимовий цирк',
+      'Opéra Bastille': 'Опера Бастилії',
+      'Ouvrir l’adresse dans le plan': 'Відкрити адресу на мапі',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Відкрити Bonjour RATP для маршруту'
+    },
+    ja: {
+      '4 rue Belgrand • 75020 Paris': 'ベルグラン通り4番 • 75020パリ',
+      'Métro Gambetta • Ligne 3': 'ガンベッタ駅 • 3号線',
+      'LA COLLINE GAMBETTA': 'ラ・コリーヌ・ガンベッタ',
+      'Dans les alentours': '近隣スポット',
+      'Mairie du 20ᵉ': 'パリ20区役所',
+      'Théâtre de la Colline': 'ラ・コリーヌ劇場',
+      'Père-Lachaise': 'ペール・ラシェーズ墓地',
+      'Carré de Baudouin': 'カレ・ド・ボードゥアン文化センター',
+      'Parc de Belleville': 'ベルヴィル公園',
+      'Le Bataclan': 'バタクラン',
+      "Cirque d'Hiver": '冬のサーカス',
+      'Opéra Bastille': 'バスティーユ・オペラ',
+      'Ouvrir l’adresse dans le plan': '地図で住所を開く',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATPでルートを表示'
+    },
+    ko: {
+      '4 rue Belgrand • 75020 Paris': '벨그랑 거리 4 • 75020 파리',
+      'Métro Gambetta • Ligne 3': '감베타역 • 3호선',
+      'LA COLLINE GAMBETTA': '라 콜린 감베타',
+      'Dans les alentours': '주변 명소',
+      'Mairie du 20ᵉ': '파리 20구청',
+      'Théâtre de la Colline': '라 콜린 극장',
+      'Père-Lachaise': '페르 라셰즈 묘지',
+      'Carré de Baudouin': '카레 드 보두앵 문화센터',
+      'Parc de Belleville': '벨빌 공원',
+      'Le Bataclan': '바타클랑',
+      "Cirque d'Hiver": '겨울 서커스',
+      'Opéra Bastille': '바스티유 오페라',
+      'Ouvrir l’adresse dans le plan': '지도에서 주소 열기',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP에서 경로 확인'
+    },
+    pl: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paryż',
+      'Métro Gambetta • Ligne 3': 'Metro Gambetta • Linia 3',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'W pobliżu',
+      'Mairie du 20ᵉ': 'Ratusz 20. dzielnicy',
+      'Théâtre de la Colline': 'Teatr La Colline',
+      'Père-Lachaise': 'Cmentarz Père-Lachaise',
+      'Carré de Baudouin': 'Centrum kultury Carré de Baudouin',
+      'Parc de Belleville': 'Park Belleville',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Cyrk Zimowy',
+      'Opéra Bastille': 'Opera Bastille',
+      'Ouvrir l’adresse dans le plan': 'Otwórz adres na mapie',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Otwórz Bonjour RATP, aby wyznaczyć trasę'
+    },
+    tr: {
+      '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
+      'Métro Gambetta • Ligne 3': 'Gambetta metrosu • 3. Hat',
+      'LA COLLINE GAMBETTA': 'LA COLLINE GAMBETTA',
+      'Dans les alentours': 'Yakınlarda',
+      'Mairie du 20ᵉ': '20. bölge belediye binası',
+      'Théâtre de la Colline': 'La Colline Tiyatrosu',
+      'Père-Lachaise': 'Père-Lachaise Mezarlığı',
+      'Carré de Baudouin': 'Carré de Baudouin Kültür Merkezi',
+      'Parc de Belleville': 'Belleville Parkı',
+      'Le Bataclan': 'Bataclan',
+      "Cirque d'Hiver": 'Kış Sirki',
+      'Opéra Bastille': 'Bastille Operası',
+      'Ouvrir l’adresse dans le plan': 'Adresi haritada aç',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Rota için Bonjour RATP’yi aç'
+    },
+    hi: {
+      '4 rue Belgrand • 75020 Paris': 'रू बेलग्रां 4 • 75020 पेरिस',
+      'Métro Gambetta • Ligne 3': 'गांबेता मेट्रो • लाइन 3',
+      'LA COLLINE GAMBETTA': 'ला कोलीन गांबेता',
+      'Dans les alentours': 'आस-पास के स्थल',
+      'Mairie du 20ᵉ': 'पेरिस के 20वें ज़िले का नगर भवन',
+      'Théâtre de la Colline': 'ला कोलीन थिएटर',
+      'Père-Lachaise': 'पेरे लाशेज़ कब्रिस्तान',
+      'Carré de Baudouin': 'कारे द बोदुआँ सांस्कृतिक केंद्र',
+      'Parc de Belleville': 'बेलविल पार्क',
+      'Le Bataclan': 'बताक्लां',
+      "Cirque d'Hiver": 'शीतकालीन सर्कस',
+      'Opéra Bastille': 'बास्तील ओपेरा',
+      'Ouvrir l’adresse dans le plan': 'मानचित्र पर पता खोलें',
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'मार्ग देखने के लिए Bonjour RATP खोलें'
+    }
+  };
+  Object.keys(FOOTER_COPY).forEach(function (lang) {
+    Object.keys(FOOTER_COPY[lang]).forEach(function (key) {
+      DICTS[lang][key] = FOOTER_COPY[lang][key];
+    });
+  });
+  var FOOTER_DISTANCE_FORMATS = {
+    en: { decimal: '.', units: { m: 'm', km: 'km' }, format: function (v, u) { return v + ' ' + u + ' from the restaurant'; } },
+    es: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return 'A ' + v + ' ' + u + ' del restaurante'; } },
+    de: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return v + ' ' + u + ' vom Restaurant'; } },
+    it: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return 'A ' + v + ' ' + u + ' dal ristorante'; } },
+    pt: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return 'A ' + v + ' ' + u + ' do restaurante'; } },
+    nl: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return 'Op ' + v + ' ' + u + ' van het restaurant'; } },
+    ar: { decimal: ',', units: { m: 'متر', km: 'كم' }, format: function (v, u) { return 'على بُعد ' + v + ' ' + u + ' من المطعم'; } },
+    zh: { decimal: '.', units: { m: '米', km: '千米' }, format: function (v, u) { return '距餐厅' + v + u; } },
+    uk: { decimal: ',', units: { m: 'м', km: 'км' }, format: function (v, u) { return 'За ' + v + ' ' + u + ' від ресторану'; } },
+    ja: { decimal: '.', units: { m: 'メートル', km: 'キロメートル' }, format: function (v, u) { return 'レストランから' + v + u; } },
+    ko: { decimal: '.', units: { m: '미터', km: '킬로미터' }, format: function (v, u) { return '식당에서 ' + v + u; } },
+    pl: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return v + ' ' + u + ' od restauracji'; } },
+    tr: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return 'Restorana ' + v + ' ' + u; } },
+    hi: { decimal: '.', units: { m: 'मीटर', km: 'किमी' }, format: function (v, u) { return 'रेस्तरां से ' + v + ' ' + u + ' दूर'; } }
+  };
   function norm(text) { return String(text).replace(/\s+/g, ' ').trim(); }
   var nodes = [];
+  var footerDistanceTitleNodes = [];
+  function applyFooterDistanceTitles(lang) {
+    var format = FOOTER_DISTANCE_FORMATS[lang];
+    footerDistanceTitleNodes.forEach(function (entry) {
+      if (!format) {
+        entry.element.setAttribute('title', entry.original);
+        return;
+      }
+      var value = entry.value;
+      if (format.decimal === '.') value = value.replace(',', '.');
+      entry.element.setAttribute('title', format.format(value, format.units[entry.unit] || entry.unit));
+    });
+  }
   function collect() {
     var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
       acceptNode: function (node) {
@@ -165,6 +424,13 @@
     while ((node = walker.nextNode())) {
       var match = node.nodeValue.match(/^(\s*)([\s\S]*?)(\s*)$/);
       nodes.push({ node:node, pre:match[1], post:match[3], key:norm(match[2]) });
+    }
+    footerDistanceTitleNodes = [];
+    var footerLinks = document.querySelectorAll('.footer-quartier a[title]');
+    for (var fi = 0; fi < footerLinks.length; fi++) {
+      var original = footerLinks[fi].getAttribute('title') || '';
+      var distance = original.match(/^À\s+([\d,.]+)\s+(m|km)\s+du restaurant$/);
+      if (distance) footerDistanceTitleNodes.push({ element:footerLinks[fi], original:original, value:distance[1], unit:distance[2] });
     }
     var title = document.querySelector('title');
     if (title && title.firstChild) {
@@ -212,6 +478,9 @@
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     if (descriptionNode && descriptionKey) descriptionNode.setAttribute('content', dict[descriptionKey] || descriptionKey);
     var footerAttrs = [
+      ['.footer-address-link', 'title', 'Ouvrir l’adresse dans le plan'],
+      ['.footer-details__metro', 'title', 'Ouvrir Bonjour RATP pour l’itinéraire'],
+      ['.footer-quartier', 'aria-label', 'Dans les alentours'],
       ['.footer-download', 'title', 'Télécharger la carte au format PDF'],
       ['.footer-links a[href^="https://www.instagram.com"]', 'title', 'Ouvrir Instagram'],
       ['.footer-links a[href^="https://www.instagram.com"]', 'aria-label', 'Ouvrir Instagram'],
@@ -225,6 +494,7 @@
       var footerNodes = document.querySelectorAll(attr[0]);
       for (var fj = 0; fj < footerNodes.length; fj++) footerNodes[fj].setAttribute(attr[1], dict[attr[2]] || attr[2]);
     }
+    applyFooterDistanceTitles(lang);
     var button = document.getElementById('legal-lang-btn');
     var menu = document.getElementById('legal-lang-menu');
     if (button) {
