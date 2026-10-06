@@ -12,10 +12,14 @@ Le m\u00eame bloc est pos\u00e9 sur toutes les pages, page de garde comprise :
   rappel\u00e9e dans l'infobulle de chaque lien).
 \u2022 Plus de redondance : la mention \u00ab M\u00c9TRO GAMBETTA \u2022 LIGNE 3 \u00bb n'appara\u00eet
   qu'une fois par page et c'est elle qui porte l'itin\u00e9raire RATP.
-\u2022 L'itin\u00e9raire a pour arriv\u00e9e le restaurant et pour d\u00e9part la position exacte
-  du visiteur (g\u00e9olocalisation du navigateur + API Adresse de l'\u00c9tat), avec un
-  repli propre si elle est refus\u00e9e ou indisponible.
-\u2022 Les liens sont discrets mais bien visibles : jamais de texte dissimul\u00e9.
+• Sur un appareil tactile, le lien universel HTTPS tente d'ouvrir Bonjour RATP;
+  Android Chrome utilise un Intent explicite avec secours sur une page locale.
+• La page de secours demande la position après le tap, avec l'autorisation du
+  navigateur; elle la convertit en adresse via la Base Adresse Nationale avant
+  d'ouvrir l'itinéraire RATP. Refus ou échec : saisie manuelle ou itinéraire
+  sans position. L'iPhone conserve le Universal Link RATP direct.
+• Sur ordinateur, le lien web RATP ouvre l'itinéraire dans un nouvel onglet.
+• Les liens sont discrets mais bien visibles : jamais de texte dissimulé.
 
 Toutes les adresses ont \u00e9t\u00e9 ouvertes et v\u00e9rifi\u00e9es une \u00e0 une (octobre 2026).
 Script idempotent : il remplace ses propres blocs entre marqueurs.
@@ -25,14 +29,15 @@ from __future__ import annotations
 import math
 import re
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote_plus
 
 ROOT = Path(__file__).resolve().parent.parent
 
 # Le restaurant
 LAT, LON = 48.8647788, 2.3993777
-ARRIVEE_RATP = "4, Rue Belgrand, 75, Paris"   # format attendu par ratp.fr
-URL_RATP = "https://www.ratp.fr/itineraires?end=" + quote(ARRIVEE_RATP)
+ARRIVEE_RATP = "4 Rue Belgrand, 75020 Paris"   # adresse complète du restaurant
+URL_RATP_APP = "https://www.bonjour-ratp.fr/itineraires/?end=" + quote_plus(ARRIVEE_RATP)
+URL_RATP_WEB = "https://www.ratp.fr/itineraires?end=" + quote_plus(ARRIVEE_RATP)
 URL_PLAN = ("https://www.google.com/maps/search/?api=1&amp;query="
             "La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris")
 
@@ -83,10 +88,64 @@ def nav_alentours(classe: str) -> str:
             f'<span>Dans les alentours</span>{SEP}{liens}</nav>')
 
 
-LIEN_METRO = (f'<a class="footer-details__metro" data-ratp-itineraire href="{URL_RATP}"'
-              ' target="_blank" rel="noopener"'
-              ' title="Itin\u00e9raire RATP jusqu\u2019au restaurant">'
-              'M\u00c9TRO GAMBETTA \u2022 LIGNE 3</a>')
+LIEN_METRO = (
+    f'<a class="footer-details__metro" data-ratp-itineraire '
+    f'data-ratp-app-href="{URL_RATP_APP}" data-ratp-fallback-path="/ratp-fallback.html" '
+    f'target="_blank" rel="noopener" href="{URL_RATP_WEB}"'
+    ' title="Ouvrir Bonjour RATP pour l\u2019itin\u00e9raire">'
+    'M\u00c9TRO GAMBETTA \u2022 LIGNE 3</a>')
+
+RATP_APP_HANDOFF_JS = """<!-- ratp:app-handoff:debut -->
+<script>
+/* Lien universel HTTPS sur iOS et les navigateurs mobiles compatibles. Android
+   Chrome reçoit en plus un Intent explicite; si l'app manque, Chrome ouvre la
+   page de secours locale, qui demande la position puis prépare le trajet RATP. */
+(function () {
+  'use strict';
+  var agent = navigator.userAgent || '';
+  var tactile = false;
+  try {
+    tactile = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  } catch (e) {}
+  tactile = tactile || navigator.maxTouchPoints > 0 || /Android|iPhone|iPad|iPod/i.test(agent);
+  if (!tactile) return;
+  var androidChrome = /Android/i.test(agent) && /Chrome/i.test(agent) &&
+    !/(EdgA|OPR|SamsungBrowser|DuckDuckGo|; wv)/i.test(agent);
+
+  function language() {
+    var lang = '';
+    try {
+      lang = new URLSearchParams(window.location.search).get('lang') || '';
+      if (!lang) lang = window.localStorage.getItem('lcg-lang') || '';
+    } catch (e) {}
+    return /^(fr|en|es|de|it|pt|nl|pl|zh|uk|ja|ko|ar|tr|hi)$/.test(lang) ? lang : '';
+  }
+
+  document.querySelectorAll('[data-ratp-itineraire]').forEach(function (lien) {
+    var appUrl = lien.getAttribute('data-ratp-app-href');
+    if (!appUrl) return;
+    if (androidChrome) {
+      try {
+        var app = new URL(appUrl);
+        var secours = new URL(lien.getAttribute('data-ratp-fallback-path') || '/ratp-fallback.html',
+          window.location.href);
+        secours.searchParams.set('source', 'metro');
+        var lang = language();
+        if (lang) secours.searchParams.set('lang', lang);
+        lien.href = 'intent://' + app.host + app.pathname + app.search +
+          '#Intent;scheme=https;package=com.fabernovel.ratp;' +
+          'S.browser_fallback_url=' + encodeURIComponent(secours.href) + ';end';
+      } catch (e) {
+        lien.href = appUrl;
+      }
+    } else {
+      lien.href = appUrl;
+    }
+    lien.removeAttribute('target');
+  });
+})();
+</script>
+<!-- ratp:app-handoff:fin -->"""
 
 CSS = """/* quartier:css:debut */
 /* ===== Pied de page : adresse, itineraire et reperes des alentours ========
@@ -131,61 +190,6 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:hover { text-decorat
 }
 /* quartier:css:fin */"""
 
-JS = """<!-- quartier:js:debut -->
-<script>
-/* Itineraire RATP : arrivee = le restaurant, depart = la position exacte du
-   visiteur. La geolocalisation n'est demandee qu'au clic ; si elle est refusee,
-   indisponible ou trop lente, l'itineraire s'ouvre avec la seule arrivee. */
-(function () {
-  var ARRIVEE = '%(arrivee)s';
-  var BASE = 'https://www.ratp.fr/itineraires?end=' + encodeURIComponent(ARRIVEE);
-  var liens = document.querySelectorAll('[data-ratp-itineraire]');
-  if (!liens.length) { return; }
-  Array.prototype.forEach.call(liens, function (lien) {
-    lien.setAttribute('href', BASE);
-    if (!navigator.geolocation) { return; }
-    lien.addEventListener('click', function (ev) {
-      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button) { return; }
-      ev.preventDefault();
-
-      var onglet = null;
-      try { onglet = window.open('about:blank', '_blank'); } catch (e) { onglet = null; }
-      if (onglet) { try { onglet.opener = null; } catch (e) {} }
-
-      var parti = false;
-      function ouvrir(url) {
-        if (parti) { return; }
-        parti = true;
-        if (onglet && !onglet.closed) { onglet.location.replace(url); }
-        else { window.open(url, '_blank', 'noopener'); }
-      }
-      var secours = setTimeout(function () { ouvrir(BASE); }, 9000);
-
-      navigator.geolocation.getCurrentPosition(function (pos) {
-        var lat = pos.coords.latitude, lon = pos.coords.longitude;
-        fetch('https://api-adresse.data.gouv.fr/reverse/?lat=' + lat + '&lon=' + lon)
-          .then(function (r) { return r.ok ? r.json() : null; })
-          .then(function (d) {
-            var p = d && d.features && d.features[0] && d.features[0].properties;
-            var depart = '';
-            if (p) {
-              var dep = String(p.postcode || '').slice(0, 2);
-              depart = [p.housenumber, p.street || p.name, dep, p.city]
-                .filter(function (x) { return x; }).join(', ');
-            }
-            clearTimeout(secours);
-            ouvrir(depart ? BASE + '&start=' + encodeURIComponent(depart) : BASE);
-          })
-          .catch(function () { clearTimeout(secours); ouvrir(BASE); });
-      }, function () {
-        clearTimeout(secours); ouvrir(BASE);
-      }, { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
-    });
-  });
-})();
-</script>
-<!-- quartier:js:fin -->""" % {"arrivee": ARRIVEE_RATP}
-
 COVER_ADRESSE = (
     '<div class="cover-footer-address">'
     f'<a href="{URL_PLAN}" data-default-map'
@@ -193,8 +197,10 @@ COVER_ADRESSE = (
     ' target="_blank" rel="noopener" title="Ouvrir l\u2019adresse dans le plan">'
     '4 rue Belgrand \u2022 75020 Paris</a>'
     '<span class="footer-quartier__sep" aria-hidden="true"> \u2022 </span>'
-    f'<a data-ratp-itineraire href="{URL_RATP}" target="_blank" rel="noopener"'
-    ' title="Itin\u00e9raire RATP jusqu\u2019au restaurant">M\u00e9tro Gambetta \u2022 Ligne 3</a>'
+    f'<a data-ratp-itineraire data-ratp-app-href="{URL_RATP_APP}" '
+    'data-ratp-fallback-path="/ratp-fallback.html" '
+    f'target="_blank" rel="noopener" href="{URL_RATP_WEB}"'
+    ' title="Ouvrir Bonjour RATP pour l\u2019itin\u00e9raire">M\u00e9tro Gambetta \u2022 Ligne 3</a>'
     '</div>')
 
 LEGAL_COVER = ('<nav class="legal-bottom-nav legal-bottom-nav--cover"'
@@ -221,11 +227,17 @@ def poser_css(s: str) -> str:
 
 
 def poser_js(s: str) -> str:
-    s, fait = entre_marqueurs(s, "<!-- quartier:js:debut -->", "<!-- quartier:js:fin -->", JS)
+    """Pose le handoff universel et son secours Intent Android."""
+    s, _ = entre_marqueurs(s, "<!-- quartier:js:debut -->",
+                            "<!-- quartier:js:fin -->", "")
+    s, fait = entre_marqueurs(s, "<!-- ratp:app-handoff:debut -->",
+                              "<!-- ratp:app-handoff:fin -->", RATP_APP_HANDOFF_JS)
     if fait:
         return s
-    i = s.index("</body>")
-    return s[:i] + JS + "\n" + s[i:]
+    i = s.rfind("</body>")
+    if i < 0:
+        return s
+    return s[:i] + RATP_APP_HANDOFF_JS + "\n" + s[i:]
 
 
 def poser_metro(s: str) -> str:

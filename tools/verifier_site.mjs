@@ -260,9 +260,11 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
   metros.length === 1 && !/gambetta|ratp|m\u00e9tro/i.test(alent.textContent)
     ? ok(`${f} : mention du metro une seule fois, sans redite dans les alentours`)
     : ko(`${f} : ${metros.length} mention(s) du metro dans le pied, ou redite`);
-  metros[0].tagName === 'A' && metros[0].hasAttribute('data-ratp-itineraire')
-    ? ok(`${f} : la mention du metro ouvre l'itineraire RATP`)
-    : ko(`${f} : la mention du metro n'est pas un itineraire`);
+  metros[0].tagName === 'A' && metros[0].hasAttribute('data-ratp-itineraire') &&
+    metros[0].getAttribute('data-ratp-fallback-path') === '/ratp-fallback.html' &&
+    metros[0].getAttribute('data-ratp-app-href')?.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=')
+    ? ok(`${f} : lien d’application RATP et secours local présents`)
+    : ko(`${f} : lien RATP ou page de secours absents`);
   alent && legal ? ok(`${f} : alentours + mentions legales en pied de page`)
                  : ko(`${f} : pied de page incomplet`);
   alent.previousElementSibling.classList.contains('footer-details')
@@ -271,12 +273,23 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
 }
 
 const ratp = d.querySelector('[data-ratp-itineraire]');
-ratp && ratp.href.startsWith('https://www.ratp.fr/itineraires?end=') && ratp.href.includes('Belgrand')
-  ? ok('lien RATP : itineraire avec le restaurant en arrivee')
-  : ko('lien RATP : ce n\'est pas un itineraire vers le restaurant');
-/navigator\.geolocation/.test(index) && /api-adresse\.data\.gouv\.fr\/reverse/.test(index)
-  ? ok('itineraire RATP : depart pris sur la position du visiteur, avec repli')
-  : ko('itineraire RATP : la geolocalisation du visiteur est absente');
+ratp && ratp.href.startsWith('https://www.ratp.fr/itineraires?end=') &&
+  new URL(ratp.href).searchParams.get('end') === '4 Rue Belgrand, 75020 Paris' &&
+  ratp.getAttribute('data-ratp-fallback-path') === '/ratp-fallback.html' &&
+  new URL(ratp.getAttribute('data-ratp-app-href')).searchParams.get('end') === '4 Rue Belgrand, 75020 Paris'
+  ? ok('lien RATP : application, secours local et adresse complète du restaurant')
+  : ko('lien RATP : URL d’application, secours ou arrivée invalide');
+const ratpFallbackHtml = lire('ratp-fallback.html');
+const ratpFallbackScript = lire('assets/js/ratp-fallback.js');
+index.includes('intent://') && index.includes('package=com.fabernovel.ratp') &&
+  index.includes('S.browser_fallback_url=') && !index.includes('navigator.geolocation') &&
+  !index.includes('api-adresse.data.gouv.fr/reverse/') &&
+  /<meta name="robots" content="noindex, nofollow">/.test(ratpFallbackHtml) &&
+  ratpFallbackScript.includes('navigator.geolocation.getCurrentPosition') &&
+  ratpFallbackScript.includes('https://api-adresse.data.gouv.fr/reverse/') &&
+  ratpFallbackScript.includes("'4 Rue Belgrand 75020 Paris'")
+  ? ok('métro : Intent Android et géolocalisation consentie dans la page de secours')
+  : ko('métro : handoff, départ géolocalisé ou confidentialité incomplets');
 const garde = d.querySelector('#cover-more .footer-quartier--cover');
 const couverture = d.getElementById('cover-section');
 const sousCouverture = d.getElementById('cover-more');
@@ -315,6 +328,7 @@ const autorises = [
   'https://www.bataclan.fr/',
   'https://www.operadeparis.fr/visites/opera-bastille',
   'https://www.ratp.fr/itineraires',
+  'https://www.bonjour-ratp.fr/itineraires/',
   'https://api-adresse.data.gouv.fr/reverse/',
   'https://www.instagram.com/lacolline.gambetta',
   'https://www.google.com/maps/search/',
