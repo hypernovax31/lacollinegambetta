@@ -21,7 +21,6 @@ Le m\u00eame bloc est pos\u00e9 sur toutes les pages, page de garde comprise :
 • Sur ordinateur, le lien web RATP ouvre l'itinéraire dans un nouvel onglet.
 \u2022 Les liens sont discrets mais bien visibles : jamais de texte dissimul\u00e9.
 
-Toutes les adresses ont \u00e9t\u00e9 ouvertes et v\u00e9rifi\u00e9es une \u00e0 une (octobre 2026).
 Script idempotent : il remplace ses propres blocs entre marqueurs.
 """
 from __future__ import annotations

@@ -64,6 +64,14 @@ index.includes('.medallion-frame.is-load-reflection::after') &&
   index.includes("frame.classList.remove('is-load-reflection')")
   ? ok('médaillon : reflet après chargement complet, retrait avant le survol suivant')
   : ko('médaillon : reflet de chargement, fin d’animation ou mouvement réduit absent');
+const noelCanvas = d.getElementById('xmas-snow');
+noelCanvas?.parentElement === d.body &&
+  index.includes("timeZone:'Europe/Paris'") &&
+  index.includes("window.addEventListener('pageshow', seasonalReturn)") &&
+  index.includes('30 * 60 * 1000') &&
+  index.includes("query === '1' || isDecemberInParis()")
+  ? ok('Noël : activation en décembre (heure de Paris), persistance sur les deux vues et reprise après retour')
+  : ko('Noël : activation saisonnière ou reprise après navigation incomplète');
 const sansDim = [...d.querySelectorAll('img')].filter((i) => !i.getAttribute('width'));
 sansDim.length === 0 ? ok('toutes les images ont width/height')
                      : ko(`${sansDim.length} image(s) sans dimensions`);
@@ -421,17 +429,25 @@ ratp && ratp.href.startsWith('https://www.ratp.fr/itineraires?end=') &&
   ratp.target === '_blank' && ratp.rel.split(/\s+/).includes('noopener')
   ? ok('lien RATP : arrivée complète, Universal Link et secours local')
   : ko('lien RATP : arrivée, Universal Link ou page de secours incorrects');
+
 const ratpFallbackHtml = lire('ratp-fallback.html');
 const ratpFallbackScript = lire('assets/js/ratp-fallback.js');
-index.includes('intent://') && index.includes('package=com.fabernovel.ratp') &&
-  index.includes('S.browser_fallback_url=') && !index.includes('navigator.geolocation') &&
-  !index.includes('api-adresse.data.gouv.fr/reverse/') &&
+index.includes('ratp:app-handoff:debut') &&
+  index.includes("window.matchMedia('(pointer: coarse)')") &&
+  index.includes("lien.removeAttribute('target')") &&
+  index.includes('intent://') && index.includes('package=com.fabernovel.ratp') &&
+  index.includes('S.browser_fallback_url=') && index.includes('/ratp-fallback.html') &&
+  !index.includes("window.open('about:blank'") &&
+  !index.includes('api-adresse.data.gouv.fr/reverse/') && !index.includes('navigator.geolocation') &&
   /<meta name="robots" content="noindex, nofollow">/.test(ratpFallbackHtml) &&
+  ratpFallbackHtml.includes('api-adresse.data.gouv.fr') &&
   ratpFallbackScript.includes('navigator.geolocation.getCurrentPosition') &&
   ratpFallbackScript.includes('https://api-adresse.data.gouv.fr/reverse/') &&
-  ratpFallbackScript.includes("'4 Rue Belgrand 75020 Paris'")
-  ? ok('métro : Intent Android, géolocalisation consentie et destination complète')
+  ratpFallbackScript.includes("'4 Rue Belgrand 75020 Paris'") &&
+  ratpFallbackScript.includes('window.location.replace(routeUrl(cleanOrigin))')
+  ? ok('métro : Intent Android, géolocalisation consentie et itinéraire RATP avec destination complète')
   : ko('métro : handoff, départ géolocalisé ou confidentialité incomplets');
+
 const fichiersLiensExternes = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html'];
 const liensExternesSansNouvelOnglet = [];
 for (const fichier of fichiersLiensExternes) {
@@ -453,9 +469,13 @@ liensExternesSansNouvelOnglet.length === 0
   ? ok(`liens externes : toutes les ancres HTTP(S) s’ouvrent dans un nouvel onglet (${fichiersLiensExternes.length} pages)`)
   : ko(`liens externes sans nouvel onglet/rel noopener : ${liensExternesSansNouvelOnglet.slice(0, 8).join(' | ')}`);
 
+d.querySelector('meta[name="apple-itunes-app"]')?.content === 'app-id=507107090'
+  ? ok('iOS Safari : Smart App Banner Bonjour RATP configurée pour proposer l’ouverture')
+  : ko('iOS Safari : métadonnée Smart App Banner Bonjour RATP absente');
+
 !index.includes("window.open('about:blank'") &&
   !index.includes('api-adresse.data.gouv.fr/reverse/')
-  ? ok('métro : aucune page blanche ni demande de géolocalisation')
+  ? ok('métro : aucune page blanche ni géolocalisation sur le site principal')
   : ko('métro : ancien intercepteur de géolocalisation encore présent');
 const garde = d.querySelector('#cover-more .footer-quartier--cover');
 const couverture = d.getElementById('cover-section');

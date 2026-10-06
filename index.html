@@ -69,6 +69,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png?v=20260926">
 <link rel="shortcut icon" href="/favicon.ico?v=20260926">
 <link rel="apple-touch-icon" sizes="192x192" href="/favicon.png?v=20260926">
+<meta name="apple-itunes-app" content="app-id=507107090">
 <link rel="manifest" href="/site.webmanifest">
 
 <!-- Polices principales : préchargées sans bloquer le premier rendu ; le système prend le relais hors ligne. -->
@@ -11926,19 +11927,56 @@ else sizeCoverMedallion();
    lieu d'une boucle plein écran à 60 i/s. */
 (function () {
   'use strict';
+  function isDecemberInParis() {
+    try {
+      var month = new Intl.DateTimeFormat('en', {
+        timeZone:'Europe/Paris', month:'numeric'
+      }).format(new Date());
+      return Number(month) === 12;
+    } catch (e) {
+      return new Date().getMonth() === 11;
+    }
+  }
   function xmasActive() {
     var query = '';
     try { query = new URLSearchParams(location.search).get('noel'); } catch (e) {}
     if (query === '0') return false;
     if (document.documentElement.classList.contains('carte-doc')) return false;
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-    return query === '1' || new Date().getMonth() === 11;
+    return query === '1' || isDecemberInParis();
   }
 
-  var api = { active:false, fly:function () {}, flakeCount:function () { return 0; }, bells:function () { return { enabled:false, state:'none' }; } };
+  var api = { active:xmasActive(), fly:function () {}, flakeCount:function () { return 0; }, bells:function () { return { enabled:false, state:'none' }; }, resume:function () {} };
   window.__xmas = api;
-  if (!xmasActive()) return;
-  api.active = true;
+  var seasonCheckTimer = 0;
+  function seasonStillMatches() {
+    if (xmasActive() === api.active) return true;
+    window.location.reload();
+    return false;
+  }
+  function scheduleSeasonCheck() {
+    clearTimeout(seasonCheckTimer);
+    seasonCheckTimer = setTimeout(function () {
+      seasonCheckTimer = 0;
+      if (seasonStillMatches()) scheduleSeasonCheck();
+    }, 30 * 60 * 1000);
+  }
+  function seasonalReturn(event) {
+    if (!seasonStillMatches()) return;
+    if (event && event.type === 'pageshow' && event.persisted && api.active) api.resume();
+    scheduleSeasonCheck();
+  }
+  window.addEventListener('pageshow', seasonalReturn);
+  window.addEventListener('focus', seasonalReturn);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) seasonalReturn();
+  });
+  window.addEventListener('pagehide', function () {
+    clearTimeout(seasonCheckTimer);
+    seasonCheckTimer = 0;
+  });
+  scheduleSeasonCheck();
+  if (!api.active) return;
 
   var snow = document.getElementById('xmas-snow');
   var sleigh = document.getElementById('xmas-sleigh');
@@ -12174,9 +12212,11 @@ else sizeCoverMedallion();
       sleighState.start += performance.now() - sleighState.pausedAt;
       delete sleighState.pausedAt;
     }
-    if (!sleighState) scheduleSleigh(rand(25000, 50000));
+    if (!sleighState && !sleighTimer) scheduleSleigh(rand(25000, 50000));
     scheduleRender();
   }
+  api.resume = resume;
+  api.pause = pause;
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) pause(); else resume();
   });
