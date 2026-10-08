@@ -200,12 +200,11 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
   metros[0].tagName === 'A' && metros[0].hasAttribute('data-ratp-itineraire') &&
     metros[0].href.startsWith('https://www.ratp.fr/itineraires?end=') &&
     new URL(metros[0].href).searchParams.get('end') === '4 Rue Belgrand, 75020 Paris' &&
-    metros[0].getAttribute('data-ratp-app-href')?.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=') &&
-    new URL(metros[0].getAttribute('data-ratp-app-href')).searchParams.get('end') === '4 Rue Belgrand, 75020 Paris' &&
-    metros[0].getAttribute('data-ratp-fallback-path') === '/ratp-fallback.html' &&
+    !metros[0].hasAttribute('data-ratp-app-href') &&
+    !metros[0].hasAttribute('data-ratp-fallback-path') &&
     metros[0].target === '_blank' && metros[0].rel.split(/\s+/).includes('noopener')
-    ? ok(`${f} : lien web RATP, Universal Link Bonjour RATP et secours local Android`)
-    : ko(`${f} : liens ou secours RATP incomplets`);
+    ? ok(`${f} : itinéraire web RATP uniquement, arrivée complète et nouvel onglet`)
+    : ko(`${f} : lien web RATP incorrect ou ancien handoff encore présent`);
   adresse && adresse.textContent.trim() === '4 RUE BELGRAND • 75020 PARIS' &&
     localisation && localisation.contains(adresse) && localisation.contains(metros[0]) &&
     separateurAdresseMetro &&
@@ -259,7 +258,7 @@ const piedsLocaux = {
     places: ['بلدية الدائرة العشرين', 'مسرح لا كولين', 'مقبرة بير لاشيز', 'مركز كاريه دو بودوان الثقافي', 'حديقة بيلفيل', 'قاعة باتاكلان', 'سيرك الشتاء', 'أوبرا الباستيل'],
     distance: 'على بُعد 100 متر من المطعم',
     addressTitle: 'فتح العنوان على الخريطة',
-    metroTitle: 'افتح تطبيق بونجور راتب لعرض المسار'
+    metroTitle: 'فتح مسار RATP'
   },
   zh: {
     heading: '附近景点',
@@ -271,7 +270,7 @@ const piedsLocaux = {
     places: ['巴黎第二十区市政厅', '拉科利讷剧院', '拉雪兹神父公墓', '博杜安文化中心', '贝尔维尔公园', '巴塔克兰演出厅', '冬季马戏团', '巴士底歌剧院'],
     distance: '距餐厅100米',
     addressTitle: '在地图中打开地址',
-    metroTitle: '打开 Bonjour RATP 查看路线'
+    metroTitle: '打开 RATP 路线'
   },
   uk: {
     heading: 'Поблизу',
@@ -283,7 +282,7 @@ const piedsLocaux = {
     places: ['Мерія 20-го округу', 'Театр «Ла Коллін»', 'Кладовище Пер-Лашез', 'Культурний центр «Карре-де-Бодуен»', 'Парк Бельвіль', 'Батаклан', 'Зимовий цирк', 'Опера Бастилії'],
     distance: 'За 100 м від ресторану',
     addressTitle: 'Відкрити адресу на мапі',
-    metroTitle: 'Відкрити Bonjour RATP для маршруту'
+    metroTitle: 'Відкрити маршрут RATP'
   },
   ja: {
     heading: '近隣スポット',
@@ -295,7 +294,7 @@ const piedsLocaux = {
     places: ['パリ20区役所', 'ラ・コリーヌ劇場', 'ペール・ラシェーズ墓地', 'カレ・ド・ボードゥアン文化センター', 'ベルヴィル公園', 'バタクラン', '冬のサーカス', 'バスティーユ・オペラ'],
     distance: 'レストランから100メートル',
     addressTitle: '地図で住所を開く',
-    metroTitle: 'Bonjour RATPでルートを表示'
+    metroTitle: 'RATPのルートを開く'
   },
   ko: {
     heading: '주변 명소',
@@ -307,7 +306,7 @@ const piedsLocaux = {
     places: ['파리 20구청', '라 콜린 극장', '페르 라셰즈 묘지', '카레 드 보두앵 문화센터', '벨빌 공원', '바타클랑', '겨울 서커스', '바스티유 오페라'],
     distance: '식당에서 100미터',
     addressTitle: '지도에서 주소 열기',
-    metroTitle: 'Bonjour RATP에서 경로 확인'
+    metroTitle: 'RATP 경로 열기'
   },
   hi: {
     heading: 'आस-पास के स्थल',
@@ -319,7 +318,7 @@ const piedsLocaux = {
     places: ['पेरिस के 20वें ज़िले का नगर भवन', 'ला कोलीन थिएटर', 'पेरे लाशेज़ कब्रिस्तान', 'कारे द बोदुआँ सांस्कृतिक केंद्र', 'बेलविल पार्क', 'बताक्लां', 'शीतकालीन सर्कस', 'बास्तील ओपेरा'],
     distance: 'रेस्तरां से 100 मीटर दूर',
     addressTitle: 'मानचित्र पर पता खोलें',
-    metroTitle: 'मार्ग देखने के लिए Bonjour RATP खोलें'
+    metroTitle: 'RATP मार्ग खोलें'
   }
 };
 for (const [lang, expected] of Object.entries(piedsLocaux)) {
@@ -414,39 +413,34 @@ const cacheChiffres = ['index.html', 'reservation.html', 'mentions-legales.html'
 cacheChiffres
   ? ok('chiffres : toutes les pages invalidant l’ancien cache du script localisé')
   : ko('chiffres : une page sert encore une version en cache du script localisé');
-['index.html', 'reservation.html'].every((f) => lire(f).includes('i18n.js?v=2026100502'))
+['index.html', 'reservation.html'].every((f) => lire(f).includes('i18n.js?v=2026100801'))
   ? ok('i18n : scripts actualisés sur la page d’accueil et la réservation')
   : ko('i18n : une page conserve l’ancienne version en cache');
-['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100504'))
+['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100802'))
   ? ok('i18n légal : scripts actualisés sur les pages juridiques')
   : ko('i18n légal : une page conserve l’ancienne version en cache');
 
 const ratp = d.querySelector('[data-ratp-itineraire]');
 ratp && ratp.href.startsWith('https://www.ratp.fr/itineraires?end=') &&
   new URL(ratp.href).searchParams.get('end') === '4 Rue Belgrand, 75020 Paris' &&
-  ratp.getAttribute('data-ratp-fallback-path') === '/ratp-fallback.html' &&
-  new URL(ratp.getAttribute('data-ratp-app-href')).searchParams.get('end') === '4 Rue Belgrand, 75020 Paris' &&
+  !ratp.hasAttribute('data-ratp-app-href') && !ratp.hasAttribute('data-ratp-fallback-path') &&
   ratp.target === '_blank' && ratp.rel.split(/\s+/).includes('noopener')
-  ? ok('lien RATP : arrivée complète, Universal Link et secours local')
-  : ko('lien RATP : arrivée, Universal Link ou page de secours incorrects');
+  ? ok('lien RATP : itinéraire web uniquement, arrivée complète et nouvel onglet')
+  : ko('lien RATP : itinéraire web incorrect ou intégration d’application encore présente');
 
-const ratpFallbackHtml = lire('ratp-fallback.html');
-const ratpFallbackScript = lire('assets/js/ratp-fallback.js');
-index.includes('ratp:app-handoff:debut') &&
-  index.includes("window.matchMedia('(pointer: coarse)')") &&
-  index.includes("lien.removeAttribute('target')") &&
-  index.includes('intent://') && index.includes('package=com.fabernovel.ratp') &&
-  index.includes('S.browser_fallback_url=') && index.includes('/ratp-fallback.html') &&
-  !index.includes("window.open('about:blank'") &&
-  !index.includes('api-adresse.data.gouv.fr/reverse/') && !index.includes('navigator.geolocation') &&
-  /<meta name="robots" content="noindex, nofollow">/.test(ratpFallbackHtml) &&
-  ratpFallbackHtml.includes('api-adresse.data.gouv.fr') &&
-  ratpFallbackScript.includes('navigator.geolocation.getCurrentPosition') &&
-  ratpFallbackScript.includes('https://api-adresse.data.gouv.fr/reverse/') &&
-  ratpFallbackScript.includes("'4 Rue Belgrand 75020 Paris'") &&
-  ratpFallbackScript.includes('window.location.replace(routeUrl(cleanOrigin))')
-  ? ok('métro : Intent Android, géolocalisation consentie et itinéraire RATP avec destination complète')
-  : ko('métro : handoff, départ géolocalisé ou confidentialité incomplets');
+const pagesSansHandoff = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html']
+  .every((f) => !/data-ratp-app-href|data-ratp-fallback-path|ratp:app-handoff|intent:\/\//i.test(lire(f)));
+const secoursApplicationSupprime = !existsSync(racine + 'ratp-fallback.html') &&
+  !existsSync(racine + 'assets/js/ratp-fallback.js') &&
+  !existsSync(racine + 'tools/verifier_ratp_fallback.mjs');
+!d.querySelector('meta[name="apple-itunes-app"]') && pagesSansHandoff && secoursApplicationSupprime
+  ? ok('métro : aucun lien d’application, Intent, Smart App Banner ou secours local')
+  : ko('métro : ancien élément d’intégration d’application encore présent');
+
+!index.includes("window.open('about:blank'") &&
+  !index.includes('api-adresse.data.gouv.fr/reverse/') && !index.includes('navigator.geolocation')
+  ? ok('métro : navigation web directe, sans page blanche ni demande de position')
+  : ko('métro : ancien intercepteur ou demande de géolocalisation encore présent');
 
 const fichiersLiensExternes = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html'];
 const liensExternesSansNouvelOnglet = [];
@@ -469,14 +463,6 @@ liensExternesSansNouvelOnglet.length === 0
   ? ok(`liens externes : toutes les ancres HTTP(S) s’ouvrent dans un nouvel onglet (${fichiersLiensExternes.length} pages)`)
   : ko(`liens externes sans nouvel onglet/rel noopener : ${liensExternesSansNouvelOnglet.slice(0, 8).join(' | ')}`);
 
-d.querySelector('meta[name="apple-itunes-app"]')?.content === 'app-id=507107090'
-  ? ok('iOS Safari : Smart App Banner Bonjour RATP configurée pour proposer l’ouverture')
-  : ko('iOS Safari : métadonnée Smart App Banner Bonjour RATP absente');
-
-!index.includes("window.open('about:blank'") &&
-  !index.includes('api-adresse.data.gouv.fr/reverse/')
-  ? ok('métro : aucune page blanche ni géolocalisation sur le site principal')
-  : ko('métro : ancien intercepteur de géolocalisation encore présent');
 const garde = d.querySelector('#cover-more .footer-quartier--cover');
 const couverture = d.getElementById('cover-section');
 const sousCouverture = d.getElementById('cover-more');
@@ -519,7 +505,6 @@ const autorises = [
   'https://www.cirquedhiver.com/',
   'https://www.bataclan.fr/',
   'https://www.operadeparis.fr/visites/opera-bastille',
-  'https://www.bonjour-ratp.fr/itineraires/',
   'https://www.ratp.fr/itineraires',
   'https://www.instagram.com/lacolline.gambetta',
   'https://www.google.com/maps/search/',

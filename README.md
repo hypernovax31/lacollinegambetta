@@ -152,11 +152,9 @@ modifier la liste `POINTS` (libellé, adresse, latitude, longitude) : le tri se
 refait tout seul.
 
 Plus de redite : « MÉTRO GAMBETTA • LIGNE 3 » n'apparaît **qu'une fois par
-page**. Le lien direct vers Bonjour RATP ouvre l'**application en priorité**
-si elle est installée sur mobile ; sinon, la page web officielle d'itinéraire
-s'ouvre. La destination reste l'adresse du restaurant (`4, Rue Belgrand,
-75, Paris`). Le site ne demande pas la géolocalisation et n'ouvre plus d'onglet
-provisoire vide.
+page**. Le lien ouvre uniquement l’itinéraire web officiel RATP, avec l’adresse
+du restaurant comme destination, dans un nouvel onglet. Le site ne tente pas
+d’ouvrir une application et ne demande pas la géolocalisation.
 
 ### Vérification
 

@@ -12,13 +12,9 @@ Le m\u00eame bloc est pos\u00e9 sur toutes les pages, page de garde comprise :
   rappel\u00e9e dans l'infobulle de chaque lien).
 \u2022 Plus de redondance : la mention \u00ab M\u00c9TRO GAMBETTA \u2022 LIGNE 3 \u00bb n'appara\u00eet
   qu'une fois par page et c'est elle qui porte l'itin\u00e9raire RATP.
-• Sur un appareil tactile, le lien universel HTTPS tente d'ouvrir Bonjour RATP;
-  Android Chrome utilise un Intent explicite avec secours sur une page locale.
-• La page de secours demande la position après le tap, avec l'autorisation du
-  navigateur; elle la convertit en adresse via la Base Adresse Nationale avant
-  d'ouvrir l'itinéraire RATP. Refus ou échec : saisie manuelle ou itinéraire
-  sans position. L'iPhone conserve le Universal Link RATP direct.
-• Sur ordinateur, le lien web RATP ouvre l'itinéraire dans un nouvel onglet.
+• Sur tous les appareils, le lien web RATP ouvre l’itinéraire avec le restaurant
+  comme destination, dans un nouvel onglet. Le site ne tente pas d’ouvrir une
+  application et ne demande pas la géolocalisation.
 \u2022 Les liens sont discrets mais bien visibles : jamais de texte dissimul\u00e9.
 
 Script idempotent : il remplace ses propres blocs entre marqueurs.
@@ -35,7 +31,6 @@ ROOT = Path(__file__).resolve().parent.parent
 # Le restaurant
 LAT, LON = 48.8647788, 2.3993777
 ARRIVEE_RATP = "4 Rue Belgrand, 75020 Paris"   # adresse complète du restaurant
-URL_RATP_APP = "https://www.bonjour-ratp.fr/itineraires/?end=" + quote_plus(ARRIVEE_RATP)
 URL_RATP_WEB = "https://www.ratp.fr/itineraires?end=" + quote_plus(ARRIVEE_RATP)
 URL_PLAN = ("https://www.google.com/maps/search/?api=1&amp;query="
             "La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris")
@@ -89,62 +84,9 @@ def nav_alentours(classe: str) -> str:
 
 LIEN_METRO = (
     f'<a class="footer-details__metro" data-ratp-itineraire '
-    f'data-ratp-app-href="{URL_RATP_APP}" data-ratp-fallback-path="/ratp-fallback.html" '
     f'target="_blank" rel="noopener" href="{URL_RATP_WEB}"'
-    ' title="Ouvrir Bonjour RATP pour l\u2019itin\u00e9raire">'
+    ' title="Ouvrir l\u2019itin\u00e9raire RATP">'
     'M\u00c9TRO GAMBETTA \u2022 LIGNE 3</a>')
-
-RATP_APP_HANDOFF_JS = """<!-- ratp:app-handoff:debut -->
-<script>
-/* Lien universel HTTPS sur iOS et les navigateurs mobiles compatibles. Android
-   Chrome reçoit en plus un Intent explicite; si l'app manque, Chrome ouvre la
-   page de secours locale, qui demande la position puis prépare le trajet RATP. */
-(function () {
-  'use strict';
-  var agent = navigator.userAgent || '';
-  var tactile = false;
-  try {
-    tactile = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
-  } catch (e) {}
-  tactile = tactile || navigator.maxTouchPoints > 0 || /Android|iPhone|iPad|iPod/i.test(agent);
-  if (!tactile) return;
-  var androidChrome = /Android/i.test(agent) && /Chrome/i.test(agent) &&
-    !/(EdgA|OPR|SamsungBrowser|DuckDuckGo|; wv)/i.test(agent);
-
-  function language() {
-    var lang = '';
-    try {
-      lang = new URLSearchParams(window.location.search).get('lang') || '';
-      if (!lang) lang = window.localStorage.getItem('lcg-lang') || '';
-    } catch (e) {}
-    return /^(fr|en|es|de|it|pt|nl|pl|zh|uk|ja|ko|ar|tr|hi)$/.test(lang) ? lang : '';
-  }
-
-  document.querySelectorAll('[data-ratp-itineraire]').forEach(function (lien) {
-    var appUrl = lien.getAttribute('data-ratp-app-href');
-    if (!appUrl) return;
-    if (androidChrome) {
-      try {
-        var app = new URL(appUrl);
-        var secours = new URL(lien.getAttribute('data-ratp-fallback-path') || '/ratp-fallback.html',
-          window.location.href);
-        secours.searchParams.set('source', 'metro');
-        var lang = language();
-        if (lang) secours.searchParams.set('lang', lang);
-        lien.href = 'intent://' + app.host + app.pathname + app.search +
-          '#Intent;scheme=https;package=com.fabernovel.ratp;' +
-          'S.browser_fallback_url=' + encodeURIComponent(secours.href) + ';end';
-      } catch (e) {
-        lien.href = appUrl;
-      }
-    } else {
-      lien.href = appUrl;
-    }
-    lien.removeAttribute('target');
-  });
-})();
-</script>
-<!-- ratp:app-handoff:fin -->"""
 
 CSS = """/* quartier:css:debut */
 /* ===== Pied de page : adresse, itineraire et reperes des alentours ========
@@ -313,11 +255,10 @@ COVER_ADRESSE = (
     ' target="_blank" rel="noopener" title="Ouvrir l\u2019adresse dans le plan">'
     '4 rue Belgrand \u2022 75020 Paris</a>'
     '<span class="footer-quartier__sep" aria-hidden="true"> \u2022 </span>'
-    f'<a data-ratp-itineraire data-ratp-app-href="{URL_RATP_APP}" '
-    'data-ratp-fallback-path="/ratp-fallback.html" '
-    f'target="_blank" rel="noopener" href="{URL_RATP_WEB}"'
-    ' title="Ouvrir Bonjour RATP pour l\u2019itin\u00e9raire">M\u00e9tro Gambetta \u2022 Ligne 3</a>'
+    f'<a data-ratp-itineraire target="_blank" rel="noopener" href="{URL_RATP_WEB}"'
+    ' title="Ouvrir l\u2019itin\u00e9raire RATP">M\u00e9tro Gambetta \u2022 Ligne 3</a>'
     '</div>')
+
 
 LEGAL_COVER = ('<nav class="legal-bottom-nav legal-bottom-nav--cover"'
                ' aria-label="Informations l\u00e9gales">'
@@ -340,20 +281,6 @@ def poser_css(s: str) -> str:
         return s
     i = s.index("</style>")
     return s[:i] + bloc + "\n" + s[i:]
-
-
-def poser_js(s: str) -> str:
-    """Pose le handoff universel et son secours Intent Android."""
-    s, _ = entre_marqueurs(s, "<!-- quartier:js:debut -->",
-                            "<!-- quartier:js:fin -->", "")
-    s, fait = entre_marqueurs(s, "<!-- ratp:app-handoff:debut -->",
-                              "<!-- ratp:app-handoff:fin -->", RATP_APP_HANDOFF_JS)
-    if fait:
-        return s
-    i = s.rfind("</body>")
-    if i < 0:
-        return s
-    return s[:i] + RATP_APP_HANDOFF_JS + "\n" + s[i:]
 
 
 def poser_metro(s: str) -> str:
@@ -427,7 +354,6 @@ def main() -> None:
     s = poser_metro(s)
     s = poser_nav_pied(s)
     s = poser_bloc_garde(s)
-    s = poser_js(s)
     f.write_text(s, encoding="utf-8")
     print("index.html : page de garde + pied de page mis a jour")
 
@@ -438,7 +364,6 @@ def main() -> None:
         s = poser_css(s)
         s = poser_metro(s)
         s = poser_nav_pied(s)
-        s = poser_js(s)
         f.write_text(s, encoding="utf-8")
         print(f"{nom} : pied de page identique a la page de garde")
 
