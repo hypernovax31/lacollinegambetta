@@ -203,7 +203,7 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
     metros[0].getAttribute('data-ratp-app-href')?.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=') &&
     new URL(metros[0].getAttribute('data-ratp-app-href')).searchParams.get('end') === '4 Rue Belgrand 75020 Paris' &&
     !metros[0].hasAttribute('data-ratp-fallback-path') &&
-    metros[0].getAttribute('data-ratp-trajet-site') === 'Ouvrir le trajet sur ratp.fr' &&
+    !metros[0].hasAttribute('data-ratp-trajet-site') &&
     metros[0].target === '_blank' && metros[0].rel.split(/\s+/).includes('noopener')
     ? ok(`${f} : lien web RATP et lien universel Bonjour RATP, arrivée du restaurant`)
     : ko(`${f} : liens RATP incomplets ou arrivée incorrecte`);
@@ -415,16 +415,16 @@ const cacheChiffres = ['index.html', 'reservation.html', 'mentions-legales.html'
 cacheChiffres
   ? ok('chiffres : toutes les pages invalidant l’ancien cache du script localisé')
   : ko('chiffres : une page sert encore une version en cache du script localisé');
-['index.html', 'reservation.html'].every((f) => lire(f).includes('i18n.js?v=2026100806'))
+['index.html', 'reservation.html'].every((f) => lire(f).includes('i18n.js?v=2026100807'))
   ? ok('i18n : scripts actualisés sur la page d’accueil et la réservation')
   : ko('i18n : une page conserve l’ancienne version en cache');
 const i18n = lire('assets/js/i18n.js');
-(i18n.match(/'Ouvrir le trajet sur ratp\.fr'/g) || []).length === 16 &&
-  i18n.includes("['.footer-details__metro', 'data-ratp-trajet-site', 'Ouvrir le trajet sur ratp.fr']") &&
-  i18n.includes("['.cover-footer-address [data-ratp-itineraire]', 'data-ratp-trajet-site', 'Ouvrir le trajet sur ratp.fr']")
-  ? ok('i18n : « Ouvrir le trajet sur ratp.fr » traduit dans les 14 langues et attributs posés')
-  : ko('i18n : traduction ou attribut data-ratp-trajet-site incomplet');
-['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100806'))
+!i18n.includes('Ouvrir le trajet sur ratp.fr') && !i18n.includes('data-ratp-trajet-site') &&
+  !lire('assets/js/legal-i18n.js').includes('Ouvrir le trajet sur ratp.fr') &&
+  !lire('assets/js/ratp-itinerary.js').includes('data-ratp-trajet-site')
+  ? ok('metro : plus aucun lien manuel « Ouvrir le trajet sur ratp.fr », et c’est tout')
+  : ko('metro : un lien manuel « Ouvrir le trajet sur ratp.fr » traîne encore');
+['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100807'))
   ? ok('i18n légal : scripts actualisés sur les pages juridiques')
   : ko('i18n légal : une page conserve l’ancienne version en cache');
 
@@ -444,17 +444,17 @@ ratpItineraireScript.includes("SCHEMA_APP = 'ratp://'") &&
   // la demande d'ouverture est émise tout de suite, au clic
   corpsClic.includes('naviguer(intentUrl(appUrl, trajet))') &&
   corpsClic.includes('essai.src = SCHEMA_APP') &&
-  // la page du site ne disparaît JAMAIS au profit de ratp.fr : aucune
-  // ouverture automatique du trajet, seulement un lien manuel proposé
-  // après l'échec (second clic volontaire)
-  !ratpItineraireScript.includes('window.open') &&
-  !/location\.assign\(trajet\)/.test(ratpItineraireScript) &&
-  ratpItineraireScript.includes('ajouterLienSite(lien, trajet)') &&
+  // si l'application n'est pas là, le trajet s'ouvre dans un NOUVEL onglet,
+  // la page du site n'est pas remplacée (dernier recours : navigation courante)
+  ratpItineraireScript.includes("window.open(trajet, '_blank')") &&
+  ratpItineraireScript.includes('if (!onglet) naviguer(trajet)') &&
   ratpItineraireScript.includes('applicationOuverte || document.hidden') &&
-  ratpItineraireScript.includes('lcg-lang-changed') &&
+  // et c'est tout : aucun lien manuel, aucune page intermédiaire
+  !ratpItineraireScript.includes('data-ratp-trajet-site') &&
+  !ratpItineraireScript.includes('ajouterLienSite') &&
   !ratpItineraireScript.includes('navigator.geolocation')
-  ? ok('metro : demande d’ouverture au clic, la page du site ne disparaît jamais')
-  : ko('metro : demande d’ouverture, ordre ou absence de position incorrects');
+  ? ok('metro : demande d’ouverture au clic, nouvel onglet si pas d’application, et c’est tout')
+  : ko('metro : demande d’ouverture, repli ou fioriture incorrects');
 const tracesSecours = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html']
   .filter((f) => /ratp-fallback/i.test(lire(f)))
   .concat(['i18n.js', 'legal-i18n.js', 'ratp-itinerary.js']

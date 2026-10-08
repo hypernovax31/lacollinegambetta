@@ -152,7 +152,7 @@ try {
   assert.equal(pageAndroid.url(),`${origineLocale}/index.html`,
     'la page du site ne doit pas disparaître au profit de ratp.fr');
   assert.equal(await pageAndroid.locator('.footer-details__metro-site').count(),0,
-    'sur Android, c’est l’Intent qui gère le repli : aucun lien manuel ajouté');
+    'et c’est tout : aucun lien manuel « Ouvrir le trajet sur ratp.fr » ajouté');
   await contexteAndroid.close();
   console.log('  ok   Chromium Android : Intent émis au clic, page du site intacte, aucun onglet ouvert');
 
@@ -663,7 +663,7 @@ try {
     assert.ok(detail.text.length > 40, `texte de dégustation ${categories[index]} absent`);
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
-  assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100806'), 'le navigateur a servi l’ancienne version i18n');
+  assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100807'), 'le navigateur a servi l’ancienne version i18n');
   assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100601'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');

@@ -156,19 +156,19 @@ page** et c'est elle qui porte l'**itinéraire RATP**.
 
 - Sur **mobile**, le tap **demande d'ouvrir l'application Bonjour RATP** :
   schéma d'application `ratp://` (c'est lui qui déclenche la boîte de dialogue
-  « Ouvrir dans Bonjour RATP ? ») sur iOS et les autres mobiles, Intent
-  explicite vers `com.fabernovel.ratp` sur Android Chrome. Le schéma est émis
-  dans une iframe jetable : la page courante n'est jamais remplacée (Safari
-  afficherait sinon « Impossible d'ouvrir la page » si l'app est absente).
-- **La page du site ne disparaît jamais au profit de ratp.fr.** Trois cas :
-  * l'application s'ouvre → la page passe en arrière-plan, rien d'autre ;
-  * l'ouverture est **annulée** → la page reste telle quelle, et un lien
-    « Ouvrir le trajet sur ratp.fr » (traduit dans les 14 langues, pointillé)
-    apparaît à côté de la mention : c'est un **second clic volontaire** qui
-    ouvre `ratp.fr/itineraires` (arrivée remplie) dans un nouvel onglet ;
-  * application absente → Android Chrome ouvre lui-même le trajet RATP
-    (`S.browser_fallback_url` de l'Intent) ; sur iOS, le même lien manuel
-    apparaît.
+  « Ouvrir dans Bonjour RATP ? ») sur iOS et les autres mobiles — émis dans une
+  iframe jetable, pour que la page courante ne soit jamais remplacée (Safari
+  afficherait sinon « Impossible d'ouvrir la page » si l'app est absente) —
+  et Intent explicite vers `com.fabernovel.ratp` sur Android Chrome.
+- **Si l'application n'est pas là**, le trajet s'ouvre dans un **nouvel
+  onglet** sur `ratp.fr/itineraires`, arrivée remplie
+  (`?end=4 Rue Belgrand 75020 Paris`) : la page du site du restaurant **n'est
+  jamais écrasée**. Sur Android Chrome, c'est l'Intent qui ouvre lui-même le
+  trajet (repli natif `S.browser_fallback_url`) ; sur iOS, c'est le minuteur
+  du script (2,5 s après le clic, tant que la page est restée visible).
+- Et c'est tout : si l'application s'ouvre, la page passe en arrière-plan et
+  rien d'autre ne se passe. Aucune page intermédiaire, aucune bannière, aucun
+  lien manuel, aucune demande de position.
 - Sur **iOS**, c'est le clic qui propose l'application : aucune bannière
   système (`apple-itunes-app`) n'est déclarée, aucune proposition n'apparaît
   en dehors du clic sur la mention du métro.
@@ -194,13 +194,14 @@ Il vérifie aussi le parcours « Métro Gambetta • Ligne 3 » : lien web RATP,
 lien universel Bonjour RATP, Intent Android, absence de bannière système iOS,
 de page intermédiaire et de demande de position.
 `node tools/verifier_ratp_itineraires.mjs` rejoue ce parcours dans Chromium
-avec des fixtures locales : sur Android l'Intent est émis au clic et la page
-du site reste intacte (aucun onglet ouvert) ; sur iPhone le clic émet le schéma
-`ratp://`, la page reste, et si l'application ne s'ouvre pas un lien manuel
-« Ouvrir le trajet sur ratp.fr » apparaît (vérifié : clic volontaire → nouvel
-onglet avec l'arrivée remplie) ; dans un navigateur intégré qui bloque les
-lancements, même comportement ; si l'application s'ouvre (page cachée), rien
-d'autre ne se passe. Aucune requête réelle ne part vers ratp.fr.
+avec des fixtures locales : sur Android l'Intent est émis au clic (repli natif
+= trajet RATP, vérifié dans la construction) et le site n'ajoute rien ; sur
+iPhone le clic émet le schéma `ratp://` (la demande d'ouverture) puis, si
+l'application ne s'ouvre pas, le trajet arrive dans un nouvel onglet avec
+l'arrivée remplie, la page du site restant intacte ; dans un navigateur
+intégré qui bloque les lancements, même comportement ; si l'application
+s'ouvre (page cachée), aucun onglet ne s'ouvre. Aucune requête réelle ne part
+vers ratp.fr.
 
 Ces trois scripts sont **idempotents** : on peut les relancer après toute
 modification du site.

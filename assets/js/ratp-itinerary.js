@@ -1,21 +1,22 @@
-/* Mention « Métro Gambetta • Ligne 3 » : demande l'ouverture de l'application
-   Bonjour RATP au clic, sans JAMAIS remplacer la page du site.
+/* Mention « Métro Gambetta • Ligne 3 » : au clic, demande d'ouvrir
+   l'application Bonjour RATP. Si l'application n'est pas là, le trajet
+   s'ouvre dans un NOUVEL onglet sur ratp.fr — la page du site du restaurant
+   n'est jamais écrasée. Et c'est tout.
 
-   - Le clic demande l'application : schéma d'application ratp:// (c'est lui
-     qui déclenche « Ouvrir dans Bonjour RATP ? ») sur iOS et les autres
-     mobiles, Intent explicite vers com.fabernovel.ratp sur Android Chrome.
-   - La page du site ne disparaît jamais au profit de ratp.fr :
-     * l'application s'ouvre -> la page passe en arrière-plan, rien d'autre ;
-     * l'ouverture est annulée -> la page reste telle quelle, et un lien
-       « Ouvrir le trajet sur ratp.fr » (traduit) apparaît à côté de la
-       mention : c'est un second clic volontaire qui ouvre le site RATP dans
-       un nouvel onglet ;
-     * application absente : Android Chrome ouvre lui-même le trajet RATP
-       (S.browser_fallback_url de l'Intent) ; sur iOS le schéma échoue
-       silencieusement (iframe) et le même lien manuel apparaît.
+   - Android Chrome : Intent explicite vers com.fabernovel.ratp, avec le trajet
+     RATP en repli natif (S.browser_fallback_url) : si l'application est
+     absente, Chrome ouvre lui-même le trajet ; si l'utilisateur annule le
+     sélecteur, rien ne se passe et la page du site reste.
+   - iOS et autres mobiles : le clic émet le schéma d'application ratp://
+     (c'est lui qui déclenche la boîte « Ouvrir dans Bonjour RATP ? ») dans
+     une iframe jetable — la page courante n'est jamais remplacée (Safari
+     afficherait sinon « Impossible d'ouvrir la page » si l'app est absente).
+     Si l'application ne prend pas la main, le trajet s'ouvre dans un nouvel
+     onglet, arrivée remplie.
    - Ordinateur : lien natif vers ratp.fr, nouvel onglet.
 
-   Aucune page intermédiaire, aucune bannière, aucune demande de position. */
+   Aucune page intermédiaire, aucune bannière, aucun lien manuel, aucune
+   demande de position. */
 (function () {
   'use strict';
 
@@ -50,35 +51,6 @@
       'S.browser_fallback_url=' + encodeURIComponent(repli) + ';end';
   }
 
-  /* Lien « Ouvrir le trajet sur ratp.fr », inséré à côté de la mention quand
-     l'application ne s'est pas ouverte. Libellé traduit par i18n.js via
-     l'attribut data-ratp-trajet-site. */
-  function ajouterLienSite(lien, trajet) {
-    if (lien.parentNode.querySelector('.footer-details__metro-site')) return;
-    var libelle = lien.getAttribute('data-ratp-trajet-site') || 'Ouvrir le trajet sur ratp.fr';
-    var separateur = document.createElement('span');
-    separateur.className = 'footer-details__separator';
-    separateur.setAttribute('aria-hidden', 'true');
-    separateur.textContent = '•';
-    var lienSite = document.createElement('a');
-    lienSite.className = 'footer-details__metro-site';
-    lienSite.href = trajet;
-    lienSite.target = '_blank';
-    lienSite.rel = 'noopener';
-    lienSite.title = libelle;
-    lienSite.textContent = libelle;
-    lien.parentNode.insertBefore(separateur, lien.nextSibling);
-    lien.parentNode.insertBefore(lienSite, separateur.nextSibling);
-    /* La langue peut changer après l'échec : le libellé suit. */
-    window.addEventListener('lcg-lang-changed', function () {
-      var nouveau = lien.getAttribute('data-ratp-trajet-site');
-      if (nouveau && nouveau !== lienSite.textContent) {
-        lienSite.textContent = nouveau;
-        lienSite.title = nouveau;
-      }
-    });
-  }
-
   document.querySelectorAll('[data-ratp-itineraire]').forEach(function (lien) {
     var appUrl = lien.getAttribute('data-ratp-app-href');
     var trajet = lien.getAttribute('href');
@@ -105,8 +77,8 @@
 
       if (androidChrome) {
         /* Android Chrome : l'Intent gère tout nativement. Application absente
-           -> Chrome ouvre le trajet RATP tout seul ; annulé -> rien ne se
-           passe, la page du site reste. Le site n'ajoute aucun minuteur. */
+           -> Chrome ouvre lui-même le trajet RATP ; annulé -> rien ne se
+           passe, la page du site reste. Le site n'ajoute rien d'autre. */
         naviguer(intentUrl(appUrl, trajet));
         return;
       }
@@ -125,9 +97,17 @@
         if (essai.parentNode) essai.parentNode.removeChild(essai);
         /* L'application s'est ouverte : on ne touche à rien. */
         if (applicationOuverte || document.hidden) return;
-        /* Annulée ou absente : la page du site reste, on propose le trajet
-           sur ratp.fr en manuel (second clic volontaire, nouvel onglet). */
-        ajouterLienSite(lien, trajet);
+        /* L'application n'est pas là (absente, ou ouverture annulée — le
+           navigateur ne signale pas la différence) : le trajet s'ouvre dans
+           un NOUVEL onglet, la page du site n'est pas écrasée. */
+        var onglet = null;
+        try {
+          onglet = window.open(trajet, '_blank');
+        } catch (e) {
+          onglet = null;
+        }
+        /* Dernier recours si le navigateur bloque le nouvel onglet. */
+        if (!onglet) naviguer(trajet);
       }, ATTENTE_APP);
     });
   });
