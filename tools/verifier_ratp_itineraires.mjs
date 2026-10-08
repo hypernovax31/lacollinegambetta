@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 // Parcours « Métro Gambetta • Ligne 3 » tel qu'il doit se comporter :
-//   Android  -> l'application est visée (Intent com.fabernovel.ratp) et le
-//               trajet est déjà ouvert dans un nouvel onglet sur ratp.fr
-//   iOS      -> lien universel Bonjour RATP visé, trajet dans un nouvel onglet
-//   aucune page de secours, aucune demande de position
+//   - au clic, l'application est DEMANDÉE (schéma ratp:// sur iOS, Intent
+//     com.fabernovel.ratp sur Android Chrome) ;
+//   - la page du site ne disparaît JAMAIS au profit de ratp.fr : aucun onglet
+//     ne s'ouvre tout seul, aucune navigation automatique ;
+//   - si l'application ne s'ouvre pas (annulée ou absente), un lien manuel
+//     « Ouvrir le trajet sur ratp.fr » (traduit) apparaît à côté de la mention,
+//     et c'est un second clic volontaire qui ouvre le site RATP en nouvel onglet.
 // A lancer avec : node tools/verifier_ratp_itineraires.mjs
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
@@ -19,6 +22,9 @@ const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8' };
 const ARRIVEE = '4 Rue Belgrand 75020 Paris';
 const PAGE_RATP = '<!doctype html><html lang="fr"><title>Itinéraires RATP</title><body>fixture locale</body></html>';
+const UA_ANDROID = 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36';
+const UA_IPHONE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
+const UA_INTEGRE = 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 320.0.0.0';
 
 function startServer() {
   const server = createServer((request, response) => {
@@ -67,91 +73,137 @@ try {
   });
   const address = server.address();
   const origin = `http://127.0.0.1:${address.port}`;
+  const urlAccueil = `${origin}/index.html?lang=fr`;
 
-  // 1. Android Chrome : Intent visé, trajet ouvert dans un nouvel onglet.
+  // 1. Android Chrome : l'Intent est émis au clic, la page du site reste,
+  //    aucun onglet ne s'ouvre tout seul.
   const journalAndroid = [];
   const android = await browser.newContext({
     viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, isMobile: true, hasTouch: true,
-    userAgent: 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36',
+    userAgent: UA_ANDROID,
   });
   const home = await android.newPage();
   await poserInterception(android, origin, journalAndroid);
-  await home.goto(`${origin}/index.html?lang=fr`, { waitUntil: 'domcontentloaded' });
-  const lien = home.locator('[data-ratp-itineraire]').first();
-  const avantTap = await lien.evaluate((noeud) => ({
-    href: noeud.href, target: noeud.target, appHref: noeud.getAttribute('data-ratp-app-href'),
+  const requetesAndroid = [];
+  const popupsAndroid = [];
+  home.on('request', (requete) => requetesAndroid.push(requete.url()));
+  home.on('popup', (page) => popupsAndroid.push(page));
+
+  await home.goto(urlAccueil, { waitUntil: 'domcontentloaded' });
+  const lienAndroid = home.locator('[data-ratp-itineraire]').first();
+  /* Le script réécrit le href du lien au chargement (il vise l'application) :
+     le trajet RATP d'origine est lu dans le code source de la page. */
+  const avantTap = await lienAndroid.evaluate((noeud) => ({
+    target: noeud.target, appHref: noeud.getAttribute('data-ratp-app-href'),
   }));
-  assert.equal(avantTap.href, avantTap.appHref,
-    'le lien doit viser l’application Bonjour RATP sur mobile');
-  assert.ok(avantTap.href.startsWith('https://www.bonjour-ratp.fr/itineraires/?end='));
-  assert.equal(new URL(avantTap.href).searchParams.get('end'), ARRIVEE,
+  /* Le script a déjà réécrit le href du lien (il vise l'application) : le
+     trajet RATP d'origine est lu dans le HTML servi, avant réécriture. */
+  const reponse = await home.request.get(urlAccueil);
+  const sourcePage = await reponse.text();
+  const matchLien = sourcePage.match(/<a[^>]*data-ratp-itineraire[^>]*>/);
+  assert.ok(matchLien, 'le lien métro doit exister dans la page');
+  const matchTrajet = matchLien[0].match(/href="(https:\/\/www\.ratp\.fr[^"]*)"/);
+  assert.ok(matchTrajet, 'le lien doit porter le trajet RATP dans son href');
+  const trajetOrigine = matchTrajet[1].replace(/&amp;/g, '&');
+  assert.equal(new URL(avantTap.appHref).searchParams.get('end'), ARRIVEE,
     'l’application doit proposer le restaurant comme arrivée');
-  assert.equal(avantTap.target, '', 'le tap ne doit pas ouvrir un onglet vide');
-  const depart = Date.now();
-  const [ongletTrajet] = await Promise.all([home.waitForEvent('popup'), lien.click()]);
-  const delaiTrajet = Date.now() - depart;
-  await ongletTrajet.waitForLoadState('domcontentloaded').catch(() => {});
-  const trajet = new URL(ongletTrajet.url());
-  assert.equal(trajet.hostname, 'www.ratp.fr', 'le trajet doit s’ouvrir sur le site RATP');
-  assert.equal(trajet.pathname, '/itineraires');
-  assert.equal(trajet.searchParams.get('end'), ARRIVEE,
-    'la case arrivée doit être remplie avec 4 Rue Belgrand 75020 Paris');
-  assert.ok(delaiTrajet >= 1800,
-    `le trajet ne doit venir qu’après la tentative d’application (mesuré : ${delaiTrajet} ms)`);
+  assert.equal(new URL(trajetOrigine).searchParams.get('end'), ARRIVEE,
+    'le trajet RATP doit proposer le restaurant comme arrivée');
+  await lienAndroid.click();
+  await home.waitForTimeout(600);
+  /* Chromium tronque la requête intent:// émise (le fragment #Intent;… n’y
+     figure pas) : on vérifie la partie visible ici, et la construction complète
+     est re-jouée depuis le script du site dans le bloc 5 ci-dessous. */
+  const intent = requetesAndroid.find((url) => url.startsWith('intent://'));
+  assert.ok(intent, 'Android Chrome doit viser l’application Bonjour RATP via un Intent');
+  assert.ok(intent.startsWith('intent://www.bonjour-ratp.fr/itineraires/?end='),
+    'l’Intent doit viser l’itinéraire Bonjour RATP');
+  assert.ok(intent.includes(encodeURIComponent(ARRIVEE).replace(/%20/g, '+')) ||
+            intent.includes(ARRIVEE),
+    'l’Intent doit viser l’itinéraire Bonjour RATP avec l’arrivée du restaurant');
+  const sourceIntent = readFileSync(join(ROOT, 'assets/js/ratp-itinerary.js'), 'utf8');
+  const debutIntent = sourceIntent.indexOf('function intentUrl');
+  const finIntent = sourceIntent.indexOf('/* Lien « Ouvrir le trajet');
+  const construireIntent = new Function(`${sourceIntent.slice(debutIntent, finIntent)}\nreturn intentUrl;`)();
+  const intentComplet = construireIntent(avantTap.appHref, trajetOrigine);
+  assert.ok(intentComplet.includes('package=com.fabernovel.ratp'),
+    'l’Intent doit désigner le paquet officiel Bonjour RATP');
+  assert.ok(intentComplet.includes('S.browser_fallback_url='),
+    'l’Intent doit prévoir un repli (le trajet RATP) si l’application est absente');
+  const parametres = intentComplet.split('#Intent;')[1].split(';');
+  const repli = parametres.find((p) => p.startsWith('S.browser_fallback_url='));
+  const urlRepli = new URL(decodeURIComponent(repli.slice('S.browser_fallback_url='.length)));
+  assert.equal(urlRepli.hostname, 'www.ratp.fr');
+  assert.equal(urlRepli.searchParams.get('end'), ARRIVEE,
+    'le repli natif doit ouvrir le trajet avec l’arrivée remplie');
+  await home.waitForTimeout(3000);
+  assert.equal(home.url(), urlAccueil, 'la page du site ne doit pas disparaître');
+  assert.equal(popupsAndroid.length, 0, 'aucun onglet ne doit s’ouvrir tout seul');
+  assert.equal(await home.locator('.footer-details__metro-site').count(), 0,
+    'sur Android, c’est l’Intent qui gère le repli : aucun lien manuel ajouté');
   assert.ok(!journalAndroid.some((url) => /api-adresse|geolocation/i.test(url)),
     'aucune demande de position ne doit partir du site');
   await android.close();
-  console.log(`  ok   Android : application visée au clic, trajet ${delaiTrajet} ms plus tard dans un nouvel onglet`);
+  console.log('  ok   Android : Intent émis au clic, page du site intacte, aucun onglet ouvert');
 
-  // 2. iOS : lien universel visé, aucun Intent, trajet toujours en nouvel onglet.
+  // 2. iOS : le schéma est émis au clic (demande « Ouvrir dans Bonjour RATP ? »),
+  //    la page du site reste, et si l'application ne s'ouvre pas, un lien manuel
+  //    « Ouvrir le trajet sur ratp.fr » apparaît (second clic volontaire).
   const journalIOS = [];
   const ios = await browser.newContext({
     viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true,
-    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+    userAgent: UA_IPHONE,
   });
   const iphone = await ios.newPage();
-  /* Le schéma d'application ratp:// n'est pas une navigation web : on l'observe
-     comme une requête émise par la page (c'est elle qui déclenche, côté système,
-     la demande « Ouvrir dans Bonjour RATP ? »). */
-  const requetesIOS = [];
-  iphone.on('request', (requete) => requetesIOS.push(requete.url()));
   await poserInterception(ios, origin, journalIOS);
-  await iphone.goto(`${origin}/index.html?lang=fr`, { waitUntil: 'domcontentloaded' });
+  const requetesIOS = [];
+  const popupsIOS = [];
+  iphone.on('request', (requete) => requetesIOS.push(requete.url()));
+  iphone.on('popup', (page) => popupsIOS.push(page));
+  await iphone.goto(urlAccueil, { waitUntil: 'domcontentloaded' });
   assert.equal(await iphone.locator('meta[name="apple-itunes-app"]').count(), 0,
     'aucune bannière système ne doit s’afficher dans Safari');
-  assert.equal(await iphone.locator('link[href^="itms-apps"], a[href^="itms-apps"]').count(), 0,
-    'aucune proposition d’installation ne doit être présente hors clic');
-  let popupIOS = null;
-  iphone.on('popup', (page) => { popupIOS = page; });
-  const departIOS = Date.now();
   await iphone.locator('[data-ratp-itineraire]').first().click();
-  await iphone.waitForTimeout(600);
+  await iphone.waitForTimeout(500);
   assert.ok(requetesIOS.includes('ratp://'),
-    'le clic doit viser le schéma d’application ratp:// — c’est lui qui déclenche la demande « Ouvrir dans Bonjour RATP ? »');
-  assert.equal(popupIOS, null,
-    'au clic, on demande d’abord l’ouverture de l’application : le trajet n’arrive pas tout de suite');
-  await iphone.waitForEvent('popup', { timeout: 8000 }).then((page) => { popupIOS = page; }).catch(() => {});
-  assert.ok(popupIOS, 'si l’application ne se lance pas, le trajet doit s’ouvrir seul');
-  await popupIOS.waitForLoadState('domcontentloaded').catch(() => {});
-  const trajetIOS = new URL(popupIOS.url());
-  assert.equal(trajetIOS.hostname, 'www.ratp.fr',
-    'l’application ne répond pas : le trajet RATP prend le relais');
-  assert.equal(trajetIOS.searchParams.get('end'), ARRIVEE,
-    'l’arrivée du restaurant doit rester remplie');
-  assert.ok(Date.now() - departIOS >= 2000,
-    'le trajet ne doit venir qu’après la demande d’ouverture');
+    'le clic doit émettre le schéma ratp:// — c’est lui qui déclenche la demande « Ouvrir dans Bonjour RATP ? »');
+  assert.equal(popupsIOS.length, 0, 'aucun onglet ne doit s’ouvrir au clic');
+  assert.equal(iphone.url(), urlAccueil, 'la page du site ne doit pas disparaître');
+  await iphone.waitForTimeout(2600);
+  assert.equal(popupsIOS.length, 0,
+    'l’application ne s’est pas ouverte : le site RATP ne doit PAS s’ouvrir tout seul');
+  assert.equal(iphone.url(), urlAccueil, 'la page du site est toujours là');
+  const lienSite = iphone.locator('.footer-details__metro-site');
+  assert.equal(await lienSite.count(), 1,
+    'un lien manuel « Ouvrir le trajet sur ratp.fr » doit être proposé');
+  assert.equal(new URL(await lienSite.getAttribute('href')).hostname, 'www.ratp.fr');
+  assert.equal(new URL(await lienSite.getAttribute('href')).searchParams.get('end'), ARRIVEE,
+    'le lien manuel doit ouvrir le trajet avec l’arrivée remplie');
+  assert.equal(await lienSite.getAttribute('target'), '_blank');
+  assert.equal((await lienSite.textContent()).trim(), 'Ouvrir le trajet sur ratp.fr',
+    'le libellé du lien manuel est « Ouvrir le trajet sur ratp.fr »');
+  assert.equal(await iphone.locator('.footer-details__metro').count(), 1,
+    'la mention du métro reste en place');
   assert.ok(!journalIOS.some((url) => url.startsWith('intent://')),
     'iOS ne doit pas recevoir d’Intent Android');
   assert.ok(!journalIOS.some((url) => /api-adresse|geolocation/i.test(url)),
     'aucune demande de position ne doit partir du site');
+  // Second clic volontaire : le trajet s'ouvre dans un nouvel onglet.
+  const [ongletManuel] = await Promise.all([iphone.waitForEvent('popup'), lienSite.click()]);
+  await ongletManuel.waitForLoadState('domcontentloaded').catch(() => {});
+  const trajetManuel = new URL(ongletManuel.url());
+  assert.equal(trajetManuel.hostname, 'www.ratp.fr');
+  assert.equal(trajetManuel.searchParams.get('end'), ARRIVEE);
+  assert.equal(iphone.url(), urlAccueil, 'la page du site reste affichée');
   await ios.close();
-  console.log('  ok   iOS : demande d’ouverture du schéma, trajet en repli (arrivée remplie)');
+  console.log('  ok   iOS : demande d’ouverture au clic, page intacte, lien « Ouvrir le trajet sur ratp.fr » en repli manuel');
 
-  // 3. Navigateur intégré : le lancement est bloqué, le trajet s'ouvre seul.
+  // 3. Navigateur intégré (Instagram) : les lancements sont bloqués, la page
+  //    du site reste et le lien manuel est proposé — jamais d'ouverture auto.
   const journalBloque = [];
   const integre = await browser.newContext({
     viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true,
-    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 320.0.0.0',
+    userAgent: UA_INTEGRE,
   });
   const insta = await integre.newPage();
   await integre.route('**/*', async (route) => {
@@ -162,45 +214,56 @@ try {
       return route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: PAGE_RATP });
     }
     if (/(^|\.)bonjour-ratp\.fr$/.test(url.hostname)) {
-      /* Les navigateurs intégrés annulent le lancement d'application : la
-         navigation n'aboutit pas, la page du site reste affichée. */
+      /* Les navigateurs intégrés annulent le lancement d'application. */
       return route.fulfill({ status: 204, body: '' });
     }
     return route.abort();
   });
-  await insta.goto(`${origin}/index.html?lang=fr`, { waitUntil: 'domcontentloaded' });
-  const departBloque = Date.now();
-  const [ongletBloque] = await Promise.all([
-    insta.waitForEvent('popup', { timeout: 15000 }),
-    insta.locator('[data-ratp-itineraire]').first().click(),
-  ]);
-  await ongletBloque.waitForLoadState('domcontentloaded').catch(() => {});
-  assert.equal(new URL(ongletBloque.url()).hostname, 'www.ratp.fr',
-    'lancement bloqué : le trajet doit s’ouvrir dans un nouvel onglet');
-  assert.equal(new URL(ongletBloque.url()).searchParams.get('end'), ARRIVEE,
-    'l’arrivée doit rester remplie dans ce cas aussi');
-  assert.ok(Date.now() - departBloque >= 1200, 'le trajet ne doit venir qu’après la tentative d’application');
+  const popupsBloque = [];
+  insta.on('popup', (page) => popupsBloque.push(page));
+  await insta.goto(urlAccueil, { waitUntil: 'domcontentloaded' });
+  await insta.locator('[data-ratp-itineraire]').first().click();
+  await insta.waitForTimeout(3200);
+  assert.equal(popupsBloque.length, 0,
+    'lancement bloqué : aucun onglet ne doit s’ouvrir tout seul');
+  assert.equal(insta.url(), urlAccueil, 'la page du site ne doit pas disparaître');
+  assert.equal(await insta.locator('.footer-details__metro-site').count(), 1,
+    'lancement bloqué : le lien manuel « Ouvrir le trajet sur ratp.fr » est proposé');
   await integre.close();
-  console.log('  ok   Navigateur intégré : trajet ouvert automatiquement, arrivée remplie');
+  console.log('  ok   Navigateur intégré : page du site intacte, lien manuel proposé, aucune ouverture forcée');
 
-  // 4. Intent Android : la construction du script est rejouee telle quelle
-  //    (Chromium de bureau n'execute pas les schemes intent:, seul Android le fait).
-  const source = readFileSync(join(ROOT, 'assets/js/ratp-itinerary.js'), 'utf8');
-  const debut = source.indexOf('function intentUrl');
-  const fin = source.indexOf('document.querySelectorAll');
-  assert.ok(debut > 0 && fin > debut, 'la fonction intentUrl doit exister dans le script du site');
-  const construireIntent = new Function(`${source.slice(debut, fin)}\nreturn intentUrl;`)();
-  const lienApp = 'https://www.bonjour-ratp.fr/itineraires/?end=' + encodeURIComponent(ARRIVEE);
-  const retour = 'https://lacollinegambetta.com/index.html';
-  const intent = construireIntent(lienApp, retour);
-  assert.ok(intent.startsWith(`intent://www.bonjour-ratp.fr/itineraires/?end=${encodeURIComponent(ARRIVEE)}#Intent;`),
-    'l’Intent doit viser l’itinéraire Bonjour RATP avec l’arrivée du restaurant');
-  assert.ok(intent.includes('scheme=https;package=com.fabernovel.ratp;'),
-    'l’Intent doit désigner le paquet officiel Bonjour RATP');
-  assert.ok(intent.endsWith(';end'), 'l’Intent doit être clos par ;end');
-  assert.ok(intent.includes('S.browser_fallback_url=' + encodeURIComponent(retour)),
-    'si l’application manque, Chrome doit revenir au site où le trajet est déjà ouvert');
-  console.log('  ok   Intent Android : paquet officiel, arrivée remplie et repli sans page intermédiaire');
+  // 4. Application ouverte (simulation) : la page passe en arrière-plan,
+  //    aucun lien manuel n'est ajouté, aucun onglet ne s'ouvre.
+  const iosOuverte = await browser.newContext({
+    viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true,
+    userAgent: UA_IPHONE,
+  });
+  await iosOuverte.addInitScript(() => {
+    /* Simule l'ouverture de l'application : la page passe en arrière-plan. */
+    window.__applicationOuverte = false;
+    Object.defineProperty(document, 'hidden', { get: () => window.__applicationOuverte });
+    Object.defineProperty(document, 'visibilityState', {
+      get: () => (window.__applicationOuverte ? 'hidden' : 'visible'),
+    });
+    window.addEventListener('click', () => {
+      window.__applicationOuverte = true;
+      document.dispatchEvent(new Event('visibilitychange'));
+    }, true);
+  });
+  const pageOuverte = await iosOuverte.newPage();
+  await poserInterception(iosOuverte, origin, []);
+  const popupsOuverts = [];
+  pageOuverte.on('popup', (page) => popupsOuverts.push(page));
+  await pageOuverte.goto(urlAccueil, { waitUntil: 'domcontentloaded' });
+  await pageOuverte.locator('[data-ratp-itineraire]').first().click();
+  await pageOuverte.waitForTimeout(3200);
+  assert.equal(popupsOuverts.length, 0, 'l’application s’est ouverte : aucun onglet ne doit s’ouvrir');
+  assert.equal(await pageOuverte.locator('.footer-details__metro-site').count(), 0,
+    'l’application s’est ouverte : aucun lien manuel ne doit apparaître');
+  await iosOuverte.close();
+  console.log('  ok   Application ouverte : la page du site passe en arrière-plan, rien d’autre ne se passe');
+
+  console.log('  ok   Intent Android : paquet officiel, arrivée remplie, repli natif sans page intermédiaire');
 } catch (error) {
   console.error(`Échec vérification itinéraires RATP : ${error.stack || error.message}`);
   process.exitCode = 1;

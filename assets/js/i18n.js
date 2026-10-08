@@ -6734,6 +6734,8 @@
     ['.cover-footer-address a[data-default-map]', 'title', 'Ouvrir l’adresse dans le plan'],
     ['.footer-details__metro', 'title', 'Ouvrir Bonjour RATP pour l’itinéraire'],
     ['.cover-footer-address [data-ratp-itineraire]', 'title', 'Ouvrir Bonjour RATP pour l’itinéraire'],
+    ['.footer-details__metro', 'data-ratp-trajet-site', 'Ouvrir le trajet sur ratp.fr'],
+    ['.cover-footer-address [data-ratp-itineraire]', 'data-ratp-trajet-site', 'Ouvrir le trajet sur ratp.fr'],
     ['.footer-quartier', 'aria-label', 'Dans les alentours'],
     ['.legal-bottom-nav', 'aria-label', 'Informations légales'],
     /* Bouton du globe et conteneur d'impression : libellés traduits aussi. */
@@ -7346,7 +7348,8 @@
       "Cirque d'Hiver": 'Winter Circus',
       'Opéra Bastille': 'Bastille Opera',
       'Ouvrir l’adresse dans le plan': 'Open the address on the map',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Open Bonjour RATP for directions'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Open Bonjour RATP for directions',
+      'Ouvrir le trajet sur ratp.fr': 'Open the route on ratp.fr'
     },
     es: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 París',
@@ -7362,7 +7365,8 @@
       "Cirque d'Hiver": 'Circo de Invierno',
       'Opéra Bastille': 'Ópera Bastille',
       'Ouvrir l’adresse dans le plan': 'Abrir la dirección en el mapa',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Abrir Bonjour RATP para consultar la ruta'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Abrir Bonjour RATP para consultar la ruta',
+      'Ouvrir le trajet sur ratp.fr': 'Abrir el trayecto en ratp.fr'
     },
     de: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
@@ -7378,7 +7382,8 @@
       "Cirque d'Hiver": 'Winterzirkus',
       'Opéra Bastille': 'Bastille-Oper',
       'Ouvrir l’adresse dans le plan': 'Adresse auf der Karte öffnen',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP für die Route öffnen'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP für die Route öffnen',
+      'Ouvrir le trajet sur ratp.fr': 'Route auf ratp.fr öffnen'
     },
     it: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Parigi',
@@ -7394,7 +7399,8 @@
       "Cirque d'Hiver": 'Circo d’inverno',
       'Opéra Bastille': 'Opera Bastille',
       'Ouvrir l’adresse dans le plan': 'Apri l’indirizzo sulla mappa',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Apri Bonjour RATP per il percorso'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Apri Bonjour RATP per il percorso',
+      'Ouvrir le trajet sur ratp.fr': 'Apri il percorso su ratp.fr'
     },
     pt: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
@@ -7410,7 +7416,8 @@
       "Cirque d'Hiver": 'Circo de Inverno',
       'Opéra Bastille': 'Ópera da Bastilha',
       'Ouvrir l’adresse dans le plan': 'Abrir o endereço no mapa',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Abrir o Bonjour RATP para consultar o percurso'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Abrir o Bonjour RATP para consultar o percurso',
+      'Ouvrir le trajet sur ratp.fr': 'Abrir o percorso no ratp.fr'
     },
     nl: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Parijs',
@@ -7426,7 +7433,8 @@
       "Cirque d'Hiver": 'Wintercircus',
       'Opéra Bastille': 'Bastilleopera',
       'Ouvrir l’adresse dans le plan': 'Adres op de kaart openen',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP openen voor de route'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP openen voor de route',
+      'Ouvrir le trajet sur ratp.fr': 'Route openen op ratp.fr'
     },
     ar: {
       '4 rue Belgrand • 75020 Paris': '4 شارع بيلغراند • 75020 باريس',
@@ -7442,7 +7450,8 @@
       "Cirque d'Hiver": 'سيرك الشتاء',
       'Opéra Bastille': 'أوبرا الباستيل',
       'Ouvrir l’adresse dans le plan': 'فتح العنوان على الخريطة',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'افتح تطبيق بونجور راتب لعرض المسار'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'افتح تطبيق بونجور راتب لعرض المسار',
+      'Ouvrir le trajet sur ratp.fr': 'عرض المسار على ratp.fr'
     },
     zh: {
       '4 rue Belgrand • 75020 Paris': '贝勒格朗街4号 • 75020 巴黎',
@@ -7458,7 +7467,8 @@
       "Cirque d'Hiver": '冬季马戏团',
       'Opéra Bastille': '巴士底歌剧院',
       'Ouvrir l’adresse dans le plan': '在地图中打开地址',
-      'Ouvrir Bonjour RATP pour l’itinéraire': '打开 Bonjour RATP 查看路线'
+      'Ouvrir Bonjour RATP pour l’itinéraire': '打开 Bonjour RATP 查看路线',
+      'Ouvrir le trajet sur ratp.fr': '在 ratp.fr 上查看路线'
     },
     uk: {
       '4 rue Belgrand • 75020 Paris': '4 вул. Бельгран • 75020 Париж',
@@ -7474,7 +7484,8 @@
       "Cirque d'Hiver": 'Зимовий цирк',
       'Opéra Bastille': 'Опера Бастилії',
       'Ouvrir l’adresse dans le plan': 'Відкрити адресу на мапі',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Відкрити Bonjour RATP для маршруту'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Відкрити Bonjour RATP для маршруту',
+      'Ouvrir le trajet sur ratp.fr': 'Відкрити маршрут на ratp.fr'
     },
     ja: {
       '4 rue Belgrand • 75020 Paris': 'ベルグラン通り4番 • 75020パリ',
@@ -7490,7 +7501,8 @@
       "Cirque d'Hiver": '冬のサーカス',
       'Opéra Bastille': 'バスティーユ・オペラ',
       'Ouvrir l’adresse dans le plan': '地図で住所を開く',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATPでルートを表示'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATPでルートを表示',
+      'Ouvrir le trajet sur ratp.fr': 'ratp.frでルートを開く'
     },
     ko: {
       '4 rue Belgrand • 75020 Paris': '벨그랑 거리 4 • 75020 파리',
@@ -7506,7 +7518,8 @@
       "Cirque d'Hiver": '겨울 서커스',
       'Opéra Bastille': '바스티유 오페라',
       'Ouvrir l’adresse dans le plan': '지도에서 주소 열기',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP에서 경로 확인'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP에서 경로 확인',
+      'Ouvrir le trajet sur ratp.fr': 'ratp.fr에서 경로 열기'
     },
     pl: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paryż',
@@ -7522,7 +7535,8 @@
       "Cirque d'Hiver": 'Cyrk Zimowy',
       'Opéra Bastille': 'Opera Bastille',
       'Ouvrir l’adresse dans le plan': 'Otwórz adres na mapie',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Otwórz Bonjour RATP, aby wyznaczyć trasę'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Otwórz Bonjour RATP, aby wyznaczyć trasę',
+      'Ouvrir le trajet sur ratp.fr': 'Otwórz trasę na ratp.fr'
     },
     tr: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
@@ -7538,7 +7552,8 @@
       "Cirque d'Hiver": 'Kış Sirki',
       'Opéra Bastille': 'Bastille Operası',
       'Ouvrir l’adresse dans le plan': 'Adresi haritada aç',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Rota için Bonjour RATP’yi aç'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'Rota için Bonjour RATP’yi aç',
+      'Ouvrir le trajet sur ratp.fr': 'Rotayı ratp.fr üzerinde aç'
     },
     hi: {
       '4 rue Belgrand • 75020 Paris': 'रू बेलग्रां 4 • 75020 पेरिस',
@@ -7554,7 +7569,8 @@
       "Cirque d'Hiver": 'शीतकालीन सर्कस',
       'Opéra Bastille': 'बास्तील ओपेरा',
       'Ouvrir l’adresse dans le plan': 'मानचित्र पर पता खोलें',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'मार्ग देखने के लिए Bonjour RATP खोलें'
+      'Ouvrir Bonjour RATP pour l’itinéraire': 'मार्ग देखने के लिए Bonjour RATP खोलें',
+      'Ouvrir le trajet sur ratp.fr': 'ratp.fr पर मार्ग खोलें'
     }
   };
   Object.keys(FOOTER_COPY).forEach(function (lang) {

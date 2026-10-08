@@ -91,13 +91,14 @@ def nav_alentours(classe: str) -> str:
 LIEN_METRO = (
     f'<a class="footer-details__metro" data-ratp-itineraire '
     f'data-ratp-app-href="{URL_RATP_APP}" '
+    'data-ratp-trajet-site="Ouvrir le trajet sur ratp.fr" '
     f'target="_blank" rel="noopener" href="{URL_RATP_WEB}"'
     ' title="Ouvrir Bonjour RATP pour l\u2019itin\u00e9raire">'
     'M\u00c9TRO GAMBETTA \u2022 LIGNE 3</a>')
 
 # Script du handoff : fichier versionne, pose sur toutes les pages.
 SCRIPT_ITINERAIRE = ("""<!-- ratp:itineraire:debut -->
-<script src="assets/js/ratp-itinerary.js?v=2026100805" defer></script>
+<script src="assets/js/ratp-itinerary.js?v=2026100806" defer></script>
 <!-- ratp:itineraire:fin -->""")
 
 # Ancien bloc RATP inline (handoff de 2025) : le script le retire des pages
@@ -129,14 +130,21 @@ html:not(.carte-doc) .footer-details__location {
 }
 html:not(.carte-doc) .footer-details__location > * { flex:0 0 auto; white-space:nowrap; }
 html:not(.carte-doc) .footer-details .footer-address-link,
-html:not(.carte-doc) .footer-details .footer-details__metro {
+html:not(.carte-doc) .footer-details .footer-details__metro,
+html:not(.carte-doc) .footer-details .footer-details__metro-site {
   color:#fff !important; text-decoration:none;
 }
 html:not(.carte-doc) .footer-details .footer-address-link:hover,
 html:not(.carte-doc) .footer-details .footer-address-link:focus-visible,
 html:not(.carte-doc) .footer-details .footer-details__metro:hover,
-html:not(.carte-doc) .footer-details .footer-details__metro:focus-visible {
+html:not(.carte-doc) .footer-details .footer-details__metro:focus-visible,
+html:not(.carte-doc) .footer-details .footer-details__metro-site:hover,
+html:not(.carte-doc) .footer-details .footer-details__metro-site:focus-visible {
   color:#fff !important; text-decoration:underline; text-underline-offset:3px;
+}
+html:not(.carte-doc) .footer-details .footer-details__metro-site,
+html:not(.carte-doc) .cover-footer-address .footer-details__metro-site {
+  text-decoration:underline dotted; text-underline-offset:3px; opacity:.92;
 }
 html:not(.carte-doc) .footer-details__separator { color:#fff !important; }
 @media (max-width:860px) {
@@ -274,6 +282,7 @@ COVER_ADRESSE = (
     '4 rue Belgrand \u2022 75020 Paris</a>'
     '<span class="footer-quartier__sep" aria-hidden="true"> \u2022 </span>'
     f'<a data-ratp-itineraire data-ratp-app-href="{URL_RATP_APP}" '
+    'data-ratp-trajet-site="Ouvrir le trajet sur ratp.fr" '
     f'target="_blank" rel="noopener" href="{URL_RATP_WEB}"'
     ' title="Ouvrir Bonjour RATP pour l\u2019itin\u00e9raire">M\u00e9tro Gambetta \u2022 Ligne 3</a>'
     '</div>')

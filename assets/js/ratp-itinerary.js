@@ -1,28 +1,26 @@
-/* Mention « Métro Gambetta • Ligne 3 » : demande d'ouverture de l'application
-   Bonjour RATP, uniquement au clic.
+/* Mention « Métro Gambetta • Ligne 3 » : demande l'ouverture de l'application
+   Bonjour RATP au clic, sans JAMAIS remplacer la page du site.
 
-   - Le clic vise d'abord le SCHÉMA D'APPLICATION : c'est ce qui déclenche la
-     demande du système (« Ouvrir dans Bonjour RATP ? »). Un simple lien web
-     ouvrirait l'application sans rien demander, et le système refuse en plus
-     ce lancement depuis un onglet déjà passé en arrière-plan.
-   - Android Chrome reçoit en plus un Intent explicite vers le paquet officiel,
-     avec le trajet RATP en repli natif.
-   - Si l'application ne prend pas la main (page toujours visible, lancement
-     bloqué par un navigateur intégré, application absente), le trajet s'ouvre
-     tout seul sur ratp.fr/itineraires, arrivée remplie : nouvel onglet si le
-     navigateur l'autorise, sinon l'onglet courant.
-   - Ordinateur : comportement natif du lien (site RATP, nouvel onglet).
+   - Le clic demande l'application : schéma d'application ratp:// (c'est lui
+     qui déclenche « Ouvrir dans Bonjour RATP ? ») sur iOS et les autres
+     mobiles, Intent explicite vers com.fabernovel.ratp sur Android Chrome.
+   - La page du site ne disparaît jamais au profit de ratp.fr :
+     * l'application s'ouvre -> la page passe en arrière-plan, rien d'autre ;
+     * l'ouverture est annulée -> la page reste telle quelle, et un lien
+       « Ouvrir le trajet sur ratp.fr » (traduit) apparaît à côté de la
+       mention : c'est un second clic volontaire qui ouvre le site RATP dans
+       un nouvel onglet ;
+     * application absente : Android Chrome ouvre lui-même le trajet RATP
+       (S.browser_fallback_url de l'Intent) ; sur iOS le schéma échoue
+       silencieusement (iframe) et le même lien manuel apparaît.
+   - Ordinateur : lien natif vers ratp.fr, nouvel onglet.
 
    Aucune page intermédiaire, aucune bannière, aucune demande de position. */
 (function () {
   'use strict';
 
-  /* Schéma d'application : c'est lui qui fait apparaître la demande
-     « Ouvrir dans Bonjour RATP ? ». S'il n'est pas reconnu par l'appareil,
-     le repli ci-dessous ouvre le trajet RATP : rien ne reste bloqué. */
   var SCHEMA_APP = 'ratp://';
-  var ATTENTE_APP = 2500;      /* le temps de répondre à la demande système */
-  var ATTENTE_ANDROID = 2000;
+  var ATTENTE_APP = 2500;
   var REDOUBLE_MS = 1200;
 
   var agent = navigator.userAgent || '';
@@ -43,8 +41,8 @@
     }
   }
 
-  /* Intent Android : application d'abord ; si elle manque, Chrome ouvre le
-     trajet RATP (arrivée remplie), sans page intermédiaire. */
+  /* Intent Android : application visée ; si elle est absente, Chrome ouvre
+     lui-même le trajet RATP (arrivée remplie), sans page intermédiaire. */
   function intentUrl(appUrl, repli) {
     var app = new URL(appUrl);
     return 'intent://' + app.host + app.pathname + app.search +
@@ -52,15 +50,33 @@
       'S.browser_fallback_url=' + encodeURIComponent(repli) + ';end';
   }
 
-  /* Le trajet RATP : nouvel onglet si le navigateur l'autorise. */
-  function ouvrirTrajet(trajet) {
-    var onglet = null;
-    try {
-      onglet = window.open(trajet, '_blank');
-    } catch (e) {
-      onglet = null;
-    }
-    if (!onglet) naviguer(trajet);
+  /* Lien « Ouvrir le trajet sur ratp.fr », inséré à côté de la mention quand
+     l'application ne s'est pas ouverte. Libellé traduit par i18n.js via
+     l'attribut data-ratp-trajet-site. */
+  function ajouterLienSite(lien, trajet) {
+    if (lien.parentNode.querySelector('.footer-details__metro-site')) return;
+    var libelle = lien.getAttribute('data-ratp-trajet-site') || 'Ouvrir le trajet sur ratp.fr';
+    var separateur = document.createElement('span');
+    separateur.className = 'footer-details__separator';
+    separateur.setAttribute('aria-hidden', 'true');
+    separateur.textContent = '•';
+    var lienSite = document.createElement('a');
+    lienSite.className = 'footer-details__metro-site';
+    lienSite.href = trajet;
+    lienSite.target = '_blank';
+    lienSite.rel = 'noopener';
+    lienSite.title = libelle;
+    lienSite.textContent = libelle;
+    lien.parentNode.insertBefore(separateur, lien.nextSibling);
+    lien.parentNode.insertBefore(lienSite, separateur.nextSibling);
+    /* La langue peut changer après l'échec : le libellé suit. */
+    window.addEventListener('lcg-lang-changed', function () {
+      var nouveau = lien.getAttribute('data-ratp-trajet-site');
+      if (nouveau && nouveau !== lienSite.textContent) {
+        lienSite.textContent = nouveau;
+        lienSite.title = nouveau;
+      }
+    });
   }
 
   document.querySelectorAll('[data-ratp-itineraire]').forEach(function (lien) {
@@ -80,31 +96,39 @@
       if (maintenant - dernierClic < REDOUBLE_MS) return;
       dernierClic = maintenant;
 
-      /* L'application a pris la main : la page passe en arrière-plan ou est
-         quittée. On renonce alors au trajet, c'est l'app qui calcule. */
+      /* L'application a pris la main : la page passe en arrière-plan. */
       var applicationOuverte = false;
       window.addEventListener('pagehide', function () { applicationOuverte = true; }, { once: true });
       document.addEventListener('visibilitychange', function () {
         if (document.hidden) applicationOuverte = true;
       }, { once: true });
 
-      /* Demande d'ouverture de l'application, tout de suite, dans l'onglet
-         courant : schéma sur iOS et les autres mobiles, Intent avec paquet
-         officiel sur Android Chrome. */
       if (androidChrome) {
+        /* Android Chrome : l'Intent gère tout nativement. Application absente
+           -> Chrome ouvre le trajet RATP tout seul ; annulé -> rien ne se
+           passe, la page du site reste. Le site n'ajoute aucun minuteur. */
         naviguer(intentUrl(appUrl, trajet));
-      } else {
-        naviguer(SCHEMA_APP);
+        return;
       }
 
-      /* Rien ne s'est ouvert : le trajet RATP prend le relais. */
-      function trajetSiRien(delai) {
-        window.setTimeout(function () {
-          if (applicationOuverte || document.hidden) return;
-          ouvrirTrajet(trajet);
-        }, delai);
-      }
-      trajetSiRien(androidChrome ? ATTENTE_ANDROID : ATTENTE_APP);
+      /* iOS et autres mobiles : demande d'ouverture via le schéma, dans une
+         iframe jetable — jamais dans la page courante, que Safari remplacerait
+         par « Impossible d'ouvrir la page » si l'application est absente. */
+      var essai = document.createElement('iframe');
+      essai.style.display = 'none';
+      essai.setAttribute('aria-hidden', 'true');
+      essai.tabIndex = -1;
+      essai.src = SCHEMA_APP;
+      document.body.appendChild(essai);
+
+      window.setTimeout(function () {
+        if (essai.parentNode) essai.parentNode.removeChild(essai);
+        /* L'application s'est ouverte : on ne touche à rien. */
+        if (applicationOuverte || document.hidden) return;
+        /* Annulée ou absente : la page du site reste, on propose le trajet
+           sur ratp.fr en manuel (second clic volontaire, nouvel onglet). */
+        ajouterLienSite(lien, trajet);
+      }, ATTENTE_APP);
     });
   });
 })();
