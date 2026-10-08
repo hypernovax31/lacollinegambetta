@@ -133,7 +133,7 @@ Galerie de la bibliothèque : `assets/vector/apercu.html`.
   JavaScript) et `robots.txt`.
 - Page `404.html` sobre, aux couleurs du site.
 
-### Pied de page commun et itinéraire RATP
+### Pied de page commun et mention du métro
 
 `tools/pied_quartier.py` pose le **même pied de page sur toutes les pages**,
 page de garde comprise :
@@ -152,11 +152,10 @@ modifier la liste `POINTS` (libellé, adresse, latitude, longitude) : le tri se
 refait tout seul.
 
 Plus de redite : « MÉTRO GAMBETTA • LIGNE 3 » n'apparaît **qu'une fois par
-page**. Le lien direct vers Bonjour RATP ouvre l'**application en priorité**
-si elle est installée sur mobile ; sinon, la page web officielle d'itinéraire
-s'ouvre. La destination reste l'adresse du restaurant (`4, Rue Belgrand,
-75, Paris`). Le site ne demande pas la géolocalisation et n'ouvre plus d'onglet
-provisoire vide.
+page**, en **texte simple** : la ligne donne l'information pratique sans
+renvoyer vers un site ni une application de transport. Le site ne demande
+jamais la géolocalisation, n'ouvre aucun onglet provisoire et ne déclare
+aucune bannière d'application tierce (pas de Smart App Banner iOS).
 
 ### Vérification
 
@@ -168,6 +167,11 @@ Le dernier contrôle **audite tous les liens externes** des cinq pages : chacun
 doit figurer dans la liste `autorises` du script, c'est-à-dire avoir été
 ouvert et vérifié (bon site, en ligne, à jour). Avant d'ajouter un lien au
 site, on le vérifie puis on l'inscrit dans cette liste.
+
+Il vérifie aussi qu'**aucune page ne renvoie vers l'application ou le site
+RATP** : plus de lien `ratp.fr` ou `bonjour-ratp.fr`, plus d'Intent Android ni
+de Universal Link, plus de page de secours géolocalisée, plus de Smart App
+Banner iOS. La mention « MÉTRO GAMBETTA • LIGNE 3 » reste **en texte simple**.
 
 Ces trois scripts sont **idempotents** : on peut les relancer après toute
 modification du site.
