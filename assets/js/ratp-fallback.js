@@ -344,7 +344,21 @@
 
   var parameters = new URLSearchParams(window.location.search);
   if (parameters.get('source') === 'metro') {
-    window.requestAnimationFrame(requestLocation);
+    /* Onglet ouvert au tap sur la mention du métro : il peut basculer tout de
+       suite vers l'application Bonjour RATP. On ne demande donc la position
+       que si la page est bien celle que l'internaute regarde. */
+    showStatus(copy.initial);
+    var demandeFaite = false;
+    function demanderPosition() {
+      if (demandeFaite || document.hidden) return;
+      demandeFaite = true;
+      requestLocation();
+    }
+    window.setTimeout(demanderPosition, 700);
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) return;
+      demandeFaite = true;
+    });
   } else {
     showStatus(copy.initial);
   }

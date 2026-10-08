@@ -125,23 +125,27 @@ try {
     if (url.origin===origineLocale) await route.continue(); else await route.abort();
   });
   await pageAndroid.goto(`${origineLocale}/index.html`,{waitUntil:'domcontentloaded'});
-  const hrefAndroid=await pageAndroid.locator('#cover-section [data-ratp-itineraire]').evaluate((link)=>({
-    href:link.href,target:link.target,web:link.href.match(/browser_fallback_url=([^;]+);end$/)?.[1],
+  const appAndroid=await pageAndroid.locator('#cover-section [data-ratp-itineraire]').evaluate((link)=>({
+    href:link.href,target:link.target,appHref:link.getAttribute('data-ratp-app-href'),
   }));
-  assert.ok(hrefAndroid.href.startsWith('intent://www.bonjour-ratp.fr/itineraires/?end='),
-    'Android Chrome doit appeler directement l’Intent Bonjour RATP');
-  assert.equal(new URL(decodeURIComponent(hrefAndroid.href.replace(/^intent:\/\//, 'https://').split('#')[0])).searchParams.get('end'),
-    '4, Rue Belgrand, 75, Paris', 'l’Intent doit porter l’adresse du restaurant en arrivée');
-  assert.ok(hrefAndroid.href.includes('#Intent;scheme=https;package=com.fabernovel.ratp;'),
-    'l’Intent Android doit désigner le paquet officiel Bonjour RATP');
-  const secoursAndroid = new URL(decodeURIComponent(hrefAndroid.web));
+  assert.ok(appAndroid.href.startsWith('https://www.bonjour-ratp.fr/itineraires/?end='),
+    'Android vise le domaine déclaré par l’application Bonjour RATP');
+  assert.equal(new URL(appAndroid.href).searchParams.get('end'), '4, Rue Belgrand, 75, Paris',
+    'l’application doit recevoir l’adresse du restaurant en arrivée');
+  assert.equal(appAndroid.href, appAndroid.appHref);
+  assert.equal(appAndroid.target,'','le tap ne doit pas ouvrir un onglet vide');
+  const [ongletSecours] = await Promise.all([
+    pageAndroid.waitForEvent('popup'),
+    pageAndroid.locator('#cover-section [data-ratp-itineraire]').click(),
+  ]);
+  const secoursAndroid = new URL(ongletSecours.url());
   assert.equal(secoursAndroid.origin, origineLocale,
-    'si l’app manque, Chrome doit ouvrir la page de secours du site');
+    'sans application, le trajet doit s’ouvrir dans un nouvel onglet du site');
   assert.equal(secoursAndroid.pathname, '/ratp-fallback.html');
   assert.equal(secoursAndroid.searchParams.get('source'), 'metro');
-  assert.equal(hrefAndroid.target,'');
+  await ongletSecours.close();
   await contexteAndroid.close();
-  console.log('  ok   Chromium : application au tap, Intent Android et page de secours locale');
+  console.log('  ok   Chromium Android : application visée, trajet dans un nouvel onglet sinon');
 
   const widgetAccueil = await page.evaluate(() => ({
     heading: document.getElementById('cover-reviews-title')?.textContent.trim(),

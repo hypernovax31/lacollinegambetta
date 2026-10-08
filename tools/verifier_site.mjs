@@ -430,13 +430,15 @@ pagesRATP.every((f) => lire(f).includes('assets/js/ratp-itinerary.js'))
   : ko('metro : une page n’embarque pas assets/js/ratp-itinerary.js');
 /<meta name="robots" content="noindex, nofollow">/.test(ratpFallbackHtml) &&
   ratpFallbackHtml.includes('api-adresse.data.gouv.fr') &&
-  ratpFallbackHtml.includes('?v=2026100801')
+  ratpFallbackHtml.includes('?v=2026100802')
   ? ok('metro : page de secours locale, noindex, position expliquee et script anticache')
   : ko('metro : page de secours incomplete');
 ratpItineraireScript.includes('intent://') &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
   ratpItineraireScript.includes("new URL('ratp-fallback.html', window.location.href)") &&
+  ratpItineraireScript.includes("window.open(pageSecours(), '_blank')") &&
+  ratpItineraireScript.includes('window.location.assign(intentUrl(') &&
   !ratpItineraireScript.includes('navigator.geolocation')
   ? ok('metro : Intent Android avec repli local, sans geolocalisation sur le site principal')
   : ko('metro : handoff Android incomplet ou geolocalisation hors page de secours');
@@ -445,7 +447,8 @@ ratpFallbackScript.includes('navigator.geolocation.getCurrentPosition') &&
   ratpFallbackScript.includes("'4, Rue Belgrand, 75, Paris'") &&
   ratpFallbackScript.includes("searchParams.set('start'") &&
   ratpFallbackScript.includes("searchParams.set('end'") &&
-  ratpFallbackScript.includes("window.location.replace(routeUrl(cleanOrigin))")
+  ratpFallbackScript.includes("window.location.replace(routeUrl(cleanOrigin))") &&
+  ratpFallbackScript.includes('document.hidden')
   ? ok('metro : depart geolocalise puis itineraire RATP avec depart et arrivee remplis')
   : ko('metro : geolocalisation consentie ou remplissage de l’itineraire incomplets');
 pagesRATP.concat(['404.html']).every((f) => !/navigator\.geolocation|api-adresse\.data\.gouv\.fr/i.test(lire(f)))

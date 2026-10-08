@@ -154,22 +154,24 @@ refait tout seul.
 Plus de redite : « MÉTRO GAMBETTA • LIGNE 3 » n'apparaît **qu'une fois par
 page** et c'est elle qui porte l'**itinéraire RATP**.
 
-- Sur **mobile**, le tap ouvre l'**application Bonjour RATP** : Android Chrome
-  reçoit un Intent explicite (`com.fabernovel.ratp`, secours
-  `S.browser_fallback_url`), iOS et les autres mobiles le lien universel HTTPS
-  `bonjour-ratp.fr`. L'arrivée est l'adresse du restaurant, le départ la
-  position du téléphone.
-- Si l'application n'est pas installée, la **page de secours locale**
-  (`ratp-fallback.html`, `noindex`) demande l'autorisation de localisation au
-  tap, convertit la position en adresse via la Base Adresse Nationale, puis
-  ouvre `ratp.fr/itineraires` avec le **départ** (`?start=`) et l'**arrivée**
-  (`?end=4, Rue Belgrand, 75, Paris`) renseignés. Refus ou échec : saisie
-  manuelle, ou lien « continuer sans position » qui ne renseigne que l'arrivée.
+- Sur **mobile**, le tap ouvre d'abord l'**application Bonjour RATP** : le
+  domaine `bonjour-ratp.fr` est celui que l'application déclare elle-même
+  (App Links Android pour `com.fabernovel.ratp` dans son `assetlinks.json`,
+  lien universel iOS dans son `apple-app-site-association`), et Android Chrome
+  reçoit en plus un Intent explicite (`S.browser_fallback_url`).
+- Si l'application n'est **pas installée**, le trajet s'ouvre dans un
+  **nouvel onglet** : la page de secours locale (`ratp-fallback.html`,
+  `noindex`) demande l'autorisation de localisation, convertit la position en
+  adresse via la Base Adresse Nationale, puis ouvre `ratp.fr/itineraires` avec
+  le **départ** (`?start=`) et l'**arrivée** (`?end=4, Rue Belgrand, 75, Paris`)
+  renseignés. Refus ou échec : saisie manuelle, ou lien « continuer sans
+  position » qui ne renseigne que l'arrivée. Si l'application a bien pris la
+  main, l'onglet de secours reste en arrière-plan et ne demande rien.
 - Sur **ordinateur**, le lien web RATP s'ouvre dans un nouvel onglet avec
   l'arrivée remplie.
 
 Le site principal ne demande **jamais** la géolocalisation : seule la page de
-secours le fait, après un tap explicite. Le handoff vit dans
+secours le fait, sur un geste explicite. Le handoff vit dans
 `assets/js/ratp-itinerary.js`, la conversion d'adresse dans
 `assets/js/ratp-fallback.js`.
 

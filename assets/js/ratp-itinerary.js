@@ -1,15 +1,17 @@
 /* Mention « Métro Gambetta • Ligne 3 » : ouvre l'application Bonjour RATP.
-   - Android Chrome : Intent explicite vers le paquet officiel ; si l'app
-     manque, Chrome ouvre la page de secours locale (S.browser_fallback_url).
-   - iOS et autres mobiles : lien universel HTTPS ; si la page reste au premier
-     plan après le tap, l'app n'a pas pris la main, on ouvre la page de secours.
-   - Ordinateur : aucun changement, le lien web RATP s'ouvre dans un onglet.
-   La page de secours demande la position (départ), puis ouvre l'itinéraire
-   RATP avec le départ et l'arrivée remplis. Aucune géolocalisation ici. */
+   - L'application d'abord : le domaine bonjour-ratp.fr est déclaré par l'app
+     elle-même (App Links Android pour com.fabernovel.ratp, lien universel iOS),
+     donc le lien universel suffit ; sous Android Chrome, un Intent explicite
+     vise en plus le paquet officiel.
+   - Application absente : le trajet s'ouvre dans un NOUVEL onglet, via la page
+     de secours locale, qui demande la position (départ) puis ouvre l'itinéraire
+     RATP avec le départ et l'arrivée remplis.
+   - Ordinateur : comportement natif du lien (site RATP, nouvel onglet).
+   Ce script ne demande jamais la position : c'est la page de secours qui le fait. */
 (function () {
   'use strict';
 
-  var FALLBACK_DELAY = 1600;
+  var REDOUBLE_MS = 1200;
 
   var agent = navigator.userAgent || '';
   var tactile = false;
@@ -30,7 +32,8 @@
     return /^(fr|en|es|de|it|pt|nl|pl|zh|uk|ja|ko|ar|tr|hi)$/.test(lang) ? lang : '';
   }
 
-  function fallbackUrl() {
+  /* Page de secours : position -> itinéraire RATP, départ et arrivée remplis. */
+  function pageSecours() {
     var url = new URL('ratp-fallback.html', window.location.href);
     url.searchParams.set('source', 'metro');
     var lang = language();
@@ -38,41 +41,56 @@
     return url.href;
   }
 
+  /* Intent Android : application d'abord ; si elle manque, Chrome ouvre la
+     page indiquée par S.browser_fallback_url. */
+  function intentUrl(appUrl, secours) {
+    var app = new URL(appUrl);
+    return 'intent://' + app.host + app.pathname + app.search +
+      '#Intent;scheme=https;package=com.fabernovel.ratp;' +
+      'S.browser_fallback_url=' + encodeURIComponent(secours) + ';end';
+  }
+
   document.querySelectorAll('[data-ratp-itineraire]').forEach(function (lien) {
     var appUrl = lien.getAttribute('data-ratp-app-href');
     if (!appUrl) return;
 
-    /* Écran tactile : on vise l'application, dans l'onglet courant. */
+    /* Écran tactile : le lien vise l'application, jamais un nouvel onglet par
+       défaut (c'est le script qui décide, au tap). */
     lien.href = appUrl;
     lien.removeAttribute('target');
 
-    if (androidChrome) {
-      try {
-        var app = new URL(appUrl);
-        lien.href = 'intent://' + app.host + app.pathname + app.search +
-          '#Intent;scheme=https;package=com.fabernovel.ratp;' +
-          'S.browser_fallback_url=' + encodeURIComponent(fallbackUrl()) + ';end';
+    var dernierTap = 0;
+    lien.addEventListener('click', function (event) {
+      var maintenant = Date.now();
+      if (maintenant - dernierTap < REDOUBLE_MS) {
+        event.preventDefault();
         return;
-      } catch (e) {
-        lien.href = appUrl;
       }
-    }
+      dernierTap = maintenant;
+      event.preventDefault();
 
-    lien.addEventListener('click', function () {
-      var settled = false;
-      var timer = window.setTimeout(function () {
-        if (settled) return;
-        settled = true;
-        /* La page est encore visible : l'application ne s'est pas ouverte. */
-        if (!document.hidden) window.location.assign(fallbackUrl());
-      }, FALLBACK_DELAY);
-      function cancel() {
-        if (settled) return;
-        settled = true;
-        window.clearTimeout(timer);
+      /* 1. Le trajet (ou sa page de secours) dans un nouvel onglet : l'onglet
+         courant reste disponible pour l'application. */
+      var secours = null;
+      try {
+        secours = window.open(pageSecours(), '_blank');
+      } catch (e) {
+        secours = null;
       }
-      document.addEventListener('visibilitychange', cancel, { once: true });
-      window.addEventListener('pagehide', cancel, { once: true });
+
+      /* 2. L'application dans l'onglet courant. */
+      if (androidChrome) {
+        try {
+          /* Onglet de secours ouvert : si l'app manque, Chrome revient ici.
+             Onglet refusé : la page de secours prend le relais dans l'onglet. */
+          window.location.assign(intentUrl(appUrl, secours ? window.location.href : pageSecours()));
+        } catch (e) {
+          window.location.assign(appUrl);
+        }
+      } else {
+        /* Lien universel (iOS) ou App Links : l'app s'ouvre si elle est là. */
+        window.location.assign(appUrl);
+      }
     });
   });
 })();

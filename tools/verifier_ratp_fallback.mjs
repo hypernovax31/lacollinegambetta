@@ -62,23 +62,28 @@ try {
   const home = await android.newPage();
   await home.route('**/*', (route) => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
   await home.goto(`${origin}/index.html?lang=fr`, { waitUntil: 'domcontentloaded' });
-  const handoff = await home.locator('[data-ratp-itineraire]').first().evaluate((link) => link.href);
-  assert.ok(handoff.startsWith('intent://www.bonjour-ratp.fr/itineraires/?end='),
-    'Android Chrome doit tenter l’Intent Bonjour RATP');
-  assert.ok(handoff.includes('#Intent;scheme=https;package=com.fabernovel.ratp;'),
-    'l’Intent doit viser le paquet officiel de Bonjour RATP');
-  const appArrivee = new URL(decodeURIComponent(handoff.replace(/^intent:\/\//, 'https://').split('#')[0]));
-  assert.equal(appArrivee.searchParams.get('end'), ARRIVEE,
+  const handoff = await home.locator('[data-ratp-itineraire]').first().evaluate((link) => ({
+    href: link.href,
+    target: link.target,
+    appHref: link.getAttribute('data-ratp-app-href'),
+  }));
+  assert.ok(handoff.href.startsWith('https://www.bonjour-ratp.fr/itineraires/?end='),
+    'Android vise le domaine déclaré par l’application Bonjour RATP');
+  assert.equal(new URL(handoff.href).searchParams.get('end'), ARRIVEE,
     'l’application doit recevoir l’adresse du restaurant en arrivée');
-  const fallbackParameter = handoff.match(/S\.browser_fallback_url=([^;]+);end$/)?.[1];
-  assert.ok(fallbackParameter, 'l’Intent Android doit contenir une page de secours');
-  const fallback = new URL(decodeURIComponent(fallbackParameter));
+  assert.equal(handoff.href, handoff.appHref);
+  assert.equal(handoff.target, '', 'le tap ne doit pas ouvrir un onglet vide');
+  const [ongletSecours] = await Promise.all([
+    home.waitForEvent('popup'),
+    home.locator('[data-ratp-itineraire]').first().click(),
+  ]);
+  const fallback = new URL(ongletSecours.url());
   assert.equal(fallback.origin, origin, 'la page de secours doit rester sur le site du restaurant');
   assert.equal(fallback.pathname, '/ratp-fallback.html');
   assert.equal(fallback.searchParams.get('source'), 'metro');
-  assert.equal(fallback.searchParams.get('lang'), 'fr');
+  await ongletSecours.close();
   await android.close();
-  console.log('  ok   Android Chrome : Intent Bonjour RATP, arrivée remplie et page de secours localisée');
+  console.log('  ok   Android Chrome : application visée, trajet dans un nouvel onglet sinon');
 
   // 2. Position acceptée : le départ, converti en adresse, part dans ?start=.
   const geolocated = await browser.newContext();
@@ -115,7 +120,49 @@ try {
   await geolocated.close();
   console.log('  ok   Position autorisée : départ rempli par la position, arrivée par le restaurant');
 
-  // 3. Position refusée : saisie manuelle et lien « sans position » restent complets.
+  // 3. Application passée au premier plan : aucune demande de position parasite.
+  const discret = await browser.newContext();
+  await discret.grantPermissions(['geolocation'], { origin });
+  await discret.setGeolocation({ latitude: 48.8566, longitude: 2.3522, accuracy: 25 });
+  // Chromium headless ne simule pas la visibilité des onglets : ce drapeau
+  // reproduit exactement l'état « le navigateur est passé en arrière-plan ».
+  await discret.addInitScript(() => {
+    window.__applicationOuverte = true;
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => window.__applicationOuverte });
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => (window.__applicationOuverte ? 'hidden' : 'visible'),
+    });
+  });
+  const ongletArriere = await discret.newPage();
+  let requetesBAN = 0;
+  await ongletArriere.route('https://api-adresse.data.gouv.fr/**', async (route) => {
+    requetesBAN++;
+    await route.fulfill({ status: 200, contentType: 'application/geo+json', body: JSON.stringify({
+      type: 'FeatureCollection',
+      features: [{ type: 'Feature', properties: { label: ADRESSE_POSITION }, geometry: { type: 'Point', coordinates: [2.35, 48.85] } }],
+    }) });
+  });
+  await ongletArriere.route('https://www.ratp.fr/itineraires?**', async (route) => {
+    await route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: '<title>RATP test</title>' });
+  });
+  await ongletArriere.goto(`${origin}/ratp-fallback.html?source=metro&lang=fr`, { waitUntil: 'domcontentloaded' });
+  await ongletArriere.waitForTimeout(1600);
+  assert.equal(requetesBAN, 0,
+    'l’application ouverte ailleurs ne doit pas déclencher de demande de position');
+  assert.ok(/Choisissez/.test(await ongletArriere.locator('#ratp-fallback-status').textContent()),
+    'l’onglet laissé en arrière-plan doit attendre un geste');
+  await ongletArriere.evaluate(() => {
+    window.__applicationOuverte = false;
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await ongletArriere.locator('#ratp-use-location').click();
+  await ongletArriere.waitForURL((url) => url.hostname === 'www.ratp.fr', { timeout: 10000 });
+  assert.equal(requetesBAN, 1, 'le geste volontaire déclenche la conversion de la position');
+  await discret.close();
+  console.log('  ok   Application ouverte : aucune demande de position dans l’onglet de secours');
+
+  // 4. Position refusée : saisie manuelle et lien « sans position » restent complets.
   const denied = await browser.newContext();
   await denied.addInitScript(() => {
     Object.defineProperty(navigator, 'geolocation', { configurable: true, value: {
