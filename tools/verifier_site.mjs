@@ -426,25 +426,26 @@ const pagesRATP = ['index.html', 'reservation.html', 'mentions-legales.html', 'c
 pagesRATP.every((f) => lire(f).includes('assets/js/ratp-itinerary.js'))
   ? ok('metro : script de handoff charge par les quatre pages (application d’abord, trajet en nouvel onglet)')
   : ko('metro : une page n’embarque pas assets/js/ratp-itinerary.js');
-const blocSecours = ratpItineraireScript.slice(
-  ratpItineraireScript.indexOf('window.setTimeout'),
-  ratpItineraireScript.indexOf('}, DELAI_APP);'));
-const apresSecours = ratpItineraireScript.slice(ratpItineraireScript.indexOf('}, DELAI_APP);'));
-ratpItineraireScript.includes('intent://') &&
+const corpsClic = ratpItineraireScript.slice(
+  ratpItineraireScript.indexOf('lien.addEventListener'),
+  ratpItineraireScript.indexOf('function trajetSiRien'));
+ratpItineraireScript.includes("SCHEMA_APP = 'ratp://'") &&
+  ratpItineraireScript.includes('naviguer(SCHEMA_APP)') &&
+  ratpItineraireScript.includes('intentUrl(') &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
-  /DELAI_APP = 1500/.test(ratpItineraireScript) &&
-  // le trajet différé est bien dans le minuteur, rien d'autre
-  blocSecours.includes("window.open(trajet, '_blank')") &&
-  blocSecours.includes('applicationOuverte') &&
-  // l'application est visée tout de suite, hors du minuteur (sinon le
-  // système refuse le lancement depuis un onglet déjà en arrière-plan)
-  !blocSecours.includes('window.location.assign(intentUrl') &&
-  apresSecours.includes('window.location.assign(intentUrl(appUrl, trajet))') &&
-  apresSecours.includes('window.location.assign(appUrl)') &&
+  // la demande d'ouverture est émise tout de suite, hors du minuteur :
+  // depuis un onglet en arrière-plan le système refuserait le lancement
+  corpsClic.includes('naviguer(SCHEMA_APP)') &&
+  corpsClic.includes('naviguer(intentUrl(appUrl, trajet))') &&
+  !corpsClic.includes('ouvrirTrajet(trajet)') &&
+  // le trajet n'arrive qu'après, dans le minuteur
+  ratpItineraireScript.slice(ratpItineraireScript.indexOf('function trajetSiRien'))
+    .includes('ouvrirTrajet(trajet)') &&
+  ratpItineraireScript.includes('applicationOuverte || document.hidden') &&
   !ratpItineraireScript.includes('navigator.geolocation')
-  ? ok('metro : l’application est visée au clic, trajet ensuite, aucune demande de position')
-  : ko('metro : handoff incomplet, ordre incorrect ou demande de position');
+  ? ok('metro : demande d’ouverture au clic (schéma, Intent Android), trajet ensuite')
+  : ko('metro : demande d’ouverture, ordre ou absence de position incorrects');
 const tracesSecours = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html']
   .filter((f) => /ratp-fallback/i.test(lire(f)))
   .concat(['i18n.js', 'legal-i18n.js', 'ratp-itinerary.js']

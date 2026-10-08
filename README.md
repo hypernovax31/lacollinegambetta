@@ -154,18 +154,18 @@ refait tout seul.
 Plus de redite : « MÉTRO GAMBETTA • LIGNE 3 » n'apparaît **qu'une fois par
 page** et c'est elle qui porte l'**itinéraire RATP**.
 
-- Sur **mobile**, le tap vise **d'abord l'application Bonjour RATP**, dans
-  l'onglet courant : iOS reçoit le lien universel `bonjour-ratp.fr` — le
-  domaine que l'application déclare elle-même dans son
-  `apple-app-site-association` — et Android Chrome un Intent explicite vers
-  `com.fabernovel.ratp` (`S.browser_fallback_url` = trajet RATP). Cet ordre
-  compte : depuis un onglet déjà passé en arrière-plan, iOS comme Android
-  refusent de lancer une application.
-- Si l'application ne prend pas la main (page toujours visible après 1,5 s),
-  le trajet s'ouvre tout seul sur `ratp.fr/itineraires`, arrivée remplie
+- Sur **mobile**, le tap **demande d'ouvrir l'application Bonjour RATP** : le
+  clic vise d'abord le **schéma d'application** (`ratp://`) dans l'onglet
+  courant — c'est ce schéma, et non un lien web, qui déclenche la demande du
+  système « Ouvrir dans Bonjour RATP ? ». Sur Android Chrome, un **Intent
+  explicite** vise en plus le paquet officiel `com.fabernovel.ratp` (repli
+  natif : le trajet RATP). Cet ordre compte : depuis un onglet déjà passé en
+  arrière-plan, iOS comme Android refusent de lancer une application.
+- Si l'application ne prend pas la main (demande refusée, application absente
+  ou lancement bloqué par un navigateur intégré), la page reste visible et le
+  trajet s'ouvre **tout seul** sur `ratp.fr/itineraires`, arrivée remplie
   (`?end=4 Rue Belgrand 75020 Paris`) : **nouvel onglet** si le navigateur
-  l'autorise, sinon dans l'onglet courant. Sans application installée sur
-  iOS, le lien universel affiche la page Bonjour RATP, arrivée déjà remplie.
+  l'autorise, sinon dans l'onglet courant.
 - Sur **iOS**, c'est le clic qui propose l'application : aucune bannière
   système (`apple-itunes-app`) n'est déclarée, aucune proposition n'apparaît
   en dehors du clic sur la mention du métro.
@@ -191,11 +191,11 @@ Il vérifie aussi le parcours « Métro Gambetta • Ligne 3 » : lien web RATP,
 lien universel Bonjour RATP, Intent Android, absence de bannière système iOS,
 de page intermédiaire et de demande de position.
 `node tools/verifier_ratp_itineraires.mjs` rejoue ce parcours dans Chromium
-avec des fixtures locales : sur Android l'application est visée au clic puis
-le trajet arrive 1,5 s plus tard dans un nouvel onglet ; sur iPhone le clic
-part sur le lien universel Bonjour RATP (arrivée remplie) ; dans un navigateur
-intégré qui bloque les lancements, le trajet s'ouvre tout seul. Aucune requête
-réelle ne part vers ratp.fr.
+avec des fixtures locales : sur Android l'Intent est émis au clic puis le
+trajet arrive 2 s plus tard dans un nouvel onglet ; sur iPhone le clic émet le
+schéma `ratp://` (la demande d'ouverture) puis le trajet en repli, arrivée
+remplie ; dans un navigateur intégré qui bloque les lancements, le trajet
+s'ouvre tout seul. Aucune requête réelle ne part vers ratp.fr.
 
 Ces trois scripts sont **idempotents** : on peut les relancer après toute
 modification du site.

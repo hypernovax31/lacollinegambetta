@@ -96,7 +96,7 @@ try {
   assert.equal(trajet.pathname, '/itineraires');
   assert.equal(trajet.searchParams.get('end'), ARRIVEE,
     'la case arrivée doit être remplie avec 4 Rue Belgrand 75020 Paris');
-  assert.ok(delaiTrajet >= 1200,
+  assert.ok(delaiTrajet >= 1800,
     `le trajet ne doit venir qu’après la tentative d’application (mesuré : ${delaiTrajet} ms)`);
   assert.ok(!journalAndroid.some((url) => /api-adresse|geolocation/i.test(url)),
     'aucune demande de position ne doit partir du site');
@@ -110,6 +110,11 @@ try {
     userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
   });
   const iphone = await ios.newPage();
+  /* Le schéma d'application ratp:// n'est pas une navigation web : on l'observe
+     comme une requête émise par la page (c'est elle qui déclenche, côté système,
+     la demande « Ouvrir dans Bonjour RATP ? »). */
+  const requetesIOS = [];
+  iphone.on('request', (requete) => requetesIOS.push(requete.url()));
   await poserInterception(ios, origin, journalIOS);
   await iphone.goto(`${origin}/index.html?lang=fr`, { waitUntil: 'domcontentloaded' });
   assert.equal(await iphone.locator('meta[name="apple-itunes-app"]').count(), 0,
@@ -118,22 +123,29 @@ try {
     'aucune proposition d’installation ne doit être présente hors clic');
   let popupIOS = null;
   iphone.on('popup', (page) => { popupIOS = page; });
+  const departIOS = Date.now();
   await iphone.locator('[data-ratp-itineraire]').first().click();
-  await iphone.waitForURL((url) => url.hostname === 'www.bonjour-ratp.fr', { timeout: 10000 });
-  const lienUniversel = new URL(iphone.url());
-  assert.equal(lienUniversel.pathname, '/itineraires/',
-    'le clic doit viser le lien universel Bonjour RATP qui ouvre l’application');
-  assert.equal(lienUniversel.searchParams.get('end'), ARRIVEE,
-    'l’application doit recevoir l’adresse du restaurant en arrivée');
-  await iphone.waitForTimeout(2000);
+  await iphone.waitForTimeout(600);
+  assert.ok(requetesIOS.includes('ratp://'),
+    'le clic doit viser le schéma d’application ratp:// — c’est lui qui déclenche la demande « Ouvrir dans Bonjour RATP ? »');
   assert.equal(popupIOS, null,
-    'une fois l’application visée, aucun onglet ne doit s’ouvrir en doublon');
+    'au clic, on demande d’abord l’ouverture de l’application : le trajet n’arrive pas tout de suite');
+  await iphone.waitForEvent('popup', { timeout: 8000 }).then((page) => { popupIOS = page; }).catch(() => {});
+  assert.ok(popupIOS, 'si l’application ne se lance pas, le trajet doit s’ouvrir seul');
+  await popupIOS.waitForLoadState('domcontentloaded').catch(() => {});
+  const trajetIOS = new URL(popupIOS.url());
+  assert.equal(trajetIOS.hostname, 'www.ratp.fr',
+    'l’application ne répond pas : le trajet RATP prend le relais');
+  assert.equal(trajetIOS.searchParams.get('end'), ARRIVEE,
+    'l’arrivée du restaurant doit rester remplie');
+  assert.ok(Date.now() - departIOS >= 2000,
+    'le trajet ne doit venir qu’après la demande d’ouverture');
   assert.ok(!journalIOS.some((url) => url.startsWith('intent://')),
     'iOS ne doit pas recevoir d’Intent Android');
   assert.ok(!journalIOS.some((url) => /api-adresse|geolocation/i.test(url)),
     'aucune demande de position ne doit partir du site');
   await ios.close();
-  console.log('  ok   iOS : le clic propose Bonjour RATP (lien universel, arrivée remplie)');
+  console.log('  ok   iOS : demande d’ouverture du schéma, trajet en repli (arrivée remplie)');
 
   // 3. Navigateur intégré : le lancement est bloqué, le trajet s'ouvre seul.
   const journalBloque = [];
