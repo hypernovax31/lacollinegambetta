@@ -166,6 +166,31 @@ html:not(.carte-doc) .footer-details__separator { color:#fff !important; }
   html:not(.carte-doc) .footer-details__separator { display:none; }
 }
 
+/* Pieds des pages intérieures (hors page de garde) : la marque et la ligne
+   adresse • métro sont encadrées d'un léger trait doré — la couleur de la
+   thématique du site — et l'adresse + le métro restent sur UNE même ligne,
+   centrée sur l'axe vertical, à toutes les largeurs (défilement horizontal
+   discret si l'écran est très étroit). Sélecteurs plus spécifiques que les
+   media queries ci-dessus : ils priment. */
+html:not(.carte-doc) .footer--secondaire .footer-details {
+  border-top:1px solid rgba(216,178,87,.55);
+  border-bottom:1px solid rgba(216,178,87,.55);
+  padding:12px 8px;
+}
+html:not(.carte-doc) .footer--secondaire .footer-details__location {
+  flex-flow:row nowrap; align-items:center; justify-content:center;
+  max-width:100%; overflow-x:auto; overflow-y:hidden; scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+html:not(.carte-doc) .footer--secondaire .footer-details__location::-webkit-scrollbar { display:none; }
+html:not(.carte-doc) .footer--secondaire .footer-details__location > * {
+  flex:0 0 auto; white-space:nowrap;
+}
+html:not(.carte-doc) .footer--secondaire .footer-details__location > a {
+  flex:0 0 auto; white-space:nowrap; text-align:center;
+}
+html:not(.carte-doc) .footer--secondaire .footer-details__separator { display:inline; }
+
 /* Même traitement pour l'adresse affichée sur la couverture. */
 html:not(.carte-doc) .cover-footer-address {
   display:flex; flex-flow:row nowrap; align-items:center; justify-content:flex-start;
@@ -335,6 +360,14 @@ def poser_metro(s: str) -> str:
         + m.group(1) + separateur + m.group(2) + '</span>', s)
 
 
+def poser_classe_secondaire(s: str) -> str:
+    """Marque le pied de page des pages intérieures (hors page de garde)."""
+    if 'class="footer footer--secondaire"' in s:
+        return s
+    return s.replace('<footer class="footer">',
+                     '<footer class="footer footer--secondaire">', 1)
+
+
 def poser_nav_pied(s: str) -> str:
     bloc = ("<!-- quartier:html:debut -->" + nav_alentours("")
             + "<!-- quartier:html:fin -->")
@@ -398,9 +431,10 @@ def main() -> None:
         s = poser_css(s)
         s = poser_metro(s)
         s = poser_nav_pied(s)
+        s = poser_classe_secondaire(s)
         s = poser_js(s)
         f.write_text(s, encoding="utf-8")
-        print(f"{nom} : pied de page identique a la page de garde")
+        print(f"{nom} : pied de page intérieur mis a jour (trait + ligne unique)")
 
     # 3. page 404 : la meme ligne de reperes sous l'adresse
     f = ROOT / "404.html"

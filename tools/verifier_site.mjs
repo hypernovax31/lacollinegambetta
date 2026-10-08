@@ -237,6 +237,26 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
     : ko(`${f} : la ligne des alentours n'est pas sous l'adresse`);
 }
 
+// Pieds des pages intérieures (hors page de garde) : classe footer--secondaire,
+// léger trait doré haut/bas, et adresse + métro sur une même ligne centrée.
+const pagesSecondaires = ['reservation.html', 'mentions-legales.html', 'confidentialite.html'];
+const marque = (f) => new JSDOM(lire(f)).window.document
+  .querySelector('footer.footer.footer--secondaire') !== null;
+pagesSecondaires.every(marque) && !marque('index.html') && !marque('404.html')
+  ? ok('pied : pages intérieures marquées footer--secondaire, page de garde et 404 exclues')
+  : ko('pied : marquage footer--secondaire incorrect (pages intérieures uniquement)');
+const cssSecondaire = lire('reservation.html');
+const traitHautBas = /html:not\(\.carte-doc\)\s*\.footer--secondaire\s*\.footer-details\s*\{[^}]*border-top:1px solid rgba\(216,178,87,\.55\)[^}]*border-bottom:1px solid rgba\(216,178,87,\.55\)/.test(cssSecondaire);
+const ligneUnique = /html:not\(\.carte-doc\)\s*\.footer--secondaire\s*\.footer-details__location\s*\{[^}]*flex-flow:row nowrap[^}]*align-items:center/.test(cssSecondaire);
+const separateurVisible = /html:not\(\.carte-doc\)\s*\.footer--secondaire\s*\.footer-details__separator\s*\{\s*display:inline/.test(cssSecondaire);
+pagesSecondaires.every((f) => {
+  const css = lire(f);
+  return /\.footer--secondaire\s*\.footer-details\s*\{[^}]*border-top:1px solid rgba\(216,178,87,\.55\)/.test(css) &&
+    /\.footer--secondaire\s*\.footer-details__location\s*\{[^}]*flex-flow:row nowrap[^}]*align-items:center/.test(css);
+}) && traitHautBas && ligneUnique && separateurVisible
+  ? ok('pied : trait doré léger haut/bas, adresse • métro sur une même ligne centrée (pages intérieures)')
+  : ko('pied : trait doré ou ligne unique adresse/métro absent des pages intérieures');
+
 const adresseAr = new JSDOM(lire('reservation.html'), {
   runScripts: 'outside-only', url: 'https://lacollinegambetta.com/reservation.html?lang=ar'
 });

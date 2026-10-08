@@ -169,6 +169,64 @@ try {
   await contexteAndroid.close();
   console.log('  ok   Chromium Android : Intent émis au clic (repli natif ?ratp=1), page intacte, aucune position demandée');
 
+  // Pied des pages intérieures (hors page de garde) : léger trait doré autour
+  // de la marque + adresse/métro, et adresse + métro sur UNE même ligne,
+  // centrée sur l'axe vertical, même sur écran étroit.
+  const piedMobile = await navigateur.newContext({
+    viewport:{width:390,height:844}, deviceScaleFactor:1, isMobile:true, hasTouch:true,
+    userAgent:'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36',
+  });
+  const pagePied = await piedMobile.newPage();
+  await pagePied.goto(`${origineLocale}/reservation.html?lang=fr`, {waitUntil:'domcontentloaded'});
+  const lignePied = await pagePied.evaluate(() => {
+    const adresse = document.querySelector('.footer-details__location .footer-address-link');
+    const metro = document.querySelector('.footer-details__location .footer-details__metro');
+    const location = document.querySelector('.footer-details__location');
+    const details = document.querySelector('.footer--secondaire .footer-details');
+    const sep = document.querySelector('.footer-details__location .footer-details__separator');
+    const rectA = adresse.getBoundingClientRect();
+    const rectM = metro.getBoundingClientRect();
+    const styleLocation = getComputedStyle(location);
+    const styleDetails = getComputedStyle(details);
+    return {
+      classeSecondaire: !!document.querySelector('footer.footer.footer--secondaire'),
+      memeLigne: Math.abs(rectA.top - rectM.top) < 1,
+      centreVertical: styleLocation.alignItems,
+      flexFlow: styleLocation.flexFlow,
+      separateurVisible: getComputedStyle(sep).display !== 'none',
+      traitHaut: styleDetails.borderTopWidth + ' ' + styleDetails.borderTopColor,
+      traitBas: styleDetails.borderBottomWidth + ' ' + styleDetails.borderBottomColor,
+    };
+  });
+  assert.ok(lignePied.classeSecondaire, 'le pied de la page intérieure est marqué footer--secondaire');
+  assert.ok(lignePied.memeLigne, 'adresse et métro doivent être sur la même ligne');
+  assert.equal(lignePied.centreVertical, 'center', 'la ligne doit être centrée sur l’axe vertical');
+  assert.ok(lignePied.flexFlow.includes('nowrap'), 'pas de retour à la ligne (responsive)');
+  assert.ok(lignePied.separateurVisible, 'le séparateur • entre adresse et métro reste visible');
+  assert.equal(lignePied.traitHaut, '1px rgba(216, 178, 87, 0.55)', 'léger trait doré au-dessus du bloc');
+  assert.equal(lignePied.traitBas, '1px rgba(216, 178, 87, 0.55)', 'léger trait doré en-dessous du bloc');
+  const pageGarde = await piedMobile.newPage();
+  await pageGarde.goto(`${origineLocale}/index.html?lang=fr`, {waitUntil:'domcontentloaded'});
+  const sansTrait = await pageGarde.evaluate(() => {
+    const details = document.querySelector('.footer .footer-details');
+    const style = getComputedStyle(details);
+    return {
+      classeSecondaire: !!document.querySelector('footer.footer.footer--secondaire'),
+      traitHaut: style.borderTopWidth,
+    };
+  });
+  assert.equal(sansTrait.classeSecondaire, false, 'la page de garde n’est pas marquée footer--secondaire');
+  assert.equal(sansTrait.traitHaut, '0px', 'la page de garde n’a pas le trait de séparation');
+  await pagePied.setViewportSize({width:280,height:640});
+  const etroit = await pagePied.evaluate(() => {
+    const adresse = document.querySelector('.footer-details__location .footer-address-link');
+    const metro = document.querySelector('.footer-details__location .footer-details__metro');
+    return Math.abs(adresse.getBoundingClientRect().top - metro.getBoundingClientRect().top) < 1;
+  });
+  assert.ok(etroit, 'même à 280 px, adresse et métro restent sur la même ligne');
+  await piedMobile.close();
+  console.log('  ok   Pied des pages intérieures : trait doré haut/bas, adresse • métro sur une même ligne centrée, responsive');
+
   const widgetAccueil = await page.evaluate(() => ({
     heading: document.getElementById('cover-reviews-title')?.textContent.trim(),
     button: document.getElementById('google-reviews-load')?.textContent.trim(),

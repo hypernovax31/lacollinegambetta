@@ -649,6 +649,31 @@ html:not(.carte-doc) .footer-details__separator { color:#fff !important; }
   html:not(.carte-doc) .footer-details__separator { display:none; }
 }
 
+/* Pieds des pages intérieures (hors page de garde) : la marque et la ligne
+   adresse • métro sont encadrées d'un léger trait doré — la couleur de la
+   thématique du site — et l'adresse + le métro restent sur UNE même ligne,
+   centrée sur l'axe vertical, à toutes les largeurs (défilement horizontal
+   discret si l'écran est très étroit). Sélecteurs plus spécifiques que les
+   media queries ci-dessus : ils priment. */
+html:not(.carte-doc) .footer--secondaire .footer-details {
+  border-top:1px solid rgba(216,178,87,.55);
+  border-bottom:1px solid rgba(216,178,87,.55);
+  padding:12px 8px;
+}
+html:not(.carte-doc) .footer--secondaire .footer-details__location {
+  flex-flow:row nowrap; align-items:center; justify-content:center;
+  max-width:100%; overflow-x:auto; overflow-y:hidden; scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+html:not(.carte-doc) .footer--secondaire .footer-details__location::-webkit-scrollbar { display:none; }
+html:not(.carte-doc) .footer--secondaire .footer-details__location > * {
+  flex:0 0 auto; white-space:nowrap;
+}
+html:not(.carte-doc) .footer--secondaire .footer-details__location > a {
+  flex:0 0 auto; white-space:nowrap; text-align:center;
+}
+html:not(.carte-doc) .footer--secondaire .footer-details__separator { display:inline; }
+
 /* Même traitement pour l'adresse affichée sur la couverture. */
 html:not(.carte-doc) .cover-footer-address {
   display:flex; flex-flow:row nowrap; align-items:center; justify-content:flex-start;
@@ -842,7 +867,7 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:focus-visible {
 
     <p style="margin:24px 4px 0;color:var(--muted);font-size:.82rem">Dernière mise à jour : <time datetime="2026-09-24">24 septembre 2026</time></p>
   </main>
-    <footer class="footer">
+    <footer class="footer footer--secondaire">
       <div class="footer-download-wrap"><a class="footer-download" href="Carte_LaCollineGambetta.pdf" download="Carte_LaCollineGambetta.pdf" title="Télécharger la carte au format PDF">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11.5"/><path d="M7.5 11.2 12 15.7l4.5-4.5"/><path d="M4.5 19.5h15"/></svg>
         <span>Télécharger la carte (PDF)</span>

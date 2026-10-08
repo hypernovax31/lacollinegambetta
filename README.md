@@ -188,8 +188,18 @@ page** et c'est elle qui porte l'**itinéraire RATP**.
   l'arrivée remplie.
 
 Aucune page intermédiaire, aucun écran de refus, aucune redirection forcée :
-le site ne demande **jamais** la géolocalisation et ne déclenche aucun Intent
-sur ordinateur. Le handoff vit dans `assets/js/ratp-itinerary.js`.
+le site ne demande la géolocalisation que pour pré-remplir le départ quand le
+site RATP s'ouvre, et ne déclenche aucun Intent sur ordinateur. Le handoff vit
+dans `assets/js/ratp-itinerary.js`.
+
+**Pieds des pages intérieures** (réservation, mentions légales, confidentialité
+— hors page de garde) : la marque « LA COLLINE GAMBETTA » et la ligne
+adresse • métro sont encadrées d'un **léger trait doré** (haut et bas,
+`rgba(216,178,87,.55)`, la couleur de la thématique), et l'adresse
+« 4 RUE BELGRAND • 75020 PARIS » + « MÉTRO GAMBETTA • LIGNE 3 » restent sur
+**une même ligne**, centrée sur l'axe vertical, à toutes les largeurs
+(défilement horizontal discret si l'écran est très étroit). La page de garde
+et la page 404 ne sont pas concernées.
 
 ### Vérification
 

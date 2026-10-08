@@ -2463,6 +2463,31 @@ html:not(.carte-doc) .footer-details__separator { color:#fff !important; }
   html:not(.carte-doc) .footer-details__separator { display:none; }
 }
 
+/* Pieds des pages intérieures (hors page de garde) : la marque et la ligne
+   adresse • métro sont encadrées d'un léger trait doré — la couleur de la
+   thématique du site — et l'adresse + le métro restent sur UNE même ligne,
+   centrée sur l'axe vertical, à toutes les largeurs (défilement horizontal
+   discret si l'écran est très étroit). Sélecteurs plus spécifiques que les
+   media queries ci-dessus : ils priment. */
+html:not(.carte-doc) .footer--secondaire .footer-details {
+  border-top:1px solid rgba(216,178,87,.55);
+  border-bottom:1px solid rgba(216,178,87,.55);
+  padding:12px 8px;
+}
+html:not(.carte-doc) .footer--secondaire .footer-details__location {
+  flex-flow:row nowrap; align-items:center; justify-content:center;
+  max-width:100%; overflow-x:auto; overflow-y:hidden; scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+html:not(.carte-doc) .footer--secondaire .footer-details__location::-webkit-scrollbar { display:none; }
+html:not(.carte-doc) .footer--secondaire .footer-details__location > * {
+  flex:0 0 auto; white-space:nowrap;
+}
+html:not(.carte-doc) .footer--secondaire .footer-details__location > a {
+  flex:0 0 auto; white-space:nowrap; text-align:center;
+}
+html:not(.carte-doc) .footer--secondaire .footer-details__separator { display:inline; }
+
 /* Même traitement pour l'adresse affichée sur la couverture. */
 html:not(.carte-doc) .cover-footer-address {
   display:flex; flex-flow:row nowrap; align-items:center; justify-content:flex-start;
@@ -2873,7 +2898,7 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:focus-visible {
     </div>
   </main>
 
-  <footer class="footer">
+  <footer class="footer footer--secondaire">
       <div class="footer-note"><span class="star-gold">✦</span> Prix nets en euros • service compris <span class="star-gold">✦</span></div>
       <div class="footer-legal">
         <span class="legal-item">Photographies non contractuelles, suggestions de présentation</span>
