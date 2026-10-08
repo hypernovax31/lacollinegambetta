@@ -441,10 +441,10 @@ const tracesSecours = ['index.html', 'reservation.html', 'mentions-legales.html'
 tracesSecours.length === 0 && !existsSync(racine + 'ratp-fallback.html') && !existsSync(racine + 'assets/js/ratp-fallback.js')
   ? ok('metro : aucune page de secours ni demande de position, plus aucun renvoi residuel')
   : ko('metro : page de secours ou demande de position encore presente (' + tracesSecours.join(', ') + ')');
-d.querySelector('meta[name="apple-itunes-app"]')?.content === 'app-id=507107090' &&
-  lire('reservation.html').includes('app-id=507107090')
-  ? ok('iOS : Safari propose d’ouvrir Bonjour RATP via la bannière système')
-  : ko('iOS : bannière système Bonjour RATP absente');
+!index.includes('apple-itunes-app') && !lire('reservation.html').includes('apple-itunes-app') &&
+  !index.includes('507107090') && !lire('reservation.html').includes('507107090')
+  ? ok('iOS : aucune bannière système, l’application n’est proposée qu’au clic sur le lien')
+  : ko('iOS : une bannière système ou un identifiant d’application traîne dans une page');
 
 
 const fichiersLiensExternes = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html'];

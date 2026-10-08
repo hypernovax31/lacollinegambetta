@@ -109,8 +109,10 @@ try {
   const iphone = await ios.newPage();
   await poserInterception(ios, origin, journalIOS);
   await iphone.goto(`${origin}/index.html?lang=fr`, { waitUntil: 'domcontentloaded' });
-  assert.equal(await iphone.locator('meta[name="apple-itunes-app"]').getAttribute('content'), 'app-id=507107090',
-    'Safari iOS doit proposer nativement d’ouvrir Bonjour RATP');
+  assert.equal(await iphone.locator('meta[name="apple-itunes-app"]').count(), 0,
+    'aucune bannière système ne doit s’afficher dans Safari');
+  assert.equal(await iphone.locator('link[href^="itms-apps"], a[href^="itms-apps"]').count(), 0,
+    'aucune proposition d’installation ne doit être présente hors clic');
   const [ongletIOS] = await Promise.all([
     iphone.waitForEvent('popup'),
     iphone.locator('[data-ratp-itineraire]').first().click(),
@@ -122,7 +124,8 @@ try {
     'l’arrivée du restaurant doit être remplie sur iPhone aussi');
   await iphone.waitForTimeout(500);
   const tentativeIOS = journalIOS.find((url) => url.startsWith('https://www.bonjour-ratp.fr/itineraires/?end='));
-  assert.ok(tentativeIOS, 'iOS doit viser le lien universel Bonjour RATP');
+  assert.ok(tentativeIOS,
+    'c’est le clic qui doit proposer l’application : iOS reçoit le lien universel Bonjour RATP');
   assert.equal(new URL(tentativeIOS).searchParams.get('end'), ARRIVEE);
   assert.ok(!journalIOS.some((url) => url.startsWith('intent://')),
     'iOS ne doit pas recevoir d’Intent Android');

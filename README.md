@@ -162,9 +162,10 @@ page** et c'est elle qui porte l'**itinéraire RATP**.
 - Le trajet est **déjà ouvert dans un nouvel onglet** sur `ratp.fr/itineraires`
   au moment du tap, arrivée remplie (`?end=4 Rue Belgrand 75020 Paris`) :
   l'application installée ou non, le voyageur garde un onglet utilisable.
-- Sur **iOS**, Safari propose en plus d'ouvrir l'application via la **bannière
-  système** (`apple-itunes-app`, app-id 507107090) sur la page de garde et la
-  réservation.
+- Sur **iOS**, c'est le clic qui propose l'application : le lien universel
+  `bonjour-ratp.fr` ouvre Bonjour RATP si elle est installée. Aucune bannière
+  système (`apple-itunes-app`) n'est déclarée, aucune proposition n'apparaît
+  hors du clic sur la mention du métro.
 - Sur **ordinateur**, le lien web RATP s'ouvre dans un nouvel onglet avec
   l'arrivée remplie.
 
@@ -184,8 +185,8 @@ ouvert et vérifié (bon site, en ligne, à jour). Avant d'ajouter un lien au
 site, on le vérifie puis on l'inscrit dans cette liste.
 
 Il vérifie aussi le parcours « Métro Gambetta • Ligne 3 » : lien web RATP,
-lien universel Bonjour RATP, Intent Android, bannière iOS et absence de toute
-page intermédiaire ou demande de position.
+lien universel Bonjour RATP, Intent Android, absence de bannière système iOS,
+de page intermédiaire et de demande de position.
 `node tools/verifier_ratp_itineraires.mjs` rejoue ce parcours dans Chromium
 (mobile Android puis iPhone) avec des fixtures locales : l'application est
 visée, le trajet s'ouvre dans un nouvel onglet avec l'arrivée remplie, sans
