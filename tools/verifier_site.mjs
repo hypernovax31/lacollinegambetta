@@ -426,13 +426,25 @@ const pagesRATP = ['index.html', 'reservation.html', 'mentions-legales.html', 'c
 pagesRATP.every((f) => lire(f).includes('assets/js/ratp-itinerary.js'))
   ? ok('metro : script de handoff charge par les quatre pages (application d’abord, trajet en nouvel onglet)')
   : ko('metro : une page n’embarque pas assets/js/ratp-itinerary.js');
+const blocSecours = ratpItineraireScript.slice(
+  ratpItineraireScript.indexOf('window.setTimeout'),
+  ratpItineraireScript.indexOf('}, DELAI_APP);'));
+const apresSecours = ratpItineraireScript.slice(ratpItineraireScript.indexOf('}, DELAI_APP);'));
 ratpItineraireScript.includes('intent://') &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
-  ratpItineraireScript.includes("window.open(trajet, '_blank')") &&
+  /DELAI_APP = 1500/.test(ratpItineraireScript) &&
+  // le trajet différé est bien dans le minuteur, rien d'autre
+  blocSecours.includes("window.open(trajet, '_blank')") &&
+  blocSecours.includes('applicationOuverte') &&
+  // l'application est visée tout de suite, hors du minuteur (sinon le
+  // système refuse le lancement depuis un onglet déjà en arrière-plan)
+  !blocSecours.includes('window.location.assign(intentUrl') &&
+  apresSecours.includes('window.location.assign(intentUrl(appUrl, trajet))') &&
+  apresSecours.includes('window.location.assign(appUrl)') &&
   !ratpItineraireScript.includes('navigator.geolocation')
-  ? ok('metro : Intent Android, trajet en nouvel onglet et aucune demande de position')
-  : ko('metro : handoff incomplet ou demande de position dans le site');
+  ? ok('metro : l’application est visée au clic, trajet ensuite, aucune demande de position')
+  : ko('metro : handoff incomplet, ordre incorrect ou demande de position');
 const tracesSecours = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html']
   .filter((f) => /ratp-fallback/i.test(lire(f)))
   .concat(['i18n.js', 'legal-i18n.js', 'ratp-itinerary.js']

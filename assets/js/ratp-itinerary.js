@@ -1,15 +1,21 @@
 /* Mention « Métro Gambetta • Ligne 3 » : ouvre l'application Bonjour RATP.
-   - L'application d'abord : le domaine bonjour-ratp.fr est déclaré par l'app
-     elle-même (App Links Android pour com.fabernovel.ratp, lien universel iOS),
-     donc le lien universel suffit ; sous Android Chrome, un Intent explicite
-     vise en plus le paquet officiel.
-   - Application absente : le trajet est déjà ouvert dans un NOUVEL onglet sur
-     ratp.fr, arrivée remplie (l'onglet courant revient simplement au site).
+   - Le clic vise l'APPLICATION d'abord, dans l'onglet courant : iOS reçoit le
+     lien universel bonjour-ratp.fr (celui que l'app déclare elle-même dans son
+     apple-app-site-association), Android Chrome un Intent explicite vers le
+     paquet com.fabernovel.ratp. C'est la seule façon pour iOS et Android de
+     proposer l'application : depuis un onglet en arrière-plan, le système
+     refuse ce lancement.
+   - Si l'application ne prend pas la main (page toujours visible), le trajet
+     s'ouvre automatiquement : nouvel onglet sur ratp.fr si le navigateur
+     l'autorise, sinon dans l'onglet courant.
    - Ordinateur : comportement natif du lien (site RATP, nouvel onglet).
    Aucune page intermédiaire, aucune demande de position par le site. */
 (function () {
   'use strict';
 
+  /* Délai laissé à l'application : au-delà, la page est toujours visible,
+     donc rien ne s'est ouvert. */
+  var DELAI_APP = 1500;
   var REDOUBLE_MS = 1200;
 
   var agent = navigator.userAgent || '';
@@ -22,9 +28,8 @@
   var androidChrome = /Android/i.test(agent) && /Chrome/i.test(agent) &&
     !/(EdgA|OPR|SamsungBrowser|DuckDuckGo|; wv)/i.test(agent);
 
-  /* Intent Android : application d'abord ; si elle manque, Chrome ouvre la
-     page indiquée par S.browser_fallback_url (ici, le trajet déjà ouvert dans
-     un nouvel onglet, ou la page courante pour ne rien afficher en double). */
+  /* Intent Android : application d'abord ; si elle manque, Chrome ouvre le
+     trajet RATP (arrivée remplie), sans page intermédiaire. */
   function intentUrl(appUrl, repli) {
     var app = new URL(appUrl);
     return 'intent://' + app.host + app.pathname + app.search +
@@ -38,37 +43,47 @@
     if (!appUrl || !trajet) return;
 
     /* Écran tactile : le lien vise l'application, jamais un nouvel onglet par
-       défaut (c'est le script qui décide, au tap). */
+       défaut (c'est le script qui décide, au clic). */
     lien.href = appUrl;
     lien.removeAttribute('target');
 
-    var dernierTap = 0;
+    var dernierClic = 0;
     lien.addEventListener('click', function (event) {
       var maintenant = Date.now();
       event.preventDefault();
-      if (maintenant - dernierTap < REDOUBLE_MS) return;
-      dernierTap = maintenant;
+      if (maintenant - dernierClic < REDOUBLE_MS) return;
+      dernierClic = maintenant;
 
-      /* 1. Le trajet RATP dans un nouvel onglet : c'est lui que l'internaute
-         garde, application installée ou non. */
-      var onglet = null;
-      try {
-        onglet = window.open(trajet, '_blank');
-      } catch (e) {
-        onglet = null;
-      }
-      /* Onglet refusé par le navigateur : le trajet prendra la place courante. */
-      var repli = onglet ? window.location.href : trajet;
+      /* L'application a pris la main : la page passe en arrière-plan ou est
+         quittée. On renonce alors au trajet : c'est l'app qui calcule. */
+      var applicationOuverte = false;
+      window.addEventListener('pagehide', function () { applicationOuverte = true; }, { once: true });
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) applicationOuverte = true;
+      }, { once: true });
 
-      /* 2. L'application dans l'onglet courant. */
+      /* Filet de sécurité : si rien ne s'est ouvert (application absente et
+         lancement bloqué, navigateur intégré par exemple), le trajet RATP
+         s'ouvre tout seul, arrivée remplie. */
+      window.setTimeout(function () {
+        if (applicationOuverte || document.hidden) return;
+        var onglet = null;
+        try {
+          onglet = window.open(trajet, '_blank');
+        } catch (e) {
+          onglet = null;
+        }
+        if (!onglet) window.location.assign(trajet);
+      }, DELAI_APP);
+
+      /* L'application maintenant : c'est ce clic qui la propose. */
       if (androidChrome) {
         try {
-          window.location.assign(intentUrl(appUrl, repli));
+          window.location.assign(intentUrl(appUrl, trajet));
         } catch (e) {
           window.location.assign(appUrl);
         }
       } else {
-        /* Lien universel : iOS propose ou ouvre Bonjour RATP. */
         window.location.assign(appUrl);
       }
     });
