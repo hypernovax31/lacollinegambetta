@@ -100,12 +100,48 @@ try {
   await page.waitForFunction(() =>
     document.getElementById('google-reviews-load')?.textContent.trim() === 'Спробувати ще раз');
 
-  const metroCouverture = await page.locator('#cover-section .cover-footer-address__metro').evaluate((mention) => ({
-    tag:mention.tagName, texte:mention.textContent.trim(), lien:mention.closest('a') ? mention.closest('a').href : '',
+  const ratpTactile = await page.locator('#cover-section [data-ratp-itineraire]').evaluate((link) => ({
+    href:link.href,target:link.target,appHref:link.getAttribute('data-ratp-app-href'),
+    secours:link.getAttribute('data-ratp-fallback-path'),texte:link.textContent.trim(),title:link.title,
   }));
-  assert.equal(metroCouverture.tag, 'SPAN', 'la mention du métro doit rester du texte simple');
-  assert.equal(metroCouverture.texte, 'метро Ґамбетта • Лінія 3', 'la mention du métro doit être traduite');
-  assert.equal(metroCouverture.lien, '', 'la mention du métro ne doit plus ouvrir l’application ou le site RATP');
+  assert.ok(ratpTactile.href.startsWith('https://www.bonjour-ratp.fr/itineraires/?end='),
+    'sur mobile, le tap doit viser l’application Bonjour RATP');
+  assert.equal(new URL(ratpTactile.href).searchParams.get('end'), '4, Rue Belgrand, 75, Paris',
+    'l’application doit recevoir l’adresse du restaurant comme arrivée');
+  assert.equal(ratpTactile.target, '', 'le lien tactile ne doit pas s’ouvrir dans un nouvel onglet');
+  assert.equal(ratpTactile.href, ratpTactile.appHref);
+  assert.equal(ratpTactile.secours, '/ratp-fallback.html',
+    'si l’application manque, la page de secours locale prend le relais');
+  assert.equal(ratpTactile.texte, 'метро Ґамбетта • Лінія 3', 'la mention du métro doit être traduite');
+  assert.ok(/Bonjour RATP/.test(ratpTactile.title), 'l’infobulle traduite doit annoncer Bonjour RATP');
+
+  const contexteAndroid=await navigateur.newContext({
+    viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true,
+    userAgent:'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36',
+  });
+  const pageAndroid=await contexteAndroid.newPage();
+  await pageAndroid.route('**/*', async (route) => {
+    const url=new URL(route.request().url());
+    if (url.origin===origineLocale) await route.continue(); else await route.abort();
+  });
+  await pageAndroid.goto(`${origineLocale}/index.html`,{waitUntil:'domcontentloaded'});
+  const hrefAndroid=await pageAndroid.locator('#cover-section [data-ratp-itineraire]').evaluate((link)=>({
+    href:link.href,target:link.target,web:link.href.match(/browser_fallback_url=([^;]+);end$/)?.[1],
+  }));
+  assert.ok(hrefAndroid.href.startsWith('intent://www.bonjour-ratp.fr/itineraires/?end='),
+    'Android Chrome doit appeler directement l’Intent Bonjour RATP');
+  assert.equal(new URL(decodeURIComponent(hrefAndroid.href.replace(/^intent:\/\//, 'https://').split('#')[0])).searchParams.get('end'),
+    '4, Rue Belgrand, 75, Paris', 'l’Intent doit porter l’adresse du restaurant en arrivée');
+  assert.ok(hrefAndroid.href.includes('#Intent;scheme=https;package=com.fabernovel.ratp;'),
+    'l’Intent Android doit désigner le paquet officiel Bonjour RATP');
+  const secoursAndroid = new URL(decodeURIComponent(hrefAndroid.web));
+  assert.equal(secoursAndroid.origin, origineLocale,
+    'si l’app manque, Chrome doit ouvrir la page de secours du site');
+  assert.equal(secoursAndroid.pathname, '/ratp-fallback.html');
+  assert.equal(secoursAndroid.searchParams.get('source'), 'metro');
+  assert.equal(hrefAndroid.target,'');
+  await contexteAndroid.close();
+  console.log('  ok   Chromium : application au tap, Intent Android et page de secours locale');
 
   const widgetAccueil = await page.evaluate(() => ({
     heading: document.getElementById('cover-reviews-title')?.textContent.trim(),
@@ -229,16 +265,17 @@ try {
   await verifierNoelVue('retour de navigation',{cover:'flex',menu:'none'});
   console.log('  ok   Chromium : animation de Noël en couverture, Menu & Carte et reprise au retour');
 
-  const metroDesktop = await pageSurvol.locator('#cover-section .cover-footer-address__metro').evaluate((mention) => ({
-    tag:mention.tagName,
-    lien:mention.closest('a') ? mention.closest('a').href : '',
-    texte:mention.textContent.trim(),
+  const ratpDesktop = await pageSurvol.locator('#cover-section [data-ratp-itineraire]').evaluate((link) => ({
+    href:link.href,
+    target:link.target,
+    appHref:link.getAttribute('data-ratp-app-href'),
   }));
-  assert.equal(metroDesktop.tag, 'SPAN', 'sur ordinateur, la mention du métro reste du texte simple');
-  assert.equal(metroDesktop.lien, '',
-    'sur ordinateur, la mention du métro ne doit renvoyer ni vers l’application ni vers le site RATP');
-  assert.ok(/gambetta/i.test(metroDesktop.texte) && !/ratp|bonjour/i.test(metroDesktop.texte),
-    'sur ordinateur, la mention traduite du métro reste affichée, sans référence RATP');
+  assert.ok(ratpDesktop.href.startsWith('https://www.ratp.fr/itineraires?end='),
+    'sur ordinateur, le site RATP doit recevoir la destination du restaurant');
+  assert.equal(new URL(ratpDesktop.href).searchParams.get('end'), '4, Rue Belgrand, 75, Paris',
+    'le lien web doit porter l’adresse complète du restaurant');
+  assert.equal(ratpDesktop.target, '_blank', 'le lien web sur ordinateur doit garder son onglet externe');
+  assert.ok(ratpDesktop.appHref.startsWith('https://www.bonjour-ratp.fr/itineraires/?end='));
   const medaillon=pageSurvol.locator('#cover-section .medallion-frame');
   await medaillon.waitFor({ state:'visible' });
   await pageSurvol.waitForFunction(() => {
@@ -332,9 +369,11 @@ try {
           .map((element)=>parseFloat(getComputedStyle(element).fontSize)),
         statusFontSize:parseFloat(getComputedStyle(document.querySelector('#cover-section [data-hours-status]')).fontSize),
         addressFontSize:parseFloat(getComputedStyle(document.querySelector('#cover-section .cover-footer-address [data-default-map]')).fontSize),
-        metroFontSize:parseFloat(getComputedStyle(document.querySelector('#cover-section .cover-footer-address__metro')).fontSize),
-        metroTag:document.querySelector('#cover-section .cover-footer-address__metro').tagName,
-        metroHref:document.querySelector('#cover-section .cover-footer-address__metro').closest('a')?.href || '',
+        metroFontSize:parseFloat(getComputedStyle(document.querySelector('#cover-section [data-ratp-itineraire]')).fontSize),
+        metroTag:document.querySelector('#cover-section [data-ratp-itineraire]').tagName,
+        metroTarget:document.querySelector('#cover-section [data-ratp-itineraire]').target,
+        metroHref:document.querySelector('#cover-section [data-ratp-itineraire]').href,
+        metroAppHref:document.querySelector('#cover-section [data-ratp-itineraire]').getAttribute('data-ratp-app-href'),
         neighborhoodOverflow:(() => {
           const nav=document.querySelector('#cover-more .footer-quartier--cover');
           return nav.scrollWidth>nav.clientWidth+1 || [...nav.children].some((item)=>{
@@ -362,10 +401,16 @@ try {
 
   for (const [largeur, hauteur] of [[1365,768], [390,844], [320,640], [300,640], [280,640], [844,390], [667,375]]) {
     const disposition=await mesurerLignesCouverture(largeur, hauteur);
-    assert.equal(disposition.metroTag, 'SPAN',
-      `la mention du métro doit rester du texte simple à ${largeur}×${hauteur}px`);
-    assert.equal(disposition.metroHref, '',
-      `la mention du métro ne doit renvoyer vers aucun site à ${largeur}×${hauteur}px`);
+    assert.equal(disposition.metroTag, 'A',
+      `la mention du métro doit porter l’itinéraire à ${largeur}×${hauteur}px`);
+    assert.equal(disposition.metroTarget, '',
+      `le lien doit viser l’application au tap à ${largeur}×${hauteur}px`);
+    assert.ok(disposition.metroHref.startsWith('https://www.bonjour-ratp.fr/itineraires/?end='),
+      `le lien tactile doit viser Bonjour RATP à ${largeur}×${hauteur}px`);
+    assert.equal(new URL(disposition.metroHref).searchParams.get('end'), '4, Rue Belgrand, 75, Paris',
+      `le lien tactile doit porter l’arrivée complète à ${largeur}×${hauteur}px`);
+    assert.equal(disposition.metroAppHref, disposition.metroHref,
+      `le handoff ne doit pas perdre l’adresse de destination à ${largeur}×${hauteur}px`);
     assert.equal(disposition.addressFontSize, disposition.metroFontSize, `l’adresse et le métro doivent garder la même taille à ${largeur}×${hauteur}px`);
     assert.ok(Math.abs(disposition.hoursLineFontSize/disposition.addressFontSize-1.2)<.01 &&
       Math.abs(disposition.statusFontSize/disposition.addressFontSize-1.2)<.01 &&
@@ -605,7 +650,7 @@ try {
     assert.ok(detail.text.length > 40, `texte de dégustation ${categories[index]} absent`);
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
-  assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100502'), 'le navigateur a servi l’ancienne version i18n');
+  assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100801'), 'le navigateur a servi l’ancienne version i18n');
   assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100601'), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#24102e">
+  <title>Itinéraire RATP — La Colline Gambetta</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh; margin: 0; padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
+      display: grid; place-items: center; color: #fff;
+      background: radial-gradient(ellipse at 50% 0, #55316a 0, #32193f 46%, #24102e 100%);
+    }
+    main {
+      width: min(100%, 620px); padding: clamp(22px, 5vw, 40px);
+      border: 1px solid rgba(240, 220, 168, .42); border-radius: 18px;
+      background: rgba(25, 11, 33, .72); box-shadow: 0 18px 54px rgba(0, 0, 0, .24);
+    }
+    .brand { margin: 0 0 12px; color: #f0dca8; font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-align: center; }
+    h1 { margin: 0; color: #fff; font-size: clamp(1.35rem, 5vw, 1.8rem); line-height: 1.25; text-align: center; }
+    .intro { margin: 14px 0 10px; line-height: 1.6; text-align: center; }
+    .privacy { margin: 14px 0 18px; padding: 12px 14px; border-inline-start: 3px solid #d8b257; border-radius: 6px; background: rgba(255,255,255,.06); color: #f4edf7; font-size: .88rem; line-height: 1.55; }
+    #ratp-fallback-status { min-height: 1.5em; margin: 12px 0; color: #f0dca8; font-weight: 600; text-align: center; }
+    button, input { width: 100%; min-height: 48px; border-radius: 9px; font: inherit; }
+    button { padding: 11px 16px; border: 1px solid #e2c77f; color: #24102e; background: #e2c77f; font-weight: 700; cursor: pointer; }
+    button:hover { background: #f0dca8; }
+    button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid #f0dca8; outline-offset: 3px; }
+    button:disabled { cursor: progress; opacity: .72; }
+    form { display: grid; gap: 9px; margin-top: 20px; }
+    label { font-weight: 600; }
+    input { padding: 10px 12px; border: 1px solid rgba(255,255,255,.42); color: #24102e; background: #fff; }
+    .no-position { display: block; margin: 17px 0 0; color: #f0dca8; font-weight: 600; text-align: center; text-underline-offset: 3px; }
+    .legal { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; margin-top: 24px; font-size: .85rem; }
+    .legal a { color: #e8d7ae; text-underline-offset: 3px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  </style>
+  <script src="assets/js/ratp-fallback.js?v=2026100801" defer></script>
+</head>
+<body>
+  <main>
+    <p class="brand">LA COLLINE GAMBETTA</p>
+    <h1 id="ratp-fallback-title" data-copy="title">Bonjour RATP n’a pas pu s’ouvrir</h1>
+    <p class="intro" data-copy="intro">Préparez un itinéraire RATP vers La Colline Gambetta, 4 Rue Belgrand, 75020 Paris, à partir de votre position ou d’un départ saisi manuellement.</p>
+    <p class="privacy" data-copy="privacy">La position n’est demandée qu’après votre action et avec l’autorisation du navigateur. Si vous l’autorisez, ses coordonnées sont envoyées à api-adresse.data.gouv.fr pour être converties en adresse; l’itinéraire transmis à RATP contient cette adresse, pas vos coordonnées. Vous pouvez refuser et saisir un départ.</p>
+    <p id="ratp-fallback-status" role="status" aria-live="polite" data-copy="initial">Préparation de la demande de localisation…</p>
+    <button id="ratp-use-location" type="button" data-copy="useLocation">Utiliser ma position</button>
+    <form id="ratp-manual-form">
+      <label for="ratp-departure" data-copy="departureLabel">Départ (adresse ou station)</label>
+      <input id="ratp-departure" type="text" maxlength="160" autocomplete="street-address" placeholder="Saisir une adresse ou une station" required>
+      <button type="submit" data-copy="openManual">Ouvrir l’itinéraire RATP</button>
+    </form>
+    <a id="ratp-no-position" class="no-position" href="https://www.ratp.fr/itineraires?end=4%2C+Rue+Belgrand%2C+75%2C+Paris" target="_blank" rel="noopener" data-copy="continueWithout">Continuer sans position sur RATP</a>
+    <nav class="legal" aria-label="Liens utiles">
+      <a href="/" data-copy="back">Retour à La Colline Gambetta</a>
+      <a href="/confidentialite.html" data-copy="privacyLink">Confidentialité</a>
+    </nav>
+    <noscript><p>JavaScript est nécessaire pour préparer automatiquement le départ; vous pouvez saisir un départ dans le formulaire ou continuer sans position.</p></noscript>
+  </main>
+</body>
+</html>

@@ -133,7 +133,7 @@ Galerie de la bibliothèque : `assets/vector/apercu.html`.
   JavaScript) et `robots.txt`.
 - Page `404.html` sobre, aux couleurs du site.
 
-### Pied de page commun et mention du métro
+### Pied de page commun et itinéraire RATP
 
 `tools/pied_quartier.py` pose le **même pied de page sur toutes les pages**,
 page de garde comprise :
@@ -152,10 +152,26 @@ modifier la liste `POINTS` (libellé, adresse, latitude, longitude) : le tri se
 refait tout seul.
 
 Plus de redite : « MÉTRO GAMBETTA • LIGNE 3 » n'apparaît **qu'une fois par
-page**, en **texte simple** : la ligne donne l'information pratique sans
-renvoyer vers un site ni une application de transport. Le site ne demande
-jamais la géolocalisation, n'ouvre aucun onglet provisoire et ne déclare
-aucune bannière d'application tierce (pas de Smart App Banner iOS).
+page** et c'est elle qui porte l'**itinéraire RATP**.
+
+- Sur **mobile**, le tap ouvre l'**application Bonjour RATP** : Android Chrome
+  reçoit un Intent explicite (`com.fabernovel.ratp`, secours
+  `S.browser_fallback_url`), iOS et les autres mobiles le lien universel HTTPS
+  `bonjour-ratp.fr`. L'arrivée est l'adresse du restaurant, le départ la
+  position du téléphone.
+- Si l'application n'est pas installée, la **page de secours locale**
+  (`ratp-fallback.html`, `noindex`) demande l'autorisation de localisation au
+  tap, convertit la position en adresse via la Base Adresse Nationale, puis
+  ouvre `ratp.fr/itineraires` avec le **départ** (`?start=`) et l'**arrivée**
+  (`?end=4, Rue Belgrand, 75, Paris`) renseignés. Refus ou échec : saisie
+  manuelle, ou lien « continuer sans position » qui ne renseigne que l'arrivée.
+- Sur **ordinateur**, le lien web RATP s'ouvre dans un nouvel onglet avec
+  l'arrivée remplie.
+
+Le site principal ne demande **jamais** la géolocalisation : seule la page de
+secours le fait, après un tap explicite. Le handoff vit dans
+`assets/js/ratp-itinerary.js`, la conversion d'adresse dans
+`assets/js/ratp-fallback.js`.
 
 ### Vérification
 
@@ -168,10 +184,12 @@ doit figurer dans la liste `autorises` du script, c'est-à-dire avoir été
 ouvert et vérifié (bon site, en ligne, à jour). Avant d'ajouter un lien au
 site, on le vérifie puis on l'inscrit dans cette liste.
 
-Il vérifie aussi qu'**aucune page ne renvoie vers l'application ou le site
-RATP** : plus de lien `ratp.fr` ou `bonjour-ratp.fr`, plus d'Intent Android ni
-de Universal Link, plus de page de secours géolocalisée, plus de Smart App
-Banner iOS. La mention « MÉTRO GAMBETTA • LIGNE 3 » reste **en texte simple**.
+Il vérifie aussi le parcours « Métro Gambetta • Ligne 3 » : lien web RATP,
+lien universel Bonjour RATP, page de secours locale, conversion de la position
+en adresse et remplissage des cases départ (`?start=`) et arrivée (`?end=`)
+dans l'application comme sur le site. `node tools/verifier_ratp_fallback.mjs`
+rejoue ce parcours dans Chromium (Intent Android, position autorisée puis
+refusée) avec des fixtures locales, sans requête réelle.
 
 Ces trois scripts sont **idempotents** : on peut les relancer après toute
 modification du site.
