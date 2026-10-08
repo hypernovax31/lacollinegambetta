@@ -5,7 +5,7 @@
  */
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { createReadStream, existsSync, statSync } from 'node:fs';
+import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, normalize, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -142,7 +142,7 @@ try {
   pageAndroid.on('request',(r)=>requetesAndroid.push(r.url()));
   pageAndroid.on('popup',(p)=>popupsAndroid.push(p));
   await pageAndroid.locator('#cover-section [data-ratp-itineraire]').click();
-  await pageAndroid.waitForTimeout(3200);
+  await pageAndroid.waitForTimeout(800);
   const intentAndroid=requetesAndroid.find((u)=>u.startsWith('intent://'));
   assert.ok(intentAndroid,'Android Chrome doit viser l’application Bonjour RATP via un Intent');
   assert.ok(intentAndroid.startsWith('intent://www.bonjour-ratp.fr/itineraires/?end='),
@@ -153,8 +153,21 @@ try {
     'la page du site ne doit pas disparaître au profit de ratp.fr');
   assert.equal(await pageAndroid.locator('.footer-details__metro-site').count(),0,
     'et c’est tout : aucun lien manuel « Ouvrir le trajet sur ratp.fr » ajouté');
+  assert.ok(!requetesAndroid.some((u)=>u.includes('api-adresse.data.gouv.fr')),
+    'tant que l’application peut s’ouvrir, aucune position n’est demandée');
+  /* Le repli natif de l’Intent marque la page (?ratp=1) : c’est elle qui ouvrira
+     le site RATP avec le lieu actuel en départ si l’application est absente. */
+  const sourceHandoff=readFileSync(join(ROOT,'assets/js/ratp-itinerary.js'),'utf8');
+  const blocIntent=sourceHandoff.slice(sourceHandoff.indexOf('function intentUrl'),sourceHandoff.indexOf('/* Lieu actuel'));
+  const construireIntent=new Function(blocIntent+'\nreturn intentUrl;')();
+  const appHrefAndroid=await pageAndroid.locator('#cover-section [data-ratp-itineraire]').getAttribute('data-ratp-app-href');
+  const repliAttendu=new URL(`${origineLocale}/index.html`);
+  repliAttendu.searchParams.set('ratp','1');
+  const intentComplet=construireIntent(appHrefAndroid,repliAttendu.href);
+  assert.ok(intentComplet.includes('S.browser_fallback_url='+encodeURIComponent(repliAttendu.href)),
+    'le repli natif doit marquer la page (?ratp=1) pour ouvrir le site RATP ensuite');
   await contexteAndroid.close();
-  console.log('  ok   Chromium Android : Intent émis au clic, page du site intacte, aucun onglet ouvert');
+  console.log('  ok   Chromium Android : Intent émis au clic (repli natif ?ratp=1), page intacte, aucune position demandée');
 
   const widgetAccueil = await page.evaluate(() => ({
     heading: document.getElementById('cover-reviews-title')?.textContent.trim(),

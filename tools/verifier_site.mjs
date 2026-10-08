@@ -424,7 +424,7 @@ const i18n = lire('assets/js/i18n.js');
   !lire('assets/js/ratp-itinerary.js').includes('data-ratp-trajet-site')
   ? ok('metro : plus aucun lien manuel « Ouvrir le trajet sur ratp.fr », et c’est tout')
   : ko('metro : un lien manuel « Ouvrir le trajet sur ratp.fr » traîne encore');
-['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100807'))
+['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100808'))
   ? ok('i18n légal : scripts actualisés sur les pages juridiques')
   : ko('i18n légal : une page conserve l’ancienne version en cache');
 
@@ -442,27 +442,47 @@ ratpItineraireScript.includes("SCHEMA_APP = 'ratp://'") &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
   // la demande d'ouverture est émise tout de suite, au clic
-  corpsClic.includes('naviguer(intentUrl(appUrl, trajet))') &&
+  corpsClic.includes('repli.searchParams.set(PARAM_RETOUR, \'1\')') &&
+  corpsClic.includes('naviguer(intentUrl(appUrl, repli.href))') &&
   corpsClic.includes('essai.src = SCHEMA_APP') &&
-  // si l'application n'est pas là, le trajet s'ouvre dans un NOUVEL onglet,
-  // la page du site n'est pas remplacée (dernier recours : navigation courante)
-  ratpItineraireScript.includes("window.open(trajet, '_blank')") &&
-  ratpItineraireScript.includes('if (!onglet) naviguer(trajet)') &&
+  // si l'application n'est pas là, le site RATP s'ouvre : nouvel onglet sur
+  // iOS, page courante marquée ?ratp=1 sur Android (détectée au chargement)
+  ratpItineraireScript.includes("window.open(url, '_blank')") &&
+  ratpItineraireScript.includes('if (!onglet) naviguer(url)') &&
   ratpItineraireScript.includes('applicationOuverte || document.hidden') &&
+  ratpItineraireScript.includes("get(PARAM_RETOUR) === '1'") &&
+  ratpItineraireScript.includes('history.replaceState') &&
+  // le départ est le lieu actuel : géolocalisation + Base Adresse Nationale,
+  // et l'URL du trajet reçoit start=<adresse> en plus de end=<restaurant>
+  ratpItineraireScript.includes('navigator.geolocation') &&
+  ratpItineraireScript.includes('api-adresse.data.gouv.fr/reverse/') &&
+  ratpItineraireScript.includes("'start=' + encodeURIComponent(adresse)") &&
+  // la position n'est demandée que quand le site RATP s'ouvre (pas au
+  // chargement, pas si l'application s'ouvre)
+  ratpItineraireScript.indexOf('function lieuActuel') < ratpItineraireScript.indexOf('function ouvrirTrajet') &&
+  ratpItineraireScript.indexOf('function ouvrirTrajet') < ratpItineraireScript.indexOf('document.querySelectorAll') &&
   // et c'est tout : aucun lien manuel, aucune page intermédiaire
   !ratpItineraireScript.includes('data-ratp-trajet-site') &&
-  !ratpItineraireScript.includes('ajouterLienSite') &&
-  !ratpItineraireScript.includes('navigator.geolocation')
-  ? ok('metro : demande d’ouverture au clic, nouvel onglet si pas d’application, et c’est tout')
+  !ratpItineraireScript.includes('ajouterLienSite')
+  ? ok('metro : demande d’ouverture au clic, site RATP avec départ (lieu actuel) et arrivée si refus ou pas d’application')
   : ko('metro : demande d’ouverture, repli ou fioriture incorrects');
 const tracesSecours = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html']
   .filter((f) => /ratp-fallback/i.test(lire(f)))
-  .concat(['i18n.js', 'legal-i18n.js', 'ratp-itinerary.js']
-    .filter((f) => /ratp-fallback|api-adresse\.data\.gouv|navigator\.geolocation/i.test(lire('assets/js/' + f)))
+  /* legal-i18n.js contient la mention légale de la géolocalisation (traduite)
+     : ce n'est pas une demande de position, juste une traduction. */
+  .concat(['i18n.js', 'google-reviews.js', 'map-links.js']
+    .filter((f) => /ratp-fallback|api-adresse\.data\.gouv\/reverse|navigator\.geolocation/i.test(lire('assets/js/' + f)))
     .map((f) => 'assets/js/' + f));
 tracesSecours.length === 0 && !existsSync(racine + 'ratp-fallback.html') && !existsSync(racine + 'assets/js/ratp-fallback.js')
-  ? ok('metro : aucune page de secours ni demande de position, plus aucun renvoi residuel')
+  ? ok('metro : aucune page de secours ; la position n’est demandée que par le handoff RATP')
   : ko('metro : page de secours ou demande de position encore presente (' + tracesSecours.join(', ') + ')');
+// la mention légale de la géolocalisation doit exister, en français, et être
+// traduite dans legal-i18n.js (15 langues)
+const mentionGeoloc = 'Lors d’un clic sur la mention « Métro Gambetta • Ligne 3 »';
+lire('confidentialite.html').includes(mentionGeoloc) &&
+  (lire('assets/js/legal-i18n.js').match(/api-adresse\.data\.gouv\.fr/g) || []).length >= 15
+  ? ok('confidentialité : la géolocalisation du handoff RATP est déclarée et traduite (15 langues)')
+  : ko('confidentialité : la géolocalisation du handoff RATP n’est pas déclarée ou traduite');
 !index.includes('apple-itunes-app') && !lire('reservation.html').includes('apple-itunes-app') &&
   !index.includes('507107090') && !lire('reservation.html').includes('507107090')
   ? ok('iOS : aucune bannière système, l’application n’est proposée qu’au clic sur le lien')

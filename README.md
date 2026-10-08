@@ -154,21 +154,33 @@ refait tout seul.
 Plus de redite : « MÉTRO GAMBETTA • LIGNE 3 » n'apparaît **qu'une fois par
 page** et c'est elle qui porte l'**itinéraire RATP**.
 
-- Sur **mobile**, le tap **demande d'ouvrir l'application Bonjour RATP** :
-  schéma d'application `ratp://` (c'est lui qui déclenche la boîte de dialogue
-  « Ouvrir dans Bonjour RATP ? ») sur iOS et les autres mobiles — émis dans une
-  iframe jetable, pour que la page courante ne soit jamais remplacée (Safari
+- Sur **mobile**, le tap **demande d'ouvrir l'application Bonjour RATP**
+  (comme le plan le fait pour l'adresse postale) : schéma d'application
+  `ratp://` (c'est lui qui déclenche la boîte de dialogue « Ouvrir dans
+  Bonjour RATP ? ») sur iOS et les autres mobiles — émis dans une iframe
+  jetable, pour que la page courante ne soit jamais remplacée (Safari
   afficherait sinon « Impossible d'ouvrir la page » si l'app est absente) —
   et Intent explicite vers `com.fabernovel.ratp` sur Android Chrome.
-- **Si l'application n'est pas là**, le trajet s'ouvre dans un **nouvel
-  onglet** sur `ratp.fr/itineraires`, arrivée remplie
-  (`?end=4 Rue Belgrand 75020 Paris`) : la page du site du restaurant **n'est
-  jamais écrasée**. Sur Android Chrome, c'est l'Intent qui ouvre lui-même le
-  trajet (repli natif `S.browser_fallback_url`) ; sur iOS, c'est le minuteur
-  du script (2,5 s après le clic, tant que la page est restée visible).
+- **Si l'utilisateur refuse d'ouvrir l'app ou ne l'a pas installée**, une
+  nouvelle page ou un nouvel onglet s'ouvre sur `ratp.fr/itineraires` avec
+  **le lieu actuel de l'utilisateur en départ** (`?start=`) et **l'adresse du
+  restaurant en arrivée** (`?end=4 Rue Belgrand 75020 Paris`) :
+  * iOS : **nouvel onglet** (la page du site du restaurant n'est pas écrasée),
+    ouvert par le minuteur du script (~2 s après le clic, tant que la page est
+    restée visible) ;
+  * Android Chrome : l'Intent a un repli natif (`S.browser_fallback_url`) =
+    la page courante marquée `?ratp=1` ; au chargement, celle-ci ouvre le site
+    RATP (nouvelle page). Si l'utilisateur annule le sélecteur, rien ne se
+    passe.
+- Le **lieu actuel** n'est demandé (géolocalisation du navigateur, convertie
+  en adresse à la volée par la Base Adresse Nationale,
+  `api-adresse.data.gouv.fr/reverse/`) que quand le site RATP doit s'ouvrir :
+  jamais au chargement, jamais si l'application s'ouvre. Refus de la position
+  → le départ reste vide, l'arrivée reste remplie. La mention est déclarée
+  dans la page confidentialité (traduite en 15 langues).
 - Et c'est tout : si l'application s'ouvre, la page passe en arrière-plan et
   rien d'autre ne se passe. Aucune page intermédiaire, aucune bannière, aucun
-  lien manuel, aucune demande de position.
+  lien manuel.
 - Sur **iOS**, c'est le clic qui propose l'application : aucune bannière
   système (`apple-itunes-app`) n'est déclarée, aucune proposition n'apparaît
   en dehors du clic sur la mention du métro.
@@ -194,14 +206,17 @@ Il vérifie aussi le parcours « Métro Gambetta • Ligne 3 » : lien web RATP,
 lien universel Bonjour RATP, Intent Android, absence de bannière système iOS,
 de page intermédiaire et de demande de position.
 `node tools/verifier_ratp_itineraires.mjs` rejoue ce parcours dans Chromium
-avec des fixtures locales : sur Android l'Intent est émis au clic (repli natif
-= trajet RATP, vérifié dans la construction) et le site n'ajoute rien ; sur
-iPhone le clic émet le schéma `ratp://` (la demande d'ouverture) puis, si
-l'application ne s'ouvre pas, le trajet arrive dans un nouvel onglet avec
-l'arrivée remplie, la page du site restant intacte ; dans un navigateur
-intégré qui bloque les lancements, même comportement ; si l'application
-s'ouvre (page cachée), aucun onglet ne s'ouvre. Aucune requête réelle ne part
-vers ratp.fr.
+avec des fixtures locales (géolocalisation simulée, Base Adresse Nationale
+simulée) : sur Android l'Intent est émis au clic avec un repli natif
+`?ratp=1`, et la page rechargée avec ce marqueur ouvre ratp.fr avec
+`?start=<lieu actuel>&end=<restaurant>` ; sans position accordée, seule
+l'arrivée est remplie ; sur iPhone le clic émet le schéma `ratp://` (la
+demande d'ouverture) puis, si l'application ne s'ouvre pas, le trajet arrive
+dans un nouvel onglet avec départ = lieu actuel et arrivée = restaurant, la
+page du site restant intacte ; dans un navigateur intégré qui bloque les
+lancements, même comportement ; si l'application s'ouvre (page cachée), aucun
+onglet ne s'ouvre et aucune position n'est demandée. Aucune requête réelle ne
+part vers ratp.fr ni vers l'API Adresse.
 
 Ces trois scripts sont **idempotents** : on peut les relancer après toute
 modification du site.
