@@ -159,21 +159,18 @@ page** et c'est elle qui porte l'**itinéraire RATP**.
   (App Links Android pour `com.fabernovel.ratp` dans son `assetlinks.json`,
   lien universel iOS dans son `apple-app-site-association`), et Android Chrome
   reçoit en plus un Intent explicite (`S.browser_fallback_url`).
-- Si l'application n'est **pas installée**, le trajet s'ouvre dans un
-  **nouvel onglet** : la page de secours locale (`ratp-fallback.html`,
-  `noindex`) demande l'autorisation de localisation, convertit la position en
-  adresse via la Base Adresse Nationale, puis ouvre `ratp.fr/itineraires` avec
-  le **départ** (`?start=`) et l'**arrivée** (`?end=4, Rue Belgrand, 75, Paris`)
-  renseignés. Refus ou échec : saisie manuelle, ou lien « continuer sans
-  position » qui ne renseigne que l'arrivée. Si l'application a bien pris la
-  main, l'onglet de secours reste en arrière-plan et ne demande rien.
+- Le trajet est **déjà ouvert dans un nouvel onglet** sur `ratp.fr/itineraires`
+  au moment du tap, arrivée remplie (`?end=4 Rue Belgrand 75020 Paris`) :
+  l'application installée ou non, le voyageur garde un onglet utilisable.
+- Sur **iOS**, Safari propose en plus d'ouvrir l'application via la **bannière
+  système** (`apple-itunes-app`, app-id 507107090) sur la page de garde et la
+  réservation.
 - Sur **ordinateur**, le lien web RATP s'ouvre dans un nouvel onglet avec
   l'arrivée remplie.
 
-Le site principal ne demande **jamais** la géolocalisation : seule la page de
-secours le fait, sur un geste explicite. Le handoff vit dans
-`assets/js/ratp-itinerary.js`, la conversion d'adresse dans
-`assets/js/ratp-fallback.js`.
+Aucune page intermédiaire, aucun écran de refus, aucune redirection forcée :
+le site ne demande **jamais** la géolocalisation et ne déclenche aucun Intent
+sur ordinateur. Le handoff vit dans `assets/js/ratp-itinerary.js`.
 
 ### Vérification
 
@@ -187,11 +184,12 @@ ouvert et vérifié (bon site, en ligne, à jour). Avant d'ajouter un lien au
 site, on le vérifie puis on l'inscrit dans cette liste.
 
 Il vérifie aussi le parcours « Métro Gambetta • Ligne 3 » : lien web RATP,
-lien universel Bonjour RATP, page de secours locale, conversion de la position
-en adresse et remplissage des cases départ (`?start=`) et arrivée (`?end=`)
-dans l'application comme sur le site. `node tools/verifier_ratp_fallback.mjs`
-rejoue ce parcours dans Chromium (Intent Android, position autorisée puis
-refusée) avec des fixtures locales, sans requête réelle.
+lien universel Bonjour RATP, Intent Android, bannière iOS et absence de toute
+page intermédiaire ou demande de position.
+`node tools/verifier_ratp_itineraires.mjs` rejoue ce parcours dans Chromium
+(mobile Android puis iPhone) avec des fixtures locales : l'application est
+visée, le trajet s'ouvre dans un nouvel onglet avec l'arrivée remplie, sans
+aucune requête réelle vers ratp.fr.
 
 Ces trois scripts sont **idempotents** : on peut les relancer après toute
 modification du site.

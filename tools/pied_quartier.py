@@ -12,10 +12,10 @@ Le m\u00eame bloc est pos\u00e9 sur toutes les pages, page de garde comprise :
   rappel\u00e9e dans l'infobulle de chaque lien).
 \u2022 La mention \u00ab M\u00c9TRO GAMBETTA \u2022 LIGNE 3 \u00bb n'appara\u00eet qu'une fois par page et
   porte l'itin\u00e9raire RATP : sur mobile, elle ouvre l'application Bonjour RATP
-  (arriv\u00e9e = adresse du restaurant, d\u00e9part = position du t\u00e9l\u00e9phone) ; si
-  l'application manque, la page de secours locale demande la position puis
-  ouvre le site RATP avec le d\u00e9part et l'arriv\u00e9e remplis. Sur ordinateur, le
-  lien web RATP s'ouvre dans un nouvel onglet.
+  (arriv\u00e9e = 4 Rue Belgrand 75020 Paris) ; si l'application manque, le trajet
+  est d\u00e9j\u00e0 ouvert dans un nouvel onglet sur ratp.fr, arriv\u00e9e remplie. Aucune
+  page interm\u00e9diaire, aucune demande de position. Sur ordinateur, le lien web
+  RATP s'ouvre dans un nouvel onglet.
 \u2022 Les liens sont discrets mais bien visibles : jamais de texte dissimul\u00e9.
 
 Script idempotent : il remplace ses propres blocs entre marqueurs et supprime
@@ -32,9 +32,9 @@ ROOT = Path(__file__).resolve().parent.parent
 
 # Le restaurant
 LAT, LON = 48.8647788, 2.3993777
-# Adresse d'arrivee au format RATP (numero, rue, departement, ville) : c'est
-# celui de leurs propres liens d'itineraire (?end=...).
-ARRIVEE_RATP = "4, Rue Belgrand, 75, Paris"
+# Adresse d'arrivee du trajet : celle du restaurant, telle qu'elle doit
+# apparaitre dans la case « Arrivee » de l'application et du site RATP.
+ARRIVEE_RATP = "4 Rue Belgrand 75020 Paris"
 URL_RATP_APP = ("https://www.bonjour-ratp.fr/itineraires/?end="
                 + quote_plus(ARRIVEE_RATP))
 URL_RATP_WEB = "https://www.ratp.fr/itineraires?end=" + quote_plus(ARRIVEE_RATP)
@@ -90,14 +90,14 @@ def nav_alentours(classe: str) -> str:
 
 LIEN_METRO = (
     f'<a class="footer-details__metro" data-ratp-itineraire '
-    f'data-ratp-app-href="{URL_RATP_APP}" data-ratp-fallback-path="/ratp-fallback.html" '
+    f'data-ratp-app-href="{URL_RATP_APP}" '
     f'target="_blank" rel="noopener" href="{URL_RATP_WEB}"'
     ' title="Ouvrir Bonjour RATP pour l\u2019itin\u00e9raire">'
     'M\u00c9TRO GAMBETTA \u2022 LIGNE 3</a>')
 
 # Script du handoff : fichier versionne, pose sur toutes les pages.
 SCRIPT_ITINERAIRE = ("""<!-- ratp:itineraire:debut -->
-<script src="assets/js/ratp-itinerary.js?v=2026100802" defer></script>
+<script src="assets/js/ratp-itinerary.js?v=2026100803" defer></script>
 <!-- ratp:itineraire:fin -->""")
 
 # Ancien bloc RATP inline (handoff de 2025) : le script le retire des pages
@@ -274,7 +274,6 @@ COVER_ADRESSE = (
     '4 rue Belgrand \u2022 75020 Paris</a>'
     '<span class="footer-quartier__sep" aria-hidden="true"> \u2022 </span>'
     f'<a data-ratp-itineraire data-ratp-app-href="{URL_RATP_APP}" '
-    'data-ratp-fallback-path="/ratp-fallback.html" '
     f'target="_blank" rel="noopener" href="{URL_RATP_WEB}"'
     ' title="Ouvrir Bonjour RATP pour l\u2019itin\u00e9raire">M\u00e9tro Gambetta \u2022 Ligne 3</a>'
     '</div>')

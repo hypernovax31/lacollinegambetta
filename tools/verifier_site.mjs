@@ -199,13 +199,13 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
     : ko(`${f} : ${metros.length} mention(s) du metro dans le pied, ou redite`);
   metros[0].tagName === 'A' && metros[0].hasAttribute('data-ratp-itineraire') &&
     metros[0].href.startsWith('https://www.ratp.fr/itineraires?end=') &&
-    new URL(metros[0].href).searchParams.get('end') === '4, Rue Belgrand, 75, Paris' &&
+    new URL(metros[0].href).searchParams.get('end') === '4 Rue Belgrand 75020 Paris' &&
     metros[0].getAttribute('data-ratp-app-href')?.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=') &&
-    new URL(metros[0].getAttribute('data-ratp-app-href')).searchParams.get('end') === '4, Rue Belgrand, 75, Paris' &&
-    metros[0].getAttribute('data-ratp-fallback-path') === '/ratp-fallback.html' &&
+    new URL(metros[0].getAttribute('data-ratp-app-href')).searchParams.get('end') === '4 Rue Belgrand 75020 Paris' &&
+    !metros[0].hasAttribute('data-ratp-fallback-path') &&
     metros[0].target === '_blank' && metros[0].rel.split(/\s+/).includes('noopener')
-    ? ok(`${f} : lien web RATP, lien universel Bonjour RATP et page de secours`)
-    : ko(`${f} : liens ou page de secours RATP incomplets`);
+    ? ok(`${f} : lien web RATP et lien universel Bonjour RATP, arrivée du restaurant`)
+    : ko(`${f} : liens RATP incomplets ou arrivée incorrecte`);
   adresse && adresse.textContent.trim() === '4 RUE BELGRAND • 75020 PARIS' &&
     localisation && localisation.contains(adresse) && localisation.contains(metros[0]) &&
     separateurAdresseMetro &&
@@ -421,39 +421,31 @@ cacheChiffres
   ? ok('i18n légal : scripts actualisés sur les pages juridiques')
   : ko('i18n légal : une page conserve l’ancienne version en cache');
 
-const ratpFallbackHtml = lire('ratp-fallback.html');
-const ratpFallbackScript = lire('assets/js/ratp-fallback.js');
 const ratpItineraireScript = lire('assets/js/ratp-itinerary.js');
 const pagesRATP = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html'];
 pagesRATP.every((f) => lire(f).includes('assets/js/ratp-itinerary.js'))
-  ? ok('metro : script de handoff charge par les quatre pages (application d’abord, secours ensuite)')
+  ? ok('metro : script de handoff charge par les quatre pages (application d’abord, trajet en nouvel onglet)')
   : ko('metro : une page n’embarque pas assets/js/ratp-itinerary.js');
-/<meta name="robots" content="noindex, nofollow">/.test(ratpFallbackHtml) &&
-  ratpFallbackHtml.includes('api-adresse.data.gouv.fr') &&
-  ratpFallbackHtml.includes('?v=2026100802')
-  ? ok('metro : page de secours locale, noindex, position expliquee et script anticache')
-  : ko('metro : page de secours incomplete');
 ratpItineraireScript.includes('intent://') &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
-  ratpItineraireScript.includes("new URL('ratp-fallback.html', window.location.href)") &&
-  ratpItineraireScript.includes("window.open(pageSecours(), '_blank')") &&
-  ratpItineraireScript.includes('window.location.assign(intentUrl(') &&
+  ratpItineraireScript.includes("window.open(trajet, '_blank')") &&
   !ratpItineraireScript.includes('navigator.geolocation')
-  ? ok('metro : Intent Android avec repli local, sans geolocalisation sur le site principal')
-  : ko('metro : handoff Android incomplet ou geolocalisation hors page de secours');
-ratpFallbackScript.includes('navigator.geolocation.getCurrentPosition') &&
-  ratpFallbackScript.includes('https://api-adresse.data.gouv.fr/reverse/') &&
-  ratpFallbackScript.includes("'4, Rue Belgrand, 75, Paris'") &&
-  ratpFallbackScript.includes("searchParams.set('start'") &&
-  ratpFallbackScript.includes("searchParams.set('end'") &&
-  ratpFallbackScript.includes("window.location.replace(routeUrl(cleanOrigin))") &&
-  ratpFallbackScript.includes('document.hidden')
-  ? ok('metro : depart geolocalise puis itineraire RATP avec depart et arrivee remplis')
-  : ko('metro : geolocalisation consentie ou remplissage de l’itineraire incomplets');
-pagesRATP.concat(['404.html']).every((f) => !/navigator\.geolocation|api-adresse\.data\.gouv\.fr/i.test(lire(f)))
-  ? ok('ratp : aucune geolocalisation dans les pages, seulement sur la page de secours')
-  : ko('ratp : une page du site demande encore la position de l’internaute');
+  ? ok('metro : Intent Android, trajet en nouvel onglet et aucune demande de position')
+  : ko('metro : handoff incomplet ou demande de position dans le site');
+const tracesSecours = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html']
+  .filter((f) => /ratp-fallback/i.test(lire(f)))
+  .concat(['i18n.js', 'legal-i18n.js', 'ratp-itinerary.js']
+    .filter((f) => /ratp-fallback|api-adresse\.data\.gouv|navigator\.geolocation/i.test(lire('assets/js/' + f)))
+    .map((f) => 'assets/js/' + f));
+tracesSecours.length === 0 && !existsSync(racine + 'ratp-fallback.html') && !existsSync(racine + 'assets/js/ratp-fallback.js')
+  ? ok('metro : aucune page de secours ni demande de position, plus aucun renvoi residuel')
+  : ko('metro : page de secours ou demande de position encore presente (' + tracesSecours.join(', ') + ')');
+d.querySelector('meta[name="apple-itunes-app"]')?.content === 'app-id=507107090' &&
+  lire('reservation.html').includes('app-id=507107090')
+  ? ok('iOS : Safari propose d’ouvrir Bonjour RATP via la bannière système')
+  : ko('iOS : bannière système Bonjour RATP absente');
+
 
 const fichiersLiensExternes = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html'];
 const liensExternesSansNouvelOnglet = [];
@@ -475,10 +467,6 @@ for (const fichier of fichiersLiensExternes) {
 liensExternesSansNouvelOnglet.length === 0
   ? ok(`liens externes : toutes les ancres HTTP(S) s’ouvrent dans un nouvel onglet (${fichiersLiensExternes.length} pages)`)
   : ko(`liens externes sans nouvel onglet/rel noopener : ${liensExternesSansNouvelOnglet.slice(0, 8).join(' | ')}`);
-
-d.querySelector('meta[name="apple-itunes-app"]')
-  ? ko('iOS Safari : une Smart App Banner est encore declaree dans la page')
-  : ok('iOS Safari : aucune bannière d’application tierce dans la page de garde');
 
 !index.includes("window.open('about:blank'") &&
   !index.includes('api-adresse.data.gouv.fr/reverse/') && !index.includes('navigator.geolocation')
