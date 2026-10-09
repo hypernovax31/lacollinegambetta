@@ -1,33 +1,34 @@
-/* Mention « Métro Gambetta • Ligne 3 » : au clic sur mobile, le trajet
-   s'ouvre IMMÉDIATEMENT sur ratp.fr — nouvel onglet, sans aucun délai —
-   avec l'arrivée = adresse du restaurant. Le départ = lieu actuel de
-   l'utilisateur (géolocalisation + BAN) est ajouté dès que possible.
-
-   La demande d'ouverture de l'application Bonjour RATP
-   https://apps.apple.com/fr/app/bonjour-ratp/id507107090 est émise en
-   parallèle avec le même trajet (départ = lieu actuel quand on le connaît,
-   arrivée = 4 Rue Belgrand 75020 Paris) :
+/* Métro Gambetta • Ligne 3 : ouvre Bonjour RATP avec départ = lieu actuel
+   (géolocalisé + BAN) et arrivée = 4 Rue Belgrand 75020 Paris.
+   - Au clic, le trajet s'ouvre IMMÉDIATEMENT dans un nouvel onglet (sans délai)
+     avec départ si connu, sinon arrivée seule puis complété.
    - Android Chrome : Intent officiel com.fabernovel.ratp vers
-     https://www.bonjour-ratp.fr/... avec fallback = trajet ratp.fr
-   - iPhone : schémas candidats ratp:// et bonjourratp:// via iframes +
-     lien universel bonjour-ratp.fr via second onglet (Universal Link).
-     Le second onglet déclenche l'app si installée ; sinon il est refermé
-     et seul le fallback ratp.fr reste.
-
-   Si l'app s'ouvre (page en arrière-plan), les onglets web se ferment.
-   Sinon le fallback reste, sans délai.
-
-   Ordinateur : lien natif vers ratp.fr, nouvel onglet. */
+     bonjour-ratp.fr (start+end) avec fallback = ratp.fr (start+end).
+     Deux onglets : fallback ratp.fr + tentative Intent. Si app installée,
+     l'app s'ouvre ; sinon second onglet refermé, fallback reste.
+   - iPhone : lien universel bonjour-ratp.fr (start+end) en second onglet
+     → Universal Link ouvre l'app si installée ; sinon second onglet refermé,
+     fallback ratp.fr reste. En parallèle, schémas candidats ratp://,
+     bonjourratp://, bonjour-ratp://, com.fabernovel.ratp://, com.ratp.ratp://
+     via iframes pour déclencher le prompt système « Ouvrir dans Bonjour RATP ? ».
+   - Si l'app s'ouvre, les onglets web se ferment.
+   Ordinateur : lien natif ratp.fr, nouvel onglet. */
 (function () {
   'use strict';
 
-  var SCHEMAS_APP = ['ratp://', 'bonjourratp://'];
+  var SCHEMAS_APP = [
+    'ratp://',
+    'bonjourratp://',
+    'bonjour-ratp://',
+    'com.fabernovel.ratp://',
+    'com.ratp.ratp://'
+  ];
   var NOM_FENETRE = 'ratp-trajet';
   var NOM_FENETRE_APP = 'ratp-app';
   var REVERSE_ENDPOINT = 'https://api-adresse.data.gouv.fr/reverse/';
   var GEOLOC_TIMEOUT = 8000;
   var SURVEILLANCE_APP = 2000;
-  var NETTOYAGE_APP = 1400;
+  var BASCULE_FALLBACK = 1200;
 
   var agent = navigator.userAgent || '';
   var tactile = false;
@@ -46,7 +47,7 @@
       'S.browser_fallback_url=' + encodeURIComponent(repli) + ';end';
   }
 
-  /* Lieu actuel de l'utilisateur */
+  /* Lieu actuel */
   function lieuActuel() {
     return new Promise(function (resolve) {
       if (!navigator.geolocation) { resolve(null); return; }
@@ -87,25 +88,16 @@
     });
   }
 
-  function urlTrajet(trajet, adresse) {
-    if (!adresse) return trajet;
-    var separateur = trajet.indexOf('?') === -1 ? '?' : '&';
-    return trajet + separateur + 'start=' + encodeURIComponent(adresse);
+  function urlTrajet(base, adresse) {
+    if (!adresse) return base;
+    var sep = base.indexOf('?') === -1 ? '?' : '&';
+    return base + sep + 'start=' + encodeURIComponent(adresse);
   }
 
-  /* Pré-cache du lieu actuel dès le chargement (mobile) : si l'utilisateur
-     a déjà autorisé la position, le clic pourra ouvrir l'app directement
-     avec départ + arrivée, sans attendre la géolocalisation. */
   var adresseCache = null;
-  var promesseCache = null;
   try {
-    promesseCache = lieuActuel().then(function (a) {
-      if (a) adresseCache = a;
-      return a;
-    });
-  } catch (e) {
-    promesseCache = null;
-  }
+    lieuActuel().then(function (a) { if (a) adresseCache = a; });
+  } catch (e) {}
 
   document.querySelectorAll('[data-ratp-itineraire]').forEach(function (lien) {
     var appUrl = lien.getAttribute('data-ratp-app-href');
@@ -113,19 +105,18 @@
     if (!appUrl || !trajet) return;
 
     var dernierClic = 0;
-    var REDOUBLE_MS = 800;
 
     lien.addEventListener('click', function (event) {
       var maintenant = Date.now();
       event.preventDefault();
-      if (maintenant - dernierClic < REDOUBLE_MS) return;
+      if (maintenant - dernierClic < 800) return;
       dernierClic = maintenant;
 
-      var departConnu = adresseCache || null;
-      var trajetAvecDepart = departConnu ? urlTrajet(trajet, departConnu) : trajet;
-      var appAvecDepart = departConnu ? urlTrajet(appUrl, departConnu) : appUrl;
+      var depart = adresseCache || null;
+      var trajetAvecDepart = depart ? urlTrajet(trajet, depart) : trajet;
+      var appAvecDepart = depart ? urlTrajet(appUrl, depart) : appUrl;
 
-      /* 1. Le trajet s'ouvre TOUT DE SUITE : nouvel onglet, sans délai. */
+      /* 1. Fallback immédiat : un onglet avec le trajet (départ si connu) */
       var onglet = null;
       try {
         onglet = window.open(trajetAvecDepart, NOM_FENETRE);
@@ -133,18 +124,12 @@
         onglet = null;
       }
       if (!onglet) {
-        try {
-          onglet = window.open(trajetAvecDepart, '_blank');
-        } catch (e2) {
-          onglet = null;
-        }
+        try { onglet = window.open(trajetAvecDepart, '_blank'); } catch (e2) {}
       }
 
       var appOnglet = null;
 
-      /* 2. La demande d'ouverture de l'application est émise en parallèle,
-         avec le même départ (si on le connaît) et arrivée = restaurant,
-         sans jamais naviguer la page courante. */
+      /* 2. Tentative d'ouverture de l'app en parallèle, second onglet */
       if (androidChrome) {
         var intent = intentUrl(appAvecDepart, trajetAvecDepart);
         try {
@@ -154,9 +139,7 @@
           iframeIntent.tabIndex = -1;
           iframeIntent.src = intent;
           document.body.appendChild(iframeIntent);
-          setTimeout(function () {
-            if (iframeIntent.parentNode) iframeIntent.parentNode.removeChild(iframeIntent);
-          }, 1000);
+          setTimeout(function () { if (iframeIntent.parentNode) iframeIntent.parentNode.removeChild(iframeIntent); }, 1000);
         } catch (e) {}
         try {
           appOnglet = window.open(intent, NOM_FENETRE_APP);
@@ -166,29 +149,23 @@
       } else {
         SCHEMAS_APP.forEach(function (schema) {
           try {
-            var essai = document.createElement('iframe');
-            essai.style.display = 'none';
-            essai.setAttribute('aria-hidden', 'true');
-            essai.tabIndex = -1;
-            essai.src = schema;
-            document.body.appendChild(essai);
-            setTimeout(function () {
-              if (essai.parentNode) essai.parentNode.removeChild(essai);
-            }, 1000);
+            var ifr = document.createElement('iframe');
+            ifr.style.display = 'none';
+            ifr.setAttribute('aria-hidden', 'true');
+            ifr.tabIndex = -1;
+            ifr.src = schema;
+            document.body.appendChild(ifr);
+            setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 1000);
           } catch (e) {}
-          /* On tente aussi avec le trajet complet (start+end) si l'app
-             accepte le chemin en deep link. */
           try {
             var u = new URL(appAvecDepart);
-            var essai2 = document.createElement('iframe');
-            essai2.style.display = 'none';
-            essai2.setAttribute('aria-hidden', 'true');
-            essai2.tabIndex = -1;
-            essai2.src = schema + u.pathname + u.search;
-            document.body.appendChild(essai2);
-            setTimeout(function () {
-              if (essai2.parentNode) essai2.parentNode.removeChild(essai2);
-            }, 1000);
+            var ifr2 = document.createElement('iframe');
+            ifr2.style.display = 'none';
+            ifr2.setAttribute('aria-hidden', 'true');
+            ifr2.tabIndex = -1;
+            ifr2.src = schema + u.pathname + u.search;
+            document.body.appendChild(ifr2);
+            setTimeout(function () { if (ifr2.parentNode) ifr2.parentNode.removeChild(ifr2); }, 1000);
           } catch (e2) {}
         });
         try {
@@ -198,33 +175,30 @@
         }
       }
 
-      /* 3. Si l'application s'ouvre, on ferme les onglets web. */
-      function detecterApplication() {
+      /* 3. Si l'app s'ouvre, on ferme les onglets web */
+      function detecterApp() {
         if (document.hidden) {
-          if (onglet) {
-            try { onglet.close(); } catch (e) {}
-          }
-          if (appOnglet) {
-            try { appOnglet.close(); } catch (e) {}
-          }
+          if (onglet) { try { onglet.close(); } catch (e) {} }
+          if (appOnglet) { try { appOnglet.close(); } catch (e) {} }
         }
       }
-      document.addEventListener('visibilitychange', detecterApplication);
-      window.addEventListener('pagehide', detecterApplication);
+      document.addEventListener('visibilitychange', detecterApp);
+      window.addEventListener('pagehide', detecterApp);
       setTimeout(function () {
-        document.removeEventListener('visibilitychange', detecterApplication);
-        window.removeEventListener('pagehide', detecterApplication);
+        document.removeEventListener('visibilitychange', detecterApp);
+        window.removeEventListener('pagehide', detecterApp);
       }, SURVEILLANCE_APP);
 
+      /* Si l'app ne s'est pas ouverte, on referme le second onglet */
       setTimeout(function () {
         if (!document.hidden && appOnglet && !appOnglet.closed) {
           try { appOnglet.close(); } catch (e) {}
         }
-      }, NETTOYAGE_APP);
+      }, BASCULE_FALLBACK);
 
-      /* 4. Le départ (lieu actuel) complète les onglets et, si on ne l'avait
-         pas au clic, on retente l'ouverture de l'app avec départ+arrivée. */
-      function completerEtRetenter(adresse) {
+      /* 4. Quand la position arrive, on complète le fallback et on retente
+         l'app avec départ+arrivée si elle ne s'était pas ouverte. */
+      lieuActuel().then(function (adresse) {
         if (!adresse) return;
         adresseCache = adresse;
         var trajetComplet = urlTrajet(trajet, adresse);
@@ -234,17 +208,16 @@
             onglet.location.href = trajetComplet;
           }
         } catch (e) {}
-        if (document.hidden) return; /* app déjà ouverte */
-        /* Si on n'avait pas le départ au clic, on retente l'app avec départ+arrivée */
-        if (!departConnu) {
+        if (document.hidden) return;
+        if (!depart) {
           if (androidChrome) {
             var intent2 = intentUrl(appComplet, trajetComplet);
             try {
-              var iframe2 = document.createElement('iframe');
-              iframe2.style.display = 'none';
-              iframe2.src = intent2;
-              document.body.appendChild(iframe2);
-              setTimeout(function () { if (iframe2.parentNode) iframe2.parentNode.removeChild(iframe2); }, 1000);
+              var ifr = document.createElement('iframe');
+              ifr.style.display = 'none';
+              ifr.src = intent2;
+              document.body.appendChild(ifr);
+              setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 1000);
             } catch (e) {}
             try {
               if (appOnglet && !appOnglet.closed) {
@@ -261,26 +234,26 @@
                 appOnglet = window.open(appComplet, NOM_FENETRE_APP);
               }
             } catch (e3) {}
+            SCHEMAS_APP.forEach(function (schema) {
+              try {
+                var u = new URL(appComplet);
+                var ifr = document.createElement('iframe');
+                ifr.style.display = 'none';
+                ifr.src = schema + u.pathname + u.search;
+                document.body.appendChild(ifr);
+                setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 1000);
+              } catch (e) {}
+            });
           }
         } else {
           try {
             if (appOnglet && !appOnglet.closed) {
-              var base = appOnglet.location.href && appOnglet.location.href.indexOf('bonjour-ratp.fr') !== -1
-                ? appUrl : trajet;
-              var hrefBase = base.indexOf('bonjour-ratp.fr') !== -1 ? appComplet : trajetComplet;
-              appOnglet.location.href = hrefBase;
+              var base = appOnglet.location.href && appOnglet.location.href.indexOf('bonjour-ratp.fr') !== -1 ? appComplet : trajetComplet;
+              appOnglet.location.href = base;
             }
           } catch (e4) {}
         }
-      }
-
-      if (departConnu) {
-        /* On a déjà le départ en cache : on a ouvert avec départ, mais on
-           rafraîchit quand même au cas où la position a bougé. */
-        lieuActuel().then(completerEtRetenter);
-      } else {
-        lieuActuel().then(completerEtRetenter);
-      }
+      });
     });
   });
 })();

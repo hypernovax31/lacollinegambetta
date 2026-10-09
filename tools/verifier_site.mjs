@@ -455,26 +455,27 @@ pagesRATP.every((f) => lire(f).includes('assets/js/ratp-itinerary.js'))
   : ko('metro : une page n’embarque pas assets/js/ratp-itinerary.js');
 const corpsClic = ratpItineraireScript.slice(
   ratpItineraireScript.indexOf('lien.addEventListener'),
-  ratpItineraireScript.indexOf('/* 3. Si l\'application'));
-ratpItineraireScript.includes("SCHEMAS_APP = ['ratp://', 'bonjourratp://']") &&
-  ratpItineraireScript.includes('essai.src = schema') &&
+  ratpItineraireScript.indexOf('/* 2. Si l\'application'));
+ratpItineraireScript.includes("SCHEMAS_APP") &&
+  ratpItineraireScript.includes("'ratp://'") &&
+  ratpItineraireScript.includes("'bonjourratp://'") &&
+  ratpItineraireScript.includes("'com.fabernovel.ratp://'") &&
+  ratpItineraireScript.includes('.src = schema') &&
   ratpItineraireScript.includes('intentUrl(') &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
-  // le trajet s'ouvre IMMÉDIATEMENT au clic : nouvel onglet, sans délai, avec départ si connu
-  (corpsClic.includes("window.open(trajetAvecDepart, NOM_FENETRE)") || corpsClic.includes("window.open(trajet, NOM_FENETRE)")) &&
+  // le trajet s'ouvre IMMÉDIATEMENT au clic : fallback + tentative app en parallèle, sans délai, avec départ si connu
+  corpsClic.includes("window.open(trajetAvecDepart, NOM_FENETRE)") &&
   !corpsClic.includes('ATTENTE_APP') &&
   !/setTimeout\(function \(\) \{[\s\S]*ouvrirTrajet/.test(corpsClic) &&
-  // la demande d'ouverture de l'application est émise en parallèle, sans naviguer la page courante, avec départ+arrivée
-  corpsClic.includes('window.open(intent, NOM_FENETRE_APP)') &&
+  // la demande d'ouverture de l'application est émise en parallèle, second onglet, avec départ+arrivée
   corpsClic.includes('iframeIntent.src = intent') &&
-  (corpsClic.includes("window.open(appAvecDepart, NOM_FENETRE_APP)") || corpsClic.includes("window.open(appUrl, NOM_FENETRE_APP)")) &&
-  corpsClic.includes('essai.src = schema') &&
-  // si l'application s'ouvre, les onglets du site RATP se ferment tout seuls
+  corpsClic.includes('window.open(intent, NOM_FENETRE_APP)') &&
+  corpsClic.includes('window.open(appAvecDepart, NOM_FENETRE_APP)') &&
+  // si l'application s'ouvre, l'onglet web se ferme tout seul
   ratpItineraireScript.includes('onglet.close()') &&
-  ratpItineraireScript.includes('appOnglet.close()') &&
   ratpItineraireScript.includes('SURVEILLANCE_APP') &&
-  ratpItineraireScript.includes('NETTOYAGE_APP') &&
+  ratpItineraireScript.includes('BASCULE_FALLBACK') &&
   // le départ est le lieu actuel : géolocalisation + Base Adresse Nationale,
   // les onglets ouverts sont rafraîchis avec ?start=, et l'app est retentée avec départ+arrivée
   ratpItineraireScript.includes('navigator.geolocation') &&
