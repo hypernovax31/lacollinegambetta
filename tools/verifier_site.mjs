@@ -461,14 +461,14 @@ ratpItineraireScript.includes("SCHEMAS_APP = ['ratp://', 'bonjourratp://']") &&
   ratpItineraireScript.includes('intentUrl(') &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
-  // le trajet s'ouvre IMMÉDIATEMENT au clic : nouvel onglet, sans délai
-  corpsClic.includes("window.open(trajet, NOM_FENETRE)") &&
+  // le trajet s'ouvre IMMÉDIATEMENT au clic : nouvel onglet, sans délai, avec départ si connu
+  (corpsClic.includes("window.open(trajetAvecDepart, NOM_FENETRE)") || corpsClic.includes("window.open(trajet, NOM_FENETRE)")) &&
   !corpsClic.includes('ATTENTE_APP') &&
   !/setTimeout\(function \(\) \{[\s\S]*ouvrirTrajet/.test(corpsClic) &&
-  // la demande d'ouverture de l'application est émise en parallèle, sans naviguer la page courante
+  // la demande d'ouverture de l'application est émise en parallèle, sans naviguer la page courante, avec départ+arrivée
   corpsClic.includes('window.open(intent, NOM_FENETRE_APP)') &&
   corpsClic.includes('iframeIntent.src = intent') &&
-  corpsClic.includes("window.open(appUrl, NOM_FENETRE_APP)") &&
+  (corpsClic.includes("window.open(appAvecDepart, NOM_FENETRE_APP)") || corpsClic.includes("window.open(appUrl, NOM_FENETRE_APP)")) &&
   corpsClic.includes('essai.src = schema') &&
   // si l'application s'ouvre, les onglets du site RATP se ferment tout seuls
   ratpItineraireScript.includes('onglet.close()') &&
@@ -476,11 +476,12 @@ ratpItineraireScript.includes("SCHEMAS_APP = ['ratp://', 'bonjourratp://']") &&
   ratpItineraireScript.includes('SURVEILLANCE_APP') &&
   ratpItineraireScript.includes('NETTOYAGE_APP') &&
   // le départ est le lieu actuel : géolocalisation + Base Adresse Nationale,
-  // les onglets ouverts sont rafraîchis avec ?start=
+  // les onglets ouverts sont rafraîchis avec ?start=, et l'app est retentée avec départ+arrivée
   ratpItineraireScript.includes('navigator.geolocation') &&
   ratpItineraireScript.includes('api-adresse.data.gouv.fr/reverse/') &&
   ratpItineraireScript.includes("'start=' + encodeURIComponent(adresse)") &&
-  ratpItineraireScript.includes('onglet.location.href = urlTrajet(trajet, adresse)') &&
+  ratpItineraireScript.includes('urlTrajet(trajet, adresse)') &&
+  ratpItineraireScript.includes('adresseCache') &&
   !ratpItineraireScript.includes('PARAM_RETOUR') &&
   !ratpItineraireScript.includes('history.replaceState') &&
   !ratpItineraireScript.includes('naviguer(intentUrl') &&
