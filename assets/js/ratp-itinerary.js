@@ -9,7 +9,7 @@
        « Ouvrir dans Bonjour RATP ? » + Universal Link ouvre l'app.
    - Garantie WEB : si popup bloqué, fallback immédiat trajet via _blank,
      <a> click, puis location.href. Si popup app ouvert mais app non
-     installée, fallback trajet dans même onglet après 2s.
+     installée, fallback trajet dans même onglet après 2s (inconditionnel).
    - Si l'app s'ouvre (document.hidden), on ferme l'onglet.
    Ordinateur : lien natif ratp.fr. */
 (function () {
@@ -26,7 +26,7 @@
   var REVERSE_ENDPOINT = 'https://api-adresse.data.gouv.fr/reverse/';
   var GEOLOC_TIMEOUT = 8000;
   var SURVEILLANCE_APP = 4000;
-  var DELAI_FALLBACK = 2200;
+  var DELAI_FALLBACK = 2000;
 
   var agent = navigator.userAgent || '';
   var tactile = false;
@@ -42,8 +42,7 @@
     try {
       var app = new URL(appUrl);
       return 'intent://' + app.host + app.pathname + app.search +
-        '#Intent;scheme=https;package=com.fabernovel.ratp;' +
-        'S.browser_fallback_url=' + encodeURIComponent(repli) + ';end';
+        '#Intent;scheme=https;package=com.fabernovel.ratp;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=' + encodeURIComponent(repli) + ';end';
     } catch (e) {
       return null;
     }
@@ -122,6 +121,7 @@
     var dernierClic = 0;
 
     lien.addEventListener('click', function (event) {
+      var trajetSecurise = trajet;
       try { event.preventDefault(); } catch (e) {}
       var maintenant = Date.now();
       if (maintenant - dernierClic < 800) return;
@@ -130,147 +130,155 @@
       var depart = adresseCache || null;
       var trajetAvecDepart = depart ? urlTrajet(trajet, depart) : trajet;
       var appAvecDepart = depart ? urlTrajet(appUrl, depart) : appUrl;
+      trajetSecurise = trajetAvecDepart;
 
-      /* 1. Tentative APP synchrone dans le geste */
-      var onglet = null;
-      var intent = null;
-      if (androidChrome) {
-        intent = intentUrl(appAvecDepart, trajetAvecDepart);
-        if (intent) {
-          try {
-            var iframeIntent = document.createElement('iframe');
-            iframeIntent.style.display = 'none';
-            iframeIntent.setAttribute('aria-hidden', 'true');
-            iframeIntent.tabIndex = -1;
-            iframeIntent.src = intent;
-            document.body.appendChild(iframeIntent);
-            setTimeout(function () { if (iframeIntent.parentNode) iframeIntent.parentNode.removeChild(iframeIntent); }, 3000);
-          } catch (e) {}
-          try {
-            onglet = window.open(intent, NOM_FENETRE);
-          } catch (e) {}
-          if (!onglet) {
+      try {
+        /* 1. Tentative APP synchrone dans le geste */
+        var onglet = null;
+        var intent = null;
+        if (androidChrome) {
+          intent = intentUrl(appAvecDepart, trajetAvecDepart);
+          if (intent) {
             try {
-              onglet = window.open('about:blank', NOM_FENETRE);
-              if (onglet) { try { onglet.location.href = intent; } catch (e2) {} }
-            } catch (e3) {}
-          }
-        }
-      } else {
-        // iOS : schémas + Universal Link
-        try {
-          var appU = new URL(appAvecDepart);
-          var suffix = appU.pathname + appU.search;
-          SCHEMAS_APP.forEach(function (schema) {
-            try {
-              var ifr = document.createElement('iframe');
-              ifr.style.position = 'absolute';
-              ifr.style.width = '1px';
-              ifr.style.height = '1px';
-              ifr.style.opacity = '0';
-              ifr.style.pointerEvents = 'none';
-              ifr.setAttribute('aria-hidden', 'true');
-              ifr.tabIndex = -1;
-              ifr.src = schema + suffix;
-              document.body.appendChild(ifr);
-              setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
+              var iframeIntent = document.createElement('iframe');
+              iframeIntent.style.display = 'none';
+              iframeIntent.setAttribute('aria-hidden', 'true');
+              iframeIntent.tabIndex = -1;
+              iframeIntent.src = intent;
+              document.body.appendChild(iframeIntent);
+              setTimeout(function () { if (iframeIntent.parentNode) iframeIntent.parentNode.removeChild(iframeIntent); }, 3000);
             } catch (e) {}
-          });
-        } catch (e) {
-          SCHEMAS_APP.forEach(function (schema) {
             try {
-              var ifr = document.createElement('iframe');
-              ifr.style.display = 'none';
-              ifr.src = schema;
-              document.body.appendChild(ifr);
-              setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
-            } catch (ex) {}
-          });
-        }
-        try {
-          onglet = window.open(appAvecDepart, NOM_FENETRE);
-        } catch (e) {}
-        if (!onglet) {
-          try {
-            onglet = window.open('about:blank', NOM_FENETRE);
-            if (onglet) { try { onglet.location.href = appAvecDepart; } catch (e2) {} }
-          } catch (e3) {}
-        }
-      }
-
-      /* 2. Garantie WEB si popup bloqué */
-      if (!onglet || (onglet && onglet.closed)) {
-        try { onglet = window.open(trajetAvecDepart, NOM_FENETRE); } catch (e) {}
-      }
-      if (!onglet || (onglet && onglet.closed)) {
-        try { onglet = window.open(trajetAvecDepart, '_blank'); } catch (e2) {}
-      }
-      if (!onglet || (onglet && onglet.closed)) {
-        ouvrirLienSecurise(trajetAvecDepart);
-      }
-      if (!onglet || (onglet && onglet.closed)) {
-        // Dernier recours : navigation courante
-        setTimeout(function () {
-          if (!document.hidden) {
-            try { window.location.href = trajetAvecDepart; } catch (e) {}
-          }
-        }, 200);
-        return;
-      }
-
-      /* 3. Si l'app s'ouvre, on ferme l'onglet */
-      function detecterApp() {
-        if (document.hidden && onglet) {
-          try { onglet.close(); } catch (e) {}
-        }
-      }
-      document.addEventListener('visibilitychange', detecterApp);
-      window.addEventListener('pagehide', detecterApp);
-      setTimeout(function () {
-        document.removeEventListener('visibilitychange', detecterApp);
-        window.removeEventListener('pagehide', detecterApp);
-      }, SURVEILLANCE_APP);
-
-      /* 4. Fallback : si l'app ne s'est pas ouverte, afficher le trajet dans même onglet */
-      setTimeout(function () {
-        if (!document.hidden && onglet && !onglet.closed) {
-          try {
-            var href = '';
-            try { href = onglet.location.href || ''; } catch (e) { href = ''; }
-            if (!href || href === 'about:blank' || href.indexOf('about:blank') !== -1 ||
-                href.indexOf('intent://') === 0 ||
-                href.indexOf('bonjour-ratp.fr') !== -1 ||
-                href.indexOf('ratp.fr') === -1) {
-              onglet.location.href = trajetAvecDepart;
+              onglet = window.open(intent, NOM_FENETRE);
+            } catch (e) {}
+            if (!onglet || onglet.closed) {
+              try {
+                onglet = window.open('about:blank', NOM_FENETRE);
+                if (onglet) { try { onglet.location.href = intent; } catch (e2) {} }
+              } catch (e3) {}
             }
-          } catch (e) {
-            try { onglet.location.href = trajetAvecDepart; } catch (e2) {}
           }
-        }
-      }, DELAI_FALLBACK);
-
-      /* 5. Quand la position arrive, compléter avec ?start= et retenter */
-      lieuActuel().then(function (adresse) {
-        if (!adresse) return;
-        adresseCache = adresse;
-        var trajetComplet = urlTrajet(trajet, adresse);
-        var appComplet = urlTrajet(appUrl, adresse);
-        if (document.hidden) {
-          try { if (onglet && !onglet.closed) onglet.location.href = trajetComplet; } catch (e) {}
-          return;
-        }
-        if (!depart) {
-          if (androidChrome) {
-            var intent2 = intentUrl(appComplet, trajetComplet);
-            if (intent2) {
+        } else {
+          // iOS : schémas + Universal Link
+          try {
+            var appU = new URL(appAvecDepart);
+            var suffix = appU.pathname + appU.search;
+            SCHEMAS_APP.forEach(function (schema) {
               try {
                 var ifr = document.createElement('iframe');
-                ifr.style.display = 'none';
-                ifr.src = intent2;
+                ifr.style.position = 'absolute';
+                ifr.style.width = '1px';
+                ifr.style.height = '1px';
+                ifr.style.opacity = '0';
+                ifr.style.pointerEvents = 'none';
+                ifr.setAttribute('aria-hidden', 'true');
+                ifr.tabIndex = -1;
+                ifr.src = schema + suffix;
                 document.body.appendChild(ifr);
                 setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
               } catch (e) {}
-              try { if (onglet && !onglet.closed) onglet.location.href = intent2; } catch (e2) {}
+            });
+          } catch (e) {
+            SCHEMAS_APP.forEach(function (schema) {
+              try {
+                var ifr = document.createElement('iframe');
+                ifr.style.display = 'none';
+                ifr.src = schema;
+                document.body.appendChild(ifr);
+                setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
+              } catch (ex) {}
+            });
+          }
+          try {
+            onglet = window.open(appAvecDepart, NOM_FENETRE);
+          } catch (e) {}
+          if (!onglet || onglet.closed) {
+            try {
+              onglet = window.open('about:blank', NOM_FENETRE);
+              if (onglet) { try { onglet.location.href = appAvecDepart; } catch (e2) {} }
+            } catch (e3) {}
+          }
+        }
+
+        /* 2. Garantie WEB si popup bloqué */
+        if (!onglet || onglet.closed) {
+          try { onglet = window.open(trajetAvecDepart, NOM_FENETRE); } catch (e) {}
+        }
+        if (!onglet || onglet.closed) {
+          try { onglet = window.open(trajetAvecDepart, '_blank'); } catch (e2) {}
+        }
+        if (!onglet || onglet.closed) {
+          ouvrirLienSecurise(trajetAvecDepart);
+          // Dernier recours immédiat : navigation courante
+          try { window.location.href = trajetAvecDepart; } catch (e) {}
+          return;
+        }
+
+        /* 3. Si l'app s'ouvre, on ferme l'onglet */
+        function detecterApp() {
+          if (document.hidden && onglet) {
+            try { onglet.close(); } catch (e) {}
+          }
+        }
+        document.addEventListener('visibilitychange', detecterApp);
+        window.addEventListener('pagehide', detecterApp);
+        setTimeout(function () {
+          document.removeEventListener('visibilitychange', detecterApp);
+          window.removeEventListener('pagehide', detecterApp);
+        }, SURVEILLANCE_APP);
+
+        /* 4. Fallback inconditionnel : si l'app ne s'est pas ouverte, afficher le trajet */
+        setTimeout(function () {
+          if (!document.hidden && onglet && !onglet.closed) {
+            try { onglet.location.href = trajetAvecDepart; } catch (e) {
+              try { onglet.location.href = trajetAvecDepart; } catch (e2) {}
+            }
+          }
+        }, DELAI_FALLBACK);
+
+        /* 5. Quand la position arrive, compléter avec ?start= et retenter */
+        lieuActuel().then(function (adresse) {
+          if (!adresse) return;
+          adresseCache = adresse;
+          var trajetComplet = urlTrajet(trajet, adresse);
+          var appComplet = urlTrajet(appUrl, adresse);
+          if (document.hidden) {
+            try { if (onglet && !onglet.closed) onglet.location.href = trajetComplet; } catch (e) {}
+            return;
+          }
+          if (!depart) {
+            if (androidChrome) {
+              var intent2 = intentUrl(appComplet, trajetComplet);
+              if (intent2) {
+                try {
+                  var ifr = document.createElement('iframe');
+                  ifr.style.display = 'none';
+                  ifr.src = intent2;
+                  document.body.appendChild(ifr);
+                  setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
+                } catch (e) {}
+                try { if (onglet && !onglet.closed) onglet.location.href = intent2; } catch (e2) {}
+                setTimeout(function () {
+                  if (!document.hidden && onglet && !onglet.closed) {
+                    try { onglet.location.href = trajetComplet; } catch (e) {}
+                  }
+                }, DELAI_FALLBACK);
+              }
+            } else {
+              try { if (onglet && !onglet.closed) onglet.location.href = appComplet; } catch (e3) {}
+              try {
+                var u = new URL(appComplet);
+                var suf = u.pathname + u.search;
+                SCHEMAS_APP.forEach(function (schema) {
+                  try {
+                    var ifr = document.createElement('iframe');
+                    ifr.style.display = 'none';
+                    ifr.src = schema + suf;
+                    document.body.appendChild(ifr);
+                    setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
+                  } catch (e) {}
+                });
+              } catch (e) {}
               setTimeout(function () {
                 if (!document.hidden && onglet && !onglet.closed) {
                   try { onglet.location.href = trajetComplet; } catch (e) {}
@@ -278,30 +286,15 @@
               }, DELAI_FALLBACK);
             }
           } else {
-            try { if (onglet && !onglet.closed) onglet.location.href = appComplet; } catch (e3) {}
-            try {
-              var u = new URL(appComplet);
-              var suf = u.pathname + u.search;
-              SCHEMAS_APP.forEach(function (schema) {
-                try {
-                  var ifr = document.createElement('iframe');
-                  ifr.style.display = 'none';
-                  ifr.src = schema + suf;
-                  document.body.appendChild(ifr);
-                  setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
-                } catch (e) {}
-              });
-            } catch (e) {}
-            setTimeout(function () {
-              if (!document.hidden && onglet && !onglet.closed) {
-                try { onglet.location.href = trajetComplet; } catch (e) {}
-              }
-            }, DELAI_FALLBACK);
+            try { if (onglet && !onglet.closed) onglet.location.href = trajetComplet; } catch (e5) {}
           }
-        } else {
-          try { if (onglet && !onglet.closed) onglet.location.href = trajetComplet; } catch (e5) {}
-        }
-      });
+        });
+      } catch (err) {
+        // En cas d'erreur JS, garantir l'ouverture web
+        try { window.open(trajetSecurise, '_blank'); } catch (e) {}
+        try { ouvrirLienSecurise(trajetSecurise); } catch (e2) {}
+        try { window.location.href = trajetSecurise; } catch (e3) {}
+      }
     });
   });
 })();
