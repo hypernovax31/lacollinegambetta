@@ -104,12 +104,15 @@ try {
     href:link.href,target:link.target,appHref:link.getAttribute('data-ratp-app-href'),
     texte:link.textContent.trim(),title:link.title,
   }));
-  assert.ok(ratpTactile.href.startsWith('https://www.bonjour-ratp.fr/itineraires/?end='),
-    'sur mobile, le tap doit viser l’application Bonjour RATP');
+  assert.ok(ratpTactile.href.startsWith('https://www.ratp.fr/itineraires?end='),
+    'le lien métro vise le trajet RATP, ouvert immédiatement au clic sur mobile');
   assert.equal(new URL(ratpTactile.href).searchParams.get('end'), '4 Rue Belgrand 75020 Paris',
+    'le trajet doit avoir l’adresse du restaurant comme arrivée');
+  assert.equal(ratpTactile.target, '_blank', 'le trajet s’ouvre dans un nouvel onglet');
+  assert.ok(ratpTactile.appHref.startsWith('https://www.bonjour-ratp.fr/itineraires/?end='),
+    'l’application Bonjour RATP reste demandée en parallèle (Intent Android, schémas iOS)');
+  assert.equal(new URL(ratpTactile.appHref).searchParams.get('end'), '4 Rue Belgrand 75020 Paris',
     'l’application doit recevoir l’adresse du restaurant comme arrivée');
-  assert.equal(ratpTactile.target, '', 'le lien tactile ne doit pas s’ouvrir dans un nouvel onglet');
-  assert.equal(ratpTactile.href, ratpTactile.appHref);
   assert.equal(ratpTactile.texte, 'метро Ґамбетта • Лінія 3', 'la mention du métro doit être traduite');
   assert.ok(/Bonjour RATP/.test(ratpTactile.title), 'l’infobulle traduite doit annoncer Bonjour RATP');
 
@@ -131,30 +134,37 @@ try {
   const appAndroid=await pageAndroid.locator('#cover-section [data-ratp-itineraire]').evaluate((link)=>({
     href:link.href,target:link.target,appHref:link.getAttribute('data-ratp-app-href'),
   }));
-  assert.ok(appAndroid.href.startsWith('https://www.bonjour-ratp.fr/itineraires/?end='),
-    'Android vise le domaine déclaré par l’application Bonjour RATP');
+  assert.ok(appAndroid.href.startsWith('https://www.ratp.fr/itineraires?end='),
+    'le lien vise le trajet RATP, ouvert immédiatement au clic');
   assert.equal(new URL(appAndroid.href).searchParams.get('end'), '4 Rue Belgrand 75020 Paris',
-    'l’application doit recevoir l’adresse du restaurant en arrivée');
-  assert.equal(appAndroid.href, appAndroid.appHref);
-  assert.equal(appAndroid.target,'','le tap ne doit pas ouvrir un onglet vide');
+    'le trajet doit avoir l’adresse du restaurant en arrivée');
+  assert.equal(appAndroid.target,'_blank','le trajet s’ouvre dans un nouvel onglet');
+  assert.ok(appAndroid.appHref.startsWith('https://www.bonjour-ratp.fr/itineraires/?end='),
+    'l’application Bonjour RATP reste demandée en parallèle via l’Intent');
   const requetesAndroid=[];
   const popupsAndroid=[];
   pageAndroid.on('request',(r)=>requetesAndroid.push(r.url()));
   pageAndroid.on('popup',(p)=>popupsAndroid.push(p));
+  const promessePopup=pageAndroid.waitForEvent('popup',{timeout:5000});
+  const departAndroid=Date.now();
   await pageAndroid.locator('#cover-section [data-ratp-itineraire]').click();
-  await pageAndroid.waitForTimeout(800);
+  const ongletAndroid=await promessePopup;
+  const delaiOuverture=Date.now()-departAndroid;
+  await ongletAndroid.waitForLoadState('domcontentloaded').catch(()=>{});
+  assert.ok(delaiOuverture<1500,`le trajet doit s’ouvrir sans délai (${delaiOuverture} ms)`);
+  const urlOuverte=new URL(ongletAndroid.url());
+  assert.equal(urlOuverte.hostname,'www.ratp.fr','le trajet doit s’ouvrir sur ratp.fr');
+  assert.equal(urlOuverte.searchParams.get('end'),'4 Rue Belgrand 75020 Paris',
+    'l’arrivée doit être remplie dès l’ouverture');
+  await pageAndroid.waitForTimeout(400);
   const intentAndroid=requetesAndroid.find((u)=>u.startsWith('intent://'));
-  assert.ok(intentAndroid,'Android Chrome doit viser l’application Bonjour RATP via un Intent');
+  assert.ok(intentAndroid,'Android Chrome doit aussi émettre l’Intent vers l’application Bonjour RATP');
   assert.ok(intentAndroid.startsWith('intent://www.bonjour-ratp.fr/itineraires/?end='),
     'l’Intent doit viser l’itinéraire Bonjour RATP avec l’arrivée du restaurant');
-  assert.equal(popupsAndroid.length,0,
-    'aucun onglet ne doit s’ouvrir tout seul : la page du site ne disparaît jamais');
   assert.equal(pageAndroid.url(),`${origineLocale}/index.html`,
     'la page du site ne doit pas disparaître au profit de ratp.fr');
   assert.equal(await pageAndroid.locator('.footer-details__metro-site').count(),0,
     'et c’est tout : aucun lien manuel « Ouvrir le trajet sur ratp.fr » ajouté');
-  assert.ok(!requetesAndroid.some((u)=>u.includes('api-adresse.data.gouv.fr')),
-    'tant que l’application peut s’ouvrir, aucune position n’est demandée');
   /* Le repli natif de l’Intent marque la page (?ratp=1) : c’est elle qui ouvrira
      le site RATP avec le lieu actuel en départ si l’application est absente. */
   const sourceHandoff=readFileSync(join(ROOT,'assets/js/ratp-itinerary.js'),'utf8');
@@ -167,7 +177,7 @@ try {
   assert.ok(intentComplet.includes('S.browser_fallback_url='+encodeURIComponent(repliAttendu.href)),
     'le repli natif doit marquer la page (?ratp=1) pour ouvrir le site RATP ensuite');
   await contexteAndroid.close();
-  console.log('  ok   Chromium Android : Intent émis au clic (repli natif ?ratp=1), page intacte, aucune position demandée');
+  console.log('  ok   Chromium Android : trajet ouvert sans délai au clic, Intent émis en parallèle, page intacte');
 
   // Pied des pages intérieures (hors page de garde) : léger trait doré autour
   // de la marque + adresse/métro, et adresse + métro sur UNE même ligne,
@@ -487,14 +497,15 @@ try {
     const disposition=await mesurerLignesCouverture(largeur, hauteur);
     assert.equal(disposition.metroTag, 'A',
       `la mention du métro doit porter l’itinéraire à ${largeur}×${hauteur}px`);
-    assert.equal(disposition.metroTarget, '',
-      `le lien doit viser l’application au tap à ${largeur}×${hauteur}px`);
-    assert.ok(disposition.metroHref.startsWith('https://www.bonjour-ratp.fr/itineraires/?end='),
-      `le lien tactile doit viser Bonjour RATP à ${largeur}×${hauteur}px`);
+    assert.equal(disposition.metroTarget, '_blank',
+      `le trajet doit s’ouvrir dans un nouvel onglet à ${largeur}×${hauteur}px`);
+    assert.ok(disposition.metroHref.startsWith('https://www.ratp.fr/itineraires?end='),
+      `le lien doit viser le trajet RATP (ouvert immédiatement au tap) à ${largeur}×${hauteur}px`);
     assert.equal(new URL(disposition.metroHref).searchParams.get('end'), '4 Rue Belgrand 75020 Paris',
       `le lien tactile doit porter l’arrivée complète à ${largeur}×${hauteur}px`);
-    assert.equal(disposition.metroAppHref, disposition.metroHref,
-      `le handoff ne doit pas perdre l’adresse de destination à ${largeur}×${hauteur}px`);
+    assert.equal(new URL(disposition.metroAppHref).searchParams.get('end'),
+      new URL(disposition.metroHref).searchParams.get('end'),
+      `l’application et le site doivent viser la même arrivée à ${largeur}×${hauteur}px`);
     assert.equal(disposition.addressFontSize, disposition.metroFontSize, `l’adresse et le métro doivent garder la même taille à ${largeur}×${hauteur}px`);
     assert.ok(Math.abs(disposition.hoursLineFontSize/disposition.addressFontSize-1.2)<.01 &&
       Math.abs(disposition.statusFontSize/disposition.addressFontSize-1.2)<.01 &&

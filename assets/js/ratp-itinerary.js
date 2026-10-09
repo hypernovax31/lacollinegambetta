@@ -1,35 +1,26 @@
-/* Mention « Métro Gambetta • Ligne 3 » : au clic, demande d'ouvrir
-   l'application Bonjour RATP (comme le plan le fait pour l'adresse postale).
-   Si l'utilisateur refuse d'ouvrir l'application ou ne l'a pas installée,
-   une nouvelle page / un nouvel onglet s'ouvre sur le site de la RATP, avec
-   le lieu actuel de l'utilisateur en DÉPART et l'adresse du restaurant en
-   ARRIVÉE. Et c'est tout.
+/* Mention « Métro Gambetta • Ligne 3 » : au clic sur mobile, le trajet
+   s'ouvre IMMÉDIATEMENT sur ratp.fr — nouvel onglet, sans aucun délai —
+   avec l'arrivée = adresse du restaurant. Le départ = lieu actuel de
+   l'utilisateur est ajouté dès que la géolocalisation est résolue (l'onglet
+   ouvert est alors rafraîchi avec ?start=).
 
-   - Android Chrome : Intent explicite vers com.fabernovel.ratp, avec en repli
-     natif (S.browser_fallback_url) la page courante marquée ?ratp=1 : si
-     l'application est absente, Chrome recharge la page, qui ouvre alors le
-     site RATP. Si l'utilisateur annule le sélecteur, rien ne se passe.
-   - iOS et autres mobiles : le clic émet les schémas candidats de
-     l'application (ratp:// et bonjourratp://) — c'est le schéma déclaré par
-     l'application qui déclenche la boîte « Ouvrir dans Bonjour RATP ? » —
-     dans des iframes jetables : la page courante n'est jamais remplacée. Si
-     l'application ne prend pas la main (refus ou application absente), le
-     site RATP s'ouvre dans un nouvel onglet.
-   - Le lieu actuel n'est demandé (géolocalisation du navigateur, convertie
-     en adresse par la Base Adresse Nationale) que quand le site RATP doit
-     s'ouvrir : jamais si l'application s'ouvre, jamais au chargement.
-   - Ordinateur : lien natif vers ratp.fr, nouvel onglet.
+   La demande d'ouverture de l'application Bonjour RATP est émise en
+   parallèle (schémas candidats ratp:// et bonjourratp:// sur iPhone, Intent
+   officiel com.fabernovel.ratp sur Android Chrome) : si l'application
+   s'ouvre, l'onglet du site RATP, inutile, se ferme tout seul. Si
+   l'application n'apparaît pas, l'onglet reste : aucun délai.
 
-   Aucune page intermédiaire, aucune bannière, aucun lien manuel. */
+   Ordinateur : lien natif vers ratp.fr, nouvel onglet. */
 (function () {
   'use strict';
 
   var SCHEMAS_APP = ['ratp://', 'bonjourratp://'];
-  var ATTENTE_APP = 2000;
-  var REDOUBLE_MS = 1200;
+  var NOM_FENETRE = 'ratp-trajet';
   var PARAM_RETOUR = 'ratp'; /* ?ratp=1 : retour de l'Intent Android sans application */
   var REVERSE_ENDPOINT = 'https://api-adresse.data.gouv.fr/reverse/';
   var GEOLOC_TIMEOUT = 8000;
+  var SURVEILLANCE_APP = 2000;
+  var REDOUBLE_MS = 800;
 
   var agent = navigator.userAgent || '';
   var tactile = false;
@@ -49,8 +40,8 @@
     }
   }
 
-  /* Intent Android : application visée ; si elle est absente, Chrome ouvre
-     lui-même le repli (ici, la page courante marquée ?ratp=1). */
+  /* Intent Android : application visée ; si elle est absente, Chrome recharge
+     la page courante marquée ?ratp=1 (aucune page d'erreur). */
   function intentUrl(appUrl, repli) {
     var app = new URL(appUrl);
     return 'intent://' + app.host + app.pathname + app.search +
@@ -108,25 +99,19 @@
     return trajet + separateur + 'start=' + encodeURIComponent(adresse);
   }
 
-  /* Ouvrir le site RATP : nouvel onglet si le navigateur l'autorise,
-     sinon la page courante. Le départ est le lieu actuel. */
-  function ouvrirTrajet(trajet) {
+  /* Rafraîchir l'onglet du trajet avec le départ (lieu actuel). */
+  function completerDepart(trajet, onglet) {
     lieuActuel().then(function (adresse) {
-      var url = urlTrajet(trajet, adresse);
-      var onglet = null;
+      if (!adresse || !onglet) return;
       try {
-        onglet = window.open(url, '_blank');
-      } catch (e) {
-        onglet = null;
-      }
-      /* Dernier recours si le navigateur bloque le nouvel onglet. */
-      if (!onglet) naviguer(url);
+        onglet.location.href = urlTrajet(trajet, adresse);
+      } catch (e) {}
     });
   }
 
   /* --- Retour de l'Intent Android sans application installée : Chrome a
-     rechargé la page avec ?ratp=1 -> on ouvre le site RATP (nouvelle page),
-     avec le lieu actuel en départ et le restaurant en arrivée. */
+     rechargé la page avec ?ratp=1. On nettoie l'URL, puis on remplit le
+     départ de l'onglet du trajet déjà ouvert (retrouvé par son nom). */
   if (new URLSearchParams(window.location.search).get(PARAM_RETOUR) === '1') {
     try {
       var propre = new URL(window.location.href);
@@ -137,7 +122,14 @@
     if (lienRetour) {
       var trajetRetour = lienRetour.getAttribute('href');
       lieuActuel().then(function (adresse) {
-        naviguer(urlTrajet(trajetRetour, adresse));
+        if (!adresse) return;
+        var reference = null;
+        try { reference = window.open('', NOM_FENETRE); } catch (e) { reference = null; }
+        if (reference) {
+          try {
+            reference.location.href = urlTrajet(trajetRetour, adresse);
+          } catch (e) {}
+        }
       });
     }
     return;
@@ -148,11 +140,6 @@
     var trajet = lien.getAttribute('href');
     if (!appUrl || !trajet) return;
 
-    /* Écran tactile : le lien vise l'application (lien universel) pour le cas
-       sans JavaScript ; le clic, lui, passe par la demande système. */
-    lien.href = appUrl;
-    lien.removeAttribute('target');
-
     var dernierClic = 0;
     lien.addEventListener('click', function (event) {
       var maintenant = Date.now();
@@ -160,50 +147,54 @@
       if (maintenant - dernierClic < REDOUBLE_MS) return;
       dernierClic = maintenant;
 
-      /* L'application a pris la main : la page passe en arrière-plan. */
-      var applicationOuverte = false;
-      window.addEventListener('pagehide', function () { applicationOuverte = true; }, { once: true });
-      document.addEventListener('visibilitychange', function () {
-        if (document.hidden) applicationOuverte = true;
-      }, { once: true });
+      /* 1. Le trajet s'ouvre TOUT DE SUITE : nouvel onglet, sans délai. */
+      var onglet = null;
+      try {
+        onglet = window.open(trajet, NOM_FENETRE);
+      } catch (e) {
+        onglet = null;
+      }
+      if (!onglet) naviguer(trajet);
 
+      /* 2. La demande d'ouverture de l'application est émise en parallèle. */
       if (androidChrome) {
-        /* Android Chrome : l'Intent vise l'application ; si elle est absente,
-           Chrome recharge la page avec ?ratp=1 (détecté ci-dessus), qui ouvre
-           le site RATP. Si l'utilisateur annule, rien ne se passe. */
         var repli = new URL(window.location.href);
         repli.searchParams.set(PARAM_RETOUR, '1');
         naviguer(intentUrl(appUrl, repli.href));
-        return;
+      } else {
+        /* iPhone et autres mobiles : les schémas candidats, dans des iframes
+           jetables — la page courante n'est jamais remplacée. */
+        SCHEMAS_APP.forEach(function (schema) {
+          var essai = document.createElement('iframe');
+          essai.style.display = 'none';
+          essai.setAttribute('aria-hidden', 'true');
+          essai.tabIndex = -1;
+          essai.src = schema;
+          document.body.appendChild(essai);
+          setTimeout(function () {
+            if (essai.parentNode) essai.parentNode.removeChild(essai);
+          }, 1000);
+        });
       }
 
-      /* iOS et autres mobiles : demande d'ouverture via les schémas candidats
-         de l'application, dans des iframes jetables — jamais dans la page
-         courante, que Safari remplacerait par « Impossible d'ouvrir la page »
-         si l'application est absente. Le schéma déclaré par l'application est
-         celui qui déclenche la boîte « Ouvrir dans Bonjour RATP ? ». */
-      var essais = [];
-      SCHEMAS_APP.forEach(function (schema) {
-        var essai = document.createElement('iframe');
-        essai.style.display = 'none';
-        essai.setAttribute('aria-hidden', 'true');
-        essai.tabIndex = -1;
-        essai.src = schema;
-        document.body.appendChild(essai);
-        essais.push(essai);
-      });
+      /* 3. Si l'application s'ouvre peu après le clic (la page passe en
+         arrière-plan), l'onglet du site RATP, inutile, se ferme tout seul. */
+      function detecterApplication() {
+        if (document.hidden) {
+          if (onglet) {
+            try { onglet.close(); } catch (e) {}
+          }
+        }
+      }
+      document.addEventListener('visibilitychange', detecterApplication);
+      window.addEventListener('pagehide', detecterApplication);
+      setTimeout(function () {
+        document.removeEventListener('visibilitychange', detecterApplication);
+        window.removeEventListener('pagehide', detecterApplication);
+      }, SURVEILLANCE_APP);
 
-      window.setTimeout(function () {
-        essais.forEach(function (essai) {
-          if (essai.parentNode) essai.parentNode.removeChild(essai);
-        });
-        /* L'application s'est ouverte (ou l'utilisateur a choisi « Ouvrir ») :
-           on ne touche à rien, aucune position n'est demandée. */
-        if (applicationOuverte || document.hidden) return;
-        /* Refus ou application absente : le site RATP s'ouvre, avec le lieu
-           actuel en départ et le restaurant en arrivée. */
-        ouvrirTrajet(trajet);
-      }, ATTENTE_APP);
+      /* 4. Le départ (lieu actuel) complète l'onglet dès que possible. */
+      completerDepart(trajet, onglet);
     });
   });
 })();
