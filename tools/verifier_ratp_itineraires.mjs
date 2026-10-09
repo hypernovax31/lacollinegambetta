@@ -22,6 +22,13 @@ import chromiumBinary, { setupLambdaEnvironment } from '@sparticuz/chromium';
 import { carteChromiumArgs } from './chromium-args.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
+try {
+  const indexContent = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  if (!indexContent.includes('data-ratp-itineraire') && !indexContent.includes('ratp-itinerary.js')) {
+    console.log('  ok   RATP : plus de lien RATP, vérification ignorée comme demandé');
+    process.exit(0);
+  }
+} catch (e) {}
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8' };
 const ARRIVEE = '4 Rue Belgrand 75020 Paris';
 const ADRESSE_POSITION = '12 Rue de la Paix, 75002 Paris';

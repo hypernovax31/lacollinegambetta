@@ -1,22 +1,18 @@
 #!/usr/bin/env python3
-"""Pied de page commun : adresse, mention du m\u00e9tro, \u00ab Dans les alentours \u00bb.
+"""Pied de page commun : adresse, mention du métro, « Dans les alentours ».
 
-Le m\u00eame bloc est pos\u00e9 sur toutes les pages, page de garde comprise :
+Le même bloc est posé sur toutes les pages, page de garde comprise :
 
-    LA COLLINE GAMBETTA \u2022 4 RUE BELGRAND \u2022 75020 PARIS \u2022 M\u00c9TRO GAMBETTA \u2022 LIGNE 3
-    Dans les alentours \u2022 Mairie du 20e \u2022 Th\u00e9\u00e2tre de la Colline \u2022 P\u00e8re-Lachaise ...
-    Mentions l\u00e9gales \u00b7 Confidentialit\u00e9
+    LA COLLINE GAMBETTA • 4 RUE BELGRAND • 75020 PARIS • MÉTRO GAMBETTA • LIGNE 3
+    Dans les alentours • Mairie du 20e • Théâtre de la Colline • Père-Lachaise ...
+    Mentions légales · Confidentialité
 
-\u2022 Les points d'int\u00e9r\u00eat sont tri\u00e9s automatiquement par distance au restaurant
-  (calcul \u00e0 vol d'oiseau \u00e0 partir des coordonn\u00e9es ci-dessous, la distance est
-  rappel\u00e9e dans l'infobulle de chaque lien).
-\u2022 La mention \u00ab M\u00c9TRO GAMBETTA \u2022 LIGNE 3 \u00bb n'appara\u00eet qu'une fois par page et
-  porte l'itin\u00e9raire RATP : sur mobile, elle ouvre l'application Bonjour RATP
-  (arriv\u00e9e = 4 Rue Belgrand 75020 Paris) ; si l'application manque, le trajet
-  est d\u00e9j\u00e0 ouvert dans un nouvel onglet sur ratp.fr, arriv\u00e9e remplie. Aucune
-  page interm\u00e9diaire, aucune demande de position. Sur ordinateur, le lien web
-  RATP s'ouvre dans un nouvel onglet.
-\u2022 Les liens sont discrets mais bien visibles : jamais de texte dissimul\u00e9.
+• Les points d'intérêt sont triés automatiquement par distance au restaurant
+  (calcul à vol d'oiseau à partir des coordonnées ci-dessous, la distance est
+  rappelée dans l'infobulle de chaque lien).
+• La mention « MÉTRO GAMBETTA • LIGNE 3 » n'apparaît qu'une fois par page,
+  en texte simple (plus de lien RATP / Bonjour RATP).
+• Les liens sont discrets mais bien visibles : jamais de texte dissimulé.
 
 Script idempotent : il remplace ses propres blocs entre marqueurs et supprime
 les anciens blocs RATP (handoff application) restés dans une page.
@@ -26,40 +22,34 @@ from __future__ import annotations
 import math
 import re
 from pathlib import Path
-from urllib.parse import quote_plus
 
 ROOT = Path(__file__).resolve().parent.parent
 
 # Le restaurant
 LAT, LON = 48.8647788, 2.3993777
-# Adresse d'arrivee du trajet : celle du restaurant, telle qu'elle doit
-# apparaitre dans la case « Arrivee » de l'application et du site RATP.
-ARRIVEE_RATP = "4 Rue Belgrand 75020 Paris"
-URL_RATP_APP = ("https://www.bonjour-ratp.fr/itineraires/?end="
-                + quote_plus(ARRIVEE_RATP))
-URL_RATP_WEB = "https://www.ratp.fr/itineraires?end=" + quote_plus(ARRIVEE_RATP)
+
 URL_PLAN = ("https://www.google.com/maps/search/?api=1&amp;query="
             "La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris")
 
-# Points d'inter\u00eat du 20e et du 11e (jamais la mairie du 11e).
+# Points d'intérêt du 20e et du 11e (jamais la mairie du 11e).
 # (libelle, url, latitude, longitude) -- le tri par distance est automatique.
 POINTS = [
-    ("Mairie du 20\u1d49", "https://mairie20.paris.fr/", 48.86512, 2.39840),
-    ("Th\u00e9\u00e2tre de la Colline", "https://www.colline.fr/", 48.86703, 2.40142),
-    ("P\u00e8re-Lachaise", "https://www.paris.fr/lieux/cimetiere-du-pere-lachaise-4080",
+    ("Mairie du 20ᵉ", "https://mairie20.paris.fr/", 48.86512, 2.39840),
+    ("Théâtre de la Colline", "https://www.colline.fr/", 48.86703, 2.40142),
+    ("Père-Lachaise", "https://www.paris.fr/lieux/cimetiere-du-pere-lachaise-4080",
      48.86300, 2.39550),
-    ("Carr\u00e9 de Baudouin", "https://www.pavilloncarredebaudouin.fr/", 48.86978, 2.38894),
+    ("Carré de Baudouin", "https://www.pavilloncarredebaudouin.fr/", 48.86978, 2.38894),
     ("Parc de Belleville", "https://www.paris.fr/lieux/parc-de-belleville-1777",
      48.87081, 2.38470),
     ("Le Bataclan", "https://www.bataclan.fr/", 48.86312, 2.37081),
     ("Cirque d'Hiver", "https://www.cirquedhiver.com/", 48.86349, 2.36767),
-    ("Op\u00e9ra Bastille", "https://www.operadeparis.fr/visites/opera-bastille",
+    ("Opéra Bastille", "https://www.operadeparis.fr/visites/opera-bastille",
      48.85200, 2.37010),
 ]
 
 
 def distance_m(lat: float, lon: float) -> float:
-    """Distance \u00e0 vol d'oiseau entre le restaurant et un point, en m\u00e8tres."""
+    """Distance à vol d'oiseau entre le restaurant et un point, en mètres."""
     r = 6371000.0
     p1, p2 = math.radians(LAT), math.radians(lat)
     dp, dl = p2 - p1, math.radians(lon - LON)
@@ -82,29 +72,21 @@ SEP = '<span class="footer-quartier__sep" aria-hidden="true">\u2022</span>'
 def nav_alentours(classe: str) -> str:
     liens = SEP.join(
         f'<a href="{u}" target="_blank" rel="noopener" '
-        f'title="\u00c0 {libelle_distance(d)} du restaurant">{t}</a>'
+        f'title="À {libelle_distance(d)} du restaurant">{t}</a>'
         for t, u, d in TRIES)
     return (f'<nav class="footer-quartier{classe}" aria-label="Dans les alentours">'
             f'<span>Dans les alentours</span>{SEP}{liens}</nav>')
 
 
 LIEN_METRO = (
-    f'<a class="footer-details__metro" data-ratp-itineraire '
-    f'data-ratp-app-href="{URL_RATP_APP}" '
-    f'target="_blank" rel="noopener" href="{URL_RATP_WEB}"'
-    ' title="Ouvrir Bonjour RATP pour l\u2019itin\u00e9raire">'
-    'M\u00c9TRO GAMBETTA \u2022 LIGNE 3</a>')
-
-# Script du handoff : fichier versionne, pose sur toutes les pages.
-SCRIPT_ITINERAIRE = ("""<!-- ratp:itineraire:debut -->
-<script src="assets/js/ratp-itinerary.js?v=2026100917" defer></script>
-<!-- ratp:itineraire:fin -->""")
+    '<span class="footer-details__metro">'
+    'MÉTRO GAMBETTA • LIGNE 3</span>')
 
 # Ancien bloc RATP inline (handoff de 2025) : le script le retire des pages
-# qui le contiennent encore, sans jamais le reposer. Le handoff vit maintenant
-# dans assets/js/ratp-itinerary.js, pose entre les marqueurs ratp:itineraire.
 BLOC_RATP = re.compile(r'\n*<!-- ratp:app-handoff:debut -->[\s\S]*?'
                        r'<!-- ratp:app-handoff:fin -->\n*')
+BLOC_RATP_ITINERAIRE = re.compile(r'\n*<!-- ratp:itineraire:debut -->[\s\S]*?'
+                                  r'<!-- ratp:itineraire:fin -->\n*')
 
 CSS = """/* quartier:css:debut */
 /* ===== Pied de page : adresse, itineraire et reperes des alentours ========
@@ -133,9 +115,7 @@ html:not(.carte-doc) .footer-details .footer-details__metro {
   color:#fff !important; text-decoration:none;
 }
 html:not(.carte-doc) .footer-details .footer-address-link:hover,
-html:not(.carte-doc) .footer-details .footer-address-link:focus-visible,
-html:not(.carte-doc) .footer-details .footer-details__metro:hover,
-html:not(.carte-doc) .footer-details .footer-details__metro:focus-visible {
+html:not(.carte-doc) .footer-details .footer-address-link:focus-visible {
   color:#fff !important; text-decoration:underline; text-underline-offset:3px;
 }
 html:not(.carte-doc) .footer-details__separator { color:#fff !important; }
@@ -298,9 +278,7 @@ COVER_ADRESSE = (
     ' target="_blank" rel="noopener" title="Ouvrir l\u2019adresse dans le plan">'
     '4 rue Belgrand \u2022 75020 Paris</a>'
     '<span class="footer-quartier__sep" aria-hidden="true"> \u2022 </span>'
-    f'<a data-ratp-itineraire data-ratp-app-href="{URL_RATP_APP}" '
-    f'target="_blank" rel="noopener" href="{URL_RATP_WEB}"'
-    ' title="Ouvrir Bonjour RATP pour l\u2019itin\u00e9raire">M\u00e9tro Gambetta \u2022 Ligne 3</a>'
+    '<span>M\u00e9tro Gambetta \u2022 Ligne 3</span>'
     '</div>')
 
 LEGAL_COVER = ('<nav class="legal-bottom-nav legal-bottom-nav--cover"'
@@ -327,25 +305,24 @@ def poser_css(s: str) -> str:
 
 
 def poser_js(s: str) -> str:
-    """Retire l'ancien bloc inline et pose le script du handoff."""
+    """Retire tous les blocs RATP."""
     s, _ = entre_marqueurs(s, "<!-- quartier:js:debut -->",
                             "<!-- quartier:js:fin -->", "")
     s = BLOC_RATP.sub("\n", s)
-    s, fait = entre_marqueurs(s, "<!-- ratp:itineraire:debut -->",
-                              "<!-- ratp:itineraire:fin -->", SCRIPT_ITINERAIRE)
-    if fait:
-        return s
-    i = s.rfind("</body>")
-    if i < 0:
-        return s
-    return s[:i] + SCRIPT_ITINERAIRE + "\n" + s[i:]
+    s = BLOC_RATP_ITINERAIRE.sub("\n", s)
+    # Supprimer toute référence au script ratp-itinerary.js
+    s = re.sub(r'<script[^>]*ratp-itinerary\.js[^>]*></script>\n?', '', s)
+    return s
 
 
 def poser_metro(s: str) -> str:
-    """La mention du metro porte l'itineraire RATP (une seule par page)."""
+    """La mention du metro en texte simple, plus de lien RATP."""
+    # Remplacer tout lien metro par un span simple
     motif = re.compile(
         r'<(?:span|a)[^>]*class="footer-details__metro"[^>]*>.*?</(?:span|a)>', re.S)
     s = motif.sub(lambda _m: LIEN_METRO, s)
+    # Remplacer aussi les anciens liens data-ratp-itineraire
+    s = re.sub(r'<a[^>]*data-ratp-itineraire[^>]*>.*?</a>', LIEN_METRO, s, flags=re.S)
     s = s.replace('>4 RUE BELGRAND, 75020 PARIS</a>',
                   '>4 RUE BELGRAND • 75020 PARIS</a>')
     if 'class="footer-details__location"' in s:
@@ -354,7 +331,7 @@ def poser_metro(s: str) -> str:
     adresse_metro = re.compile(
         r'(<a class="footer-address-link"[^>]*>.*?</a>)\s*'
         r'(?:<span class="footer-details__separator"[^>]*>.*?</span>\s*)?'
-        r'(<a class="footer-details__metro"[^>]*>.*?</a>)', re.S)
+        r'(<span class="footer-details__metro"[^>]*>.*?</span>)', re.S)
     return adresse_metro.sub(
         lambda m: '<span class="footer-details__location">'
         + m.group(1) + separateur + m.group(2) + '</span>', s)
@@ -422,7 +399,7 @@ def main() -> None:
     s = poser_bloc_garde(s)
     s = poser_js(s)
     f.write_text(s, encoding="utf-8")
-    print("index.html : page de garde + pied de page mis a jour")
+    print("index.html : page de garde + pied de page mis a jour (sans RATP)")
 
     # 2. les autres pieds de page
     for nom in ("reservation.html", "mentions-legales.html", "confidentialite.html"):
@@ -434,7 +411,7 @@ def main() -> None:
         s = poser_classe_secondaire(s)
         s = poser_js(s)
         f.write_text(s, encoding="utf-8")
-        print(f"{nom} : pied de page intérieur mis a jour (trait + ligne unique)")
+        print(f"{nom} : pied de page intérieur mis a jour (sans RATP)")
 
     # 3. page 404 : la meme ligne de reperes sous l'adresse
     f = ROOT / "404.html"
@@ -446,8 +423,9 @@ def main() -> None:
     if not fait:
         i = s.index("</main>")
         s = s[:i] + "  " + bloc + "\n" + s[i:]
+    s = poser_js(s)
     f.write_text(s, encoding="utf-8")
-    print("404.html : ligne des alentours ajoutee")
+    print("404.html : ligne des alentours ajoutee (sans RATP)")
 
     print("  ordre par distance : "
           + " \u2022 ".join(f"{t} ({libelle_distance(d)})" for t, _u, d in TRIES))

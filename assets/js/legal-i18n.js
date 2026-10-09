@@ -76,7 +76,6 @@
     ['message libre, qui peut contenir une demande particulière, une allergie signalée, une fête ou une information pratique ;','free-text message, which may contain a special request, reported allergy, celebration or practical information;','mensaje libre, que puede contener una solicitud especial, una alergia, una celebración o información práctica;','Freitextnachricht, die einen besonderen Wunsch, eine angegebene Allergie, eine Feier oder praktische Informationen enthalten kann;','messaggio libero, che può contenere una richiesta particolare, un’allergia segnalata, una festa o informazioni pratiche;','mensagem livre, que pode conter um pedido específico, uma alergia, uma celebração ou informação prática;','vrij bericht, dat een bijzonder verzoek, gemelde allergie, feest of praktische informatie kan bevatten;','رسالة حرة قد تتضمن طلباً خاصاً أو حساسية مُبلّغاً عنها أو احتفالاً أو معلومة عملية؛','自由留言，可能包含特殊要求、已申报的过敏、庆祝活动或实用信息；','вільне повідомлення, яке може містити особливе побажання, зазначену алергію, свято або практичну інформацію;','特別な希望、申告されたアレルギー、記念日、実用情報などを含む自由記入メッセージ；','특별 요청, 알려진 알레르기, 축하 행사 또는 실용 정보를 포함할 수 있는 자유 메시지;','wiadomość, która może zawierać szczególną prośbę, zgłoszoną alergię, uroczystość lub informację praktyczną;','özel talep, bildirilen alerji, kutlama veya pratik bilgi içerebilen serbest mesaj;','विशेष अनुरोध, बताई गई एलर्जी, उत्सव या व्यावहारिक जानकारी वाला स्वतंत्र संदेश;'],
     ['informations nécessaires au suivi technique de la réservation, notamment son identifiant, son statut et sa date de création.','information needed for technical tracking of the booking, including its identifier, status and creation date.','información necesaria para el seguimiento técnico de la reserva, incluido su identificador, estado y fecha de creación.','für die technische Nachverfolgung der Reservierung erforderliche Informationen, insbesondere Kennung, Status und Erstellungsdatum.','informazioni necessarie al monitoraggio tecnico della prenotazione, inclusi identificativo, stato e data di creazione.','informações necessárias ao acompanhamento técnico da reserva, incluindo o identificador, o estado e a data de criação.','informatie die nodig is voor de technische opvolging van de reservering, waaronder identificatie, status en aanmaakdatum.','المعلومات اللازمة للمتابعة التقنية للحجز، بما في ذلك معرّفه وحالته وتاريخ إنشائه.','预订技术跟踪所需的信息，包括其标识符、状态和创建日期。','інформація, необхідна для технічного супроводу бронювання, зокрема ідентифікатор, статус і дату створення.','予約の技術的な追跡に必要な情報（識別子、ステータス、作成日など）。','예약의 기술적 추적에 필요한 정보(식별자, 상태 및 생성일 포함).','informacje potrzebne do technicznej obsługi rezerwacji, w tym identyfikator, status i datę utworzenia.','rezervasyonun teknik takibi için gerekli bilgiler; özellikle kimliği, durumu ve oluşturulma tarihi.','बुकिंग की तकनीकी निगरानी के लिए आवश्यक जानकारी, जिसमें पहचानकर्ता, स्थिति और निर्माण की तारीख शामिल है।'],
     ['Le formulaire ne demande pas de données bancaires. Il est recommandé de ne pas inscrire dans le message libre de données sensibles qui ne sont pas nécessaires à l’organisation de la table.','The form does not request banking details. You are advised not to enter sensitive data in the free-text message when it is not necessary for arranging the table.','El formulario no solicita datos bancarios. Se recomienda no incluir en el mensaje libre datos sensibles que no sean necesarios para organizar la mesa.','Das Formular fragt keine Bankdaten ab. Es wird empfohlen, in der Freitextnachricht keine sensiblen Daten einzutragen, die für die Organisation des Tisches nicht erforderlich sind.','Il modulo non richiede dati bancari. Si raccomanda di non inserire nel messaggio libero dati sensibili non necessari all’organizzazione del tavolo.','O formulário não solicita dados bancários. Recomenda-se não inserir na mensagem livre dados sensíveis que não sejam necessários para organizar a mesa.','Het formulier vraagt niet om bankgegevens. Vul in het vrije bericht geen gevoelige gegevens in die niet nodig zijn om de tafel te organiseren.','لا يطلب النموذج بيانات مصرفية. ويُنصح بعدم إدخال بيانات حساسة في الرسالة الحرة إذا لم تكن ضرورية لتنظيم الطاولة.','表单不会要求银行信息。建议不要在自由留言中填写安排餐桌所不需要的敏感数据。','Форма не запитує банківських даних. Рекомендуємо не вносити у вільне повідомлення чутливі дані, не потрібні для організації столика.','フォームでは銀行情報を求めません。テーブルの手配に不要な機微情報を自由記入欄へ入力しないでください。','양식에서는 은행 정보를 요구하지 않습니다. 테이블 준비에 필요하지 않은 민감한 정보를 자유 메시지에 입력하지 않는 것이 좋습니다.','Formularz nie wymaga danych bankowych. Zaleca się, aby w wiadomości nie wpisywać danych wrażliwych, które nie są potrzebne do organizacji stolika.','Form banka bilgisi istemez. Masa düzenlemesi için gerekli olmayan hassas verilerin serbest mesaja yazılmaması önerilir.','फ़ॉर्म बैंक संबंधी जानकारी नहीं माँगता। टेबल की व्यवस्था के लिए आवश्यक न होने वाला संवेदनशील डेटा स्वतंत्र संदेश में न लिखने की सलाह दी जाती है।'],
-    ['Lors d’un clic sur la mention « Métro Gambetta • Ligne 3 », votre position peut être demandée par le navigateur pour pré-remplir le point de départ sur le site ratp.fr. Les coordonnées sont converties en adresse à la volée par la Base Adresse Nationale (api-adresse.data.gouv.fr), puis transmises à ratp.fr : elles ne sont ni enregistrées par le site, ni communiquées au restaurant.','When you click the “Gambetta metro • Line 3” mention, the browser may request your location to pre-fill the departure point on the ratp.fr website. The coordinates are converted into an address on the fly by the Base Adresse Nationale (api-adresse.data.gouv.fr) and then sent to ratp.fr: they are neither stored by the site nor shared with the restaurant.','Al pulsar la mención «Metro Gambetta • Línea 3», el navegador puede solicitar su ubicación para rellenar el punto de salida en el sitio ratp.fr. Las coordenadas se convierten en dirección al vuelo mediante la Base Adresse Nationale (api-adresse.data.gouv.fr) y luego se envían a ratp.fr: el sitio no las registra y tampoco se comunican al restaurante.','Beim Klick auf den Hinweis „U-Bahn Gambetta • Linie 3“ kann der Browser Ihren Standort anfordern, um den Abfahrtsort auf der Website ratp.fr vorab auszufüllen. Die Koordinaten werden über die Base Adresse Nationale (api-adresse.data.gouv.fr) sofort in eine Adresse umgewandelt und dann an ratp.fr übertragen: Sie werden weder von der Website gespeichert noch an das Restaurant weitergegeben.','Cliccando sulla dicitura «Metro Gambetta • Linea 3», il browser può richiedere la tua posizione per precompilare il punto di partenza sul sito ratp.fr. Le coordinate vengono convertite in indirizzo al volo dalla Base Adresse Nationale (api-adresse.data.gouv.fr) e poi trasmesse a ratp.fr: non vengono né registrate dal sito né comunicate al ristorante.','Ao clicar na menção «Metro Gambetta • Linha 3», o navegador pode pedir a sua localização para preencher o ponto de partida no site ratp.fr. As coordenadas são convertidas em endereço na hora pela Base Adresse Nationale (api-adresse.data.gouv.fr) e depois transmitidas ao ratp.fr: não são nem guardadas pelo site nem comunicadas ao restaurante.','Wanneer u op de vermelding „Metro Gambetta • Lijn 3” klikt, kan de browser uw locatie opvragen om het vertrekpunt op de website ratp.fr vooraf in te vullen. De coördinaten worden via de Base Adresse Nationale (api-adresse.data.gouv.fr) direct in een adres omgezet en vervolgens naar ratp.fr gestuurd: ze worden noch door de site opgeslagen, noch aan het restaurant doorgegeven.','عند النقر على عبارة «مترو غامبيتا • الخط 3»، قد يطلب المتصفح موقعك لملء نقطة الانطلاق مسبقاً على موقع ratp.fr. يتم تحويل الإحداثيات إلى عنوان فوراً عبر Base Adresse Nationale (api-adresse.data.gouv.fr)، ثم إرسالها إلى ratp.fr: لا يسجلها الموقع ولا تُبلَّغ للمطعم.','点击«甘贝塔地铁站 • 3号线»字样时，浏览器可能会请求您的位置，以便在 ratp.fr 网站上预填出发地点。坐标会通过 Base Adresse Nationale（api-adresse.data.gouv.fr）即时转换为地址，然后发送给 ratp.fr：网站既不会记录，也不会告知餐厅。','Після натискання на напис «метро Ґамбетта • Лінія 3» браузер може запросити ваше місцезнаходження, щоб заздалегідь заповнити пункт відправлення на сайті ratp.fr. Координати миттєво конвертуються в адресу через Base Adresse Nationale (api-adresse.data.gouv.fr), а потім передаються ratp.fr: їх не зберігає сайт і не повідомляє ресторан.','「ガンベッタ駅 • 3号線」という記載をクリックすると、ratp.fr サイトの出発地を事前入力するために、ブラウザが現在地を要求することがあります。座標は Base Adresse Nationale（api-adresse.data.gouv.fr）によって即座に住所に変換され、ratp.fr に送信されます。サイトに保存されることも、レストランに伝えられることもありません。','«감베타역 • 3호선» 문구를 클릭하면 ratp.fr 사이트의 출발지를 미리 채우기 위해 브라우저가 현재 위치를 요청할 수 있습니다. 좌표는 Base Adresse Nationale(api-adresse.data.gouv.fr)를 통해 즉시 주소로 변환되어 ratp.fr로 전송됩니다. 사이트에 저장되지 않으며 레스토랑에도 전달되지 않습니다.','Po kliknięciu napisu „Metro Gambetta • Linia 3” przeglądarka może poprosić o lokalizację, aby wstępnie wypełnić miejsce odjazdu na stronie ratp.fr. Współrzędne są natychmiast zamieniane na adres przez Base Adresse Nationale (api-adresse.data.gouv.fr), a następnie przekazywane do ratp.fr: nie są przechowywane przez witrynę ani udostępniane restauracji.','«Gambetta metrosu • 3. Hat» ibaresine tıkladığınızda, tarayıcı ratp.fr sitesindeki kalkış noktasını önceden doldurmak için konumunuzu isteyebilir. Koordinatlar Base Adresse Nationale (api-adresse.data.gouv.fr) üzerinden anında adrese dönüştürülür ve ratp.fr’e gönderilir: site tarafından saklanmaz ve restorana iletilmez.','«गांबेता मेट्रो • 라인 3» पर क्लिक करने पर, ratp.fr साइट पर प्रस्थान बिंदु पहले से भरने के लिए ब्राउज़र आपका स्थान माँग सकता है। निर्देशांकों को Base Adresse Nationale (api-adresse.data.gouv.fr) के ज़रिए即座 पते में Badla जाता है और ratp.fr को भेजा जाता है: न तो साइट उन्हें सहेजती है, न ही रेस्टोरेंट को बताती है।'],
     ['3. Finalités','3. Purposes','3. Finalidades','3. Zwecke','3. Finalità','3. Finalidades','3. Doeleinden','٣. الأغراض','3. 处理目的','3. Цілі','3. 利用目的','3. 처리 목적','3. Cele','3. Amaçlar','3. उद्देश्य'],
     ['Les données sont utilisées pour :','The data is used to:','Los datos se utilizan para:','Die Daten werden verwendet, um:','I dati sono utilizzati per:','Os dados são utilizados para:','De gegevens worden gebruikt om:','تُستخدم البيانات من أجل:','数据用于：','Дані використовуються для:','データは次の目的で利用します：','데이터는 다음 목적으로 사용됩니다:','Dane są wykorzystywane do:','Veriler şu amaçlarla kullanılır:','डेटा का उपयोग इन उद्देश्यों के लिए किया जाता है:'],
     ['recevoir et traiter votre demande de réservation ;','receive and process your booking request;','recibir y tramitar su solicitud de reserva;','Ihre Reservierungsanfrage zu empfangen und zu bearbeiten;','ricevere ed elaborare la richiesta di prenotazione;','receber e tratar o seu pedido de reserva;','uw reserveringsaanvraag ontvangen en verwerken;','تلقي طلب الحجز ومعالجته؛','接收并处理您的预订请求；','отримувати й обробляти ваш запит на бронювання;','予約リクエストを受け取り処理する；','예약 요청을 접수하고 처리하기;','przyjmować i obsługiwać prośbę o rezerwację;','rezervasyon talebinizi almak ve işlemek;','आपके बुकिंग अनुरोध को प्राप्त और संसाधित करना;'],
@@ -165,7 +164,6 @@
       "Cirque d'Hiver": 'Winter Circus',
       'Opéra Bastille': 'Bastille Opera',
       'Ouvrir l’adresse dans le plan': 'Open the address on the map',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Open Bonjour RATP for directions'
     },
     es: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 París',
@@ -181,7 +179,6 @@
       "Cirque d'Hiver": 'Circo de Invierno',
       'Opéra Bastille': 'Ópera Bastille',
       'Ouvrir l’adresse dans le plan': 'Abrir la dirección en el mapa',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Abrir Bonjour RATP para consultar la ruta'
     },
     de: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
@@ -197,7 +194,6 @@
       "Cirque d'Hiver": 'Winterzirkus',
       'Opéra Bastille': 'Bastille-Oper',
       'Ouvrir l’adresse dans le plan': 'Adresse auf der Karte öffnen',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP für die Route öffnen'
     },
     it: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Parigi',
@@ -213,7 +209,6 @@
       "Cirque d'Hiver": 'Circo d’inverno',
       'Opéra Bastille': 'Opera Bastille',
       'Ouvrir l’adresse dans le plan': 'Apri l’indirizzo sulla mappa',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Apri Bonjour RATP per il percorso'
     },
     pt: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
@@ -229,7 +224,6 @@
       "Cirque d'Hiver": 'Circo de Inverno',
       'Opéra Bastille': 'Ópera da Bastilha',
       'Ouvrir l’adresse dans le plan': 'Abrir o endereço no mapa',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Abrir o Bonjour RATP para consultar o percurso'
     },
     nl: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Parijs',
@@ -245,7 +239,6 @@
       "Cirque d'Hiver": 'Wintercircus',
       'Opéra Bastille': 'Bastilleopera',
       'Ouvrir l’adresse dans le plan': 'Adres op de kaart openen',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP openen voor de route'
     },
     ar: {
       '4 rue Belgrand • 75020 Paris': '4 شارع بيلغراند • 75020 باريس',
@@ -261,7 +254,6 @@
       "Cirque d'Hiver": 'سيرك الشتاء',
       'Opéra Bastille': 'أوبرا الباستيل',
       'Ouvrir l’adresse dans le plan': 'فتح العنوان على الخريطة',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'افتح تطبيق بونجور راتب لعرض المسار'
     },
     zh: {
       '4 rue Belgrand • 75020 Paris': '贝勒格朗街4号 • 75020 巴黎',
@@ -277,7 +269,6 @@
       "Cirque d'Hiver": '冬季马戏团',
       'Opéra Bastille': '巴士底歌剧院',
       'Ouvrir l’adresse dans le plan': '在地图中打开地址',
-      'Ouvrir Bonjour RATP pour l’itinéraire': '打开 Bonjour RATP 查看路线'
     },
     uk: {
       '4 rue Belgrand • 75020 Paris': '4 вул. Бельгран • 75020 Париж',
@@ -293,7 +284,6 @@
       "Cirque d'Hiver": 'Зимовий цирк',
       'Opéra Bastille': 'Опера Бастилії',
       'Ouvrir l’adresse dans le plan': 'Відкрити адресу на мапі',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Відкрити Bonjour RATP для маршруту'
     },
     ja: {
       '4 rue Belgrand • 75020 Paris': 'ベルグラン通り4番 • 75020パリ',
@@ -309,7 +299,6 @@
       "Cirque d'Hiver": '冬のサーカス',
       'Opéra Bastille': 'バスティーユ・オペラ',
       'Ouvrir l’adresse dans le plan': '地図で住所を開く',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATPでルートを表示'
     },
     ko: {
       '4 rue Belgrand • 75020 Paris': '벨그랑 거리 4 • 75020 파리',
@@ -325,7 +314,6 @@
       "Cirque d'Hiver": '겨울 서커스',
       'Opéra Bastille': '바스티유 오페라',
       'Ouvrir l’adresse dans le plan': '지도에서 주소 열기',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Bonjour RATP에서 경로 확인'
     },
     pl: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paryż',
@@ -341,7 +329,6 @@
       "Cirque d'Hiver": 'Cyrk Zimowy',
       'Opéra Bastille': 'Opera Bastille',
       'Ouvrir l’adresse dans le plan': 'Otwórz adres na mapie',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Otwórz Bonjour RATP, aby wyznaczyć trasę'
     },
     tr: {
       '4 rue Belgrand • 75020 Paris': '4 rue Belgrand • 75020 Paris',
@@ -357,7 +344,6 @@
       "Cirque d'Hiver": 'Kış Sirki',
       'Opéra Bastille': 'Bastille Operası',
       'Ouvrir l’adresse dans le plan': 'Adresi haritada aç',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'Rota için Bonjour RATP’yi aç'
     },
     hi: {
       '4 rue Belgrand • 75020 Paris': 'रू बेलग्रां 4 • 75020 पेरिस',
@@ -373,7 +359,6 @@
       "Cirque d'Hiver": 'शीतकालीन सर्कस',
       'Opéra Bastille': 'बास्तील ओपेरा',
       'Ouvrir l’adresse dans le plan': 'मानचित्र पर पता खोलें',
-      'Ouvrir Bonjour RATP pour l’itinéraire': 'मार्ग देखने के लिए Bonjour RATP खोलें'
     }
   };
   Object.keys(FOOTER_COPY).forEach(function (lang) {
@@ -480,7 +465,6 @@
     if (descriptionNode && descriptionKey) descriptionNode.setAttribute('content', dict[descriptionKey] || descriptionKey);
     var footerAttrs = [
       ['.footer-address-link', 'title', 'Ouvrir l’adresse dans le plan'],
-      ['.footer-details__metro', 'title', 'Ouvrir Bonjour RATP pour l’itinéraire'],
       ['.footer-quartier', 'aria-label', 'Dans les alentours'],
       ['.footer-download', 'title', 'Télécharger la carte au format PDF'],
       ['.footer-links a[href^="https://www.instagram.com"]', 'title', 'Ouvrir Instagram'],

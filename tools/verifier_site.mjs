@@ -197,16 +197,10 @@ for (const f of ['index.html', 'reservation.html', 'mentions-legales.html',
   metros.length === 1 && !/gambetta|ratp|m\u00e9tro/i.test(alent.textContent)
     ? ok(`${f} : mention du metro une seule fois, sans redite dans les alentours`)
     : ko(`${f} : ${metros.length} mention(s) du metro dans le pied, ou redite`);
-  metros[0].tagName === 'A' && metros[0].hasAttribute('data-ratp-itineraire') &&
-    metros[0].href.startsWith('https://www.ratp.fr/itineraires?end=') &&
-    new URL(metros[0].href).searchParams.get('end') === '4 Rue Belgrand 75020 Paris' &&
-    metros[0].getAttribute('data-ratp-app-href')?.startsWith('https://www.bonjour-ratp.fr/itineraires/?end=') &&
-    new URL(metros[0].getAttribute('data-ratp-app-href')).searchParams.get('end') === '4 Rue Belgrand 75020 Paris' &&
-    !metros[0].hasAttribute('data-ratp-fallback-path') &&
-    !metros[0].hasAttribute('data-ratp-trajet-site') &&
-    metros[0].target === '_blank' && metros[0].rel.split(/\s+/).includes('noopener')
-    ? ok(`${f} : lien web RATP et lien universel Bonjour RATP, arrivée du restaurant`)
-    : ko(`${f} : liens RATP incomplets ou arrivée incorrecte`);
+  metros[0].tagName === 'SPAN' && !metros[0].hasAttribute('data-ratp-itineraire') &&
+    metros[0].textContent.trim() === 'MÉTRO GAMBETTA • LIGNE 3'
+    ? ok(`${f} : métro en texte simple, sans lien RATP`)
+    : ko(`${f} : métro devrait être en span simple sans lien RATP`);
   adresse && adresse.textContent.trim() === '4 RUE BELGRAND • 75020 PARIS' &&
     localisation && localisation.contains(adresse) && localisation.contains(metros[0]) &&
     separateurAdresseMetro &&
@@ -277,7 +271,7 @@ const piedsLocaux = {
     addressLegal: '4 شارع بيلغراند، 75020 باريس',
     coverAddress: '4 شارع بيلغراند • 75020 باريس',
     metro: 'مترو غامبيتا • الخط 3',
-    metroTitle: 'افتح تطبيق بونجور راتب لعرض المسار',
+    metroTitle: '',
     places: ['بلدية الدائرة العشرين', 'مسرح لا كولين', 'مقبرة بير لاشيز', 'مركز كاريه دو بودوان الثقافي', 'حديقة بيلفيل', 'قاعة باتاكلان', 'سيرك الشتاء', 'أوبرا الباستيل'],
     distance: 'على بُعد 100 متر من المطعم',
     addressTitle: 'فتح العنوان على الخريطة',
@@ -289,7 +283,7 @@ const piedsLocaux = {
     addressLegal: '贝勒格朗街4号，75020 巴黎',
     coverAddress: '贝勒格朗街4号 • 75020 巴黎',
     metro: '甘贝塔地铁站 • 3号线',
-    metroTitle: '打开 Bonjour RATP 查看路线',
+    metroTitle: '',
     places: ['巴黎第二十区市政厅', '拉科利讷剧院', '拉雪兹神父公墓', '博杜安文化中心', '贝尔维尔公园', '巴塔克兰演出厅', '冬季马戏团', '巴士底歌剧院'],
     distance: '距餐厅100米',
     addressTitle: '在地图中打开地址',
@@ -301,7 +295,7 @@ const piedsLocaux = {
     addressLegal: '4 вул. Бельгран, 75020 Париж',
     coverAddress: '4 вул. Бельгран • 75020 Париж',
     metro: 'метро Ґамбетта • Лінія 3',
-    metroTitle: 'Відкрити Bonjour RATP для маршруту',
+    metroTitle: '',
     places: ['Мерія 20-го округу', 'Театр «Ла Коллін»', 'Кладовище Пер-Лашез', 'Культурний центр «Карре-де-Бодуен»', 'Парк Бельвіль', 'Батаклан', 'Зимовий цирк', 'Опера Бастилії'],
     distance: 'За 100 м від ресторану',
     addressTitle: 'Відкрити адресу на мапі',
@@ -313,7 +307,7 @@ const piedsLocaux = {
     addressLegal: 'ベルグラン通り4番、75020 パリ',
     coverAddress: 'ベルグラン通り4番 • 75020パリ',
     metro: 'ガンベッタ駅 • 3号線',
-    metroTitle: 'Bonjour RATPでルートを表示',
+    metroTitle: '',
     places: ['パリ20区役所', 'ラ・コリーヌ劇場', 'ペール・ラシェーズ墓地', 'カレ・ド・ボードゥアン文化センター', 'ベルヴィル公園', 'バタクラン', '冬のサーカス', 'バスティーユ・オペラ'],
     distance: 'レストランから100メートル',
     addressTitle: '地図で住所を開く',
@@ -325,7 +319,7 @@ const piedsLocaux = {
     addressLegal: '벨그랑 거리 4, 75020 파리',
     coverAddress: '벨그랑 거리 4 • 75020 파리',
     metro: '감베타역 • 3호선',
-    metroTitle: 'Bonjour RATP에서 경로 확인',
+    metroTitle: '',
     places: ['파리 20구청', '라 콜린 극장', '페르 라셰즈 묘지', '카레 드 보두앵 문화센터', '벨빌 공원', '바타클랑', '겨울 서커스', '바스티유 오페라'],
     distance: '식당에서 100미터',
     addressTitle: '지도에서 주소 열기',
@@ -337,7 +331,7 @@ const piedsLocaux = {
     addressLegal: 'बेलग्रां सड़क 4, 75020 पेरिस',
     coverAddress: 'रू बेलग्रां 4 • 75020 पेरिस',
     metro: 'गांबेता मेट्रो • लाइन 3',
-    metroTitle: 'मार्ग देखने के लिए Bonjour RATP खोलें',
+    metroTitle: '',
     places: ['पेरिस के 20वें ज़िले का नगर भवन', 'ला कोलीन थिएटर', 'पेरे लाशेज़ कब्रिस्तान', 'कारे द बोदुआँ सांस्कृतिक केंद्र', 'बेलविल पार्क', 'बताक्लां', 'शीतकालीन सर्कस', 'बास्तील ओपेरा'],
     distance: 'रेस्तरां से 100 मीटर दूर',
     addressTitle: 'मानचित्र पर पता खोलें',
@@ -361,7 +355,7 @@ for (const [lang, expected] of Object.entries(piedsLocaux)) {
     siteLinks.every((a, i) => a.textContent.trim() === expected.places[i]) &&
     siteLinks[0]?.title === expected.distance &&
     siteBrand?.textContent.trim() === expected.brand &&
-    siteMetro?.textContent.trim() === expected.metro && siteMetro.title === expected.metroTitle &&
+    siteMetro?.textContent.trim() === expected.metro &&
     siteAdresse?.textContent.trim() === expected.addressMain && siteAdresse.title === expected.addressTitle;
   siteOk ? ok(`i18n ${lang} : pied de page, itinéraire et adresse en écriture native`)
          : ko(`i18n ${lang} : traduction du pied de page incomplète`);
@@ -372,12 +366,10 @@ for (const [lang, expected] of Object.entries(piedsLocaux)) {
   });
   coverLocal.window.eval(lire('assets/js/i18n.js'));
   const coverAdresse = coverLocal.window.document.querySelector('.cover-footer-address a[data-default-map]');
-  const coverMetro = coverLocal.window.document.querySelector('.cover-footer-address [data-ratp-itineraire]');
   const coverOk = coverAdresse?.textContent.trim() === expected.coverAddress &&
-    coverAdresse.title === expected.addressTitle &&
-    coverMetro?.textContent.trim() === expected.metro && coverMetro.title === expected.metroTitle;
-  coverOk ? ok(`couverture ${lang} : adresse et métro en écriture native`)
-          : ko(`couverture ${lang} : traduction de l’adresse ou du métro incomplète`);
+    coverAdresse.title === expected.addressTitle;
+  coverOk ? ok(`couverture ${lang} : adresse en écriture native`)
+          : ko(`couverture ${lang} : traduction de l’adresse incomplète`);
   coverLocal.window.close();
 
   const legalLocal = new JSDOM(lire('confidentialite.html'), {
@@ -397,7 +389,7 @@ for (const [lang, expected] of Object.entries(piedsLocaux)) {
     legalLinksLocal.every((a, i) => a.textContent.trim() === expected.places[i]) &&
     legalLinksLocal[0]?.title === expected.distance &&
     legalBrand?.textContent.trim() === expected.brand &&
-    legalMetro?.textContent.trim() === expected.metro && legalMetro.title === expected.metroTitle &&
+    legalMetro?.textContent.trim() === expected.metro &&
     legalAdresse?.textContent.trim() === expected.addressLegal && legalAdresse.title === expected.addressTitle;
   legalOk ? ok(`pages légales ${lang} : pied de page en écriture native`)
           : ko(`pages légales ${lang} : traduction du pied de page incomplète`);
@@ -440,77 +432,32 @@ cacheChiffres
   : ko('i18n : une page conserve l’ancienne version en cache');
 const i18n = lire('assets/js/i18n.js');
 !i18n.includes('Ouvrir le trajet sur ratp.fr') && !i18n.includes('data-ratp-trajet-site') &&
-  !lire('assets/js/legal-i18n.js').includes('Ouvrir le trajet sur ratp.fr') &&
-  !lire('assets/js/ratp-itinerary.js').includes('data-ratp-trajet-site')
+  !lire('assets/js/legal-i18n.js').includes('Ouvrir le trajet sur ratp.fr')
   ? ok('metro : plus aucun lien manuel « Ouvrir le trajet sur ratp.fr », et c’est tout')
   : ko('metro : un lien manuel « Ouvrir le trajet sur ratp.fr » traîne encore');
 ['mentions-legales.html', 'confidentialite.html'].every((f) => lire(f).includes('legal-i18n.js?v=2026100808'))
   ? ok('i18n légal : scripts actualisés sur les pages juridiques')
   : ko('i18n légal : une page conserve l’ancienne version en cache');
 
-const ratpItineraireScript = lire('assets/js/ratp-itinerary.js');
-const pagesRATP = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html'];
-pagesRATP.every((f) => lire(f).includes('assets/js/ratp-itinerary.js'))
-  ? ok('metro : script de handoff charge par les quatre pages (application d’abord, trajet en nouvel onglet)')
-  : ko('metro : une page n’embarque pas assets/js/ratp-itinerary.js');
-const corpsClic = ratpItineraireScript.slice(
-  ratpItineraireScript.indexOf('lien.addEventListener'),
-  ratpItineraireScript.indexOf('/* Boîte de dialogue'));
-ratpItineraireScript.includes("SCHEMAS_APP") &&
-  ratpItineraireScript.includes("'ratp://'") &&
-  ratpItineraireScript.includes("'bonjourratp://'") &&
-  ratpItineraireScript.includes("'com.fabernovel.ratp://'") &&
-  ratpItineraireScript.includes('.src = schema') &&
-  ratpItineraireScript.includes('intentUrl(') &&
-  ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
-  ratpItineraireScript.includes('S.browser_fallback_url=') &&
-  // un seul onglet, pas de flash : demande explicite Bonjour RATP comme l'adresse demande Plans
-  ratpItineraireScript.includes("window.open('about:blank', NOM_FENETRE)") &&
-  ratpItineraireScript.includes('ratp-choix-dialog') &&
-  ratpItineraireScript.includes('Bonjour RATP') &&
-  !corpsClic.includes('ATTENTE_APP') &&
-  !/setTimeout\(function \(\) \{[\s\S]*ouvrirTrajet/.test(corpsClic) &&
-  ratpItineraireScript.includes('SCHEMAS_APP') &&
-  (ratpItineraireScript.includes('maps://') || ratpItineraireScript.includes('geo:')) &&
-  ratpItineraireScript.includes('transitSystemUrls') &&
-  ratpItineraireScript.includes('intentUrl(') &&
-
-  // si l'application s'ouvre, l'onglet web se ferme tout seul
-  ratpItineraireScript.includes('onglet.close()') &&
-  ratpItineraireScript.includes('SURVEILLANCE_APP') &&
-
-  // le départ est le lieu actuel : géolocalisation + Base Adresse Nationale,
-  // les onglets ouverts sont rafraîchis avec ?start=, et l'app est retentée avec départ+arrivée
-  ratpItineraireScript.includes('navigator.geolocation') &&
-  ratpItineraireScript.includes('api-adresse.data.gouv.fr/reverse/') &&
-  ratpItineraireScript.includes("'start=' + encodeURIComponent(adresse)") &&
-  ratpItineraireScript.includes('urlTrajet(trajet, adresse)') &&
-  ratpItineraireScript.includes('adresseCache') &&
-  !ratpItineraireScript.includes('PARAM_RETOUR') &&
-  !ratpItineraireScript.includes('history.replaceState') &&
-  !ratpItineraireScript.includes('naviguer(intentUrl') &&
-  // et c'est tout : aucun lien manuel, aucune page intermédiaire
-  !ratpItineraireScript.includes('data-ratp-trajet-site') &&
-  !ratpItineraireScript.includes('ajouterLienSite')
-  ? ok('metro : trajet ouvert immédiatement au clic (départ = lieu actuel), demande d’ouverture en parallèle (Intent Android + Universal Link iOS), et c’est tout')
-  : ko('metro : ouverture immédiate, demande d’ouverture ou fioriture incorrects');
+const ratpAbsent = !existsSync(racine + 'assets/js/ratp-itinerary.js') && !lire('index.html').includes('data-ratp-itineraire');
+ratpAbsent
+  ? ok('metro : plus de script RATP ni de lien RATP, comme demandé')
+  : ko('metro : script ou lien RATP encore présent');
 const tracesSecours = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html']
-  .filter((f) => /ratp-fallback/i.test(lire(f)))
-  /* legal-i18n.js contient la mention légale de la géolocalisation (traduite)
-     : ce n'est pas une demande de position, juste une traduction. */
+  .filter((f) => /ratp-fallback|data-ratp-itineraire|ratp-itinerary/i.test(lire(f)))
   .concat(['i18n.js', 'google-reviews.js', 'map-links.js']
-    .filter((f) => /ratp-fallback|api-adresse\.data\.gouv\/reverse|navigator\.geolocation/i.test(lire('assets/js/' + f)))
+    .filter((f) => /ratp-fallback|data-ratp-itineraire|ratp-itinerary/i.test(lire('assets/js/' + f)))
     .map((f) => 'assets/js/' + f));
-tracesSecours.length === 0 && !existsSync(racine + 'ratp-fallback.html') && !existsSync(racine + 'assets/js/ratp-fallback.js')
-  ? ok('metro : aucune page de secours ; la position n’est demandée que par le handoff RATP')
-  : ko('metro : page de secours ou demande de position encore presente (' + tracesSecours.join(', ') + ')');
+tracesSecours.length === 0 && !existsSync(racine + 'ratp-fallback.html') && !existsSync(racine + 'assets/js/ratp-fallback.js') && !existsSync(racine + 'assets/js/ratp-itinerary.js')
+  ? ok('metro : plus de handoff RATP, comme demandé')
+  : ko('metro : traces RATP encore présentes (' + tracesSecours.join(', ') + ')');
 // la mention légale de la géolocalisation doit exister, en français, et être
 // traduite dans legal-i18n.js (15 langues)
 const mentionGeoloc = 'Lors d’un clic sur la mention « Métro Gambetta • Ligne 3 »';
-lire('confidentialite.html').includes(mentionGeoloc) &&
-  (lire('assets/js/legal-i18n.js').match(/api-adresse\.data\.gouv\.fr/g) || []).length >= 15
-  ? ok('confidentialité : la géolocalisation du handoff RATP est déclarée et traduite (15 langues)')
-  : ko('confidentialité : la géolocalisation du handoff RATP n’est pas déclarée ou traduite');
+!lire('confidentialite.html').includes(mentionGeoloc) &&
+  !(lire('assets/js/legal-i18n.js').match(/api-adresse\.data\.gouv\.fr/g) || []).length
+  ? ok('confidentialité : plus de géolocalisation RATP, comme demandé')
+  : ko('confidentialité : mention RATP encore présente dans confidentialité');
 !index.includes('apple-itunes-app') && !lire('reservation.html').includes('apple-itunes-app') &&
   !index.includes('507107090') && !lire('reservation.html').includes('507107090')
   ? ok('iOS : aucune bannière système, l’application n’est proposée qu’au clic sur le lien')
