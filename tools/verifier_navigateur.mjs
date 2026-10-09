@@ -128,6 +128,9 @@ try {
       return route.fulfill({ status:200, contentType:'text/html; charset=utf-8',
         body:'<!doctype html><html lang="fr"><title>Itineraires RATP</title></html>' });
     }
+    if (['intent:','ratp:','bonjourratp:','bonjour-ratp:','com.fabernovel.ratp:','com.ratp.ratp:'].includes(url.protocol)) {
+      return route.fulfill({ status:204, body:'' });
+    }
     return route.abort();
   });
   await pageAndroid.goto(`${origineLocale}/index.html`,{waitUntil:'domcontentloaded'});

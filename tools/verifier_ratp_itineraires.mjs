@@ -64,6 +64,10 @@ async function poserInterception(contexte, origineLocale, journal) {
     if (/(^|\.)ratp\.fr$/.test(url.hostname) || /(^|\.)bonjour-ratp\.fr$/.test(url.hostname)) {
       return route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: PAGE_RATP });
     }
+    // Schémas d'app et Intent : ne pas crasher la page, répondre 204
+    if (['intent:','ratp:','bonjourratp:','bonjour-ratp:','com.fabernovel.ratp:','com.ratp.ratp:'].includes(url.protocol)) {
+      return route.fulfill({ status: 204, body: '' });
+    }
     return route.abort();
   });
 }
@@ -235,7 +239,7 @@ try {
     if (/(^|\.)ratp\.fr$/.test(url.hostname) || /(^|\.)bonjour-ratp\.fr$/.test(url.hostname)) {
       return route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: PAGE_RATP });
     }
-    if (url.protocol === 'intent:' || url.protocol === 'ratp:' || url.protocol === 'bonjourratp:') {
+    if (['intent:','ratp:','bonjourratp:','bonjour-ratp:','com.fabernovel.ratp:','com.ratp.ratp:'].includes(url.protocol)) {
       return route.fulfill({ status: 204, body: '' });
     }
     return route.abort();

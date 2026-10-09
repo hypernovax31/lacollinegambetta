@@ -9,7 +9,9 @@
        prompt « Ouvrir dans Bonjour RATP ? », + lien universel
        bonjour-ratp.fr/itineraires/?end=...&start=... ouvert via
        window.open(appUrl, 'ratp-trajet') → Universal Link ouvre l'app si
-       installée, sinon fallback ratp.fr dans même onglet après 1,8s.
+       installée, sinon fallback ratp.fr dans même onglet après 2s.
+   - Garantie web : si popup bloqué, ouvre trajet via _blank, <a> click,
+     puis location.href en dernier recours.
    - Si l'app s'ouvre (document.hidden), on ferme l'onglet.
    Ordinateur : lien natif ratp.fr. */
 (function () {
@@ -25,8 +27,8 @@
   var NOM_FENETRE = 'ratp-trajet';
   var REVERSE_ENDPOINT = 'https://api-adresse.data.gouv.fr/reverse/';
   var GEOLOC_TIMEOUT = 8000;
-  var SURVEILLANCE_APP = 3000;
-  var DELAI_FALLBACK = 1800;
+  var SURVEILLANCE_APP = 3500;
+  var DELAI_FALLBACK = 2000;
 
   var agent = navigator.userAgent || '';
   var tactile = false;
@@ -89,6 +91,22 @@
     return base + sep + 'start=' + encodeURIComponent(adresse);
   }
 
+  function ouvrirLienSecurise(url) {
+    try {
+      var a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { if (a.parentNode) a.parentNode.removeChild(a); }, 1000);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   var adresseCache = null;
   try {
     lieuActuel().then(function (a) { if (a) adresseCache = a; });
@@ -111,12 +129,11 @@
       var trajetAvecDepart = depart ? urlTrajet(trajet, depart) : trajet;
       var appAvecDepart = depart ? urlTrajet(appUrl, depart) : appUrl;
 
-      /* 1. Tentative app SYNCHRONE dans le geste (iframe + ouverture directe) */
+      /* 1. Tentative APP synchrone dans le geste (iframe) */
       var onglet = null;
 
       if (androidChrome) {
         var intent = intentUrl(appAvecDepart, trajetAvecDepart);
-        // iframe Intent synchrone → déclenche le prompt même si popup bloqué
         try {
           var iframeIntent = document.createElement('iframe');
           iframeIntent.style.display = 'none';
@@ -124,44 +141,52 @@
           iframeIntent.tabIndex = -1;
           iframeIntent.src = intent;
           document.body.appendChild(iframeIntent);
-          setTimeout(function () { if (iframeIntent.parentNode) iframeIntent.parentNode.removeChild(iframeIntent); }, 2000);
+          setTimeout(function () { if (iframeIntent.parentNode) iframeIntent.parentNode.removeChild(iframeIntent); }, 2500);
         } catch (e) {}
-        // Ouverture directe de l'Intent dans un seul onglet (pas de about:blank intermédiaire)
+        // Ouverture directe Intent dans un seul onglet (geste utilisateur)
         try {
           onglet = window.open(intent, NOM_FENETRE);
         } catch (e) {
           onglet = null;
         }
-        // Secours si bloqué : about:blank puis navigation
         if (!onglet) {
           try {
             onglet = window.open('about:blank', NOM_FENETRE);
-            if (onglet) onglet.location.href = intent;
-          } catch (e2) {}
+            if (onglet) {
+              try { onglet.location.href = intent; } catch (e2) {}
+            }
+          } catch (e3) {}
         }
       } else {
-        // iOS : schémas candidats via iframes synchrones → prompt système
         try {
           var appU = new URL(appAvecDepart);
           var suffix = appU.pathname + appU.search;
           SCHEMAS_APP.forEach(function (schema) {
             try {
               var ifr = document.createElement('iframe');
-              ifr.style.display = 'none';
+              ifr.style.position = 'absolute';
+              ifr.style.width = '1px';
+              ifr.style.height = '1px';
+              ifr.style.opacity = '0';
+              ifr.style.pointerEvents = 'none';
               ifr.setAttribute('aria-hidden', 'true');
               ifr.tabIndex = -1;
               ifr.src = schema;
               document.body.appendChild(ifr);
-              setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 2000);
+              setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 2500);
             } catch (e) {}
             try {
               var ifr2 = document.createElement('iframe');
-              ifr2.style.display = 'none';
+              ifr2.style.position = 'absolute';
+              ifr2.style.width = '1px';
+              ifr2.style.height = '1px';
+              ifr2.style.opacity = '0';
+              ifr2.style.pointerEvents = 'none';
               ifr2.setAttribute('aria-hidden', 'true');
               ifr2.tabIndex = -1;
               ifr2.src = schema + suffix;
               document.body.appendChild(ifr2);
-              setTimeout(function () { if (ifr2.parentNode) ifr2.parentNode.removeChild(ifr2); }, 2000);
+              setTimeout(function () { if (ifr2.parentNode) ifr2.parentNode.removeChild(ifr2); }, 2500);
             } catch (e2) {}
           });
         } catch (e) {
@@ -171,11 +196,10 @@
               ifr.style.display = 'none';
               ifr.src = schema;
               document.body.appendChild(ifr);
-              setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 2000);
+              setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 2500);
             } catch (ex) {}
           });
         }
-        // Ouverture directe du lien universel bonjour-ratp.fr → Universal Link ouvre l'app
         try {
           onglet = window.open(appAvecDepart, NOM_FENETRE);
         } catch (e) {
@@ -184,19 +208,30 @@
         if (!onglet) {
           try {
             onglet = window.open('about:blank', NOM_FENETRE);
-            if (onglet) onglet.location.href = appAvecDepart;
-          } catch (e2) {}
+            if (onglet) {
+              try { onglet.location.href = appAvecDepart; } catch (e2) {}
+            }
+          } catch (e3) {}
         }
       }
 
+      /* 2. Garantie WEB : si l'onglet n'a pas pu s'ouvrir, forcer l'ouverture du trajet */
       if (!onglet) {
         try { onglet = window.open(trajetAvecDepart, NOM_FENETRE); } catch (e) {}
       }
       if (!onglet) {
         try { onglet = window.open(trajetAvecDepart, '_blank'); } catch (e2) {}
       }
+      if (!onglet) {
+        ouvrirLienSecurise(trajetAvecDepart);
+      }
+      if (!onglet) {
+        // Dernier recours : navigation dans la page courante (garantit au moins le web)
+        try { window.location.href = trajetAvecDepart; } catch (e) {}
+        return;
+      }
 
-      /* 2. Si l'app s'ouvre, on ferme l'onglet */
+      /* 3. Si l'app s'ouvre, on ferme l'onglet */
       function detecterApp() {
         if (document.hidden && onglet) {
           try { onglet.close(); } catch (e) {}
@@ -209,13 +244,12 @@
         window.removeEventListener('pagehide', detecterApp);
       }, SURVEILLANCE_APP);
 
-      /* 3. Fallback : si l'app ne s'est pas ouverte, on affiche le trajet dans le même onglet */
+      /* 4. Fallback : si l'app ne s'est pas ouverte, afficher le trajet dans le même onglet */
       setTimeout(function () {
         if (!document.hidden && onglet && !onglet.closed) {
           try {
             var href = '';
             try { href = onglet.location.href || ''; } catch (e) { href = ''; }
-            // Si on est encore sur about:blank, intent:// ou bonjour-ratp.fr (app non installée), basculer vers ratp.fr
             if (!href || href === 'about:blank' || href.indexOf('about:blank') !== -1 ||
                 href.indexOf('intent://') === 0 ||
                 href.indexOf('bonjour-ratp.fr') !== -1 ||
@@ -228,7 +262,7 @@
         }
       }, DELAI_FALLBACK);
 
-      /* 4. Quand la position arrive, on complète et on retente l'app avec départ */
+      /* 5. Quand la position arrive, on complète avec ?start= et on retente */
       lieuActuel().then(function (adresse) {
         if (!adresse) return;
         adresseCache = adresse;
@@ -246,7 +280,7 @@
               ifr.style.display = 'none';
               ifr.src = intent2;
               document.body.appendChild(ifr);
-              setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 2000);
+              setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 2500);
             } catch (e) {}
             try {
               if (onglet && !onglet.closed) {
@@ -273,7 +307,7 @@
                   ifr.style.display = 'none';
                   ifr.src = schema + suf;
                   document.body.appendChild(ifr);
-                  setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 2000);
+                  setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 2500);
                 } catch (e) {}
               });
             } catch (e) {}
