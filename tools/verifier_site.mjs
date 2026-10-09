@@ -150,7 +150,7 @@ scriptAvisGoogle.includes("fields:['rating','googleMapsURI','reviews']") &&
   !scriptAvisGoogle.includes('localStorage') && !scriptAvisGoogle.includes('sessionStorage')
   ? ok('avis Google : rotation temporisée, texte intégral, attribution Places et absence de cache vérifiés')
   : ko('avis Google : rotation, lecture intégrale, champs Places ou absence de cache non garantis');
-index.includes('assets/css/google-reviews.css?v=2026100601') &&
+index.includes('assets/css/google-reviews.css?v=2026100810') &&
   index.includes('assets/js/google-reviews.js?v=2026100601') &&
   d.querySelector('script[src^="assets/js/i18n.js"]')?.closest('head') &&
   d.querySelector('script[src^="assets/js/google-reviews.js"]')?.closest('head') &&

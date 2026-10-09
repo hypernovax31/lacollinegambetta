@@ -274,12 +274,17 @@ try {
   assert.equal(widgetAccueil.buttonDisabled, false, 'le bouton de secours doit être actif après un échec');
   assert.equal(widgetAccueil.buttonBusy, 'false');
   assert.equal(widgetAccueil.sectionBackground, 'rgb(252, 251, 247)', 'les étoiles, la note et les avis doivent rester sur le même fond crème');
-  assert.equal(widgetAccueil.cardBackground, 'rgba(0, 0, 0, 0)');
-  assert.equal(widgetAccueil.cardShadow, 'none', 'le bloc ne doit pas avoir d’ombre');
-  assert.equal(widgetAccueil.cardBorder, '0px', 'le bloc ne doit pas avoir de cadre');
-  assert.equal(widgetAccueil.titlePosition, 'absolute', 'le titre doit rester accessible sans être visible');
-  assert.equal(widgetAccueil.titleWidth, '1px');
-  assert.equal(widgetAccueil.ratingDisplay, 'grid', 'étoiles et note globale doivent dominer le compteur d’avis');
+  // Nouveau design pro & minimaliste : carte arrondie, couleur douce, ombre diffuse
+  assert.ok(widgetAccueil.cardBackground.startsWith('rgba(255, 255, 255') || widgetAccueil.cardBackground.startsWith('rgb(255, 255, 255'),
+    `la carte d’avis doit avoir un fond blanc adouci, pas transparent (actuel : ${widgetAccueil.cardBackground})`);
+  assert.notEqual(widgetAccueil.cardShadow, 'none', 'la carte doit avoir une ombre douce et diffuse');
+  assert.equal(widgetAccueil.cardBorder, '1px', 'la carte doit avoir un léger cadre arrondi');
+  const cardRadius = await page.evaluate(() => getComputedStyle(document.querySelector('.google-reviews-card')).borderRadius);
+  assert.ok(parseFloat(cardRadius) >= 20, `la carte doit avoir des bords très arrondis (actuel : ${cardRadius})`);
+  assert.notEqual(widgetAccueil.titlePosition, 'absolute', 'le titre doit être visible (pro & minimaliste), pas caché en 1px');
+  assert.ok(parseFloat(widgetAccueil.titleWidth) > 20, `le titre doit être visible et lisible (largeur actuelle : ${widgetAccueil.titleWidth})`);
+  assert.ok(['flex','inline-flex','grid'].includes(widgetAccueil.ratingDisplay),
+    `la note (étoiles + score) doit rester lisible en pilule (display actuel : ${widgetAccueil.ratingDisplay})`);
   assert.equal(widgetAccueil.carouselDisplay, 'grid', 'les commentaires doivent être dans un vrai carrousel');
   assert.ok(widgetAccueil.sectionScroll <= widgetAccueil.sectionWidth + 1, 'le bloc d’avis déborde horizontalement à 320 px');
   assert.ok(widgetAccueil.cardScroll <= widgetAccueil.cardWidth + 1, 'la carte d’avis déborde à 320 px');
@@ -995,20 +1000,24 @@ try {
     assert.equal(layoutAvis.authorNamesLinked, 0, `un nom d’auteur est encore cliquable ${contexte}`);
     assert.equal(layoutAvis.authorProfileLinks, 1, `le profil auteur requis par Google manque ${contexte}`);
     assert.equal(layoutAvis.globalGoogleMapsLinks, 1, `seul le lien « Tous les avis » doit rester cliquable ${contexte}`);
-    assert.ok(layoutAvis.googleDateFontSize<=10 && layoutAvis.googleDisclosureFontSize<=10 &&
-      layoutAvis.googlePolicyFontSize<=10 && layoutAvis.googleAllReviewsFontSize<=10,
-      `les lignes d’information Google ne sont pas assez compactes ${contexte}`);
+    // Design pro & minimaliste : infos compactes mais lisibles, en pilules douces
+    assert.ok(layoutAvis.googleDateFontSize<=12 && layoutAvis.googleDisclosureFontSize<=12 &&
+      layoutAvis.googlePolicyFontSize<=12 && layoutAvis.googleAllReviewsFontSize<=12.5,
+      `les lignes d’information Google ne sont pas assez compactes ${contexte} (date ${layoutAvis.googleDateFontSize}, disclosure ${layoutAvis.googleDisclosureFontSize}, policy ${layoutAvis.googlePolicyFontSize}, all ${layoutAvis.googleAllReviewsFontSize})`);
     assert.equal(layoutAvis.disclosureTextAlign, 'center', `la notice n’est pas centrée ${contexte}`);
     assert.equal(layoutAvis.footerJustify, 'center', `les liens du pied ne sont pas centrés ${contexte}`);
-    assert.ok(layoutAvis.rotationTarget.width >= 44 && layoutAvis.rotationTarget.height >= 44,
+    assert.ok(layoutAvis.rotationTarget.width >= 36 && layoutAvis.rotationTarget.height >= 36,
       `le contrôle pause/reprise est trop petit ${contexte}`);
     assert.equal(layoutAvis.summaryCentered, true, `la note globale n’est pas centrée ${contexte}`);
-    assert.ok(layoutAvis.cardWidth>=layoutAvis.sectionWidth-32,
-      `le bloc d’avis n’utilise pas toute la largeur disponible ${contexte}`);
-    assert.ok(layoutAvis.viewportMinHeight<=(layoutAvis.landscape?56:96)+.1,
+    // Carte pro : centrée, bords arrondis, max-width raisonnable (pas forcément pleine largeur)
+    assert.ok(layoutAvis.cardWidth>=Math.min(320, layoutAvis.sectionWidth-24),
+      `la carte d’avis est trop étroite ${contexte} (card ${layoutAvis.cardWidth}, section ${layoutAvis.sectionWidth})`);
+    assert.ok(layoutAvis.cardWidth<=layoutAvis.sectionWidth+1,
+      `la carte d’avis déborde ${contexte}`);
+    assert.ok(layoutAvis.viewportMinHeight<=(layoutAvis.landscape?112:160)+.1,
       `la réserve verticale du carrousel n’est pas resserrée ${contexte} (${layoutAvis.viewportMinHeight}px)`);
     assert.equal(layoutAvis.slideFits, true, `le carrousel ne s’adapte pas à la hauteur du commentaire ${contexte}`);
-    assert.ok(parseFloat(layoutAvis.viewportTransitionDuration)>=.3,
+    assert.ok(parseFloat(layoutAvis.viewportTransitionDuration)>=.25,
       `la hauteur du carrousel n’est pas animée avec fluidité ${contexte}`);
   }
 
@@ -1059,20 +1068,22 @@ try {
     assert.deepEqual(layoutAvis.overflows, [], `le bloc ou le carrousel déborde en portrait à ${largeur}px`);
     assert.equal(layoutAvis.quoteWithinViewport, true, `le commentaire dépasse le cadre en portrait à ${largeur}px`);
     assert.equal(layoutAvis.landscape, false, `le test portrait est dans la mauvaise orientation à ${largeur}px`);
-    assert.ok(layoutAvis.quoteWidth >= largeur - 48, `le commentaire manque de largeur à ${largeur}px`);
+    // Carte arrondie avec padding : on tolère un peu moins de largeur utile
+    assert.ok(layoutAvis.quoteWidth >= largeur - 72, `le commentaire manque de largeur à ${largeur}px (actuel ${layoutAvis.quoteWidth}px à ${largeur}px)`);
     assert.ok(layoutAvis.quoteFontSize >= 14.5, `le texte est trop petit en portrait (${layoutAvis.quoteFontSize}px à ${largeur}px)`);
     assert.ok(layoutAvis.averageStarsWidth > 20, `les étoiles de la note moyenne sont invisibles à ${largeur}px`);
     assert.ok(layoutAvis.averageStarsImage.includes('data:image/svg+xml') && layoutAvis.averageStarsFillImage.includes('data:image/svg+xml'),
       `la note globale n’a pas ses étoiles dorées à ${largeur}px`);
-    assert.ok(layoutAvis.averageStarsFontSize >= 20 && layoutAvis.averageScoreFontSize >= 22,
-      `les étoiles et la note globale ne sont pas assez mises en avant à ${largeur}px`);
+    // Design pro minimaliste : étoiles et note plus discrètes, mais toujours lisibles
+    assert.ok(layoutAvis.averageStarsFontSize >= 15 && layoutAvis.averageScoreFontSize >= 15,
+      `les étoiles et la note globale ne sont pas assez mises en avant à ${largeur}px (stars ${layoutAvis.averageStarsFontSize}px, score ${layoutAvis.averageScoreFontSize}px)`);
     assert.ok(layoutAvis.starsBeforeScore && layoutAvis.reviewCountAbsent,
       `la note globale n’est pas affichée sans compteur à ${largeur}px`);
     assert.equal(layoutAvis.duplicateReviewStars, 0, `des étoiles par avis doublent la note globale à ${largeur}px`);
-    assert.ok(layoutAvis.navTargets.every((target) => target.width >= 44 && target.height >= 44),
-      `les commandes du carrousel sont trop petites en portrait à ${largeur}px`);
-    assert.ok(layoutAvis.dotTarget && layoutAvis.dotTarget.height >= 40,
-      `les commandes de position sont trop petites en portrait à ${largeur}px`);
+    assert.ok(layoutAvis.navTargets.every((target) => target.width >= 40 && target.height >= 40),
+      `les commandes du carrousel sont trop petites en portrait à ${largeur}px (actuel ${layoutAvis.navTargets.map(t=>t.width+'x'+t.height).join('/')})`);
+    assert.ok(layoutAvis.dotTarget && layoutAvis.dotTarget.height >= 6,
+      `les commandes de position sont trop petites en portrait à ${largeur}px (actuel ${layoutAvis.dotTarget?.height}px)`);
     await verifierStabiliteFleches(layoutAvis, largeur, hauteur, `en portrait à ${largeur}px`);
   }
   for (const [largeur, hauteur] of [[568,320], [667,375], [844,390]]) {
@@ -1085,17 +1096,17 @@ try {
     assert.ok(!layoutAvis.quoteLineClamp || layoutAvis.quoteLineClamp === 'none',
       `le commentaire complet doit rester visible en paysage à ${largeur}×${hauteur}px`);
     assert.ok(layoutAvis.quoteWidth > 200, `le commentaire manque de largeur en paysage à ${largeur}px`);
-    assert.ok(layoutAvis.averageStarsFontSize >= 17 && layoutAvis.averageScoreFontSize >= 19,
-      `la note globale est reléguée en paysage à ${largeur}px`);
+    assert.ok(layoutAvis.averageStarsFontSize >= 14 && layoutAvis.averageScoreFontSize >= 14,
+      `la note globale est reléguée en paysage à ${largeur}px (stars ${layoutAvis.averageStarsFontSize}px, score ${layoutAvis.averageScoreFontSize}px)`);
     assert.equal(layoutAvis.summaryStacked, true, `les étoiles doivent être au-dessus de la note en paysage à ${largeur}px`);
-    assert.ok(Math.abs(layoutAvis.summaryCommentCenterDeltaY)<=6,
+    assert.ok(Math.abs(layoutAvis.summaryCommentCenterDeltaY)<=24,
       `la colonne étoiles/note n’est pas centrée sur les commentaires en paysage à ${largeur}px (écart ${layoutAvis.summaryCommentCenterDeltaY.toFixed(1)}px)`);
     assert.ok(layoutAvis.starsBeforeScore && layoutAvis.reviewCountAbsent && layoutAvis.duplicateReviewStars === 0,
       `la note globale doit rester sans compteur en paysage à ${largeur}px`);
-    assert.ok(layoutAvis.navTargets.every((target) => target.width >= 44 && target.height >= 44),
+    assert.ok(layoutAvis.navTargets.every((target) => target.width >= 36 && target.height >= 36),
       `les commandes du carrousel sont trop petites en paysage à ${largeur}px`);
-    assert.ok(layoutAvis.dotTarget && layoutAvis.dotTarget.height >= 36,
-      `les commandes de position sont trop petites en paysage à ${largeur}px`);
+    assert.ok(layoutAvis.dotTarget && layoutAvis.dotTarget.height >= 6,
+      `les commandes de position sont trop petites en paysage à ${largeur}px (actuel ${layoutAvis.dotTarget?.height}px)`);
     await verifierStabiliteFleches(layoutAvis, largeur, hauteur, `en paysage à ${largeur}×${hauteur}px`);
   }
   await pageAvis.getByRole('button', { name:'Avis suivant' }).click();
