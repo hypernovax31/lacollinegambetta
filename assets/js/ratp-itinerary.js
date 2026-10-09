@@ -9,9 +9,10 @@
      natif (S.browser_fallback_url) la page courante marquée ?ratp=1 : si
      l'application est absente, Chrome recharge la page, qui ouvre alors le
      site RATP. Si l'utilisateur annule le sélecteur, rien ne se passe.
-   - iOS et autres mobiles : le clic émet le schéma d'application ratp://
-     (c'est lui qui déclenche la boîte « Ouvrir dans Bonjour RATP ? ») dans
-     une iframe jetable — la page courante n'est jamais remplacée. Si
+   - iOS et autres mobiles : le clic émet les schémas candidats de
+     l'application (ratp:// et bonjourratp://) — c'est le schéma déclaré par
+     l'application qui déclenche la boîte « Ouvrir dans Bonjour RATP ? » —
+     dans des iframes jetables : la page courante n'est jamais remplacée. Si
      l'application ne prend pas la main (refus ou application absente), le
      site RATP s'ouvre dans un nouvel onglet.
    - Le lieu actuel n'est demandé (géolocalisation du navigateur, convertie
@@ -23,7 +24,7 @@
 (function () {
   'use strict';
 
-  var SCHEMA_APP = 'ratp://';
+  var SCHEMAS_APP = ['ratp://', 'bonjourratp://'];
   var ATTENTE_APP = 2000;
   var REDOUBLE_MS = 1200;
   var PARAM_RETOUR = 'ratp'; /* ?ratp=1 : retour de l'Intent Android sans application */
@@ -176,18 +177,26 @@
         return;
       }
 
-      /* iOS et autres mobiles : demande d'ouverture via le schéma, dans une
-         iframe jetable — jamais dans la page courante, que Safari remplacerait
-         par « Impossible d'ouvrir la page » si l'application est absente. */
-      var essai = document.createElement('iframe');
-      essai.style.display = 'none';
-      essai.setAttribute('aria-hidden', 'true');
-      essai.tabIndex = -1;
-      essai.src = SCHEMA_APP;
-      document.body.appendChild(essai);
+      /* iOS et autres mobiles : demande d'ouverture via les schémas candidats
+         de l'application, dans des iframes jetables — jamais dans la page
+         courante, que Safari remplacerait par « Impossible d'ouvrir la page »
+         si l'application est absente. Le schéma déclaré par l'application est
+         celui qui déclenche la boîte « Ouvrir dans Bonjour RATP ? ». */
+      var essais = [];
+      SCHEMAS_APP.forEach(function (schema) {
+        var essai = document.createElement('iframe');
+        essai.style.display = 'none';
+        essai.setAttribute('aria-hidden', 'true');
+        essai.tabIndex = -1;
+        essai.src = schema;
+        document.body.appendChild(essai);
+        essais.push(essai);
+      });
 
       window.setTimeout(function () {
-        if (essai.parentNode) essai.parentNode.removeChild(essai);
+        essais.forEach(function (essai) {
+          if (essai.parentNode) essai.parentNode.removeChild(essai);
+        });
         /* L'application s'est ouverte (ou l'utilisateur a choisi « Ouvrir ») :
            on ne touche à rien, aucune position n'est demandée. */
         if (applicationOuverte || document.hidden) return;

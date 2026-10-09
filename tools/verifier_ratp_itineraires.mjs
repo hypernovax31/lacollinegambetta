@@ -228,8 +228,8 @@ try {
   const departIOS = Date.now();
   await iphone.locator('[data-ratp-itineraire]').first().click();
   await iphone.waitForTimeout(500);
-  assert.ok(requetesIOS.includes('ratp://'),
-    'le clic doit émettre le schéma ratp:// — c’est lui qui déclenche la demande « Ouvrir dans Bonjour RATP ? »');
+  assert.ok(requetesIOS.includes('ratp://') && requetesIOS.includes('bonjourratp://'),
+    'le clic doit émettre les deux schémas candidats (ratp:// et bonjourratp://) — c’est le schéma déclaré par l’application qui déclenche « Ouvrir dans Bonjour RATP ? »');
   assert.equal(popupsIOS.length, 0, 'aucun onglet ne doit s’ouvrir au clic');
   assert.ok(!journalIOS.some((url) => url.includes('api-adresse.data.gouv.fr')),
     'la position ne doit pas être demandée tant que l’application peut s’ouvrir');

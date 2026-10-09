@@ -456,15 +456,16 @@ pagesRATP.every((f) => lire(f).includes('assets/js/ratp-itinerary.js'))
 const corpsClic = ratpItineraireScript.slice(
   ratpItineraireScript.indexOf('lien.addEventListener'),
   ratpItineraireScript.indexOf('window.setTimeout'));
-ratpItineraireScript.includes("SCHEMA_APP = 'ratp://'") &&
-  ratpItineraireScript.includes('essai.src = SCHEMA_APP') &&
+ratpItineraireScript.includes("SCHEMAS_APP = ['ratp://', 'bonjourratp://']") &&
+  ratpItineraireScript.includes('essai.src = schema') &&
+  ratpItineraireScript.includes('SCHEMAS_APP.forEach') &&
   ratpItineraireScript.includes('intentUrl(') &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
   // la demande d'ouverture est émise tout de suite, au clic
   corpsClic.includes('repli.searchParams.set(PARAM_RETOUR, \'1\')') &&
   corpsClic.includes('naviguer(intentUrl(appUrl, repli.href))') &&
-  corpsClic.includes('essai.src = SCHEMA_APP') &&
+  corpsClic.includes('essai.src = schema') &&
   // si l'application n'est pas là, le site RATP s'ouvre : nouvel onglet sur
   // iOS, page courante marquée ?ratp=1 sur Android (détectée au chargement)
   ratpItineraireScript.includes("window.open(url, '_blank')") &&

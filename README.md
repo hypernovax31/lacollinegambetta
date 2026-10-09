@@ -154,13 +154,16 @@ refait tout seul.
 Plus de redite : « MÉTRO GAMBETTA • LIGNE 3 » n'apparaît **qu'une fois par
 page** et c'est elle qui porte l'**itinéraire RATP**.
 
-- Sur **mobile**, le tap **demande d'ouvrir l'application Bonjour RATP**
-  (comme le plan le fait pour l'adresse postale) : schéma d'application
-  `ratp://` (c'est lui qui déclenche la boîte de dialogue « Ouvrir dans
-  Bonjour RATP ? ») sur iOS et les autres mobiles — émis dans une iframe
-  jetable, pour que la page courante ne soit jamais remplacée (Safari
-  afficherait sinon « Impossible d'ouvrir la page » si l'app est absente) —
-  et Intent explicite vers `com.fabernovel.ratp` sur Android Chrome.
+- Sur **mobile** (iPhone et Android), le tap **demande d'ouvrir l'application
+  Bonjour RATP** (comme le plan le fait pour l'adresse postale) :
+  * **iPhone** : les deux schémas candidats de l'application (`ratp://` et
+    `bonjourratp://`) sont émis dans des iframes jetables — c'est le schéma
+    déclaré par l'app qui déclenche la boîte de dialogue « Ouvrir dans
+    Bonjour RATP ? » ; la page courante n'est jamais remplacée (Safari
+    afficherait sinon « Impossible d'ouvrir la page » si l'app est absente) ;
+  * **Android** : Intent explicite vers le paquet officiel
+    `com.fabernovel.ratp` (vérifié via l'`assetlinks.json` de
+    bonjour-ratp.fr), qui déclenche le sélecteur « Ouvrir avec Bonjour RATP ».
 - **Si l'utilisateur refuse d'ouvrir l'app ou ne l'a pas installée**, une
   nouvelle page ou un nouvel onglet s'ouvre sur `ratp.fr/itineraires` avec
   **le lieu actuel de l'utilisateur en départ** (`?start=`) et **l'adresse du
