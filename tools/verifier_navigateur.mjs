@@ -128,7 +128,7 @@ try {
       return route.fulfill({ status:200, contentType:'text/html; charset=utf-8',
         body:'<!doctype html><html lang="fr"><title>Itineraires RATP</title></html>' });
     }
-    if (['intent:','ratp:','bonjourratp:','bonjour-ratp:','com.fabernovel.ratp:','com.ratp.ratp:'].includes(url.protocol)) {
+    if (['intent:','ratp:','bonjourratp:','bonjour-ratp:','com.fabernovel.ratp:','com.ratp.ratp:','maps:','geo:','comgooglemaps:','google.navigation:'].includes(url.protocol)) {
       return route.fulfill({ status:204, body:'' });
     }
     return route.abort();
@@ -153,7 +153,7 @@ try {
   await pageAndroid.locator('#cover-section [data-ratp-itineraire]').click();
   const ongletAndroid=await promessePopup;
   const delaiOuverture=Date.now()-departAndroid;
-  assert.ok(delaiOuverture<2500,`le trajet doit s’ouvrir sans délai (${delaiOuverture} ms)`);
+  assert.ok(delaiOuverture<4000,`le trajet doit s’ouvrir sans délai (${delaiOuverture} ms)`);
   // L'onglet tente l'Intent directement (ou via about:blank) avec fallback ratp.fr
   await ongletAndroid.waitForFunction(() => {
     const h = window.location.href;

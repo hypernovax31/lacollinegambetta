@@ -464,13 +464,15 @@ ratpItineraireScript.includes("SCHEMAS_APP") &&
   ratpItineraireScript.includes('intentUrl(') &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
-  // un seul onglet, pas de flash : trajet ouvert immédiatement, app tentée en parallèle via iframe
+  // un seul onglet, pas de flash : Bonjour RATP d'abord, puis app Plans/Maps par défaut comme l'adresse
   corpsClic.includes("window.open(trajetAvecDepart, NOM_FENETRE)") &&
   !corpsClic.includes('ATTENTE_APP') &&
   !/setTimeout\(function \(\) \{[\s\S]*ouvrirTrajet/.test(corpsClic) &&
-  // demande d'ouverture en parallèle, avec départ+arrivée
+  // demande d'ouverture en parallèle, avec départ+arrivée + fallback Plans/Maps
   corpsClic.includes('iframeIntent.src = intent') &&
   corpsClic.includes('SCHEMAS_APP') &&
+  (ratpItineraireScript.includes('maps://') || ratpItineraireScript.includes('geo:')) &&
+  ratpItineraireScript.includes('transitSystemUrls') &&
   // si l'application s'ouvre, l'onglet web se ferme tout seul
   ratpItineraireScript.includes('onglet.close()') &&
   ratpItineraireScript.includes('SURVEILLANCE_APP') &&

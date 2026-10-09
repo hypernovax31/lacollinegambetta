@@ -65,7 +65,7 @@ async function poserInterception(contexte, origineLocale, journal) {
       return route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: PAGE_RATP });
     }
     // Schémas d'app et Intent : ne pas crasher la page, répondre 204
-    if (['intent:','ratp:','bonjourratp:','bonjour-ratp:','com.fabernovel.ratp:','com.ratp.ratp:'].includes(url.protocol)) {
+    if (['intent:','ratp:','bonjourratp:','bonjour-ratp:','com.fabernovel.ratp:','com.ratp.ratp:','maps:','geo:','comgooglemaps:','google.navigation:'].includes(url.protocol)) {
       return route.fulfill({ status: 204, body: '' });
     }
     return route.abort();
@@ -239,7 +239,7 @@ try {
     if (/(^|\.)ratp\.fr$/.test(url.hostname) || /(^|\.)bonjour-ratp\.fr$/.test(url.hostname)) {
       return route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: PAGE_RATP });
     }
-    if (['intent:','ratp:','bonjourratp:','bonjour-ratp:','com.fabernovel.ratp:','com.ratp.ratp:'].includes(url.protocol)) {
+    if (['intent:','ratp:','bonjourratp:','bonjour-ratp:','com.fabernovel.ratp:','com.ratp.ratp:','maps:','geo:','comgooglemaps:','google.navigation:'].includes(url.protocol)) {
       return route.fulfill({ status: 204, body: '' });
     }
     return route.abort();
