@@ -1,12 +1,10 @@
 /* Métro Gambetta • Ligne 3 : demande à l'utilisateur s'il veut utiliser
    l'application Bonjour RATP, comme l'adresse demande à ouvrir l'app de plan.
    - Au clic, ouvre immédiatement un onglet vide pendant le geste (pas bloqué),
-     puis affiche la boîte de dialogue. Après choix, navigue l'onglet vers :
-     • Bonjour RATP (Intent + Universal Link)
-     • Plans/Maps par défaut en mode transit
-     • Site RATP
-   - Un seul onglet, pas de flash. Départ = lieu actuel BAN.
-   - Si l'app s'ouvre (hidden), on ferme l'onglet. */
+     puis affiche la boîte. Les boutons de la boîte ouvrent DIRECTEMENT
+     pendant leur propre geste (pas via Promise.then) pour ne pas être bloqués.
+   - Choix : Bonjour RATP (Intent + Universal Link), Plans/Maps transit, Site RATP.
+   - Un seul onglet, pas de flash. Départ = lieu actuel BAN. */
 (function () {
   'use strict';
 
@@ -139,9 +137,30 @@
     lieuActuel().then(function (a) { if (a) adresseCache = a; });
   } catch (e) {}
 
-  /* Boîte de dialogue */
-  function demanderChoixApp() {
-    return new Promise(function (resolve) {
+  document.querySelectorAll('[data-ratp-itineraire]').forEach(function (lien) {
+    var appUrl = lien.getAttribute('data-ratp-app-href');
+    var trajet = lien.getAttribute('href');
+    if (!appUrl || !trajet) return;
+
+    var dernierClic = 0;
+
+    lien.addEventListener('click', function (event) {
+      try { event.preventDefault(); } catch (e) {}
+      var maintenant = Date.now();
+      if (maintenant - dernierClic < 800) return;
+      dernierClic = maintenant;
+
+      var depart = adresseCache || null;
+      var trajetAvecDepart = depart ? urlTrajet(trajet, depart) : trajet;
+      var appAvecDepart = depart ? urlTrajet(appUrl, depart) : appUrl;
+
+      /* Ouvrir immédiatement un onglet vide pendant le geste */
+      var onglet = null;
+      try {
+        onglet = window.open('about:blank', NOM_FENETRE);
+      } catch (e) {}
+
+      /* Boîte de dialogue - les boutons ouvrent DIRECTEMENT pendant leur geste */
       var exist = document.getElementById('ratp-choix-dialog');
       if (exist && exist.parentNode) exist.parentNode.removeChild(exist);
 
@@ -182,23 +201,170 @@
       btnFermer.type = 'button';
       btnFermer.textContent = 'Annuler';
       btnFermer.style.cssText = 'width:100%;padding:8px;border:0;background:transparent;color:#888;font-size:13px;cursor:pointer;';
-      
-      function fermer(choix) {
+
+      function nettoyer() {
         try { document.removeEventListener('keydown', onKey); } catch (e) {}
         if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-        resolve(choix);
       }
       function onKey(e) {
-        if (e.key === 'Escape') fermer('annuler');
+        if (e.key === 'Escape') {
+          nettoyer();
+          if (onglet && !onglet.closed) { try { onglet.close(); } catch (e) {} }
+        }
       }
       document.addEventListener('keydown', onKey);
       overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) fermer('annuler');
+        if (e.target === overlay) {
+          nettoyer();
+          if (onglet && !onglet.closed) { try { onglet.close(); } catch (e) {} }
+        }
       });
-      btnBonjour.addEventListener('click', function () { fermer('bonjour-ratp'); });
-      btnMaps.addEventListener('click', function () { fermer('system-maps'); });
-      btnWeb.addEventListener('click', function () { fermer('ratp-web'); });
-      btnFermer.addEventListener('click', function () { fermer('annuler'); });
+
+      function ouvrirDansOnglet(url) {
+        // Essayer de naviguer l'onglet vide déjà ouvert pendant le premier geste
+        if (onglet && !onglet.closed) {
+          try { onglet.location.href = url; return onglet; } catch (e) {}
+        }
+        // Sinon ouvrir directement pendant ce second geste (clic sur bouton)
+        try {
+          var o = window.open(url, NOM_FENETRE);
+          if (o && !o.closed) return o;
+        } catch (e) {}
+        try {
+          var o2 = window.open(url, '_blank');
+          if (o2 && !o2.closed) return o2;
+        } catch (e2) {}
+        ouvrirLienSecurise(url);
+        try { window.location.href = url; } catch (e3) {}
+        return null;
+      }
+
+      btnBonjour.addEventListener('click', function () {
+        // Geste utilisateur direct : ouverture app
+        var endAddr = '4 Rue Belgrand 75020 Paris';
+        var startAddr = depart || '';
+        var cible = appAvecDepart;
+        var intent = null;
+        if (androidChrome) {
+          intent = intentUrl(appAvecDepart, trajetAvecDepart);
+          if (intent) {
+            try {
+              var iframeIntent = document.createElement('iframe');
+              iframeIntent.style.display = 'none';
+              iframeIntent.src = intent;
+              document.body.appendChild(iframeIntent);
+              setTimeout(function () { if (iframeIntent.parentNode) iframeIntent.parentNode.removeChild(iframeIntent); }, 3000);
+            } catch (e) {}
+            cible = intent;
+          }
+        } else {
+          try {
+            var appU = new URL(appAvecDepart);
+            var suffix = appU.pathname + appU.search;
+            SCHEMAS_APP.forEach(function (schema) {
+              try {
+                var ifr = document.createElement('iframe');
+                ifr.style.display = 'none';
+                ifr.src = schema + suffix;
+                document.body.appendChild(ifr);
+                setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
+              } catch (e) {}
+            });
+          } catch (e) {}
+        }
+        var o = ouvrirDansOnglet(cible);
+        nettoyer();
+        if (!o) return;
+        // Détection ouverture app
+        function detecterApp() {
+          if (document.hidden && o) { try { o.close(); } catch (e) {} }
+        }
+        document.addEventListener('visibilitychange', detecterApp);
+        window.addEventListener('pagehide', detecterApp);
+        setTimeout(function () {
+          document.removeEventListener('visibilitychange', detecterApp);
+          window.removeEventListener('pagehide', detecterApp);
+        }, SURVEILLANCE_APP);
+        // Fallback web si app non installée
+        setTimeout(function () {
+          if (!document.hidden && o && !o.closed) {
+            try { o.location.href = trajetAvecDepart; } catch (e) {}
+          }
+        }, DELAI_FALLBACK);
+        // Compléter avec lieu actuel
+        lieuActuel().then(function (adresse) {
+          if (!adresse) return;
+          adresseCache = adresse;
+          var trajetComplet = urlTrajet(trajet, adresse);
+          if (document.hidden) return;
+          try { if (o && !o.closed) o.location.href = trajetComplet; } catch (e) {}
+        });
+      });
+
+      btnMaps.addEventListener('click', function () {
+        var endAddr = '4 Rue Belgrand 75020 Paris';
+        var startAddr = depart || '';
+        var systemUrls = transitSystemUrls(startAddr, endAddr);
+        var cible = systemUrls[0];
+        // iOS : comme l'adresse, navigation directe
+        if (isIOS()) {
+          nettoyer();
+          try { window.location.assign(cible); } catch (e) {}
+          if (onglet && !onglet.closed) { try { onglet.close(); } catch (e) {} }
+          // Fallback web si Maps non ouvert
+          setTimeout(function () {
+            if (!document.hidden) {
+              try { window.open(trajetAvecDepart, '_blank'); } catch (e) {}
+            }
+          }, 1200);
+          return;
+        }
+        var o = ouvrirDansOnglet(cible);
+        nettoyer();
+        if (!o) return;
+        setTimeout(function () {
+          if (!document.hidden && o && !o.closed) {
+            try {
+              var href = '';
+              try { href = o.location.href || ''; } catch (e) { href = ''; }
+              if (!href || href.indexOf('maps://') === 0 || href.indexOf('geo:') === 0 || href.indexOf('about:blank') !== -1) {
+                o.location.href = trajetAvecDepart;
+              }
+            } catch (e) {}
+          }
+        }, DELAI_FALLBACK + 800);
+      });
+
+      btnWeb.addEventListener('click', function () {
+        var o = null;
+        if (onglet && !onglet.closed) {
+          try { onglet.location.href = trajetAvecDepart; o = onglet; } catch (e) {}
+        }
+        if (!o || o.closed) {
+          try { o = window.open(trajetAvecDepart, NOM_FENETRE); } catch (e) {}
+        }
+        if (!o || o.closed) {
+          try { o = window.open(trajetAvecDepart, '_blank'); } catch (e2) {}
+        }
+        if (!o || o.closed) {
+          ouvrirLienSecurise(trajetAvecDepart);
+          try { window.location.href = trajetAvecDepart; } catch (e) {}
+        }
+        nettoyer();
+        if (!o) return;
+        lieuActuel().then(function (adresse) {
+          if (!adresse) return;
+          adresseCache = adresse;
+          var trajetComplet = urlTrajet(trajet, adresse);
+          if (document.hidden) return;
+          try { if (o && !o.closed) o.location.href = trajetComplet; } catch (e) {}
+        });
+      });
+
+      btnFermer.addEventListener('click', function () {
+        nettoyer();
+        if (onglet && !onglet.closed) { try { onglet.close(); } catch (e) {} }
+      });
 
       box.appendChild(titre);
       box.appendChild(msg);
@@ -209,193 +375,6 @@
       overlay.appendChild(box);
       document.body.appendChild(overlay);
       try { btnBonjour.focus(); } catch (e) {}
-    });
-  }
-
-  document.querySelectorAll('[data-ratp-itineraire]').forEach(function (lien) {
-    var appUrl = lien.getAttribute('data-ratp-app-href');
-    var trajet = lien.getAttribute('href');
-    if (!appUrl || !trajet) return;
-
-    var dernierClic = 0;
-
-    lien.addEventListener('click', function (event) {
-      try { event.preventDefault(); } catch (e) {}
-      var maintenant = Date.now();
-      if (maintenant - dernierClic < 800) return;
-      dernierClic = maintenant;
-
-      var depart = adresseCache || null;
-      var trajetAvecDepart = depart ? urlTrajet(trajet, depart) : trajet;
-      var appAvecDepart = depart ? urlTrajet(appUrl, depart) : appUrl;
-
-      /* Ouvrir immédiatement un onglet vide pendant le geste (pas bloqué) */
-      var onglet = null;
-      try {
-        onglet = window.open('about:blank', NOM_FENETRE);
-      } catch (e) {}
-      // Si même about:blank bloqué, on tentera plus tard avec _blank / location.href
-
-      demanderChoixApp().then(function (choix) {
-        var endAddr = '4 Rue Belgrand 75020 Paris';
-        var startAddr = depart || '';
-        var trajetFinal = trajetAvecDepart;
-
-        try {
-          if (choix === 'bonjour-ratp') {
-            // Tentative Bonjour RATP
-            var intent = null;
-            if (androidChrome) {
-              intent = intentUrl(appAvecDepart, trajetAvecDepart);
-              if (intent) {
-                try {
-                  var iframeIntent = document.createElement('iframe');
-                  iframeIntent.style.display = 'none';
-                  iframeIntent.src = intent;
-                  document.body.appendChild(iframeIntent);
-                  setTimeout(function () { if (iframeIntent.parentNode) iframeIntent.parentNode.removeChild(iframeIntent); }, 3000);
-                } catch (e) {}
-              }
-            } else {
-              try {
-                var appU = new URL(appAvecDepart);
-                var suffix = appU.pathname + appU.search;
-                SCHEMAS_APP.forEach(function (schema) {
-                  try {
-                    var ifr = document.createElement('iframe');
-                    ifr.style.display = 'none';
-                    ifr.src = schema + suffix;
-                    document.body.appendChild(ifr);
-                    setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
-                  } catch (e) {}
-                });
-              } catch (e) {}
-            }
-            var cibleApp = androidChrome && intent ? intent : appAvecDepart;
-            if (onglet && !onglet.closed) {
-              try { onglet.location.href = cibleApp; } catch (e) {}
-            } else {
-              try { onglet = window.open(cibleApp, NOM_FENETRE); } catch (e) {}
-            }
-            if (!onglet || onglet.closed) {
-              onglet = null;
-              try { onglet = window.open(trajetAvecDepart, NOM_FENETRE); } catch (e) {}
-            }
-            if (!onglet || onglet.closed) {
-              try { onglet = window.open(trajetAvecDepart, '_blank'); } catch (e2) {}
-            }
-            if (!onglet || onglet.closed) {
-              ouvrirLienSecurise(trajetAvecDepart);
-              try { window.location.href = trajetAvecDepart; } catch (e) {}
-              return;
-            }
-            // Fallback web si app non installée
-            setTimeout(function () {
-              if (!document.hidden && onglet && !onglet.closed) {
-                try { onglet.location.href = trajetAvecDepart; } catch (e) {}
-              }
-            }, DELAI_FALLBACK);
-          } else if (choix === 'system-maps') {
-            var systemUrls = transitSystemUrls(startAddr, endAddr);
-            if (isIOS()) {
-              // Comme l'adresse : maps:// direct
-              try {
-                window.location.assign(systemUrls[0]);
-                // Fermer l'onglet vide si on a navigué la page courante
-                if (onglet && !onglet.closed) { try { onglet.close(); } catch (e) {} }
-                return;
-              } catch (e) {}
-            } else {
-              try {
-                systemUrls.forEach(function (u) {
-                  if (u.indexOf('geo:') === 0 || u.indexOf('google.navigation:') === 0 || u.indexOf('comgooglemaps://') === 0) {
-                    try {
-                      var ifr = document.createElement('iframe');
-                      ifr.style.display = 'none';
-                      ifr.src = u;
-                      document.body.appendChild(ifr);
-                      setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 2500);
-                    } catch (e) {}
-                  }
-                });
-              } catch (e) {}
-            }
-            var cibleMaps = systemUrls[0];
-            if (onglet && !onglet.closed) {
-              try { onglet.location.href = cibleMaps; } catch (e) {}
-            } else {
-              try { onglet = window.open(cibleMaps, NOM_FENETRE); } catch (e) {}
-            }
-            if (!onglet || onglet.closed) {
-              var fallbackWeb = systemUrls[systemUrls.length - 1];
-              try { onglet = window.open(fallbackWeb, NOM_FENETRE); } catch (e) {}
-            }
-            if (!onglet || onglet.closed) {
-              try { onglet = window.open(trajetAvecDepart, '_blank'); } catch (e2) {}
-            }
-            if (!onglet || onglet.closed) {
-              ouvrirLienSecurise(trajetAvecDepart);
-              try { window.location.href = trajetAvecDepart; } catch (e) {}
-              return;
-            }
-            setTimeout(function () {
-              if (!document.hidden && onglet && !onglet.closed) {
-                try {
-                  var href = '';
-                  try { href = onglet.location.href || ''; } catch (e) { href = ''; }
-                  if (!href || href.indexOf('maps://') === 0 || href.indexOf('geo:') === 0 || href.indexOf('about:blank') !== -1) {
-                    onglet.location.href = trajetAvecDepart;
-                  }
-                } catch (e) {}
-              }
-            }, DELAI_FALLBACK + 800);
-          } else if (choix === 'ratp-web') {
-            if (onglet && !onglet.closed) {
-              try { onglet.location.href = trajetAvecDepart; } catch (e) {}
-            } else {
-              try { onglet = window.open(trajetAvecDepart, NOM_FENETRE); } catch (e) {}
-            }
-            if (!onglet || onglet.closed) {
-              try { onglet = window.open(trajetAvecDepart, '_blank'); } catch (e2) {}
-            }
-            if (!onglet || onglet.closed) {
-              ouvrirLienSecurise(trajetAvecDepart);
-              try { window.location.href = trajetAvecDepart; } catch (e) {}
-              return;
-            }
-          } else {
-            // Annuler : fermer l'onglet vide
-            if (onglet && !onglet.closed) { try { onglet.close(); } catch (e) {} }
-            return;
-          }
-
-          if (!onglet) return;
-
-          function detecterApp() {
-            if (document.hidden && onglet) {
-              try { onglet.close(); } catch (e) {}
-            }
-          }
-          document.addEventListener('visibilitychange', detecterApp);
-          window.addEventListener('pagehide', detecterApp);
-          setTimeout(function () {
-            document.removeEventListener('visibilitychange', detecterApp);
-            window.removeEventListener('pagehide', detecterApp);
-          }, SURVEILLANCE_APP);
-
-          lieuActuel().then(function (adresse) {
-            if (!adresse) return;
-            adresseCache = adresse;
-            var trajetComplet = urlTrajet(trajet, adresse);
-            if (document.hidden) return;
-            try { if (onglet && !onglet.closed) onglet.location.href = trajetComplet; } catch (e) {}
-          });
-        } catch (err) {
-          try { window.open(trajetAvecDepart, '_blank'); } catch (e) {}
-          try { ouvrirLienSecurise(trajetAvecDepart); } catch (e2) {}
-          try { window.location.href = trajetAvecDepart; } catch (e3) {}
-        }
-      });
     });
   });
 })();
