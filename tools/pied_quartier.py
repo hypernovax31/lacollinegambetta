@@ -97,7 +97,7 @@ LIEN_METRO = (
 
 # Script du handoff : fichier versionne, pose sur toutes les pages.
 SCRIPT_ITINERAIRE = ("""<!-- ratp:itineraire:debut -->
-<script src="assets/js/ratp-itinerary.js?v=2026100910" defer></script>
+<script src="assets/js/ratp-itinerary.js?v=2026100911" defer></script>
 <!-- ratp:itineraire:fin -->""")
 
 # Ancien bloc RATP inline (handoff de 2025) : le script le retire des pages

@@ -455,7 +455,7 @@ pagesRATP.every((f) => lire(f).includes('assets/js/ratp-itinerary.js'))
   : ko('metro : une page n’embarque pas assets/js/ratp-itinerary.js');
 const corpsClic = ratpItineraireScript.slice(
   ratpItineraireScript.indexOf('lien.addEventListener'),
-  ratpItineraireScript.indexOf('/* 3. Si l\'application'));
+  ratpItineraireScript.indexOf('/* 3. Si l\'app'));
 ratpItineraireScript.includes("SCHEMAS_APP") &&
   ratpItineraireScript.includes("'ratp://'") &&
   ratpItineraireScript.includes("'bonjourratp://'") &&
@@ -464,19 +464,17 @@ ratpItineraireScript.includes("SCHEMAS_APP") &&
   ratpItineraireScript.includes('intentUrl(') &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
-  // un seul onglet, pas de flash : ouverture directe Intent / Universal Link pendant le geste
-  (corpsClic.includes("window.open(intent, NOM_FENETRE)") || corpsClic.includes("window.open('about:blank', NOM_FENETRE)")) &&
+  // un seul onglet, pas de flash : trajet ouvert immédiatement, app tentée en parallèle via iframe
   corpsClic.includes("window.open(trajetAvecDepart, NOM_FENETRE)") &&
   !corpsClic.includes('ATTENTE_APP') &&
   !/setTimeout\(function \(\) \{[\s\S]*ouvrirTrajet/.test(corpsClic) &&
   // demande d'ouverture en parallèle, avec départ+arrivée
   corpsClic.includes('iframeIntent.src = intent') &&
-  (corpsClic.includes('onglet.location.href = intent') || corpsClic.includes('window.open(intent, NOM_FENETRE)')) &&
-  (corpsClic.includes('onglet.location.href = appAvecDepart') || corpsClic.includes('window.open(appAvecDepart, NOM_FENETRE)')) &&
+  corpsClic.includes('SCHEMAS_APP') &&
   // si l'application s'ouvre, l'onglet web se ferme tout seul
   ratpItineraireScript.includes('onglet.close()') &&
   ratpItineraireScript.includes('SURVEILLANCE_APP') &&
-  (ratpItineraireScript.includes('BASCULE_FALLBACK') || ratpItineraireScript.includes('DELAI_FALLBACK')) &&
+
   // le départ est le lieu actuel : géolocalisation + Base Adresse Nationale,
   // les onglets ouverts sont rafraîchis avec ?start=, et l'app est retentée avec départ+arrivée
   ratpItineraireScript.includes('navigator.geolocation') &&
