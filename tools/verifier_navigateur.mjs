@@ -150,10 +150,15 @@ try {
   await pageAndroid.locator('#cover-section [data-ratp-itineraire]').click();
   const ongletAndroid=await promessePopup;
   const delaiOuverture=Date.now()-departAndroid;
-  await ongletAndroid.waitForLoadState('domcontentloaded').catch(()=>{});
   assert.ok(delaiOuverture<1500,`le trajet doit s’ouvrir sans délai (${delaiOuverture} ms)`);
+  // L'onglet est créé en about:blank puis tente l'Intent avec fallback ratp.fr
+  await ongletAndroid.waitForFunction(() => {
+    const h = window.location.href;
+    return h.includes('ratp.fr') || h === 'about:blank';
+  }, {timeout:5000}).catch(()=>{});
+  await ongletAndroid.waitForTimeout(1200);
   const urlOuverte=new URL(ongletAndroid.url());
-  assert.equal(urlOuverte.hostname,'www.ratp.fr','le trajet doit s’ouvrir sur ratp.fr');
+  assert.equal(urlOuverte.hostname,'www.ratp.fr','le trajet doit s’ouvrir sur ratp.fr (fallback si app absente)');
   assert.equal(urlOuverte.searchParams.get('end'),'4 Rue Belgrand 75020 Paris',
     'l’arrivée doit être remplie dès l’ouverture');
   await pageAndroid.waitForTimeout(400);

@@ -455,7 +455,7 @@ pagesRATP.every((f) => lire(f).includes('assets/js/ratp-itinerary.js'))
   : ko('metro : une page n’embarque pas assets/js/ratp-itinerary.js');
 const corpsClic = ratpItineraireScript.slice(
   ratpItineraireScript.indexOf('lien.addEventListener'),
-  ratpItineraireScript.indexOf('/* 2. Si l\'application'));
+  ratpItineraireScript.indexOf('/* 3. Si l\'application'));
 ratpItineraireScript.includes("SCHEMAS_APP") &&
   ratpItineraireScript.includes("'ratp://'") &&
   ratpItineraireScript.includes("'bonjourratp://'") &&
@@ -464,18 +464,19 @@ ratpItineraireScript.includes("SCHEMAS_APP") &&
   ratpItineraireScript.includes('intentUrl(') &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
-  // le trajet s'ouvre IMMÉDIATEMENT au clic : fallback + tentative app en parallèle, sans délai, avec départ si connu
+  // un seul onglet créé pendant le geste (about:blank) puis tentative app, fallback sans flash
+  corpsClic.includes("window.open('about:blank', NOM_FENETRE)") &&
   corpsClic.includes("window.open(trajetAvecDepart, NOM_FENETRE)") &&
   !corpsClic.includes('ATTENTE_APP') &&
   !/setTimeout\(function \(\) \{[\s\S]*ouvrirTrajet/.test(corpsClic) &&
-  // la demande d'ouverture de l'application est émise en parallèle, second onglet, avec départ+arrivée
+  // demande d'ouverture en parallèle, avec départ+arrivée
   corpsClic.includes('iframeIntent.src = intent') &&
-  corpsClic.includes('window.open(intent, NOM_FENETRE_APP)') &&
-  corpsClic.includes('window.open(appAvecDepart, NOM_FENETRE_APP)') &&
+  corpsClic.includes('onglet.location.href = intent') &&
+  corpsClic.includes('onglet.location.href = appAvecDepart') &&
   // si l'application s'ouvre, l'onglet web se ferme tout seul
   ratpItineraireScript.includes('onglet.close()') &&
   ratpItineraireScript.includes('SURVEILLANCE_APP') &&
-  ratpItineraireScript.includes('BASCULE_FALLBACK') &&
+  (ratpItineraireScript.includes('BASCULE_FALLBACK') || ratpItineraireScript.includes('DELAI_FALLBACK')) &&
   // le départ est le lieu actuel : géolocalisation + Base Adresse Nationale,
   // les onglets ouverts sont rafraîchis avec ?start=, et l'app est retentée avec départ+arrivée
   ratpItineraireScript.includes('navigator.geolocation') &&
