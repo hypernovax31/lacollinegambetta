@@ -1,10 +1,12 @@
-/* Métro Gambetta • Ligne 3 : ouvre Bonjour RATP puis app Plans/Maps par défaut
-   comme l'adresse postale ouvre l'app de plan du mobile.
-   - Un seul onglet, pas de flash.
-   - Au clic : Bonjour RATP d'abord (Intent Android + Universal Link iOS),
-     sinon app de plan par défaut en mode transports (comme data-default-map),
-     sinon fallback web ratp.fr + Google Maps transit.
-   - Départ = lieu actuel géolocalisé BAN, arrivée = 4 Rue Belgrand.
+/* Métro Gambetta • Ligne 3 : demande à l'utilisateur s'il veut utiliser
+   l'application Bonjour RATP, comme l'adresse demande à ouvrir l'app de plan.
+   - Au clic sur [data-ratp-itineraire], affiche une boîte de dialogue :
+     « Ouvrir l'itinéraire dans Bonjour RATP ? » avec 3 choix :
+     • Oui, ouvrir Bonjour RATP (Intent Android + Universal Link iOS)
+     • Ouvrir dans l'app de plan par défaut (maps:// / geo: transit)
+     • Non, voir sur le site RATP (ratp.fr)
+   - Un seul onglet, pas de flash. Départ = lieu actuel BAN, arrivée = 4 Rue Belgrand.
+   - Si l'app s'ouvre (document.hidden), on ferme l'onglet.
    Ordinateur : lien natif ratp.fr. */
 (function () {
   'use strict';
@@ -20,8 +22,7 @@
   var REVERSE_ENDPOINT = 'https://api-adresse.data.gouv.fr/reverse/';
   var GEOLOC_TIMEOUT = 8000;
   var SURVEILLANCE_APP = 4500;
-  var DELAI_FALLBACK_RATP = 1600;
-  var DELAI_FALLBACK_MAPS = 2600;
+  var DELAI_FALLBACK = 2200;
 
   var agent = navigator.userAgent || '';
   var tactile = false;
@@ -73,27 +74,21 @@
     }
   }
 
-  /* URLs pour app de plan par défaut en mode transports, comme map-links.js */
   function transitSystemUrls(start, end) {
     var urls = [];
     var encEnd = encodeURIComponent(end);
     var encStart = start ? encodeURIComponent(start) : '';
     if (isIOS()) {
-      // Apple Plans : maps://?saddr=...&daddr=...&dirflg=r (r=transit)
       if (encStart) urls.push('maps://?saddr=' + encStart + '&daddr=' + encEnd + '&dirflg=r');
       urls.push('maps://?daddr=' + encEnd + '&dirflg=r');
-      // Google Maps iOS si installé
       if (encStart) urls.push('comgooglemaps://?saddr=' + encStart + '&daddr=' + encEnd + '&directionsmode=transit');
       urls.push('comgooglemaps://?daddr=' + encEnd + '&directionsmode=transit');
     } else if (isAndroid()) {
-      // geo: pour app par défaut
       urls.push('geo:0,0?q=' + encEnd);
-      // Google Maps navigation transit
       if (encStart) urls.push('https://www.google.com/maps/dir/?api=1&origin=' + encStart + '&destination=' + encEnd + '&travelmode=transit');
       urls.push('https://www.google.com/maps/dir/?api=1&destination=' + encEnd + '&travelmode=transit');
       urls.push('google.navigation:q=' + encEnd + '&mode=transit');
     }
-    // Fallback web Google Maps transit (ouvre n'importe quel navigateur)
     if (encStart) {
       urls.push('https://www.google.com/maps/dir/?api=1&origin=' + encStart + '&destination=' + encEnd + '&travelmode=transit');
     } else {
@@ -145,6 +140,169 @@
     lieuActuel().then(function (a) { if (a) adresseCache = a; });
   } catch (e) {}
 
+  /* Boîte de dialogue : Voulez-vous utiliser Bonjour RATP ? */
+  function demanderChoixApp() {
+    return new Promise(function (resolve) {
+      // Si déjà une boîte ouverte, la fermer
+      var exist = document.getElementById('ratp-choix-dialog');
+      if (exist && exist.parentNode) exist.parentNode.removeChild(exist);
+
+      var overlay = document.createElement('div');
+      overlay.id = 'ratp-choix-dialog';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-label', 'Ouvrir dans Bonjour RATP ?');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);padding:16px;box-sizing:border-box;';
+      
+      var box = document.createElement('div');
+      box.style.cssText = 'background:#fff;color:#1a1a1a;max-width:380px;width:100%;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.25);padding:22px 20px 16px;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;';
+      
+      var titre = document.createElement('div');
+      titre.textContent = 'Ouvrir l’itinéraire ?';
+      titre.style.cssText = 'font-weight:700;font-size:18px;line-height:1.3;margin-bottom:8px;';
+      
+      var msg = document.createElement('div');
+      msg.textContent = 'Voulez-vous utiliser l’application « Bonjour RATP » pour l’itinéraire Métro Gambetta • Ligne 3 ?';
+      msg.style.cssText = 'font-size:15px;line-height:1.45;color:#333;margin-bottom:18px;';
+      
+      var btnBonjour = document.createElement('button');
+      btnBonjour.type = 'button';
+      btnBonjour.textContent = 'Oui, ouvrir Bonjour RATP';
+      btnBonjour.style.cssText = 'width:100%;padding:12px 14px;border-radius:10px;border:0;background:#000;color:#fff;font-weight:600;font-size:15px;cursor:pointer;margin-bottom:10px;';
+      
+      var btnMaps = document.createElement('button');
+      btnMaps.type = 'button';
+      btnMaps.textContent = 'Ouvrir dans Plans / Maps';
+      btnMaps.style.cssText = 'width:100%;padding:11px 14px;border-radius:10px;border:1px solid #ddd;background:#f7f7f7;color:#111;font-weight:500;font-size:14px;cursor:pointer;margin-bottom:10px;';
+      
+      var btnWeb = document.createElement('button');
+      btnWeb.type = 'button';
+      btnWeb.textContent = 'Non, voir sur le site RATP';
+      btnWeb.style.cssText = 'width:100%;padding:11px 14px;border-radius:10px;border:1px solid #e5e5e5;background:#fff;color:#555;font-weight:400;font-size:14px;cursor:pointer;margin-bottom:6px;';
+      
+      var btnFermer = document.createElement('button');
+      btnFermer.type = 'button';
+      btnFermer.textContent = 'Annuler';
+      btnFermer.setAttribute('aria-label', 'Fermer');
+      btnFermer.style.cssText = 'width:100%;padding:8px;border:0;background:transparent;color:#888;font-size:13px;cursor:pointer;';
+      
+      function fermer(choix) {
+        try { document.removeEventListener('keydown', onKey); } catch (e) {}
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        resolve(choix);
+      }
+      function onKey(e) {
+        if (e.key === 'Escape') fermer('annuler');
+      }
+      document.addEventListener('keydown', onKey);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) fermer('annuler');
+      });
+      btnBonjour.addEventListener('click', function () { fermer('bonjour-ratp'); });
+      btnMaps.addEventListener('click', function () { fermer('system-maps'); });
+      btnWeb.addEventListener('click', function () { fermer('ratp-web'); });
+      btnFermer.addEventListener('click', function () { fermer('annuler'); });
+
+      box.appendChild(titre);
+      box.appendChild(msg);
+      box.appendChild(btnBonjour);
+      box.appendChild(btnMaps);
+      box.appendChild(btnWeb);
+      box.appendChild(btnFermer);
+      overlay.appendChild(box);
+      document.body.appendChild(overlay);
+      try { btnBonjour.focus(); } catch (e) {}
+    });
+  }
+
+  function ouvrirBonjourRATP(appAvecDepart, trajetAvecDepart) {
+    var onglet = null;
+    var intent = null;
+    if (androidChrome) {
+      intent = intentUrl(appAvecDepart, trajetAvecDepart);
+      if (intent) {
+        try {
+          var iframeIntent = document.createElement('iframe');
+          iframeIntent.style.display = 'none';
+          iframeIntent.src = intent;
+          document.body.appendChild(iframeIntent);
+          setTimeout(function () { if (iframeIntent.parentNode) iframeIntent.parentNode.removeChild(iframeIntent); }, 3000);
+        } catch (e) {}
+        try { onglet = window.open(intent, NOM_FENETRE); } catch (e) {}
+        if (!onglet || onglet.closed) {
+          try {
+            onglet = window.open('about:blank', NOM_FENETRE);
+            if (onglet) { try { onglet.location.href = intent; } catch (e2) {} }
+          } catch (e3) {}
+        }
+      }
+    } else {
+      try {
+        var appU = new URL(appAvecDepart);
+        var suffix = appU.pathname + appU.search;
+        SCHEMAS_APP.forEach(function (schema) {
+          try {
+            var ifr = document.createElement('iframe');
+            ifr.style.position = 'absolute';
+            ifr.style.width = '1px';
+            ifr.style.height = '1px';
+            ifr.style.opacity = '0';
+            ifr.src = schema + suffix;
+            document.body.appendChild(ifr);
+            setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
+          } catch (e) {}
+        });
+      } catch (e) {}
+      try { onglet = window.open(appAvecDepart, NOM_FENETRE); } catch (e) {}
+      if (!onglet || onglet.closed) {
+        try {
+          onglet = window.open('about:blank', NOM_FENETRE);
+          if (onglet) { try { onglet.location.href = appAvecDepart; } catch (e2) {} }
+        } catch (e3) {}
+      }
+    }
+    return onglet;
+  }
+
+  function ouvrirSystemMaps(start, end) {
+    var urls = transitSystemUrls(start, end);
+    if (isIOS()) {
+      try { window.location.assign(urls[0]); return null; } catch (e) {}
+      try { return window.open(urls[0], NOM_FENETRE); } catch (e) { return null; }
+    } else {
+      // Android : iframe geo: + ouverture Google Maps
+      try {
+        urls.forEach(function (u) {
+          if (u.indexOf('geo:') === 0 || u.indexOf('google.navigation:') === 0 || u.indexOf('comgooglemaps://') === 0) {
+            try {
+              var ifr = document.createElement('iframe');
+              ifr.style.display = 'none';
+              ifr.src = u;
+              document.body.appendChild(ifr);
+              setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 2500);
+            } catch (e) {}
+          }
+        });
+      } catch (e) {}
+      try { return window.open(urls[0], NOM_FENETRE); } catch (e) { return null; }
+    }
+  }
+
+  function ouvrirWeb(trajetUrl) {
+    var onglet = null;
+    try { onglet = window.open(trajetUrl, NOM_FENETRE); } catch (e) {}
+    if (!onglet || onglet.closed) {
+      try { onglet = window.open(trajetUrl, '_blank'); } catch (e2) {}
+    }
+    if (!onglet || onglet.closed) {
+      ouvrirLienSecurise(trajetUrl);
+    }
+    if (!onglet || onglet.closed) {
+      try { window.location.href = trajetUrl; } catch (e) {}
+    }
+    return onglet;
+  }
+
   document.querySelectorAll('[data-ratp-itineraire]').forEach(function (lien) {
     var appUrl = lien.getAttribute('data-ratp-app-href');
     var trajet = lien.getAttribute('href');
@@ -153,7 +311,6 @@
     var dernierClic = 0;
 
     lien.addEventListener('click', function (event) {
-      var trajetSecurise = trajet;
       try { event.preventDefault(); } catch (e) {}
       var maintenant = Date.now();
       if (maintenant - dernierClic < 800) return;
@@ -162,75 +319,54 @@
       var depart = adresseCache || null;
       var trajetAvecDepart = depart ? urlTrajet(trajet, depart) : trajet;
       var appAvecDepart = depart ? urlTrajet(appUrl, depart) : appUrl;
-      trajetSecurise = trajetAvecDepart;
 
-      try {
-        /* 1. Tentative BONJOUR RATP d'abord */
+      // Demander à l'utilisateur s'il veut Bonjour RATP, comme l'adresse demande Plans
+      demanderChoixApp().then(function (choix) {
         var onglet = null;
-        var intent = null;
-        if (androidChrome) {
-          intent = intentUrl(appAvecDepart, trajetAvecDepart);
-          if (intent) {
-            try {
-              var iframeIntent = document.createElement('iframe');
-              iframeIntent.style.display = 'none';
-              iframeIntent.setAttribute('aria-hidden', 'true');
-              iframeIntent.tabIndex = -1;
-              iframeIntent.src = intent;
-              document.body.appendChild(iframeIntent);
-              setTimeout(function () { if (iframeIntent.parentNode) iframeIntent.parentNode.removeChild(iframeIntent); }, 3000);
-            } catch (e) {}
-            try { onglet = window.open(intent, NOM_FENETRE); } catch (e) {}
-            if (!onglet || onglet.closed) {
-              try {
-                onglet = window.open('about:blank', NOM_FENETRE);
-                if (onglet) { try { onglet.location.href = intent; } catch (e2) {} }
-              } catch (e3) {}
-            }
-          }
-        } else {
-          try {
-            var appU = new URL(appAvecDepart);
-            var suffix = appU.pathname + appU.search;
-            SCHEMAS_APP.forEach(function (schema) {
-              try {
-                var ifr = document.createElement('iframe');
-                ifr.style.position = 'absolute';
-                ifr.style.width = '1px';
-                ifr.style.height = '1px';
-                ifr.style.opacity = '0';
-                ifr.style.pointerEvents = 'none';
-                ifr.setAttribute('aria-hidden', 'true');
-                ifr.tabIndex = -1;
-                ifr.src = schema + suffix;
-                document.body.appendChild(ifr);
-                setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
-              } catch (e) {}
-            });
-          } catch (e) {}
-          try { onglet = window.open(appAvecDepart, NOM_FENETRE); } catch (e) {}
-          if (!onglet || onglet.closed) {
-            try {
-              onglet = window.open('about:blank', NOM_FENETRE);
-              if (onglet) { try { onglet.location.href = appAvecDepart; } catch (e2) {} }
-            } catch (e3) {}
-          }
-        }
+        var endAddr = '4 Rue Belgrand 75020 Paris';
+        var startAddr = depart || '';
 
-        /* 2. Garantie WEB si popup bloqué */
-        if (!onglet || onglet.closed) {
-          try { onglet = window.open(trajetAvecDepart, NOM_FENETRE); } catch (e) {}
-        }
-        if (!onglet || onglet.closed) {
-          try { onglet = window.open(trajetAvecDepart, '_blank'); } catch (e2) {}
-        }
-        if (!onglet || onglet.closed) {
-          ouvrirLienSecurise(trajetAvecDepart);
-          try { window.location.href = trajetAvecDepart; } catch (e) {}
+        if (choix === 'bonjour-ratp') {
+          onglet = ouvrirBonjourRATP(appAvecDepart, trajetAvecDepart);
+          if (!onglet || onglet.closed) {
+            onglet = ouvrirWeb(trajetAvecDepart);
+          } else {
+            // Si Bonjour RATP non installée, fallback web après délai
+            setTimeout(function () {
+              if (!document.hidden && onglet && !onglet.closed) {
+                try { onglet.location.href = trajetAvecDepart; } catch (e) {}
+              }
+            }, DELAI_FALLBACK);
+          }
+        } else if (choix === 'system-maps') {
+          onglet = ouvrirSystemMaps(startAddr, endAddr);
+          if (!onglet || onglet.closed) {
+            // Fallback Google Maps web transit
+            var webMaps = transitSystemUrls(startAddr, endAddr);
+            var fallback = webMaps[webMaps.length - 1];
+            onglet = ouvrirWeb(fallback);
+          }
+          // Fallback ultime ratp.fr si Maps non ouvert
+          setTimeout(function () {
+            if (!document.hidden && onglet && !onglet.closed) {
+              try {
+                var href = '';
+                try { href = onglet.location.href || ''; } catch (e) { href = ''; }
+                if (!href || href.indexOf('maps://') === 0 || href.indexOf('geo:') === 0 || href.indexOf('about:blank') !== -1) {
+                  onglet.location.href = trajetAvecDepart;
+                }
+              } catch (e) {}
+            }
+          }, DELAI_FALLBACK + 800);
+        } else if (choix === 'ratp-web') {
+          onglet = ouvrirWeb(trajetAvecDepart);
+        } else {
+          // Annuler : ne rien faire, ou ouvrir web par défaut
           return;
         }
 
-        /* 3. Si l'app s'ouvre, on ferme l'onglet */
+        if (!onglet) return;
+
         function detecterApp() {
           if (document.hidden && onglet) {
             try { onglet.close(); } catch (e) {}
@@ -243,104 +379,14 @@
           window.removeEventListener('pagehide', detecterApp);
         }, SURVEILLANCE_APP);
 
-        /* 4. Fallback : si Bonjour RATP ne s'est pas ouverte, essayer app Plans/Maps par défaut en mode transit (comme l'adresse) */
-        setTimeout(function () {
-          if (document.hidden || !onglet || onglet.closed) return;
-          try {
-            var href = '';
-            try { href = onglet.location.href || ''; } catch (e) { href = ''; }
-            // Si on est encore sur intent://, bonjour-ratp.fr ou about:blank, on n'a pas ouvert l'app
-            var besoinFallback = !href || href === 'about:blank' || href.indexOf('about:blank') !== -1 ||
-              href.indexOf('intent://') === 0 || href.indexOf('bonjour-ratp.fr') !== -1;
-            if (!besoinFallback) return; // déjà sur ratp.fr ou autre, on garde
-
-            // Essayer app de plan par défaut en mode transit
-            var endAddr = '4 Rue Belgrand 75020 Paris';
-            var startAddr = depart || '';
-            var systemUrls = transitSystemUrls(startAddr, endAddr);
-            // iOS : comme map-links.js, navigation directe vers maps:// sans repli immédiat
-            if (isIOS()) {
-              try {
-                window.location.assign(systemUrls[0]);
-              } catch (e) {
-                try { onglet.location.href = systemUrls[systemUrls.length - 1]; } catch (e2) {}
-              }
-              return;
-            }
-            // Android : iframe geo: + navigation onglet vers Google Maps transit
-            try {
-              systemUrls.forEach(function (u) {
-                if (u.indexOf('geo:') === 0 || u.indexOf('google.navigation:') === 0 || u.indexOf('comgooglemaps://') === 0) {
-                  try {
-                    var ifr = document.createElement('iframe');
-                    ifr.style.display = 'none';
-                    ifr.src = u;
-                    document.body.appendChild(ifr);
-                    setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 2500);
-                  } catch (e) {}
-                }
-              });
-            } catch (e) {}
-            try { onglet.location.href = systemUrls[0]; } catch (e) {}
-          } catch (e) {}
-        }, DELAI_FALLBACK_RATP);
-
-        /* 5. Fallback ultime web : ratp.fr + Google Maps transit */
-        setTimeout(function () {
-          if (!document.hidden && onglet && !onglet.closed) {
-            try { onglet.location.href = trajetAvecDepart; } catch (e) {}
-          }
-        }, DELAI_FALLBACK_MAPS);
-
-        /* 6. Quand la position arrive, compléter avec ?start= et retenter */
         lieuActuel().then(function (adresse) {
           if (!adresse) return;
           adresseCache = adresse;
           var trajetComplet = urlTrajet(trajet, adresse);
-          var appComplet = urlTrajet(appUrl, adresse);
-          if (document.hidden) {
-            try { if (onglet && !onglet.closed) onglet.location.href = trajetComplet; } catch (e) {}
-            return;
-          }
-          if (!depart) {
-            // Mettre à jour l'onglet avec le départ géolocalisé
-            try { if (onglet && !onglet.closed) onglet.location.href = trajetComplet; } catch (e) {}
-            // Retenter Bonjour RATP avec départ
-            if (androidChrome) {
-              var intent2 = intentUrl(appComplet, trajetComplet);
-              if (intent2) {
-                try {
-                  var ifr = document.createElement('iframe');
-                  ifr.style.display = 'none';
-                  ifr.src = intent2;
-                  document.body.appendChild(ifr);
-                  setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
-                } catch (e) {}
-              }
-            } else {
-              try {
-                var u = new URL(appComplet);
-                var suf = u.pathname + u.search;
-                SCHEMAS_APP.forEach(function (schema) {
-                  try {
-                    var ifr = document.createElement('iframe');
-                    ifr.style.display = 'none';
-                    ifr.src = schema + suf;
-                    document.body.appendChild(ifr);
-                    setTimeout(function () { if (ifr.parentNode) ifr.parentNode.removeChild(ifr); }, 3000);
-                  } catch (e) {}
-                });
-              } catch (e) {}
-            }
-          } else {
-            try { if (onglet && !onglet.closed) onglet.location.href = trajetComplet; } catch (e5) {}
-          }
+          if (document.hidden) return;
+          try { if (onglet && !onglet.closed) onglet.location.href = trajetComplet; } catch (e) {}
         });
-      } catch (err) {
-        try { window.open(trajetSecurise, '_blank'); } catch (e) {}
-        try { ouvrirLienSecurise(trajetSecurise); } catch (e2) {}
-        try { window.location.href = trajetSecurise; } catch (e3) {}
-      }
+      });
     });
   });
 })();

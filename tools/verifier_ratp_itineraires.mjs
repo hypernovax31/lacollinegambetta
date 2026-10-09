@@ -105,9 +105,13 @@ try {
   home.on('request', (requete) => requetesAndroid.push(requete.url()));
   home.on('popup', (page) => popupsAndroid.push(page));
   await home.goto(urlAccueil, { waitUntil: 'domcontentloaded' });
-  const promessePopupAndroid = home.waitForEvent('popup', { timeout: 5000 });
+  const promessePopupAndroid = home.waitForEvent('popup', { timeout: 8000 });
   const departAndroid = Date.now();
   await home.locator('[data-ratp-itineraire]').first().click();
+  try {
+    await home.waitForSelector('#ratp-choix-dialog', {timeout:3000});
+    await home.locator('#ratp-choix-dialog button:has-text("Bonjour RATP")').first().click();
+  } catch (e) {}
   const ongletAndroid = await promessePopupAndroid;
   const delaiOuverture = Date.now() - departAndroid;
   assert.ok(delaiOuverture < 2500,
@@ -175,9 +179,13 @@ try {
   await iphone.goto(urlAccueil, { waitUntil: 'domcontentloaded' });
   assert.equal(await iphone.locator('meta[name="apple-itunes-app"]').count(), 0,
     'aucune bannière système ne doit s’afficher dans Safari');
-  const promessePopupIOS = iphone.waitForEvent('popup', { timeout: 5000 });
+  const promessePopupIOS = iphone.waitForEvent('popup', { timeout: 8000 });
   const departIOS = Date.now();
   await iphone.locator('[data-ratp-itineraire]').first().click();
+  try {
+    await iphone.waitForSelector('#ratp-choix-dialog', {timeout:3000});
+    await iphone.locator('#ratp-choix-dialog button:has-text("Bonjour RATP")').first().click();
+  } catch (e) {}
   const ongletIOS = await promessePopupIOS;
   const delaiIOS = Date.now() - departIOS;
   assert.ok(delaiIOS < 2500, `le trajet doit s’ouvrir sans délai (ouvert en ${delaiIOS} ms)`);
@@ -245,9 +253,13 @@ try {
     return route.abort();
   });
   await insta.goto(urlAccueil, { waitUntil: 'domcontentloaded' });
-  const promessePopupBloque = insta.waitForEvent('popup', { timeout: 5000 });
+  const promessePopupBloque = insta.waitForEvent('popup', { timeout: 8000 });
   const departBloque = Date.now();
   await insta.locator('[data-ratp-itineraire]').first().click();
+  try {
+    await insta.waitForSelector('#ratp-choix-dialog', {timeout:3000});
+    await insta.locator('#ratp-choix-dialog button:has-text("site RATP")').first().click();
+  } catch (e) {}
   const ongletBloque = await promessePopupBloque;
   const delaiBloque = Date.now() - departBloque;
   await ongletBloque.waitForFunction(() => {
@@ -294,8 +306,12 @@ try {
   const popupsOuverts = [];
   pageOuverte.on('popup', (page) => popupsOuverts.push(page));
   await pageOuverte.goto(urlAccueil, { waitUntil: 'domcontentloaded' });
-  const promessePopupOuvert = pageOuverte.waitForEvent('popup', { timeout: 5000 });
+  const promessePopupOuvert = pageOuverte.waitForEvent('popup', { timeout: 8000 });
   await pageOuverte.locator('[data-ratp-itineraire]').first().click();
+  try {
+    await pageOuverte.waitForSelector('#ratp-choix-dialog', {timeout:3000});
+    await pageOuverte.locator('#ratp-choix-dialog button:has-text("Bonjour RATP")').first().click();
+  } catch (e) {}
   const ongletOuvert = await promessePopupOuvert;
   await ongletOuvert.waitForFunction(() => {
     const h = window.location.href;

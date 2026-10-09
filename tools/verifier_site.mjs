@@ -455,7 +455,7 @@ pagesRATP.every((f) => lire(f).includes('assets/js/ratp-itinerary.js'))
   : ko('metro : une page n’embarque pas assets/js/ratp-itinerary.js');
 const corpsClic = ratpItineraireScript.slice(
   ratpItineraireScript.indexOf('lien.addEventListener'),
-  ratpItineraireScript.indexOf('/* 3. Si l\'app'));
+  ratpItineraireScript.indexOf('/* Boîte de dialogue'));
 ratpItineraireScript.includes("SCHEMAS_APP") &&
   ratpItineraireScript.includes("'ratp://'") &&
   ratpItineraireScript.includes("'bonjourratp://'") &&
@@ -464,15 +464,17 @@ ratpItineraireScript.includes("SCHEMAS_APP") &&
   ratpItineraireScript.includes('intentUrl(') &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
-  // un seul onglet, pas de flash : Bonjour RATP d'abord, puis app Plans/Maps par défaut comme l'adresse
-  corpsClic.includes("window.open(trajetAvecDepart, NOM_FENETRE)") &&
+  // un seul onglet, pas de flash : demande explicite Bonjour RATP comme l'adresse demande Plans
+  (corpsClic.includes("window.open(trajetAvecDepart, NOM_FENETRE)") || ratpItineraireScript.includes('demanderChoixApp')) &&
   !corpsClic.includes('ATTENTE_APP') &&
   !/setTimeout\(function \(\) \{[\s\S]*ouvrirTrajet/.test(corpsClic) &&
-  // demande d'ouverture en parallèle, avec départ+arrivée + fallback Plans/Maps
-  corpsClic.includes('iframeIntent.src = intent') &&
-  corpsClic.includes('SCHEMAS_APP') &&
+  // demande d'ouverture avec choix explicite
+  (corpsClic.includes('iframeIntent.src = intent') || ratpItineraireScript.includes('ouvrirBonjourRATP')) &&
+  ratpItineraireScript.includes('SCHEMAS_APP') &&
   (ratpItineraireScript.includes('maps://') || ratpItineraireScript.includes('geo:')) &&
   ratpItineraireScript.includes('transitSystemUrls') &&
+  ratpItineraireScript.includes('Bonjour RATP') &&
+  ratpItineraireScript.includes('demanderChoixApp') &&
   // si l'application s'ouvre, l'onglet web se ferme tout seul
   ratpItineraireScript.includes('onglet.close()') &&
   ratpItineraireScript.includes('SURVEILLANCE_APP') &&

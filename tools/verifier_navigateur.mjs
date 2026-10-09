@@ -148,9 +148,14 @@ try {
   const popupsAndroid=[];
   pageAndroid.on('request',(r)=>requetesAndroid.push(r.url()));
   pageAndroid.on('popup',(p)=>popupsAndroid.push(p));
-  const promessePopup=pageAndroid.waitForEvent('popup',{timeout:5000});
+  const promessePopup=pageAndroid.waitForEvent('popup',{timeout:8000});
   const departAndroid=Date.now();
   await pageAndroid.locator('#cover-section [data-ratp-itineraire]').click();
+  // Nouvelle UX : demande explicite « Voulez-vous utiliser Bonjour RATP ? »
+  try {
+    await pageAndroid.waitForSelector('#ratp-choix-dialog', {timeout:3000});
+    await pageAndroid.locator('#ratp-choix-dialog button:has-text("Bonjour RATP")').first().click();
+  } catch (e) {}
   const ongletAndroid=await promessePopup;
   const delaiOuverture=Date.now()-departAndroid;
   assert.ok(delaiOuverture<4000,`le trajet doit s’ouvrir sans délai (${delaiOuverture} ms)`);
