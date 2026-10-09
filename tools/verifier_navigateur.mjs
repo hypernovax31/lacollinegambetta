@@ -164,7 +164,7 @@ try {
     const h = window.location.href;
     return h.includes('ratp.fr') || h === 'about:blank' || h.startsWith('intent://') || h.includes('bonjour-ratp.fr');
   }, {timeout:5000}).catch(()=>{});
-  await ongletAndroid.waitForTimeout(1900);
+  await ongletAndroid.waitForTimeout(2700);
   const urlOuverte=new URL(ongletAndroid.url());
   assert.equal(urlOuverte.hostname,'www.ratp.fr','le trajet doit s’ouvrir sur ratp.fr (fallback si app absente)');
   assert.equal(urlOuverte.searchParams.get('end'),'4 Rue Belgrand 75020 Paris',

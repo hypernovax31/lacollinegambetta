@@ -465,16 +465,17 @@ ratpItineraireScript.includes("SCHEMAS_APP") &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
   // un seul onglet, pas de flash : demande explicite Bonjour RATP comme l'adresse demande Plans
-  (corpsClic.includes("window.open(trajetAvecDepart, NOM_FENETRE)") || ratpItineraireScript.includes('demanderChoixApp')) &&
+  (ratpItineraireScript.includes("window.open('about:blank', NOM_FENETRE)") || ratpItineraireScript.includes("window.open(trajetAvecDepart")) &&
+  ratpItineraireScript.includes('demanderChoixApp') &&
   !corpsClic.includes('ATTENTE_APP') &&
   !/setTimeout\(function \(\) \{[\s\S]*ouvrirTrajet/.test(corpsClic) &&
   // demande d'ouverture avec choix explicite
-  (corpsClic.includes('iframeIntent.src = intent') || ratpItineraireScript.includes('ouvrirBonjourRATP')) &&
   ratpItineraireScript.includes('SCHEMAS_APP') &&
   (ratpItineraireScript.includes('maps://') || ratpItineraireScript.includes('geo:')) &&
   ratpItineraireScript.includes('transitSystemUrls') &&
   ratpItineraireScript.includes('Bonjour RATP') &&
   ratpItineraireScript.includes('demanderChoixApp') &&
+  ratpItineraireScript.includes('intentUrl(') &&
   // si l'application s'ouvre, l'onglet web se ferme tout seul
   ratpItineraireScript.includes('onglet.close()') &&
   ratpItineraireScript.includes('SURVEILLANCE_APP') &&

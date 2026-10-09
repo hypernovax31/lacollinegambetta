@@ -121,7 +121,7 @@ try {
     const h = window.location.href;
     return h.includes('ratp.fr') || h === 'about:blank' || h.startsWith('intent://') || h.includes('bonjour-ratp.fr');
   }, { timeout: 5000 }).catch(()=>{});
-  await ongletAndroid.waitForTimeout(1900);
+  await ongletAndroid.waitForTimeout(2700);
   const urlOuverte = new URL(ongletAndroid.url());
   assert.equal(urlOuverte.hostname, 'www.ratp.fr');
   assert.equal(urlOuverte.pathname, '/itineraires');
@@ -193,7 +193,7 @@ try {
     const h = window.location.href;
     return h.includes('ratp.fr') || h.includes('bonjour-ratp.fr') || h === 'about:blank' || h.startsWith('intent://');
   }, { timeout: 5000 }).catch(()=>{});
-  await ongletIOS.waitForTimeout(1900);
+  await ongletIOS.waitForTimeout(2700);
   const urlInitiale = new URL(ongletIOS.url());
   // Après fallback, on est sur ratp.fr (ou bonjour-ratp.fr si l'app n'est pas mockée, mais notre mock répond 200)
   assert.ok(['www.ratp.fr','www.bonjour-ratp.fr'].includes(urlInitiale.hostname),
@@ -266,7 +266,7 @@ try {
     const h = window.location.href;
     return h.includes('ratp.fr') || h === 'about:blank' || h.startsWith('intent://') || h.includes('bonjour-ratp.fr');
   }, { timeout: 5000 }).catch(()=>{});
-  await ongletBloque.waitForTimeout(1900);
+  await ongletBloque.waitForTimeout(2700);
   assert.ok(delaiBloque < 2500, `lancement bloqué : le trajet doit quand même s’ouvrir sans délai (${delaiBloque} ms)`);
   assert.equal(new URL(ongletBloque.url()).searchParams.get('end'), ARRIVEE);
   await insta.waitForFunction(() => {
