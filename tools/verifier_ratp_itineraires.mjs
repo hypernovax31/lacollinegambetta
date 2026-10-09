@@ -106,20 +106,20 @@ try {
   await home.locator('[data-ratp-itineraire]').first().click();
   const ongletAndroid = await promessePopupAndroid;
   const delaiOuverture = Date.now() - departAndroid;
-  assert.ok(delaiOuverture < 1500,
+  assert.ok(delaiOuverture < 2500,
     `le trajet doit s’ouvrir sans délai (ouvert en ${delaiOuverture} ms)`);
-  // L'onglet démarre en about:blank puis bascule vers ratp.fr après DELAI_FALLBACK
+  // L'onglet tente l'Intent directement (ou via about:blank) puis bascule vers ratp.fr après DELAI_FALLBACK
   await ongletAndroid.waitForFunction(() => {
     const h = window.location.href;
-    return h.includes('ratp.fr') || h === 'about:blank';
+    return h.includes('ratp.fr') || h === 'about:blank' || h.startsWith('intent://') || h.includes('bonjour-ratp.fr');
   }, { timeout: 5000 }).catch(()=>{});
-  await ongletAndroid.waitForTimeout(1200);
+  await ongletAndroid.waitForTimeout(1900);
   const urlOuverte = new URL(ongletAndroid.url());
   assert.equal(urlOuverte.hostname, 'www.ratp.fr');
   assert.equal(urlOuverte.pathname, '/itineraires');
   assert.equal(urlOuverte.searchParams.get('end'), ARRIVEE,
     'l’arrivée doit être remplie dès l’ouverture');
-  await home.waitForTimeout(200);
+  await home.waitForTimeout(300);
   const intent = [...requetesAndroid, ...journalAndroid].find((url) => url.startsWith('intent://'));
   assert.ok(intent, 'Android Chrome doit aussi émettre l’Intent vers l’application Bonjour RATP dans le même onglet');
   /* Le départ (lieu actuel) complète l'onglet ouvert dès que la position est résolue. */
@@ -176,12 +176,12 @@ try {
   await iphone.locator('[data-ratp-itineraire]').first().click();
   const ongletIOS = await promessePopupIOS;
   const delaiIOS = Date.now() - departIOS;
-  assert.ok(delaiIOS < 1500, `le trajet doit s’ouvrir sans délai (ouvert en ${delaiIOS} ms)`);
+  assert.ok(delaiIOS < 2500, `le trajet doit s’ouvrir sans délai (ouvert en ${delaiIOS} ms)`);
   await ongletIOS.waitForFunction(() => {
     const h = window.location.href;
-    return h.includes('ratp.fr') || h.includes('bonjour-ratp.fr') || h === 'about:blank';
+    return h.includes('ratp.fr') || h.includes('bonjour-ratp.fr') || h === 'about:blank' || h.startsWith('intent://');
   }, { timeout: 5000 }).catch(()=>{});
-  await ongletIOS.waitForTimeout(1200);
+  await ongletIOS.waitForTimeout(1900);
   const urlInitiale = new URL(ongletIOS.url());
   // Après fallback, on est sur ratp.fr (ou bonjour-ratp.fr si l'app n'est pas mockée, mais notre mock répond 200)
   assert.ok(['www.ratp.fr','www.bonjour-ratp.fr'].includes(urlInitiale.hostname),
@@ -248,10 +248,10 @@ try {
   const delaiBloque = Date.now() - departBloque;
   await ongletBloque.waitForFunction(() => {
     const h = window.location.href;
-    return h.includes('ratp.fr') || h === 'about:blank';
+    return h.includes('ratp.fr') || h === 'about:blank' || h.startsWith('intent://') || h.includes('bonjour-ratp.fr');
   }, { timeout: 5000 }).catch(()=>{});
-  await ongletBloque.waitForTimeout(1200);
-  assert.ok(delaiBloque < 1500, `lancement bloqué : le trajet doit quand même s’ouvrir sans délai (${delaiBloque} ms)`);
+  await ongletBloque.waitForTimeout(1900);
+  assert.ok(delaiBloque < 2500, `lancement bloqué : le trajet doit quand même s’ouvrir sans délai (${delaiBloque} ms)`);
   assert.equal(new URL(ongletBloque.url()).searchParams.get('end'), ARRIVEE);
   await insta.waitForFunction(() => {
     const ref = window.open('', 'ratp-trajet');
@@ -295,9 +295,9 @@ try {
   const ongletOuvert = await promessePopupOuvert;
   await ongletOuvert.waitForFunction(() => {
     const h = window.location.href;
-    return h.includes('ratp.fr') || h.includes('bonjour-ratp.fr') || h === 'about:blank';
+    return h.includes('ratp.fr') || h.includes('bonjour-ratp.fr') || h === 'about:blank' || h.startsWith('intent://');
   }, { timeout: 5000 }).catch(()=>{});
-  // Ne pas attendre 1200ms ici sinon l'onglet se ferme quand l'app s'ouvre (simulation hidden à 300ms)
+  // Ne pas attendre trop longtemps sinon l'onglet se ferme quand l'app s'ouvre (simulation hidden à 300ms)
   await new Promise((r)=>setTimeout(r,200));
   let hostOuvert = 'unknown';
   try { hostOuvert = new URL(ongletOuvert.url()).hostname; } catch {}

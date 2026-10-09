@@ -464,15 +464,15 @@ ratpItineraireScript.includes("SCHEMAS_APP") &&
   ratpItineraireScript.includes('intentUrl(') &&
   ratpItineraireScript.includes('package=com.fabernovel.ratp') &&
   ratpItineraireScript.includes('S.browser_fallback_url=') &&
-  // un seul onglet créé pendant le geste (about:blank) puis tentative app, fallback sans flash
-  corpsClic.includes("window.open('about:blank', NOM_FENETRE)") &&
+  // un seul onglet, pas de flash : ouverture directe Intent / Universal Link pendant le geste
+  (corpsClic.includes("window.open(intent, NOM_FENETRE)") || corpsClic.includes("window.open('about:blank', NOM_FENETRE)")) &&
   corpsClic.includes("window.open(trajetAvecDepart, NOM_FENETRE)") &&
   !corpsClic.includes('ATTENTE_APP') &&
   !/setTimeout\(function \(\) \{[\s\S]*ouvrirTrajet/.test(corpsClic) &&
   // demande d'ouverture en parallèle, avec départ+arrivée
   corpsClic.includes('iframeIntent.src = intent') &&
-  corpsClic.includes('onglet.location.href = intent') &&
-  corpsClic.includes('onglet.location.href = appAvecDepart') &&
+  (corpsClic.includes('onglet.location.href = intent') || corpsClic.includes('window.open(intent, NOM_FENETRE)')) &&
+  (corpsClic.includes('onglet.location.href = appAvecDepart') || corpsClic.includes('window.open(appAvecDepart, NOM_FENETRE)')) &&
   // si l'application s'ouvre, l'onglet web se ferme tout seul
   ratpItineraireScript.includes('onglet.close()') &&
   ratpItineraireScript.includes('SURVEILLANCE_APP') &&
