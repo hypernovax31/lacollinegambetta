@@ -465,25 +465,29 @@ ratpItineraireScript.includes("SCHEMAS_APP = ['ratp://', 'bonjourratp://']") &&
   corpsClic.includes("window.open(trajet, NOM_FENETRE)") &&
   !corpsClic.includes('ATTENTE_APP') &&
   !/setTimeout\(function \(\) \{[\s\S]*ouvrirTrajet/.test(corpsClic) &&
-  // la demande d'ouverture de l'application est émise en parallèle
-  corpsClic.includes('repli.searchParams.set(PARAM_RETOUR, \'1\')') &&
-  corpsClic.includes('naviguer(intentUrl(appUrl, repli.href))') &&
+  // la demande d'ouverture de l'application est émise en parallèle, sans naviguer la page courante
+  corpsClic.includes('window.open(intent, NOM_FENETRE_APP)') &&
+  corpsClic.includes('iframeIntent.src = intent') &&
+  corpsClic.includes("window.open(appUrl, NOM_FENETRE_APP)") &&
   corpsClic.includes('essai.src = schema') &&
-  // si l'application s'ouvre, l'onglet du site RATP se ferme tout seul
+  // si l'application s'ouvre, les onglets du site RATP se ferment tout seuls
   ratpItineraireScript.includes('onglet.close()') &&
+  ratpItineraireScript.includes('appOnglet.close()') &&
   ratpItineraireScript.includes('SURVEILLANCE_APP') &&
+  ratpItineraireScript.includes('NETTOYAGE_APP') &&
   // le départ est le lieu actuel : géolocalisation + Base Adresse Nationale,
-  // l'onglet ouvert est rafraîchi avec ?start=
+  // les onglets ouverts sont rafraîchis avec ?start=
   ratpItineraireScript.includes('navigator.geolocation') &&
   ratpItineraireScript.includes('api-adresse.data.gouv.fr/reverse/') &&
   ratpItineraireScript.includes("'start=' + encodeURIComponent(adresse)") &&
   ratpItineraireScript.includes('onglet.location.href = urlTrajet(trajet, adresse)') &&
-  ratpItineraireScript.includes("get(PARAM_RETOUR) === '1'") &&
-  ratpItineraireScript.includes('history.replaceState') &&
+  !ratpItineraireScript.includes('PARAM_RETOUR') &&
+  !ratpItineraireScript.includes('history.replaceState') &&
+  !ratpItineraireScript.includes('naviguer(intentUrl') &&
   // et c'est tout : aucun lien manuel, aucune page intermédiaire
   !ratpItineraireScript.includes('data-ratp-trajet-site') &&
   !ratpItineraireScript.includes('ajouterLienSite')
-  ? ok('metro : trajet ouvert immédiatement au clic (départ = lieu actuel), demande d’ouverture en parallèle, et c’est tout')
+  ? ok('metro : trajet ouvert immédiatement au clic (départ = lieu actuel), demande d’ouverture en parallèle (Intent Android + Universal Link iOS), et c’est tout')
   : ko('metro : ouverture immédiate, demande d’ouverture ou fioriture incorrects');
 const tracesSecours = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html']
   .filter((f) => /ratp-fallback/i.test(lire(f)))

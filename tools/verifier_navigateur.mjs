@@ -165,17 +165,16 @@ try {
     'la page du site ne doit pas disparaître au profit de ratp.fr');
   assert.equal(await pageAndroid.locator('.footer-details__metro-site').count(),0,
     'et c’est tout : aucun lien manuel « Ouvrir le trajet sur ratp.fr » ajouté');
-  /* Le repli natif de l’Intent marque la page (?ratp=1) : c’est elle qui ouvrira
-     le site RATP avec le lieu actuel en départ si l’application est absente. */
+  /* Le repli natif de l’Intent est le trajet ratp.fr lui-même : si l’app est
+     absente, le même onglet reste sur ratp.fr (un seul onglet). */
   const sourceHandoff=readFileSync(join(ROOT,'assets/js/ratp-itinerary.js'),'utf8');
   const blocIntent=sourceHandoff.slice(sourceHandoff.indexOf('function intentUrl'),sourceHandoff.indexOf('/* Lieu actuel'));
   const construireIntent=new Function(blocIntent+'\nreturn intentUrl;')();
   const appHrefAndroid=await pageAndroid.locator('#cover-section [data-ratp-itineraire]').getAttribute('data-ratp-app-href');
-  const repliAttendu=new URL(`${origineLocale}/index.html`);
-  repliAttendu.searchParams.set('ratp','1');
-  const intentComplet=construireIntent(appHrefAndroid,repliAttendu.href);
-  assert.ok(intentComplet.includes('S.browser_fallback_url='+encodeURIComponent(repliAttendu.href)),
-    'le repli natif doit marquer la page (?ratp=1) pour ouvrir le site RATP ensuite');
+  const trajetAndroid=await pageAndroid.locator('#cover-section [data-ratp-itineraire]').getAttribute('href');
+  const intentComplet=construireIntent(appHrefAndroid,trajetAndroid);
+  assert.ok(intentComplet.includes('S.browser_fallback_url='+encodeURIComponent(trajetAndroid)),
+    'le repli natif doit être le trajet ratp.fr lui-même, pas une page de marquage');
   await contexteAndroid.close();
   console.log('  ok   Chromium Android : trajet ouvert sans délai au clic, Intent émis en parallèle, page intacte');
 
