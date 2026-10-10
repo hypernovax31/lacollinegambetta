@@ -6876,32 +6876,40 @@ html:not(.carte-doc) #cover-section .cover-brand .star-gold {
   display:inline-block;
 }
 
-/* ===== Noël basse consommation : neige + traîneau ==============   Le décor est saisonnier (1–31 décembre, ou ?noel=1 pour l'aperçu),
-   suspendu quand l’onglet est caché et volontairement limité : peu de
-   flocons, cadence basse, un seul passage de traîneau occasionnel et aucun
-   son. */
+/* ===== Noël fluide : neige 60fps + traîneau Père Noël ultra-fluide =====
+   Décor saisonnier (1–31 décembre ou ?noel=1), pause si onglet caché,
+   sans son. Rendu en requestAnimationFrame 60fps pour fluidité maximale. */
 #xmas-snow {
   position:fixed; inset:0; z-index:9970;
   display:none; width:100%; height:100%;
   pointer-events:none;
+  will-change: opacity;
 }
 #xmas-snow.on { display:block; }
 #xmas-sleigh {
   position:fixed; left:0; top:0; z-index:9980;
   display:none; pointer-events:none;
   transform:translate3d(0,0,0);
+  will-change: transform, opacity;
+  backface-visibility:hidden;
+  transform-style:preserve-3d;
+  contain:layout style paint;
 }
 #xmas-sleigh.on { display:block; }
 #xmas-sleigh img {
   display:block; width:100%; height:auto;
-  filter:drop-shadow(0 4px 12px rgba(0,0,0,.35));
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,.42)) drop-shadow(0 2px 6px rgba(0,0,0,.3));
+  will-change: transform;
+  transform:translateZ(0);
 }
-#xmas-sleigh.flip img { transform:scaleX(-1); }
+#xmas-sleigh.flip img { transform:translateZ(0) scaleX(-1); }
 #xmas-sleigh .trail {
-  position:absolute; top:52%; width:42%; height:26%;
+  position:absolute; top:52%; width:48%; height:32%;
   border-radius:50%;
-  background:radial-gradient(closest-side,rgba(255,210,120,.42),rgba(255,210,120,0));
-  filter:blur(5px);
+  background:radial-gradient(closest-side,rgba(255,220,140,.55),rgba(255,200,100,.22) 45%,rgba(255,210,120,0) 75%);
+  filter:blur(6px);
+  will-change: transform, opacity;
+  transition: opacity 0.3s ease;
 }
 #xmas-sleigh.ltr .trail { right:88%; }
 #xmas-sleigh.rtl .trail { left:88%; }
@@ -11916,22 +11924,16 @@ else sizeCoverMedallion();
 
 
 <script>
-/* ===== Noël : animation complète, cadence basse et pause intelligente =====
-   Neige légère et traîneau occasionnel, sans son. Le décor est
-   limité au mois de décembre (ou ?noel=1), s'arrête dans un onglet caché,
-   ne crée aucun contexte audio sans clic et utilise un rendu à 14 i/s au
-   lieu d'une boucle plein écran à 60 i/s. */
+/* ===== Noël : animation fluide 60fps, traîneau Père Noël =====
+   Neige légère + traîneau ultra-fluide en requestAnimationFrame.
+   Sans son. Décembre Paris ou ?noel=1. Pause si onglet caché. */
 (function () {
   'use strict';
   function isDecemberInParis() {
     try {
-      var month = new Intl.DateTimeFormat('en', {
-        timeZone:'Europe/Paris', month:'numeric'
-      }).format(new Date());
+      var month = new Intl.DateTimeFormat('en', { timeZone:'Europe/Paris', month:'numeric' }).format(new Date());
       return Number(month) === 12;
-    } catch (e) {
-      return new Date().getMonth() === 11;
-    }
+    } catch (e) { return new Date().getMonth() === 11; }
   }
   function xmasActive() {
     var query = '';
@@ -11941,38 +11943,18 @@ else sizeCoverMedallion();
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
     return query === '1' || isDecemberInParis();
   }
-
-  var api = { active:xmasActive(), fly:function () {}, flakeCount:function () { return 0; }, bells:function () { return { enabled:false, state:'none' }; }, resume:function () {} };
+  var api = { active:xmasActive(), fly:function(){}, flakeCount:function(){return 0;}, bells:function(){return{enabled:false,state:'none'};}, resume:function(){} };
   window.__xmas = api;
   var seasonCheckTimer = 0;
-  function seasonStillMatches() {
-    if (xmasActive() === api.active) return true;
-    window.location.reload();
-    return false;
-  }
-  function scheduleSeasonCheck() {
-    clearTimeout(seasonCheckTimer);
-    seasonCheckTimer = setTimeout(function () {
-      seasonCheckTimer = 0;
-      if (seasonStillMatches()) scheduleSeasonCheck();
-    }, 30 * 60 * 1000);
-  }
-  function seasonalReturn(event) {
-    if (!seasonStillMatches()) return;
-    if (event && event.type === 'pageshow' && event.persisted && api.active) api.resume();
-    scheduleSeasonCheck();
-  }
+  function seasonStillMatches(){ if(xmasActive()===api.active) return true; window.location.reload(); return false; }
+  function scheduleSeasonCheck(){ clearTimeout(seasonCheckTimer); seasonCheckTimer=setTimeout(function(){ seasonCheckTimer=0; if(seasonStillMatches()) scheduleSeasonCheck(); }, 30 * 60 * 1000); }
+  function seasonalReturn(e){ if(!seasonStillMatches()) return; if(e && e.type==='pageshow' && e.persisted && api.active) api.resume(); scheduleSeasonCheck(); }
   window.addEventListener('pageshow', seasonalReturn);
   window.addEventListener('focus', seasonalReturn);
-  document.addEventListener('visibilitychange', function () {
-    if (!document.hidden) seasonalReturn();
-  });
-  window.addEventListener('pagehide', function () {
-    clearTimeout(seasonCheckTimer);
-    seasonCheckTimer = 0;
-  });
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) seasonalReturn(); });
+  window.addEventListener('pagehide', function(){ clearTimeout(seasonCheckTimer); seasonCheckTimer=0; });
   scheduleSeasonCheck();
-  // Médaillon Noël : swap central uniquement en période Noël (même logique que neige)
+
   (function swapMedallionNoel(){
     try{
       if(!api.active) return;
@@ -11994,163 +11976,222 @@ else sizeCoverMedallion();
   var snow = document.getElementById('xmas-snow');
   var sleigh = document.getElementById('xmas-sleigh');
   if (!snow || !sleigh || !snow.getContext) return;
-  var ctx = snow.getContext('2d');
+  var ctx = snow.getContext('2d', { alpha:true });
   var lowPower = !!(navigator.connection && navigator.connection.saveData);
   var hidden = document.hidden;
-  var renderTimer = 0, resizeTimer = 0, sleighTimer = 0;
-  var renderFps = lowPower ? 8 : 14;
+  var resizeTimer = 0, sleighTimer = 0;
+  var rafId = 0, lastTime = 0;
   var flakes = [], W = 0, H = 0, dpr = 1;
   var sleighState = null;
 
-  function rand(min, max) { return min + Math.random() * (max - min); }
-  function flakeLimit() { return lowPower ? 14 : Math.max(22, Math.min(42, Math.round(W * H / 26000))); }
-  function newFlake(anywhere) {
-    var r = rand(.8, 2.8);
+  function rand(min,max){ return min + Math.random()*(max-min); }
+  function flakeLimit(){ return lowPower ? 18 : Math.max(28, Math.min(55, Math.round(W*H/18000))); }
+  function newFlake(anywhere){
+    var r = rand(0.9, 3.2);
     return {
-      x:Math.random() * W,
-      y:anywhere ? Math.random() * H : rand(-12, -2),
-      r:r,
-      o:rand(.4, .9),
-      v:rand(18, 42) * (.65 + r / 3),
-      sway:rand(8, 24),
-      phase:Math.random() * Math.PI * 2,
-      freq:rand(.35, .9)
+      x: Math.random()*W,
+      y: anywhere ? Math.random()*H : rand(-20,-2),
+      r: r,
+      o: rand(0.45, 0.92),
+      v: rand(20, 48) * (0.6 + r/3.2),
+      sway: rand(10, 32),
+      phase: Math.random()*Math.PI*2,
+      freq: rand(0.4, 1.1),
+      rot: Math.random()*Math.PI*2,
+      rotSpeed: rand(-0.8,0.8)
     };
   }
-  function resizeSnow() {
-    dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1 : 1.25);
+  function resizeSnow(){
+    dpr = Math.min(window.devicePixelRatio||1, lowPower ? 1.2 : 1.8);
     W = Math.max(1, window.innerWidth);
     H = Math.max(1, window.innerHeight);
-    snow.width = Math.round(W * dpr);
-    snow.height = Math.round(H * dpr);
-    snow.style.width = W + 'px';
-    snow.style.height = H + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    snow.width = Math.round(W*dpr);
+    snow.height = Math.round(H*dpr);
+    snow.style.width = W+'px';
+    snow.style.height = H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
     var wanted = flakeLimit();
-    while (flakes.length < wanted) flakes.push(newFlake(true));
+    while(flakes.length < wanted) flakes.push(newFlake(true));
     flakes.length = wanted;
   }
-  function scheduleRender() {
-    if (!hidden && !renderTimer) renderTimer = setTimeout(render, Math.round(1000 / renderFps));
-  }
-  function finishSleigh() {
-    if (!sleighState) return;
-    sleigh.classList.remove('on', 'flip', 'ltr', 'rtl');
+
+  function finishSleigh(){
+    if(!sleighState) return;
+    sleigh.classList.remove('on','flip','ltr','rtl');
     sleigh.style.opacity = '';
     sleigh.style.transform = '';
     sleighState = null;
-    scheduleSleigh(rand(70000, 140000));
+    scheduleSleigh(rand(35000, 70000));
   }
-  function renderSleigh(now) {
-    if (!sleighState) return;
-    var state = sleighState;
-    var progress = Math.min(1, (now - state.start) / state.duration);
-    var x = state.ltr ? state.x0 + (state.x1 - state.x0) * progress : state.x1 - (state.x1 - state.x0) * progress;
-    var y = state.top + Math.sin(progress * Math.PI * 2 * state.waves) * state.amplitude - Math.sin(progress * Math.PI) * H * .025;
-    var fade = progress < .1 ? progress / .1 : (progress > .9 ? (1 - progress) / .1 : 1);
-    sleigh.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0)';
+
+  // Easing fluide pour traîneau
+  function easeInOutCubic(t){ return t<0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+  function easeOutSine(t){ return Math.sin((t*Math.PI)/2); }
+
+  function renderSleigh(now, dt){
+    if(!sleighState) return;
+    var s = sleighState;
+    var elapsed = now - s.start;
+    var progress = Math.min(1, elapsed / s.duration);
+    // Progression avec easing pour fluidité (lent au début/fin, rapide au milieu)
+    var eased = easeInOutCubic(progress);
+    var x = s.ltr ? s.x0 + (s.x1 - s.x0)*eased : s.x1 - (s.x1 - s.x0)*eased;
+    // Trajectoire en arc + ondulations fluides
+    var arc = -Math.sin(progress*Math.PI) * H * 0.06;
+    var wave1 = Math.sin(progress*Math.PI*2*s.waves + s.waveOffset) * s.amplitude;
+    var wave2 = Math.sin(progress*Math.PI*4.3 + s.waveOffset*1.3) * s.amplitude*0.32;
+    var y = s.top + arc + wave1 + wave2;
+    // Calcul inclinaison (pitch) basée sur vitesse verticale
+    var prevY = s.prevY != null ? s.prevY : y;
+    var vy = y - prevY;
+    var pitch = Math.max(-12, Math.min(12, vy*1.8));
+    s.prevY = y;
+    // Fade fluide
+    var fade;
+    if(progress < 0.12) fade = easeOutSine(progress/0.12);
+    else if(progress > 0.88) fade = easeOutSine((1-progress)/0.12);
+    else fade = 1;
+    // Scale légèrement plus grand au centre pour effet perspective
+    var scale = 0.92 + Math.sin(progress*Math.PI)*0.18;
+    // Rotation Y pour flip déjà gérée par classe, on ajoute pitch + léger roll
+    var roll = Math.sin(progress*Math.PI*2.2)*2.5;
+    var transform = 'translate3d('+x.toFixed(2)+'px,'+y.toFixed(2)+'px,0) rotateZ('+pitch.toFixed(2)+'deg) rotateY('+(roll*0.3).toFixed(2)+'deg) scale('+scale.toFixed(3)+')';
+    if(!s.ltr) transform += ' scaleX(-1)';
+    sleigh.style.transform = transform;
     sleigh.style.opacity = fade.toFixed(3);
-    if (progress >= 1) { finishSleigh(); }
+    // Trail plus intense au centre
+    var trail = sleigh.querySelector('.trail');
+    if(trail){ trail.style.opacity = (fade*0.75).toFixed(3); trail.style.transform = 'scale('+(0.8+fade*0.6).toFixed(2)+')'; }
+    if(progress >= 1) finishSleigh();
   }
-  function render() {
-    renderTimer = 0;
-    if (hidden) return;
-    var now = performance.now();
-    ctx.clearRect(0, 0, W, H);
+
+  function render(now){
+    rafId = 0;
+    if(hidden) return;
+    if(!lastTime) lastTime = now;
+    var dt = Math.min(32, now - lastTime) / 16.666; // normalisé à 60fps
+    lastTime = now;
+
+    ctx.clearRect(0,0,W,H);
     ctx.fillStyle = '#fff';
-    for (var i = 0; i < flakes.length; i++) {
+    for(var i=0;i<flakes.length;i++){
       var f = flakes[i];
-      f.phase += f.freq / renderFps;
-      f.y += f.v / renderFps;
-      f.x += Math.cos(f.phase) * f.sway / renderFps;
-      if (f.y > H + 6) { flakes[i] = newFlake(false); continue; }
-      if (f.x > W + 6) f.x = -6;
-      if (f.x < -6) f.x = W + 6;
+      f.phase += f.freq * 0.016 * dt;
+      f.rot += f.rotSpeed * 0.02 * dt;
+      f.y += f.v * 0.016 * dt;
+      f.x += Math.cos(f.phase) * f.sway * 0.016 * dt;
+      if(f.y > H+10){ flakes[i]=newFlake(false); continue; }
+      if(f.x > W+10) f.x = -10;
+      if(f.x < -10) f.x = W+10;
       ctx.globalAlpha = f.o;
-      ctx.beginPath();
-      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-      ctx.fill();
+      // Flocon un peu plus détaillé : petit dessin en croix pour les plus gros
+      if(f.r > 2.1){
+        ctx.save();
+        ctx.translate(f.x, f.y);
+        ctx.rotate(f.rot);
+        ctx.beginPath();
+        ctx.arc(0,0,f.r*0.55,0,Math.PI*2);
+        ctx.fill();
+        ctx.globalAlpha = f.o*0.45;
+        ctx.beginPath();
+        ctx.moveTo(-f.r,0); ctx.lineTo(f.r,0);
+        ctx.moveTo(0,-f.r); ctx.lineTo(0,f.r);
+        ctx.lineWidth = 0.7;
+        ctx.strokeStyle = '#fff';
+        ctx.stroke();
+        ctx.restore();
+      } else {
+        ctx.beginPath();
+        ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
+        ctx.fill();
+      }
     }
     ctx.globalAlpha = 1;
-    renderSleigh(now);
-    scheduleRender();
-  }
-  function scheduleSleigh(delay) {
-    clearTimeout(sleighTimer);
-    sleighTimer = 0;
-    if (hidden) return;
-    sleighTimer = setTimeout(function () {
-      sleighTimer = 0;
-      api.fly();
-    }, delay == null ? rand(70000, 140000) : delay);
-  }
-  function fly(options) {
-    if (sleighState || hidden) return;
-    options = options || {};
-    var width = options.width || Math.round(Math.max(220, Math.min(390, W * .28)));
-    var ltr = options.dir ? options.dir === 'ltr' : Math.random() < .5;
-    sleighState = {
-      ltr:ltr,
-      x0:-width - 70,
-      x1:W + 70,
-      top:options.top == null ? Math.round(H * rand(.06, .32)) : options.top,
-      duration:options.duration || rand(9000, 12000),
-      amplitude:rand(8, 20),
-      waves:rand(1.2, 1.8),
-      start:performance.now()
-    };
-    sleigh.style.width = width + 'px';
-    sleigh.classList.remove('flip', 'ltr', 'rtl');
-    sleigh.classList.add('on', ltr ? 'ltr' : 'rtl');
-    if (!ltr) sleigh.classList.add('flip');
-    scheduleRender();
-  }
-  api.fly = fly;
-  api.flakeCount = function () { return flakes.length; };
 
-  function pause() {
-    hidden = true;
-    clearTimeout(renderTimer); renderTimer = 0;
-    clearTimeout(sleighTimer); sleighTimer = 0;
-    if (sleighState) sleighState.pausedAt = performance.now();
-    
+    renderSleigh(now, dt);
+
+    rafId = requestAnimationFrame(render);
   }
-  function resume() {
+
+  function scheduleRender(){
+    if(!hidden && !rafId){
+      lastTime = 0;
+      rafId = requestAnimationFrame(render);
+    }
+  }
+
+  function scheduleSleigh(delay){
+    clearTimeout(sleighTimer); sleighTimer=0;
+    if(hidden) return;
+    sleighTimer = setTimeout(function(){ sleighTimer=0; api.fly(); }, delay==null ? rand(35000,70000) : delay);
+  }
+
+  function fly(options){
+    if(sleighState || hidden) return;
+    options = options||{};
+    var width = options.width || Math.round(Math.max(260, Math.min(460, W*0.32)));
+    var ltr = options.dir ? options.dir==='ltr' : Math.random()<0.5;
+    sleighState = {
+      ltr: ltr,
+      x0: -width - 90,
+      x1: W + 90,
+      top: options.top==null ? Math.round(H*rand(0.08,0.36)) : options.top,
+      duration: options.duration || rand(7500, 10500),
+      amplitude: rand(10, 26),
+      waves: rand(1.1, 1.9),
+      waveOffset: Math.random()*Math.PI*2,
+      start: performance.now(),
+      prevY: null
+    };
+    sleigh.style.width = width+'px';
+    sleigh.style.willChange = 'transform, opacity';
+    sleigh.classList.remove('flip','ltr','rtl');
+    sleigh.classList.add('on', ltr ? 'ltr' : 'rtl');
+    if(!ltr) sleigh.classList.add('flip');
+    scheduleRender();
+  }
+
+  api.fly = fly;
+  api.flakeCount = function(){ return flakes.length; };
+
+  function pause(){
+    hidden = true;
+    if(rafId){ cancelAnimationFrame(rafId); rafId=0; }
+    clearTimeout(sleighTimer); sleighTimer=0;
+    if(sleighState) sleighState.pausedAt = performance.now();
+  }
+  function resume(){
     hidden = false;
-    if (sleighState && sleighState.pausedAt) {
+    if(sleighState && sleighState.pausedAt){
       sleighState.start += performance.now() - sleighState.pausedAt;
       delete sleighState.pausedAt;
+      sleighState.prevY = null;
     }
-    if (!sleighState && !sleighTimer) scheduleSleigh(rand(25000, 50000));
+    lastTime = 0;
+    if(!sleighState && !sleighTimer) scheduleSleigh(rand(12000,25000));
     scheduleRender();
   }
   api.resume = resume;
   api.pause = pause;
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) pause(); else resume();
-  });
-  window.addEventListener('resize', function () {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resizeSnow, 180);
-  }, { passive:true });
-  if (navigator.getBattery) {
-    navigator.getBattery().then(function (battery) {
-      function powerMode() {
-        var next = !battery.charging && battery.level <= .25;
-        if (next === lowPower) return;
+  document.addEventListener('visibilitychange', function(){ if(document.hidden) pause(); else resume(); });
+  window.addEventListener('resize', function(){ clearTimeout(resizeTimer); resizeTimer=setTimeout(resizeSnow,180); }, {passive:true});
+  if(navigator.getBattery){
+    navigator.getBattery().then(function(battery){
+      function powerMode(){
+        var next = !battery.charging && battery.level <= 0.22;
+        if(next===lowPower) return;
         lowPower = next;
-        renderFps = lowPower ? 8 : 14;
         resizeSnow();
       }
       battery.addEventListener('chargingchange', powerMode);
       battery.addEventListener('levelchange', powerMode);
       powerMode();
-    }).catch(function () {});
+    }).catch(function(){});
   }
   resizeSnow();
   snow.classList.add('on');
   scheduleRender();
-  scheduleSleigh(15000);
+  scheduleSleigh(8000);
 })();
 </script>
 
