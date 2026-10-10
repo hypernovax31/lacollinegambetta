@@ -278,15 +278,20 @@
     if (!raw || typeof raw !== 'object') return null;
     var author = raw.authorAttribution || {};
     var authorName = String(author.displayName || '').trim();
-    var text = localisedText(raw.text) || localisedText(raw.originalText);
+    var original = localisedText(raw.originalText) || localisedText(raw.text);
+    var translated = localisedText(raw.text) || original;
+    var text = translated;
     text = String(text || '').replace(/\r\n?/g, '\n').trim();
+    original = String(original || '').replace(/\r\n?/g, '\n').trim();
     if (!authorName || !text) return null;
     return {
       author: authorName,
       authorUrl: safeUrl(author.uri),
       photoUrl: safeUrl(author.photoURI || author.photoUri),
       text: text,
+      originalText: original,
       textLanguage: String(raw.textLanguageCode || raw.originalTextLanguageCode || lang()),
+      originalTextLanguageCode: String(raw.originalTextLanguageCode || raw.textLanguageCode || 'fr').toLowerCase(),
       translated: !!(raw.textLanguageCode && raw.originalTextLanguageCode &&
         String(raw.textLanguageCode).toLowerCase() !== String(raw.originalTextLanguageCode).toLowerCase()),
       visit: visitDate(raw),
@@ -675,29 +680,60 @@
   function translateExistingReviews(targetLang) {
     if (!reviews.length) return Promise.resolve();
     var c = COPY[targetLang] || COPY.fr;
-    // On affiche un état de chargement léger pendant la traduction
+    // On traduit systématiquement si la langue cible diffère de la langue d'origine des avis
+    // La plupart des avis sont en français, donc si targetLang != fr, on traduit
+    var toLang = targetLang.toLowerCase();
     var needsTranslation = reviews.some(function (rv) {
-      var rvLang = (rv.textLanguage || '').toLowerCase().split('-')[0];
-      return rvLang && rvLang !== targetLang.toLowerCase() && !rv.translated;
+      var src = (rv.originalTextLanguageCode || rv.textLanguage || 'fr').toLowerCase().split('-')[0];
+      return src !== toLang;
     });
-    if (!needsTranslation) {
-      // Même si Google a déjà traduit, on garde la logique d'affichage
+    // Même si Google a déjà traduit certains avis, on tente de traduire ceux qui restent en français
+    // ou dont la langue ne correspond pas à la cible
+    if (!needsTranslation && reviewsLanguage === targetLang) {
       return Promise.resolve();
     }
     status.textContent = c.loading;
     var promises = reviews.map(function (rv) {
-      var rvLang = (rv.textLanguage || rv.originalTextLanguageCode || 'auto').toLowerCase();
-      var toLang = targetLang.toLowerCase();
-      if (rvLang.split('-')[0] === toLang) return Promise.resolve(rv);
-      // Si Google avait déjà traduit, on garde
+      var srcLang = (rv.originalTextLanguageCode || rv.textLanguage || 'fr').toLowerCase();
+      var srcShort = srcLang.split('-')[0];
+      if (srcShort === toLang) {
+        // Déjà dans la bonne langue
+        return Promise.resolve(rv);
+      }
+      // On garde le texte original pour éviter la double traduction
+      var sourceText = rv.originalText || rv.text;
+      // Si Google avait déjà traduit dans la bonne langue, on garde
       if (rv.translated && rv.textLanguage && rv.textLanguage.toLowerCase().split('-')[0] === toLang) {
         return Promise.resolve(rv);
       }
-      return translateViaMyMemory(rv.text, rvLang, toLang).then(function (translatedText) {
-        rv.text = translatedText;
-        rv.textLanguage = toLang;
-        rv.translated = true;
+      return translateViaMyMemory(sourceText, srcShort, toLang).then(function (translatedText) {
+        // MyMemory renvoie parfois le même texte si échec, on garde quand même
+        if (translatedText && translatedText.trim() && translatedText.trim().toLowerCase() !== sourceText.trim().toLowerCase()) {
+          rv.text = translatedText;
+          rv.textLanguage = toLang;
+          rv.translated = true;
+        } else {
+          // Fallback : on tente la traduction via Google Translate gratuit (gtx)
+          return translateViaGoogleGtx(sourceText, toLang).then(function (gtxText) {
+            if (gtxText && gtxText.trim()) {
+              rv.text = gtxText;
+              rv.textLanguage = toLang;
+              rv.translated = true;
+            }
+            return rv;
+          });
+        }
         return rv;
+      }).catch(function () {
+        // En cas d'erreur, on tente Google gtx
+        return translateViaGoogleGtx(sourceText, toLang).then(function (gtxText) {
+          if (gtxText) {
+            rv.text = gtxText;
+            rv.textLanguage = toLang;
+            rv.translated = true;
+          }
+          return rv;
+        });
       });
     });
     return Promise.all(promises).then(function () {
@@ -706,6 +742,30 @@
       setStatus();
     });
   }
+
+  function translateViaGoogleGtx(text, toLang) {
+    if (!text || !toLang) return Promise.resolve(text);
+    toLang = toLang.toLowerCase().split('-')[0];
+    var cacheKey = 'gtx|' + toLang + '|' + text;
+    if (translationCache[cacheKey]) return Promise.resolve(translationCache[cacheKey]);
+    var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + encodeURIComponent(toLang) + '&dt=t&q=' + encodeURIComponent(text);
+    return fetch(url).then(function (r) { return r.json(); }).then(function (data) {
+      try {
+        var translated = '';
+        if (Array.isArray(data) && Array.isArray(data[0])) {
+          data[0].forEach(function (chunk) {
+            if (chunk && chunk[0]) translated += chunk[0];
+          });
+        }
+        if (translated) {
+          translationCache[cacheKey] = translated;
+          return translated;
+        }
+        return text;
+      } catch (e) { return text; }
+    }).catch(function () { return text; });
+  }
+
 
   function fetchConfiguration() {
     return fetch('assets/data/avis-google.json', { cache:'no-store', credentials:'same-origin' })

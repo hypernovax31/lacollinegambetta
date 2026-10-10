@@ -62,6 +62,12 @@ window.fetch = (url) => {
       json: () => Promise.resolve({ responseData: { translatedText: 'TEST ONLY — translated fixture' } })
     });
   }
+  if (urlStr.includes('translate.googleapis.com')) {
+    return Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve([[['TEST ONLY — translated via gtx','original',null,null,10]],null,'en'])
+    });
+  }
   return Promise.resolve({
     ok: true,
     json: () => Promise.resolve({
