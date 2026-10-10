@@ -227,8 +227,35 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:focus-visible {
 </head>
 <body>
 <main>
-  <img class="medaillon" src="assets/cover/medaillon-logo-or.svg?v=20261010-or" width="400" height="400"
+  <img id="medaillon-404" class="medaillon" src="assets/cover/medaillon-logo-or.svg?v=20261010-or" width="400" height="400"
        alt="Médaillon doré de La Colline Gambetta - full SVG or">
+  <script>/* 404 : swap médaillon or vers Saint Patrick si ?stpatrick=1 ou 10-20 mars Paris */
+  (function(){
+    try{
+      var qs=new URLSearchParams(location.search);
+      if(qs.get('stpatrick')==='0'||qs.get('stpat')==='0'||qs.get('stp')==='0') return;
+      if(qs.get('noel')==='1') return;
+      try{ var mNoel=new Intl.DateTimeFormat('en',{timeZone:'Europe/Paris',month:'numeric'}).format(new Date()); if(Number(mNoel)===12) return; }catch(e){ if(new Date().getMonth()===11) return; }
+      var isParam=qs.get('stpatrick')==='1'||qs.get('stpat')==='1'||qs.get('stp')==='1';
+      var isSeason=false;
+      try{
+        var fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Paris',month:'numeric',day:'numeric'});
+        var parts=fmt.formatToParts(new Date());
+        var mm=0,dd=0;
+        for(var i=0;i<parts.length;i++){ if(parts[i].type==='month') mm=Number(parts[i].value); if(parts[i].type==='day') dd=Number(parts[i].value); }
+        isSeason=(mm===3&&dd>=10&&dd<=20);
+      }catch(e){ var now=new Date(); isSeason=(now.getMonth()===2&&now.getDate()>=10&&now.getDate()<=20); }
+      if(!isParam&&!isSeason) return;
+      var img=document.getElementById('medaillon-404');
+      if(!img) return;
+      var patHref='assets/cover/medaillon-logo-saint-patrick.svg?v=20261010-stpatrick';
+      try{ var p=new Image(); p.src=patHref; }catch(e){}
+      img.src=patHref;
+      img.alt='Médaillon Saint Patrick - La Colline Gambetta - full SVG arbre centre';
+      document.documentElement.classList.add('stpatrick-404-active');
+    }catch(e){}
+  })();
+  </script>
   <h1>Cette page n’existe pas</h1>
   <p>Le lien que vous avez suivi ne mène nulle part — mais la table, elle, vous attend.</p>
   <div class="liens">
