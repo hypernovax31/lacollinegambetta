@@ -6918,6 +6918,10 @@ html.carte-doc #xmas-sleigh { display:none !important; }
 @media print {
   #xmas-snow, #xmas-sleigh { display:none !important; }
 }
+/* Saint Patrick : léger halo vert/or sur médaillon actif */
+html.stpatrick-medallion-active .medallion-photo--web {
+  filter: drop-shadow(0 0 18px rgba(46,204,106,.28)) drop-shadow(0 6px 22px rgba(0,0,0,.38));
+}
 
 /* ===== Japonais : activation des fontes jumelles =====
    Copie scopée de chaque règle font-family du site : en vue
@@ -10935,6 +10939,40 @@ html:not(.carte-doc) #cover-section .cover-hours .cover-hours__range > .cover-ho
           try{ img.setAttributeNS('http://www.w3.org/1999/xlink','href', noelHref); }catch(e){}
           try{ img.setAttributeNS('http://www.w3.org/1999/xlink','xlink:href', noelHref); }catch(e){}
           document.documentElement.classList.add('xmas-medallion-active');
+        }catch(e){}
+      })();
+      </script>
+      <script>/* Saint Patrick : swap médaillon central en période Saint Patrick (?stpatrick=1 ou 10-20 mars Paris) - full SVG vectoriel */
+      (function(){
+        try{
+          var qs = new URLSearchParams(location.search);
+          if(qs.get('stpatrick')==='0' || qs.get('stpat')==='0' || qs.get('stp')==='0') return;
+          if(qs.get('noel')==='1') return;
+          try{
+            var mNoel = new Intl.DateTimeFormat('en',{timeZone:'Europe/Paris',month:'numeric'}).format(new Date());
+            if(Number(mNoel)===12) return;
+          }catch(e){ if(new Date().getMonth()===11) return; }
+          var isParam = qs.get('stpatrick')==='1' || qs.get('stpat')==='1' || qs.get('stp')==='1';
+          var isSeason = false;
+          try{
+            var fmt = new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Paris',month:'numeric',day:'numeric'});
+            var parts = fmt.formatToParts(new Date());
+            var mm=0, dd=0;
+            for(var i=0;i<parts.length;i++){ if(parts[i].type==='month') mm=Number(parts[i].value); if(parts[i].type==='day') dd=Number(parts[i].value); }
+            isSeason = (mm===3 && dd>=10 && dd<=20);
+          }catch(e){
+            var now=new Date(); isSeason = (now.getMonth()===2 && now.getDate()>=10 && now.getDate()<=20);
+          }
+          if(!isParam && !isSeason) return;
+          if(document.documentElement.classList.contains('carte-doc')) return;
+          var img = document.getElementById('medallion-web') || document.querySelector('.medallion-photo--web');
+          if(!img) return;
+          var patHref = 'assets/cover/medaillon-logo-saint-patrick.svg?v=20261010-stpatrick';
+          try{ var p=new Image(); p.src=patHref; }catch(e){}
+          img.setAttribute('href', patHref);
+          try{ img.setAttributeNS('http://www.w3.org/1999/xlink','href', patHref); }catch(e){}
+          try{ img.setAttributeNS('http://www.w3.org/1999/xlink','xlink:href', patHref); }catch(e){}
+          document.documentElement.classList.add('stpatrick-medallion-active');
         }catch(e){}
       })();
       </script>
