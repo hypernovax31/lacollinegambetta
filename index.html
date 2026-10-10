@@ -10901,9 +10901,35 @@ html:not(.carte-doc) #cover-section .cover-hours .cover-hours__range > .cover-ho
                 </svg>
 
                 <svg class="relief-inner-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
-                        <image class="medallion-photo medallion-photo--web" href="assets/cover/medaillon-logo-noir-brillant.svg?v=20260930-grains" x="0" y="0" width="280" height="280" preserveAspectRatio="xMidYMid meet" />
+                        <image class="medallion-photo medallion-photo--web" id="medallion-web" href="assets/cover/medaillon-logo-noir-brillant.svg?v=20260930-grains" x="0" y="0" width="280" height="280" preserveAspectRatio="xMidYMid meet" />
                         <image class="medallion-photo medallion-photo--print" href="assets/cover/logo-facade.webp" x="-69" y="-16" width="418" height="312" preserveAspectRatio="none" />
                     </svg></div>
+      <script>/* Noël : swap médaillon central uniquement en période Noël (?noel=1 ou décembre Paris) - sans flash */
+      (function(){
+        try{
+          var qs = new URLSearchParams(location.search);
+          if(qs.get('noel')==='0') return;
+          var isNoelParam = qs.get('noel')==='1';
+          var isDec = false;
+          try{
+            var m = new Intl.DateTimeFormat('en',{timeZone:'Europe/Paris',month:'numeric'}).format(new Date());
+            isDec = Number(m)===12;
+          }catch(e){ isDec = (new Date().getMonth()===11); }
+          if(!isNoelParam && !isDec) return;
+          if(document.documentElement.classList.contains('carte-doc')) return;
+          var img = document.getElementById('medallion-web');
+          if(!img) img = document.querySelector('.medallion-photo--web');
+          if(!img) return;
+          var noelHref = 'assets/cover/medaillon-logo-noel.svg?v=20261010-noel';
+          // précharge pour éviter flash
+          try{ var p=new Image(); p.src=noelHref; }catch(e){}
+          img.setAttribute('href', noelHref);
+          try{ img.setAttributeNS('http://www.w3.org/1999/xlink','href', noelHref); }catch(e){}
+          try{ img.setAttributeNS('http://www.w3.org/1999/xlink','xlink:href', noelHref); }catch(e){}
+          document.documentElement.classList.add('xmas-medallion-active');
+        }catch(e){}
+      })();
+      </script>
       <a href="index.html#menu-nav-anchor" class="contact-link cover-action" onclick="showView('menu'); return false;"><span class="star-gold">✦</span> Menu & Carte <span class="star-gold">✦</span></a>
       </div>
       <div class="cover-footer">
@@ -11946,6 +11972,23 @@ else sizeCoverMedallion();
     seasonCheckTimer = 0;
   });
   scheduleSeasonCheck();
+  // Médaillon Noël : swap central uniquement en période Noël (même logique que neige)
+  (function swapMedallionNoel(){
+    try{
+      if(!api.active) return;
+      var med = document.getElementById('medallion-web') || document.querySelector('.medallion-photo--web');
+      if(!med) return;
+      var noelHref = 'assets/cover/medaillon-logo-noel.svg?v=20261010-noel';
+      var cur = med.getAttribute('href') || '';
+      if(cur.indexOf('noel')===-1){
+        try{ var pre=new Image(); pre.src=noelHref; }catch(e){}
+        med.setAttribute('href', noelHref);
+        try{ med.setAttributeNS('http://www.w3.org/1999/xlink','href', noelHref); }catch(e){}
+        try{ med.setAttributeNS('http://www.w3.org/1999/xlink','xlink:href', noelHref); }catch(e){}
+      }
+      document.documentElement.classList.add('xmas-medallion-active');
+    }catch(e){}
+  })();
   if (!api.active) return;
 
   var snow = document.getElementById('xmas-snow');
