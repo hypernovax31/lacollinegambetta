@@ -5360,8 +5360,7 @@ html:not(.carte-doc) #cover-section .medallion-container .medallion-frame {
   }
 }
 
-/* ============================================================================
-   VIS-À-VIS « INTITULÉ ⇄ PRIX » EN RESPONSIVE — bascules par onglet
+/* =====================================================================   VIS-À-VIS « INTITULÉ ⇄ PRIX » EN RESPONSIVE — bascules par onglet
    ----------------------------------------------------------------------------
    Règle fixe, à toutes les largeurs : le prix reste en vis-à-vis de la
    PREMIÈRE ligne de son intitulé, jamais dessous. Quand l'intitulé est long,
@@ -5474,8 +5473,7 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
   margin-bottom: 2px;
 }
 
-/* ============================================================================
-   3. REPÈRES DE BASCULE PAR ONGLET
+/* =====================================================================   3. REPÈRES DE BASCULE PAR ONGLET
    ========================================================================= */
 
 /* ===== Entrees ===== */
@@ -5655,8 +5653,7 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
    « 2 colonnes → 1 colonne » reste donc réglée à 719 px, comme avant. */
 
 
-/* ============================================================================
-   CONTENANCES : UN SEUL FORMAT
+/* =====================================================================   CONTENANCES : UN SEUL FORMAT
    ----------------------------------------------------------------------------
    Une contenance (4 cl, 12 cl, 25 cl, 1 L, Coupe 12 cl…) n'est pas un intitulé :
    c'est une précision de service. Elle se lisait pourtant de huit façons
@@ -5732,8 +5729,7 @@ html #interior-menu .wine-table td:not(.wine-name):not(.wine-no)::before {
   text-transform: none !important;
   color: var(--qty-ink) !important;
 }
-/* =============================================================================
-   POINTILLÉS : LA MÊME DISTANCE AU PRIX PARTOUT
+/* ======================================================================   POINTILLÉS : LA MÊME DISTANCE AU PRIX PARTOUT
    -----------------------------------------------------------------------------
    Référence : les boissons fraîches. Leur ligne est un flex — nom, pointillé
    élastique, prix — et le pointillé s'arrête à un seul écart (le `gap` de 10 px)
@@ -5823,8 +5819,7 @@ html #interior-menu .wine-table td:not(.wine-name):not(.wine-no)::before {
   }
 }
 
-/* =============================================================================
-   DEUX COLONNES : DE L'AIR DANS LA GOUTTIÈRE
+/* ======================================================================   DEUX COLONNES : DE L'AIR DANS LA GOUTTIÈRE
    -----------------------------------------------------------------------------
    Sur grand écran et sur la carte A4, les listes se lisent sur deux colonnes.
    Elles n'étaient séparées que de 10 px : le prix de la colonne de gauche et le
@@ -5863,8 +5858,7 @@ html #interior-menu .wine-table td:not(.wine-name):not(.wine-no)::before {
   html #interior-menu .hh-list--cols { column-gap: 2.75rem; }
 }
 
-/* =============================================================================
-   DEUX COLONNES : LE GROUPE RECENTRÉ DANS LE PANNEAU
+/* ======================================================================   DEUX COLONNES : LE GROUPE RECENTRÉ DANS LE PANNEAU
    -----------------------------------------------------------------------------
    Les listes à deux colonnes (.price-list--cols, .hh-list--cols) gardent
    des colonnes égales (1fr) sur toute la largeur du panneau : la gouttière
@@ -6085,8 +6079,7 @@ html:not(.carte-doc) #menus .special-card--dark .special-card__badge { color: #e
   html:not(.carte-doc) #menus .menus-duo .special-card--dark { order: 0 !important; }
 }
 
-/* ============================================================================
-   FORMULES : habillage des formules (bandeau « La formule complète », rubans,
+/* =====================================================================   FORMULES : habillage des formules (bandeau « La formule complète », rubans,
    médaillons, ornements « au choix »). Le rendu actuel se fait en CSS/SVG
    inline (blocs .fm / .fmb-* ci-dessous) ; les PNG du client (badge-*.png,
    orn-*.png…) ont été retirés du dépôt et ne sont plus référencés.
@@ -6158,8 +6151,7 @@ html.carte-doc #carte-p4 .offer-card--duo .offer-card__badge {
 
 
 
-/* ================= NOS MENUS — feuille A4 « Formules » =================
-   Le PDF est reproduit à l'échelle : boîte 516 pt (largeur) × 612 pt (hauteur utile).
+/* ================= NOS MENUS — feuille A4 « Formules » ==========   Le PDF est reproduit à l'échelle : boîte 516 pt (largeur) × 612 pt (hauteur utile).
    1 pt = 100/516 cqw ; positions verticales en % d'une hauteur de 612 pt. */
 html:not(.carte-doc) #menus .fm {
   container-type: inline-size;
@@ -6878,15 +6870,13 @@ html.carte-doc #menus .fm .fmb-card--pdj .fmb-list {
   .footer-download { font-size: .6rem; letter-spacing: .14em; padding: 5px 12px; }
 }
 
-/* ===== Couverture statique ============================================
-   La couverture ne lance aucun effet décoratif ni cycle visuel. */
+/* ===== Couverture statique =====================================   La couverture ne lance aucun effet décoratif ni cycle visuel. */
 /* --- Etoiles du titre : rendu statique ------------------------------- */
 html:not(.carte-doc) #cover-section .cover-brand .star-gold {
   display:inline-block;
 }
 
-/* ===== Noël basse consommation : neige + traîneau =====================
-   Le décor est saisonnier (1–31 décembre, ou ?noel=1 pour l'aperçu),
+/* ===== Noël basse consommation : neige + traîneau ==============   Le décor est saisonnier (1–31 décembre, ou ?noel=1 pour l'aperçu),
    suspendu quand l’onglet est caché et volontairement limité : peu de
    flocons, cadence basse, un seul passage de traîneau occasionnel et aucun
    son tant que la personne n’a pas activé les grelots. */
@@ -7045,8 +7035,7 @@ html.carte-doc #xmas-bells-btn { display:none !important; }
   html[lang="ja"]:not(.carte-doc) #interior-menu #vins .wine-table td.wine-no { font-family:'CinzelJP','Cinzel', serif; }
 }
 
-/* ============ Lancement de l'Happy Hour : compte à rebours plein écran ============
-   À 16h59m55s (heure de Paris), la page s'efface (flou + voile violet) et
+/* ============ Lancement de l'Happy Hour : compte à rebours plein écran =====   À 16h59m55s (heure de Paris), la page s'efface (flou + voile violet) et
    devient injouable au doigt, à la molette et au clic : un compte à rebours
    de 5 s défile en or, puis le message « L'Happy Hour démarre maintenant ! »
    (dans la langue du visiteur) éclate au-dessus d'un bouquet final de feux
@@ -7284,8 +7273,7 @@ html.hh-lock body { overflow: hidden; touch-action: none; }
   #hh-launch { display: none !important; }
 }
 
-/* =====================================================================
-   Assiettes en photo : la fiche d'un plat devient un dépliant.
+/* ==============================================================   Assiettes en photo : la fiche d'un plat devient un dépliant.
    Le bandeau (intitulé + prix + notes) ne change pas d'un iota — on
    lui ajoute un chevron doré et, dessous, un tiroir qui révèle la
    photo de l'assiette. Fermé, la carte est EXACTEMENT celle d'avant :
@@ -7742,8 +7730,7 @@ html.lightbox-open, html.lightbox-open body { overflow:hidden; }
   }
 }
 
-/* ===== Popup vins : bouteille à gauche, fiche à droite ================
-   La photo garde toute la hauteur du cadre. À droite, le titre ouvre la
+/* ===== Popup vins : bouteille à gauche, fiche à droite =========   La photo garde toute la hauteur du cadre. À droite, le titre ouvre la
    fiche, les contenances/prix arrivent immédiatement en grille puis les
    informations de dégustation et d’accords suivent dans la typographie
    habituelle des lignes de vins. */
@@ -8059,8 +8046,7 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
   }
 }
 
-/* ===== Responsive des dépliants : chevron, encarts et photos ==========
-   Trois familles de lignes dépliantes coexistent (plats, cocktails,
+/* ===== Responsive des dépliants : chevron, encarts et photos ===   Trois familles de lignes dépliantes coexistent (plats, cocktails,
    boissons, pressions). Les règles ci-dessous n'ajustent QUE la colonne
    du chevron, les marges intérieures des encarts et la hauteur des
    photos : les grilles de prix ne sont jamais retouchées, sous peine de
@@ -8166,8 +8152,7 @@ html:not(.carte-doc) .beer-row__photo img.is-loaded { opacity:1; }
   }
 }
 
-/* ===== Bières : « Bouteille » et « Pression » côte à côte ============
-   L'encart Bières empile deux tableaux : les bouteilles, puis les
+/* ===== Bières : « Bouteille » et « Pression » côte à côte =====   L'encart Bières empile deux tableaux : les bouteilles, puis les
    pressions. Sur un écran large — PC/Mac en 16/9 — comme sur un iPhone
    tenu en paysage, cet empilement gâche la largeur disponible et
    allonge la page : en paysage la hauteur est justement ce qui manque.
@@ -8548,8 +8533,7 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
   border-color:#fcf6ba;
 }
 
-/* ===== Gouttiere du globe fixe ======================================
-   Le globe est colle au coin haut droit de la FENETRE : tout bandeau
+/* ===== Gouttiere du globe fixe ===============================   Le globe est colle au coin haut droit de la FENETRE : tout bandeau
    qui passe sous lui doit lui reserver la place, sinon un bouton vient
    se glisser dessous. La reserve est appliquee a droite seulement pour
    le bandeau a deux boutons — une grille, dont on decale la derniere
@@ -8562,8 +8546,7 @@ html:not(.carte-doc) .price-line--nophoto .price-line__name { padding-right:0; }
    feuille (regle « les trois boutons ne se chevauchent jamais ») : on
    ne la contredit pas. */
 
-/* ===== Globe ancre dans le bandeau des deux boutons ==================
-   Dans la carte, le socle devient un enfant du bandeau : il cesse
+/* ===== Globe ancre dans le bandeau des deux boutons ===========   Dans la carte, le socle devient un enfant du bandeau : il cesse
    d'etre fixe a la fenetre pour se poser dans son coin droit, et
    defile donc avec lui. Sur la page de garde, ou ce bandeau est
    masque, il reste fixe en haut a droite (regle de base plus haut). */
@@ -8856,8 +8839,7 @@ html:not(.carte-doc) #cover-section .cover-links .contact-link {
   }
 }
 
-/* ===== Couverture mobile en paysage : pied de page 2 × 2 ================
-   Les quatre actions restent de même largeur et ne laissent plus un bouton
+/* ===== Couverture mobile en paysage : pied de page 2 × 2 =========   Les quatre actions restent de même largeur et ne laissent plus un bouton
    seul sur une ligne : réservation, Instagram / téléphone, puis e-mail. */
 @media screen and (orientation:landscape) and (max-width:1000px) and (max-height:700px) {
   html:not(.carte-doc) #cover-section .cover-links {
@@ -8899,8 +8881,7 @@ html:not(.carte-doc) #cover-section .cover-footer-address {
   transform:none !important;
 }
 
-/* ===== Encadré horaire de la couverture ===============================
-   L’adresse appartient au même bloc que les horaires : l’ensemble reste
+/* ===== Encadré horaire de la couverture ========================   L’adresse appartient au même bloc que les horaires : l’ensemble reste
    lisible comme une seule information, sans titre redondant. */
 html:not(.carte-doc) #cover-section .cover-hours {
   gap:clamp(3px, .65vh, 7px) !important;
@@ -8951,8 +8932,7 @@ html:not(.carte-doc) .top-controls > .lang-dock {
   }
 }
 
-/* ===== Vins : rythme vertical plus éditorial ==========================
-   Les vins se lisent comme une liste de cave : des panneaux rapprochés,
+/* ===== Vins : rythme vertical plus éditorial ===================   Les vins se lisent comme une liste de cave : des panneaux rapprochés,
    un titre qui respire juste ce qu'il faut, puis des rangées régulières.
    Cette retouche reste limitée à l'affichage web ; la carte imprimable
    conserve sa pagination et ses métriques dédiées. */
@@ -9068,8 +9048,7 @@ html:not(.carte-doc) #vins .wine-table tbody td.wine-name {
   }
 }
 
-/* ===== Globe : ancré au bandeau de titre actif ========================
-   Le bouton suit le bandeau visible — couverture ou en-tête de la carte —
+/* ===== Globe : ancré au bandeau de titre actif =================   Le bouton suit le bandeau visible — couverture ou en-tête de la carte —
    au lieu de se placer dans le bandeau d'actions. Il reste ainsi dans le
    coin supérieur droit de l'identité visuelle de chaque vue. */
 html:not(.carte-doc) .lang-dock {
@@ -9169,8 +9148,7 @@ html:not(.carte-doc) #cover-section .lang-dock .lang-menu {
   }
 }
 
-/* ===== Règle éditoriale absolue : aucun mot coupé ======================
-   Les retours se font uniquement entre les mots. Aucun composant ne peut
+/* ===== Règle éditoriale absolue : aucun mot coupé ===============   Les retours se font uniquement entre les mots. Aucun composant ne peut
    forcer une césure, une coupure arbitraire ou un mot cassé par overflow. */
 html:not(.carte-doc) body,
 html:not(.carte-doc) body * {
@@ -9183,8 +9161,7 @@ html:not(.carte-doc) .footer-link--mail,
 html:not(.carte-doc) .info-link[href^="mailto:"] {
   white-space:nowrap !important;
 }
-/* ===== Centrage invariant du titre principal ============================
-   Le titre est un bloc de largeur pleine centré dans la couverture. Les
+/* ===== Centrage invariant du titre principal =====================   Le titre est un bloc de largeur pleine centré dans la couverture. Les
    anciennes règles responsive lui donnaient tantôt une largeur naturelle,
    tantôt une largeur pleine avec des gouttières différentes ; la largeur du
    mot et la police active pouvaient donc déplacer visuellement le groupe.
@@ -9429,8 +9406,7 @@ html:not(.carte-doc) #interior-menu > .interior-header > p {
 
 
 /* ===== Fiches menu : intitulé à gauche, informations sous l'intitulé,
-   prix conservé dans sa colonne de droite ============================
-   Le même rythme est appliqué aux plats, boissons, cocktails, desserts
+   prix conservé dans sa colonne de droite =====================   Le même rythme est appliqué aux plats, boissons, cocktails, desserts
    et vins. Chaque colonne possède une largeur minimale nulle côté texte :
    le titre peut donc se replier, tandis que prix et informations restent
    dans l'encart sans se chevaucher. */
@@ -9661,8 +9637,7 @@ html:not(.carte-doc) #vins .wine-producer {
   word-break:normal;
   hyphens:none;
 }
-/* ===== Réglages PC finaux : cocktails et vins =========================
-   Les règles historiques de centrage du menu sont plus spécifiques sur
+/* ===== Réglages PC finaux : cocktails et vins ==================   Les règles historiques de centrage du menu sont plus spécifiques sur
    desktop. Ces reprises rétablissent l'axe gauche des intitulés, resserrent
    les deux tarifs et gardent le chevron sur la même ligne, à droite. */
 @media screen and (min-width:861px) {
@@ -10022,8 +9997,7 @@ html:not(.carte-doc) #vins .wine-detail-value {
   }
 }
 
-/* ===== Mobile : tiroirs photo sans hauteur résiduelle =================
-   Le tiroir garde l'animation 0fr → 1fr des desserts, mais son contenu
+/* ===== Mobile : tiroirs photo sans hauteur résiduelle ==========   Le tiroir garde l'animation 0fr → 1fr des desserts, mais son contenu
    reste strictement à sa hauteur réelle. Les photos utilisent leur ratio
    natif : aucun cadre fixe ne peut donc réserver une piste blanche sous
    l'image. */
@@ -10082,8 +10056,7 @@ html:not(.carte-doc) #vins .wine-detail-value {
 }
 
 
-/* ===== Garde statique : aucun coût d'animation en permanence ==========
-   Cette règle finale neutralise aussi les règles historiques déclarées
+/* ===== Garde statique : aucun coût d'animation en permanence ===   Cette règle finale neutralise aussi les règles historiques déclarées
    plus haut dans la feuille. Les interactions (navigation, liens, clavier)
    restent instantanées et fonctionnelles. */
 html:not(.carte-doc) #cover-section *,
@@ -10098,8 +10071,7 @@ html:not(.carte-doc) #cover-section .cover-action::after {
   content: none !important;
 }
 
-/* ===== Animations continues désactivées ================================
-   Les animations ponctuelles (ouverture des menus/tiroirs) restent
+/* ===== Animations continues désactivées =========================   Les animations ponctuelles (ouverture des menus/tiroirs) restent
    fonctionnelles. Seuls les cycles permanents du site sont coupés ici :
    les animations Noël et Happy Hour ont leurs propres sélecteurs et restent
    volontairement intactes. */
@@ -10135,8 +10107,7 @@ html:not(.carte-doc) .foldall--hint .foldall__ico {
   }
 }
 
-/* ===== Vins : une seule présentation mobile ===========================
-   Les vins rouges, blancs, rosés et les Bulles suivent exactement la même
+/* ===== Vins : une seule présentation mobile ====================   Les vins rouges, blancs, rosés et les Bulles suivent exactement la même
    architecture : numéro + appellation sur la première ligne, contenances
    sur la seconde, puis tiroir pleine largeur. Seul le nombre de contenances
    change (4 pour les vins, 2 pour les Bulles). */
@@ -10240,8 +10211,7 @@ html:not(.carte-doc) .foldall--hint .foldall__ico {
   }
 }
 
-/* ===== Finition mobile des vins ========================================
-   Les montants restent toujours dans l'or principal du restaurant. Le
+/* ===== Finition mobile des vins =================================   Les montants restent toujours dans l'or principal du restaurant. Le
    type de vin devient le repère de la colonne d'informations, puis le
    titre, les tarifs et enfin les textes de dégustation suivent le même
    ordre que dans la visionneuse paysage. */
@@ -10340,8 +10310,7 @@ html:not(.carte-doc) .lightbox--wine .lightbox__note-label {
 }
 
 
-/* ===== Popup vin mobile paysage =======================================
-   Sur un téléphone en paysage, la visionneuse utilise la faible hauteur
+/* ===== Popup vin mobile paysage ================================   Sur un téléphone en paysage, la visionneuse utilise la faible hauteur
    plutôt que de grossir la photo : le panneau d'informations reste à
    droite, avec le type de vin comme premier repère en haut à gauche. */
 @media screen and (orientation:landscape) and (max-height:560px) and (min-width:721px) {
@@ -10401,8 +10370,7 @@ html:not(.carte-doc) .lightbox--wine .lightbox__note-label {
   }
 }
 
-/* ===== Format photo commun pour les vins ===============================
-   Les photos de référence de Bordeaux et des Côtes du Rhône sont carrées.
+/* ===== Format photo commun pour les vins ========================   Les photos de référence de Bordeaux et des Côtes du Rhône sont carrées.
    Toutes les bouteilles reprennent donc ce format fixe et ce centrage,
    sans couper la bouteille, afin que passer d'un vin à l'autre ne fasse
    plus varier la taille de la photo. */
@@ -10439,8 +10407,7 @@ html:not(.carte-doc) .lightbox--wine {
   background:rgba(0,0,0,.84);
 }
 /* quartier:css:debut */
-/* ===== Pied de page : adresse, itineraire et reperes des alentours ========
-   Une ligne en tres petits caracteres sous l'adresse, dans la meme fonte que
+/* ===== Pied de page : adresse, itineraire et reperes des alentours =   Une ligne en tres petits caracteres sous l'adresse, dans la meme fonte que
    le reste du pied de page. Discrete a l'oeil, parfaitement lisible pour les
    moteurs : ce sont de vrais liens, jamais du texte dissimule. */
 /* Adresse et métro : ligne unique sur grand écran, repli en lignes complètes
@@ -10806,7 +10773,7 @@ html:not(.carte-doc) #cover-section .cover-hours .cover-hours__range > .cover-ho
 </style>
 <link rel="stylesheet" href="assets/css/google-reviews.css?v=2026100810">
 <script src="assets/js/i18n.js?v=2026100807" defer></script>
-<script src="assets/js/google-reviews.js?v=2026100601" defer></script>
+<script src="assets/js/google-reviews.js?v=2026101010" defer></script>
 <script>
 /* Les traductions sont servies par ?lang= : chaque version linguistique doit
    se declarer canonique d'elle-meme, sinon Google ignore les hreflang. */

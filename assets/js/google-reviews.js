@@ -109,6 +109,9 @@
   var placeUrl = allReviews.href;
   var place = null;
   var sdkPromise = null;
+  var loadedSdkLanguage = null;
+  var reviewsLanguage = null;
+  var translationCache = {};
   var requestPromise = null;
   var pointerStart = null;
   var carouselResizeObserver = null;
@@ -156,6 +159,8 @@
   }
   function applyLanguage() {
     var c = copy();
+    var newLang = lang();
+    var langChanged = reviewsLanguage && reviewsLanguage !== newLang;
     section.setAttribute('aria-label', c.title);
     title.textContent = c.title;
     loadButton.textContent = c.retry;
@@ -166,8 +171,8 @@
     previous.setAttribute('aria-label', c.prev);
     next.setAttribute('aria-label', c.next);
     carousel.setAttribute('aria-label', c.title);
-    carousel.setAttribute('aria-roledescription', CAROUSEL_LABELS[lang()] || 'carousel');
-    viewport.setAttribute('aria-roledescription', CAROUSEL_LABELS[lang()] || 'carousel');
+    carousel.setAttribute('aria-roledescription', CAROUSEL_LABELS[newLang] || 'carousel');
+    viewport.setAttribute('aria-roledescription', CAROUSEL_LABELS[newLang] || 'carousel');
     viewport.setAttribute('aria-label', c.keyboard);
     dots.setAttribute('aria-label', c.title);
     disclosureText.textContent = c.disclosure;
@@ -179,6 +184,10 @@
     if (reviews.length) {
       renderSlide(0);
       scheduleCarouselMeasurement();
+      if (langChanged) {
+        // L'utilisateur a changé de langue : on recharge les avis dans sa langue
+        loadReviews(true);
+      }
     }
   }
   function updateRotationControl() {
@@ -565,7 +574,21 @@
     attributions.hidden = usable.length === 0;
   }
   function loadMapsLibrary(key, language) {
-    if (sdkPromise) return sdkPromise;
+    if (sdkPromise && loadedSdkLanguage === language) return sdkPromise;
+    // Si la langue change, on tente de recharger la librairie Google
+    if (sdkPromise && loadedSdkLanguage !== language) {
+      try {
+        var oldScripts = document.querySelectorAll('script[data-google-reviews-sdk]');
+        oldScripts.forEach(function (s) { s.remove(); });
+      } catch (e) {}
+      // On ne peut pas vraiment décharger google.maps, mais on invalide la promesse
+      // pour forcer un nouveau chargement avec la nouvelle langue.
+      sdkPromise = null;
+      loadedSdkLanguage = null;
+      try { delete window.google; } catch (e) { window.google = undefined; }
+      try { delete window.__lcgGoogleReviewsReady; } catch (e) {}
+    }
+    loadedSdkLanguage = language;
     sdkPromise = new Promise(function (resolve, reject) {
       function importPlaces() {
         var maps = window.google && window.google.maps;
@@ -608,10 +631,82 @@
       document.head.appendChild(script);
     }).catch(function (error) {
       sdkPromise = null;
+      loadedSdkLanguage = null;
       throw error;
     });
     return sdkPromise;
   }
+
+  function fetchPlaceViaRest(config, language) {
+    var langCode = LOCALES[language] || language;
+    // Places API New : on tente d'abord avec le code complet (zh-CN), puis court (zh)
+    var shortLang = String(language).toLowerCase();
+    var candidates = [langCode, shortLang];
+    var unique = [];
+    candidates.forEach(function (c) { if (c && unique.indexOf(c) === -1) unique.push(c); });
+    // On tente le premier, en cas d'echec on retombera sur la librairie JS
+    var url = 'https://places.googleapis.com/v1/places/' + encodeURIComponent(config.place_id) + '?languageCode=' + encodeURIComponent(unique[0]);
+    return fetch(url, {
+      headers: {
+        'X-Goog-Api-Key': config.cle_api,
+        'X-Goog-FieldMask': 'rating,googleMapsUri,reviews,attributions'
+      }
+    }).then(function (resp) {
+      if (!resp.ok) throw new Error('rest-' + resp.status);
+      return resp.json();
+    });
+  }
+
+  function translateViaMyMemory(text, fromLang, toLang) {
+    if (!text || !toLang) return Promise.resolve(text);
+    fromLang = (fromLang || 'auto').toLowerCase().split('-')[0];
+    toLang = toLang.toLowerCase().split('-')[0];
+    if (fromLang === toLang) return Promise.resolve(text);
+    var cacheKey = fromLang + '|' + toLang + '|' + text;
+    if (translationCache[cacheKey]) return Promise.resolve(translationCache[cacheKey]);
+    var url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=' + encodeURIComponent(fromLang + '|' + toLang);
+    return fetch(url).then(function (r) { return r.json(); }).then(function (data) {
+      var translated = data && data.responseData && data.responseData.translatedText ? data.responseData.translatedText : text;
+      translationCache[cacheKey] = translated;
+      return translated;
+    }).catch(function () { return text; });
+  }
+
+  function translateExistingReviews(targetLang) {
+    if (!reviews.length) return Promise.resolve();
+    var c = COPY[targetLang] || COPY.fr;
+    // On affiche un état de chargement léger pendant la traduction
+    var needsTranslation = reviews.some(function (rv) {
+      var rvLang = (rv.textLanguage || '').toLowerCase().split('-')[0];
+      return rvLang && rvLang !== targetLang.toLowerCase() && !rv.translated;
+    });
+    if (!needsTranslation) {
+      // Même si Google a déjà traduit, on garde la logique d'affichage
+      return Promise.resolve();
+    }
+    status.textContent = c.loading;
+    var promises = reviews.map(function (rv) {
+      var rvLang = (rv.textLanguage || rv.originalTextLanguageCode || 'auto').toLowerCase();
+      var toLang = targetLang.toLowerCase();
+      if (rvLang.split('-')[0] === toLang) return Promise.resolve(rv);
+      // Si Google avait déjà traduit, on garde
+      if (rv.translated && rv.textLanguage && rv.textLanguage.toLowerCase().split('-')[0] === toLang) {
+        return Promise.resolve(rv);
+      }
+      return translateViaMyMemory(rv.text, rvLang, toLang).then(function (translatedText) {
+        rv.text = translatedText;
+        rv.textLanguage = toLang;
+        rv.translated = true;
+        return rv;
+      });
+    });
+    return Promise.all(promises).then(function () {
+      renderSlide(0);
+      scheduleCarouselMeasurement();
+      setStatus();
+    });
+  }
+
   function fetchConfiguration() {
     return fetch('assets/data/avis-google.json', { cache:'no-store', credentials:'same-origin' })
       .then(function (response) {
@@ -625,9 +720,22 @@
         return data;
       });
   }
-  function loadReviews() {
+  function loadReviews(forceReload) {
+    var targetLang = lang();
     if (requestPromise) return requestPromise;
-    if (state === 'loaded' || state === 'empty') return Promise.resolve();
+    if (!forceReload && (state === 'loaded' || state === 'empty') && reviewsLanguage === targetLang) return Promise.resolve();
+    if (forceReload) {
+      // On force le rechargement : on réinitialise l'état
+      state = 'loading';
+      reviewsLanguage = targetLang;
+    } else if (state === 'loaded' || state === 'empty') {
+      // Langue différente mais déjà chargée : on tente de traduire les avis existants
+      if (reviewsLanguage !== targetLang && reviews.length) {
+        reviewsLanguage = targetLang;
+        return translateExistingReviews(targetLang);
+      }
+      return Promise.resolve();
+    }
     state = 'loading';
     loadButton.disabled = true;
     loadButton.setAttribute('aria-busy', 'true');
@@ -636,21 +744,38 @@
     requestPromise = Promise.resolve()
       .then(fetchConfiguration)
       .then(function (config) {
-        return loadMapsLibrary(config.cle_api, lang()).then(function (library) {
-          if (!library || !library.Place) throw new Error('places');
-          var target = new library.Place({ id:config.place_id });
-          return target.fetchFields({
-            fields:['rating','googleMapsURI','reviews']
-          }).then(function () {
-            place = target;
-            setPlaceLinks(target.googleMapsURI || config.url || placeUrl);
-            renderSummary(target);
-            renderAttributions(target.attributions);
-            renderCarousel(Array.isArray(target.reviews) ? target.reviews : []);
-            if (document.activeElement === loadButton) {
-              var focusTarget = reviews.length > 1 ? previous : viewport;
-              focusTarget.focus({ preventScroll:true });
-            }
+        // On tente d'abord la REST API qui supporte languageCode par requête
+        return fetchPlaceViaRest(config, targetLang).then(function (data) {
+          // Format REST : data.rating, data.googleMapsUri, data.reviews
+          place = data;
+          reviewsLanguage = targetLang;
+          setPlaceLinks(data.googleMapsUri || config.url || placeUrl);
+          renderSummary(data);
+          renderAttributions(data.attributions);
+          renderCarousel(Array.isArray(data.reviews) ? data.reviews : []);
+          if (document.activeElement === loadButton) {
+            var focusTarget = reviews.length > 1 ? previous : viewport;
+            focusTarget.focus({ preventScroll:true });
+          }
+        }).catch(function (restError) {
+          // Fallback : librairie JS Maps (qui nécessite rechargement si langue change)
+          return loadMapsLibrary(config.cle_api, targetLang).then(function (library) {
+            if (!library || !library.Place) throw new Error('places');
+            var target = new library.Place({ id:config.place_id });
+            return target.fetchFields({
+              fields:['rating','googleMapsURI','reviews','attributions']
+            }).then(function () {
+              place = target;
+              reviewsLanguage = targetLang;
+              setPlaceLinks(target.googleMapsURI || config.url || placeUrl);
+              renderSummary(target);
+              renderAttributions(target.attributions);
+              renderCarousel(Array.isArray(target.reviews) ? target.reviews : []);
+              if (document.activeElement === loadButton) {
+                var focusTarget = reviews.length > 1 ? previous : viewport;
+                focusTarget.focus({ preventScroll:true });
+              }
+            });
           });
         });
       })
@@ -661,6 +786,10 @@
       })
       .then(function (result) {
         requestPromise = null;
+        // Après chargement, on tente une traduction complémentaire si certains avis restent dans une autre langue
+        if (state === 'loaded' && reviews.length) {
+          return translateExistingReviews(targetLang).then(function () { return result; });
+        }
         return result;
       }, function (error) {
         requestPromise = null;

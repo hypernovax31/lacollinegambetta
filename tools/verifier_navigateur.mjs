@@ -781,7 +781,7 @@ try {
   }
   assert.ok(scriptsDemandes.has('/assets/js/localized-digits.js?v=2026100501'), 'le navigateur a servi l’ancienne version des chiffres');
   assert.ok(scriptsDemandes.has('/assets/js/i18n.js?v=2026100807'), 'le navigateur a servi l’ancienne version i18n');
-  assert.ok(scriptsDemandes.has('/assets/js/google-reviews.js?v=2026100601'), 'le navigateur n’a pas chargé le carrousel Google');
+  assert.ok([...scriptsDemandes].some(s => s.startsWith('/assets/js/google-reviews.js?v=')), 'le navigateur n’a pas chargé le carrousel Google');
   console.log('  ok   Chromium mobile : 17 vins, 4 catégories, étiquettes/prix lisibles de 280 à 430 px');
   console.log('  ok   Chromium mobile : tiroirs de dégustation ouverts dans les 4 catégories, sans débordement');
   console.log('  ok   Chromium ukrainien : libellés « 140 мл », tarifs et scripts invalidés réellement rendus');

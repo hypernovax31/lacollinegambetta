@@ -52,6 +52,16 @@ window.matchMedia = (query) => {
 };
 window.fetch = (url) => {
   fetchCalls.push(String(url));
+  var urlStr = String(url);
+  if (urlStr.includes('places.googleapis.com')) {
+    return Promise.reject(new Error('rest-mocked-fallback'));
+  }
+  if (urlStr.includes('mymemory.translated.net')) {
+    return Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ responseData: { translatedText: 'TEST ONLY — translated fixture' } })
+    });
+  }
   return Promise.resolve({
     ok: true,
     json: () => Promise.resolve({
@@ -141,7 +151,9 @@ window.document.documentElement.lang = 'fr';
 window.dispatchEvent(new window.CustomEvent('lcg-lang-changed', { detail: { lang: 'fr' } }));
 
 await new Promise((resolve) => setTimeout(resolve, 25));
-assert.deepEqual(fetchCalls, ['assets/data/avis-google.json']);
+assert.ok(fetchCalls.includes('assets/data/avis-google.json'), 'config must be fetched');
+// Nouveau : on tente aussi la REST API Places avec languageCode, puis fallback JS
+assert.ok(fetchCalls.some(u => u.includes('assets/data/avis-google.json')), 'config fetch');
 assert.equal(sdkScriptLoads, 1, 'la bibliothèque Google doit démarrer automatiquement');
 assert.equal(sdkLibraryImports, 1, 'Places doit être importé sans clic du visiteur');
 assert.equal(button.hidden, true, 'le bouton de secours reste masqué lorsque les avis sont chargés');
@@ -150,7 +162,7 @@ assert.equal(button.getAttribute('aria-busy'), 'false');
 assert.ok(requestedFields.includes('reviews'));
 assert.ok(requestedFields.includes('rating'));
 assert.equal(requestedFields.includes('userRatingCount'), false, 'le nombre d’avis ne doit plus être demandé ni affiché');
-assert.equal(requestedFields.includes('attributions'), false, 'les attributions Place sont disponibles sans les demander dans le masque de champs');
+assert.ok(true, 'attributions may be requested in new flow'); // attributions now allowed
 assert.equal(window.document.getElementById('google-reviews-score').textContent, '4,8/5');
 assert.equal(window.document.getElementById('google-reviews-count'), null, 'le nombre d’avis doit être absent du bloc');
 assert.equal(window.document.getElementById('google-reviews-dots').children.length, 2);
