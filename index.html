@@ -10920,7 +10920,7 @@ html:not(.carte-doc) #cover-section .cover-hours .cover-hours__range > .cover-ho
           var img = document.getElementById('medallion-web');
           if(!img) img = document.querySelector('.medallion-photo--web');
           if(!img) return;
-          var noelHref = 'assets/cover/medaillon-logo-noel.svg?v=20261010-noel';
+          var noelHref = 'assets/cover/medaillon-logo-noel.png?v=20261010-noel';
           // précharge pour éviter flash
           try{ var p=new Image(); p.src=noelHref; }catch(e){}
           img.setAttribute('href', noelHref);
@@ -11978,7 +11978,7 @@ else sizeCoverMedallion();
       if(!api.active) return;
       var med = document.getElementById('medallion-web') || document.querySelector('.medallion-photo--web');
       if(!med) return;
-      var noelHref = 'assets/cover/medaillon-logo-noel.svg?v=20261010-noel';
+      var noelHref = 'assets/cover/medaillon-logo-noel.png?v=20261010-noel';
       var cur = med.getAttribute('href') || '';
       if(cur.indexOf('noel')===-1){
         try{ var pre=new Image(); pre.src=noelHref; }catch(e){}
