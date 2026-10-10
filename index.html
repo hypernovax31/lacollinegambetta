@@ -6879,7 +6879,7 @@ html:not(.carte-doc) #cover-section .cover-brand .star-gold {
 /* ===== Noël basse consommation : neige + traîneau ==============   Le décor est saisonnier (1–31 décembre, ou ?noel=1 pour l'aperçu),
    suspendu quand l’onglet est caché et volontairement limité : peu de
    flocons, cadence basse, un seul passage de traîneau occasionnel et aucun
-   son tant que la personne n’a pas activé les grelots. */
+   son. */
 #xmas-snow {
   position:fixed; inset:0; z-index:9970;
   display:none; width:100%; height:100%;
@@ -6905,29 +6905,10 @@ html:not(.carte-doc) #cover-section .cover-brand .star-gold {
 }
 #xmas-sleigh.ltr .trail { right:88%; }
 #xmas-sleigh.rtl .trail { left:88%; }
-#xmas-bells-btn {
-  position:fixed; right:16px; bottom:16px; z-index:9990;
-  display:none; align-items:center; justify-content:center;
-  width:42px; height:42px; padding:0;
-  border:1px solid rgba(216,178,87,.45); border-radius:50%;
-  background:rgba(24,12,30,.82); color:#d8b257; cursor:pointer;
-  box-sizing:border-box;
-}
-#xmas-bells-btn.on { display:inline-flex; }
-#xmas-bells-btn:hover { background:rgba(38,18,46,.95); }
-#xmas-bells-btn:focus-visible { outline:2px solid #d8b257; outline-offset:2px; }
-#xmas-bells-btn svg { width:21px; height:21px; display:block; }
-#xmas-bells-btn .bell-off { display:none; }
-#xmas-bells-btn.muted .bell-off { display:block; }
-#xmas-bells-btn.muted .bell-body { opacity:.45; }
-@media (max-width:520px) {
-  #xmas-bells-btn { right:10px; bottom:10px; width:38px; height:38px; }
-}
 html.carte-doc #xmas-snow,
-html.carte-doc #xmas-sleigh,
-html.carte-doc #xmas-bells-btn { display:none !important; }
+html.carte-doc #xmas-sleigh { display:none !important; }
 @media print {
-  #xmas-snow, #xmas-sleigh, #xmas-bells-btn { display:none !important; }
+  #xmas-snow, #xmas-sleigh { display:none !important; }
 }
 
 /* ===== Japonais : activation des fontes jumelles =====
@@ -11910,7 +11891,7 @@ else sizeCoverMedallion();
 
 <script>
 /* ===== Noël : animation complète, cadence basse et pause intelligente =====
-   Neige légère, traîneau occasionnel et grelots optionnels. Le décor est
+   Neige légère et traîneau occasionnel, sans son. Le décor est
    limité au mois de décembre (ou ?noel=1), s'arrête dans un onglet caché,
    ne crée aucun contexte audio sans clic et utilise un rendu à 14 i/s au
    lieu d'une boucle plein écran à 60 i/s. */
@@ -12026,8 +12007,7 @@ else sizeCoverMedallion();
     var fade = progress < .1 ? progress / .1 : (progress > .9 ? (1 - progress) / .1 : 1);
     sleigh.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0)';
     sleigh.style.opacity = fade.toFixed(3);
-    if (bellsEnabled && progress > .04 && progress < .96) scheduleBell();
-    if (progress >= 1) { finishSleigh(); stopBells(); }
+    if (progress >= 1) { finishSleigh(); }
   }
   function render() {
     renderTimer = 0;
@@ -12080,120 +12060,17 @@ else sizeCoverMedallion();
     sleigh.classList.remove('flip', 'ltr', 'rtl');
     sleigh.classList.add('on', ltr ? 'ltr' : 'rtl');
     if (!ltr) sleigh.classList.add('flip');
-    startBells();
     scheduleRender();
   }
   api.fly = fly;
   api.flakeCount = function () { return flakes.length; };
 
-  /* Audio strictement opt-in : un seul grelot discret à la fois, puis le
-     contexte est suspendu à la fin du passage. Aucun minuteur audio permanent. */
-  var audioContext = null, audioGain = null, bellTimer = 0, bellsEnabled = false;
-  var BELL_COPY = {
-    fr:['Activer les grelots du traîneau','Désactiver les grelots du traîneau'],
-    en:['Turn sleigh bells on','Turn sleigh bells off'],
-    es:['Activar los cascabeles del trineo','Desactivar los cascabeles del trineo'],
-    de:['Schlittenglöckchen einschalten','Schlittenglöckchen ausschalten'],
-    it:['Attivare i campanelli della slitta','Disattivare i campanelli della slitta'],
-    pt:['Ativar os sinos do trenó','Desativar os sinos do trenó'],
-    nl:['Sleejbelletjes inschakelen','Sleejbelletjes uitschakelen'],
-    pl:['Włącz dzwonki sań','Wyłącz dzwonki sań'],
-    zh:['开启雪橇铃声','关闭雪橇铃声'],
-    uk:['Увімкнути дзвіночки саней','Вимкнути дзвіночки саней'],
-    ja:['そりの鈴をオンにする','そりの鈴をオフにする'],
-    ko:['썰매 방울 켜기','썰매 방울 끄기'],
-    ar:['تفعيل أجراس الزلاجة','إيقاف أجراس الزلاجة'],
-    tr:['Kızak çanlarını aç','Kızak çanlarını kapat'],
-    hi:['स्लेज की घंटियाँ चालू करें','स्लेज की घंटियाँ बंद करें']
-  };
-  var bellButton = document.createElement('button');
-  bellButton.type = 'button';
-  bellButton.id = 'xmas-bells-btn';
-  bellButton.className = 'on muted';
-  bellButton.setAttribute('aria-pressed', 'false');
-  bellButton.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="bell-body" d="M12 3.2c-3.1 0-5.2 2.2-5.2 5v3.1c0 .8-.3 1.6-.9 2.2l-1.1 1.2h14.4l-1.1-1.2c-.6-.6-.9-1.4-.9-2.2V8.2c0-2.8-2.1-5-5.2-5Z"/><path class="bell-body" d="M9.6 18.6a2.5 2.5 0 0 0 4.8 0"/><line class="bell-off" x1="4.5" y1="4.5" x2="19.5" y2="19.5"/></svg>';
-  document.body.appendChild(bellButton);
-  function bellLabel() {
-    var lang = (document.documentElement.getAttribute('lang') || 'fr').slice(0, 2);
-    var copy = BELL_COPY[lang] || BELL_COPY.fr;
-    var text = copy[bellsEnabled ? 1 : 0];
-    bellButton.title = text;
-    bellButton.setAttribute('aria-label', text);
-    bellButton.setAttribute('aria-pressed', bellsEnabled ? 'true' : 'false');
-    bellButton.classList.toggle('muted', !bellsEnabled);
-  }
-  function ensureAudio() {
-    if (audioContext) return audioContext.state === 'running';
-    var AudioCtor = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtor) return false;
-    try {
-      audioContext = new AudioCtor();
-      audioGain = audioContext.createGain();
-      audioGain.gain.value = .045;
-      audioGain.connect(audioContext.destination);
-      return audioContext.state === 'running';
-    } catch (e) { audioContext = null; audioGain = null; return false; }
-  }
-  function bellHit() {
-    if (!bellsEnabled || !audioContext || audioContext.state !== 'running') return;
-    var now = audioContext.currentTime + .015;
-    [1, 2.43, 3.83].forEach(function (ratio, i) {
-      var oscillator = audioContext.createOscillator();
-      var gain = audioContext.createGain();
-      oscillator.type = 'sine';
-      oscillator.frequency.value = (1850 + Math.random() * 350) * ratio;
-      gain.gain.setValueAtTime(.0001, now);
-      gain.gain.linearRampToValueAtTime((.16 / (i + 1)), now + .004);
-      gain.gain.exponentialRampToValueAtTime(.0001, now + .16 + i * .04);
-      oscillator.connect(gain); gain.connect(audioGain);
-      oscillator.start(now); oscillator.stop(now + .28 + i * .04);
-    });
-  }
-  function scheduleBell() {
-    if (bellTimer || !bellsEnabled || !sleighState || hidden) return;
-    bellTimer = setTimeout(function () {
-      bellTimer = 0;
-      bellHit();
-      scheduleBell();
-    }, Math.round(rand(650, 1000)));
-  }
-  function stopBells() {
-    clearTimeout(bellTimer); bellTimer = 0;
-    if (audioGain && audioContext) {
-      try { audioGain.gain.setTargetAtTime(0, audioContext.currentTime, .05); } catch (e) {}
-    }
-    if (audioContext && audioContext.state === 'running') {
-      try { audioContext.suspend(); } catch (e) {}
-    }
-  }
-  function startBells() {
-    if (!bellsEnabled) return;
-    if (audioContext && audioContext.state === 'suspended') {
-      try { audioContext.resume(); } catch (e) {}
-    }
-    if (ensureAudio()) scheduleBell();
-  }
-  bellButton.addEventListener('click', function () {
-    if (bellsEnabled) {
-      bellsEnabled = false;
-      stopBells();
-    } else {
-      bellsEnabled = ensureAudio();
-      if (bellsEnabled && audioGain) audioGain.gain.value = .045;
-      if (bellsEnabled && sleighState) scheduleBell();
-    }
-    bellLabel();
-  });
-  window.addEventListener('lcg-lang-changed', bellLabel);
-  api.bells = function () { return { enabled:bellsEnabled, state:audioContext ? audioContext.state : 'none' }; };
-
   function pause() {
     hidden = true;
     clearTimeout(renderTimer); renderTimer = 0;
     clearTimeout(sleighTimer); sleighTimer = 0;
-    clearTimeout(bellTimer); bellTimer = 0;
     if (sleighState) sleighState.pausedAt = performance.now();
-    stopBells();
+    
   }
   function resume() {
     hidden = false;
@@ -12229,7 +12106,6 @@ else sizeCoverMedallion();
   }
   resizeSnow();
   snow.classList.add('on');
-  bellLabel();
   scheduleRender();
   scheduleSleigh(15000);
 })();
