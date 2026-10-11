@@ -11417,6 +11417,39 @@ function centerMenuNavButton(btnElement) {
   };
   requestAnimationFrame(step);
 }
+/* Jeton de bascule : un seul défilement programmatique à la fois. Si le
+   visiteur enchaîne deux onglets, la visée différée du premier ne doit pas
+   s'appliquer après coup. */
+let __menuSwitchGen = 0;
+/* --- Viser une mise en page POSÉE, jamais une mise en page en train de se
+   faire ------------------------------------------------------------------
+   « Nos menus » est dessiné en unités de conteneur (cqw) : le moteur ne
+   connaît la largeur du conteneur — donc la hauteur de toute la section —
+   qu'après un premier passage de mise en page. Mesurer dans la foulée du
+   `display:block` donnait une cible périmée : le défilement s'arrêtait trop
+   haut, puis la mise en page définitive (ou le verrou d'ancre) ramenait la
+   page en arrière — le « sursaut » montagne russe propre à cet onglet.
+   On force donc deux passages de mise en page (les unités de conteneur sont
+   alors résolues), puis on attend que la hauteur de la section soit stable
+   d'une image à l'autre avant de viser. Les autres onglets, dont la mise en
+   page est déjà posée, ne patientent qu'une image : rien ne change pour eux.
+   Garde-fou : au bout de 5 images on vise quand même — jamais le geste du
+   visiteur n'est retardé. */
+function quandSectionStable(section, faire) {
+  if (!section) { faire(); return; }
+  let images = 0, dernier = -1;
+  /* deux passages synchrones : offsetHeight pose le conteneur,
+     getBoundingClientRect relit les descendants dimensionnés en cqw */
+  void section.offsetHeight;
+  void section.getBoundingClientRect();
+  function image() {
+    const h = Math.round(section.getBoundingClientRect().height);
+    if (h === dernier || ++images >= 5) { faire(); return; }
+    dernier = h;
+    requestAnimationFrame(image);
+  }
+  requestAnimationFrame(image);
+}
 function showMenuSection(sectionId, btnElement) {
   if (sectionId !== 'vins' && window.LCGCloseWineAccordions) window.LCGCloseWineAccordions();
   document.querySelectorAll('.menu-section').forEach(sec => sec.classList.remove('active'));
@@ -11445,18 +11478,36 @@ function showMenuSection(sectionId, btnElement) {
      réévaluent d'une image à l'autre — l'arrivée se fait sur la position
      réelle, jamais sur une position périmée. */
   const stickyOffset = () => (topBar ? topBar.offsetHeight : 0) + (navWrap ? navWrap.offsetHeight : 0);
+  const maxScroll = () => Math.max(0, (document.documentElement.scrollHeight || 0) - (window.innerHeight || 0));
   const liveTarget = () => {
     const base = section
       ? section.getBoundingClientRect().top + window.scrollY
       : (anchor ? anchor.getBoundingClientRect().top + window.scrollY : 0);
-    return Math.max(0, Math.round(base - stickyOffset() - 10));
+    /* Jamais au-delà du bas de page : viser plus bas que le défilement
+       possible fait recaler le navigateur en cours de route (il ramène la
+       page), puis le verrou d'ancre revise — c'est ce va-et-vient qui se
+       voyait. On borne donc la cible au dernier défilement atteignable. */
+    return Math.min(Math.max(0, Math.round(base - stickyOffset() - 10)), maxScroll());
   };
-  animateScrollTo(liveTarget(), 240, liveTarget);
-  /* Le verrou impose la formule (bandeaux épinglés + jeu), pas un instantané :
-     même si le défilement animé n'a rien à faire parce que la page était déjà
-     en place, une perturbation tardive est toujours ramenée à la position
-     théorique. */
-  lockSectionAnchor(section, () => stickyOffset() + 10);
+  const jeton = ++__menuSwitchGen;
+  /* Pendant la courte attente de mise en page, un défilement lancé vers
+     l'onglet précédent continuerait vers SA cible et la page repartirait en
+     sens inverse : on l'arrête dès maintenant (animateScrollTo le ferait à
+     son tour, mais trop tard d'une ou deux images). */
+  if (window.__collineScrollAnim) {
+    cancelAnimationFrame(window.__collineScrollAnim);
+    window.__collineScrollAnim = null;
+  }
+  if (window.__collineAnchorCleanup) window.__collineAnchorCleanup();
+  quandSectionStable(section, function () {
+    if (jeton !== __menuSwitchGen) return;   /* un autre onglet a pris la main */
+    animateScrollTo(liveTarget(), 240, liveTarget);
+    /* Le verrou impose la formule (bandeaux épinglés + jeu), pas un instantané :
+       même si le défilement animé n'a rien à faire parce que la page était déjà
+       en place, une perturbation tardive est toujours ramenée à la position
+       théorique. */
+    lockSectionAnchor(section, () => stickyOffset() + 10);
+  });
 }
 /* Verrou d'ancre : une fois le défilement animé terminé, le haut de la
    section active reste cloué à l'écran pendant un court instant. Toute
@@ -11491,6 +11542,7 @@ function lockSectionAnchor(section, desiredTop) {
      les deux chemins : animation JS (t0 + 320) et défilement natif WebKit
      (nativeUntil + 120, plus tardif). */
   let lastShift = holdFrom;
+  let reajuste = false;   /* un seul ré-ajustement en douceur, pas deux */
   function step(now) {
     window.__collineAnchorLock = null;
     /* On n'agit qu'une fois le défilement animé vraiment terminé (sa grâce
@@ -11499,7 +11551,18 @@ function lockSectionAnchor(section, desiredTop) {
     if (now < holdFrom || window.__collineScrollAnim) { window.__collineAnchorLock = requestAnimationFrame(step); return; }
     const top = section.getBoundingClientRect().top;
     const want = desiredTop();
-    if (Math.abs(top - want) >= 0.5) {
+    const ecart = Math.round(top - want);
+    if (Math.abs(ecart) >= 0.5) {
+      /* Arrivée sur une cible périmée : si l'écart est FRANC, la mise en page
+         a bougé après le défilement (conteneur en unités cqw qui se réévalue,
+         image qui prend sa place…) — on vise à nouveau EN DOUCEUR, une seule
+         fois, au lieu de recoller la page d'un coup : ce saut sec était le
+         « sursaut » haut/bas ressenti au changement d'onglet. */
+      if (!reajuste && Math.abs(ecart) >= 24) {
+        reajuste = true;
+        animateScrollTo(Math.max(0, Math.round((window.pageYOffset || 0) + ecart)), 180);
+        return;
+      }
       /* Position ABSOLUE (scrollTo), jamais relative (scrollBy) : certains
          moteurs fusionnent, ignorent ou rejouent un défilement programmatique
          pendant un défilement tactile ou élastique — avec un delta relatif,
