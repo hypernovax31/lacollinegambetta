@@ -1,26 +1,32 @@
 /* ========================================================================== *
- *  Halloween — la sorcière passe de temps en temps et fait coucou
+ *  Halloween — décor partagé : toiles d'araignée et sorcière de passage
  * -------------------------------------------------------------------------- *
- *  Même mécanique que le traîneau du Père Noël : un survol programmé, une
- *  traversée en arc avec de légères ondulations, une apparition en fondu, et
- *  rien qui tourne quand l'onglet est caché. La sorcière lève le bras au
- *  milieu du trajet (classe « sorciere--coucou », animation CSS du bras).
+ *  Un seul script pour tout le site (index, réservation, pages légales, 404).
+ *  Quand la fenêtre Halloween est ouverte, il :
+ *    1. pose la classe html.fete-halloween-active (les toiles s'affichent) ;
+ *    2. ajoute les formes SVG réutilisables (toile d'angle, araignée) ;
+ *    3. dépose deux toiles dans chaque bandeau violet de titre de page
+ *       (.interior-header de la carte et de la réservation, .site-header des
+ *       pages légales) ;
+ *    4. dépose une toile d'angle et son araignée en bas à droite de la page —
+ *       la couverture et la carte ont déjà leurs quatre toiles, l'araignée y
+ *       rejoint celle du bas droit ;
+ *    5. fait voler la sorcière de temps en temps sur les pages qui ont une
+ *       couverture ou une carte (jamais sur les pages légales).
  *
- *  Actif uniquement sur la fenêtre Halloween : classe html.fete-halloween-active
- *  posée par assets/js/fetes-medaillon.js, ou ?halloween=1 / ?sorciere=1.
+ *  Fenêtre : 24 octobre → 2 novembre, heure de Paris (assets/js/fetes-medaillon.js).
+ *  Aperçu : ?halloween=1 ou ?sorciere=1 — ?fete=0 pour tout masquer.
  *  Jamais en mode carte-doc, jamais à l'impression, jamais si le visiteur a
  *  demandé la réduction des animations.
  *
- *  Le SVG est injecté par ce script : hors saison, aucun nœud ajouté au DOM et
- *  aucun fichier chargé. La boucle d'animation ne tourne que pendant un vol.
- *
  *  API : window.__lcgSorciere.fly() / .pause() / .resume() / .programmer(ms)
- *        (utilisée par preview-halloween.html pour la déclencher à la demande)
  * ========================================================================== */
 (function () {
   'use strict';
 
-  var SVG = '<svg viewBox="0 -52 448 236" xmlns="http://www.w3.org/2000/svg">\
+  var SYMBOLES = '<symbol id="lcg-toile" viewBox="0 0 120 120"><path vector-effect="non-scaling-stroke" d="M0 0L116 0"/><path vector-effect="non-scaling-stroke" d="M0 0L112 30"/><path vector-effect="non-scaling-stroke" d="M0 0L100.5 58"/><path vector-effect="non-scaling-stroke" d="M0 0L82 82"/><path vector-effect="non-scaling-stroke" d="M0 0L58 100.5"/><path vector-effect="non-scaling-stroke" d="M0 0L30 112"/><path vector-effect="non-scaling-stroke" d="M0 0L0 116"/><path vector-effect="non-scaling-stroke" d="M32 0Q26.3 3.5 30.9 8.3"/><path vector-effect="non-scaling-stroke" d="M30.9 8.3Q24.5 10.2 27.7 16"/><path vector-effect="non-scaling-stroke" d="M27.7 16Q21.1 16.2 22.6 22.6"/><path vector-effect="non-scaling-stroke" d="M22.6 22.6Q16.2 21.1 16 27.7"/><path vector-effect="non-scaling-stroke" d="M16 27.7Q10.2 24.5 8.3 30.9"/><path vector-effect="non-scaling-stroke" d="M8.3 30.9Q3.5 26.3 0 32"/><path vector-effect="non-scaling-stroke" d="M58 0Q47.7 6.3 56 15"/><path vector-effect="non-scaling-stroke" d="M56 15Q44.5 18.4 50.2 29"/><path vector-effect="non-scaling-stroke" d="M50.2 29Q38.2 29.3 41 41"/><path vector-effect="non-scaling-stroke" d="M41 41Q29.3 38.2 29 50.2"/><path vector-effect="non-scaling-stroke" d="M29 50.2Q18.4 44.5 15 56"/><path vector-effect="non-scaling-stroke" d="M15 56Q6.3 47.7 0 58"/><path vector-effect="non-scaling-stroke" d="M84 0Q69.1 9.1 81.1 21.7"/><path vector-effect="non-scaling-stroke" d="M81.1 21.7Q64.4 26.7 72.7 42"/><path vector-effect="non-scaling-stroke" d="M72.7 42Q55.3 42.4 59.4 59.4"/><path vector-effect="non-scaling-stroke" d="M59.4 59.4Q42.4 55.3 42 72.7"/><path vector-effect="non-scaling-stroke" d="M42 72.7Q26.7 64.4 21.7 81.1"/><path vector-effect="non-scaling-stroke" d="M21.7 81.1Q9.1 69.1 0 84"/><path vector-effect="non-scaling-stroke" d="M110 0Q90.5 11.9 106.3 28.5"/><path vector-effect="non-scaling-stroke" d="M106.3 28.5Q84.4 34.9 95.3 55"/><path vector-effect="non-scaling-stroke" d="M95.3 55Q72.4 55.6 77.8 77.8"/><path vector-effect="non-scaling-stroke" d="M77.8 77.8Q55.6 72.4 55 95.3"/><path vector-effect="non-scaling-stroke" d="M55 95.3Q34.9 84.4 28.5 106.3"/><path vector-effect="non-scaling-stroke" d="M28.5 106.3Q11.9 90.5 0 110"/></symbol>\
+<symbol id="lcg-araignee" viewBox="0 0 60 96"><path vector-effect="non-scaling-stroke" d="M30 0V48"/><g fill="currentColor" stroke="none"><circle cx="30" cy="52" r="3.4"/><ellipse cx="30" cy="63" rx="6.2" ry="7.8"/></g><g vector-effect="non-scaling-stroke"><path d="M26.8 51C19 48 13 51 10 56"/><path d="M26 57C18 56 12 59 10 64"/><path d="M23.9 62.5C17 62 13 66 11 71"/><path d="M25.3 68C19 69 16 73 15 78"/><path d="M33.2 51C41 48 47 51 50 56"/><path d="M34 57C42 56 48 59 50 64"/><path d="M36.1 62.5C43 62 47 66 49 71"/><path d="M34.7 68C41 69 44 73 45 78"/></g></symbol>';
+  var SORCIERE = '<svg viewBox="0 -52 448 236" xmlns="http://www.w3.org/2000/svg">\
   <defs>\
     <radialGradient id="gLune" cx="50%" cy="50%" r="50%">\
       <stop offset="0" stop-color="#ffe9b0" stop-opacity=".38"/>\
@@ -114,12 +120,10 @@
 
   function active() {
     if (document.documentElement.classList.contains('carte-doc')) return false;
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
     if (param('fete') === '0' || param('fetes') === '0' || param('sorciere') === '0' || param('halloween') === '0') return false;
     if (param('sorciere') === '1' || param('halloween') === '1') return true;
     if (document.documentElement.classList.contains('fete-halloween-active')) return true;
-    /* filet de sécurité : le médaillon n'a pas encore tourné au chargement */
-    var F = window.FeteMedaillon;
+    var F = window.FeteMedaillon;                 /* pas encore appliqué ? */
     if (F && F.choisir) {
       try { var f = F.choisir(location.search, F.aujourdhui()); return !!f && f.id === 'halloween'; }
       catch (e) { return false; }
@@ -127,38 +131,93 @@
     return false;
   }
 
+  var reduit = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
   var api = { active: active(), fly: function () {}, pause: function () {}, resume: function () {}, programmer: function () {} };
   window.__lcgSorciere = api;
 
-  /* la page reste ouverte (tablette du bar) : on revérifie la saison souvent,
-     sans recharger — on arrête simplement les vols si Halloween est passé */
-  var controleSaison = 0;
-  function saisonToujoursBonne() {
-    if (active() === api.active) return true;
-    api.active = active();
-    if (api.active) { programmer(4000); return true; }
-    finir();                       /* arrête le vol en cours, s'il y en a un */
-    window.clearTimeout(minuterieCoucou);
-    cache = true;
-    if (boite && boite.parentNode) boite.parentNode.removeChild(boite);
-    boite = null;
-    return false;
-  }
-  function programmerControleSaison() {
-    window.clearTimeout(controleSaison);
-    controleSaison = window.setTimeout(function () {
-      controleSaison = 0;
-      if (saisonToujoursBonne()) programmerControleSaison();
-    }, 30 * 60 * 1000);
+  var racine = document.documentElement;
+  if (api.active) racine.classList.add('fete-halloween-active');
+  if (!api.active) return;
+
+  /* ---------- 1. les formes réutilisables -------------------------------- */
+  if (!document.getElementById('lcg-halloween-sprite')) {
+    var sprite = document.createElement('div');
+    sprite.id = 'lcg-halloween-sprite';
+    sprite.setAttribute('aria-hidden', 'true');
+    sprite.innerHTML = '<svg width="0" height="0" focusable="false"><defs>' + SYMBOLES + '</defs></svg>';
+    document.body.appendChild(sprite);
   }
 
-  var boite = null, bras = null;
+  /* ---------- 2. le décor, bloc par bloc ---------------------------------
+     Rien n'est dans le flux : tout est en position absolue ou fixe, aucune
+     page ne bouge ni ne se redimensionne quand le décor apparaît. */
+  var APERCU_SEUL = racine.getAttribute('data-halloween-decor') === 'non';
 
-  if (api.active) {
+  function toileCoin(coins) {
+    var html = '';
+    for (var i = 0; i < coins.length; i++) {
+      html += '<svg class="lcg-halloween__toile lcg-halloween__toile--' + coins[i] +
+        '"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg>';
+    }
+    return html;
+  }
+  function toileAraignee() {
+    return '<svg class="lcg-halloween__araignee lcg-halloween__araignee--bd">' +
+      '<use href="#lcg-araignee" xlink:href="#lcg-araignee"/></svg>';
+  }
+  function bloc(classe, contenu, ou) {
+    var div = document.createElement('div');
+    div.className = 'lcg-halloween ' + classe;
+    div.setAttribute('aria-hidden', 'true');
+    div.innerHTML = contenu;
+    ou.appendChild(div);
+    return div;
+  }
+
+  if (!APERCU_SEUL) {
+    /* deux toiles dans chaque bandeau violet de titre */
+    var bandeaux = document.querySelectorAll('.interior-header, .site-header');
+    for (var b = 0; b < bandeaux.length; b++) {
+      if (bandeaux[b].querySelector('.lcg-halloween--bandeau')) continue;
+      bandeaux[b].appendChild(
+        (function () {
+          var d = document.createElement('div');
+          d.className = 'lcg-halloween lcg-halloween--bandeau';
+          d.setAttribute('aria-hidden', 'true');
+          d.innerHTML = toileCoin(['hg', 'hd']);
+          return d;
+        })()
+      );
+    }
+
+    /* couverture et carte : quatre toiles, l'araignée sur celle du bas droit */
+    var couverture = document.querySelector('.cover-page');
+    if (couverture && !couverture.querySelector('.lcg-halloween--cover')) {
+      bloc('lcg-halloween--cover', toileCoin(['hg', 'hd', 'bg', 'bd']) + toileAraignee(), couverture);
+    }
+    var carte = document.getElementById('interior-menu');
+    if (carte && !carte.querySelector('.lcg-halloween--menu')) {
+      bloc('lcg-halloween--menu', toileCoin(['hg', 'hd', 'bg', 'bd']) + toileAraignee(), carte);
+    }
+
+    /* les autres pages gardent la même signature : une araignée en bas à
+       droite, posée sur sa toile */
+    if (!couverture && !carte) {
+      bloc('lcg-halloween--page', toileCoin(['bd']) + toileAraignee(), document.body);
+    }
+  }
+
+  /* ---------- 3. la sorcière --------------------------------------------- */
+  var sorciereIci = racine.getAttribute('data-sorciere') === '1' ||
+    !!document.getElementById('cover-section') || !!document.getElementById('interior-menu');
+
+  var boite = null;
+  if (sorciereIci && !reduit) {
     boite = document.createElement('div');
     boite.id = 'halloween-sorciere';
     boite.setAttribute('aria-hidden', 'true');
-    boite.innerHTML = '<span class="trail"></span>' + SVG;
+    boite.innerHTML = '<span class="trail"></span>' + SORCIERE;
     document.body.appendChild(boite);
   }
 
@@ -168,6 +227,14 @@
   function hasard(a, b) { return a + Math.random() * (b - a); }
   function douce(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
   function fonduDoux(t) { return Math.sin((t * Math.PI) / 2); }
+  function maintenant() { return (window.performance && performance.now) ? performance.now() : Date.now(); }
+
+  function programmer(delai) {
+    window.clearTimeout(minuterie); minuterie = 0;
+    if (cache || !api.active || !boite) return;
+    minuterie = window.setTimeout(function () { minuterie = 0; voler(); },
+      delai == null ? hasard(38000, 85000) : delai);
+  }
 
   function finir() {
     if (!vol) return;
@@ -228,17 +295,12 @@
     var largeur = options.width || Math.round(Math.max(190, Math.min(360, W * 0.26)));
     var ltr = options.dir ? options.dir === 'ltr' : Math.random() < 0.5;
     vol = {
-      ltr: ltr,
-      x0: -largeur - 90,
-      x1: W + 90,
+      ltr: ltr, x0: -largeur - 90, x1: W + 90,
       haut: options.top == null ? Math.round(H * hasard(0.06, 0.34)) : options.top,
       duree: options.duration || hasard(13000, 18000),
-      amplitude: hasard(10, 20),
-      vagues: hasard(1.0, 1.6),
+      amplitude: hasard(10, 20), vagues: hasard(1.0, 1.6),
       phase: Math.random() * Math.PI * 2,
-      debut: (window.performance && performance.now) ? performance.now() : Date.now(),
-      dernierY: null,
-      coucouFait: false
+      debut: maintenant(), dernierY: null, coucouFait: false
     };
     boite.style.width = largeur + 'px';
     boite.classList.remove('flip', 'ltr', 'rtl', 'sorciere--coucou');
@@ -247,17 +309,6 @@
     if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
     rafId = requestAnimationFrame(image);
   }
-
-  function programmer(delai) {
-    window.clearTimeout(minuterie); minuterie = 0;
-    if (cache || !api.active) return;
-    minuterie = window.setTimeout(function () {
-      minuterie = 0;
-      voler();
-    }, delai == null ? hasard(38000, 85000) : delai);
-  }
-
-  function maintenant() { return (window.performance && performance.now) ? performance.now() : Date.now(); }
 
   function pause() {
     cache = true;
@@ -290,9 +341,25 @@
   window.addEventListener('resize', mesure, { passive: true });
   window.addEventListener('pageshow', function (e) { if (e.persisted) reprendre(); }, false);
 
-  if (api.active) {
-    mesure();
-    programmer(hasard(7000, 14000));
-    programmerControleSaison();
+  /* la page reste ouverte (tablette du bar) : on revérifie la saison toutes
+     les demi-heures, sans jamais recharger */
+  function saisonToujoursBonne() {
+    var maintenant2 = active();
+    if (maintenant2 === api.active) return true;
+    api.active = maintenant2;
+    if (api.active) { programmer(4000); return true; }
+    finir();
+    racine.classList.remove('fete-halloween-active');
+    var aRetirer = document.querySelectorAll('.lcg-halloween, #halloween-sorciere, #lcg-halloween-sprite');
+    for (var i = 0; i < aRetirer.length; i++) {
+      if (aRetirer[i].parentNode) aRetirer[i].parentNode.removeChild(aRetirer[i]);
+    }
+    boite = null;
+    return false;
   }
+  (function boucleSaison() {
+    window.setTimeout(function () { if (saisonToujoursBonne()) boucleSaison(); }, 30 * 60 * 1000);
+  })();
+
+  if (boite) { mesure(); programmer(hasard(7000, 14000)); }
 })();

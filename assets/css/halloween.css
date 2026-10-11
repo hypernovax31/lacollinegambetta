@@ -4,41 +4,69 @@
    Le décor est piloté par la classe html.fete-halloween-active, posée par
    assets/js/fetes-medaillon.js (24 octobre → 2 novembre, ou ?halloween=1).
    ========================================================================== */
-/* ===== Halloween : toiles d'araignée dans les angles (24 oct → 2 nov) =====
-   Décor saisonnier piloté par la classe que pose assets/js/fetes-medaillon.js
-   (html.fete-halloween-active) : aucun script de plus, aucun fichier à charger
-   hors saison, aucun élément dans le flux (rien ne bouge à l'affichage).
+/* ===== Toiles d'araignée et araignée ====================================
+   Trois emplacements, injectés par assets/js/halloween.js :
+     --cover / --menu  quatre toiles d'angle  (couverture et carte)
+     --bandeau         deux toiles            (bandeaux violets des titres)
+     --page            une toile en bas à droite, avec son araignée posée
+                       dessus (toutes les autres pages)
+   Rien n'est dans le flux : position absolue ou fixe, aucune page ne bouge
+   ni ne se redimensionne quand le décor apparaît.
    Aperçu toute l'année : ?halloween=1 — ou ?fete=halloween, ?fete=0 pour rien. */
-.lcg-halloween-sprite { display:none; }
+#lcg-halloween-sprite { display:none; }
 .lcg-halloween { display:none; }
 html.fete-halloween-active .lcg-halloween {
   display:block;
   animation:lcg-halloween-apparait 1.6s ease both;
 }
 @keyframes lcg-halloween-apparait { from { opacity:0; } to { opacity:1; } }
-.lcg-halloween { position:absolute; inset:0; z-index:1; pointer-events:none; }
-.lcg-halloween--menu { position:fixed; }          /* suit le défilement de la carte */
+
+.lcg-halloween {
+  --toile:clamp(92px,14vw,164px);      /* taille d'une toile d'angle */
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+}
+.lcg-halloween--menu,
+.lcg-halloween--page { position:fixed; }          /* suivent le défilement */
+.lcg-halloween--bandeau {
+  --toile:clamp(58px,8vw,104px);
+  overflow:hidden;                                /* jamais par-dessus le contenu du bandeau */
+}
+/* les bandeaux de titre ne sont pas positionnés par défaut : on ne le fait
+   que pendant la saison, pour ne rien décaler le reste de l'année */
+html.fete-halloween-active .interior-header,
+html.fete-halloween-active .site-header { position:relative; }
+
 .lcg-halloween--cover { color:rgba(252,251,247,.26); }   /* ivoire sur le violet de la couverture */
 .lcg-halloween--menu { color:rgba(36,16,46,.18); }       /* encre sur le crème de la carte */
+.lcg-halloween--bandeau { color:rgba(252,251,247,.22); } /* ivoire sur le bandeau violet */
+.lcg-halloween--page { color:rgba(36,16,46,.18); }       /* encre sur les pages claires */
+html[data-halloween="sombre"] .lcg-halloween--page { color:rgba(252,251,247,.24); }
+
 .lcg-halloween__toile,
 .lcg-halloween__araignee {
   position:absolute; fill:none; stroke:currentColor;
   stroke-width:1.1; stroke-linecap:round;
 }
-.lcg-halloween__toile { width:clamp(92px,14vw,164px); aspect-ratio:1/1; }
+.lcg-halloween__toile { width:var(--toile); aspect-ratio:1/1; }
 .lcg-halloween__toile--hg { top:0; left:0; }
 .lcg-halloween__toile--hd { top:0; right:0; transform:scaleX(-1); }
 .lcg-halloween__toile--bg { bottom:0; left:0; transform:scaleY(-1); }
 .lcg-halloween__toile--bd { bottom:0; right:0; transform:scale(-1,-1); }
-.lcg-halloween__araignee { width:clamp(34px,4.6vw,52px); aspect-ratio:60/96; }
-/* Une seule araignée, et une seule fois : elle descend de son fil en haut à
-   gauche de la couverture. Dans la carte, le bandeau d'onglets collant occupe
-   tout le haut de l'écran — elle attend donc le coin en bas à droite, son fil
-   se perdant dans la toile voisine. */
+
+/* L'araignée : posée sur la toile du bas droit, son fil se perdant dans les
+   fils de la toile. Une seule par page. */
+.lcg-halloween__araignee {
+  width:calc(var(--toile) * .36); aspect-ratio:60/96;
+}
+.lcg-halloween__araignee--bd {
+  right:calc(var(--toile) * .16);
+  bottom:calc(var(--toile) * .16);
+}
 .lcg-halloween--cover .lcg-halloween__araignee { color:rgba(252,251,247,.42); }
 .lcg-halloween--menu .lcg-halloween__araignee { color:rgba(36,16,46,.3); }
-.lcg-halloween__araignee--haut { top:0; left:clamp(96px,15vw,176px); }
-.lcg-halloween__araignee--bas { bottom:0; right:clamp(96px,15vw,176px); }
+.lcg-halloween--page .lcg-halloween__araignee { color:rgba(36,16,46,.3); }
+html[data-halloween="sombre"] .lcg-halloween--page .lcg-halloween__araignee { color:rgba(252,251,247,.4); }
+
 html.carte-doc .lcg-halloween { display:none !important; }
 @media print { .lcg-halloween { display:none !important; } }
 @media (prefers-reduced-motion: reduce) {
