@@ -5,6 +5,9 @@
 
 
 
+
+
+
 <radialGradient id="lcgDisc" cx="50%" cy="40%" r="78%"><stop offset="0%" stop-color="#2a2a2a"/><stop offset="50%" stop-color="#0f0f0f"/><stop offset="100%" stop-color="#000000"/></radialGradient>
 
 <linearGradient id="lcgGold" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c9982f"/><stop offset="18%" stop-color="#fff3bf"/><stop offset="42%" stop-color="#e9c368"/><stop offset="68%" stop-color="#c39a37"/><stop offset="88%" stop-color="#ffefb8"/><stop offset="100%" stop-color="#d8ad48"/></linearGradient>

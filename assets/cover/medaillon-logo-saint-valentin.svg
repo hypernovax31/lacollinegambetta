@@ -2,11 +2,8 @@
 <radialGradient id="lcgHeart" cx="45%" cy="34%" r="76%"><stop offset="0%" stop-color="#ffc9d4"/><stop offset="28%" stop-color="#ff7c99"/><stop offset="60%" stop-color="#ee3d63"/><stop offset="100%" stop-color="#a80f33"/></radialGradient>
 <filter id="lcgHeartGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="26"/></filter>
 
-<filter id="lcgHeartGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="26"/></filter>
 
-<filter id="lcgHeartGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="26"/></filter>
 
-<filter id="lcgHeartGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="26"/></filter>
 
 
 

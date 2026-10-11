@@ -102,10 +102,14 @@ COEUR_GRADIENTS = """<radialGradient id="lcgHeart" cx="45%" cy="34%" r="76%"><st
 def appliquer_coeur(texte: str, rayon: float = 600.0) -> str:
     """Insère le cœur de fond juste après le disque du médaillon."""
     texte = re.sub(r'\s*<g id="coeur-fond".*?</g>', '', texte, flags=re.S)
-    for gid in ("lcgHeart", "lcgHeartBg"):
-        texte = re.sub(
-            r'\s*<(?:radial|linear)Gradient\b[^>]*\bid="%s"[^>]*>.*?</(?:radial|linear)Gradient>' % gid,
-            '', texte, flags=re.S)
+    # on repart toujours de zéro : dégradés et filtre du cœur sont retirés avant
+    # d'être réécrits, sinon chaque passage en ajouterait une copie
+    for motif in (
+        r'<(?:radial|linear)Gradient\b[^>]*\bid="lcgHeart"[^>]*>.*?</(?:radial|linear)Gradient>',
+        r'<(?:radial|linear)Gradient\b[^>]*\bid="lcgHeartBg"[^>]*>.*?</(?:radial|linear)Gradient>',
+        r'<filter\b[^>]*\bid="lcgHeartGlow"[^>]*>.*?</filter>',
+    ):
+        texte = re.sub(r'\s*' + motif, '', texte, flags=re.S)
 
     d = coeur_path(rayon=rayon)
     groupe = (

@@ -15,61 +15,142 @@
   .name{font-family:Cinzel,serif;color:#d8b257;letter-spacing:1.5px;font-weight:700;text-transform:uppercase}
   .desc{font-size:12px;opacity:.75;text-align:center;line-height:1.5}
   .desc code{background:rgba(255,255,255,.12);padding:1px 5px;border-radius:4px;font-size:11px}
+  .card a.essayer{font-size:12px;color:#0f0f0f;background:#d8b257;border-radius:999px;padding:6px 14px;text-decoration:none;font-weight:600}
+  .card a.essayer:hover{background:#f6eee9}
+  .cal{max-width:1100px;margin:0 auto 34px;border-collapse:collapse;font-size:13px}
+  .cal caption{font-family:Cinzel,serif;color:#d8b257;letter-spacing:2px;padding:0 0 12px;font-weight:700;text-transform:uppercase}
+  .cal th,.cal td{border-bottom:1px solid rgba(216,178,87,.22);padding:7px 12px;text-align:left}
+  .cal th{color:#d8b257;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  .cal td:first-child{white-space:nowrap}
+  .cal td code{font-size:11px;opacity:.8}
+  .cal tr:hover td{background:rgba(216,178,87,.08)}
+  .note{max-width:1100px;margin:0 auto 30px;font-size:13px;line-height:1.7;opacity:.8}
+  .note code{background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px}
 </style>
 </head>
 <body>
 <h1>☘️ Médaillons Fêtes — full SVG vectoriel</h1>
 <p class="sub">Tous basés sur le médaillon de la page de garde (2000×2000, arbre central officiel à 1000,1000, texte Cinzel or, anneaux or) — 100% vectoriel<br>Fond transparent : les films de dégradé noir (<code>lcgTextBg</code>, <code>lcgVignette</code>) ont été retirés de tous les médaillons</p>
+
+<p class="note">Le médaillon de la page de garde (et celui de la page 404) change tout seul selon la date, heure de Paris —
+<code>assets/js/fetes-medaillon.js</code>. Pas de rechargement : si la page reste ouverte, le médaillon est remplacé à la
+demi-heure qui suit le changement de fête. Aperçu forcé : <code>index.html?fete=paques</code> (id ou alias),
+<code>?noel=1</code> / <code>?stpatrick=1</code> / <code>?ny=1</code> ; désactiver une fête : <code>?noel=0</code> ;
+tout désactiver : <code>?fete=0</code>.</p>
+
+<table class="cal">
+  <caption>Calendrier d'affichage</caption>
+  <tr><th>Fête</th><th>Médaillon</th><th>Affiché du … au …</th><th>Aperçu</th></tr>
+  <tr><td>🎆 Jour de l'An</td><td><code>medaillon-logo-nouvel-an.svg</code></td><td>26 décembre → 5 janvier</td><td><code>?ny=1</code></td></tr>
+  <tr><td>👑 Épiphanie</td><td><code>medaillon-logo-epiphanie.svg</code></td><td>2 → 14 janvier (pic : 1<sup>er</sup> dimanche)</td><td><code>?fete=galette</code></td></tr>
+  <tr><td>🥞 Chandeleur</td><td><code>medaillon-logo-chandeleur.svg</code></td><td>28 janvier → 4 février</td><td><code>?fete=crepes</code></td></tr>
+  <tr><td>💝 Saint-Valentin</td><td><code>medaillon-logo-saint-valentin.svg</code></td><td>5 → 16 février</td><td><code>?fete=coeur</code></td></tr>
+  <tr><td>🎭 Mardi gras</td><td><code>medaillon-logo-mardi-gras.svg</code></td><td>Mardi gras −4 j → +1 j (Pâques − 47 j)</td><td><code>?fete=mardigras</code></td></tr>
+  <tr><td>🐣 Pâques</td><td><code>medaillon-logo-paques.svg</code></td><td>Pâques −8 j → +7 j</td><td><code>?fete=paques</code></td></tr>
+  <tr><td>☘️ Saint-Patrick</td><td><code>medaillon-logo-saint-patrick.svg</code></td><td>10 → 20 mars</td><td><code>?stpatrick=1</code></td></tr>
+  <tr><td>💐 Fête des mères</td><td><code>medaillon-logo-fete-des-meres.svg</code></td><td>Fête −5 j → +1 j (dernier dimanche de mai, ou 1<sup>er</sup> dimanche de juin si Pentecôte)</td><td><code>?fete=meres</code></td></tr>
+  <tr><td>🎶 Fête de la musique</td><td><code>medaillon-logo-fete-de-la-musique.svg</code></td><td>16 → 24 juin</td><td><code>?fete=vinyle</code></td></tr>
+  <tr><td>🇫🇷 14 Juillet</td><td><code>medaillon-logo-14-juillet.svg</code></td><td>10 → 16 juillet</td><td><code>?14juillet=1</code></td></tr>
+  <tr><td>🍺 Oktoberfest</td><td><code>medaillon-logo-oktoberfest.svg</code></td><td>16 septembre → 5 octobre</td><td><code>?fete=oktoberfest</code></td></tr>
+  <tr><td>🎃 Halloween</td><td><code>medaillon-logo-halloween.svg</code></td><td>24 octobre → 2 novembre</td><td><code>?halloween=1</code></td></tr>
+  <tr><td>🍇 Beaujolais nouveau</td><td><code>medaillon-logo-beaujolais-nouveau.svg</code></td><td>3<sup>e</sup> jeudi de novembre −3 j → +5 j</td><td><code>?fete=beaujolais</code></td></tr>
+  <tr><td>🎄 Noël</td><td><code>medaillon-logo-noel-full.svg</code></td><td>1 → 25 décembre</td><td><code>?noel=1</code></td></tr>
+</table>
+
 <div class="grid">
   <div class="card">
-    <div class="frame"><img src="assets/cover/medaillon-logo-or.svg" alt="Or"></div>
+    <div class="frame"><img src="assets/cover/medaillon-logo-or.svg?v=preview2" alt="Or"></div>
     <div class="name">Or — référence</div>
-    <div class="desc">Full doré monochrome<br><code>medaillon-logo-or.svg</code> 121KB</div>
+    <div class="desc">Full doré monochrome<br><code>medaillon-logo-or.svg</code></div>
   </div>
   <div class="card">
-    <div class="frame"><img src="assets/cover/medaillon-logo-noir-brillant.svg" alt="Noir brillant"></div>
+    <div class="frame"><img src="assets/cover/medaillon-logo-noir-brillant.svg?v=preview2" alt="Noir brillant"></div>
     <div class="name">Original — Noir brillant</div>
-    <div class="desc">Violet #8d1c72→#3d0836 + or + vert<br><code>medaillon-logo-noir-brillant.svg</code></div>
-  </div>
-  <div class="card">
-    <div class="frame"><img src="assets/cover/medaillon-logo-saint-patrick.svg?v=fetes" alt="Saint Patrick"></div>
-    <div class="name">☘️ Saint Patrick — 17 mars</div>
-    <div class="desc">Disque vert irlandais #2ecc6a→#042a14, arbre centre 1000,1000 or + trèfles shamrocks + pièces or<br><code>medaillon-logo-saint-patrick.svg</code> 49KB<br>Auto 10-20 mars + <code>?stpatrick=1</code></div>
-  </div>
-  <div class="card">
-    <div class="frame"><img src="assets/cover/medaillon-logo-noel-full.svg?v=fetes" alt="Noël full"></div>
-    <div class="name">🎄 Noël — 25 déc (full vector)</div>
-    <div class="desc">Disque rouge profond #c41e1e→#1a0505, arbre or avec houx + baies + étoiles, couronne houx + flocons or<br><code>medaillon-logo-noel-full.svg</code> 50KB<br>Remplace le PNG base64 271KB</div>
+    <div class="desc">Violet #8d1c72→#3d0836 + or + vert<br>médaillon par défaut hors période de fête<br><code>medaillon-logo-noir-brillant.svg</code></div>
   </div>
   <div class="card">
     <div class="frame"><img src="assets/cover/medaillon-logo-nouvel-an.svg?v=fetes" alt="Nouvel An"></div>
     <div class="name">🎆 Jour de l'An — 1er jan</div>
-    <div class="desc">Disque bleu nuit #1e1e5a→#050510, feux d'artifice or/blanc, arbre étoiles + bulles champagne, 2026<br><code>medaillon-logo-nouvel-an.svg</code> 51KB<br><code>?nouvelan=1</code> / <code>?an=1</code></div>
+    <div class="desc">Disque bleu nuit #2a2a7a→#040410, feux d'artifice or/blanc, arbre étoilé + bulles de champagne<br>26 déc → 5 jan</div>
+    <a class="essayer" href="index.html?ny=1">Voir sur le site</a>
   </div>
   <div class="card">
-    <div class="frame"><img src="assets/cover/medaillon-logo-14-juillet.svg?v=fetes" alt="14 Juillet"></div>
-    <div class="name">🇫🇷 14 Juillet — Fête nationale</div>
-    <div class="desc">Disque bleu blanc rouge #0055A4→#fff→#EF4135, feux tricolores, arbre tricolore<br><code>medaillon-logo-14-juillet.svg</code> 57KB<br><code>?14juillet=1</code></div>
+    <div class="frame"><img src="assets/cover/medaillon-logo-epiphanie.svg?v=fetes" alt="Épiphanie"></div>
+    <div class="name">👑 Épiphanie</div>
+    <div class="desc">Disque or pâle #fef3c7→#78350f, trois couronnes or en pied de médaillon<br>2 → 14 jan</div>
+    <a class="essayer" href="index.html?fete=galette">Voir sur le site</a>
   </div>
   <div class="card">
-    <div class="frame"><img src="assets/cover/medaillon-logo-paques.svg?v=fetes" alt="Pâques"></div>
-    <div class="name">🐣 Pâques</div>
-    <div class="desc">Disque doré clair #f9e8a0→#c9982f, œufs décorés, bourgeons verts<br><code>medaillon-logo-paques.svg</code> 43KB</div>
-  </div>
-  <div class="card">
-    <div class="frame"><img src="assets/cover/medaillon-logo-halloween.svg?v=fetes" alt="Halloween"></div>
-    <div class="name">🎃 Halloween — 31 oct</div>
-    <div class="desc">Disque orange #ff7a00→#1a0a00, citrouilles, arbre spectral<br><code>medaillon-logo-halloween.svg</code> 41KB</div>
+    <div class="frame"><img src="assets/cover/medaillon-logo-chandeleur.svg?v=fetes" alt="Chandeleur"></div>
+    <div class="name">🥞 Chandeleur — 2 fév</div>
+    <div class="desc">Disque crème dorée #fffbe0→#b68a20, trois crêpes dorées en pied de médaillon<br>28 jan → 4 fév</div>
+    <a class="essayer" href="index.html?fete=crepes">Voir sur le site</a>
   </div>
   <div class="card">
     <div class="frame"><img src="assets/cover/medaillon-logo-saint-valentin.svg?v=fetes-coeur" alt="Saint-Valentin"></div>
     <div class="name">💝 Saint-Valentin — 14 fév</div>
-    <div class="desc">Grand cœur rose en fond du médaillon (halo + liseré or), disque rouge #ff6b8a→#4a0a18<br><code>medaillon-logo-saint-valentin.svg</code><br>Fond transparent : aucun voile noir dégradé</div>
+    <div class="desc">Disque rouge #ff6b8a→#4a0a18 + grand cœur rose en fond (halo diffus, liseré or)<br>5 → 16 fév</div>
+    <a class="essayer" href="index.html?fete=coeur">Voir sur le site</a>
+  </div>
+  <div class="card">
+    <div class="frame"><img src="assets/cover/medaillon-logo-mardi-gras.svg?v=fetes" alt="Mardi gras"></div>
+    <div class="name">🎭 Mardi gras</div>
+    <div class="desc">Disque violet #a78bfa→#1e0a3a — date mobile (Pâques − 47 j)<br>Mardi gras −4 j → +1 j</div>
+    <a class="essayer" href="index.html?fete=mardigras">Voir sur le site</a>
+  </div>
+  <div class="card">
+    <div class="frame"><img src="assets/cover/medaillon-logo-paques.svg?v=fetes" alt="Pâques"></div>
+    <div class="name">🐣 Pâques</div>
+    <div class="desc">Disque doré clair #fffef5→#b7791a, œufs décorés et bourgeons verts — date mobile<br>Pâques −8 j → +7 j</div>
+    <a class="essayer" href="index.html?fete=paques">Voir sur le site</a>
+  </div>
+  <div class="card">
+    <div class="frame"><img src="assets/cover/medaillon-logo-saint-patrick.svg?v=fetes" alt="Saint Patrick"></div>
+    <div class="name">☘️ Saint Patrick — 17 mars</div>
+    <div class="desc">Disque vert irlandais #2ecc6a→#021a0c, trèfles shamrocks + pièces or<br>10 → 20 mars</div>
+    <a class="essayer" href="index.html?stpatrick=1">Voir sur le site</a>
+  </div>
+  <div class="card">
+    <div class="frame"><img src="assets/cover/medaillon-logo-fete-des-meres.svg?v=fetes" alt="Fête des mères"></div>
+    <div class="name">💐 Fête des mères</div>
+    <div class="desc">Disque rose #fbcfe8→#4a0a2a, trois fleurs roses à cœur or en pied de médaillon<br>Fête −5 j → +1 j</div>
+    <a class="essayer" href="index.html?fete=meres">Voir sur le site</a>
   </div>
   <div class="card">
     <div class="frame"><img src="assets/cover/medaillon-logo-fete-de-la-musique.svg?v=fetes-vinyle" alt="Fête de la musique"></div>
     <div class="name">🎶 Fête de la musique — 21 juin</div>
-    <div class="desc">Vinyle noir à sillons en fond du médaillon (étiquette cerclée or + trou central + reflet) à la place du dégradé noir<br><code>medaillon-logo-fete-de-la-musique.svg</code><br>Fond transparent : aucun voile noir dégradé</div>
+    <div class="desc">Vinyle noir à sillons en fond du médaillon (étiquette cerclée d'or, trou central, reflet) à la place du dégradé noir<br>16 → 24 juin</div>
+    <a class="essayer" href="index.html?fete=vinyle">Voir sur le site</a>
+  </div>
+  <div class="card">
+    <div class="frame"><img src="assets/cover/medaillon-logo-14-juillet.svg?v=fetes" alt="14 Juillet"></div>
+    <div class="name">🇫🇷 14 Juillet</div>
+    <div class="desc">Disque bleu blanc rouge, feux tricolores, arbre tricolore<br>10 → 16 juil</div>
+    <a class="essayer" href="index.html?14juillet=1">Voir sur le site</a>
+  </div>
+  <div class="card">
+    <div class="frame"><img src="assets/cover/medaillon-logo-oktoberfest.svg?v=fetes" alt="Oktoberfest"></div>
+    <div class="name">🍺 Oktoberfest</div>
+    <div class="desc">Disque ambre/brun #fbbf24→#2a0f00, ornements or<br>16 sept → 5 oct</div>
+    <a class="essayer" href="index.html?fete=oktoberfest">Voir sur le site</a>
+  </div>
+  <div class="card">
+    <div class="frame"><img src="assets/cover/medaillon-logo-halloween.svg?v=fetes" alt="Halloween"></div>
+    <div class="name">🎃 Halloween — 31 oct</div>
+    <div class="desc">Disque orange #ff8a1a→#0d0200, citrouilles, arbre spectral<br>24 oct → 2 nov</div>
+    <a class="essayer" href="index.html?halloween=1">Voir sur le site</a>
+  </div>
+  <div class="card">
+    <div class="frame"><img src="assets/cover/medaillon-logo-beaujolais-nouveau.svg?v=fetes" alt="Beaujolais nouveau"></div>
+    <div class="name">🍇 Beaujolais nouveau</div>
+    <div class="desc">Disque pourpre #9f2d3a→#1a0507, grappes de raisin en pied de médaillon<br>fête −3 j → +5 j</div>
+    <a class="essayer" href="index.html?fete=beaujolais">Voir sur le site</a>
+  </div>
+  <div class="card">
+    <div class="frame"><img src="assets/cover/medaillon-logo-noel-full.svg?v=fetes" alt="Noël"></div>
+    <div class="name">🎄 Noël — 25 déc</div>
+    <div class="desc">Disque rouge profond #e03a4a→#0f0203, arbre or + houx + baies + étoiles — full vectoriel<br>1 → 25 déc</div>
+    <a class="essayer" href="index.html?noel=1">Voir sur le site</a>
   </div>
 </div>
 </body>
