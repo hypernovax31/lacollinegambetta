@@ -35,7 +35,9 @@ DOSSIERS = ("assets/cover", "assets/fetes")
 # Gradients considérés comme des voiles noirs recouvrant le médaillon.
 VOILES = ("lcgTextBg", "lcgVignette")
 
-DISQUE = re.compile(r'<circle cx="999\.5" cy="999\.5" r="999\.5" fill="url\(#lcgDisc\)"/>')
+# Le disque de fond, quel que soit le dégradé qu'il porte (lcgDisc par défaut,
+# lcgVinyl après passage du vinyle) : l'ancrage reste valide à chaque exécution.
+DISQUE = re.compile(r'<circle cx="999\.5" cy="999\.5" r="999\.5" fill="url\(#lcg(?:Disc|Vinyl)\)"/>')
 
 
 # --------------------------------------------------------------------------- #
@@ -92,8 +94,8 @@ def coeur_path(cx: float = 1000.0, cy: float = 1000.0, rayon: float = 560.0,
     return d + "Z"
 
 
-COEUR_GRADIENTS = """<radialGradient id="lcgHeart" cx="42%" cy="32%" r="72%"><stop offset="0%" stop-color="#ffb3c1"/><stop offset="35%" stop-color="#f4566f"/><stop offset="72%" stop-color="#d01b45"/><stop offset="100%" stop-color="#8e0c2c"/></radialGradient>
-<radialGradient id="lcgHeartBg" cx="50%" cy="52%" r="62%"><stop offset="0%" stop-color="#ff7a95" stop-opacity="0.50"/><stop offset="60%" stop-color="#ff5c7d" stop-opacity="0.20"/><stop offset="100%" stop-color="#ff5c7d" stop-opacity="0"/></radialGradient>
+COEUR_GRADIENTS = """<radialGradient id="lcgHeart" cx="45%" cy="34%" r="76%"><stop offset="0%" stop-color="#ffc9d4"/><stop offset="28%" stop-color="#ff7c99"/><stop offset="60%" stop-color="#ee3d63"/><stop offset="100%" stop-color="#a80f33"/></radialGradient>
+<filter id="lcgHeartGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="26"/></filter>
 """
 
 
@@ -108,9 +110,12 @@ def appliquer_coeur(texte: str, rayon: float = 600.0) -> str:
     d = coeur_path(rayon=rayon)
     groupe = (
         '<g id="coeur-fond">'
-        '<path d="%s" fill="url(#lcgHeartBg)"/>'
-        '<path d="%s" fill="url(#lcgHeart)" opacity="0.94" stroke="#6d0722" stroke-width="5" stroke-linejoin="round"/>'
-        '<path d="%s" fill="none" stroke="url(#lcgGold)" stroke-width="3" stroke-opacity="0.9" stroke-linejoin="round"/>'
+        # halo rose diffuse : detache le cœur du disque sans assombrir l'orangerie
+        '<path d="%s" fill="#ff5c7d" opacity="0.5" filter="url(#lcgHeartGlow)"/>'
+        # corps du cœur, cerne de rouge profond
+        '<path d="%s" fill="url(#lcgHeart)" opacity="0.95" stroke="#5c0418" stroke-width="9" stroke-linejoin="round"/>'
+        # liseré or, dans la langue du médaillon
+        '<path d="%s" fill="none" stroke="url(#lcgGold)" stroke-width="5" stroke-opacity="0.95" stroke-linejoin="round"/>'
         '</g>' % (d, d, d)
     )
     texte = DISQUE.sub(lambda m: m.group(0) + groupe, texte, count=1)
@@ -121,32 +126,38 @@ def appliquer_coeur(texte: str, rayon: float = 600.0) -> str:
 # 3. Vinyle — Fête de la musique                                              #
 # --------------------------------------------------------------------------- #
 VINYLE_GRADIENTS = """<radialGradient id="lcgVinyl" cx="50%" cy="42%" r="74%"><stop offset="0%" stop-color="#2e2e2e"/><stop offset="38%" stop-color="#171717"/><stop offset="72%" stop-color="#0b0b0b"/><stop offset="100%" stop-color="#040404"/></radialGradient>
-<radialGradient id="lcgLabel" cx="38%" cy="30%" r="76%"><stop offset="0%" stop-color="#ffe9a8"/><stop offset="45%" stop-color="#e9c368"/><stop offset="100%" stop-color="#c08a24"/></radialGradient>
+<radialGradient id="lcgLabel" cx="38%" cy="30%" r="78%"><stop offset="0%" stop-color="#2a1d16"/><stop offset="55%" stop-color="#160f0b"/><stop offset="100%" stop-color="#0a0705"/></radialGradient>
 <radialGradient id="lcgVinylSheen" cx="32%" cy="22%" r="60%"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.13"/><stop offset="55%" stop-color="#ffffff" stop-opacity="0.04"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
 """
 
 
 def _sillons(r_min: float, r_max: float, pas: float, couleur: str, opacite: float,
              largeur: float, decalage: float = 0.0) -> str:
+    """Sillons concentriques.
+
+    Les cercles portent leurs propres attributs (pas de ``<g>`` imbriqué) pour
+    que le retrait du groupe ``vinyle-fond`` reste une simple expression
+    régulière non gourmande.
+    """
     out = []
     r = r_min
     while r <= r_max + 0.01:
-        out.append('<circle cx="1000" cy="1000" r="%.1f"/>' % (r + decalage))
+        out.append('<circle cx="1000" cy="1000" r="%.1f" fill="none" stroke="%s" '
+                   'stroke-opacity="%s" stroke-width="%s"/>' % (r + decalage, couleur, opacite, largeur))
         r += pas
-    return ('<g fill="none" stroke="%s" stroke-opacity="%s" stroke-width="%s">%s</g>'
-            % (couleur, opacite, largeur, "".join(out)))
+    return "".join(out)
 
 
 def groupe_vinyle() -> str:
     """Sillons + étiquette or + trou central + reflet, derrière l'orangerie."""
     return (
         '<g id="vinyle-fond">'
-        + _sillons(455, 958, 21, "#ffffff", 0.07, 1.8)
-        + _sillons(455, 958, 21, "#000000", 0.40, 1.2, decalage=10.5)
+        + _sillons(455, 958, 26, "#ffffff", 0.09, 5)
+        + _sillons(455, 958, 26, "#000000", 0.45, 3, decalage=13)
         + '<circle cx="1000" cy="1000" r="430" fill="url(#lcgLabel)"/>'
-        + '<circle cx="1000" cy="1000" r="430" fill="none" stroke="#140d05" stroke-width="11" stroke-opacity="0.85"/>'
-        + '<circle cx="1000" cy="1000" r="438" fill="none" stroke="url(#lcgGold)" stroke-width="4"/>'
-        + _sillons(150, 400, 46, "#ffffff", 0.05, 1.2)
+        + '<circle cx="1000" cy="1000" r="430" fill="none" stroke="url(#lcgGold)" stroke-width="9"/>'
+        + '<circle cx="1000" cy="1000" r="408" fill="none" stroke="url(#lcgGold)" stroke-width="2.5" stroke-opacity="0.8"/>'
+        + _sillons(180, 390, 42, "#ffffff", 0.06, 4)
         + '<circle cx="1000" cy="1000" r="26" fill="#080808" stroke="url(#lcgGold)" stroke-width="2.5"/>'
         + '<circle cx="999.5" cy="999.5" r="999.5" fill="url(#lcgVinylSheen)"/>'
         + '</g>'
@@ -189,7 +200,6 @@ def traiter(fichier: Path) -> str:
             texte = texte.replace("<defs>", "<defs>\n" + COEUR_GRADIENTS, 1)
     elif "fete-de-la-musique" in nom:
         texte = appliquer_vinyle(texte)
-        texte = DISQUE.sub(lambda m: m.group(0) + groupe_vinyle(), texte, count=1)
     fichier.write_text(texte, encoding="utf-8")
     try:
         ET.fromstring(texte)
