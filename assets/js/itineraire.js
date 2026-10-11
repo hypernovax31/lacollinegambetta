@@ -117,17 +117,6 @@
     adresse: { titre: 'Venir au restaurant', applis: applisAdresse }
   };
 
-  /* ---------- ouverture ----------
-     Toutes les applications proposées s'ouvrent par un lien https, dans un
-     nouvel onglet ; le téléphone passe la main à l'application quand elle est
-     installée. (Le schéma natif et son repli, utilisés par le passé pour
-     Moovit, restent possibles via la propriété `app` d'une entrée.) */
-  function ouvrir(app) {
-    var cible = app.app || app.web;
-    var w = window.open(cible, '_blank', 'noopener,noreferrer');
-    if (!w) window.location.assign(cible);
-  }
-
   /* ---------- le panneau de choix ---------- */
   var panneau = null, liste = null, ligneDepart = null, titreEl = null, dernierLien = null;
 
@@ -203,8 +192,14 @@
       var lien = document.createElement('a');
       lien.className = 'itin__app itin__app--' + app.id;
       lien.href = app.web || '#';
+      /* Toujours un nouvel onglet : la page du restaurant n'est jamais
+         remplacée. On laisse le clic suivre son cours naturel sur une vraie
+         balise <a target="_blank"> plutôt que d'appeler window.open(), qu'un
+         bloqueur de fenêtres peut refuser (le repli par location.assign
+         écrasait alors la page du site). */
+      lien.target = '_blank';
+      lien.setAttribute('rel', 'noopener noreferrer');
       lien.setAttribute('data-app', app.id);
-      if (app.app) lien.setAttribute('data-schema', app.app);
       var icone = document.createElement('span');
       icone.className = 'itin__icone';
       icone.setAttribute('aria-hidden', 'true');
@@ -218,11 +213,9 @@
       lien.appendChild(icone);
       lien.appendChild(nom);
       lien.appendChild(detail);
-      lien.addEventListener('click', function (e) {
-        e.preventDefault();
-        fermer();
-        ouvrir(app);
-      });
+      /* Pas de preventDefault : le navigateur ouvre le lien dans le nouvel
+         onglet, on se contente de refermer le panneau. */
+      lien.addEventListener('click', function () { fermer(); });
       liste.appendChild(lien);
     });
   }
