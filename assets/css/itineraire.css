@@ -1,5 +1,10 @@
 /* Panneau de choix de l'application d'itinéraire (assets/js/itineraire.js).
    Feuille commune à toutes les pages qui affichent une adresse. */
+/* Les mentions « Métro Gambetta • Ligne 3 » cliquables : jamais de
+   soulignement, le passage en or suffit à les signaler. */
+a.metro-route { cursor:pointer; }
+a.metro-route:hover, a.metro-route:focus-visible { color:var(--gold-300, #f0d78f); }
+
 html.itin-open, html.itin-open body { overflow:hidden; }
 .itin { position:fixed; inset:0; z-index:9600; display:flex; align-items:center; justify-content:center; padding:clamp(16px,4vw,40px); }
 .itin[hidden] { display:none; }
