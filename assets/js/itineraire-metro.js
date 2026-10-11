@@ -11,8 +11,10 @@
  *  Formats utilisés (documentés) :
  *    Google Maps  https://www.google.com/maps/dir/?api=1&origin=…&destination=…&travelmode=transit
  *    Plans        https://maps.apple.com/?saddr=…&daddr=…&dirflg=r        (r = transports)
- *    Citymapper   https://citymapper.com/directions?startcoord=…&endcoord=…&endname=…&endaddress=…
- *    Moovit       moovit://directions?orig_lat=…&orig_lon=…&dest_lat=…&dest_lon=…&dest_name=…&auto_run=true
+ *    Bonjour RATP https://www.ratp.fr/itineraires
+ *                 (la RATP ne publie pas de lien profond : on ouvre son
+ *                  calculateur officiel, qui passe la main à l'application
+ *                  Bonjour RATP lorsqu'elle est installée sur le téléphone)
  *  Sans origine, chaque application part d'elle-même de la position de
  *  l'appareil : le visiteur n'est jamais bloqué par un refus de localisation.
  * ========================================================================== */
@@ -25,17 +27,11 @@
     lat: 48.8647788,
     lng: 2.3993777
   };
-  var DELAI_REPLI = 1200;   /* ms : au-delà, l'application native ne viendra pas */
 
   function estApple() {
     var ua = navigator.userAgent || '';
     return /iPad|iPhone|iPod|Macintosh/.test(ua) ||
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  }
-  function estMobile() {
-    var ua = navigator.userAgent || '';
-    return /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(ua) ||
-      (!!navigator.maxTouchPoints && navigator.maxTouchPoints > 1 && /Mac/.test(ua));
   }
 
   /* ---------- les applications proposées ---------- */
@@ -59,56 +55,24 @@
     applis.push({ id: 'google', nom: 'Google Maps', icone: '🗺️',
       detail: 'Itinéraire en transports', web: google });
 
-    /* Citymapper : le lien https ouvre l'application si elle est installée,
-       sinon le calculateur web — pas de lien mort. */
-    var city = 'https://citymapper.com/directions?endcoord=' + destCoord +
-      '&endname=' + encodeURIComponent(dest.nom) + '&endaddress=' + adresse;
-    if (origine) city += '&startcoord=' + origine + '&startname=' + encodeURIComponent('Ma position');
-    applis.push({ id: 'citymapper', nom: 'Citymapper', icone: '🚇',
-      detail: 'Le spécialiste du métro parisien', web: city });
-
-    /* Moovit : application native uniquement (pas de calculateur web
-       paramétrable) — on ne la propose donc que sur mobile, avec repli vers
-       la boutique si elle n'est pas installée. */
-    if (estMobile()) {
-      var moovit = 'moovit://directions?dest_lat=' + dest.lat + '&dest_lon=' + dest.lng +
-        '&dest_name=' + encodeURIComponent(dest.nom) + '&auto_run=true';
-      if (origine) moovit += '&orig_lat=' + depart.lat + '&orig_lon=' + depart.lng + '&orig_name=' + encodeURIComponent('Ma position');
-      var boutique = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent || '')
-        ? 'https://apps.apple.com/app/id498477945'
-        : 'https://play.google.com/store/apps/details?id=com.tranzmate';
-      applis.push({ id: 'moovit', nom: 'Moovit', icone: '🚉',
-        detail: 'Application installée uniquement', app: moovit, web: boutique });
-    }
+    /* Bonjour RATP : application officielle de la RATP (métro, RER, bus,
+       tram). Elle ne publie pas de lien profond paramétrable — on ouvre donc
+       son calculateur officiel, qui lui passe la main quand l'application est
+       installée sur le téléphone. */
+    applis.push({ id: 'ratp', nom: 'Bonjour RATP', icone: '🚇',
+      detail: 'Application officielle RATP', web: 'https://www.ratp.fr/itineraires' });
     return applis;
   }
 
-  /* ---------- ouverture : schéma natif, puis repli ---------- */
+  /* ---------- ouverture ----------
+     Toutes les applications proposées s'ouvrent par un lien https, dans un
+     nouvel onglet ; le téléphone passe la main à l'application quand elle est
+     installée. (Le schéma natif et son repli, utilisés par le passé pour
+     Moovit, restent possibles via la propriété `app` d'une entrée.) */
   function ouvrir(app) {
-    if (!app.app) {                       /* lien web : nouvel onglet */
-      var w = window.open(app.web, '_blank', 'noopener,noreferrer');
-      if (!w) window.location.assign(app.web);
-      return;
-    }
-    /* Schéma d'application (moovit://) : si rien ne s'ouvre, on retombe sur
-       le lien web (la boutique) au bout d'une seconde — même mécanique que
-       assets/js/map-links.js pour l'adresse. */
-    var regle = false, timer = 0;
-    function nettoyer() {
-      if (regle) return;
-      regle = true;
-      window.clearTimeout(timer);
-      document.removeEventListener('visibilitychange', surVisibilite);
-    }
-    function surVisibilite() { if (document.hidden) nettoyer(); }
-    document.addEventListener('visibilitychange', surVisibilite);
-    timer = window.setTimeout(function () {
-      nettoyer();
-      var w = window.open(app.web, '_blank', 'noopener,noreferrer');
-      if (!w) window.location.assign(app.web);
-    }, DELAI_REPLI);
-    try { window.location.assign(app.app); }
-    catch (e) { nettoyer(); window.location.assign(app.web); }
+    var cible = app.app || app.web;
+    var w = window.open(cible, '_blank', 'noopener,noreferrer');
+    if (!w) window.location.assign(cible);
   }
 
   /* ---------- le panneau de choix ---------- */

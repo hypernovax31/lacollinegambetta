@@ -158,7 +158,7 @@ html:not(.carte-doc) .relief-inner-svg { width:64.5%; height:64.5%; background:t
 .cover-footer { display:grid; justify-items:center; gap:12px; text-align:center; color:#fff; }
 .cover-footer-address { max-width:30ch; font-family:'Cinzel',serif; font-size:clamp(.82rem,1.4vw,.98rem); letter-spacing:.12em; line-height:1.5; text-transform:uppercase; }
 .cover-footer-address a { color:inherit; text-decoration:none; }
-.cover-footer-address a:hover, .cover-footer-address a:focus-visible { color:var(--gold-100); text-decoration:underline; text-underline-offset:3px; }
+.cover-footer-address a:hover, .cover-footer-address a:focus-visible { color:var(--gold-100); }
 .cover-links, .footer-links { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
 .contact-link svg, .footer-link svg { width:15px; height:15px; flex:0 0 auto; stroke:#fff; }
 #interior-menu { display:none; background:var(--cream); padding-bottom:0; }
@@ -304,7 +304,7 @@ html:not(.carte-doc) .container {
   .footer-details__metro { flex-basis:auto; }
 }
     .footer-address-link { color:inherit; text-decoration:none; }
-    .footer-address-link:hover, .footer-address-link:focus-visible { color:var(--gold-100); text-decoration:underline; text-underline-offset:3px; }
+    .footer-address-link:hover, .footer-address-link:focus-visible { color:var(--gold-100); }
 .footer-links { margin:10px 0; }
 .footer-link { background:transparent; border:1px solid rgba(216,178,87,.45); color:#fff; border-radius:999px; min-height:42px; padding:8px 14px; text-decoration:none; display:inline-flex; gap:8px; align-items:center; justify-content:center; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
 .footer-link:hover { background:rgba(255,255,255,.08); color:var(--gold-100); border-color:#fcf6ba; }
@@ -10424,7 +10424,7 @@ html:not(.carte-doc) .footer-details .footer-details__metro {
 }
 html:not(.carte-doc) .footer-details .footer-address-link:hover,
 html:not(.carte-doc) .footer-details .footer-address-link:focus-visible {
-  color:#fff !important; text-decoration:underline; text-underline-offset:3px;
+  color:#fff !important; text-decoration:none;
 }
 html:not(.carte-doc) .footer-details__separator { color:#fff !important; }
 @media (max-width:860px) {
@@ -10783,10 +10783,11 @@ html.itin-open, html.itin-open body { overflow:hidden; }
 .itin__detail { font-size:.73rem; line-height:1.3; color:#6e5468; }
 .itin__copier { margin-top:14px; width:100%; min-height:44px; border-radius:999px; border:1px solid rgba(216,178,87,.55); background:transparent; color:#5b4718; font-family:inherit; font-size:.8rem; cursor:pointer; }
 .itin__copier:hover, .itin__copier:focus-visible { background:rgba(216,178,87,.18); }
-/* Le « Métro Gambetta • Ligne 3 » de la couverture devient un lien discret */
-.cover-footer-address a.metro-route { border-bottom:1px dotted rgba(216,178,87,.65); cursor:pointer; }
+/* Le « Métro Gambetta • Ligne 3 » de la couverture est cliquable, sans
+   soulignement : le simple passage en or suffit à le signaler. */
+.cover-footer-address a.metro-route { cursor:pointer; }
 .cover-footer-address a.metro-route:hover,
-.cover-footer-address a.metro-route:focus-visible { color:var(--gold-100); border-bottom-style:solid; }
+.cover-footer-address a.metro-route:focus-visible { color:var(--gold-100); }
 </style>
 <link rel="stylesheet" href="assets/css/google-reviews.css?v=2026100810">
 <script src="assets/js/i18n.js?v=2026100807" defer></script>
