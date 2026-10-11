@@ -212,13 +212,19 @@
   var sorciereIci = racine.getAttribute('data-sorciere') === '1' ||
     !!document.getElementById('cover-section') || !!document.getElementById('interior-menu');
 
-  var boite = null;
+  var boite = null, toileFeuilles = null;
   if (sorciereIci && !reduit) {
     boite = document.createElement('div');
     boite.id = 'halloween-sorciere';
     boite.setAttribute('aria-hidden', 'true');
     boite.innerHTML = '<span class="trail"></span>' + SORCIERE;
     document.body.appendChild(boite);
+    if (window.HTMLCanvasElement) {
+      toileFeuilles = document.createElement('canvas');
+      toileFeuilles.id = 'halloween-feuilles';
+      toileFeuilles.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(toileFeuilles);
+    }
   }
 
   var W = 0, H = 0, minuterie = 0, rafId = 0, vol = null, cache = document.hidden, minuterieCoucou = 0;
@@ -315,6 +321,7 @@
     if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
     window.clearTimeout(minuterie); minuterie = 0;
     window.clearTimeout(minuterieCoucou);
+    arreterFeuilles();
     if (vol) vol.enPause = maintenant();
   }
 
@@ -328,17 +335,128 @@
     } else if (!vol && !minuterie) {
       programmer(hasard(10000, 22000));
     }
+    demarrerFeuilles();
+  }
+
+  /* ---------- 4. les feuilles mortes -------------------------------------
+     L'équivalent exact de la neige de Noël : un canvas plein écran, des
+     particules qui tombent en tournoyant, et rien qui tourne quand l'onglet
+     est caché. Réservé aux pages qui ont une couverture ou une carte. */
+  var ctxFeuilles = null, feuilles = [], FW = 0, FH = 0, fdpr = 1;
+  var rafFeuilles = 0, tempsFeuilles = 0, ecoFeuilles = false;
+  var COULEURS = ['#c2622a', '#d9a441', '#a8501f', '#8c3f18', '#b8762a', '#7d3f1c'];
+
+  function limiteFeuilles() {
+    return ecoFeuilles ? 8 : Math.max(16, Math.min(34, Math.round(FW * FH / 40000)));
+  }
+
+  function nouvelleFeuille(partout) {
+    return {
+      x: Math.random() * FW,
+      y: partout ? Math.random() * FH : -20 - Math.random() * 70,
+      r: hasard(5, 11),
+      o: hasard(0.45, 0.9),
+      v: hasard(26, 62),                       /* px par seconde, lent */
+      balancement: hasard(18, 46),
+      phase: Math.random() * Math.PI * 2,
+      frequence: hasard(0.5, 1.2),
+      rot: Math.random() * Math.PI * 2,
+      rotation: hasard(-1.4, 1.4),
+      bascule: Math.random() * Math.PI * 2,    /* la feuille se retourne */
+      vitesseBascule: hasard(0.8, 2.2),
+      couleur: COULEURS[Math.floor(Math.random() * COULEURS.length)]
+    };
+  }
+
+  function mesurerFeuilles() {
+    if (!toileFeuilles || !ctxFeuilles) return;
+    fdpr = Math.min(window.devicePixelRatio || 1, ecoFeuilles ? 1 : 1.6);
+    FW = Math.max(1, window.innerWidth);
+    FH = Math.max(1, window.innerHeight);
+    toileFeuilles.width = Math.round(FW * fdpr);
+    toileFeuilles.height = Math.round(FH * fdpr);
+    toileFeuilles.style.width = FW + 'px';
+    toileFeuilles.style.height = FH + 'px';
+    ctxFeuilles.setTransform(fdpr, 0, 0, fdpr, 0, 0);
+    var voulues = limiteFeuilles();
+    while (feuilles.length < voulues) feuilles.push(nouvelleFeuille(true));
+    feuilles.length = voulues;
+  }
+
+  function dessinerFeuille(f) {
+    var r = f.r;
+    ctxFeuilles.save();
+    ctxFeuilles.translate(f.x, f.y);
+    ctxFeuilles.rotate(f.rot);
+    ctxFeuilles.scale(Math.max(0.18, Math.abs(Math.cos(f.bascule))), 1);
+    ctxFeuilles.globalAlpha = f.o;
+    ctxFeuilles.fillStyle = f.couleur;
+    ctxFeuilles.beginPath();
+    ctxFeuilles.moveTo(0, -r);
+    ctxFeuilles.quadraticCurveTo(r * 0.95, -r * 0.15, 0, r);
+    ctxFeuilles.quadraticCurveTo(-r * 0.95, -r * 0.15, 0, -r);
+    ctxFeuilles.fill();
+    ctxFeuilles.strokeStyle = 'rgba(60,26,10,.32)';
+    ctxFeuilles.lineWidth = 0.7;
+    ctxFeuilles.beginPath();
+    ctxFeuilles.moveTo(0, -r * 0.72);
+    ctxFeuilles.lineTo(0, r * 0.72);
+    ctxFeuilles.stroke();
+    ctxFeuilles.restore();
+  }
+
+  function imageFeuilles(now) {
+    rafFeuilles = 0;
+    if (cache || !toileFeuilles || !ctxFeuilles) return;
+    if (!tempsFeuilles) tempsFeuilles = now;
+    var dt = Math.min(0.05, (now - tempsFeuilles) / 1000);
+    tempsFeuilles = now;
+    ctxFeuilles.clearRect(0, 0, FW, FH);
+    for (var i = 0; i < feuilles.length; i++) {
+      var f = feuilles[i];
+      f.phase += f.frequence * dt;
+      f.rot += f.rotation * dt;
+      f.bascule += f.vitesseBascule * dt;
+      f.y += f.v * dt;
+      f.x += Math.cos(f.phase) * f.balancement * dt;
+      if (f.y - f.r > FH + 10) { feuilles[i] = nouvelleFeuille(false); continue; }
+      if (f.x > FW + 30) f.x = -30;
+      else if (f.x < -30) f.x = FW + 30;
+      dessinerFeuille(f);
+    }
+    rafFeuilles = requestAnimationFrame(imageFeuilles);
+  }
+
+  function demarrerFeuilles() {
+    if (!toileFeuilles || cache) return;
+    if (!ctxFeuilles) ctxFeuilles = toileFeuilles.getContext('2d', { alpha: true });
+    if (!ctxFeuilles) return;
+    mesurerFeuilles();
+    tempsFeuilles = 0;
+    toileFeuilles.classList.add('on');
+    if (!rafFeuilles) rafFeuilles = requestAnimationFrame(imageFeuilles);
+  }
+
+  function arreterFeuilles() {
+    if (rafFeuilles) { cancelAnimationFrame(rafFeuilles); rafFeuilles = 0; }
+    if (toileFeuilles) toileFeuilles.classList.remove('on');
   }
 
   api.fly = voler;
   api.pause = pause;
   api.resume = reprendre;
   api.programmer = programmer;
+  api.feuilles = function () { return feuilles.length; };
 
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) pause(); else reprendre();
   });
-  window.addEventListener('resize', mesure, { passive: true });
+  var minuteurRedim = 0;
+  window.addEventListener('resize', function () {
+    mesure();
+    window.clearTimeout(minuteurRedim);
+    minuteurRedim = window.setTimeout(mesurerFeuilles, 180);
+  }, { passive: true });
   window.addEventListener('pageshow', function (e) { if (e.persisted) reprendre(); }, false);
 
   /* la page reste ouverte (tablette du bar) : on revérifie la saison toutes
@@ -349,8 +467,9 @@
     api.active = maintenant2;
     if (api.active) { programmer(4000); return true; }
     finir();
+    arreterFeuilles();
     racine.classList.remove('fete-halloween-active');
-    var aRetirer = document.querySelectorAll('.lcg-halloween, #halloween-sorciere, #lcg-halloween-sprite');
+    var aRetirer = document.querySelectorAll('.lcg-halloween, #halloween-sorciere, #halloween-feuilles, #lcg-halloween-sprite');
     for (var i = 0; i < aRetirer.length; i++) {
       if (aRetirer[i].parentNode) aRetirer[i].parentNode.removeChild(aRetirer[i]);
     }
@@ -361,5 +480,10 @@
     window.setTimeout(function () { if (saisonToujoursBonne()) boucleSaison(); }, 30 * 60 * 1000);
   })();
 
-  if (boite) { mesure(); programmer(hasard(7000, 14000)); }
+  if (sorciereIci && !reduit) {
+    ecoFeuilles = !!(navigator.connection && navigator.connection.saveData);
+    mesure();
+    if (boite) programmer(hasard(7000, 14000));
+    demarrerFeuilles();
+  }
 })();

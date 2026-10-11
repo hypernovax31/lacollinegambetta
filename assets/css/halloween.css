@@ -122,3 +122,18 @@ html.carte-doc #halloween-sorciere { display:none !important; }
 @media (prefers-reduced-motion: reduce) {
   #halloween-sorciere { display:none !important; }
 }
+
+/* ===== Halloween : les feuilles mortes ===================================
+   L'équivalent exact de la neige de Noël : un canvas plein écran, des
+   feuilles orangées qui tombent en tournoyant. Même plan que #xmas-snow
+   (z-index 9970), même discrétion : masqué en mode carte-doc, à l'impression
+   et si le visiteur a demandé la réduction des animations. */
+#halloween-feuilles {
+  position:fixed; inset:0; z-index:9970;
+  display:none; width:100%; height:100%;
+  pointer-events:none;
+}
+#halloween-feuilles.on { display:block; }
+html.carte-doc #halloween-feuilles { display:none !important; }
+@media print { #halloween-feuilles { display:none !important; } }
+@media (prefers-reduced-motion: reduce) { #halloween-feuilles { display:none !important; } }
