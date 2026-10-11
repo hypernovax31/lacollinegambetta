@@ -11,10 +11,12 @@
  *  Formats utilisés (documentés) :
  *    Google Maps  https://www.google.com/maps/dir/?api=1&origin=…&destination=…&travelmode=transit
  *    Plans        https://maps.apple.com/?saddr=…&daddr=…&dirflg=r        (r = transports)
- *    Bonjour RATP https://www.ratp.fr/itineraires
- *                 (la RATP ne publie pas de lien profond : on ouvre son
- *                  calculateur officiel, qui passe la main à l'application
- *                  Bonjour RATP lorsqu'elle est installée sur le téléphone)
+ *    Bonjour RATP fiche App Store (id 507107090) / fiche Play Store
+ *                 (com.fabernovel.ratp) sur mobile : la RATP ne publie pas de
+ *                  lien profond, on ouvre donc l'application si elle est là,
+ *                  sinon sa fiche pour l'installer. Sur ordinateur, où
+ *                  l'application n'existe pas, on ouvre le calculateur
+ *                  officiel ratp.fr/itineraires.
  *  Sans origine, chaque application part d'elle-même de la position de
  *  l'appareil : le visiteur n'est jamais bloqué par un refus de localisation.
  * ========================================================================== */
@@ -32,6 +34,26 @@
     var ua = navigator.userAgent || '';
     return /iPad|iPhone|iPod|Macintosh/.test(ua) ||
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+
+  /* ---------- Bonjour RATP ----------
+     Pas de lien profond public : sur téléphone on ouvre la fiche de
+     l'application, qui l'ouvre si elle est installée, sinon propose de
+     l'installer ; sur ordinateur, l'application n'existe pas, on ouvre le
+     calculateur officiel de la RATP. */
+  function lienRatp() {
+    var ua = navigator.userAgent || '';
+    var apple = /iPad|iPhone|iPod|Macintosh/i.test(ua) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (apple) {
+      return { web: 'https://apps.apple.com/fr/app/bonjour-ratp/id507107090',
+        detail: "Ouvre l'application, ou l'installe" };
+    }
+    if (/Android/i.test(ua)) {
+      return { web: 'https://play.google.com/store/apps/details?id=com.fabernovel.ratp&hl=fr',
+        detail: "Ouvre l'application, ou l'installe" };
+    }
+    return { web: 'https://www.ratp.fr/itineraires', detail: 'Calculateur officiel RATP' };
   }
 
   /* ---------- les applications proposées ---------- */
@@ -56,11 +78,11 @@
       detail: 'Itinéraire en transports', web: google });
 
     /* Bonjour RATP : application officielle de la RATP (métro, RER, bus,
-       tram). Elle ne publie pas de lien profond paramétrable — on ouvre donc
-       son calculateur officiel, qui lui passe la main quand l'application est
-       installée sur le téléphone. */
+       tram). Aucun lien profond paramétrable n'est publié : on envoie vers
+       l'application, qui calcule le trajet depuis la position du téléphone. */
+    var ratp = lienRatp();
     applis.push({ id: 'ratp', nom: 'Bonjour RATP', icone: '🚇',
-      detail: 'Application officielle RATP', web: 'https://www.ratp.fr/itineraires' });
+      detail: ratp.detail, web: ratp.web });
     return applis;
   }
 
