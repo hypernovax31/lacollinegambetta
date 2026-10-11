@@ -1,22 +1,25 @@
 /* ========================================================================== *
- *  Itinéraire en métro — lien « Métro Gambetta • Ligne 3 »
+ *  Itinéraires — lien « Métro Gambetta • Ligne 3 » et adresse postale
  * -------------------------------------------------------------------------- *
+ *  Deux portes d'entrée, un seul panneau de choix :
+ *    [data-metro-route]  « Venir en métro »       : trajet en transports
+ *    [data-nav-route]    « Venir au restaurant »   : navigation guidée
+ *
  *  Au clic, on demande au visiteur dans QUELLE application ouvrir le trajet :
  *  départ = sa position (géolocalisation du navigateur), arrivée = le
- *  restaurant, en mode « transports en commun ».
+ *  restaurant. La position n'est demandée qu'au clic, jamais au chargement.
  *
- *  Le lien garde un href valable (Google Maps, itinéraire en transports) :
- *  sans JavaScript, il ouvre directement l'itinéraire.
+ *  Les liens gardent un href valable (Google Maps) : sans JavaScript, ils
+ *  ouvrent directement l'itinéraire.
  *
  *  Formats utilisés (documentés) :
- *    Google Maps  https://www.google.com/maps/dir/?api=1&origin=…&destination=…&travelmode=transit
- *    Plans        https://maps.apple.com/?saddr=…&daddr=…&dirflg=r        (r = transports)
+ *    Google Maps  https://www.google.com/maps/dir/?api=1&origin=…&destination=…&travelmode=transit|driving
+ *    Plans        https://maps.apple.com/?saddr=…&daddr=…&dirflg=r|d   (r = transports, d = voiture)
+ *    Waze         https://waze.com/ul?ll=<lat>,<lng>&q=…&navigate=yes
  *    Bonjour RATP fiche App Store (id 507107090) / fiche Play Store
- *                 (com.fabernovel.ratp) sur mobile : la RATP ne publie pas de
- *                  lien profond, on ouvre donc l'application si elle est là,
- *                  sinon sa fiche pour l'installer. Sur ordinateur, où
- *                  l'application n'existe pas, on ouvre le calculateur
- *                  officiel ratp.fr/itineraires.
+ *                 (com.fabernovel.ratp) sur mobile, calculateur officiel
+ *                 ratp.fr/itineraires sur ordinateur — la RATP ne publie pas
+ *                 de lien profond.
  *  Sans origine, chaque application part d'elle-même de la position de
  *  l'appareil : le visiteur n'est jamais bloqué par un refus de localisation.
  * ========================================================================== */
@@ -26,20 +29,21 @@
   var PAR_DEFAUT = {
     nom: 'La Colline Gambetta',
     adresse: 'La Colline Gambetta, 4 Rue Belgrand, 75020 Paris',
+    court: '4 rue Belgrand, 75020 Paris',
     lat: 48.8647788,
     lng: 2.3993777
   };
 
   function estApple() {
     var ua = navigator.userAgent || '';
-    return /iPad|iPhone|iPod|Macintosh/.test(ua) ||
+    return /iPad|iPhone|iPod|Macintosh/i.test(ua) ||
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   }
 
   /* ---------- Bonjour RATP ----------
      Pas de lien profond public : sur téléphone on ouvre la fiche de
      l'application, qui l'ouvre si elle est installée, sinon propose de
-     l'installer ; sur ordinateur, l'application n'existe pas, on ouvre le
+     l'installer ; sur ordinateur, où l'application n'existe pas, on ouvre le
      calculateur officiel de la RATP. */
   function lienRatp() {
     var ua = navigator.userAgent || '';
@@ -57,10 +61,8 @@
   }
 
   /* ---------- les applications proposées ---------- */
-  function construireApplis(dest, depart) {
+  function applisMetro(dest, origine) {
     var adresse = encodeURIComponent(dest.adresse);
-    var destCoord = dest.lat + ',' + dest.lng;
-    var origine = depart ? (depart.lat + ',' + depart.lng) : '';
     var applis = [];
 
     /* Plans (Apple) : en tête sur iPhone / Mac, c'est l'application attendue */
@@ -77,14 +79,43 @@
     applis.push({ id: 'google', nom: 'Google Maps', icone: '🗺️',
       detail: 'Itinéraire en transports', web: google });
 
-    /* Bonjour RATP : application officielle de la RATP (métro, RER, bus,
-       tram). Aucun lien profond paramétrable n'est publié : on envoie vers
-       l'application, qui calcule le trajet depuis la position du téléphone. */
     var ratp = lienRatp();
     applis.push({ id: 'ratp', nom: 'Bonjour RATP', icone: '🚇',
       detail: ratp.detail, web: ratp.web });
     return applis;
   }
+
+  function applisAdresse(dest, origine) {
+    var adresse = encodeURIComponent(dest.adresse);
+    var applis = [];
+
+    /* Plans (Apple) : dirflg=d pour la navigation voiture */
+    if (estApple()) {
+      var plans = 'https://maps.apple.com/?daddr=' + adresse + '&dirflg=d';
+      if (origine) plans += '&saddr=' + encodeURIComponent(origine);
+      applis.push({ id: 'plans', nom: 'Plans', icone: '🍎',
+        detail: 'Navigation guidée', web: plans });
+    }
+
+    var google = 'https://www.google.com/maps/dir/?api=1&destination=' + adresse + '&travelmode=driving';
+    if (origine) google += '&origin=' + encodeURIComponent(origine);
+    applis.push({ id: 'google', nom: 'Google Maps', icone: '🗺️',
+      detail: 'Navigation guidée', web: google });
+
+    /* Waze : navigation porte-à-porte. Le lien https ouvre l'application si
+       elle est installée, sinon le calculateur web de Waze. Waze part toujours
+       de la position de l'appareil : pas de paramètre de départ. */
+    var waze = 'https://waze.com/ul?ll=' + encodeURIComponent(dest.lat + ',' + dest.lng) +
+      '&q=' + adresse + '&navigate=yes';
+    applis.push({ id: 'waze', nom: 'Waze', icone: '🚗',
+      detail: 'Navigation porte-à-porte', web: waze });
+    return applis;
+  }
+
+  var MODES = {
+    metro: { titre: 'Venir en métro', applis: applisMetro },
+    adresse: { titre: 'Venir au restaurant', applis: applisAdresse }
+  };
 
   /* ---------- ouverture ----------
      Toutes les applications proposées s'ouvrent par un lien https, dans un
@@ -98,7 +129,7 @@
   }
 
   /* ---------- le panneau de choix ---------- */
-  var panneau = null, liste = null, ligneDepart = null, dernierLien = null;
+  var panneau = null, liste = null, ligneDepart = null, titreEl = null, dernierLien = null;
 
   function construire() {
     panneau = document.createElement('div');
@@ -122,14 +153,13 @@
     fermerBtn.innerHTML = '&times;';
     fermerBtn.addEventListener('click', fermer);
 
-    var titre = document.createElement('h2');
-    titre.className = 'itin__titre';
-    titre.id = 'itin-titre';
-    titre.textContent = 'Venir en métro';
+    titreEl = document.createElement('h2');
+    titreEl.className = 'itin__titre';
+    titreEl.id = 'itin-titre';
 
     var sous = document.createElement('p');
     sous.className = 'itin__sous';
-    sous.textContent = 'Arrivée : ' + PAR_DEFAUT.nom + ' — 4 rue Belgrand, 75020 Paris';
+    sous.textContent = 'Arrivée : ' + PAR_DEFAUT.nom + ' — ' + PAR_DEFAUT.court;
 
     ligneDepart = document.createElement('p');
     ligneDepart.className = 'itin__depart';
@@ -142,7 +172,7 @@
     copier.className = 'itin__copier';
     copier.textContent = "Copier l'adresse";
     copier.addEventListener('click', function () {
-      var texte = 'La Colline Gambetta, 4 rue Belgrand, 75020 Paris';
+      var texte = PAR_DEFAUT.court;
       var fin = function () { copier.textContent = "Adresse copiée ✓"; };
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -153,7 +183,7 @@
     });
 
     boite.appendChild(fermerBtn);
-    boite.appendChild(titre);
+    boite.appendChild(titreEl);
     boite.appendChild(sous);
     boite.appendChild(ligneDepart);
     boite.appendChild(liste);
@@ -175,7 +205,6 @@
       lien.href = app.web || '#';
       lien.setAttribute('data-app', app.id);
       if (app.app) lien.setAttribute('data-schema', app.app);
-      lien.innerHTML = '';
       var icone = document.createElement('span');
       icone.className = 'itin__icone';
       icone.setAttribute('aria-hidden', 'true');
@@ -198,12 +227,12 @@
     });
   }
 
-  function ouvrirPanneau(dest) {
+  function ouvrirPanneau(dest, mode) {
     if (!panneau) construire();
+    titreEl.textContent = (MODES[mode] || MODES.metro).titre;
     /* première passe sans position : les applications partent d'elles-mêmes
        de la position de l'appareil — le visiteur peut cliquer tout de suite */
-    var depart = null;
-    remplir(construireApplis(dest, depart));
+    remplir((MODES[mode] || MODES.metro).applis(dest, null));
     ligneDepart.className = 'itin__depart itin__depart--attente';
     ligneDepart.textContent = 'Départ : localisation en cours…';
     panneau.hidden = false;
@@ -211,21 +240,19 @@
     var premier = liste.querySelector('.itin__app');
     if (premier) premier.focus();
 
-    if (!navigator.geolocation) {
+    var sansPosition = function () {
       ligneDepart.className = 'itin__depart';
       ligneDepart.textContent = "Départ : votre position (chaque application la utilise)";
-      return;
-    }
+    };
+    if (!navigator.geolocation) { sansPosition(); return; }
+
     navigator.geolocation.getCurrentPosition(function (pos) {
-      depart = { lat: Math.round(pos.coords.latitude * 1e6) / 1e6, lng: Math.round(pos.coords.longitude * 1e6) / 1e6 };
-      remplir(construireApplis(dest, depart));
+      var depart = { lat: Math.round(pos.coords.latitude * 1e6) / 1e6, lng: Math.round(pos.coords.longitude * 1e6) / 1e6 };
+      remplir((MODES[mode] || MODES.metro).applis(dest, depart.lat + ',' + depart.lng));
       ligneDepart.className = 'itin__depart itin__depart--ok';
       ligneDepart.textContent = 'Départ : votre position (' +
         depart.lat.toFixed(4) + ', ' + depart.lng.toFixed(4) + ')';
-    }, function () {
-      ligneDepart.className = 'itin__depart';
-      ligneDepart.textContent = "Départ : votre position (chaque application la utilise)";
-    }, { timeout: 8000, maximumAge: 60000, enableHighAccuracy: false });
+    }, sansPosition, { timeout: 8000, maximumAge: 60000, enableHighAccuracy: false });
   }
 
   function fermer() {
@@ -237,16 +264,17 @@
 
   document.addEventListener('click', function (e) {
     var cible = e.target;
-    var lien = cible && cible.closest ? cible.closest('[data-metro-route]') : null;
+    var lien = cible && cible.closest ? cible.closest('[data-metro-route], [data-nav-route]') : null;
     if (!lien) return;
     e.preventDefault();
     dernierLien = lien;
+    var mode = lien.hasAttribute('data-nav-route') ? 'adresse' : 'metro';
     var dest = {
       nom: PAR_DEFAUT.nom,
       adresse: lien.getAttribute('data-map-address') || PAR_DEFAUT.adresse,
       lat: parseFloat(lien.getAttribute('data-map-lat')) || PAR_DEFAUT.lat,
       lng: parseFloat(lien.getAttribute('data-map-lng')) || PAR_DEFAUT.lng
     };
-    ouvrirPanneau(dest);
+    ouvrirPanneau(dest, mode);
   });
 })();
