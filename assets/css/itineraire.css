@@ -7,11 +7,7 @@ html.itin-open, html.itin-open body { overflow:hidden; }
 .itin__boite { position:relative; width:min(430px,100%); max-height:100%; overflow:auto; padding:24px 20px 18px; border-radius:20px; background:#fcfbf7; border:1px solid rgba(216,178,87,.5); box-shadow:0 30px 80px rgba(16,6,22,.5); font-family:'Montserrat',system-ui,sans-serif; color:var(--ink, #24102e); text-align:left; }
 .itin__fermer { position:absolute; top:8px; right:8px; width:40px; height:40px; border:0; border-radius:50%; background:transparent; color:#8a6f3b; font-size:1.7rem; line-height:1; cursor:pointer; }
 .itin__fermer:hover, .itin__fermer:focus-visible { background:rgba(216,178,87,.2); color:#4a3714; }
-.itin__titre { margin:0 0 6px; font-family:'Cinzel',serif; font-size:1.02rem; letter-spacing:.09em; text-transform:uppercase; color:#592e6f; }
-.itin__sous { margin:0 0 12px; font-size:.82rem; line-height:1.45; color:#6e5468; }
-.itin__depart { margin:0 0 14px; padding:9px 11px; border-radius:10px; background:rgba(216,178,87,.15); font-size:.78rem; line-height:1.35; color:#5b4718; }
-.itin__depart--attente { background:rgba(216,178,87,.07); }
-.itin__depart--ok { background:rgba(46,204,106,.14); color:#14612f; }
+.itin__titre { margin:0 0 14px; font-family:'Cinzel',serif; font-size:1.02rem; letter-spacing:.09em; text-transform:uppercase; color:#592e6f; }
 .itin__liste { display:grid; gap:8px; }
 .itin__app { display:grid; grid-template-columns:34px minmax(0,1fr); align-items:center; gap:1px 12px; min-height:54px; padding:10px 14px; border-radius:14px; border:1px solid rgba(216,178,87,.45); background:#fff; color:#2a1633; text-decoration:none; }
 .itin__app:hover, .itin__app:focus-visible { background:#fffaf0; border-color:var(--gold-500, #d8b257); text-decoration:none; }

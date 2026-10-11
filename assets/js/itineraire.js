@@ -118,7 +118,7 @@
   };
 
   /* ---------- le panneau de choix ---------- */
-  var panneau = null, liste = null, ligneDepart = null, titreEl = null, dernierLien = null;
+  var panneau = null, liste = null, titreEl = null, dernierLien = null, dejaChoisi = false;
 
   function construire() {
     panneau = document.createElement('div');
@@ -146,15 +146,14 @@
     titreEl.className = 'itin__titre';
     titreEl.id = 'itin-titre';
 
-    var sous = document.createElement('p');
-    sous.className = 'itin__sous';
-    sous.textContent = 'Arrivée : ' + PAR_DEFAUT.nom + ' — ' + PAR_DEFAUT.court;
-
-    ligneDepart = document.createElement('p');
-    ligneDepart.className = 'itin__depart';
-
     liste = document.createElement('div');
     liste.className = 'itin__liste';
+    /* Dès que le visiteur touche la liste, on ne la reconstruit plus : la
+       position arrive parfois juste après le clic et remplacerait la ligne
+       sous son doigt. */
+    var dejaLa = function () { dejaChoisi = true; };
+    liste.addEventListener('pointerdown', dejaLa);
+    liste.addEventListener('keydown', dejaLa);
 
     var copier = document.createElement('button');
     copier.type = 'button';
@@ -173,8 +172,6 @@
 
     boite.appendChild(fermerBtn);
     boite.appendChild(titreEl);
-    boite.appendChild(sous);
-    boite.appendChild(ligneDepart);
     boite.appendChild(liste);
     boite.appendChild(copier);
     panneau.appendChild(fond);
@@ -223,29 +220,25 @@
   function ouvrirPanneau(dest, mode) {
     if (!panneau) construire();
     titreEl.textContent = (MODES[mode] || MODES.metro).titre;
+    var applis = (MODES[mode] || MODES.metro).applis;
     /* première passe sans position : les applications partent d'elles-mêmes
        de la position de l'appareil — le visiteur peut cliquer tout de suite */
-    remplir((MODES[mode] || MODES.metro).applis(dest, null));
-    ligneDepart.className = 'itin__depart itin__depart--attente';
-    ligneDepart.textContent = 'Départ : localisation en cours…';
+    dejaChoisi = false;
+    remplir(applis(dest, null));
     panneau.hidden = false;
     document.documentElement.classList.add('itin-open');
     var premier = liste.querySelector('.itin__app');
     if (premier) premier.focus();
 
-    var sansPosition = function () {
-      ligneDepart.className = 'itin__depart';
-      ligneDepart.textContent = "Départ : votre position (chaque application la utilise)";
-    };
-    if (!navigator.geolocation) { sansPosition(); return; }
-
+    /* La position sert à pré-remplir le départ des liens : on la récupère
+       sans rien afficher, et sans rien changer si elle est refusée. */
+    if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(function (pos) {
-      var depart = { lat: Math.round(pos.coords.latitude * 1e6) / 1e6, lng: Math.round(pos.coords.longitude * 1e6) / 1e6 };
-      remplir((MODES[mode] || MODES.metro).applis(dest, depart.lat + ',' + depart.lng));
-      ligneDepart.className = 'itin__depart itin__depart--ok';
-      ligneDepart.textContent = 'Départ : votre position (' +
-        depart.lat.toFixed(4) + ', ' + depart.lng.toFixed(4) + ')';
-    }, sansPosition, { timeout: 8000, maximumAge: 60000, enableHighAccuracy: false });
+      var lat = Math.round(pos.coords.latitude * 1e6) / 1e6;
+      var lng = Math.round(pos.coords.longitude * 1e6) / 1e6;
+      if (panneau.hidden || dejaChoisi) return;
+      remplir(applis(dest, lat + ',' + lng));
+    }, function () {}, { timeout: 8000, maximumAge: 60000, enableHighAccuracy: false });
   }
 
   function fermer() {
