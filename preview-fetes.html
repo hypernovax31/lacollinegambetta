@@ -34,14 +34,14 @@
 
 <p class="note">Le médaillon de la page de garde (et celui de la page 404) change tout seul selon la date, heure de Paris —
 <code>assets/js/fetes-medaillon.js</code>. Pas de rechargement : si la page reste ouverte, le médaillon est remplacé à la
-demi-heure qui suit le changement de fête. Aperçu forcé : <code>index.html?fete=paques</code> (id ou alias),
+demi-heure qui suit le changement de fête. Quand deux fenêtres se chevauchent (Mardi gras / Saint-Valentin, Pâques / Saint-Patrick), c'est la fête <strong>la plus proche</strong> qui est affichée. Aperçu forcé : <code>index.html?fete=paques</code> (id ou alias),
 <code>?noel=1</code> / <code>?stpatrick=1</code> / <code>?ny=1</code> ; désactiver une fête : <code>?noel=0</code> ;
 tout désactiver : <code>?fete=0</code>.</p>
 
 <table class="cal">
   <caption>Calendrier d'affichage</caption>
   <tr><th>Fête</th><th>Médaillon</th><th>Affiché du … au …</th><th>Aperçu</th></tr>
-  <tr><td>🎆 Jour de l'An</td><td><code>medaillon-logo-nouvel-an.svg</code></td><td>26 décembre → 5 janvier</td><td><code>?ny=1</code></td></tr>
+  <tr><td>🎆 Jour de l'An</td><td><code>medaillon-logo-nouvel-an.svg</code></td><td>26 décembre → 1<sup>er</sup> janvier</td><td><code>?ny=1</code></td></tr>
   <tr><td>👑 Épiphanie</td><td><code>medaillon-logo-epiphanie.svg</code></td><td>2 → 14 janvier (pic : 1<sup>er</sup> dimanche)</td><td><code>?fete=galette</code></td></tr>
   <tr><td>🥞 Chandeleur</td><td><code>medaillon-logo-chandeleur.svg</code></td><td>28 janvier → 4 février</td><td><code>?fete=crepes</code></td></tr>
   <tr><td>💝 Saint-Valentin</td><td><code>medaillon-logo-saint-valentin.svg</code></td><td>5 → 16 février</td><td><code>?fete=coeur</code></td></tr>
@@ -71,7 +71,7 @@ tout désactiver : <code>?fete=0</code>.</p>
   <div class="card">
     <div class="frame"><img src="assets/cover/medaillon-logo-nouvel-an.svg?v=fetes" alt="Nouvel An"></div>
     <div class="name">🎆 Jour de l'An — 1er jan</div>
-    <div class="desc">Disque bleu nuit #2a2a7a→#040410, feux d'artifice or/blanc, arbre étoilé + bulles de champagne<br>26 déc → 5 jan</div>
+    <div class="desc">Disque bleu nuit #2a2a7a→#040410, feux d'artifice or/blanc, arbre étoilé + bulles de champagne<br>26 déc → 1<sup>er</sup> jan</div>
     <a class="essayer" href="index.html?ny=1">Voir sur le site</a>
   </div>
   <div class="card">

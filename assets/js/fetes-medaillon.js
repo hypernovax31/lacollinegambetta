@@ -54,7 +54,7 @@
     { id:'nouvel-an', fichier:'medaillon-logo-nouvel-an.svg', titre:'Bonne année — La Colline Gambetta',
       alias:['nouvelan','jourdelan','reveillon','an','ny'],
       pic:function (a) { return midi(a, 1, 1); },
-      fenetre:function (a) { return [midi(a - 1, 12, 26), midi(a, 1, 5)]; } },
+      fenetre:function (a) { return [midi(a - 1, 12, 26), midi(a, 1, 1)]; } },
     { id:'epiphanie', fichier:'medaillon-logo-epiphanie.svg', titre:'Épiphanie — galette des rois',
       alias:['epiphanie','galette','rois'],
       pic:function (a) { return niemeJour(a, 1, 1, 0); },
