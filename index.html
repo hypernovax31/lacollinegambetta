@@ -1111,6 +1111,7 @@ html:not(.carte-doc) .container {
 #entrees .food-card__head h5,
 #plats .food-card__head h5,
 #desserts .food-card__head h5,
+#crepes .food-card__head h5,
 #menus .choice-card h5,
 #menus .special-card h5,
 #menus .breakfast-card h5,
@@ -1141,7 +1142,8 @@ html:not(.carte-doc) #menus .menu-points li {
 #menus .breakfast-card,
 #entrees .food-card,
 #plats .food-card,
-#desserts .food-card {
+#desserts .food-card,
+#crepes .food-card {
   color: var(--royal-violet-ink);
 }
 
@@ -2195,7 +2197,8 @@ html:not(.carte-doc) .price-line__price { white-space: nowrap; width: auto !impo
 /* Prix de la même couleur que les intitulés (entrées, plats, desserts) */
 #entrees .food-card__head strong,
 #plats .food-card__head strong,
-#desserts .food-card__head strong {
+#desserts .food-card__head strong,
+#crepes .food-card__head strong {
   color: var(--royal-violet-ink) !important;
 }
 /* Bandeau Happy Hour en bas de l'onglet Boissons */
@@ -5507,6 +5510,13 @@ html:not(.carte-doc) #interior-menu .hh-line__hh::before {
 @media screen and (max-width: 795px) {
   html:not(.carte-doc) #interior-menu #desserts .food-card-grid,
   html:not(.carte-doc) #interior-menu #desserts .food-card-grid--wide { grid-template-columns: 1fr !important; }
+}
+
+/* ===== Crêpes à la carte ===== */
+/* Même largeur de bascule que les entrées et desserts : les fiches restent
+   rigoureusement dans le même gabarit que les autres plats. */
+@media screen and (max-width: 795px) {
+  html:not(.carte-doc) #interior-menu #crepes .food-card-grid--crepes { grid-template-columns: 1fr !important; }
 }
 
 /* ===== Boissons ===== */
@@ -9412,7 +9422,8 @@ html:not(.carte-doc) #interior-menu > .interior-header > p {
    dans l'encart sans se chevaucher. */
 html:not(.carte-doc) #entrees .food-card__head,
 html:not(.carte-doc) #plats .food-card__head,
-html:not(.carte-doc) #desserts .food-card__head {
+html:not(.carte-doc) #desserts .food-card__head,
+html:not(.carte-doc) #crepes .food-card__head {
   display:grid !important;
   grid-template-columns:minmax(0,1fr) auto !important;
   align-items:baseline !important;
@@ -9422,7 +9433,8 @@ html:not(.carte-doc) #desserts .food-card__head {
 }
 html:not(.carte-doc) #entrees .food-card__lead,
 html:not(.carte-doc) #plats .food-card__lead,
-html:not(.carte-doc) #desserts .food-card__lead {
+html:not(.carte-doc) #desserts .food-card__lead,
+html:not(.carte-doc) #crepes .food-card__lead {
   grid-column:1;
   grid-row:1;
   min-width:0;
@@ -9431,7 +9443,8 @@ html:not(.carte-doc) #desserts .food-card__lead {
 }
 html:not(.carte-doc) #entrees .food-card__lead h5,
 html:not(.carte-doc) #plats .food-card__lead h5,
-html:not(.carte-doc) #desserts .food-card__lead h5 {
+html:not(.carte-doc) #desserts .food-card__lead h5,
+html:not(.carte-doc) #crepes .food-card__lead h5 {
   display:block !important;
   min-width:0;
   margin:0;
@@ -9456,7 +9469,8 @@ html:not(.carte-doc) #desserts .food-card__note {
 }
 html:not(.carte-doc) #entrees .food-card__head > strong,
 html:not(.carte-doc) #plats .food-card__head > strong,
-html:not(.carte-doc) #desserts .food-card__head > strong {
+html:not(.carte-doc) #desserts .food-card__head > strong,
+html:not(.carte-doc) #crepes .food-card__head > strong {
   grid-column:2;
   grid-row:1;
   justify-self:end !important;
@@ -10801,28 +10815,9 @@ html:not(.carte-doc) #crepes .panel__subtitle {
   letter-spacing: .2em;
   text-transform: uppercase;
 }
-html:not(.carte-doc) #crepes .food-card-grid--crepes { gap: clamp(10px, 1.2vw, 16px); }
-html:not(.carte-doc) #crepes .food-card {
-  border-color: var(--crepe-gold-line);
-  background: linear-gradient(145deg, #fff 0%, #fffdf8 67%, #faf0de 100%);
-  box-shadow: 0 8px 20px rgba(91,49,114,.06);
-}
-html:not(.carte-doc) #crepes .food-card__head {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto !important;
-  align-items: baseline !important;
-  gap: 12px !important;
-}
-html:not(.carte-doc) #crepes .food-card__lead { min-width: 0; text-align: start; }
-html:not(.carte-doc) #crepes .food-card__head h5 {
-  color: var(--crepe-ink) !important;
-  font-size: clamp(.9rem, .77vw + .59rem, 1.12rem) !important;
-  line-height: 1.28 !important;
-}
-html:not(.carte-doc) #crepes .food-card__head strong {
-  color: var(--crepe-violet) !important;
-  font-size: clamp(1.03rem, 1.32vw + .5rem, 1.28rem) !important;
-}
+/* Les crêpes à la carte reprennent volontairement les vraies .food-card
+   (fond blanc, filet or, rayon, rythme des titres/prix et tiroir illustré)
+   des entrées, plats et desserts. Aucun habillage parallèle ne les distingue. */
 html:not(.carte-doc) #crepes .crepes-panel--formules {
   background:
     radial-gradient(80% 100% at 50% 0%, rgba(255,255,255,.82) 0%, rgba(255,255,255,0) 66%),
@@ -11435,10 +11430,10 @@ html.carte-doc #crepes .crepe-formula-card__list li::before,
         <p class="panel__subtitle">À la carte</p>
       </div>
       <div class="food-card-grid food-card-grid--crepes">
-        <article class="food-card menu-card-grid__item"><div class="food-card__head"><div class="food-card__lead"><h5>Sucre</h5></div><strong>3,00</strong></div></article>
-        <article class="food-card menu-card-grid__item"><div class="food-card__head"><div class="food-card__lead"><h5>Confiture <span class="crepe-inline-or">ou</span> Caramel</h5></div><strong>3,50</strong></div></article>
-        <article class="food-card menu-card-grid__item"><div class="food-card__head"><div class="food-card__lead"><h5>Nutella</h5></div><strong>4,00</strong></div></article>
-        <article class="food-card menu-card-grid__item"><div class="food-card__head"><div class="food-card__lead"><h5>Nutella + Banane</h5></div><strong>5,00</strong></div></article>
+        <article class="food-card menu-card-grid__item" data-photo="assets/menus/illustration-crepe-a-la-carte.svg"><div class="food-card__head"><div class="food-card__lead"><h5>Sucre</h5></div><strong>3,00</strong></div></article>
+        <article class="food-card menu-card-grid__item" data-photo="assets/menus/illustration-crepe-a-la-carte.svg"><div class="food-card__head"><div class="food-card__lead"><h5>Confiture <span class="crepe-inline-or">ou</span> Caramel</h5></div><strong>3,50</strong></div></article>
+        <article class="food-card menu-card-grid__item" data-photo="assets/menus/illustration-crepe-a-la-carte.svg"><div class="food-card__head"><div class="food-card__lead"><h5>Nutella</h5></div><strong>4,00</strong></div></article>
+        <article class="food-card menu-card-grid__item" data-photo="assets/menus/illustration-crepe-a-la-carte.svg"><div class="food-card__head"><div class="food-card__lead"><h5>Nutella + Banane</h5></div><strong>5,00</strong></div></article>
       </div>
     </article>
 
