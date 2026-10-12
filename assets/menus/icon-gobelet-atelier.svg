@@ -1,15 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 160" fill="none" role="img" aria-labelledby="title desc" shape-rendering="geometricPrecision">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-labelledby="title desc" shape-rendering="geometricPrecision">
   <title id="title">Boisson chaude</title>
-  <desc id="desc">Dessin au trait d'un gobelet de boisson chaude fumant.</desc>
+  <desc id="desc">Dessin au trait : un gobelet de boisson chaude fumant, posé sur un plateau.</desc>
   <g fill="none" stroke="#411559" stroke-linecap="round" stroke-linejoin="round">
+    <!-- plateau -->
+    <rect x="18" y="157" width="164" height="13" rx="6.5" stroke-width="5.5"/>
     <!-- gobelet -->
-    <path d="M38 52L44 136C44 142 52 147 70 147C88 147 96 142 96 136L102 52" stroke-width="8"/>
-    <path d="M34 52C34 42 46 36 70 36C94 36 106 42 106 52V56H34V52Z" stroke-width="7"/>
+    <path d="M66 60L74 144C74 150 86 154 100 154C114 154 126 150 126 144L134 60" stroke-width="6"/>
+    <!-- couvercle -->
+    <path d="M58 50C58 40 76 33 100 33C124 33 142 40 142 50V57H58V50Z" stroke-width="5.5"/>
     <!-- bandes -->
-    <path d="M48 88H92" stroke-width="5.5"/>
-    <path d="M52 108H88" stroke-width="5.5"/>
+    <path d="M80 96H120" stroke-width="4"/>
+    <path d="M84 118H116" stroke-width="4"/>
     <!-- vapeur -->
-    <path d="M54 28C49 20 56 14 51 6" stroke-width="5.5"/>
-    <path d="M86 28C81 20 88 14 83 6" stroke-width="5.5"/>
+    <path d="M88 24C83 17 90 11 85 4" stroke-width="4"/>
+    <path d="M114 24C109 17 116 11 111 4" stroke-width="4"/>
   </g>
 </svg>

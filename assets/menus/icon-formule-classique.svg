@@ -3,27 +3,27 @@
   <desc id="d-classique">Dessin au trait : un verre de jus, un croissant et une tasse de café sur un plateau.</desc>
   <g fill="none" stroke="#411559" stroke-linecap="round" stroke-linejoin="round">
     <!-- plateau -->
-    <rect x="18" y="157" width="164" height="13" rx="6.5" stroke-width="7"/>
+    <rect x="18" y="157" width="164" height="13" rx="6.5" stroke-width="5.5"/>
     <!-- verre de jus (fond) -->
-    <path d="M62 66C63 100 64 130 66 146C67 150 72 152 86 152C100 152 105 150 106 146C108 130 109 100 110 66" stroke-width="8"/>
-    <path d="M60 66H112" stroke-width="8"/>
-    <path d="M65 90H107" stroke-width="5.5"/>
-    <path d="M88 66L66 36" stroke-width="7"/>
-    <path d="M66 36L76 28" stroke-width="7"/>
+    <path d="M62 66C63 100 64 130 66 146C67 150 72 152 86 152C100 152 105 150 106 146C108 130 109 100 110 66" stroke-width="6"/>
+    <path d="M60 66H112" stroke-width="6"/>
+    <path d="M65 90H107" stroke-width="4"/>
+    <path d="M88 66L66 36" stroke-width="5.5"/>
+    <path d="M66 36L76 28" stroke-width="5.5"/>
     <!-- croissant -->
-    <path d="M30 156C28 132 46 114 68 114C90 114 106 132 104 156" stroke-width="8"/>
-    <path d="M30 156H104" stroke-width="7"/>
-    <path d="M50 118C45 130 45 143 49 155" stroke-width="6"/>
-    <path d="M68 114C64 128 64 143 68 156" stroke-width="6"/>
-    <path d="M86 118C91 130 91 143 87 155" stroke-width="6"/>
-    <path d="M30 155C24 157 23 163 28 165" stroke-width="6"/>
-    <path d="M104 155C110 157 111 163 106 165" stroke-width="6"/>
+    <path d="M30 156C28 132 46 114 68 114C90 114 106 132 104 156" stroke-width="6"/>
+    <path d="M30 156H104" stroke-width="5.5"/>
+    <path d="M50 118C45 130 45 143 49 155" stroke-width="4.5"/>
+    <path d="M68 114C64 128 64 143 68 156" stroke-width="4.5"/>
+    <path d="M86 118C91 130 91 143 87 155" stroke-width="4.5"/>
+    <path d="M30 155C24 157 23 163 28 165" stroke-width="4.5"/>
+    <path d="M104 155C110 157 111 163 106 165" stroke-width="4.5"/>
     <!-- tasse -->
-    <ellipse cx="147" cy="98" rx="23" ry="7" stroke-width="8"/>
-    <path d="M124 98C126 122 128 142 130 156H164C166 142 168 122 170 98" stroke-width="8"/>
-    <path d="M170 110C181 108 187 122 177 130C174 132 172 133 169 133" stroke-width="7"/>
+    <ellipse cx="147" cy="98" rx="23" ry="7" stroke-width="6"/>
+    <path d="M124 98C126 122 128 142 130 156H164C166 142 168 122 170 98" stroke-width="6"/>
+    <path d="M170 110C181 108 187 122 177 130C174 132 172 133 169 133" stroke-width="5.5"/>
     <!-- vapeur -->
-    <path d="M138 82C133 76 140 70 136 60" stroke-width="6"/>
-    <path d="M156 82C151 76 158 70 154 60" stroke-width="6"/>
+    <path d="M138 82C133 76 140 70 136 60" stroke-width="4"/>
+    <path d="M156 82C151 76 158 70 154 60" stroke-width="4"/>
   </g>
 </svg>
