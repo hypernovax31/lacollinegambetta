@@ -1,24 +1,34 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-labelledby="t-parisien d-parisien" shape-rendering="geometricPrecision">
   <title id="t-parisien">Formule Le Parisien</title>
-  <desc id="d-parisien">Dessin au trait d’un verre d’orange pressée à côté d’une demi-orange coupée.</desc>
-  <g transform="translate(106 100) scale(1.16) translate(-100 -100)" fill="none" stroke="#411559" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-    <!-- verre (droite) -->
-    <ellipse cx="128" cy="62" rx="26" ry="7"/>
-    <path d="M102 62C104 100 108 140 112 152C116 160 140 160 144 152C148 140 152 100 154 62"/>
-    <path d="M105 90C117 96 139 96 151 90" stroke-width="5"/>
-    <!-- demi-orange (gauche, face coupée) -->
-    <circle cx="56" cy="128" r="32"/>
-    <circle cx="56" cy="128" r="25" stroke-width="4"/>
-    <g stroke-width="3.5">
-      <path d="M56 128C54 120 54 112 56 106"/>
-      <path d="M56 128C62 123 68 118 72 113"/>
-      <path d="M56 128C62 133 68 138 72 143"/>
-      <path d="M56 128C54 136 54 144 56 150"/>
-      <path d="M56 128C50 133 44 138 40 143"/>
-      <path d="M56 128C50 123 44 118 40 113"/>
+  <desc id="d-parisien">Dessin au trait : un croissant, une demi-orange pressée et une tasse de café sur un plateau.</desc>
+  <g fill="none" stroke="#411559" stroke-linecap="round" stroke-linejoin="round">
+    <!-- plateau -->
+    <rect x="18" y="157" width="164" height="13" rx="6.5" stroke-width="7"/>
+    <!-- demi-orange (face coupée) -->
+    <circle cx="108" cy="130" r="26" stroke-width="8"/>
+    <circle cx="108" cy="130" r="19" stroke-width="5"/>
+    <g stroke-width="4.5">
+      <path d="M108 130C106 124 106 118 108 113"/>
+      <path d="M108 130C113 126 117 123 121 119"/>
+      <path d="M108 130C113 134 117 137 121 141"/>
+      <path d="M108 130C106 136 106 142 108 147"/>
+      <path d="M108 130C103 134 99 137 95 141"/>
+      <path d="M108 130C103 126 99 123 95 119"/>
     </g>
-    <!-- pédoncule -->
-    <path d="M56 96C55 90 56 87 58 84" stroke-width="5"/>
-    <path d="M58 84C61 74 73 68 83 70C80 80 68 86 58 84" stroke-width="5"/>
+    <path d="M108 104C107 98 109 94 112 91" stroke-width="5.5"/>
+    <path d="M112 91C116 82 126 78 134 81C131 90 121 94 112 91" stroke-width="5.5"/>
+    <!-- croissant -->
+    <path d="M18 156C16 136 30 118 50 118C70 118 82 136 80 156" stroke-width="8"/>
+    <path d="M18 156H80" stroke-width="7"/>
+    <path d="M34 122C30 132 30 143 33 154" stroke-width="6"/>
+    <path d="M52 118C48 130 48 143 52 155" stroke-width="6"/>
+    <path d="M18 155C12 157 11 163 16 165" stroke-width="6"/>
+    <!-- tasse -->
+    <ellipse cx="158" cy="98" rx="21" ry="6.5" stroke-width="8"/>
+    <path d="M137 98C139 122 141 142 143 156H173C175 142 177 122 179 98" stroke-width="8"/>
+    <path d="M179 110C189 108 194 121 185 128C183 130 181 131 178 131" stroke-width="7"/>
+    <!-- vapeur -->
+    <path d="M150 82C145 76 152 70 148 60" stroke-width="6"/>
+    <path d="M166 82C161 76 168 70 164 60" stroke-width="6"/>
   </g>
 </svg>
