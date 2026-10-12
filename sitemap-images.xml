@@ -469,8 +469,20 @@
       <image:title>Virgin Mojito — La Colline Gambetta, Paris 20e</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://lacollinegambetta.com/assets/menus/crepe-a-la-carte-photo.jpg</image:loc>
-      <image:title>Crêpe à la carte — La Colline Gambetta, Paris 20e</image:title>
+      <image:loc>https://lacollinegambetta.com/assets/menus/crepe-confiture-caramel.jpg</image:loc>
+      <image:title>Crêpe confiture ou caramel — La Colline Gambetta, Paris 20e</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lacollinegambetta.com/assets/menus/crepe-nutella-banane.jpg</image:loc>
+      <image:title>Crêpe au Nutella et à la banane — La Colline Gambetta, Paris 20e</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lacollinegambetta.com/assets/menus/crepe-nutella.jpg</image:loc>
+      <image:title>Crêpe au Nutella — La Colline Gambetta, Paris 20e</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lacollinegambetta.com/assets/menus/crepe-sucre.jpg</image:loc>
+      <image:title>Crêpe au sucre — La Colline Gambetta, Paris 20e</image:title>
     </image:image>
     <image:image>
       <image:loc>https://lacollinegambetta.com/assets/plats/6-escargots-au-roquefort.jpg</image:loc>
