@@ -36,6 +36,8 @@ const MIME = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.svg': 'image/svg+xml',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
   '.pdf': 'application/pdf',
 };
 
@@ -140,6 +142,16 @@ async function main() {
     });
     await page.emulateMedia({ media: 'print' });
     await page.waitForFunction((count) => document.querySelectorAll('.print-page').length === count, PAGE_COUNT);
+    // Le passage en média print révèle de nouvelles règles et peut déclencher
+    // des chargements de fontes additionnels. Attendre une seconde fois évite
+    // de capturer le tout premier cycle de mise en page avec la police de repli.
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      await Promise.all([
+        document.fonts.load('700 24px Cinzel'),
+        document.fonts.load('500 16px Montserrat'),
+      ]);
+    });
 
     const info = await page.evaluate(() => ({
       pages: document.querySelectorAll('.print-page').length,

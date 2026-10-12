@@ -80,11 +80,11 @@ main.
 ```bash
 npm run build:carte            # carte.html puis Carte_LaCollineGambetta.pdf
 npm run build:carte-imprimeur  # version 300 dpi pour l'imprimeur
-python3 tools/comparer_cartes.py  # controle : memes 8 pages, meme contenu
+python3 tools/comparer_cartes.py  # controle : memes 9 pages, meme contenu
 ```
 
 Les deux PDF sont **versionnés** et composés depuis le même `carte.html` :
-8 pages A4 identiques au contenu près du rendu, en 180 dpi (1488 × 2105 px par
+9 pages A4 identiques au contenu près du rendu, en 180 dpi (1488 × 2105 px par
 page, 2,4 Mo) pour la diffusion et en **300 dpi** (2480 × 3508 px par page,
 17,5 Mo) pour l'imprimeur. `tools/comparer_cartes.py` vérifie page à page que
 les deux versions disent exactement la même chose.

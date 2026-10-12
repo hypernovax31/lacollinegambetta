@@ -105,7 +105,7 @@ def carte_menu(s: str) -> dict:
     """Construit le Menu schema.org a partir du HTML de la carte."""
     titres = {"entrees": "Entr\u00e9es", "plats": "Plats", "menus": "Formules",
               "boissons": "Boissons", "cocktails": "Cocktails", "vins": "Vins",
-              "desserts": "Desserts"}
+              "crepes": "Crêpes", "desserts": "Desserts"}
     sections = []
     for ident, titre in titres.items():
         m = re.search(rf'<section id="{ident}" class="menu-section[^"]*">', s)
@@ -113,7 +113,7 @@ def carte_menu(s: str) -> dict:
             continue
         bloc = s[m.end():s.index("</section>", m.end())]
         sous = []
-        for pan in re.split(r'<article class="panel">', bloc)[1:]:
+        for pan in re.split(r'<article class="[^"]*\bpanel\b[^"]*">', bloc)[1:]:
             nom = re.search(r'<h4 class="panel__title">(.*?)</h4>', pan)
             items = []
             for mm in re.finditer(
@@ -134,6 +134,18 @@ def carte_menu(s: str) -> dict:
                 prix = [p for p in re.findall(r'<td data-label="[^"]*">([^<]*)</td>',
                                               mm.group(2)) if _prix(p)]
                 items.append((_texte(mm.group(1)), "", _prix(prix[-1]) if prix else None))
+            # Les formules crêpes sont des cartes illustrées plutôt que des
+            # fiches h5 / strong : elles restent néanmoins de vrais éléments
+            # de carte avec leur prix et leur composition dans le balisage SEO.
+            for mm in re.finditer(
+                    r'<article class="crepe-formula-card">(.*?)</article>', pan, re.S):
+                label = re.search(r'crepe-formula-card__label">(.*?)</p>', mm.group(1), re.S)
+                prix = re.search(r'crepe-formula-card__price">(.*?)</p>', mm.group(1), re.S)
+                points = re.findall(r'<li>(.*?)</li>', mm.group(1), re.S)
+                if label and prix:
+                    items.append((_texte(label.group(1)),
+                                  " • ".join(_texte(point) for point in points),
+                                  _prix(prix.group(1))))
             if not items:
                 continue
             offres = []

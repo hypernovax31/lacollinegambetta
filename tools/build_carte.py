@@ -43,11 +43,11 @@ BASE_VIEWPORT = 1180        # largeur d'écran à laquelle le site est composé
 # c'est celui que la maison a choisi, et le PDF doit se feuilleter comme le site
 # se parcourt. Le générateur compose les feuilles dans cet ordre ; l'onglet
 # Boissons garde ses deux feuilles, les autres tiennent sur la leur.
-SECTIONS = ["entrees", "plats", "menus", "boissons", "cocktails", "vins", "desserts"]
+SECTIONS = ["entrees", "plats", "menus", "boissons", "cocktails", "vins", "crepes", "desserts"]
 
-# Blocs qui ne doivent jamais être séparés entre deux feuilles :
-# Demande expresse : toutes les boissons tiennent sur une seule feuille (8 pages au total),
-# et tous les cocktails sur une autre feuille.
+# Blocs qui ne doivent jamais être séparés entre deux feuilles : toutes les
+# boissons restent sur une feuille et tous les cocktails sur une autre. Les
+# crêpes ont leur propre feuille entre les vins et les desserts.
 MERGE = {"boissons": [(0, 1, 2, 3, 4, 5, 6)],
         "cocktails": [(0, 1, 2, 3, 4)]}
 
@@ -75,13 +75,14 @@ PX_PER_MM = 96 / 25.4
 ZONE_W_PX = ZONE_W_MM * PX_PER_MM                                    # 695,43 px
 ZONE_H_PX = (SHEET_H_MM - ZONE_TOP_MM - ZONE_BOTTOM_MM) * PX_PER_MM  # 842,86 px
 
-# Échelle unique de police pour toute la carte, sauf la page « Nos Menus »
-# (FORMULES) qui garde sa taille propre (demande expresse). Le gabarit est la
+# Échelle unique de police pour toute la carte, sauf les pages « Nos Menus »,
+# « Boissons » et « Crêpes » : ces compositions courtes gardent leur taille
+# propre pour rester généreuses et lisibles sur leur feuille. Le gabarit est la
 # page des plats — la plus dense : la seule taille qui la laisse tenir sur sa
 # feuille, 7,6 pt, devient la taille de toute la carte. `--per-onglet` rend la
 # main au réglage individuel (chaque feuille au plus grand corps qui tient).
 UNIFORME = "--per-onglet" not in sys.argv
-UNIFORME_EXCEPT = {"menus", "boissons"}
+UNIFORME_EXCEPT = {"menus", "boissons", "crepes"}
 # Largeurs de composition essayées, en fractions de celle du site. Au-dessus de 1,
 # le bloc est étiré (le site compose à 1 140 px mais rien ne l'oblige à rester à sa
 # largeur de conteneur quand on le pose sur papier) ; en dessous, il se resserre et
@@ -1509,11 +1510,13 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table th {
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table tbody tr:nth-child(even) td {
   background: transparent !important;          /* pas de bandes */
 }
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table td {
+/* #print-document donne à cette règle la préséance sur les cartes de vins
+   interactives (elles portent #vins et remettent leurs cellules à zéro). */
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table td {
   border-bottom: 1px dotted rgba(156, 122, 45, .38) !important;  /* pointillé du site, pas trait plein */
   padding: 5px 0 !important;                                     /* l'air vient du filet, pas de la cellule */
 }
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table tbody td {
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table tbody td {
   padding: 5px 0 !important;
 }
 /* Le corps d'une carte des vins suit la taille uniforme de la carte (1,12 rem
@@ -1568,8 +1571,9 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
 }
 /* --- Feuille boissons : une seule page, en double colonne ------------------
    Toutes les catégories de boissons (fraîches, chaudes, apéritifs, whiskies,
-   digestifs, bières et bandeau HH) tiennent sur UNE SEULE feuille (8 pages au total
-   pour la carte A4). Les 6 panneaux passent en deux colonnes de lignes (carte-2col).
+   digestifs, bières et bandeau HH) tiennent sur UNE SEULE feuille (9 pages au total
+   pour la carte A4, couverture comprise). Les 6 panneaux passent en deux colonnes
+   de lignes (carte-2col).
    Les titres des boissons sont en gras (<strong>), suivis immédiatement de leurs
    informations (notes, contenances, parfums) en italique. Les points de suspension
    sont supprimés : le texte et le prix sont séparés par un espace aéré sans
@@ -1893,18 +1897,18 @@ html #print-document :is(#cocktails, [data-sec="cocktails"]) .hh-line {
 #print-document .carte-flow[data-sec="vins"] .wine-table td:not(.wine-name) {
   font-size: 1.28rem !important;
 }
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table td,
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table th {
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table td,
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table th {
   padding-left: 8px !important;
   padding-right: 8px !important;
   box-sizing: border-box !important;
 }
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:first-child,
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table th:first-child {
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table td:first-child,
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table th:first-child {
   padding-left: 10px !important;
 }
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:last-child,
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table th:last-child {
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table td:last-child,
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table th:last-child {
   padding-right: 10px !important;
 }
 #print-document .carte-flow.carte-aerate[data-sec="vins"] .tab-flow .wine-table td {
@@ -2493,7 +2497,7 @@ def layout(metrics: dict, uniforme: bool = False):
 
     En mode uniforme (défaut), un seul facteur sert à toute la carte — la
     page des plats (le plus petit corps qui tienne, 7,6 pt) fait gabarit —
-    sauf la page « Nos Menus » (UNIFORME_EXCEPT), qui garde sa taille propre."""
+    sauf les pages déclarées dans UNIFORME_EXCEPT, qui gardent leur taille propre."""
     w0 = min(v["flow_width"] for v in metrics["sections"].values())
     if w0 < 300:
         raise SystemExit(f"largeur de composition mesurée à {w0} px : la mesure est fausse "
@@ -2504,8 +2508,8 @@ def layout(metrics: dict, uniforme: bool = False):
     f_uniform = None
     if uniforme:
         # Une seule échelle pour tout le document — sauf les onglets de
-        # UNIFORME_EXCEPT (la page « Nos Menus » garde son corps propre). À
-        # facteur unique, la largeur de composition est la même partout
+        # UNIFORME_EXCEPT, qui gardent leur corps propre. À facteur unique,
+        # la largeur de composition est la même partout
         # (w = zone / f) : on cherche donc la PLUS PETITE largeur — donc le
         # plus gros caractère — qui laisse chaque onglet au nombre de feuilles
         # qu'il atteint dans sa meilleure configuration. Grossir encore
@@ -2709,8 +2713,12 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
         rows, titles = m["rows"], m["titles"]
         if free > 0.5 and rows + titles > 0:
             air_side = free / (2 * info["fit"] * (rows + titles))
-            airs[n] = (round(max(air_side, 0.0), 2), round(2 * max(air_side, 0.0), 2),
-                       rows, titles, free, m["flowH"])
+            # Un apport subpixel par rangée n'est pas visible et rend la
+            # composition sensible aux arrondis Chromium ; on laisse alors
+            # la petite garde libre plutôt que de la distribuer artificiellement.
+            if air_side >= 0.5:
+                airs[n] = (round(air_side, 2), round(2 * air_side, 2),
+                           rows, titles, free, m["flowH"])
     if not airs:
         return pages, [], {}
     pages2, labels2, _, infos2 = compose_pages(src, metrics, flows, chosen, w0, airs)
@@ -2727,6 +2735,14 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
             break
         for n in mauvaises:
             A, T, rows, titles, free, flowH0 = airs[n]
+            # À moins d'un dixième de pixel de composition, les arrondis du
+            # navigateur peuvent faire dépasser la garde alors que rabaisser
+            # A à deux décimales ne change plus le rendu. On retire alors ce
+            # supplément microscopique : la feuille garde son rythme de base
+            # et retrouve une vraie marge de sécurité.
+            if A <= 0.10:
+                del airs[n]
+                continue
             m1 = meas.get(n, {}).get("flowH", 0)
             m2 = meas2.get(n, {}).get("flowH", 0)
             zone_target = meas2.get(n, {}).get("zone", ZONE_H_PX) * SAFETY

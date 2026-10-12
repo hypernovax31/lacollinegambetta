@@ -4,7 +4,7 @@
    (ou au clavier) s'ouvre un menu esthétique des langues — drapeau SVG
    + nom de la langue dans sa propre langue. À la sélection, TOUT le
    site est traduit : les textes de la page de garde, du bandeau, des
-   sept onglets de la carte (noms de plats et descriptions), des
+   huit onglets de la carte (noms de plats et descriptions), des
    formules « Nos menus », et jusqu'aux libellés des médaillons et
    icônes des formules, recréés en SVG inline précisément pour que
    leur texte soit traduisible (les PNG d'origine gravient leur texte
