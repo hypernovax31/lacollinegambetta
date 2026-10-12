@@ -4,7 +4,7 @@
  *
  * Unlike the former ImageMagick renderer, this script loads index.html,
  * loads the website fonts from node_modules/@fontsource (so an offline build
- * cannot silently fall back to a system font), lets the page build its nine
+ * cannot silently fall back to a system font), lets the page build its ten
  * print pages, and exports the exact print DOM to a PDF plus one
  * high-resolution JPG per page.
  */
@@ -23,7 +23,7 @@ const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const OUT = join(ROOT, 'print-assets');
 const STAGE = join(ROOT, '.browser-print');
 const PDF_NAME = 'carte-menus-boissons-a4.pdf';
-const PAGE_COUNT = 9;
+const PAGE_COUNT = 10;
 const JPG_WIDTH = 2480;
 const JPG_HEIGHT = 3508;
 
