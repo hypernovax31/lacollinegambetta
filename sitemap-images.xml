@@ -3,7 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://lacollinegambetta.com/</loc>
-    <lastmod>2026-10-04</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <image:image>
       <image:loc>https://lacollinegambetta.com/assets/boissons/1664-blanc.jpg</image:loc>
       <image:title>1664 Blanc — La Colline Gambetta, Paris 20e</image:title>
@@ -467,6 +467,10 @@
     <image:image>
       <image:loc>https://lacollinegambetta.com/assets/cocktails/virgin-mojito.jpg</image:loc>
       <image:title>Virgin Mojito — La Colline Gambetta, Paris 20e</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lacollinegambetta.com/assets/menus/crepe-a-la-carte-photo.jpg</image:loc>
+      <image:title>Crêpe à la carte — La Colline Gambetta, Paris 20e</image:title>
     </image:image>
     <image:image>
       <image:loc>https://lacollinegambetta.com/assets/plats/6-escargots-au-roquefort.jpg</image:loc>
