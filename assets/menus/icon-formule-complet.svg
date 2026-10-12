@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-labelledby="t-complet d-complet" shape-rendering="geometricPrecision">
+  <title id="t-complet">Formule Le Complet</title>
+  <desc id="d-complet">Dessin au trait d’une poêle vue de dessus avec deux œufs au plat.</desc>
+  <g transform="translate(100 100) scale(1.1) translate(-100 -100)" fill="none" stroke="#411559" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- poêle vue de dessus -->
+    <circle cx="92" cy="108" r="58"/>
+    <circle cx="92" cy="108" r="47" stroke-width="4"/>
+    <!-- manche -->
+    <path d="M135 65L178 24" stroke-width="12"/>
+    <!-- œufs au plat -->
+    <ellipse cx="72" cy="92" rx="21" ry="16" transform="rotate(-14 72 92)"/>
+    <circle cx="70" cy="90" r="6.5" stroke-width="4"/>
+    <ellipse cx="112" cy="126" rx="19" ry="15" transform="rotate(12 112 126)"/>
+    <circle cx="114" cy="124" r="5.5" stroke-width="4"/>
+  </g>
+</svg>

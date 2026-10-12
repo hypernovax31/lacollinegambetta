@@ -6391,13 +6391,13 @@ html:not(.carte-doc) #menus .fm .fmb-card {
 }
 html:not(.carte-doc) #menus .fm .fmb-card--duo,
 html:not(.carte-doc) #menus .fm .fmb-card--child,
-html:not(.carte-doc) #menus .fm .fmb-card--pdj {
+html:not(.carte-doc) #menus .fm .fmb-card--day,
+html:not(.carte-doc) #menus .fm .fmb-card--bf {
   background: linear-gradient(180deg, var(--fm-cream) 0%, var(--fm-cream-2) 100%);
   border: 1px solid var(--fm-gold-line);
   box-shadow: 0 10px 24px rgba(91, 49, 114, .08);
 }
-html:not(.carte-doc) #menus .fm .fmb-card--complete,
-html:not(.carte-doc) #menus .fm .fmb-card--day {
+html:not(.carte-doc) #menus .fm .fmb-card--complete {
   background: linear-gradient(178deg, var(--fm-dark-1) 0%, var(--fm-dark-2) 55%, var(--fm-dark-3) 100%);
   border: 1px solid rgba(255, 255, 255, .09);
   box-shadow: 0 16px 34px rgba(36, 16, 46, .26);
@@ -6421,14 +6421,14 @@ html:not(.carte-doc) #menus .fm .fmb-ico {
   filter: drop-shadow(0 2px 2px rgba(36, 16, 46, .24)) drop-shadow(0 7px 12px rgba(36, 16, 46, .16));
 }
 html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-ico,
-html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-ico {
+html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico,
+html:not(.carte-doc) #menus .fm .fmb-card--bf .fmb-ico {
   width: clamp(48px, calc(4.8vw - 1.536px), 66px);
 }
-/* Relief sur fond sombre (formule complète, menu du jour) : une ombre
-   brune claire y disparaîtrait — on l'assombrit presque jusqu'au noir
-   en la resserrant, elle reste lisible sur le violet profond. */
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-ico,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico {
+/* Relief sur fond sombre (formule complète) : une ombre brune claire y
+   disparaîtrait — on l'assombrit presque jusqu'au noir en la resserrant,
+   elle reste lisible sur le violet profond. */
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-ico {
   filter: drop-shadow(0 2px 2px rgba(5, 1, 8, .6)) drop-shadow(0 8px 14px rgba(5, 1, 8, .45));
 }
 html:not(.carte-doc) #menus .fm .fmb-title {
@@ -6439,16 +6439,14 @@ html:not(.carte-doc) #menus .fm .fmb-title {
   text-transform: uppercase; color: var(--fm-violet);
 }
 html:not(.carte-doc) #menus .fm .fmb-title > span { display: block; }
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-title,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title { color: #fff; }
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-title { color: #fff; }
 html:not(.carte-doc) #menus .fm .fmb-price {
   margin: clamp(2px, calc(.6vw - 0.192px), 8px) 0 0; text-align: center;
   font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
   font-size: clamp(1.8rem, calc(3.6vw - 1.152px), 2.5rem);
   line-height: 1; letter-spacing: .02em; color: var(--fm-violet);
 }
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-price,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price { color: #fffbf1; }
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-price { color: #fffbf1; }
 /* ---------- Mention « Choix ci-dessous » ---------- */
 html:not(.carte-doc) #menus .fm .fmb-foot {
   display: flex; align-items: center; justify-content: center;
@@ -6468,16 +6466,9 @@ html:not(.carte-doc) #menus .fm .fmb-sep {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--fm-gold-line) 15%, var(--fm-gold-line) 85%, transparent);
 }
-html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-sep,
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-sep {
+html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-sep {
   background: linear-gradient(90deg, transparent, rgba(228, 198, 128, .48) 15%, rgba(228, 198, 128, .48) 85%, transparent);
 }
-/* ---------- Menu du jour : bloc violet (carte A4, colonne droite ≥ 720 px) ---------- */
-html:not(.carte-doc) #menus .fm .fmb-card--day {
-  padding: clamp(24px, calc(2.8vw - 0.896px), 38px) clamp(16px, calc(3vw - 0.96px), 44px);
-}
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head { gap: clamp(8px, calc(1.2vw - 0.384px), 16px); }
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico { width: clamp(56px, calc(5.6vw - 1.792px), 80px); }
 html:not(.carte-doc) #menus .fm svg.fmb-ico { display: block; }
 /* ---------- Sous-titre du bloc enfant (page 4 : « Moins de 12 ans ») ---------- */
 html:not(.carte-doc) #menus .fm .fmb-sub {
@@ -6490,14 +6481,16 @@ html:not(.carte-doc) #menus .fm .fmb-sub {
   text-transform: uppercase;
   color: #3f2f47;
 }
+/* ---------- Menu du jour : bloc crème (contenu de l'ancienne bannière
+   violette, bannière retirée) — jumeau du bloc « Menu enfant » ---------- */
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-midi {
   margin: 0;
   font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
   font-weight: 500;
-  font-size: clamp(.72rem, calc(1.15vw - 0.368px), .9rem);
+  font-size: clamp(.66rem, calc(1.1vw - 0.352px), .82rem);
   letter-spacing: .05em;
   line-height: 1.45;
-  color: rgba(255, 255, 255, .9);
+  color: #3f2f47;
 }
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
   margin-top: clamp(4px, calc(.8vw - 0.256px), 10px);
@@ -6505,7 +6498,7 @@ html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
 html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-note {
   margin: auto 0 0; padding: clamp(4px, calc(.6vw - 0.192px), 10px) 0 0;
   width: 100%; text-align: center;
-  color: rgba(255, 255, 255, .92);
+  color: var(--fm-gold);
   font-weight: 500; text-transform: uppercase;
   font-size: clamp(.74rem, calc(1.2vw - 0.384px), .92rem);
   letter-spacing: .24em;
@@ -6533,7 +6526,6 @@ html:not(.carte-doc) #menus .fm .fmb-pils {
     inset 0 -2px 5px rgba(106, 70, 30, .3),
     0 7px 16px rgba(49, 26, 66, .16);
 }
-html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-pils,
 html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-pils {
   border-color: rgba(255, 255, 255, .22);
   box-shadow:
@@ -6542,7 +6534,7 @@ html:not(.carte-doc) #menus .fm .fmb-card--complete .fmb-pils {
     0 0 0 1px rgba(43, 20, 57, .6),
     0 7px 16px rgba(20, 8, 30, .38);
 }
-html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-pils {
+html:not(.carte-doc) #menus .fm .fmb-card--bf .fmb-pils {
   color: #fdf3d7;
   background:
     radial-gradient(130% 110% at 50% -20%, rgba(255, 255, 255, .38) 0%, rgba(255, 255, 255, .12) 44%, rgba(255, 255, 255, 0) 66%),
@@ -6619,11 +6611,35 @@ html:not(.carte-doc) #menus .fm .fmb-list li::before {
 html:not(.carte-doc) #menus .fm .fmb-list em {
   font-style: normal; font-weight: 400; color: var(--fm-soft);
 }
-/* ---------- Écrans larges / paysage : architecture alignée sur la page 4 de la
-   carte A4 (version à jour) — duo et complète côte à côte, les trois « au
-   choix » en bande pleine largeur, puis le « Menu du jour » en bande violette
-   pleine largeur, enfin enfant et petit-déjeuner côte à côte. Le bloc s'étend
-   sur toute la largeur visible de la fenêtre et les contenus respirent. ---------- */
+/* ---------- Formules petits déjeuners : les trois cartes (Le Classique,
+   Le Parisien, Le Complet) sous la paire « Menu du jour » / « Menu enfant ».
+   Même style que les autres blocs de l'onglet : carton crème, pilule
+   violette (héritée de l'ancien bloc « Petit déjeuner »), emblème, prix et
+   liste à étoiles dorées. ---------- */
+html:not(.carte-doc) #menus .fm .fmb-bf {
+  display: flex; flex-direction: column;
+  gap: clamp(14px, calc(1.8vw - 0.576px), 22px);
+  width: 100%;
+}
+html:not(.carte-doc) #menus .fm .fmb-bf__title {
+  margin: 0; text-align: center;
+  font-family: 'Cinzel', 'Times New Roman', serif; font-weight: 700;
+  font-size: clamp(1.02rem, calc(1.7vw - 0.544px), 1.24rem);
+  line-height: 1.3; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--fm-violet);
+}
+html:not(.carte-doc) #menus .fm .fmb-bf__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(16px, calc(2vw - 0.64px), 28px);
+  align-items: stretch;
+}
+
+/* ---------- Écrans larges / paysage : architecture — duo et complète côte à
+   côte, les trois « au choix » en bande pleine largeur, puis la paire
+   « Menu enfant » / « Menu du jour », enfin les trois formules petits
+   déjeuners pleine largeur. Le bloc s'étend sur toute la largeur visible de
+   la fenêtre et les contenus respirent. ---------- */
 @media (min-width: 720px) {
   html:not(.carte-doc) #menus .fm {
     display: grid;
@@ -6634,18 +6650,19 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
   html:not(.carte-doc) #menus .fm .fmb-card--duo     { grid-column: 1; grid-row: 1; }
   html:not(.carte-doc) #menus .fm .fmb-card--complete{ grid-column: 2; grid-row: 1; }
   html:not(.carte-doc) #menus .fm .fmb-choices       { grid-column: 1 / -1; grid-row: 2; }
-  html:not(.carte-doc) #menus .fm .fmb-card--day     { grid-column: 1 / -1; grid-row: 3; }
-  html:not(.carte-doc) #menus .fm .fmb-card--child   { grid-column: 1; grid-row: 4; }
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj     { grid-column: 2; grid-row: 4; }
+  html:not(.carte-doc) #menus .fm .fmb-card--child   { grid-column: 1; grid-row: 3; }
+  html:not(.carte-doc) #menus .fm .fmb-card--day     { grid-column: 2; grid-row: 3; }
+  html:not(.carte-doc) #menus .fm .fmb-bf            { grid-column: 1 / -1; grid-row: 4; }
   html:not(.carte-doc) #menus .fm .fmb-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  html:not(.carte-doc) #menus .fm .fmb-bf__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
   /* « Choix ci-dessous » des cartes claires : violet comme sur la page 4. */
   html:not(.carte-doc) #menus .fm .fmb-card--duo .fmb-foot { color: var(--fm-violet); }
 
-  /* ===== Enfant & Petit-déjeuner (rangée du bas) : emblème puis pilule en
-     tête, liste à gauche, prix en bas entre deux filets dorés (page 4). ===== */
+  /* ===== Enfant & Menu du jour (paire du milieu) : emblème puis pilule en
+     tête, contenu, prix en bas entre deux filets dorés (page 4). ===== */
   html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-head,
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-head { display: contents; }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head { display: contents; }
 
   html:not(.carte-doc) #menus .fm .fmb-card--child {
     display: grid;
@@ -6660,36 +6677,49 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
     row-gap: clamp(14px, 1.8vw, 24px);
     align-items: center;
   }
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj {
+  html:not(.carte-doc) #menus .fm .fmb-card--day {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, max-content) minmax(0, 1fr);
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto auto auto auto;
     grid-template-areas:
       ".  ico  pils  ."
-      "list list list list"
+      ".  .    midi  ."
+      "title title title title"
+      "note  note  note  note"
       "price price price price";
     column-gap: clamp(12px, 1.6vw, 26px);
     row-gap: clamp(14px, 1.8vw, 24px);
     align-items: center;
   }
   html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-ico,
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-ico {
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico {
     grid-area: ico; align-self: center; justify-self: center;
   }
   html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-pils,
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-pils {
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-pils {
     grid-area: pils; justify-self: start; align-self: center; margin: 0;
   }
   html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-sub {
     grid-area: sub; justify-self: center; align-self: center;
     margin: clamp(2px, .4vw, 6px) 0 0;
   }
-  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-list,
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-list {
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-midi {
+    grid-area: midi; justify-self: center; align-self: center;
+    margin: clamp(2px, .4vw, 6px) 0 0;
+    max-width: 32ch; text-align: center;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title {
+    grid-area: title; justify-self: stretch; align-self: center; margin: 0;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-note {
+    grid-area: note; justify-self: center; align-self: center;
+    margin: 0; padding: 0; width: auto; max-width: 30ch; text-align: center;
+  }
+  html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-list {
     grid-area: list; margin: 0; padding: 0; border: 0; width: 100%;
   }
   html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-price,
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-price {
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
     grid-area: price; margin: clamp(2px, .4vw, 8px) 0 0;
     display: flex; align-items: center; justify-content: center;
     gap: clamp(12px, 1.5vw, 26px);
@@ -6697,14 +6727,14 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
   }
   html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-price::before,
   html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-price::after,
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-price::before,
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-price::after {
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price::before,
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price::after {
     content: ""; height: 1px; flex: 0 0 auto;
     width: clamp(26px, 3.4vw, 80px);
     background: linear-gradient(90deg, rgba(185, 141, 59, 0), var(--fm-gold));
   }
   html:not(.carte-doc) #menus .fm .fmb-card--child .fmb-price::after,
-  html:not(.carte-doc) #menus .fm .fmb-card--pdj .fmb-price::after {
+  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price::after {
     background: linear-gradient(90deg, var(--fm-gold), rgba(185, 141, 59, 0));
   }
 
@@ -6735,81 +6765,25 @@ html:not(.carte-doc) #menus .fm .fmb-list em {
   }
 }
 
-@media (min-width: 1000px) {
-  /* ===== Menu du jour : bande violette PLEINE LARGEUR en horizontal —
-     l'ordre demandé se lit de gauche à droite : pilule de titre (+horaire
-     dessous), toque, prix, séparateur (trait VERTICAL), composition
-     « Entrée + plat ou plat + dessert », mention « Choix selon
-     l'ardoise » à droite. Sous 1000 px, l'empilement vertical (ordre
-     identique, lu de haut en bas) reste en vigueur. ===== */
-  html:not(.carte-doc) #menus .fm .fmb-card--day {
-    display: grid;
-    grid-template-columns: minmax(0, auto) auto auto auto minmax(0, 1fr) auto;
-    grid-template-areas:
-      "pils  ico  price sep  title note"
-      "midi  ico  price sep  title note";
-    column-gap: clamp(14px, 2vw, 34px);
-    row-gap: 3px;
-    align-items: center;
-    padding: clamp(18px, 2.4vw, 30px) clamp(20px, 2.8vw, 48px);
-  }
-  /* les quatre éléments d'en-tête deviennent des items de la grille
-     (sinon .fmb-head reste une seule cellule qui les empile). */
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-head { display: contents; }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-pils {
-    grid-area: pils; justify-self: center; align-self: end; margin: 0;
-  }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-midi {
-    grid-area: midi; justify-self: center; align-self: start;
-    margin: 2px 0 0; padding: 0; border: 0; width: auto; max-width: 30ch;
-    text-align: center;
-  }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-ico {
-    grid-area: ico; justify-self: center; align-self: center; margin: 0;
-  }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-price {
-    grid-area: price; justify-self: center; align-self: center; margin: 0;
-  }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-sep {
-    grid-area: sep; justify-self: center; align-self: stretch;
-    width: 1px; height: auto;
-    background: linear-gradient(180deg, transparent, rgba(228, 198, 128, .48) 15%, rgba(228, 198, 128, .48) 85%, transparent);
-  }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-title {
-    /* stretch : la boîte remplit sa colonne — une boîte rétrécie
-       (justify-self:center) coupait « Entrée + plat ou » en trois lignes
-       alors que la colonne était assez large. Le texte reste centré par
-       text-align. */
-    grid-area: title; justify-self: stretch; align-self: center; margin: 0;
-    /* un rien plus compacte que les cartes : les longues compositions
-       (néerlandais, allemand) tiennent ainsi sur leurs deux lignes. */
-    font-size: clamp(.98rem, calc(1.7vw - 0.544px), 1.3rem);
-  }
-  html:not(.carte-doc) #menus .fm .fmb-card--day .fmb-note {
-    grid-area: note; justify-self: end; align-self: center;
-    margin: 0; padding: 0; width: auto; max-width: 22ch; text-align: end;
-  }
-
-}
-
 /* ---------- Écran étroit (< 720 px) : empilement centré ---------- */
 @media (max-width: 640px) {
   html:not(.carte-doc) #menus .fm .fmb-ico { width: clamp(44px, 12vw, 56px); }
 }
 
-/* ===== Carte A4 (papier uniquement) : « Menu enfant » et « Petit
-   déjeuner » — MÊME ordre qu'avant (logo et pilule de titre sur une
-   même ligne, puis description, prix, séparateur doré, liste des
-   plats) mais empilé VERTICALEMENT, comme les autres blocs. Sur le
+/* ===== Carte A4 (papier uniquement) : « Menu enfant », « Menu du jour » et
+   les formules petits déjeuners — MÊME ordre qu'avant (logo et pilule de
+   titre sur une même ligne, puis description, prix, séparateur doré,
+   contenu) mais empilé VERTICALEMENT, comme les autres blocs. Sur le
    site web, ces blocs gardent leur mise en page (le séparateur y
    reste masqué). ===== */
 /* masqué par défaut (site ET feuille de style de base)… */
 #menus .fm .fmb-card--child .fmb-sep,
-#menus .fm .fmb-card--pdj .fmb-sep { display: none; }
+#menus .fm .fmb-card--day .fmb-sep,
+#menus .fm .fmb-card--bf .fmb-sep { display: none; }
 /* …affiché uniquement dans le contexte carte-doc (spécificité plus
    forte que la règle de masquage) */
 html.carte-doc #menus .fm .fmb-card--child,
-html.carte-doc #menus .fm .fmb-card--pdj {
+html.carte-doc #menus .fm .fmb-card--day {
   display: grid;
   grid-template-columns: auto auto;
   grid-template-areas:
@@ -6824,40 +6798,50 @@ html.carte-doc #menus .fm .fmb-card--pdj {
   align-items: center;
   text-align: center;
 }
-html.carte-doc #menus .fm .fmb-card--pdj {
+html.carte-doc #menus .fm .fmb-card--day {
   grid-template-areas:
     "ico   pils"
+    "sub   sub"
     "price price"
     "sep   sep"
-    "list  list";
+    "title title"
+    "note  note";
 }
 html.carte-doc #menus .fm .fmb-card--child .fmb-head,
-html.carte-doc #menus .fm .fmb-card--pdj .fmb-head { display: contents; }
+html.carte-doc #menus .fm .fmb-card--day .fmb-head { display: contents; }
 html.carte-doc #menus .fm .fmb-card--child .fmb-ico,
-html.carte-doc #menus .fm .fmb-card--pdj .fmb-ico {
+html.carte-doc #menus .fm .fmb-card--day .fmb-ico {
   grid-area: ico; justify-self: center; align-self: center; margin: 0;
 }
 html.carte-doc #menus .fm .fmb-card--child .fmb-pils,
-html.carte-doc #menus .fm .fmb-card--pdj .fmb-pils {
+html.carte-doc #menus .fm .fmb-card--day .fmb-pils {
   grid-area: pils; justify-self: start; align-self: center; margin: 0;
 }
 html.carte-doc #menus .fm .fmb-card--child .fmb-sub {
   grid-area: sub; justify-self: center; align-self: center; margin: 0;
 }
+html.carte-doc #menus .fm .fmb-card--day .fmb-midi {
+  grid-area: sub; justify-self: center; align-self: center; margin: 0;
+}
+html.carte-doc #menus .fm .fmb-card--day .fmb-title {
+  grid-area: title; justify-self: stretch; margin: 0;
+}
+html.carte-doc #menus .fm .fmb-card--day .fmb-note {
+  grid-area: note; justify-self: center; margin: 0; padding: 0; width: auto;
+}
 html.carte-doc #menus .fm .fmb-card--child .fmb-price,
-html.carte-doc #menus .fm .fmb-card--pdj .fmb-price {
+html.carte-doc #menus .fm .fmb-card--day .fmb-price {
   grid-area: price; justify-self: center; align-self: center; margin: 0;
 }
 html.carte-doc #menus .fm .fmb-card--child .fmb-price::before,
 html.carte-doc #menus .fm .fmb-card--child .fmb-price::after,
-html.carte-doc #menus .fm .fmb-card--pdj .fmb-price::before,
-html.carte-doc #menus .fm .fmb-card--pdj .fmb-price::after { content: none; }
+html.carte-doc #menus .fm .fmb-card--day .fmb-price::before,
+html.carte-doc #menus .fm .fmb-card--day .fmb-price::after { content: none; }
 html.carte-doc #menus .fm .fmb-card--child .fmb-sep,
-html.carte-doc #menus .fm .fmb-card--pdj .fmb-sep {
+html.carte-doc #menus .fm .fmb-card--day .fmb-sep {
   display: block; grid-area: sep; justify-self: stretch;
 }
-html.carte-doc #menus .fm .fmb-card--child .fmb-list,
-html.carte-doc #menus .fm .fmb-card--pdj .fmb-list {
+html.carte-doc #menus .fm .fmb-card--child .fmb-list {
   grid-area: list; margin: 0; padding: 0; border: 0; width: 100%;
 }
 
@@ -11372,19 +11356,6 @@ html.carte-doc #crepes .crepe-formula-card__list li::before,
     </section>
   </div>
 
-  <!-- ============ Menu du jour ============ -->
-  <article class="fmb-card fmb-card--day">
-    <div class="fmb-head">
-      <p class="fmb-pils">Menu du jour</p>
-      <p class="fmb-midi">Uniquement le midi - sauf weekends et jours fériés</p>
-      <svg class="fmb-ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="#f6ecd2" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M30.3 5.1C29.3 5.2 26.5 5.5 25.3 6.1C24.1 6.6 22.7 8.6 21.6 8.9C20.6 9.2 19.1 8.2 18.0 8.2C16.9 8.1 15.1 8.3 14.1 8.6C13.0 8.9 11.4 9.8 10.5 10.5C9.6 11.1 8.4 12.4 7.8 13.3C7.2 14.2 6.5 15.8 6.3 16.8C6.0 17.9 5.8 19.6 5.9 20.7C6.0 21.8 6.4 23.5 6.9 24.5C7.5 25.6 8.8 27.4 9.8 28.3C10.8 29.2 12.9 29.8 13.7 30.8C14.4 31.8 14.7 33.8 15.0 35.3C15.3 36.8 15.7 39.2 15.9 41.3C16.0 43.5 16.0 47.7 16.0 50.2C16.0 52.7 15.4 57.7 16.1 59.0C16.8 60.4 18.3 59.5 20.9 59.6C23.4 59.7 30.3 59.5 34.1 59.5C37.9 59.5 45.4 59.4 47.3 59.4C49.3 59.3 47.7 60.5 47.8 59.1C47.9 57.8 47.9 52.6 48.0 50.0C48.1 47.3 48.0 42.9 48.2 40.8C48.4 38.7 48.8 36.6 49.1 35.2C49.4 33.7 49.6 31.8 50.3 30.8C51.1 29.8 53.6 28.8 54.6 28.0C55.5 27.2 56.4 26.0 56.8 25.0C57.3 24.1 57.9 23.0 58.0 21.7C58.1 20.4 58.0 17.5 57.6 16.1C57.2 14.7 55.9 12.9 55.2 12.1C54.6 11.2 53.7 10.5 53.0 10.0C52.2 9.6 51.1 8.9 50.2 8.7C49.3 8.5 48.0 8.2 46.9 8.5C45.7 8.7 43.7 10.6 42.3 10.4C41.0 10.2 38.6 7.5 37.2 6.9C35.8 6.2 33.6 6.1 32.6 5.8C31.6 5.6 31.3 5.1 30.3 5.1Z"/><path d="M16.6 46.6H47.4"/></g><g fill="none" stroke="#f6ecd2" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20.7 27.5V46.6"/><path d="M32 27.5V46.6"/><path d="M43.3 27.5V46.6"/><path d="M22.2 12.0v3.6M26.4 12.0v3.6M30.6 12.0v3.6"/><path d="M22.2 15.6h8.4"/><path d="M26.4 15.6V46.6"/><path d="M34.9 18.5C33.9 15.4 34.5 12.6 37.6 12.0C40.7 12.6 41.3 15.4 40.3 18.5C38.6 19.2 36.6 19.2 34.9 18.5Z"/><path d="M37.6 18.9V46.6"/></g></svg>
-      <p class="fmb-price">14,90</p>
-    </div>
-    <div class="fmb-sep" aria-hidden="true"></div>
-    <h3 class="fmb-title"><span>Entrée + plat <span class="ou">ou</span></span><span>plat + dessert</span></h3>
-    <p class="fmb-note">Choix selon l’ardoise</p>
-  </article>
-
   <!-- ============ Menu enfant ============ -->
   <article class="fmb-card fmb-card--child">
     <div class="fmb-head">
@@ -11402,20 +11373,66 @@ html.carte-doc #crepes .crepe-formula-card__list li::before,
     </ul>
   </article>
 
-  <!-- ============ Petit déjeuner ============ -->
-  <article id="menu-petit-dejeuner" class="fmb-card fmb-card--pdj">
+  <!-- ============ Menu du jour — contenu de l'ancienne bannière violette,
+       présentée comme un bloc ordinaire (bannière retirée) ============ -->
+  <article class="fmb-card fmb-card--day">
     <div class="fmb-head">
-      <p class="fmb-pils">Petit déjeuner</p>
-      <img class="fmb-ico" src="assets/menus/icon-pdj.png" alt="" aria-hidden="true" loading="eager" decoding="async" width="316" height="316">
-      <p class="fmb-price">7,00</p>
+      <p class="fmb-pils">Menu du jour</p>
+      <p class="fmb-midi">Uniquement le midi - sauf weekends et jours fériés</p>
+      <svg class="fmb-ico" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="#59326E" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M30.3 5.1C29.3 5.2 26.5 5.5 25.3 6.1C24.1 6.6 22.7 8.6 21.6 8.9C20.6 9.2 19.1 8.2 18.0 8.2C16.9 8.1 15.1 8.3 14.1 8.6C13.0 8.9 11.4 9.8 10.5 10.5C9.6 11.1 8.4 12.4 7.8 13.3C7.2 14.2 6.5 15.8 6.3 16.8C6.0 17.9 5.8 19.6 5.9 20.7C6.0 21.8 6.4 23.5 6.9 24.5C7.5 25.6 8.8 27.4 9.8 28.3C10.8 29.2 12.9 29.8 13.7 30.8C14.4 31.8 14.7 33.8 15.0 35.3C15.3 36.8 15.7 39.2 15.9 41.3C16.0 43.5 16.0 47.7 16.0 50.2C16.0 52.7 15.4 57.7 16.1 59.0C16.8 60.4 18.3 59.5 20.9 59.6C23.4 59.7 30.3 59.5 34.1 59.5C37.9 59.5 45.4 59.4 47.3 59.4C49.3 59.3 47.7 60.5 47.8 59.1C47.9 57.8 47.9 52.6 48.0 50.0C48.1 47.3 48.0 42.9 48.2 40.8C48.4 38.7 48.8 36.6 49.1 35.2C49.4 33.7 49.6 31.8 50.3 30.8C51.1 29.8 53.6 28.8 54.6 28.0C55.5 27.2 56.4 26.0 56.8 25.0C57.3 24.1 57.9 23.0 58.0 21.7C58.1 20.4 58.0 17.5 57.6 16.1C57.2 14.7 55.9 12.9 55.2 12.1C54.6 11.2 53.7 10.5 53.0 10.0C52.2 9.6 51.1 8.9 50.2 8.7C49.3 8.5 48.0 8.2 46.9 8.5C45.7 8.7 43.7 10.6 42.3 10.4C41.0 10.2 38.6 7.5 37.2 6.9C35.8 6.2 33.6 6.1 32.6 5.8C31.6 5.6 31.3 5.1 30.3 5.1Z"/><path d="M16.6 46.6H47.4"/></g><g fill="none" stroke="#B98D3B" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20.7 27.5V46.6"/><path d="M32 27.5V46.6"/><path d="M43.3 27.5V46.6"/><path d="M22.2 12.0v3.6M26.4 12.0v3.6M30.6 12.0v3.6"/><path d="M22.2 15.6h8.4"/><path d="M26.4 15.6V46.6"/><path d="M34.9 18.5C33.9 15.4 34.5 12.6 37.6 12.0C40.7 12.6 41.3 15.4 40.3 18.5C38.6 19.2 36.6 19.2 34.9 18.5Z"/><path d="M37.6 18.9V46.6"/></g></svg>
+      <p class="fmb-price">14,90</p>
     </div>
     <div class="fmb-sep" aria-hidden="true"></div>
-    <ul class="fmb-list">
-      <li>Boisson chaude <em>au choix</em></li>
-      <li>Croissant ou Tartine au beurre</li>
-      <li>Verre de jus de fruits <em>au choix</em></li>
-    </ul>
+    <h3 class="fmb-title"><span>Entrée + plat <span class="ou">ou</span></span><span>plat + dessert</span></h3>
+    <p class="fmb-note">Choix selon l’ardoise</p>
   </article>
+
+  <!-- ============ Formules petits déjeuners ============ -->
+  <section class="fmb-bf" id="menu-petit-dejeuner">
+    <h3 class="fmb-bf__title">Formules petits déjeuners</h3>
+    <div class="fmb-bf__grid">
+      <article class="fmb-card fmb-card--bf">
+        <div class="fmb-head">
+          <p class="fmb-pils">Le Classique</p>
+          <img class="fmb-ico" src="assets/menus/icon-formule-classique.svg" alt="" aria-hidden="true" loading="eager" decoding="async" width="200" height="200">
+          <p class="fmb-price">7,00</p>
+        </div>
+        <div class="fmb-sep" aria-hidden="true"></div>
+        <ul class="fmb-list">
+          <li>Boisson chaude <em>au choix</em></li>
+          <li>Croissant, pain au chocolat ou tartine</li>
+          <li>Un verre de <strong>jus de fruits</strong> <em>au choix</em></li>
+        </ul>
+      </article>
+      <article class="fmb-card fmb-card--bf">
+        <div class="fmb-head">
+          <p class="fmb-pils">Le Parisien</p>
+          <img class="fmb-ico" src="assets/menus/icon-formule-parisien.svg" alt="" aria-hidden="true" loading="eager" decoding="async" width="200" height="200">
+          <p class="fmb-price">8,50</p>
+        </div>
+        <div class="fmb-sep" aria-hidden="true"></div>
+        <ul class="fmb-list">
+          <li>Boisson chaude <em>au choix</em></li>
+          <li>Croissant, pain au chocolat ou tartine</li>
+          <li>Orange pressée</li>
+        </ul>
+      </article>
+      <article class="fmb-card fmb-card--bf">
+        <div class="fmb-head">
+          <p class="fmb-pils">Le Complet</p>
+          <img class="fmb-ico" src="assets/menus/icon-formule-complet.svg" alt="" aria-hidden="true" loading="eager" decoding="async" width="200" height="200">
+          <p class="fmb-price">11,50</p>
+        </div>
+        <div class="fmb-sep" aria-hidden="true"></div>
+        <ul class="fmb-list">
+          <li>Boisson chaude <em>au choix</em></li>
+          <li>Croissant, pain au chocolat ou tartine</li>
+          <li>Omelette nature, jambon ou fromage</li>
+          <li>Un verre de jus</li>
+        </ul>
+      </article>
+    </div>
+  </section>
 
   
 </div>

@@ -58,6 +58,9 @@ def page_accueil() -> None:
         "assets/menus/icon-complete.png": (256, 256),
         "assets/menus/icon-enfant.png": (308, 308),
         "assets/menus/icon-pdj.png": (316, 316),
+        "assets/menus/icon-formule-classique.svg": (200, 200),
+        "assets/menus/icon-formule-parisien.svg": (200, 200),
+        "assets/menus/icon-formule-complet.svg": (200, 200),
     }
 
     def ajouter_dimensions(m: re.Match) -> str:
