@@ -127,12 +127,16 @@ async function main() {
     const context = await browser.newContext({
       // Use the site's desktop breakpoint while keeping the printed page A4.
       // This preserves the two/three-column menu layouts in the print DOM.
+      // The physical restaurant card is the French master version: set both
+      // the browser locale and explicit URL preference so the build is stable
+      // on every CI or developer machine.
+      locale: 'fr-FR',
       viewport: { width: 1600, height: 900 },
       deviceScaleFactor: 3.125,
     });
     await installLocalFonts(context, ROOT);
     const page = await context.newPage();
-    await page.goto(url, { waitUntil: 'networkidle' });
+    await page.goto(`${url}?lang=fr`, { waitUntil: 'networkidle' });
     await page.evaluate(async () => {
       await document.fonts.ready;
       await Promise.all([

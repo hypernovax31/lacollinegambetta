@@ -93,7 +93,10 @@ def hreflang(s: str) -> str:
 # 4. donnees structurees
 # --------------------------------------------------------------------------- #
 def _texte(x: str) -> str:
-    return html.unescape(re.sub(r"<[^>]+>", " ", x)).replace("\u00a0", " ").strip()
+    # Les éléments décoratifs (par exemple le « ou » allégé des crêpes)
+    # deviennent des espaces lors du retrait des balises. On normalise donc
+    # les blancs pour produire un texte de données structurées naturel.
+    return " ".join(html.unescape(re.sub(r"<[^>]+>", " ", x)).replace("\u00a0", " ").split())
 
 
 def _prix(x: str) -> str | None:
@@ -113,8 +116,14 @@ def carte_menu(s: str) -> dict:
             continue
         bloc = s[m.end():s.index("</section>", m.end())]
         sous = []
-        for pan in re.split(r'<article class="[^"]*\bpanel\b[^"]*">', bloc)[1:]:
+        for pan in re.split(
+                r'<article\b(?=[^>]*\bclass="[^"]*\bpanel\b[^"]*")[^>]*>', bloc)[1:]:
             nom = re.search(r'<h4 class="panel__title">(.*?)</h4>', pan)
+            # Certains panneaux, notamment les formules crêpes, n'affichent
+            # volontairement aucun titre visuel. Leur libellé de section reste
+            # présent dans un attribut de données afin de préserver le sens de
+            # la carte dans les données structurées, sans réintroduire un titre.
+            nom_donnees = re.search(r'data-menu-section-label="([^"]+)"', pan)
             items = []
             for mm in re.finditer(
                     r'<h5>(.*?)</h5>(.*?)</div>\s*<strong>([^<]+)</strong>', pan, re.S):
@@ -138,7 +147,7 @@ def carte_menu(s: str) -> dict:
             # fiches h5 / strong : elles restent néanmoins de vrais éléments
             # de carte avec leur prix et leur composition dans le balisage SEO.
             for mm in re.finditer(
-                    r'<article class="crepe-formula-card">(.*?)</article>', pan, re.S):
+                    r'<article class="[^"]*\bcrepe-formula-card\b[^"]*">(.*?)</article>', pan, re.S):
                 label = re.search(r'crepe-formula-card__label">(.*?)</p>', mm.group(1), re.S)
                 prix = re.search(r'crepe-formula-card__price">(.*?)</p>', mm.group(1), re.S)
                 points = re.findall(r'<li>(.*?)</li>', mm.group(1), re.S)
@@ -158,7 +167,8 @@ def carte_menu(s: str) -> dict:
                                       "priceCurrency": "EUR"}
                 offres.append(item)
             sous.append({"@type": "MenuSection",
-                         "name": _texte(nom.group(1)) if nom else titre,
+                         "name": (_texte(nom.group(1)) if nom else
+                                  _texte(nom_donnees.group(1)) if nom_donnees else titre),
                          "hasMenuItem": offres})
         if sous:
             sections.append({"@type": "MenuSection", "name": titre,
