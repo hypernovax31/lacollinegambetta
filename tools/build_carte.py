@@ -1983,6 +1983,96 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:not(.wine-name):not(.
 #print-document .carte-flow.carte-aerate .panel__head {
   margin-bottom: calc(12px + var(--carte-air-title, 0px)) !important;
 }
+/* ===== Feuille « Nos Crêpes » : quatre gros blocs pleine feuille =====
+   1. « Nos crêpes — à la carte » en haut (pilule + grille 2×2 de cartons) ;
+   2-4. les trois formules en bas, côte à côte.
+   Les blocs remplissent toute la hauteur et toute la largeur de la feuille :
+   la hauteur du flux est celle de la zone utile (223 mm entre les filets,
+   voir .print-page__content), répartie entre les blocs — l'espace libre
+   sert aux blocs, jamais aux interlignes (feuille non aérée, voir
+   aerate_pages). Les règles sont écartées du document de mesure
+   (html.carte-measure) : les hauteurs naturelles restent celles du site. */
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .tab-flow {
+  display: flex !important;
+  flex-direction: column;
+  gap: 2.8mm !important;
+  height: calc(223mm / var(--carte-fit));
+  box-sizing: border-box;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte {
+  flex: 52 1 0;
+  display: flex !important;
+  flex-direction: column;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte .panel__head {
+  flex: 0 0 auto;
+  margin-bottom: 3mm !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte .food-card-grid--crepes {
+  flex: 1 1 auto;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  grid-template-rows: 1fr 1fr;
+  gap: 2.5mm !important;
+  align-items: stretch;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte .food-card {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  /* le CSS site pose align-self:start sur .food-card : à reprendre
+     pour que chaque carton remplisse sa case de la grille 2×2. */
+  align-self: stretch !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte .food-card__head {
+  align-items: baseline !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte .food-card__lead h5 {
+  font-size: 14pt !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte .food-card__price {
+  font-size: 18pt !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--formules {
+  flex: 48 1 0;
+  display: flex !important;
+  flex-direction: column;
+  /* les trois cartons sont les blocs : le panneau qui les enveloppe
+     ne doit pas dessiner un cinquième carton autour d'eux. */
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--formules .crepe-formula-grid {
+  flex: 1 1 auto;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 2.5mm !important;
+  align-items: stretch;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 5mm 3mm !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__label {
+  font-size: 8pt !important;
+  padding: 2mm 4mm !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual { gap: 2.5mm !important; }
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual .plus { font-size: 10pt !important; }
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual img { width: 20mm !important; height: 20mm !important; }
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual .crepe-formula-card__visual-crepe { width: 26mm !important; height: 21mm !important; }
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual .crepe-formula-card__visual-drink { width: 16mm !important; height: 21mm !important; }
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__price {
+  font-size: 22pt !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__list {
+  gap: 3mm !important;
+  font-size: 10pt;
+}
 """
 
 
@@ -2697,6 +2787,12 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
     for n, info in infos.items():
         m = meas.get(n)
         if not m or m.get("kind") == "cover":
+            continue
+        # Feuille « Nos Crêpes » : ses quatre blocs (à la carte + les trois
+        # formules) remplissent la feuille par étirement — voir la section
+        # « Feuille Nos Crêpes » de CARD_OVERRIDES. Aérer les interlignes
+        # ici gonflerait les cartons de vide au lieu de les agrandir.
+        if m.get("kind") == "crepes":
             continue
         # contrôle des bases : la CSS d'aération compose sur des paddings
         # connus — si une règle du site les a changés, on ne devine pas.
