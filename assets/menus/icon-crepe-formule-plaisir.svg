@@ -1,29 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-labelledby="t-crepe-plaisir d-crepe-plaisir" shape-rendering="geometricPrecision">
-  <title id="t-crepe-plaisir">Formule Plaisir — crêpe au Nutella et banane</title>
-  <desc id="d-crepe-plaisir">Dessin au trait : une crêpe au Nutella et banane, un verre de jus et un gobelet de boisson chaude sur un plateau.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-labelledby="t-crepe-formule-plaisir d-crepe-formule-plaisir" shape-rendering="geometricPrecision">
+  <title id="t-crepe-formule-plaisir">Crêpe au Nutella et banane — vue du dessus</title>
+  <desc id="d-crepe-formule-plaisir">Dessin au trait : une crêpe vue de dessus au bord légèrement ondulé, garnie de rondelles de banane et d’un ruban de Nutella.</desc>
   <g fill="none" stroke="#411559" stroke-linecap="round" stroke-linejoin="round">
-    <!-- plateau -->
-    <rect x="18" y="157" width="164" height="13" rx="6.5" stroke-width="5.5"/>
-    <!-- verre de jus (arrière-plan gauche) -->
-    <path d="M34 68C35 98 36 126 38 142C39 147 44 150 54 150C64 150 69 147 70 142C72 126 73 98 74 68" stroke-width="6"/>
-    <path d="M32 68H76" stroke-width="6"/>
-    <path d="M37 90H71" stroke-width="4"/>
-    <path d="M56 68L38 40" stroke-width="5.5"/>
-    <path d="M38 40L47 33" stroke-width="5.5"/>
-    <!-- gobelet de boisson chaude (droite) -->
-    <path d="M128 80L134 145C134 150 142 153 152 153C162 153 172 150 172 145L178 80" stroke-width="6"/>
-    <path d="M122 74C122 66 136 60 152 60C168 60 182 66 182 74V80H122V74Z" stroke-width="5.5"/>
-    <path d="M140 108H166" stroke-width="4"/>
-    <path d="M138 52C134 46 140 41 136 35" stroke-width="4"/>
-    <path d="M158 52C154 46 160 41 156 35" stroke-width="4"/>
-    <!-- crêpe au Nutella et banane (avant-plan) -->
-    <path d="M30 156C28 130 48 116 74 116C100 116 120 130 118 156" stroke-width="6"/>
-    <path d="M30 156C52 146 96 146 118 156" stroke-width="4.5"/>
-    <circle cx="72" cy="128" r="6.5" stroke-width="4"/>
-    <circle cx="90" cy="124" r="6.5" stroke-width="4"/>
-    <circle cx="108" cy="128" r="6.5" stroke-width="4"/>
-    <path d="M72 138L72 143" stroke-width="4"/>
-    <path d="M90 134L90 139" stroke-width="4"/>
-    <path d="M108 138L108 143" stroke-width="4"/>
+    <path d="M100 50 Q120 52 134 66 Q148 80 151 100 Q154 120 143 135 Q132 150 113 153 Q96 156 80 149 Q63 142 54 126 Q45 110 50 91 Q55 72 72 61 Q82 51 100 50 Z" stroke-width="3.5"/>
+    <path d="M62 120 C78 110 92 122 106 112 C118 103 130 114 140 108" stroke-width="2.5"/>
+    <circle cx="84" cy="96" r="7.5" stroke-width="2.5"/>
+    <circle cx="112" cy="86" r="7.5" stroke-width="2.5"/>
+    <circle cx="126" cy="114" r="7.5" stroke-width="2.5"/>
   </g>
 </svg>
