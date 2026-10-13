@@ -533,13 +533,22 @@ def rescope_site_css(css: str) -> tuple[str, dict]:
         css, k = re.subn(rf"#{sid}(?=[\s>+~ ])", f':is(#{sid}, [data-sec="{sid}"])', css)
         if k:
             stats[f"#{sid}"] = k
+    # Garde-fou : la règle qui masque la pastille « ● Ouvert » de la couverture
+    # doit rester gagnante après la levée de neutralisation (les règles du site
+    # deviennent « html :is(#cover-section, …) … !important » et écraseraient un
+    # simple display:none de moindre spécificité).
+    css, stats["pastille ouvert"] = re.subn(
+        r"html\.carte-doc \.print-page--cover \.cover-hours__status",
+        "html.carte-doc :is(#cover-section, .print-page--cover) .cover-hours .cover-hours__status",
+        css)
     return css, stats
 
 
 def extract_cover(src: str) -> str:
-    # La couverture imprimée reprend aussi le cartouche d'horaires du site :
-    # l'indicateur dynamique est masqué en mode carte-doc par la CSS, mais
-    # l'amplitude et le service continu restent lisibles sur le PDF.
+    # La couverture imprimée reprend aussi le cartouche d'horaires du site,
+    # mais SANS la pastille de statut (« ● Ouvert ») : elle n'appartient qu'au
+    # site en direct. La carte A4 à télécharger garde seulement
+    # « Tous les jours · 07h00 — 02h00 ».
     start = src.find('<div class="cover-page">')
     node, _ = take_element(src[start:], "div")
     node = node.replace(' onclick="showView(\'menu\')"', "")
@@ -563,6 +572,13 @@ def extract_cover(src: str) -> str:
     inner_start = node.find('<svg class="relief-inner-svg"')
     if inner_start < 0:
         raise SystemExit("cover inner medallion missing")
+    # Suppression de la pastille « ● Ouvert » (statut dynamique du site).
+    while True:
+        p = node.find('<div class="cover-hours__status')
+        if p < 0:
+            break
+        _, rest = take_element(node[p:], "div")
+        node = node[:p] + rest
     inner_end = node.find("</svg>", inner_start)
     if inner_end < 0:
         raise SystemExit("cover inner medallion unclosed")
