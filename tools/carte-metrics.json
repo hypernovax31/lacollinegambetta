@@ -1,7 +1,7 @@
 {
  "generator": "tools/measure_carte.mjs",
- "index_hash": "95dfb172fcee1153",
- "css_hash": "9cfee4ed9d720d2c",
+ "index_hash": "a872929d7a0c7e95",
+ "css_hash": "6c08095b80a154ab",
  "viewport": 1180,
  "base_width": 1180,
  "fonts": [
@@ -1596,7 +1596,7 @@
      "i": 1,
      "tag": "block",
      "cls": "",
-     "h": 207.03
+     "h": 229.7
     }
    ],
    "variants": [
@@ -1607,7 +1607,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,
@@ -1620,7 +1620,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,
@@ -1633,7 +1633,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,
@@ -1646,7 +1646,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,
@@ -1659,7 +1659,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,
@@ -1672,7 +1672,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,
@@ -1685,7 +1685,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,
@@ -1698,7 +1698,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,
@@ -1711,7 +1711,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,
@@ -1724,7 +1724,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,
@@ -1737,7 +1737,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,
@@ -1750,7 +1750,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,
@@ -1763,7 +1763,7 @@
      "overflow": 0,
      "heights": [
       236.88,
-      207.03
+      229.7
      ],
      "count": 2,
      "heights2col": null,

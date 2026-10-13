@@ -2064,7 +2064,7 @@ html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"
 html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual { gap: 2.5mm !important; }
 html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual .plus { font-size: 10pt !important; }
 html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual img { width: 20mm !important; height: 20mm !important; }
-html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual .crepe-formula-card__visual-crepe { width: 24mm !important; height: 24mm !important; }
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual .crepe-formula-card__visual-crepe { width: 30mm !important; height: 30mm !important; }
 html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual .crepe-formula-card__visual-drink { width: 17mm !important; height: 17mm !important; }
 html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__price {
   font-size: 22pt !important;

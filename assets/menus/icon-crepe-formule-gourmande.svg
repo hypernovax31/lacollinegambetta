@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-labelledby="t-crepe-gourmande d-crepe-gourmande" shape-rendering="geometricPrecision">
+  <title id="t-crepe-gourmande">Formule Gourmande — crêpe au Nutella</title>
+  <desc id="d-crepe-gourmande">Dessin au trait : une crêpe au Nutella, un verre de jus et un gobelet de boisson chaude sur un plateau.</desc>
+  <g fill="none" stroke="#411559" stroke-linecap="round" stroke-linejoin="round">
+    <!-- plateau -->
+    <rect x="18" y="157" width="164" height="13" rx="6.5" stroke-width="5.5"/>
+    <!-- verre de jus (arrière-plan gauche) -->
+    <path d="M34 68C35 98 36 126 38 142C39 147 44 150 54 150C64 150 69 147 70 142C72 126 73 98 74 68" stroke-width="6"/>
+    <path d="M32 68H76" stroke-width="6"/>
+    <path d="M37 90H71" stroke-width="4"/>
+    <path d="M56 68L38 40" stroke-width="5.5"/>
+    <path d="M38 40L47 33" stroke-width="5.5"/>
+    <!-- gobelet de boisson chaude (droite) -->
+    <path d="M128 80L134 145C134 150 142 153 152 153C162 153 172 150 172 145L178 80" stroke-width="6"/>
+    <path d="M122 74C122 66 136 60 152 60C168 60 182 66 182 74V80H122V74Z" stroke-width="5.5"/>
+    <path d="M140 108H166" stroke-width="4"/>
+    <path d="M138 52C134 46 140 41 136 35" stroke-width="4"/>
+    <path d="M158 52C154 46 160 41 156 35" stroke-width="4"/>
+    <!-- crêpe au Nutella (avant-plan) -->
+    <path d="M30 156C28 130 48 116 74 116C100 116 120 130 118 156" stroke-width="6"/>
+    <path d="M30 156C52 146 96 146 118 156" stroke-width="4.5"/>
+    <path d="M64 138C74 130 84 142 94 134C102 128 110 134 114 130" stroke-width="4"/>
+    <path d="M78 138L78 145" stroke-width="4"/>
+    <path d="M100 133L100 140" stroke-width="4"/>
+  </g>
+</svg>
