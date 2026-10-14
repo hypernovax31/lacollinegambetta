@@ -11043,6 +11043,18 @@ html.carte-doc #crepes .crepe-formula-card__list li::before,
   top: 0;
   color: #b98d3b;
 }
+
+/* Formules crêpes : présentation et visuels repris de la carte PDF fournie. */
+html:not(.carte-doc) #crepes .crepes-panel--formules { background:transparent; border:0; box-shadow:none; }
+html:not(.carte-doc) #crepes .crepe-formula-card { background:#fff; border:1px solid #c6b78e; border-radius:16px; box-shadow:0 5px 14px #0002; padding:20px 18px; gap:24px; }
+html:not(.carte-doc) #crepes .crepe-formula-card__top { gap:30px; }
+html:not(.carte-doc) #crepes .crepe-formula-card__label { width:100%; color:#16110b; font-family:Georgia,serif; background:linear-gradient(120deg,#d4a634,#faf5d6 35%,#e7dfb4 64%,#b2821b); letter-spacing:.1em; }
+html:not(.carte-doc) #crepes .crepe-formula-card__visual .crepe-formula-card__visual-crepe { width:min(100%,230px); height:auto; }
+html:not(.carte-doc) #crepes .crepe-formula-card__sep { display:none; }
+html:not(.carte-doc) #crepes .crepe-formula-card__list { flex:1; color:#171717; font-weight:400; gap:18px; }
+html:not(.carte-doc) #crepes .crepe-formula-card__list li::before { content:'✦'; color:#d1ab52; margin-right:5px; }
+html:not(.carte-doc) #crepes .crepe-formula-card > .crepe-formula-card__price { margin-top:10px; font-family:Georgia,serif; font-style:italic; font-size:2.2rem; }
+
 </style>
 <link rel="stylesheet" href="assets/css/google-reviews.css?v=2026100810">
 <script src="assets/js/i18n.js?v=2026100807" defer></script>
@@ -11455,48 +11467,49 @@ html.carte-doc #crepes .crepe-formula-card__list li::before,
     </article>
 
     <article class="panel crepes-panel crepes-panel--formules">
+      <div class="panel__head"><h4 class="panel__title">Formules</h4></div>
       <div class="crepe-formula-grid" aria-label="Choisissez votre formule" data-menu-section-label="Formules crêpes">
         <article class="crepe-formula-card crepe-formula-card--sucre">
           <div class="crepe-formula-card__top">
             <p class="crepe-formula-card__label">Formule Classique</p>
             <div class="crepe-formula-card__visual" aria-hidden="true">
-              <img class="crepe-formula-card__visual-crepe" src="assets/menus/icon-crepe-formule-classique.svg" alt="" width="160" height="160" decoding="async">
+              <img class="crepe-formula-card__visual-crepe" src="assets/menus/formule-crepe-pdf-classique.png" alt="" width="432" height="204" decoding="async">
             </div>
-            <p class="crepe-formula-card__price">5,50</p>
           </div>
           <div class="crepe-formula-card__sep" aria-hidden="true"></div>
           <ul class="crepe-formula-card__list">
             <li>Crêpe au Sucre</li>
-            <li>Boisson chaude <span class="crepe-inline-or">ou</span> Verre de jus</li>
+            <li>Boisson chaude <span class="crepe-inline-or">ou</span> Verre de jus au choix</li>
           </ul>
+          <p class="crepe-formula-card__price">5,50</p>
         </article>
         <article class="crepe-formula-card crepe-formula-card--nutella">
           <div class="crepe-formula-card__top">
             <p class="crepe-formula-card__label">Formule Gourmande</p>
             <div class="crepe-formula-card__visual" aria-hidden="true">
-              <img class="crepe-formula-card__visual-crepe" src="assets/menus/icon-crepe-formule-gourmande.svg" alt="" width="160" height="160" decoding="async">
+              <img class="crepe-formula-card__visual-crepe" src="assets/menus/formule-crepe-pdf-gourmande.png" alt="" width="432" height="204" decoding="async">
             </div>
-            <p class="crepe-formula-card__price">6,50</p>
           </div>
           <div class="crepe-formula-card__sep" aria-hidden="true"></div>
           <ul class="crepe-formula-card__list">
             <li>Crêpe au Nutella</li>
-            <li>Boisson chaude <span class="crepe-inline-or">ou</span> Verre de jus</li>
+            <li>Boisson chaude <span class="crepe-inline-or">ou</span> Verre de jus au choix</li>
           </ul>
+          <p class="crepe-formula-card__price">6,50</p>
         </article>
         <article class="crepe-formula-card crepe-formula-card--banane">
           <div class="crepe-formula-card__top">
             <p class="crepe-formula-card__label">Formule Plaisir</p>
             <div class="crepe-formula-card__visual" aria-hidden="true">
-              <img class="crepe-formula-card__visual-crepe" src="assets/menus/icon-crepe-formule-plaisir.svg" alt="" width="160" height="160" decoding="async">
+              <img class="crepe-formula-card__visual-crepe" src="assets/menus/formule-crepe-pdf-plaisir.png" alt="" width="432" height="204" decoding="async">
             </div>
-            <p class="crepe-formula-card__price">7,50</p>
           </div>
           <div class="crepe-formula-card__sep" aria-hidden="true"></div>
           <ul class="crepe-formula-card__list">
             <li>Crêpe au Nutella + Banane</li>
-            <li>Boisson chaude <span class="crepe-inline-or">ou</span> Verre de jus</li>
+            <li>Boisson chaude <span class="crepe-inline-or">ou</span> Verre de jus au choix</li>
           </ul>
+          <p class="crepe-formula-card__price">7,50</p>
         </article>
       </div>
     </article>
