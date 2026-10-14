@@ -11522,7 +11522,7 @@ html.carte-doc #crepes .crepe-formula-card__list li::before,
         <span class="legal-item legal-item--alcool">L’abus d’alcool est dangereux pour la santé</span>
       </div>
       
-      <div class="footer-download-wrap"><a class="footer-download" href="Carte_LaCollineGambetta.pdf" download="Carte_LaCollineGambetta.pdf" title="Télécharger la carte au format PDF">
+      <div class="footer-download-wrap"><a class="footer-download" href="Carte_LaCollineGambetta.pdf" target="_blank" rel="noopener noreferrer" title="Télécharger la carte au format PDF">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11.5"/><path d="M7.5 11.2 12 15.7l4.5-4.5"/><path d="M4.5 19.5h15"/></svg>
         <span>Télécharger la carte (PDF)</span>
       </a></div>
@@ -12308,46 +12308,7 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 else sizeCoverMedallion();
 
 </script>
-<script>
-/* ===== Téléchargement de la carte A4 : déclenché automatiquement =====
-   Les deux contrôles « Télécharger » (.lang-btn dans le bandeau, et
-   .footer-download en pied de carte) sont des liens <a download>. On force ici
-   le téléchargement côté appareil au clic : on coupe la navigation par défaut
-   (qui ouvrirait parfois le PDF dans la visionneuse) et on rejoue un clic sur
-   un lien « download » natif — le navigateur enregistre le fichier au lieu de
-   l'afficher. Aucune surcharge mémoire : le fichier n'est pas rapatrié en blob,
-   c'est le téléchargement natif du navigateur qui s'applique. */
-(function () {
-  var NOM = 'Carte_LaCollineGambetta.pdf';
-  function lier(selecteur) {
-    var els = document.querySelectorAll(selecteur);
-    for (var i = 0; i < els.length; i++) {
-      els[i].addEventListener('click', function (ev) {
-        var href = this.getAttribute('href');
-        if (!href) return;
-        ev.preventDefault();
-        var a = document.createElement('a');
-        a.rel = 'noopener';
-        a.href = href;
-        a.download = this.getAttribute('download') || NOM;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      });
-    }
-  }
-  function prêt() {
-    lier('.lang-btn');
-    lier('.footer-download');
-    /* Le PDF reste téléchargé uniquement après le clic explicite. */
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', prêt);
-  } else {
-    prêt();
-  }
-})();
-</script>
+
 
 
 
