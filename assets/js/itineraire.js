@@ -7,7 +7,7 @@
  *
  *  Au clic, on demande au visiteur dans QUELLE application ouvrir le trajet :
  *  départ = sa position (géolocalisation du navigateur), arrivée = le
- *  restaurant. La position n'est demandée qu'au clic, jamais au chargement.
+ *  restaurant (ou la station Gambetta pour le métro). La position n'est demandée qu'au clic, jamais au chargement.
  *
  *  Les liens gardent un href valable (Google Maps) : sans JavaScript, ils
  *  ouvrent directement l'itinéraire.
@@ -28,7 +28,7 @@
 
   var PAR_DEFAUT = {
     nom: 'La Colline Gambetta',
-    adresse: 'La Colline Gambetta, 4 Rue Belgrand, 75020 Paris',
+    adresse: '4 rue Belgrand, 75020 Paris, France',
     court: '4 rue Belgrand, 75020 Paris',
     lat: 48.8647788,
     lng: 2.3993777
@@ -97,7 +97,8 @@
         detail: 'Navigation guidée', web: plans });
     }
 
-    var google = 'https://www.google.com/maps/dir/?api=1&destination=' + adresse + '&travelmode=driving';
+    var google = 'https://www.google.com/maps/dir/?api=1&destination=' + adresse +
+      '&destination_place_id=ChIJF8cwdNBt5kcRaUhXDrZCsKw&travelmode=driving';
     if (origine) google += '&origin=' + encodeURIComponent(origine);
     applis.push({ id: 'google', nom: 'Google Maps', icone: '🗺️',
       detail: 'Navigation guidée', web: google });
@@ -105,8 +106,7 @@
     /* Waze : navigation porte-à-porte. Le lien https ouvre l'application si
        elle est installée, sinon le calculateur web de Waze. Waze part toujours
        de la position de l'appareil : pas de paramètre de départ. */
-    var waze = 'https://waze.com/ul?ll=' + encodeURIComponent(dest.lat + ',' + dest.lng) +
-      '&q=' + adresse + '&navigate=yes';
+    var waze = 'https://waze.com/ul?q=' + adresse + '&navigate=yes';
     applis.push({ id: 'waze', nom: 'Waze', icone: '🚗',
       detail: 'Navigation porte-à-porte', web: waze });
     return applis;
@@ -257,7 +257,8 @@
     var mode = lien.hasAttribute('data-nav-route') ? 'adresse' : 'metro';
     var dest = {
       nom: PAR_DEFAUT.nom,
-      adresse: lien.getAttribute('data-map-address') || PAR_DEFAUT.adresse,
+      // Deux destinations distinctes : jamais une recherche ambiguë du nom La Colline.
+      adresse: mode === 'metro' ? 'Station Gambetta, Place Gambetta, 75020 Paris, France' : PAR_DEFAUT.adresse,
       lat: parseFloat(lien.getAttribute('data-map-lat')) || PAR_DEFAUT.lat,
       lng: parseFloat(lien.getAttribute('data-map-lng')) || PAR_DEFAUT.lng
     };

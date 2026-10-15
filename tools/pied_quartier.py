@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parent.parent
 LAT, LON = 48.8647788, 2.3993777
 
 URL_PLAN = ("https://www.google.com/maps/search/?api=1&amp;query="
-            "La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris")
+            "4%20rue%20Belgrand%2C%2075020%20Paris%2C%20France&amp;query_place_id=ChIJF8cwdNBt5kcRaUhXDrZCsKw")
 
 # Points d'intérêt du 20e et du 11e (jamais la mairie du 11e).
 # (libelle, url, latitude, longitude) -- le tri par distance est automatique.
@@ -279,7 +279,7 @@ html:not(.carte-doc) .cover-more .legal-bottom-nav--cover a:focus-visible {
 COVER_ADRESSE = (
     '<div class="cover-footer-address">'
     f'<a href="{URL_PLAN}" data-default-map'
-    ' data-map-address="La Colline Gambetta, 4 Rue Belgrand, 75020 Paris"'
+    ' data-map-address="4 rue Belgrand, 75020 Paris, France"'
     ' target="_blank" rel="noopener" title="Ouvrir l\u2019adresse dans le plan">'
     '4 rue Belgrand \u2022 75020 Paris</a>'
     '<span class="footer-quartier__sep" aria-hidden="true"> \u2022 </span>'
