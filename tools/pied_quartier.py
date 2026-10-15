@@ -48,6 +48,11 @@ POINTS = [
 ]
 
 
+# Ajouts communs, sans distances estimées non vérifiées. Noms propres conservés
+# dans toutes les langues ; lien officiel pour l’hôpital Tenon.
+EXTRA_LINKS = '<a href="https://www.google.com/maps/search/?api=1&amp;query=Square%20%C3%89douard-Vaillant%20Paris" target="_blank" rel="noopener noreferrer">Square Édouard-Vaillant</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.google.com/maps/search/?api=1&amp;query=Square%20Samuel-de-Champlain%20Paris" target="_blank" rel="noopener noreferrer">Square Samuel-de-Champlain</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://www.google.com/maps/search/?api=1&amp;query=Square%20du%20Sergent%20Aur%C3%A9lie%20Salel%20Paris" target="_blank" rel="noopener noreferrer">Square du Sergent Aurélie Salel</a><span class="footer-quartier__sep" aria-hidden="true">•</span><a href="https://tenon.aphp.fr" target="_blank" rel="noopener noreferrer">Hôpital Tenon</a>'
+
+
 def distance_m(lat: float, lon: float) -> float:
     """Distance à vol d'oiseau entre le restaurant et un point, en mètres."""
     r = 6371000.0
@@ -75,7 +80,7 @@ def nav_alentours(classe: str) -> str:
         f'title="À {libelle_distance(d)} du restaurant">{t}</a>'
         for t, u, d in TRIES)
     return (f'<nav class="footer-quartier{classe}" aria-label="Dans les alentours">'
-            f'<span>Dans les alentours</span>{SEP}{liens}</nav>')
+            f'<span>Dans les alentours</span>{SEP}{liens}{SEP}{EXTRA_LINKS}</nav>')
 
 
 LIEN_METRO = (
