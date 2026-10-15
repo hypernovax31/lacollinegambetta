@@ -366,6 +366,8 @@
       DICTS[lang][key] = FOOTER_COPY[lang][key];
     });
   });
+  if (window.LCGMergeCommonTranslations) window.LCGMergeCommonTranslations(DICTS);
+  var translateCommonAttributes = window.LCGCaptureTranslatedAttributes ? window.LCGCaptureTranslatedAttributes() : function () {};
   var FOOTER_DISTANCE_FORMATS = {
     en: { decimal: '.', units: { m: 'm', km: 'km' }, format: function (v, u) { return v + ' ' + u + ' from the restaurant'; } },
     es: { decimal: ',', units: { m: 'm', km: 'km' }, format: function (v, u) { return 'A ' + v + ' ' + u + ' del restaurante'; } },
@@ -479,6 +481,7 @@
       var footerNodes = document.querySelectorAll(attr[0]);
       for (var fj = 0; fj < footerNodes.length; fj++) footerNodes[fj].setAttribute(attr[1], dict[attr[2]] || attr[2]);
     }
+    translateCommonAttributes(lang, DICTS);
     applyFooterDistanceTitles(lang);
     var button = document.getElementById('legal-lang-btn');
     var menu = document.getElementById('legal-lang-menu');

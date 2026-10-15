@@ -8515,6 +8515,8 @@
     });
     d['Verre de jus au choix'] = d['Verre de jus'] + ' ' + d['au choix'];
   });
+  if (window.LCGMergeCommonTranslations) window.LCGMergeCommonTranslations(DICTS);
+  var translateCommonAttributes = window.LCGCaptureTranslatedAttributes ? window.LCGCaptureTranslatedAttributes() : function () {};
   window.__i18nWineTastings = WINE_TASTINGS;
   var LANG = 'fr';
 
@@ -8624,6 +8626,7 @@
   function applyLang(lang, save) {
     LANG = lang;
     var d = DICTS[lang] || {};
+    translateCommonAttributes(lang, DICTS);
     nodes.forEach(function (e) {
       var t = (lang === 'fr') ? e.key : (d[e.key] != null ? d[e.key] : e.key);
       e.node.nodeValue = e.pre + keepMeasuresTogether(t) + e.post;
