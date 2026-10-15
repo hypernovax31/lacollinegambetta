@@ -9,12 +9,14 @@ function run(path, saved, referrer, blocked) {
   });
   if (saved) dom.window.sessionStorage.setItem('lcg-cover-context-v1', saved);
   if (blocked) Object.defineProperty(dom.window, 'sessionStorage', { get() { throw Error('blocked'); } });
+  dom.window.eval(readFileSync('assets/js/fetes-medaillon.js', 'utf8'));
   dom.window.eval(script);
   const url = id => new URL(dom.window.document.getElementById(id).href);
   return { dom, url };
 }
 let first = run('?halloween=1&lang=en');
-assert.equal(first.url('book').search, '?halloween=1&lang=en');
+assert.equal(first.url('book').searchParams.get('halloween'), '1');
+assert.equal(first.url('book').searchParams.get('lang'), 'en');
 const saved = first.dom.window.sessionStorage.getItem('lcg-cover-context-v1');
 let back = run('reservation.html?halloween=1&lang=en', saved);
 assert.equal(back.url('home').search, '?halloween=1&lang=en');
@@ -38,4 +40,25 @@ assert.equal(noStorage.url('home').searchParams.get('noel'), '1');
 back.dom.window.dispatchEvent(new back.dom.window.CustomEvent('lcg-lang-changed', { detail: { lang: 'es' } }));
 assert.equal(back.url('home').searchParams.get('lang'), 'es');
 for (const test of [first, back, disabled, fresh, ref, noStorage]) test.dom.window.close();
+// Vérifie les 14 fêtes et chacun des raccourcis du registre, y compris =0.
+let catalog = run('index.html');
+let count = 0;
+for (const festival of catalog.dom.window.FeteMedaillon.fetes) {
+  for (const key of new Set([festival.id, ...festival.alias])) {
+    for (const value of ['1', '0', 'oui']) {
+      const entry = run('?' + key + '=' + value);
+      assert.equal(entry.url('book').searchParams.get(key), value);
+      const target = run('reservation.html' + entry.url('book').search);
+      assert.equal(target.url('home').searchParams.get(key), value);
+      entry.dom.window.close(); target.dom.window.close(); count++;
+    }
+  }
+  for (const page of ['reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html']) {
+    const target = run(page + '?fete=' + festival.id);
+    assert.equal(target.url('home').searchParams.get('fete'), festival.id);
+    target.dom.window.close();
+  }
+}
+catalog.dom.window.close();
+console.log(count + ' scénarios de raccourcis de fête vérifiés.');
 console.log('Navigation : couverture, fêtes, langue, pages séparées et stockage bloqué OK.');

@@ -3,7 +3,15 @@
 (function () {
   'use strict';
   var KEY = 'lcg-cover-context-v1';
-  var PARAMS = ['fete', 'fetes', 'halloween', 'sorciere', 'noel', 'lang'];
+  var PARAMS = ['fete', 'fetes', 'sorciere', 'lang'];
+  // Source unique : toutes les fêtes et tous leurs alias reconnus par le site.
+  // Une nouvelle fête ajoutée au calendrier est donc conservée sans autre liste.
+  var festivals = window.FeteMedaillon ? window.FeteMedaillon.fetes : [];
+  festivals.forEach(function (festival) {
+    [festival.id].concat(festival.alias || []).forEach(function (key) {
+      if (PARAMS.indexOf(key) === -1) PARAMS.push(key);
+    });
+  });
   var PAGES = ['index.html', 'reservation.html', 'mentions-legales.html', 'confidentialite.html', '404.html'];
   function pageName(url) { return url.pathname.split('/').pop() || 'index.html'; }
   function isInternal(url) { return url.origin === location.origin && PAGES.indexOf(pageName(url)) !== -1; }
