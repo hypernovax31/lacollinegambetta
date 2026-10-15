@@ -8505,6 +8505,16 @@
       DICTS[lang][key] = DYNAMIC_LABELS[lang][key];
     });
   });
+  /* Clés issues des nouveaux cartouches et des textes scindés des formules crêpes.
+     Garder les garnitures dans leur span permet les majuscules sans perdre i18n. */
+  var CREPE_FORMULA_COPY = {"en": ["Crêpe with", "Classic", "Gourmet", "Treat"], "es": ["Crêpe con", "Clásica", "Golosa", "Placer"], "de": ["Crêpe mit", "Klassisch", "Gourmet", "Genuss"], "it": ["Crêpe con", "Classica", "Golosa", "Piacere"], "pt": ["Crepe com", "Clássica", "Gulosa", "Prazer"], "nl": ["Crêpe met", "Klassiek", "Gourmet", "Verwennerij"], "ar": ["كريب مع", "كلاسيكية", "غنية", "متعة"], "zh": ["可丽饼配", "经典", "美味", "悦享"], "uk": ["Креп із", "Класична", "Ласунка", "Насолода"], "ja": ["クレープ：", "クラシック", "グルメ", "プレジャー"], "ko": ["크레페 토핑:", "클래식", "고메", "플레저"], "pl": ["Naleśnik z", "Klasyczny", "Dla smakoszy", "Przyjemność"], "tr": ["Krep,", "Klasik", "Gurme", "Keyif"], "hi": ["क्रेप के साथ", "क्लासिक", "गोरमे", "आनंद"]};
+  Object.keys(CREPE_FORMULA_COPY).forEach(function (lang) {
+    var d = DICTS[lang], copy = CREPE_FORMULA_COPY[lang];
+    ['Crêpe au', 'Classique', 'Gourmande', 'Plaisir'].forEach(function (key, i) {
+      d[key] = copy[i];
+    });
+    d['Verre de jus au choix'] = d['Verre de jus'] + ' ' + d['au choix'];
+  });
   window.__i18nWineTastings = WINE_TASTINGS;
   var LANG = 'fr';
 
