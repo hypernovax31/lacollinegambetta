@@ -8,6 +8,7 @@
     "start": "npx firebase-tools emulators:start --project la-colline-gambetta --only hosting,firestore",
     "dev": "npx firebase-tools emulators:start --project la-colline-gambetta --only hosting,firestore",
     "firebase:deploy": "npx firebase-tools deploy --project la-colline-gambetta --only firestore",
+    "test:navigation": "node tools/check_navigation_context.cjs",
     "test:i18n": "node tools/check_i18n.cjs",
     "test:site": "node tools/verifier_site.mjs && node tools/verifier_navigateur.mjs && node tools/verifier_google_reviews.mjs && node tools/verifier_ratp_itineraires.mjs",
     "build:print": "node tools/build_browser_print.mjs",
