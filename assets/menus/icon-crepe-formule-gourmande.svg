@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-labelledby="t-crepe-formule-gourmande d-crepe-formule-gourmande" shape-rendering="geometricPrecision">
+  <title id="t-crepe-formule-gourmande">Crêpe au Nutella — vue du dessus</title>
+  <desc id="d-crepe-formule-gourmande">Dessin au trait : une crêpe vue de dessus au bord légèrement ondulé, parcourue d’un fin zigzag de Nutella.</desc>
+  <g fill="none" stroke="#411559" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M100 50 Q120 52 134 66 Q148 80 151 100 Q154 120 143 135 Q132 150 113 153 Q96 156 80 149 Q63 142 54 126 Q45 110 50 91 Q55 72 72 61 Q82 51 100 50 Z" stroke-width="3.5"/>
+    <path d="M58 118 C72 98 86 124 100 102 C112 84 128 110 142 94" stroke-width="2.75"/>
+  </g>
+</svg>

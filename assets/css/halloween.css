@@ -1,0 +1,139 @@
+/* ==========================================================================
+   Halloween — toiles d'araignée dans les angles + sorcière de passage
+   Feuille partagée : index.html et preview-halloween.html.
+   Le décor est piloté par la classe html.fete-halloween-active, posée par
+   assets/js/fetes-medaillon.js (24 octobre → 2 novembre, ou ?halloween=1).
+   ========================================================================== */
+/* ===== Toiles d'araignée et araignée ====================================
+   Trois emplacements, injectés par assets/js/halloween.js :
+     --cover / --menu  quatre toiles d'angle  (couverture et carte)
+     --bandeau         deux toiles            (bandeaux violets des titres)
+     --page            une toile en bas à droite, avec son araignée posée
+                       dessus (toutes les autres pages)
+   Rien n'est dans le flux : position absolue ou fixe, aucune page ne bouge
+   ni ne se redimensionne quand le décor apparaît.
+   Aperçu toute l'année : ?halloween=1 — ou ?fete=halloween, ?fete=0 pour rien. */
+#lcg-halloween-sprite { display:none; }
+.lcg-halloween { display:none; }
+html.fete-halloween-active .lcg-halloween {
+  display:block;
+  animation:lcg-halloween-apparait 1.6s ease both;
+}
+@keyframes lcg-halloween-apparait { from { opacity:0; } to { opacity:1; } }
+
+.lcg-halloween {
+  --toile:clamp(92px,14vw,164px);      /* taille d'une toile d'angle */
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+}
+.lcg-halloween--menu,
+.lcg-halloween--page { position:fixed; }          /* suivent le défilement */
+.lcg-halloween--bandeau {
+  --toile:clamp(58px,8vw,104px);
+  overflow:hidden;                                /* jamais par-dessus le contenu du bandeau */
+}
+/* les bandeaux de titre ne sont pas positionnés par défaut : on ne le fait
+   que pendant la saison, pour ne rien décaler le reste de l'année */
+html.fete-halloween-active .interior-header,
+html.fete-halloween-active .site-header { position:relative; }
+
+.lcg-halloween--cover { color:rgba(252,251,247,.26); }   /* ivoire sur le violet de la couverture */
+.lcg-halloween--menu { color:rgba(36,16,46,.18); }       /* encre sur le crème de la carte */
+.lcg-halloween--bandeau { color:rgba(252,251,247,.22); } /* ivoire sur le bandeau violet */
+.lcg-halloween--page { color:rgba(36,16,46,.18); }       /* encre sur les pages claires */
+html[data-halloween="sombre"] .lcg-halloween--page { color:rgba(252,251,247,.24); }
+
+.lcg-halloween__toile,
+.lcg-halloween__araignee {
+  position:absolute; fill:none; stroke:currentColor;
+  stroke-width:1.1; stroke-linecap:round;
+}
+.lcg-halloween__toile { width:var(--toile); aspect-ratio:1/1; }
+.lcg-halloween__toile--hg { top:0; left:0; }
+.lcg-halloween__toile--hd { top:0; right:0; transform:scaleX(-1); }
+.lcg-halloween__toile--bg { bottom:0; left:0; transform:scaleY(-1); }
+.lcg-halloween__toile--bd { bottom:0; right:0; transform:scale(-1,-1); }
+
+/* L'araignée : posée sur la toile du bas droit, son fil se perdant dans les
+   fils de la toile. Une seule par page. */
+.lcg-halloween__araignee {
+  width:calc(var(--toile) * .36); aspect-ratio:60/96;
+}
+.lcg-halloween__araignee--bd {
+  right:calc(var(--toile) * .16);
+  bottom:calc(var(--toile) * .16);
+}
+.lcg-halloween--cover .lcg-halloween__araignee { color:rgba(252,251,247,.42); }
+.lcg-halloween--menu .lcg-halloween__araignee { color:rgba(36,16,46,.3); }
+.lcg-halloween--page .lcg-halloween__araignee { color:rgba(36,16,46,.3); }
+html[data-halloween="sombre"] .lcg-halloween--page .lcg-halloween__araignee { color:rgba(252,251,247,.4); }
+
+html.carte-doc .lcg-halloween { display:none !important; }
+@media print { .lcg-halloween { display:none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  html.fete-halloween-active .lcg-halloween { animation:none; }
+}
+
+/* ===== Halloween : la sorcière qui passe et fait coucou =====
+   Même mécanique que le traîneau de Noël (assets/js/halloween-sorciere.js) :
+   un survol programmé, une traversée en arc, une apparition en fondu, et rien
+   qui tourne quand l'onglet est caché. Intervalle de 38 à 85 s, premier
+   passage 7 à 14 s après l'ouverture. */
+#halloween-sorciere {
+  position:fixed; left:0; top:0; z-index:9980;
+  display:none; pointer-events:none;
+  transform:translate3d(0,0,0);
+  will-change:transform, opacity;
+  backface-visibility:hidden;
+  transform-style:preserve-3d;
+  contain:layout style;            /* pas de contain:paint : il rognerait l'ombre */
+}
+#halloween-sorciere.on { display:block; }
+#halloween-sorciere svg {
+  display:block; width:100%; height:auto;
+  filter:drop-shadow(0 8px 20px rgba(0,0,0,.42)) drop-shadow(0 2px 6px rgba(0,0,0,.3));
+  will-change:transform;
+  transform:translateZ(0);
+}
+#halloween-sorciere.flip svg { transform:translateZ(0) scaleX(-1); }
+#halloween-sorciere .trail {
+  position:absolute; top:44%; width:54%; height:36%;
+  border-radius:50%;
+  background:radial-gradient(closest-side, rgba(240,215,150,.4), rgba(168,116,214,.2) 45%, rgba(168,116,214,0) 75%);
+  filter:blur(7px);
+  will-change:transform, opacity;
+}
+#halloween-sorciere.ltr .trail { right:84%; }
+#halloween-sorciere.rtl .trail { left:84%; }
+/* Le coucou : le bras pivote à l'épaule (238,66 dans le viewBox) quand la
+   sorcière arrive au milieu de l'écran. */
+.sorciere__bras { transform-box:view-box; transform-origin:238px 66px; }
+#halloween-sorciere.sorciere--coucou .sorciere__bras {
+  animation:lcg-sorciere-coucou 1.15s ease-in-out infinite;
+}
+@keyframes lcg-sorciere-coucou {
+  0%   { transform:rotate(0deg); }
+  22%  { transform:rotate(-27deg); }
+  48%  { transform:rotate(-3deg); }
+  74%  { transform:rotate(-31deg); }
+  100% { transform:rotate(0deg); }
+}
+html.carte-doc #halloween-sorciere { display:none !important; }
+@media print { #halloween-sorciere { display:none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  #halloween-sorciere { display:none !important; }
+}
+
+/* ===== Halloween : les feuilles mortes ===================================
+   L'équivalent exact de la neige de Noël : un canvas plein écran, des
+   feuilles orangées qui tombent en tournoyant. Même plan que #xmas-snow
+   (z-index 9970), même discrétion : masqué en mode carte-doc, à l'impression
+   et si le visiteur a demandé la réduction des animations. */
+#halloween-feuilles {
+  position:fixed; inset:0; z-index:9970;
+  display:none; width:100%; height:100%;
+  pointer-events:none;
+}
+#halloween-feuilles.on { display:block; }
+html.carte-doc #halloween-feuilles { display:none !important; }
+@media print { #halloween-feuilles { display:none !important; } }
+@media (prefers-reduced-motion: reduce) { #halloween-feuilles { display:none !important; } }
