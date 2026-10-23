@@ -1,16 +1,27 @@
 {
-  "revision": "Gros plan gourmand, légèrement dézoomé à la demande du propriétaire",
-  "style": "Vue élevée 45–60° vers le bas, cadrage serré : plat/assiette 72–80% de largeur, contenu net et gourmand. Table noire, couverts/serviette/verre discrets. Photos réelles seules références de décor : ne pas reconstruire une pièce, pas de géométrie inventée. Arrière-plan minimal, totalement défocalisé : quelques touches noir/jaune et lumières ambre, bokeh très prononcé. Format16:9 1280x720, pas de personnes ni texte lisible. Léger recul : laisser davantage respirer les bords et les accessoires, sans revenir au plan large sur la salle.",
+  "revision": "Reprise pour perspective naturelle, cadrage élargi et dossier de chaise cuir noir visible",
+  "style": "Perspective naturelle : table noire horizontale avec appui/volume crédibles, assiette posée à plat, aucun plan noir flottant ou incliné. Cadrage un peu plus large, dossier vertical de chaise en cuir noir visible en bout de table derrière le couvert. Le plat reste lisible, vue élevée cible45–50°, ne pas déformer le plateau pour simuler cet angle. Couverts/serviette/verres discrets, lumière naturelle chaleureuse, fond bokeh à partir du vrai décor IMG2830/3117/2829. Ne pas inventer de pièce ; dossier suffisamment lisible, salle floue. Format16:9 1280x720.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
     "/home/user/restaurant-references/IMG_2830.jpeg"
   ],
   "done": [
+    "assets/plats/couscous-agneau.jpg",
+    "assets/plats/couscous-boeuf.jpg",
+    "assets/plats/couscous-merguez.jpg",
+    "assets/plats/couscous-poulet.jpg",
+    "assets/plats/couscous-trois-viandes.jpg",
+    "assets/plats/couscous-vegetarien.jpg",
+    "assets/plats/nordique.jpg",
+    "assets/plats/penne-au-poulet-et-champignons.jpg",
+    "assets/plats/tagliatelles-a-la-carbonara.jpg",
+    "assets/plats/tagliatelles-au-saumon.jpg"
+  ],
+  "remaining": [
     "assets/plats/bavette-d-aloyau.jpg",
     "assets/plats/burger-chicken-croustillant.jpg",
     "assets/plats/burger-la-colline.jpg",
-    "assets/plats/couscous-trois-viandes.jpg",
     "assets/plats/cuisse-de-canard-confite.jpg",
     "assets/plats/cuisse-de-poulet-rotie.jpg",
     "assets/plats/entrecote-190-g.jpg",
@@ -19,45 +30,9 @@
     "assets/plats/tartare-de-boeuf.jpg",
     "assets/plats/burger-vegetarien.jpg",
     "assets/plats/chevre-chaud.jpg",
-    "assets/plats/couscous-poulet.jpg",
     "assets/plats/la-colline.jpg",
     "assets/plats/le-royal-fishburger.jpg",
-    "assets/plats/nordique.jpg",
-    "assets/plats/penne-au-poulet-et-champignons.jpg",
-    "assets/plats/tagliatelles-a-la-carbonara.jpg",
-    "assets/plats/tagliatelles-au-saumon.jpg",
-    "assets/plats/vegetarienne.jpg",
-    "assets/plats/couscous-merguez.jpg",
-    "assets/plats/couscous-agneau.jpg",
-    "assets/plats/couscous-boeuf.jpg",
-    "assets/plats/couscous-vegetarien.jpg"
+    "assets/plats/vegetarienne.jpg"
   ],
-  "remaining": [],
-  "next": "Passe terminée. Conserver le cadrage légèrement desserré, la vue élevée, la table noire et le fond minimal très flou. La Colline : poulet, agneau et bœuf, sans merguez. Ne pas réutiliser le visuel de pavé entier pour les tagliatelles au saumon. Aucun changement de texte, prix ou PDF.",
-  "slightly_wider_done": [
-    "assets/plats/burger-vegetarien.jpg",
-    "assets/plats/chevre-chaud.jpg",
-    "assets/plats/couscous-poulet.jpg",
-    "assets/plats/la-colline.jpg",
-    "assets/plats/le-royal-fishburger.jpg",
-    "assets/plats/nordique.jpg",
-    "assets/plats/penne-au-poulet-et-champignons.jpg",
-    "assets/plats/tagliatelles-a-la-carbonara.jpg",
-    "assets/plats/tagliatelles-au-saumon.jpg",
-    "assets/plats/vegetarienne.jpg",
-    "assets/plats/couscous-merguez.jpg",
-    "assets/plats/couscous-agneau.jpg",
-    "assets/plats/couscous-boeuf.jpg",
-    "assets/plats/couscous-vegetarien.jpg"
-  ],
-  "latest_batch": [
-    "assets/plats/couscous-agneau.jpg",
-    "assets/plats/couscous-boeuf.jpg",
-    "assets/plats/couscous-merguez.jpg",
-    "assets/plats/couscous-poulet.jpg",
-    "assets/plats/couscous-trois-viandes.jpg",
-    "assets/plats/couscous-vegetarien.jpg",
-    "assets/plats/tagliatelles-au-saumon.jpg"
-  ],
-  "latest_correction": "Six couscous harmonisés avec les autres plats (référence de cadrage : salade Nordique). Tagliatelles au saumon corrigées : rubans de pâtes et morceaux de saumon mêlés, pas un pavé entier posé dessus. Le plat Poisson garde son pavé de saumon sur pâtes."
+  "next": "Poursuivre les14remaining dans ce NOUVEAU style. Contrôler surtout table non flottante/non inclinée, assiette lisible, dossier en cuir noir derrière table, photo chaleureuse sans grand plan de salle. Les24photos ne sont PAS toutes reprises selon cette dernière demande :10sur24traitées. Préserver recettes/prix/textes/PDF. Tagliatelles au saumon = morceaux mêlés, pas pavé entier ; couscous La Colline = poulet agneau bœuf sans merguez."
 }

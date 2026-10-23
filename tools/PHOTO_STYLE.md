@@ -1,5 +1,21 @@
 # Ton photographique du site
 
+## Priorité actuelle pour les 24 photos « Nos plats »
+Cette consigne remplace, pour ces 24 photos, les anciens gabarits et notes
+ci-dessous : **table noire posée naturellement, perspective crédible et
+cadrage un peu plus large**, sans plateau flottant ni plan noir penché.
+Voir le **dossier vertical en cuir noir d’une chaise en bout de table**,
+derrière l’assiette. Celle-ci reste posée à plat et son contenu bien visible.
+Vue élevée cible 45–50°, sans forcer la géométrie de la table. Accessoires
+réalistes et discrets, lumière chaleureuse. Salle en bokeh d’après les vraies
+photos IMG_2830, IMG_3117, IMG_2829 ; le dossier reste identifiable. Ne pas
+remplacer la salle par une architecture inventée. Format 16:9, 1280×720.
+Suivi de cette NOUVELLE passe : `tools/plats-photos-progress.json` (10/24).
+Tagliatelles au saumon : morceaux mêlés aux pâtes, pas pavé entier.
+Couscous La Colline : poulet, agneau, bœuf sans merguez.
+
+Les gabarits historiques ci-dessous ne priment pas sur ce bloc pour Nos plats.
+
 Un seul ton pour TOUTES les photos : plats, entrées, desserts, boissons,
 cocktails, vins. Référence : `assets/plats/*.jpg`.
 
