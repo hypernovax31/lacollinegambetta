@@ -75,3 +75,10 @@ prises au restaurant.
 
 Mise à jour couscous : cadrage **16:9** (1280 × 720), lumière dorée douce,
 ambiance plus chaleureuse, tables noires conservées. Pas de filtre orange excessif.
+
+Décor des couscous affiné d’après la photo intérieure fournie par le propriétaire :
+comptoir noir à façade rainurée, étagères sombres de bouteilles et verres suspendus,
+petites suspensions sphériques crème, plafond pêche/ambre et banquette jaune moutarde.
+Cadrage serré sur l’assiette, faible profondeur de champ (esprit 85 mm f/1.4),
+arrière-plan en bokeh lumineux et avant-plan doux. Pas de personnes identifiables
+ni de texte lisible ; garder le plat net, l’assiette entière et le format 16:9.
