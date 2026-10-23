@@ -1,18 +1,18 @@
 # Ton photographique du site
 
-## Priorité actuelle : vraie photo TV+bar fortement floutée
-Le propriétaire a accepté d’utiliser le cadrage réel de IMG_2830 (TV+bar),
-sans ajouter de baie vitrée hors champ. **Ne plus faire générer une salle** :
-conserver la géométrie de cette vraie photo, recadrée proportionnellement et
-fortement floutée, puis placer le premier plan net (table et plat) devant.
-Le tartare est le premier montage de référence. Le fond est issu directement
-de IMG_2830 : réduction à1280px, recadrage vertical nord16:9 et flou sigma22.
-Les fichiers source du montage et le masque sont conservés dans
-`/home/user/photo-background-work/` ; la photo réelle dans
-`/home/user/restaurant-references/IMG_2830.jpeg`. Le premier plan avant montage
-correspond au tartare du commit eb35e60. Les23autres ne sont pas encore adaptés.
-Pas de chaises dispersées, pas de détails de salle nets. Plat net, lumière
-chaleureuse, point de vue du client assis. Textes/prix/PDF inchangés.
+## Priorité actuelle : profondeur progressive et vue gourmande sur le plat
+Le propriétaire a rejeté le montage du premier plan sur un fond uniformément
+flouté : effet artificiel et peu appétissant. Ne pas reprendre ce procédé.
+La nouvelle référence tartare est une scène générée cohérente inspirée de
+IMG2830 (TV à gauche/bar à droite), pas un décor réel conservé pixel à pixel.
+Vue du client assis vers le contenu de l’assiette (cible45–50°), assiette
+entière proche, table noire naturellement horizontale. Profondeur progressive
+(type50mmf4) : nourriture nette, verre/arrière de table progressivement doux,
+salle distante floue sans grands halos artificiels ni détourages visibles.
+Lumière de fenêtre latérale douce, textures fraîches et naturelles, pas de
+sur-accentuation ou de brillance plastique. Éviter mobilier répétitif en fond.
+Cette référence est à montrer avant de décliner aux23autres. Format16:9.
+Suivi : `tools/plats-photos-progress.json`. Textes/prix/PDF inchangés.
 
 Les gabarits historiques ci-dessous ne priment pas sur ce bloc pour Nos plats.
 

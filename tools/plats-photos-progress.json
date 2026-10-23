@@ -1,7 +1,7 @@
 {
-  "revision": "Fond TV+bar réel fortement flouté, sans architecture regénérée",
-  "awaiting_reference_approval": false,
-  "style": "Accord propriétaire : utiliser la vraie photo IMG_2830 de la TV+bar, fortement floutée, conserver ses proportions SANS réinventer les volumes ni ajouter la baie hors champ. Le tartare est un montage du premier plan net (plat et table) sur cette vraie photo recadrée proportionnellement en16:9 puis floutée (sigma22 sur1280px). Fichiers de travail durables /home/user/photo-background-work/. Ne pas utiliser une salle générée comme fond. Vue du client assis et table noire crédible ; pas de rangées de tables/chaises en fond. Plat et accessoires nets.",
+  "revision": "Référence retravaillée : profondeur progressive et vue plus lisible sur le plat",
+  "awaiting_reference_approval": true,
+  "style": "Remplace le montage TV/bar trop artificiel : générer une scène photographique cohérente inspirée de la vraie photo IMG2830, pas un détourage sur fond uniformément flouté. Point de vue du client assis, regard vers le bas45–50°, assiette entière proche et sujet dominant. Profondeur progressive type50mmf4 : nourriture nette, arrière de table et verre légèrement adoucis, salle distante floue sans halos de détourage ni gros ronds artificiels. Lumière de fenêtre latérale douce, textures naturelles, plat gourmand sans brillance plastique ni aiguisage excessif. TV jaune à gauche et bar à droite seulement contexte discret, pas de chaises/tables répétées. Table noire naturellement horizontale. Format16:9 1280x720. Les proportions exactes de la vraie photo ne sont pas garanties par la génération : ne pas présenter cela comme un fond photo conservé pixel pour pixel.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
@@ -35,5 +35,5 @@
     "assets/plats/couscous-vegetarien.jpg",
     "assets/plats/couscous-trois-viandes.jpg"
   ],
-  "next": "Décliner aux23remaining le fond réel TV+bar validé dans son principe, pas l’ancien fond inventé. Un seul visuel (tartare) est adapté pour le moment. Préserver proportions de IMG2830 et flou marqué ; détourer soigneusement le premier plan, notamment verres et couverts. Pas de baie inventée hors champ, pas de nouvelle reconstruction de pièce. Prix/textes/PDF inchangés."
+  "next": "La référence tartare a été retravaillée après rejet du montage artificiel. La montrer au propriétaire avant de décliner aux23autres. Ne pas revenir à un fond uniformément flouté collé derrière le plat. Les autres23 ne sont pas encore harmonisées selon cette dernière correction. Textes/prix/PDF inchangés."
 }
