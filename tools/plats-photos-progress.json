@@ -1,21 +1,20 @@
 {
-  "revision": "Fond tartare revu selon IMG3117 : bar sombre et suspensions, sans TV/baie inventées",
+  "revision": "Corriger la table flottante : proposition sur table ronde existante avec bord et pied visibles",
   "awaiting_reference_approval": true,
-  "style": "Dernière référence propriétaire IMG3117 uniquement pour ce cadrage : bar sombre nervuré, étagères de bouteilles et verres suspendus, petites suspensions chaudes, plafond clair. Pas de TV/niche jaune ni baie ajoutée hors champ, pas de personnes. Scène générée inspirée de la photo, pas copie exacte de géométrie garantie. Plat net et gourmand, table noire crédible, point de vue client assis, profondeur progressive et arrière-plan doux. Format16:9 1280x720.",
+  "style": "NOUVELLE PRIORITÉ : pas de plateau noir ajouté devant une vue du bar. Partir de la table ronde noire à bord doré réellement présente dans IMG2830, avec courbure du bord et pied/support visibles, liés naturellement au sol et à une chaise cuir noire. Plat assiette blanche entière et net, point de vue client, lumière douce, bokeh progressif. Ne pas promettre une copie exacte de géométrie par génération. Proposition distincte non intégrée aux cartes avant validation.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
     "/home/user/restaurant-references/IMG_2830.jpeg"
   ],
-  "done": [
-    "assets/plats/tartare-de-boeuf.jpg"
-  ],
+  "done": [],
   "remaining": [
     "assets/plats/entrecote-190-g.jpg",
     "assets/plats/bavette-d-aloyau.jpg",
     "assets/plats/escalope-de-veau.jpg",
     "assets/plats/cuisse-de-canard-confite.jpg",
     "assets/plats/poisson.jpg",
+    "assets/plats/tartare-de-boeuf.jpg",
     "assets/plats/cuisse-de-poulet-rotie.jpg",
     "assets/plats/burger-la-colline.jpg",
     "assets/plats/le-royal-fishburger.jpg",
@@ -35,5 +34,7 @@
     "assets/plats/couscous-vegetarien.jpg",
     "assets/plats/couscous-trois-viandes.jpg"
   ],
-  "next": "Montrer le tartare avec le nouveau fond inspiré de IMG3117. Attendre validation avant déclinaison sur les23restantes ; ne pas revenir à IMG2830/TV pour ce cadrage. Textes/prix/PDF inchangés."
+  "next": "Présenter propositions-photos/tartare-table-ancree.jpg et attendre validation. Les24photos restent à harmoniser. Ne pas reprendre les10variantes à plateau flottant ni les publier. Le fichier live tartare reste inchangé pour éviter de pousser une proposition non validée. Prix/textes/PDF inchangés.",
+  "proposal": "propositions-photos/tartare-table-ancree.jpg",
+  "rejected_latest_attempts": "Les10variantes générées avant le signalement table flottante ont toutes été écartées et les photos précédentes restaurées. Aucun de ces10essais n’a été publié."
 }

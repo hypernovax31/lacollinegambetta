@@ -1,16 +1,16 @@
 # Ton photographique du site
 
-## Priorité actuelle : fond du bar selon IMG_3117
-Le propriétaire vient de redonner IMG_3117 pour corriger le fond. Cette photo
-est l’unique référence de décor pour le tartare : comptoir sombre nervuré,
-étagères de bouteilles, verres suspendus, petites suspensions chaudes et
-plafond clair. Retirer les personnes et ne pas ajouter TV/niche jaune/baie
-vitrée hors champ. La génération s’inspire du décor ; ne pas promettre une
-copie exacte de ses proportions. Plat net et gourmand, scène cohérente,
-profondeur progressive, fond doux, table noire naturellement horizontale,
-point de vue du client assis. Format16:9,1280×720. Cette référence est à
-montrer avant déclinaison aux23autres. Suivi : plats-photos-progress.json.
-Textes, recettes, prix et PDF inchangés.
+## Priorité actuelle : supprimer l’effet de table flottante
+Le propriétaire a rejeté les10dernières variantes : plateaux ajoutés devant
+le décor, sans relation crédible au sol. Ces10variantes non publiées ont été
+écartées et les anciens visuels restaurés. Ne pas les remettre en production.
+Nouvelle proposition : `propositions-photos/tartare-table-ancree.jpg`, distincte
+du fichier live. Prendre comme base la table ronde noire à bord doré de
+IMG2830, conserver un bord courbe et un support/pied visibles, avec une chaise
+cuir noire à hauteur cohérente, au lieu d’ajouter un rectangle noir dans une
+vue du bar. Le plat reste gourmand et net, perspective naturelle, lumière
+douce et profondeur progressive. Attendre validation de ce visuel avant de
+modifier la série.24photos restent à harmoniser ; textes/prix/PDF inchangés.
 
 Les gabarits historiques ci-dessous ne priment pas sur ce bloc pour Nos plats.
 
