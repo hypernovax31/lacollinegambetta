@@ -72,3 +72,6 @@ et le décor bistrot des plats, mais sont présentées sur une **table noire**,
 à la demande explicite du propriétaire. Cette exception ne change pas le
 style des autres catégories. Visuels illustratifs générés, pas des photos
 prises au restaurant.
+
+Mise à jour couscous : cadrage **16:9** (1280 × 720), lumière dorée douce,
+ambiance plus chaleureuse, tables noires conservées. Pas de filtre orange excessif.
