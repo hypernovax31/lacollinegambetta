@@ -1,17 +1,14 @@
 {
-  "revision": "Reprendre les24photos en première personne, point de vue naturel du client assis",
-  "style": "Première personne : regard naturel du client ASSIS devant sa propre assiette, pas une vue depuis l’autre côté de la table, pas une mise en scène studio ni vue verticale. Table noire horizontale et crédible, assiette entière proche du bord côté client et sujet principal, couverts à portée de main gauche/droite, verre en haut à droite. Pose naturelle asymétrique, cadrage laissant respirer le plat. Dossier cuir noir présent discrètement au-delà de la table, pas une chaise géante au centre. Lumière naturelle chaleureuse, décor réel de IMG2830/3117/2829 en bokeh, aucun personnage ni texte lisible. Format16:9 1280x720.",
+  "revision": "Nouvelle reprise complète : première personne et salle rangée, tables alignées, chaises rentrées",
+  "style": "Première personne : regard naturel du client ASSIS devant sa propre assiette, pas une vue depuis l’autre côté de la table, pas une mise en scène studio ni vue verticale. Table noire horizontale et crédible, assiette entière proche du bord côté client et sujet principal, couverts à portée de main gauche/droite, verre en haut à droite. Pose naturelle asymétrique, cadrage laissant respirer le plat. Dossier cuir noir présent discrètement au-delà de la table, pas une chaise géante au centre. Lumière naturelle chaleureuse, décor réel de IMG2830/3117/2829 en bokeh, aucun personnage ni texte lisible. Format16:9 1280x720. PRIORITÉ NOUVELLE : salle ordonnée, tables noires alignées en rangées régulières le long des murs, chaises cuir noir rentrées sous chaque table, allée dégagée. Éviter tables rondes ou diagonales qui cassent les alignements, mobilier dispersé ou superposé. Garder le plat dominant et le fond flou, pas une photo de la salle. Aucune table marron ou blanche.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
     "/home/user/restaurant-references/IMG_2830.jpeg"
   ],
   "done": [
-    "assets/plats/bavette-d-aloyau.jpg",
     "assets/plats/burger-chicken-croustillant.jpg",
-    "assets/plats/burger-la-colline.jpg",
     "assets/plats/cuisse-de-canard-confite.jpg",
-    "assets/plats/cuisse-de-poulet-rotie.jpg",
     "assets/plats/entrecote-190-g.jpg",
     "assets/plats/escalope-de-veau.jpg",
     "assets/plats/le-royal-fishburger.jpg",
@@ -19,6 +16,9 @@
     "assets/plats/tartare-de-boeuf.jpg"
   ],
   "remaining": [
+    "assets/plats/bavette-d-aloyau.jpg",
+    "assets/plats/cuisse-de-poulet-rotie.jpg",
+    "assets/plats/burger-la-colline.jpg",
     "assets/plats/burger-vegetarien.jpg",
     "assets/plats/la-colline.jpg",
     "assets/plats/chevre-chaud.jpg",
@@ -34,5 +34,10 @@
     "assets/plats/couscous-vegetarien.jpg",
     "assets/plats/couscous-trois-viandes.jpg"
   ],
-  "next": "Continuer les14remaining dans le point de vue PREMIÈRE PERSONNE confirmé ci-dessus. Ne pas reprendre la dernière vue frontalement centrée sur un grand dossier de chaise.10photos sur24reprises pour cette nouvelle demande. Recettes/prix/textes/PDF inchangés. Tagliatelles saumon=morceaux mêlés pas pavé ; Poisson=pavé sur pâtes ; couscous LaColline=poulet agneau bœuf sans merguez."
+  "rejected_latest_attempts": [
+    "assets/plats/bavette-d-aloyau.jpg",
+    "assets/plats/cuisse-de-poulet-rotie.jpg",
+    "assets/plats/burger-la-colline.jpg"
+  ],
+  "next": "Continuer les17remaining dans ce nouveau brief SALLE RANGÉE en première personne.7/24validées. Les variantes bavette/poulet rôti trop encombrées et burger La Colline table marron ont été REJETÉES et restaurées à leur précédent visuel : les reprendre en priorité. Vérifier avant publication tables vraiment alignées et noires, chaises rentrées sans dispersion. Recettes/textes/prix/PDF inchangés."
 }
