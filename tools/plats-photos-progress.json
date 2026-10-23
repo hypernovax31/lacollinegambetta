@@ -1,0 +1,37 @@
+{
+  "style": "Vue à 45°, 16:9 1280x720, plat net, arrière-plan bokeh inspiré du vrai décor, tables noires à bord laiton, chaises cuir noir, banquettes jaunes/noires. Sans personnes reconnaissables.",
+  "references": [
+    "/home/user/restaurant-references/IMG_3117.jpeg",
+    "/home/user/restaurant-references/IMG_2829.jpeg",
+    "/home/user/restaurant-references/IMG_2830.jpeg"
+  ],
+  "done": [
+    "assets/plats/bavette-d-aloyau.jpg",
+    "assets/plats/burger-chicken-croustillant.jpg",
+    "assets/plats/burger-la-colline.jpg",
+    "assets/plats/chevre-chaud.jpg",
+    "assets/plats/cuisse-de-canard-confite.jpg",
+    "assets/plats/cuisse-de-poulet-rotie.jpg",
+    "assets/plats/entrecote-190-g.jpg",
+    "assets/plats/escalope-de-veau.jpg",
+    "assets/plats/poisson.jpg",
+    "assets/plats/tartare-de-boeuf.jpg"
+  ],
+  "remaining": [
+    "assets/plats/le-royal-fishburger.jpg",
+    "assets/plats/burger-vegetarien.jpg",
+    "assets/plats/la-colline.jpg",
+    "assets/plats/vegetarienne.jpg",
+    "assets/plats/nordique.jpg",
+    "assets/plats/tagliatelles-a-la-carbonara.jpg",
+    "assets/plats/tagliatelles-au-saumon.jpg",
+    "assets/plats/penne-au-poulet-et-champignons.jpg",
+    "assets/plats/couscous-poulet.jpg",
+    "assets/plats/couscous-merguez.jpg",
+    "assets/plats/couscous-agneau.jpg",
+    "assets/plats/couscous-boeuf.jpg",
+    "assets/plats/couscous-vegetarien.jpg",
+    "assets/plats/couscous-trois-viandes.jpg"
+  ],
+  "next": "Régénérer les 14 restantes en prenant la photo actuelle comme référence du plat et les 3 photos du restaurant comme décor. Puis optimiser en 1280x720, versionner data-photo et ajouter food-card--decor45 aux cartes concernées. Aucun texte/prix/PDF à modifier."
+}

@@ -82,3 +82,11 @@ petites suspensions sphériques crème, plafond pêche/ambre et banquette jaune 
 Cadrage serré sur l’assiette, faible profondeur de champ (esprit 85 mm f/1.4),
 arrière-plan en bokeh lumineux et avant-plan doux. Pas de personnes identifiables
 ni de texte lisible ; garder le plat net, l’assiette entière et le format 16:9.
+
+## Harmonisation de tout l’onglet « Nos plats » — en cours
+Demande du propriétaire : réutiliser ses trois photos intérieures pour toutes
+les 24 photos (plats, burgers, salades, pâtes, couscous). Angle plongeant **45°**,
+format **16:9**, tables **noires** à bord fin doré, chaises **cuir noir**,
+banquettes jaunes/noires, murs pêche texturés, suspensions ambrées.
+Bokeh d’arrière-plan marqué, plat net et entier. Pas de personnes identifiables.
+L’état d’avancement est dans `tools/plats-photos-progress.json`.
