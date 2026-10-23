@@ -1,14 +1,15 @@
 # Ton photographique du site
 
-## Priorité actuelle : pieds complets et contact avec le sol
-Le propriétaire a de nouveau rejeté la table flottante. Montrer le plateau
-carré noir légèrement plus grand, mais aussi **les quatre pieds jusqu’au sol**
-et un peu de sol au-dessous. Ne pas couper les appuis dans le cadrage.
-Proposition actuelle : `propositions-photos/tartare-table-au-sol.jpg`, cadrage
-plus large, plat net et lumière chaleureuse. Il s’agit d’une image générée,
-pas d’une reproduction garantie du décor réel. Ne pas promettre l’inverse.
-Attendre validation de cette perspective avant de reprendre les24photos.
-Les cartes restent inchangées ; prix, textes et PDF aussi.
+## Priorité actuelle : RESTAURATION DES ORIGINAUX — STOP AUX RETOUCHES
+Le propriétaire a rejeté les nouvelles photos et demandé le retour aux
+originaux. Les24photos de Nos plats ont été restaurées **octet pour octet**
+depuis29ef6c1 :18photos avant la campagne de retouches,6couscous lors de
+leur ajout initial. Les classes de recadrage ajoutées ont été retirées et les
+URL d’images versionnées pour vider le cache. Propositions rejetées supprimées.
+**Ne pas poursuivre la génération ni la modification de décor/cadrage/bokeh**
+sans nouvelle demande explicite. Les anciennes consignes ci-dessous sont
+historiques et ne doivent pas relancer cette campagne. Textes, prix, traductions,
+réservation et PDF ne sont pas restaurés ni modifiés par ce retour des photos.
 
 Les gabarits historiques ci-dessous ne priment pas sur ce bloc pour Nos plats.
 
