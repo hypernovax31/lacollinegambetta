@@ -1,5 +1,16 @@
 # Ton photographique du site
 
+### Nouvelle exception demandée : six couscous et décor du restaurant
+Après la restauration des originaux, le propriétaire a demandé de reprendre
+uniquement les six couscous à partir de IMG3117/2829/2830. Table carrée noire
+à bord doré, cuir noir, jaune/noir des banquettes, niche jaune TV, bar sombre,
+murs chauds et lumière ambre. Format16:9,1280×720, nourriture nette, fond bokeh.
+Les images sont inspirées des photos réelles, sans garantie de reproduction
+architecturale exacte. Assiette entière, perspective cohérente ; LaColline
+contient poulet, agneau et bœuf, sans merguez. Aucun autre visuel à retoucher
+sans demande explicite. La correction séparée des tagliatelles est conservée.
+
+
 ### Affichage 16:9 demandé pour les quatre rubriques
 Les66photos des entrées, plats, desserts et crêpes s’affichent dans un cadre
 16:9, dans les tiroirs et la visionneuse, sur mobile et ordinateur. Les fichiers
