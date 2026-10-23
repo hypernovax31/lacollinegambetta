@@ -121,3 +121,10 @@ de fond visible, complètement dissous en bokeh crémeux noir/jaune/ambre.
 Ne pas reconstruire une entrée, TV ou salle détaillée ; le décor n’est pas
 le sujet. Accessoires discrets en bordure, pas de concurrence avec le plat.
 Les10photos de la précédente série ont été reprises ;14restantes à traiter.
+
+## Ajustement suivant : dézoom très léger
+À la demande du propriétaire : viser75–80% de largeur pour l’assiette,
+un peu plus d’air autour et d’accessoires visibles, toujours sans plan large
+sur le restaurant. Conserver la vue élevée et le bokeh très prononcé.
+La série burgers poisson/végétarien,4salades,3pâtes,couscous poulet est
+réalisée dans ce cadrage ;4couscous restent à terminer.
