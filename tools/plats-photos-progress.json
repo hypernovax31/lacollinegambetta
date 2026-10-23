@@ -24,14 +24,23 @@
     "assets/plats/nordique.jpg",
     "assets/plats/tagliatelles-a-la-carbonara.jpg",
     "assets/plats/tagliatelles-au-saumon.jpg",
-    "assets/plats/vegetarienne.jpg"
-  ],
-  "remaining": [
-    "assets/plats/penne-au-poulet-et-champignons.jpg",
+    "assets/plats/vegetarienne.jpg",
     "assets/plats/couscous-agneau.jpg",
     "assets/plats/couscous-boeuf.jpg",
+    "assets/plats/couscous-trois-viandes.jpg",
     "assets/plats/couscous-vegetarien.jpg",
-    "assets/plats/couscous-trois-viandes.jpg"
+    "assets/plats/penne-au-poulet-et-champignons.jpg"
   ],
-  "next": "Régénérer les penne (dernier essai rejeté car assiette coupée) puis les 4 couscous restants. Vue à 45°, plat entier dominant le cadre, grande baie vitrée noire, TV sur mur jaune à gauche du bar, tables noires/chaises cuir noir, bokeh, 16:9. Optimiser 1280x720 et intégrer avec food-card--decor45. Ne modifier ni textes ni prix ni PDF."
+  "remaining": [],
+  "next": "Toutes les photos ont été refaites une fois. Reprendre les 8 needs_latest_decor : baie vitrée noire, TV sur mur jaune à gauche du bar, toutes tables/chaises noires, angle45, bokeh très marqué. Contrôler surtout que le plat reste entier. La Colline remplace 3 Viandes et contient poulet, agneau, bœuf sans merguez. PDF inchangé.",
+  "needs_latest_decor": [
+    "assets/plats/bavette-d-aloyau.jpg",
+    "assets/plats/burger-chicken-croustillant.jpg",
+    "assets/plats/burger-la-colline.jpg",
+    "assets/plats/cuisse-de-canard-confite.jpg",
+    "assets/plats/cuisse-de-poulet-rotie.jpg",
+    "assets/plats/entrecote-190-g.jpg",
+    "assets/plats/escalope-de-veau.jpg",
+    "assets/plats/tartare-de-boeuf.jpg"
+  ]
 }

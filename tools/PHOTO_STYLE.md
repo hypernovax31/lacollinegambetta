@@ -94,3 +94,9 @@ L’état d’avancement est dans `tools/plats-photos-progress.json`.
 Précision du décor pour la deuxième série et la suite : grande baie vitrée
 à encadrement noir ; grande télévision noire éteinte sur le mur jaune
 **à gauche du bar**, visibles comme formes floutées dans le bokeh.
+
+Dernières précisions : toutes les tables doivent rester noir uni (aucun
+marbre blanc ni bois clair), chaises cuir noir ; accentuer le bokeh sans
+couper l’assiette. Le plat de poisson reprend désormais un pavé de saumon
+sur des pâtes d’après la photo fournie. Le couscous signature s’appelle
+« La Colline » et contient poulet, agneau et bœuf, sans merguez.
