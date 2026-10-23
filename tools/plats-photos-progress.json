@@ -1,7 +1,7 @@
 {
-  "revision": "Référence retravaillée : profondeur progressive et vue plus lisible sur le plat",
+  "revision": "Fond tartare revu selon IMG3117 : bar sombre et suspensions, sans TV/baie inventées",
   "awaiting_reference_approval": true,
-  "style": "Remplace le montage TV/bar trop artificiel : générer une scène photographique cohérente inspirée de la vraie photo IMG2830, pas un détourage sur fond uniformément flouté. Point de vue du client assis, regard vers le bas45–50°, assiette entière proche et sujet dominant. Profondeur progressive type50mmf4 : nourriture nette, arrière de table et verre légèrement adoucis, salle distante floue sans halos de détourage ni gros ronds artificiels. Lumière de fenêtre latérale douce, textures naturelles, plat gourmand sans brillance plastique ni aiguisage excessif. TV jaune à gauche et bar à droite seulement contexte discret, pas de chaises/tables répétées. Table noire naturellement horizontale. Format16:9 1280x720. Les proportions exactes de la vraie photo ne sont pas garanties par la génération : ne pas présenter cela comme un fond photo conservé pixel pour pixel.",
+  "style": "Dernière référence propriétaire IMG3117 uniquement pour ce cadrage : bar sombre nervuré, étagères de bouteilles et verres suspendus, petites suspensions chaudes, plafond clair. Pas de TV/niche jaune ni baie ajoutée hors champ, pas de personnes. Scène générée inspirée de la photo, pas copie exacte de géométrie garantie. Plat net et gourmand, table noire crédible, point de vue client assis, profondeur progressive et arrière-plan doux. Format16:9 1280x720.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
@@ -35,5 +35,5 @@
     "assets/plats/couscous-vegetarien.jpg",
     "assets/plats/couscous-trois-viandes.jpg"
   ],
-  "next": "La référence tartare a été retravaillée après rejet du montage artificiel. La montrer au propriétaire avant de décliner aux23autres. Ne pas revenir à un fond uniformément flouté collé derrière le plat. Les autres23 ne sont pas encore harmonisées selon cette dernière correction. Textes/prix/PDF inchangés."
+  "next": "Montrer le tartare avec le nouveau fond inspiré de IMG3117. Attendre validation avant déclinaison sur les23restantes ; ne pas revenir à IMG2830/TV pour ce cadrage. Textes/prix/PDF inchangés."
 }

@@ -1,18 +1,16 @@
 # Ton photographique du site
 
-## Priorité actuelle : profondeur progressive et vue gourmande sur le plat
-Le propriétaire a rejeté le montage du premier plan sur un fond uniformément
-flouté : effet artificiel et peu appétissant. Ne pas reprendre ce procédé.
-La nouvelle référence tartare est une scène générée cohérente inspirée de
-IMG2830 (TV à gauche/bar à droite), pas un décor réel conservé pixel à pixel.
-Vue du client assis vers le contenu de l’assiette (cible45–50°), assiette
-entière proche, table noire naturellement horizontale. Profondeur progressive
-(type50mmf4) : nourriture nette, verre/arrière de table progressivement doux,
-salle distante floue sans grands halos artificiels ni détourages visibles.
-Lumière de fenêtre latérale douce, textures fraîches et naturelles, pas de
-sur-accentuation ou de brillance plastique. Éviter mobilier répétitif en fond.
-Cette référence est à montrer avant de décliner aux23autres. Format16:9.
-Suivi : `tools/plats-photos-progress.json`. Textes/prix/PDF inchangés.
+## Priorité actuelle : fond du bar selon IMG_3117
+Le propriétaire vient de redonner IMG_3117 pour corriger le fond. Cette photo
+est l’unique référence de décor pour le tartare : comptoir sombre nervuré,
+étagères de bouteilles, verres suspendus, petites suspensions chaudes et
+plafond clair. Retirer les personnes et ne pas ajouter TV/niche jaune/baie
+vitrée hors champ. La génération s’inspire du décor ; ne pas promettre une
+copie exacte de ses proportions. Plat net et gourmand, scène cohérente,
+profondeur progressive, fond doux, table noire naturellement horizontale,
+point de vue du client assis. Format16:9,1280×720. Cette référence est à
+montrer avant déclinaison aux23autres. Suivi : plats-photos-progress.json.
+Textes, recettes, prix et PDF inchangés.
 
 Les gabarits historiques ci-dessous ne priment pas sur ce bloc pour Nos plats.
 
