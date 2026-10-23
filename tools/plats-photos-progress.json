@@ -1,5 +1,5 @@
 {
-  "style": "Vue à 45°, 16:9 1280x720, plat net, arrière-plan bokeh inspiré du vrai décor, tables noires à bord laiton, chaises cuir noir, banquettes jaunes/noires. Sans personnes reconnaissables.",
+  "style": "Vue à 45°, 16:9 1280x720, plat net, arrière-plan bokeh inspiré du vrai décor, tables noires à bord laiton, chaises cuir noir, banquettes jaunes/noires. Sans personnes reconnaissables. Décor demandé pour la suite : grande baie vitrée à cadre noir et grande télévision noire sur le mur jaune, à gauche du bar, en arrière-plan bokeh.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
@@ -15,23 +15,23 @@
     "assets/plats/entrecote-190-g.jpg",
     "assets/plats/escalope-de-veau.jpg",
     "assets/plats/poisson.jpg",
-    "assets/plats/tartare-de-boeuf.jpg"
-  ],
-  "remaining": [
-    "assets/plats/le-royal-fishburger.jpg",
+    "assets/plats/tartare-de-boeuf.jpg",
     "assets/plats/burger-vegetarien.jpg",
+    "assets/plats/couscous-merguez.jpg",
+    "assets/plats/couscous-poulet.jpg",
     "assets/plats/la-colline.jpg",
-    "assets/plats/vegetarienne.jpg",
+    "assets/plats/le-royal-fishburger.jpg",
     "assets/plats/nordique.jpg",
     "assets/plats/tagliatelles-a-la-carbonara.jpg",
     "assets/plats/tagliatelles-au-saumon.jpg",
+    "assets/plats/vegetarienne.jpg"
+  ],
+  "remaining": [
     "assets/plats/penne-au-poulet-et-champignons.jpg",
-    "assets/plats/couscous-poulet.jpg",
-    "assets/plats/couscous-merguez.jpg",
     "assets/plats/couscous-agneau.jpg",
     "assets/plats/couscous-boeuf.jpg",
     "assets/plats/couscous-vegetarien.jpg",
     "assets/plats/couscous-trois-viandes.jpg"
   ],
-  "next": "Régénérer les 14 restantes en prenant la photo actuelle comme référence du plat et les 3 photos du restaurant comme décor. Puis optimiser en 1280x720, versionner data-photo et ajouter food-card--decor45 aux cartes concernées. Aucun texte/prix/PDF à modifier."
+  "next": "Régénérer les penne (dernier essai rejeté car assiette coupée) puis les 4 couscous restants. Vue à 45°, plat entier dominant le cadre, grande baie vitrée noire, TV sur mur jaune à gauche du bar, tables noires/chaises cuir noir, bokeh, 16:9. Optimiser 1280x720 et intégrer avec food-card--decor45. Ne modifier ni textes ni prix ni PDF."
 }

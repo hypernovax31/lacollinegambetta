@@ -90,3 +90,7 @@ format **16:9**, tables **noires** à bord fin doré, chaises **cuir noir**,
 banquettes jaunes/noires, murs pêche texturés, suspensions ambrées.
 Bokeh d’arrière-plan marqué, plat net et entier. Pas de personnes identifiables.
 L’état d’avancement est dans `tools/plats-photos-progress.json`.
+
+Précision du décor pour la deuxième série et la suite : grande baie vitrée
+à encadrement noir ; grande télévision noire éteinte sur le mur jaune
+**à gauche du bar**, visibles comme formes floutées dans le bokeh.
