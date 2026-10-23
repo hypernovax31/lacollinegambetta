@@ -1,7 +1,7 @@
 {
-  "revision": "Correction propriétaire : tables intérieures carrées légèrement plus grandes, éclairage chaleureux",
+  "revision": "Proposition plus large : table carrée à quatre pieds visibles en contact avec le sol",
   "awaiting_reference_approval": true,
-  "style": "Les tables INTÉRIEURES sont CARRÉES et légèrement plus grandes : plateau noir, liseré doré, bord droit et support/pied visibles, perspective naturelle sans effet flottant. Cette instruction remplace la table ronde de la proposition précédente. Dossier de chaise cuir noir à hauteur crédible. Plat net et gourmand, point de vue client assis. Conserver chaleur du décor et éclairage ambre des suspensions et alentours en fond, profondeur progressive/bokeh, pas de mobilier dispersé. Références réelles IMG2830/3117/2829, ne pas promettre une géométrie exacte par génération. Image16:9 1280x720.",
+  "style": "Priorité propriétaire : table réellement posée au sol, pas de plateau flottant. Proposition plus large montrant le plateau carré noir à bord doré, ses quatre pieds et leur contact avec un sol continu. Ne pas recadrer les pieds hors champ. Plat net/gourmand, lumière chaleureuse, scène cohérente et fond adouci. Cette proposition de génération ne garantit pas une copie exacte du décor réel ; ne pas la présenter comme telle. Les cartes du site restent inchangées en attente de validation.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
@@ -34,7 +34,7 @@
     "assets/plats/couscous-vegetarien.jpg",
     "assets/plats/couscous-trois-viandes.jpg"
   ],
-  "next": "Présenter propositions-photos/tartare-table-carree.jpg pour validation (remplace table-ancree ronde). Aucun visuel de carte remplacé à ce stade ;24photos restent à harmoniser. Garder table carrée plus grande et chaleur de l’éclairage de fond. Textes/prix/PDF inchangés.",
-  "proposal": "propositions-photos/tartare-table-carree.jpg",
+  "next": "Montrer propositions-photos/tartare-table-au-sol.jpg (remplace la référence aux pieds coupés). Attendre validation avant reprise des24photos. Ne pas publier une nouvelle série de plateaux flottants. Conserver prix/textes/PDF.",
+  "proposal": "propositions-photos/tartare-table-au-sol.jpg",
   "rejected_latest_attempts": "Les10variantes générées avant le signalement table flottante ont toutes été écartées et les photos précédentes restaurées. Aucun de ces10essais n’a été publié."
 }

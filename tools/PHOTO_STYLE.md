@@ -1,16 +1,14 @@
 # Ton photographique du site
 
-## Priorité actuelle : table intérieure carrée et éclairage chaleureux
-Correction explicite du propriétaire : les tables intérieures sont **carrées,
-légèrement plus grandes**, et non rondes. Plateau noir, bord doré, bord droit
-et support visibles pour que la table soit naturellement ancrée et non flottante.
-Conserver la chaleur du décor et de l’éclairage alentour dans le fond :
-suspensions ambre, lumière douce et accueillante. Plat net et gourmand,
-profondeur progressive/bokeh, point de vue du client assis. Ne pas inventer
-une autre architecture ni multiplier tables et chaises en arrière-plan.
-Proposition actuelle : `propositions-photos/tartare-table-carree.jpg` ; elle
-remplace la proposition ronde. Attendre validation avant intégration dans
-les cartes. Les24photos restent à harmoniser. Textes/prix/PDF inchangés.
+## Priorité actuelle : pieds complets et contact avec le sol
+Le propriétaire a de nouveau rejeté la table flottante. Montrer le plateau
+carré noir légèrement plus grand, mais aussi **les quatre pieds jusqu’au sol**
+et un peu de sol au-dessous. Ne pas couper les appuis dans le cadrage.
+Proposition actuelle : `propositions-photos/tartare-table-au-sol.jpg`, cadrage
+plus large, plat net et lumière chaleureuse. Il s’agit d’une image générée,
+pas d’une reproduction garantie du décor réel. Ne pas promettre l’inverse.
+Attendre validation de cette perspective avant de reprendre les24photos.
+Les cartes restent inchangées ; prix, textes et PDF aussi.
 
 Les gabarits historiques ci-dessous ne priment pas sur ce bloc pour Nos plats.
 
