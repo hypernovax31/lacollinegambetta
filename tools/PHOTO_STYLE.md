@@ -134,3 +134,12 @@ Merguez, agneau, bœuf et végétarien repris avec un très léger recul
 (assiette environ72–78% de largeur), vue élevée et fond bokeh intense.
 La passe couvre les24photos ; les10premières restent au gros plan précédent,
 les14suivantes ont reçu le cadrage légèrement élargi demandé ensuite.
+
+## Correction des couscous et des tagliatelles au saumon
+Les six couscous ont été harmonisés en prenant la salade Nordique comme
+référence de cadrage et de lumière : présentation naturelle dans une assiette
+blanche posée à plat, vue élevée, table noire et arrière-plan discret flouté.
+Le couscous La Colline montre poulet, agneau et bœuf, sans merguez.
+**Tagliatelles au saumon** : rubans de pâtes avec morceaux de saumon mêlés
+à la sauce, et non un pavé entier posé sur les pâtes. Cette correction ne
+change pas le visuel du plat « Poisson » (pavé accompagné de pâtes).

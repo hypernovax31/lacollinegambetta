@@ -33,7 +33,7 @@
     "assets/plats/couscous-vegetarien.jpg"
   ],
   "remaining": [],
-  "next": "Passe terminée : 24 photos ont été reprises avec plat dominant et fond bokeh. Les 10 premières restent en gros plan 80–90%, les 14 suivantes au cadrage légèrement dézoomé (environ72–80%). Aucun changement de texte, prix ou PDF.",
+  "next": "Passe terminée. Conserver le cadrage légèrement desserré, la vue élevée, la table noire et le fond minimal très flou. La Colline : poulet, agneau et bœuf, sans merguez. Ne pas réutiliser le visuel de pavé entier pour les tagliatelles au saumon. Aucun changement de texte, prix ou PDF.",
   "slightly_wider_done": [
     "assets/plats/burger-vegetarien.jpg",
     "assets/plats/chevre-chaud.jpg",
@@ -51,9 +51,13 @@
     "assets/plats/couscous-vegetarien.jpg"
   ],
   "latest_batch": [
-    "assets/plats/couscous-merguez.jpg",
     "assets/plats/couscous-agneau.jpg",
     "assets/plats/couscous-boeuf.jpg",
-    "assets/plats/couscous-vegetarien.jpg"
-  ]
+    "assets/plats/couscous-merguez.jpg",
+    "assets/plats/couscous-poulet.jpg",
+    "assets/plats/couscous-trois-viandes.jpg",
+    "assets/plats/couscous-vegetarien.jpg",
+    "assets/plats/tagliatelles-au-saumon.jpg"
+  ],
+  "latest_correction": "Six couscous harmonisés avec les autres plats (référence de cadrage : salade Nordique). Tagliatelles au saumon corrigées : rubans de pâtes et morceaux de saumon mêlés, pas un pavé entier posé dessus. Le plat Poisson garde son pavé de saumon sur pâtes."
 }
