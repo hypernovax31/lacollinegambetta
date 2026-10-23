@@ -1,18 +1,19 @@
 # Ton photographique du site
 
-## Priorité actuelle pour les 24 photos « Nos plats »
-Cette consigne remplace, pour ces 24 photos, les anciens gabarits et notes
-ci-dessous : **table noire posée naturellement, perspective crédible et
-cadrage un peu plus large**, sans plateau flottant ni plan noir penché.
-Voir le **dossier vertical en cuir noir d’une chaise en bout de table**,
-derrière l’assiette. Celle-ci reste posée à plat et son contenu bien visible.
-Vue élevée cible 45–50°, sans forcer la géométrie de la table. Accessoires
-réalistes et discrets, lumière chaleureuse. Salle en bokeh d’après les vraies
-photos IMG_2830, IMG_3117, IMG_2829 ; le dossier reste identifiable. Ne pas
-remplacer la salle par une architecture inventée. Format 16:9, 1280×720.
-Suivi de cette NOUVELLE passe : `tools/plats-photos-progress.json` (10/24).
-Tagliatelles au saumon : morceaux mêlés aux pâtes, pas pavé entier.
-Couscous La Colline : poulet, agneau, bœuf sans merguez.
+## Priorité actuelle pour les 24 photos « Nos plats » : première personne
+Cette demande remplace les précédents cadrages pour les24photos.
+Photographier comme si le client était ASSIS devant sa propre assiette,
+regardant naturellement vers le bas : pas depuis l’autre côté de la table,
+pas de vue studio ni de plateau artificiellement incliné. Table noire,
+assiette proche et entièrement visible, couverts accessibles à gauche et à
+droite, verre à portée de main. Composition naturelle, vivante, moins figée.
+Dossier de chaise en cuir noir discret au-delà de la table, pas une chaise
+monumentale centrée devant l’appareil. Restaurant réel d’après IMG2830,
+IMG3117, IMG2829 ; lumière naturelle chaleureuse et bokeh, pas de décor inventé.
+Format16:9,1280×720. Progression : `tools/plats-photos-progress.json` (10/24).
+Préserver les recettes : tagliatelles saumon avec morceaux mêlés aux pâtes,
+pavé de saumon sur pâtes pour «Poisson», couscous LaColline poulet/agneau/bœuf
+sans merguez. Ne pas modifier les prix, textes ni le PDF.
 
 Les gabarits historiques ci-dessous ne priment pas sur ce bloc pour Nos plats.
 

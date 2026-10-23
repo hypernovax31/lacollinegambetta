@@ -1,24 +1,12 @@
 {
-  "revision": "Reprise pour perspective naturelle, cadrage élargi et dossier de chaise cuir noir visible",
-  "style": "Perspective naturelle : table noire horizontale avec appui/volume crédibles, assiette posée à plat, aucun plan noir flottant ou incliné. Cadrage un peu plus large, dossier vertical de chaise en cuir noir visible en bout de table derrière le couvert. Le plat reste lisible, vue élevée cible45–50°, ne pas déformer le plateau pour simuler cet angle. Couverts/serviette/verres discrets, lumière naturelle chaleureuse, fond bokeh à partir du vrai décor IMG2830/3117/2829. Ne pas inventer de pièce ; dossier suffisamment lisible, salle floue. Format16:9 1280x720.",
+  "revision": "Reprendre les24photos en première personne, point de vue naturel du client assis",
+  "style": "Première personne : regard naturel du client ASSIS devant sa propre assiette, pas une vue depuis l’autre côté de la table, pas une mise en scène studio ni vue verticale. Table noire horizontale et crédible, assiette entière proche du bord côté client et sujet principal, couverts à portée de main gauche/droite, verre en haut à droite. Pose naturelle asymétrique, cadrage laissant respirer le plat. Dossier cuir noir présent discrètement au-delà de la table, pas une chaise géante au centre. Lumière naturelle chaleureuse, décor réel de IMG2830/3117/2829 en bokeh, aucun personnage ni texte lisible. Format16:9 1280x720.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
     "/home/user/restaurant-references/IMG_2830.jpeg"
   ],
   "done": [
-    "assets/plats/couscous-agneau.jpg",
-    "assets/plats/couscous-boeuf.jpg",
-    "assets/plats/couscous-merguez.jpg",
-    "assets/plats/couscous-poulet.jpg",
-    "assets/plats/couscous-trois-viandes.jpg",
-    "assets/plats/couscous-vegetarien.jpg",
-    "assets/plats/nordique.jpg",
-    "assets/plats/penne-au-poulet-et-champignons.jpg",
-    "assets/plats/tagliatelles-a-la-carbonara.jpg",
-    "assets/plats/tagliatelles-au-saumon.jpg"
-  ],
-  "remaining": [
     "assets/plats/bavette-d-aloyau.jpg",
     "assets/plats/burger-chicken-croustillant.jpg",
     "assets/plats/burger-la-colline.jpg",
@@ -26,13 +14,25 @@
     "assets/plats/cuisse-de-poulet-rotie.jpg",
     "assets/plats/entrecote-190-g.jpg",
     "assets/plats/escalope-de-veau.jpg",
-    "assets/plats/poisson.jpg",
-    "assets/plats/tartare-de-boeuf.jpg",
-    "assets/plats/burger-vegetarien.jpg",
-    "assets/plats/chevre-chaud.jpg",
-    "assets/plats/la-colline.jpg",
     "assets/plats/le-royal-fishburger.jpg",
-    "assets/plats/vegetarienne.jpg"
+    "assets/plats/poisson.jpg",
+    "assets/plats/tartare-de-boeuf.jpg"
   ],
-  "next": "Poursuivre les14remaining dans ce NOUVEAU style. Contrôler surtout table non flottante/non inclinée, assiette lisible, dossier en cuir noir derrière table, photo chaleureuse sans grand plan de salle. Les24photos ne sont PAS toutes reprises selon cette dernière demande :10sur24traitées. Préserver recettes/prix/textes/PDF. Tagliatelles au saumon = morceaux mêlés, pas pavé entier ; couscous La Colline = poulet agneau bœuf sans merguez."
+  "remaining": [
+    "assets/plats/burger-vegetarien.jpg",
+    "assets/plats/la-colline.jpg",
+    "assets/plats/chevre-chaud.jpg",
+    "assets/plats/vegetarienne.jpg",
+    "assets/plats/nordique.jpg",
+    "assets/plats/tagliatelles-a-la-carbonara.jpg",
+    "assets/plats/tagliatelles-au-saumon.jpg",
+    "assets/plats/penne-au-poulet-et-champignons.jpg",
+    "assets/plats/couscous-poulet.jpg",
+    "assets/plats/couscous-merguez.jpg",
+    "assets/plats/couscous-agneau.jpg",
+    "assets/plats/couscous-boeuf.jpg",
+    "assets/plats/couscous-vegetarien.jpg",
+    "assets/plats/couscous-trois-viandes.jpg"
+  ],
+  "next": "Continuer les14remaining dans le point de vue PREMIÈRE PERSONNE confirmé ci-dessus. Ne pas reprendre la dernière vue frontalement centrée sur un grand dossier de chaise.10photos sur24reprises pour cette nouvelle demande. Recettes/prix/textes/PDF inchangés. Tagliatelles saumon=morceaux mêlés pas pavé ; Poisson=pavé sur pâtes ; couscous LaColline=poulet agneau bœuf sans merguez."
 }
