@@ -26,7 +26,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • Legal notice",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • Privacy",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • Gambetta metro",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, United States"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, United States",
+    "Couscous": "Couscous",
+    "À déguster chaque vendredi et samedi (midi et soir).": "Enjoy every Friday and Saturday (lunch and dinner).",
+    "Poulet": "Chicken",
+    "Merguez": "Merguez sausages",
+    "Brochette d’agneau": "Lamb skewer",
+    "Bœuf": "Beef",
+    "Végétarien": "Vegetarian",
+    "3 Viandes": "3 Meats",
+    "Semoule fine, légumes mijotés et bouillon maison.": "Fine semolina, slow-cooked vegetables and homemade broth."
   },
   "es": {
     "Hôpital Tenon": "Hospital Tenon",
@@ -52,7 +61,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • Aviso legal",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • Privacidad",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • Metro Gambetta",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, Estados Unidos"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, Estados Unidos",
+    "Couscous": "Cuscús",
+    "À déguster chaque vendredi et samedi (midi et soir).": "Para disfrutar cada viernes y sábado (comida y cena).",
+    "Poulet": "Pollo",
+    "Merguez": "Merguez",
+    "Brochette d’agneau": "Brocheta de cordero",
+    "Bœuf": "Ternera",
+    "Végétarien": "Vegetariano",
+    "3 Viandes": "3 Carnes",
+    "Semoule fine, légumes mijotés et bouillon maison.": "Sémola fina, verduras guisadas y caldo casero."
   },
   "de": {
     "Hôpital Tenon": "Krankenhaus Tenon",
@@ -78,7 +96,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • Impressum",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • Datenschutz",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • Metro Gambetta",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, USA"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, USA",
+    "Couscous": "Couscous",
+    "À déguster chaque vendredi et samedi (midi et soir).": "Jeden Freitag und Samstag zum Mittag- und Abendessen genießen.",
+    "Poulet": "Hähnchen",
+    "Merguez": "Merguez",
+    "Brochette d’agneau": "Lammspieß",
+    "Bœuf": "Rindfleisch",
+    "Végétarien": "Vegetarisch",
+    "3 Viandes": "3 Fleischsorten",
+    "Semoule fine, légumes mijotés et bouillon maison.": "Feiner Grieß, geschmortes Gemüse und hausgemachte Brühe."
   },
   "it": {
     "Hôpital Tenon": "Ospedale Tenon",
@@ -104,7 +131,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • Note legali",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • Privacy",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • Metro Gambetta",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, Stati Uniti"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, Stati Uniti",
+    "Couscous": "Cous cous",
+    "À déguster chaque vendredi et samedi (midi et soir).": "Da gustare ogni venerdì e sabato (a pranzo e a cena).",
+    "Poulet": "Pollo",
+    "Merguez": "Merguez",
+    "Brochette d’agneau": "Spiedino di agnello",
+    "Bœuf": "Manzo",
+    "Végétarien": "Vegetariano",
+    "3 Viandes": "3 Carni",
+    "Semoule fine, légumes mijotés et bouillon maison.": "Semola fine, verdure stufate e brodo fatto in casa."
   },
   "pt": {
     "Hôpital Tenon": "Hospital Tenon",
@@ -130,7 +166,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • Aviso legal",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • Privacidade",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • Metro Gambetta",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, Estados Unidos"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, Estados Unidos",
+    "Couscous": "Cuscuz",
+    "À déguster chaque vendredi et samedi (midi et soir).": "Para saborear todas as sextas-feiras e sábados (almoço e jantar).",
+    "Poulet": "Frango",
+    "Merguez": "Merguez",
+    "Brochette d’agneau": "Espetada de borrego",
+    "Bœuf": "Carne de vaca",
+    "Végétarien": "Vegetariano",
+    "3 Viandes": "3 Carnes",
+    "Semoule fine, légumes mijotés et bouillon maison.": "Sêmola fina, legumes estufados e caldo caseiro."
   },
   "nl": {
     "Hôpital Tenon": "Ziekenhuis Tenon",
@@ -156,7 +201,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • Juridische informatie",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • Privacy",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • Metro Gambetta",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, Verenigde Staten"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, Verenigde Staten",
+    "Couscous": "Couscous",
+    "À déguster chaque vendredi et samedi (midi et soir).": "Elke vrijdag en zaterdag te genieten (lunch en diner).",
+    "Poulet": "Kip",
+    "Merguez": "Merguez",
+    "Brochette d’agneau": "Lamsspies",
+    "Bœuf": "Rundvlees",
+    "Végétarien": "Vegetarisch",
+    "3 Viandes": "3 Vleessoorten",
+    "Semoule fine, légumes mijotés et bouillon maison.": "Fijne gries, gestoofde groenten en huisgemaakte bouillon."
   },
   "ar": {
     "Hôpital Tenon": "مستشفى تينون",
@@ -182,7 +236,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • إشعار قانوني",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • الخصوصية",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • مترو غامبيتا",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, الولايات المتحدة"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, الولايات المتحدة",
+    "Couscous": "كسكس",
+    "À déguster chaque vendredi et samedi (midi et soir).": "استمتعوا به كل جمعة وسبت (الغداء والعشاء).",
+    "Poulet": "دجاج",
+    "Merguez": "مرقاز",
+    "Brochette d’agneau": "سيخ لحم ضأن",
+    "Bœuf": "لحم بقري",
+    "Végétarien": "نباتي",
+    "3 Viandes": "3 أنواع من اللحوم",
+    "Semoule fine, légumes mijotés et bouillon maison.": "سميد ناعم وخضار مطهوة على نار هادئة ومرق منزلي."
   },
   "zh": {
     "Hôpital Tenon": "特农医院",
@@ -208,7 +271,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • 法律声明",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • 隐私",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • Gambetta地铁站",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, 美国"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, 美国",
+    "Couscous": "库斯库斯",
+    "À déguster chaque vendredi et samedi (midi et soir).": "每周五、周六午餐和晚餐供应。",
+    "Poulet": "鸡肉",
+    "Merguez": "北非辣香肠",
+    "Brochette d’agneau": "羊肉串",
+    "Bœuf": "牛肉",
+    "Végétarien": "素食",
+    "3 Viandes": "三种肉类",
+    "Semoule fine, légumes mijotés et bouillon maison.": "细粒库斯库斯、慢炖蔬菜和自制高汤。"
   },
   "uk": {
     "Hôpital Tenon": "Лікарня Тенон",
@@ -234,7 +306,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • Юридична інформація",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • Конфіденційність",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • Метро Гамбетта",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, США"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, США",
+    "Couscous": "Кускус",
+    "À déguster chaque vendredi et samedi (midi et soir).": "Смакуйте щоп’ятниці та щосуботи (на обід і вечерю).",
+    "Poulet": "Курка",
+    "Merguez": "Мергез",
+    "Brochette d’agneau": "Шашличок із ягнятини",
+    "Bœuf": "Яловичина",
+    "Végétarien": "Вегетаріанський",
+    "3 Viandes": "3 види м’яса",
+    "Semoule fine, légumes mijotés et bouillon maison.": "Дрібна манна крупа, тушковані овочі та домашній бульйон."
   },
   "ja": {
     "Hôpital Tenon": "テノン病院",
@@ -260,7 +341,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • 法的事項",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • プライバシー",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • 地下鉄ガンベッタ駅",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, アメリカ合衆国"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, アメリカ合衆国",
+    "Couscous": "クスクス",
+    "À déguster chaque vendredi et samedi (midi et soir).": "毎週金曜・土曜のランチとディナーにどうぞ。",
+    "Poulet": "チキン",
+    "Merguez": "メルゲーズ",
+    "Brochette d’agneau": "ラム串焼き",
+    "Bœuf": "ビーフ",
+    "Végétarien": "ベジタリアン",
+    "3 Viandes": "3種のお肉",
+    "Semoule fine, légumes mijotés et bouillon maison.": "細粒のクスクス、じっくり煮込んだ野菜、自家製ブイヨン。"
   },
   "ko": {
     "Hôpital Tenon": "테농 병원",
@@ -286,7 +376,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • 법적 고지",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • 개인정보 보호",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • 감베타 지하철역",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, 미국"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, 미국",
+    "Couscous": "쿠스쿠스",
+    "À déguster chaque vendredi et samedi (midi et soir).": "매주 금요일과 토요일, 점심과 저녁에 즐기실 수 있습니다.",
+    "Poulet": "닭고기",
+    "Merguez": "메르게즈 소시지",
+    "Brochette d’agneau": "양고기 꼬치",
+    "Bœuf": "소고기",
+    "Végétarien": "채식",
+    "3 Viandes": "고기 3종",
+    "Semoule fine, légumes mijotés et bouillon maison.": "고운 세몰리나, 푹 익힌 채소와 수제 육수."
   },
   "pl": {
     "Hôpital Tenon": "Szpital Tenon",
@@ -312,7 +411,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • Nota prawna",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • Prywatność",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • Metro Gambetta",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, Stany Zjednoczone"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, Stany Zjednoczone",
+    "Couscous": "Kuskus",
+    "À déguster chaque vendredi et samedi (midi et soir).": "Zapraszamy w każdy piątek i sobotę (na obiad i kolację).",
+    "Poulet": "Kurczak",
+    "Merguez": "Merguez",
+    "Brochette d’agneau": "Szaszłyk jagnięcy",
+    "Bœuf": "Wołowina",
+    "Végétarien": "Wegetariański",
+    "3 Viandes": "3 rodzaje mięsa",
+    "Semoule fine, légumes mijotés et bouillon maison.": "Drobna kasza manna, duszone warzywa i domowy bulion."
   },
   "tr": {
     "Hôpital Tenon": "Tenon Hastanesi",
@@ -338,7 +446,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • Yasal bilgiler",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • Gizlilik",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • Gambetta metrosu",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, ABD"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, ABD",
+    "Couscous": "Kuskus",
+    "À déguster chaque vendredi et samedi (midi et soir).": "Her cuma ve cumartesi öğle ve akşam yemeklerinde tadını çıkarın.",
+    "Poulet": "Tavuk",
+    "Merguez": "Merguez sosisi",
+    "Brochette d’agneau": "Kuzu şiş",
+    "Bœuf": "Dana eti",
+    "Végétarien": "Vejetaryen",
+    "3 Viandes": "3 Çeşit Et",
+    "Semoule fine, légumes mijotés et bouillon maison.": "İnce irmik, ağır ateşte pişmiş sebzeler ve ev yapımı bulyon."
   },
   "hi": {
     "Hôpital Tenon": "टेनॉन अस्पताल",
@@ -364,7 +481,16 @@
     "La Colline Gambetta • Mentions légales": "La Colline Gambetta • कानूनी सूचना",
     "La Colline Gambetta • Confidentialité": "La Colline Gambetta • गोपनीयता",
     "4 rue Belgrand • 75020 Paris • Métro Gambetta": "4 rue Belgrand • 75020 Paris • गाम्बेटा मेट्रो",
-    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, संयुक्त राज्य अमेरिका"
+    "San Francisco, CA 94107, États-Unis": "San Francisco, CA 94107, संयुक्त राज्य अमेरिका",
+    "Couscous": "कूसकूस",
+    "À déguster chaque vendredi et samedi (midi et soir).": "हर शुक्रवार और शनिवार दोपहर और रात के भोजन में उपलब्ध।",
+    "Poulet": "चिकन",
+    "Merguez": "मरगेज़ सॉसेज",
+    "Brochette d’agneau": "मेमने के मांस की सीख",
+    "Bœuf": "गोमांस",
+    "Végétarien": "शाकाहारी",
+    "3 Viandes": "3 प्रकार के मांस",
+    "Semoule fine, légumes mijotés et bouillon maison.": "बारीक सूजी, धीमी आँच पर पकी सब्ज़ियाँ और घर का बना शोरबा।"
   }
 };
   window.LCGMergeCommonTranslations = function (dicts) {

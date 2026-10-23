@@ -65,3 +65,10 @@ Pour les BOISSONS, voir aussi la liste de proscriptions du gabarit v2
 (brique, ardoise, verrière, banquette).
 
 Les **cocktails** font exception : lumière cosy de soirée, validée.
+
+## Exception demandée pour les couscous
+Les six photos `assets/plats/couscous-*.jpg` conservent la lumière naturelle
+et le décor bistrot des plats, mais sont présentées sur une **table noire**,
+à la demande explicite du propriétaire. Cette exception ne change pas le
+style des autres catégories. Visuels illustratifs générés, pas des photos
+prises au restaurant.
