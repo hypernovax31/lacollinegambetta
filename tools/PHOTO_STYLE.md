@@ -128,3 +128,9 @@ un peu plus d’air autour et d’accessoires visibles, toujours sans plan large
 sur le restaurant. Conserver la vue élevée et le bokeh très prononcé.
 La série burgers poisson/végétarien,4salades,3pâtes,couscous poulet est
 réalisée dans ce cadrage ;4couscous restent à terminer.
+
+## Fin de série : quatre couscous restants
+Merguez, agneau, bœuf et végétarien repris avec un très léger recul
+(assiette environ72–78% de largeur), vue élevée et fond bokeh intense.
+La passe couvre les24photos ; les10premières restent au gros plan précédent,
+les14suivantes ont reçu le cadrage légèrement élargi demandé ensuite.

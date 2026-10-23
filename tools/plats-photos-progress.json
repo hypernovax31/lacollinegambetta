@@ -1,6 +1,6 @@
 {
   "revision": "Gros plan gourmand, légèrement dézoomé à la demande du propriétaire",
-  "style": "Vue élevée 45–60° vers le bas, cadrage serré : plat/assiette 75–80% de largeur, contenu net et gourmand. Table noire, couverts/serviette/verre discrets. Photos réelles seules références de décor : ne pas reconstruire une pièce, pas de géométrie inventée. Arrière-plan minimal, totalement défocalisé : quelques touches noir/jaune et lumières ambre, bokeh très prononcé. Format16:9 1280x720, pas de personnes ni texte lisible. Léger recul : laisser davantage respirer les bords et les accessoires, sans revenir au plan large sur la salle.",
+  "style": "Vue élevée 45–60° vers le bas, cadrage serré : plat/assiette 72–80% de largeur, contenu net et gourmand. Table noire, couverts/serviette/verre discrets. Photos réelles seules références de décor : ne pas reconstruire une pièce, pas de géométrie inventée. Arrière-plan minimal, totalement défocalisé : quelques touches noir/jaune et lumières ambre, bokeh très prononcé. Format16:9 1280x720, pas de personnes ni texte lisible. Léger recul : laisser davantage respirer les bords et les accessoires, sans revenir au plan large sur la salle.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
@@ -26,15 +26,14 @@
     "assets/plats/penne-au-poulet-et-champignons.jpg",
     "assets/plats/tagliatelles-a-la-carbonara.jpg",
     "assets/plats/tagliatelles-au-saumon.jpg",
-    "assets/plats/vegetarienne.jpg"
-  ],
-  "remaining": [
+    "assets/plats/vegetarienne.jpg",
     "assets/plats/couscous-merguez.jpg",
     "assets/plats/couscous-agneau.jpg",
     "assets/plats/couscous-boeuf.jpg",
     "assets/plats/couscous-vegetarien.jpg"
   ],
-  "next": "Terminer les 4 couscous remaining : merguez, agneau, bœuf, végétarien, cadrage légèrement dézoomé (75–80% de largeur), vue élevée45–60°, fond minimal bokeh intense à partir des photos réelles. Les10premières de done restent au cadrage serré précédent ; les10 suivantes sont légèrement dézoomées. Pas de modification de recette, textes, prix, PDF.",
+  "remaining": [],
+  "next": "Passe terminée : 24 photos ont été reprises avec plat dominant et fond bokeh. Les 10 premières restent en gros plan 80–90%, les 14 suivantes au cadrage légèrement dézoomé (environ72–80%). Aucun changement de texte, prix ou PDF.",
   "slightly_wider_done": [
     "assets/plats/burger-vegetarien.jpg",
     "assets/plats/chevre-chaud.jpg",
@@ -45,6 +44,16 @@
     "assets/plats/penne-au-poulet-et-champignons.jpg",
     "assets/plats/tagliatelles-a-la-carbonara.jpg",
     "assets/plats/tagliatelles-au-saumon.jpg",
-    "assets/plats/vegetarienne.jpg"
+    "assets/plats/vegetarienne.jpg",
+    "assets/plats/couscous-merguez.jpg",
+    "assets/plats/couscous-agneau.jpg",
+    "assets/plats/couscous-boeuf.jpg",
+    "assets/plats/couscous-vegetarien.jpg"
+  ],
+  "latest_batch": [
+    "assets/plats/couscous-merguez.jpg",
+    "assets/plats/couscous-agneau.jpg",
+    "assets/plats/couscous-boeuf.jpg",
+    "assets/plats/couscous-vegetarien.jpg"
   ]
 }
