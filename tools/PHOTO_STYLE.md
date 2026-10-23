@@ -1,15 +1,18 @@
 # Ton photographique du site
 
-## Priorité actuelle : bokeh extrême, bar / TV / baie vitrée
-La demande précédente sur la salle rangée ne doit plus conduire à montrer
-les rangées de tables et de chaises. Le propriétaire veut le PLAT NET et
-l’arrière-plan très flouté : seulement le bar à droite, la TV dans sa niche
-jaune à gauche du bar et la grande baie vitrée noire à gauche, suggérés par
-des formes douces. Pas de mobilier répétitif, pas de dossiers partout.
-Conserver le point de vue du client assis et la table noire crédible.
-Le tartare est refait comme proposition de référence : attendre le retour
-avant de décliner aux23autres. Suivi `tools/plats-photos-progress.json`.
-Textes, recettes, prix et PDF inchangés. Format16:9 1280×720.
+## Priorité actuelle : vraie photo TV+bar fortement floutée
+Le propriétaire a accepté d’utiliser le cadrage réel de IMG_2830 (TV+bar),
+sans ajouter de baie vitrée hors champ. **Ne plus faire générer une salle** :
+conserver la géométrie de cette vraie photo, recadrée proportionnellement et
+fortement floutée, puis placer le premier plan net (table et plat) devant.
+Le tartare est le premier montage de référence. Le fond est issu directement
+de IMG_2830 : réduction à1280px, recadrage vertical nord16:9 et flou sigma22.
+Les fichiers source du montage et le masque sont conservés dans
+`/home/user/photo-background-work/` ; la photo réelle dans
+`/home/user/restaurant-references/IMG_2830.jpeg`. Le premier plan avant montage
+correspond au tartare du commit eb35e60. Les23autres ne sont pas encore adaptés.
+Pas de chaises dispersées, pas de détails de salle nets. Plat net, lumière
+chaleureuse, point de vue du client assis. Textes/prix/PDF inchangés.
 
 Les gabarits historiques ci-dessous ne priment pas sur ce bloc pour Nos plats.
 

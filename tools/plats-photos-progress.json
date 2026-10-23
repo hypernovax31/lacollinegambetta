@@ -1,7 +1,7 @@
 {
-  "revision": "Proposition de référence : bokeh extrême bar/TV/baie, sans mobilier en fond",
-  "awaiting_reference_approval": true,
-  "style": "Point de vue du client assis, plat NET et table noire horizontale. Arrière-plan très flouté avec bar à droite, TV dans niche jaune à gauche du bar, baie vitrée noire encore à gauche, seulement suggérés par des formes/couleurs douces. PAS de rangées de tables ni accumulation de chaises ; cette demande remplace la précédente mise en valeur du rangement de la salle et des dossiers. Bokeh très prononcé, lumière chaleureuse, plat dominant. Format16:9 1280x720.",
+  "revision": "Fond TV+bar réel fortement flouté, sans architecture regénérée",
+  "awaiting_reference_approval": false,
+  "style": "Accord propriétaire : utiliser la vraie photo IMG_2830 de la TV+bar, fortement floutée, conserver ses proportions SANS réinventer les volumes ni ajouter la baie hors champ. Le tartare est un montage du premier plan net (plat et table) sur cette vraie photo recadrée proportionnellement en16:9 puis floutée (sigma22 sur1280px). Fichiers de travail durables /home/user/photo-background-work/. Ne pas utiliser une salle générée comme fond. Vue du client assis et table noire crédible ; pas de rangées de tables/chaises en fond. Plat et accessoires nets.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
@@ -35,5 +35,5 @@
     "assets/plats/couscous-vegetarien.jpg",
     "assets/plats/couscous-trois-viandes.jpg"
   ],
-  "next": "Attendre le retour du propriétaire sur le tartare présenté comme référence avant de décliner le bokeh bar/TV/baie aux23autres. Le modèle doit montrer le plat net sans rangées de mobilier. Ne pas présenter cette nouvelle passe comme terminée. Textes/prix/PDF inchangés."
+  "next": "Décliner aux23remaining le fond réel TV+bar validé dans son principe, pas l’ancien fond inventé. Un seul visuel (tartare) est adapté pour le moment. Préserver proportions de IMG2830 et flou marqué ; détourer soigneusement le premier plan, notamment verres et couverts. Pas de baie inventée hors champ, pas de nouvelle reconstruction de pièce. Prix/textes/PDF inchangés."
 }
