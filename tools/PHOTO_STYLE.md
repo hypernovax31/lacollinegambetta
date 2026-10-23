@@ -100,3 +100,14 @@ marbre blanc ni bois clair), chaises cuir noir ; accentuer le bokeh sans
 couper l’assiette. Le plat de poisson reprend désormais un pavé de saumon
 sur des pâtes d’après la photo fournie. Le couscous signature s’appelle
 « La Colline » et contient poulet, agneau et bœuf, sans merguez.
+
+## Précision finale de l’angle et du décor (confirmée)
+L’appareil est **au-dessus** de l’assiette, à **45–60° vers le bas** (cible55°),
+pour montrer le contenu ; jamais au ras de la table. Assiette posée à plat.
+La grande baie vitrée noire est l’entrée, **à gauche de la TV dans sa niche
+jaune** ; le bar est à droite de la TV. À droite du bar : salle longue avec
+une rangée de tables le long de chaque mur. Tables noir uni, chaises cuir noir.
+Mise en scène professionnelle : couverts, serviette, boisson et pain/sauce
+selon le plat, sans modifier la recette ni ajouter de suppléments implicites.
+Conserver les plats nets et le bokeh d’arrière-plan marqué. La nouvelle passe
+suit `tools/plats-photos-progress.json` (10/24 traitées pour ce brief révisé).

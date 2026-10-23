@@ -1,5 +1,6 @@
 {
-  "style": "Vue à 45°, 16:9 1280x720, plat net, arrière-plan bokeh inspiré du vrai décor, tables noires à bord laiton, chaises cuir noir, banquettes jaunes/noires. Sans personnes reconnaissables. Décor demandé pour la suite : grande baie vitrée à cadre noir et grande télévision noire sur le mur jaune, à gauche du bar, en arrière-plan bokeh.",
+  "revision": "Vue plongeante 45–60° et table vivante — demande confirmée par le propriétaire",
+  "style": "Appareil élevé à 45–60° (cible55), assiette à plat entièrement visible, contenu net. Format16:9 1280x720. Tables noir uni, chaises cuir noir, accessoires adaptés (couverts, serviette, boisson, pain/sauce selon plat). Entrée baie vitrée noire à gauche de la TV dans niche jaune ; bar à droite de la TV ; salle longue à droite du bar avec tables le long des deux murs. Fond bokeh prononcé. Pas de gens reconnaissables, pas de texte lisible.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
@@ -9,38 +10,29 @@
     "assets/plats/bavette-d-aloyau.jpg",
     "assets/plats/burger-chicken-croustillant.jpg",
     "assets/plats/burger-la-colline.jpg",
-    "assets/plats/chevre-chaud.jpg",
+    "assets/plats/couscous-trois-viandes.jpg",
     "assets/plats/cuisse-de-canard-confite.jpg",
     "assets/plats/cuisse-de-poulet-rotie.jpg",
     "assets/plats/entrecote-190-g.jpg",
     "assets/plats/escalope-de-veau.jpg",
     "assets/plats/poisson.jpg",
-    "assets/plats/tartare-de-boeuf.jpg",
-    "assets/plats/burger-vegetarien.jpg",
-    "assets/plats/couscous-merguez.jpg",
-    "assets/plats/couscous-poulet.jpg",
-    "assets/plats/la-colline.jpg",
+    "assets/plats/tartare-de-boeuf.jpg"
+  ],
+  "remaining": [
     "assets/plats/le-royal-fishburger.jpg",
+    "assets/plats/burger-vegetarien.jpg",
+    "assets/plats/la-colline.jpg",
+    "assets/plats/chevre-chaud.jpg",
+    "assets/plats/vegetarienne.jpg",
     "assets/plats/nordique.jpg",
     "assets/plats/tagliatelles-a-la-carbonara.jpg",
     "assets/plats/tagliatelles-au-saumon.jpg",
-    "assets/plats/vegetarienne.jpg",
+    "assets/plats/penne-au-poulet-et-champignons.jpg",
+    "assets/plats/couscous-poulet.jpg",
+    "assets/plats/couscous-merguez.jpg",
     "assets/plats/couscous-agneau.jpg",
     "assets/plats/couscous-boeuf.jpg",
-    "assets/plats/couscous-trois-viandes.jpg",
-    "assets/plats/couscous-vegetarien.jpg",
-    "assets/plats/penne-au-poulet-et-champignons.jpg"
+    "assets/plats/couscous-vegetarien.jpg"
   ],
-  "remaining": [],
-  "next": "Toutes les photos ont été refaites une fois. Reprendre les 8 needs_latest_decor : baie vitrée noire, TV sur mur jaune à gauche du bar, toutes tables/chaises noires, angle45, bokeh très marqué. Contrôler surtout que le plat reste entier. La Colline remplace 3 Viandes et contient poulet, agneau, bœuf sans merguez. PDF inchangé.",
-  "needs_latest_decor": [
-    "assets/plats/bavette-d-aloyau.jpg",
-    "assets/plats/burger-chicken-croustillant.jpg",
-    "assets/plats/burger-la-colline.jpg",
-    "assets/plats/cuisse-de-canard-confite.jpg",
-    "assets/plats/cuisse-de-poulet-rotie.jpg",
-    "assets/plats/entrecote-190-g.jpg",
-    "assets/plats/escalope-de-veau.jpg",
-    "assets/plats/tartare-de-boeuf.jpg"
-  ]
+  "next": "Poursuivre les 14 restantes dans le même style. Vérifier angle suffisamment plongeant, assiette entière, disposition entrée/TV/bar/salle, table noire, accessoires adaptés. La Colline : poulet, agneau, bœuf sans merguez ; saumon avec pâtes. Ne modifier ni textes ni prix ni PDF."
 }
