@@ -111,3 +111,13 @@ Mise en scène professionnelle : couverts, serviette, boisson et pain/sauce
 selon le plat, sans modifier la recette ni ajouter de suppléments implicites.
 Conserver les plats nets et le bokeh d’arrière-plan marqué. La nouvelle passe
 suit `tools/plats-photos-progress.json` (10/24 traitées pour ce brief révisé).
+
+## Correction prioritaire : zoom et fond réellement flou
+Le propriétaire a rejeté la salle trop visible et inventée. Cette correction
+**remplace les précédents briefs montrant toute la disposition**. Utiliser les
+3 photos réelles comme références, mais cadrer serré sur la nourriture :
+assiette environ80–90% de la largeur, angle élevé45–60°, contenu net. Très peu
+de fond visible, complètement dissous en bokeh crémeux noir/jaune/ambre.
+Ne pas reconstruire une entrée, TV ou salle détaillée ; le décor n’est pas
+le sujet. Accessoires discrets en bordure, pas de concurrence avec le plat.
+Les10photos de la précédente série ont été reprises ;14restantes à traiter.

@@ -1,6 +1,6 @@
 {
-  "revision": "Vue plongeante 45–60° et table vivante — demande confirmée par le propriétaire",
-  "style": "Appareil élevé à 45–60° (cible55), assiette à plat entièrement visible, contenu net. Format16:9 1280x720. Tables noir uni, chaises cuir noir, accessoires adaptés (couverts, serviette, boisson, pain/sauce selon plat). Entrée baie vitrée noire à gauche de la TV dans niche jaune ; bar à droite de la TV ; salle longue à droite du bar avec tables le long des deux murs. Fond bokeh prononcé. Pas de gens reconnaissables, pas de texte lisible.",
+  "revision": "Correction propriétaire : gros plan plat dominant et décor réel réduit en bokeh intense",
+  "style": "Vue élevée 45–60° vers le bas, cadrage serré : plat/assiette 80–90% de largeur, contenu net et gourmand. Table noire, couverts/serviette/verre discrets. Photos réelles seules références de décor : ne pas reconstruire une pièce, pas de géométrie inventée. Arrière-plan minimal, totalement défocalisé : quelques touches noir/jaune et lumières ambre, bokeh très prononcé. Format16:9 1280x720, pas de personnes ni texte lisible.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
@@ -34,5 +34,5 @@
     "assets/plats/couscous-boeuf.jpg",
     "assets/plats/couscous-vegetarien.jpg"
   ],
-  "next": "Poursuivre les 14 restantes dans le même style. Vérifier angle suffisamment plongeant, assiette entière, disposition entrée/TV/bar/salle, table noire, accessoires adaptés. La Colline : poulet, agneau, bœuf sans merguez ; saumon avec pâtes. Ne modifier ni textes ni prix ni PDF."
+  "next": "Reprendre les 14 remaining selon la CORRECTION GROS PLAN ci-dessus et les 3 photos réelles, pas le précédent cadrage montrant toute la salle. Contrôler le plat et sa recette ; ne pas décrire ces14 comme terminées. Textes, prix et PDF inchangés."
 }
