@@ -17,7 +17,8 @@
     "build:imprimeur": "node tools/build_carte_pdf.mjs --imprimeur",
     "build:carte-imprimeur": "python3 tools/build_carte.py && node tools/build_carte_pdf.mjs --imprimeur",
     "pdf:from-jpg": "node tools/jpeg-pdf.mjs",
-    "build:carte": "python3 tools/build_carte.py && node tools/build_carte_pdf.mjs"
+    "build:carte": "python3 tools/build_carte.py && node tools/build_carte_pdf.mjs",
+    "test:photos": "node tools/check_food_photo_ratio.cjs"
   },
   "devDependencies": {
     "@fontsource/cinzel": "^5.3.0",

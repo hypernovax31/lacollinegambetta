@@ -1,5 +1,15 @@
 # Ton photographique du site
 
+### Affichage 16:9 demandé pour les quatre rubriques
+Les66photos des entrées, plats, desserts et crêpes s’affichent dans un cadre
+16:9, dans les tiroirs et la visionneuse, sur mobile et ordinateur. Les fichiers
+originaux restent intacts ; `object-fit:contain` évite de déformer ou couper
+les assiettes (bandes discrètes possibles pour les sources carrées). Les
+illustrations des formules crêpes et le PDF sont exclus de ce changement.
+Aucune reprise de génération ou de décor n’est autorisée par ce simple
+changement d’affichage. Vérification : `npm run test:photos`.
+
+
 ### Exception expressément demandée après restauration
 Uniquement `tagliatelles-au-saumon.jpg` : le propriétaire a choisi des petits
 morceaux de saumon mêlés aux pâtes. Photo corrigée en conservant le décor

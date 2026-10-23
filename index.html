@@ -11059,19 +11059,46 @@ html:not(.carte-doc) #crepes .crepe-formula-card__list li::before { content:'✦
 html:not(.carte-doc) #crepes .crepe-formula-card > .crepe-formula-card__price { margin-top:10px; font-family:'Cinzel',serif; font-style:normal; color:#411559; font-size:2.2rem; }
 
 
-/* Couscous : photos chaleureuses au format panoramique 16:9 sur tous les écrans. */
-html:not(.carte-doc) #plats .panel--couscous .food-card__photo {
-  width:100% !important;
+/* Photos des entrées, plats, desserts et crêpes : cadre 16:9 sur tous
+   les écrans. Les originaux restent intacts et visibles sans déformation. */
+html:not(.carte-doc) #entrees .food-card__photo,
+html:not(.carte-doc) #plats .food-card__photo,
+html:not(.carte-doc) #desserts .food-card__photo,
+html:not(.carte-doc) #crepes .food-card__photo {
+  width:calc(100% - 24px) !important;
   height:auto !important;
+  min-height:0 !important;
   max-height:none !important;
   aspect-ratio:16 / 9 !important;
 }
-html:not(.carte-doc) #plats .panel--couscous .food-card__photo img {
+html:not(.carte-doc) #entrees .food-card__photo img,
+html:not(.carte-doc) #plats .food-card__photo img,
+html:not(.carte-doc) #desserts .food-card__photo img,
+html:not(.carte-doc) #crepes .food-card__photo img {
   display:block;
   width:100% !important;
   height:100% !important;
   max-height:none !important;
   object-fit:contain !important;
+  transform:none;
+}
+/* La visionneuse garde aussi le 16:9, y compris en paysage sur téléphone.
+   Sa largeur tient compte de la hauteur disponible pour laisser les légendes. */
+html:not(.carte-doc) .lightbox--food-wide .lightbox__frame {
+  width:min(920px, calc(100vw - 32px), max(160px, calc(177.7778dvh - 355.5556px))) !important;
+  max-width:100%;
+  flex-direction:column !important;
+  align-items:stretch !important;
+}
+html:not(.carte-doc) .lightbox--food-wide .lightbox__img {
+  display:block;
+  width:100% !important;
+  height:auto !important;
+  max-width:100% !important;
+  max-height:none !important;
+  aspect-ratio:16 / 9 !important;
+  object-fit:contain !important;
+  flex:0 0 auto !important;
 }
 
 </style>
@@ -13355,6 +13382,7 @@ else sizeCoverMedallion();
     if (!lbGroup || !lbGroup.length) return;
     lbIndex = (i + lbGroup.length) % lbGroup.length;
     var info = lbInfo(lbGroup[lbIndex]);
+    lb.classList.toggle('lightbox--food-wide', !!lbGroup[lbIndex].closest('#entrees, #plats, #desserts, #crepes'));
 
     lbImg.src = info.src;
     lbImg.alt = info.title;
