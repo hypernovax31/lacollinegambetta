@@ -1,5 +1,12 @@
 # Ton photographique du site
 
+### Exception expressément demandée après restauration
+Uniquement `tagliatelles-au-saumon.jpg` : le propriétaire a choisi des petits
+morceaux de saumon mêlés aux pâtes. Photo corrigée en conservant le décor
+original. Les23autres restent identiques aux originaux. Ne pas relancer
+la campagne de décor/cadrage ; les consignes historiques restent suspendues.
+
+
 ## Priorité actuelle : RESTAURATION DES ORIGINAUX — STOP AUX RETOUCHES
 Le propriétaire a rejeté les nouvelles photos et demandé le retour aux
 originaux. Les24photos de Nos plats ont été restaurées **octet pour octet**

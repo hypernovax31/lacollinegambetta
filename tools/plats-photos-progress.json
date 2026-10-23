@@ -1,5 +1,5 @@
 {
-  "status": "cancelled_originals_restored",
+  "status": "originals_restored_with_single_requested_correction",
   "source_commit": "29ef6c1",
   "restored": [
     "assets/plats/entrecote-190-g.jpg",
@@ -18,7 +18,6 @@
     "assets/plats/vegetarienne.jpg",
     "assets/plats/nordique.jpg",
     "assets/plats/tagliatelles-a-la-carbonara.jpg",
-    "assets/plats/tagliatelles-au-saumon.jpg",
     "assets/plats/penne-au-poulet-et-champignons.jpg",
     "assets/plats/couscous-poulet.jpg",
     "assets/plats/couscous-merguez.jpg",
@@ -30,5 +29,10 @@
   "done": [],
   "remaining": [],
   "awaiting_reference_approval": false,
-  "next": "ARRÊT des retouches demandé par le propriétaire. Les24photos ont été restaurées octet pour octet depuis29ef6c1 :18photos précédant la campagne de modifications et6couscous à leur ajout initial. Aucun nouveau cadrage/décor/bokeh à générer sans nouvelle demande explicite. Textes/prix/réservation/PDF préservés."
+  "next": "Campagne de retouches arrêtée.23photos strictement originales ; seule exception demandée ensuite : tagliatelles au saumon avec petits morceaux mêlés aux pâtes. Aucun changement aux autres photos sans demande explicite. Textes/prix/réservation/PDF préservés.",
+  "single_requested_correction": {
+    "photo": "assets/plats/tagliatelles-au-saumon.jpg",
+    "content": "Choix explicite propriétaire : petits morceaux de saumon mêlés aux tagliatelles. Correction du contenu du plat uniquement, décor original conservé.",
+    "format": "1280x720"
+  }
 }
