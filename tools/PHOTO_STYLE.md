@@ -1,29 +1,15 @@
 # Ton photographique du site
 
-## Priorité actuelle pour les 24 photos « Nos plats » : première personne
-
-**Dernière correction prioritaire : SALLE RANGÉE.** Tables noires alignées
-régulièrement le long des murs, chaises en cuir noir rentrées, allée dégagée.
-Pas de tables de travers, superposées, rondes dispersées ni dossiers partout.
-Conserver le point de vue du client assis, plat dominant et arrière-plan flou.
-Rejeter une variante si le rangement ou la table noire ne sont pas respectés.
-Cette nouvelle passe compte 7 photos validées sur24,17restantes. Les variantes
-bavette/poulet rôti encore encombrées et burger LaColline table marron ont été
-écartées sans remplacer les précédents visuels.
-
-Cette demande remplace les précédents cadrages pour les24photos.
-Photographier comme si le client était ASSIS devant sa propre assiette,
-regardant naturellement vers le bas : pas depuis l’autre côté de la table,
-pas de vue studio ni de plateau artificiellement incliné. Table noire,
-assiette proche et entièrement visible, couverts accessibles à gauche et à
-droite, verre à portée de main. Composition naturelle, vivante, moins figée.
-Dossier de chaise en cuir noir discret au-delà de la table, pas une chaise
-monumentale centrée devant l’appareil. Restaurant réel d’après IMG2830,
-IMG3117, IMG2829 ; lumière naturelle chaleureuse et bokeh, pas de décor inventé.
-Format16:9,1280×720. Progression : `tools/plats-photos-progress.json` (7/24 pour la nouvelle passe salle rangée).
-Préserver les recettes : tagliatelles saumon avec morceaux mêlés aux pâtes,
-pavé de saumon sur pâtes pour «Poisson», couscous LaColline poulet/agneau/bœuf
-sans merguez. Ne pas modifier les prix, textes ni le PDF.
+## Priorité actuelle : bokeh extrême, bar / TV / baie vitrée
+La demande précédente sur la salle rangée ne doit plus conduire à montrer
+les rangées de tables et de chaises. Le propriétaire veut le PLAT NET et
+l’arrière-plan très flouté : seulement le bar à droite, la TV dans sa niche
+jaune à gauche du bar et la grande baie vitrée noire à gauche, suggérés par
+des formes douces. Pas de mobilier répétitif, pas de dossiers partout.
+Conserver le point de vue du client assis et la table noire crédible.
+Le tartare est refait comme proposition de référence : attendre le retour
+avant de décliner aux23autres. Suivi `tools/plats-photos-progress.json`.
+Textes, recettes, prix et PDF inchangés. Format16:9 1280×720.
 
 Les gabarits historiques ci-dessous ne priment pas sur ce bloc pour Nos plats.
 
