@@ -1,7 +1,7 @@
 {
-  "revision": "Corriger la table flottante : proposition sur table ronde existante avec bord et pied visibles",
+  "revision": "Correction propriétaire : tables intérieures carrées légèrement plus grandes, éclairage chaleureux",
   "awaiting_reference_approval": true,
-  "style": "NOUVELLE PRIORITÉ : pas de plateau noir ajouté devant une vue du bar. Partir de la table ronde noire à bord doré réellement présente dans IMG2830, avec courbure du bord et pied/support visibles, liés naturellement au sol et à une chaise cuir noire. Plat assiette blanche entière et net, point de vue client, lumière douce, bokeh progressif. Ne pas promettre une copie exacte de géométrie par génération. Proposition distincte non intégrée aux cartes avant validation.",
+  "style": "Les tables INTÉRIEURES sont CARRÉES et légèrement plus grandes : plateau noir, liseré doré, bord droit et support/pied visibles, perspective naturelle sans effet flottant. Cette instruction remplace la table ronde de la proposition précédente. Dossier de chaise cuir noir à hauteur crédible. Plat net et gourmand, point de vue client assis. Conserver chaleur du décor et éclairage ambre des suspensions et alentours en fond, profondeur progressive/bokeh, pas de mobilier dispersé. Références réelles IMG2830/3117/2829, ne pas promettre une géométrie exacte par génération. Image16:9 1280x720.",
   "references": [
     "/home/user/restaurant-references/IMG_3117.jpeg",
     "/home/user/restaurant-references/IMG_2829.jpeg",
@@ -34,7 +34,7 @@
     "assets/plats/couscous-vegetarien.jpg",
     "assets/plats/couscous-trois-viandes.jpg"
   ],
-  "next": "Présenter propositions-photos/tartare-table-ancree.jpg et attendre validation. Les24photos restent à harmoniser. Ne pas reprendre les10variantes à plateau flottant ni les publier. Le fichier live tartare reste inchangé pour éviter de pousser une proposition non validée. Prix/textes/PDF inchangés.",
-  "proposal": "propositions-photos/tartare-table-ancree.jpg",
+  "next": "Présenter propositions-photos/tartare-table-carree.jpg pour validation (remplace table-ancree ronde). Aucun visuel de carte remplacé à ce stade ;24photos restent à harmoniser. Garder table carrée plus grande et chaleur de l’éclairage de fond. Textes/prix/PDF inchangés.",
+  "proposal": "propositions-photos/tartare-table-carree.jpg",
   "rejected_latest_attempts": "Les10variantes générées avant le signalement table flottante ont toutes été écartées et les photos précédentes restaurées. Aucun de ces10essais n’a été publié."
 }

@@ -1,16 +1,16 @@
 # Ton photographique du site
 
-## Priorité actuelle : supprimer l’effet de table flottante
-Le propriétaire a rejeté les10dernières variantes : plateaux ajoutés devant
-le décor, sans relation crédible au sol. Ces10variantes non publiées ont été
-écartées et les anciens visuels restaurés. Ne pas les remettre en production.
-Nouvelle proposition : `propositions-photos/tartare-table-ancree.jpg`, distincte
-du fichier live. Prendre comme base la table ronde noire à bord doré de
-IMG2830, conserver un bord courbe et un support/pied visibles, avec une chaise
-cuir noire à hauteur cohérente, au lieu d’ajouter un rectangle noir dans une
-vue du bar. Le plat reste gourmand et net, perspective naturelle, lumière
-douce et profondeur progressive. Attendre validation de ce visuel avant de
-modifier la série.24photos restent à harmoniser ; textes/prix/PDF inchangés.
+## Priorité actuelle : table intérieure carrée et éclairage chaleureux
+Correction explicite du propriétaire : les tables intérieures sont **carrées,
+légèrement plus grandes**, et non rondes. Plateau noir, bord doré, bord droit
+et support visibles pour que la table soit naturellement ancrée et non flottante.
+Conserver la chaleur du décor et de l’éclairage alentour dans le fond :
+suspensions ambre, lumière douce et accueillante. Plat net et gourmand,
+profondeur progressive/bokeh, point de vue du client assis. Ne pas inventer
+une autre architecture ni multiplier tables et chaises en arrière-plan.
+Proposition actuelle : `propositions-photos/tartare-table-carree.jpg` ; elle
+remplace la proposition ronde. Attendre validation avant intégration dans
+les cartes. Les24photos restent à harmoniser. Textes/prix/PDF inchangés.
 
 Les gabarits historiques ci-dessous ne priment pas sur ce bloc pour Nos plats.
 
