@@ -11091,7 +11091,7 @@ html:not(.carte-doc) #plats .food-card--decor45 .food-card__photo img {
 </style>
 <link rel="stylesheet" href="assets/css/google-reviews.css?v=2026100810">
 <script src="assets/js/i18n-common.js?v=20261023-colline" defer></script>
-<script src="assets/js/i18n.js?v=20261015-nutella" defer></script>
+<script src="assets/js/i18n.js?v=20261024-breakfast" defer></script>
 <script src="assets/js/fetes-medaillon.js?v=20261011"></script>
 <script src="assets/js/halloween.js?v=20261012" defer></script>
 <script src="assets/js/google-reviews.js?v=2026101011" defer></script>
@@ -11883,7 +11883,7 @@ function quandSectionStable(section, faire) {
   }
   requestAnimationFrame(image);
 }
-function showMenuSection(sectionId, btnElement) {
+function showMenuSection(sectionId, btnElement, targetId) {
   if (sectionId !== 'vins' && window.LCGCloseWineAccordions) window.LCGCloseWineAccordions();
   document.querySelectorAll('.menu-section').forEach(sec => sec.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -11902,6 +11902,8 @@ function showMenuSection(sectionId, btnElement) {
      visible. */
   const anchor = document.getElementById('menu-nav-anchor');
   const section = document.getElementById(sectionId);
+  // Une entrée depuis Réservation peut viser un bloc précis de cet onglet.
+  const scrollTarget = (targetId && document.getElementById(targetId)) || section;
   const topBar = document.querySelector('.top-controls');
   const navWrap = document.getElementById('menu-nav-wrap');
   /* Cible VIVANTE : le haut de section et la hauteur des bandeaux épinglés
@@ -11912,8 +11914,8 @@ function showMenuSection(sectionId, btnElement) {
   const stickyOffset = () => (topBar ? topBar.offsetHeight : 0) + (navWrap ? navWrap.offsetHeight : 0);
   const maxScroll = () => Math.max(0, (document.documentElement.scrollHeight || 0) - (window.innerHeight || 0));
   const liveTarget = () => {
-    const base = section
-      ? section.getBoundingClientRect().top + window.scrollY
+    const base = scrollTarget
+      ? scrollTarget.getBoundingClientRect().top + window.scrollY
       : (anchor ? anchor.getBoundingClientRect().top + window.scrollY : 0);
     /* Jamais au-delà du bas de page : viser plus bas que le défilement
        possible fait recaler le navigateur en cours de route (il ramène la
@@ -11938,7 +11940,7 @@ function showMenuSection(sectionId, btnElement) {
        même si le défilement animé n'a rien à faire parce que la page était déjà
        en place, une perturbation tardive est toujours ramenée à la position
        théorique. */
-    lockSectionAnchor(section, () => stickyOffset() + 10);
+    lockSectionAnchor(scrollTarget, () => stickyOffset() + 10);
   });
 }
 /* Verrou d'ancre : une fois le défilement animé terminé, le haut de la
@@ -12150,18 +12152,6 @@ if (document.readyState === 'loading') {
 } else {
   buildPrintDocument();
 }
-function scrollToMenuTarget(targetId) {
-  const target = document.getElementById(targetId);
-  if (!target) return;
-  const topBar = document.querySelector('.top-controls');
-  const navWrap = document.getElementById('menu-nav-wrap');
-  const stickyOffset = () => (topBar ? topBar.offsetHeight : 0) + (navWrap ? navWrap.offsetHeight : 0);
-  const liveTarget = () => Math.max(0, Math.round(
-    target.getBoundingClientRect().top + window.scrollY - stickyOffset() - 10
-  ));
-  animateScrollTo(liveTarget(), 280, liveTarget);
-  lockSectionAnchor(target, () => stickyOffset() + 10);
-}
 function openInteractiveMenuIfHashed() {
   const hash = location.hash;
   const breakfastTarget = hash === '#menu-petit-dejeuner';
@@ -12178,8 +12168,9 @@ function openInteractiveMenuIfHashed() {
         const menuButton = Array.from(document.querySelectorAll('#menu-nav .nav-btn'))
           .find(btn => /showMenuSection\(\s*['"]menus['"]/.test(btn.getAttribute('onclick') || ''));
         if (!menuButton) return;
-        showMenuSection('menus', menuButton);
-        requestAnimationFrame(() => scrollToMenuTarget('menu-petit-dejeuner'));
+        // Une seule animation, après stabilisation : ne pas laisser le
+        // défilement de l’onglet écraser celui du petit-déjeuner.
+        showMenuSection('menus', menuButton, 'menu-petit-dejeuner');
       });
     }
   }
