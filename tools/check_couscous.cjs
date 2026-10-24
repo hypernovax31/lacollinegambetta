@@ -16,7 +16,7 @@ const assert = require('node:assert/strict');
   assert.equal(panel.previousElementSibling.querySelector('h4').textContent, 'Pâtes');
   const cards = [...panel.querySelectorAll('.food-card')];
   assert.equal(cards.length, 6);
-  const names = ['Poulet','Merguez','Brochette d’agneau','Bœuf','Végétarien','La Colline'];
+  const names = ['Poulet','Merguez','Brochette d’agneau','Bœuf','Végétarien','La Colline Royale'];
   const prices = ['15,60','15,60','16,50','16,50','13,50','22,90'];
   const note = 'Semoule fine, légumes mijotés et bouillon maison.';
   const signatureNote = "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.";

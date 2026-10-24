@@ -37,6 +37,7 @@
     "3 Viandes": "3 Meats",
     "Semoule fine, légumes mijotés et bouillon maison.": "Fine semolina, slow-cooked vegetables and homemade broth.",
     "La Colline": "La Colline",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Chicken, lamb and beef. Fine semolina, slow-cooked vegetables and homemade broth."
   },
   "es": {
@@ -74,6 +75,7 @@
     "3 Viandes": "3 Carnes",
     "Semoule fine, légumes mijotés et bouillon maison.": "Sémola fina, verduras guisadas y caldo casero.",
     "La Colline": "La Colline",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Pollo, cordero y ternera. Sémola fina, verduras guisadas y caldo casero."
   },
   "de": {
@@ -111,6 +113,7 @@
     "3 Viandes": "3 Fleischsorten",
     "Semoule fine, légumes mijotés et bouillon maison.": "Feiner Grieß, geschmortes Gemüse und hausgemachte Brühe.",
     "La Colline": "La Colline",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Hähnchen, Lamm und Rindfleisch. Feiner Grieß, geschmortes Gemüse und hausgemachte Brühe."
   },
   "it": {
@@ -148,6 +151,7 @@
     "3 Viandes": "3 Carni",
     "Semoule fine, légumes mijotés et bouillon maison.": "Semola fine, verdure stufate e brodo fatto in casa.",
     "La Colline": "La Colline",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Pollo, agnello e manzo. Semola fine, verdure stufate e brodo fatto in casa."
   },
   "pt": {
@@ -185,6 +189,7 @@
     "3 Viandes": "3 Carnes",
     "Semoule fine, légumes mijotés et bouillon maison.": "Sêmola fina, legumes estufados e caldo caseiro.",
     "La Colline": "La Colline",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Frango, borrego e carne de vaca. Sêmola fina, legumes estufados e caldo caseiro."
   },
   "nl": {
@@ -222,6 +227,7 @@
     "3 Viandes": "3 Vleessoorten",
     "Semoule fine, légumes mijotés et bouillon maison.": "Fijne gries, gestoofde groenten en huisgemaakte bouillon.",
     "La Colline": "La Colline",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Kip, lamsvlees en rundvlees. Fijne gries, gestoofde groenten en huisgemaakte bouillon."
   },
   "ar": {
@@ -259,6 +265,7 @@
     "3 Viandes": "3 أنواع من اللحوم",
     "Semoule fine, légumes mijotés et bouillon maison.": "سميد ناعم وخضار مطهوة على نار هادئة ومرق منزلي.",
     "La Colline": "لا كولين",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "دجاج ولحم ضأن ولحم بقري. سميد ناعم وخضار مطهوة على نار هادئة ومرق منزلي."
   },
   "zh": {
@@ -296,6 +303,7 @@
     "3 Viandes": "三种肉类",
     "Semoule fine, légumes mijotés et bouillon maison.": "细粒库斯库斯、慢炖蔬菜和自制高汤。",
     "La Colline": "拉科林",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "鸡肉、羊肉和牛肉。细粒库斯库斯、慢炖蔬菜和自制高汤。"
   },
   "uk": {
@@ -333,6 +341,7 @@
     "3 Viandes": "3 види м’яса",
     "Semoule fine, légumes mijotés et bouillon maison.": "Дрібна манна крупа, тушковані овочі та домашній бульйон.",
     "La Colline": "«Ла Коллін»",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Курка, ягнятина та яловичина. Дрібна манна крупа, тушковані овочі та домашній бульйон."
   },
   "ja": {
@@ -370,6 +379,7 @@
     "3 Viandes": "3種のお肉",
     "Semoule fine, légumes mijotés et bouillon maison.": "細粒のクスクス、じっくり煮込んだ野菜、自家製ブイヨン。",
     "La Colline": "ラ・コリーヌ",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "チキン、ラム、ビーフ。細粒のクスクス、じっくり煮込んだ野菜、自家製ブイヨン。"
   },
   "ko": {
@@ -407,6 +417,7 @@
     "3 Viandes": "고기 3종",
     "Semoule fine, légumes mijotés et bouillon maison.": "고운 세몰리나, 푹 익힌 채소와 수제 육수.",
     "La Colline": "라 콜린",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "닭고기, 양고기, 소고기. 고운 세몰리나, 푹 익힌 채소와 수제 육수."
   },
   "pl": {
@@ -444,6 +455,7 @@
     "3 Viandes": "3 rodzaje mięsa",
     "Semoule fine, légumes mijotés et bouillon maison.": "Drobna kasza manna, duszone warzywa i domowy bulion.",
     "La Colline": "La Colline",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Kurczak, jagnięcina i wołowina. Drobna kasza manna, duszone warzywa i domowy bulion."
   },
   "tr": {
@@ -481,6 +493,7 @@
     "3 Viandes": "3 Çeşit Et",
     "Semoule fine, légumes mijotés et bouillon maison.": "İnce irmik, ağır ateşte pişmiş sebzeler ve ev yapımı bulyon.",
     "La Colline": "La Colline",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Tavuk, kuzu eti ve dana eti. İnce irmik, ağır ateşte pişmiş sebzeler ve ev yapımı bulyon."
   },
   "hi": {
@@ -518,6 +531,7 @@
     "3 Viandes": "3 प्रकार के मांस",
     "Semoule fine, légumes mijotés et bouillon maison.": "बारीक सूजी, धीमी आँच पर पकी सब्ज़ियाँ और घर का बना शोरबा।",
     "La Colline": "ला कोलीन",
+    "La Colline Royale": "La Colline Royale",
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "चिकन, मेमने का मांस और गोमांस। बारीक सूजी, धीमी आँच पर पकी सब्ज़ियाँ और घर का बना शोरबा।"
   }
 };
