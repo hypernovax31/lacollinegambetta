@@ -1,5 +1,14 @@
 # Ton photographique du site
 
+### Correction géométrique des couscous : aucun chevauchement de tables
+Une SEULE petite table carrée noire à bord doré pour deux, une assiette
+en gros plan. Supprimer tous les plateaux voisins, bords parasites et
+surfaces qui traversent la table principale. La chaise opposée doit rester
+clairement derrière le plateau, sans le traverser. Fond chaleureux en bokeh,
+courgettes en morceaux et six recettes conservées. Contrôle visuel des six
+photos avant publication ; aucune autre photo à modifier.
+
+
 ### Précision du propriétaire : petite table pour DEUX + gros plan couscous
 Il ne suffit pas de recadrer une grande table : les6photos de couscous ont
 été retravaillées pour un petit plateau carré de bistrot (cible60×60cm),
