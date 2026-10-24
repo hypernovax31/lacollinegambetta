@@ -30,7 +30,7 @@
   ],
   "remaining": [],
   "awaiting_reference_approval": false,
-  "next": "Demande terminée sur les six couscous : tables de bistrot pour deux, une seule assiette, vue rapprochée. Ne pas reprendre les essais de très grandes tables écartés. Ne pas modifier les autres photos, textes, prix ou PDF sans demande explicite.",
+  "next": "Correction6couscous terminée : petite table pour2 et gros plan sur une seule assiette. Pas de grande table pour4, pas de second service, ne pas simplement recadrer les anciens essais de grandes tables. Ne pas modifier autres photos/textes/prix/PDF.",
   "single_requested_correction": {
     "photo": "assets/plats/tagliatelles-au-saumon.jpg",
     "content": "Choix explicite propriétaire : petits morceaux de saumon mêlés aux tagliatelles. Correction du contenu du plat uniquement, décor original conservé.",
@@ -75,8 +75,8 @@
       "assets/plats/couscous-vegetarien.jpg",
       "assets/plats/couscous-trois-viandes.jpg"
     ],
-    "request": "Tables pour deux personnes, une seule assiette de couscous et zoom sur assiette.",
-    "method": "Essais de très grandes tables interrompus et écartés. Reparti des six fichiers du commit d8e7cba (tables de bistrot avant agrandissement), puis recadrage rapproché en16:9 sans recréer le décor ni ajouter d’assiette.",
-    "preserved": "Courgettes en morceaux, six recettes, matériaux/couleurs et lumière du décor existant."
+    "request": "Réponse explicite propriétaire : une table pour2personnes ET gros plan couscous.",
+    "method": "Six images retravaillées pour une petite table carrée de bistrot (cible60×60cm), noir/bord doré, une seule assiette, place du client au premier plan et chaise opposée. Ce n’est plus un simple recadrage des grandes tables. Recadrage final léger sur merguez et Royale pour rapprocher la nourriture.",
+    "preserved": "Courgettes en morceaux, recettes différenciées, décor chaleureux et bokeh, pas de seconde assiette."
   }
 }

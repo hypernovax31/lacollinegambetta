@@ -1,5 +1,15 @@
 # Ton photographique du site
 
+### Précision du propriétaire : petite table pour DEUX + gros plan couscous
+Il ne suffit pas de recadrer une grande table : les6photos de couscous ont
+été retravaillées pour un petit plateau carré de bistrot (cible60×60cm),
+noir à liseré doré, une seule assiette, cadrage rapproché sur la nourriture.
+Deux places seulement : client au point de vue de la photo et chaise opposée,
+pas de service supplémentaire. Courgettes en morceaux, lumière chaude et
+bokeh conservés. Ne pas revenir aux grandes tables ni modifier les autres
+photos. Le nom du couscous signature reste La Colline Royale.
+
+
 ### Dernière consigne couscous : table pour deux et zoom sur une assiette
 Le propriétaire a précisé qu’il souhaite une table de bistrot pour deux
 personnes, avec UNE seule assiette de couscous, cadrée de plus près.
