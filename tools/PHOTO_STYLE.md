@@ -1,5 +1,15 @@
 # Ton photographique du site
 
+### Dernière consigne couscous : table pour deux et zoom sur une assiette
+Le propriétaire a précisé qu’il souhaite une table de bistrot pour deux
+personnes, avec UNE seule assiette de couscous, cadrée de plus près.
+Les essais de très grandes tables ont été écartés avant publication. Les six
+images ont été recadrées depuis d8e7cba (avant ces essais), sans génération
+d’un nouveau décor : assiette entière, courgettes en morceaux conservées,
+format16:9. Ne pas réagrandir les tables ni ajouter un second couvert complet
+ou une seconde assiette. Aucun autre visuel à modifier.
+
+
 ### Courgettes des six couscous : morceaux, pas rondelles
 Correction explicite du propriétaire : courgettes coupées en morceaux
 allongés dans la longueur, peau verte visible, et non en rondelles/disques.
