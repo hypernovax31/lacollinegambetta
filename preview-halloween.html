@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr" class="fete-halloween-active" data-halloween-decor="non" data-sorciere="1">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aperçu — décor Halloween</title>
+<link rel="stylesheet" href="assets/css/halloween.css?v=20261012">
+<style>
+  :root { --ink:#24102e; --cream:#fcfbf7; --gold-500:#d8b257; --gold-100:#fef9db; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Montserrat',system-ui,sans-serif; background:var(--cream); color:var(--ink); }
+  header { padding:22px 18px 10px; text-align:center; }
+  header h1 { margin:0 0 6px; font-family:'Cinzel',serif; font-size:1.1rem; letter-spacing:.14em; text-transform:uppercase; }
+  header p { margin:0 auto; max-width:62ch; font-size:.82rem; line-height:1.5; color:#6e5468; }
+  header code { background:rgba(216,178,87,.16); padding:1px 5px; border-radius:5px; }
+  #btn-sorciere {
+    margin:14px auto 0; display:block; min-height:42px; padding:9px 18px; cursor:pointer;
+    border:1px solid var(--gold-500); border-radius:999px; background:transparent;
+    font-family:'Cinzel',serif; letter-spacing:.12em; text-transform:uppercase; font-size:.74rem; color:#5b4718;
+  }
+  #btn-sorciere:hover { background:rgba(216,178,87,.18); }
+  .maquettes { display:grid; gap:26px; padding:18px; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
+  figure { margin:0; }
+  figcaption { margin:0 0 8px; font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:#6e5468; }
+  .maquette { position:relative; height:min(70vh,600px); overflow:hidden; border:1px solid rgba(216,178,87,.5); }
+  .maquette--cover { background:radial-gradient(circle at 50% 25%, #5f3477 0%, #432155 55%, #24102e 100%); display:grid; place-items:center; color:#fff; }
+  .maquette--cover::after { content:''; position:absolute; inset:16px; border:1px solid rgba(216,178,87,.22); pointer-events:none; }
+  .faux-titre { text-align:center; font-family:'Cinzel',serif; letter-spacing:.18em; text-transform:uppercase; }
+  .faux-titre b { display:block; font-size:clamp(1.5rem,4.4vw,2.3rem); font-weight:400; }
+  .faux-titre span { display:block; margin-top:.4rem; color:var(--gold-500); font-size:.6rem; letter-spacing:.3em; }
+  .faux-medaillon { width:min(44%,210px); aspect-ratio:1; border-radius:50%; border:4px solid var(--gold-500); margin:14px auto 0; display:grid; place-items:center; font-family:'Cinzel',serif; letter-spacing:.2em; color:var(--gold-100); font-size:.76rem; }
+  .faux-bandeau { position:relative; background:#592e6f; color:#fff; padding:22px 16px 18px; text-align:center; border-bottom:2px solid rgba(216,178,87,.42); }
+  .faux-bandeau b { display:block; font-family:'Cinzel',serif; font-size:clamp(1.1rem,3.4vw,1.7rem); letter-spacing:.16em; text-transform:uppercase; font-weight:400; }
+  .faux-bandeau i { display:block; margin-top:6px; font-style:normal; font-size:.62rem; letter-spacing:.24em; text-transform:uppercase; color:var(--gold-100); }
+  .faux-nav { position:sticky; top:0; z-index:1000; display:flex; gap:5px; padding:9px; background:rgba(89,46,111,.96); color:#fff; font-size:.58rem; }
+  .faux-nav span { flex:1; text-align:center; padding:5px 2px; border-radius:8px; background:rgba(255,255,255,.08); }
+  .faux-nav span:nth-child(1) { background:rgba(216,178,87,.35); }
+  .faux-grille { display:grid; gap:10px; padding:14px; }
+  .faux-carte { border:1px solid rgba(36,16,46,.12); border-radius:12px; padding:10px 12px; background:#fff; }
+  .faux-carte b { display:block; font-size:.78rem; }
+  .faux-carte i { display:block; height:8px; margin-top:6px; border-radius:4px; background:rgba(36,16,46,.08); }
+  .faux-carte i:nth-child(3) { width:62%; }
+  /* aperçu : les toiles restent dans leur maquette au lieu de suivre la fenêtre */
+  .lcg-halloween--menu, .lcg-halloween--page { position:absolute; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Décor Halloween</h1>
+  <p>Quatre toiles d’angle sur la couverture et la carte, deux toiles sur chaque bandeau violet de titre,
+     et une araignée posée sur la toile du bas droit de chaque page. Fenêtre du 24 octobre au 2 novembre.<br>
+     Sur le site : <code>index.html?halloween=1</code> pour l’aperçu, <code>?fete=0</code> pour tout masquer.</p>
+  <button type="button" id="btn-sorciere">Faire voler la sorcière</button>
+</header>
+
+<div class="maquettes">
+  <figure>
+    <figcaption>Page de garde</figcaption>
+    <div class="maquette maquette--cover">
+      <div class="lcg-halloween lcg-halloween--cover" aria-hidden="true"><svg class="lcg-halloween__toile lcg-halloween__toile--hg"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg><svg class="lcg-halloween__toile lcg-halloween__toile--hd"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg><svg class="lcg-halloween__toile lcg-halloween__toile--bg"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg><svg class="lcg-halloween__toile lcg-halloween__toile--bd"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg><svg class="lcg-halloween__araignee lcg-halloween__araignee--bd"><use href="#lcg-araignee" xlink:href="#lcg-araignee"/></svg></div>
+      <div class="faux-titre"><b>Colline</b><span>Gambetta</span></div>
+      <div class="faux-medaillon">Médaillon</div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption>Carte &amp; menus</figcaption>
+    <div class="maquette maquette--menu">
+      <div class="lcg-halloween lcg-halloween--menu" aria-hidden="true"><svg class="lcg-halloween__toile lcg-halloween__toile--hg"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg><svg class="lcg-halloween__toile lcg-halloween__toile--hd"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg><svg class="lcg-halloween__toile lcg-halloween__toile--bg"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg><svg class="lcg-halloween__toile lcg-halloween__toile--bd"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg><svg class="lcg-halloween__araignee lcg-halloween__araignee--bd"><use href="#lcg-araignee" xlink:href="#lcg-araignee"/></svg></div>
+      <div class="faux-bandeau">
+      <div class="lcg-halloween lcg-halloween--bandeau" aria-hidden="true"><svg class="lcg-halloween__toile lcg-halloween__toile--hg"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg><svg class="lcg-halloween__toile lcg-halloween__toile--hd"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg></div>
+        <b>La Colline</b><i>Gambetta</i>
+      </div>
+      <div class="faux-nav"><span>Entrées</span><span>Plats</span><span>Desserts</span><span>Boissons</span><span>Vins</span></div>
+      <div class="faux-grille">
+        <div class="faux-carte"><b>Assiette de foie gras du Sud-Ouest</b><i></i><i></i></div>
+        <div class="faux-carte"><b>Entrecôte 190 g</b><i></i><i></i></div>
+        <div class="faux-carte"><b>Tarte aux pommes</b><i></i><i></i></div>
+        <div class="faux-carte"><b>Crème brûlée</b><i></i><i></i></div>
+      </div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption>Autre page (réservation, mentions légales…)</figcaption>
+    <div class="maquette maquette--page">
+      <div class="lcg-halloween lcg-halloween--page" aria-hidden="true"><svg class="lcg-halloween__toile lcg-halloween__toile--bd"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg><svg class="lcg-halloween__araignee lcg-halloween__araignee--bd"><use href="#lcg-araignee" xlink:href="#lcg-araignee"/></svg></div>
+      <div class="faux-bandeau">
+      <div class="lcg-halloween lcg-halloween--bandeau" aria-hidden="true"><svg class="lcg-halloween__toile lcg-halloween__toile--hg"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg><svg class="lcg-halloween__toile lcg-halloween__toile--hd"><use href="#lcg-toile" xlink:href="#lcg-toile"/></svg></div>
+        <b>Réservation</b><i>4 rue Belgrand</i>
+      </div>
+      <div class="faux-grille">
+        <div class="faux-carte"><b>Service continu</b><i></i><i></i></div>
+        <div class="faux-carte"><b>07h00 — 02h00</b><i></i><i></i></div>
+        <div class="faux-carte"><b>Métro Gambetta</b><i></i><i></i></div>
+        <div class="faux-carte"><b>01 43 49 05 93</b><i></i><i></i></div>
+      </div>
+    </div>
+  </figure>
+</div>
+
+<script src="assets/js/halloween.js?v=20261012" defer></script>
+<script>
+window.addEventListener('load', function () {
+  var bouton = document.getElementById('btn-sorciere');
+  if (!bouton) return;
+  bouton.addEventListener('click', function () {
+    var api = window.__lcgSorciere;
+    if (api && api.fly) api.fly({ duration: 9000 });
+  });
+});
+</script>
+</body>
+</html>
