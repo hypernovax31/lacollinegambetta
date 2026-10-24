@@ -30,7 +30,7 @@
   ],
   "remaining": [],
   "awaiting_reference_approval": false,
-  "next": "Demande couscous terminée. Ne pas relancer de campagne sur les autres photos :17photos originales + tagliatelles corrigées restent intactes. Aucun changement de texte/prix/réservation/PDF.",
+  "next": "Dernière correction terminée : courgettes en morceaux sur6photos. Ne pas revenir aux rondelles. Garder le reste des photos et les autres plats inchangés. Prix/textes/réservation/PDF conservés.",
   "single_requested_correction": {
     "photo": "assets/plats/tagliatelles-au-saumon.jpg",
     "content": "Choix explicite propriétaire : petits morceaux de saumon mêlés aux tagliatelles. Correction du contenu du plat uniquement, décor original conservé.",
@@ -52,5 +52,18 @@
     ],
     "style": "Nouvelle demande explicite après arrêt : six couscous uniquement. Format16:9 1280x720, noir/doré des tables carrées, cuir noir, banquettes jaune/noir, TV dans niche jaune et bar sombre, murs chauds, lumière chaleureuse et bokeh. Générations inspirées des photos réelles, pas copies exactes de géométrie garanties.",
     "checks": "Assiettes entières, recettes différenciées, La Colline poulet+agneau+bœuf sans merguez. Deux premiers essais cadrés/architecturaux non conformes remplacés avant publication."
+  },
+  "latest_food_correction": {
+    "photos": [
+      "assets/plats/couscous-poulet.jpg",
+      "assets/plats/couscous-merguez.jpg",
+      "assets/plats/couscous-agneau.jpg",
+      "assets/plats/couscous-boeuf.jpg",
+      "assets/plats/couscous-vegetarien.jpg",
+      "assets/plats/couscous-trois-viandes.jpg"
+    ],
+    "request": "Courgettes en morceaux sur les six couscous, aucune rondelle.",
+    "result": "Morceaux allongés coupés dans la longueur, chair et peau verte visibles ; reste de la présentation conservé.",
+    "title": "La Colline Royale"
   }
 }

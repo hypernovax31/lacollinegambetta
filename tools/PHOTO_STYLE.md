@@ -1,5 +1,12 @@
 # Ton photographique du site
 
+### Courgettes des six couscous : morceaux, pas rondelles
+Correction explicite du propriétaire : courgettes coupées en morceaux
+allongés dans la longueur, peau verte visible, et non en rondelles/disques.
+Appliqué aux six visuels, y compris La Colline Royale. Conserver le reste
+des plats, leurs viandes, le cadrage et le décor existants.
+
+
 ### Nouvelle exception demandée : six couscous et décor du restaurant
 Après la restauration des originaux, le propriétaire a demandé de reprendre
 uniquement les six couscous à partir de IMG3117/2829/2830. Table carrée noire
