@@ -347,14 +347,15 @@
   var COULEURS = ['#c2622a', '#d9a441', '#a8501f', '#8c3f18', '#b8762a', '#7d3f1c'];
 
   function limiteFeuilles() {
-    return ecoFeuilles ? 8 : Math.max(16, Math.min(34, Math.round(FW * FH / 40000)));
+    // Moins de feuilles, mais chacune est nettement plus grande.
+    return ecoFeuilles ? 4 : Math.max(6, Math.min(14, Math.round(FW * FH / 100000)));
   }
 
   function nouvelleFeuille(partout) {
     return {
       x: Math.random() * FW,
-      y: partout ? Math.random() * FH : -20 - Math.random() * 70,
-      r: hasard(5, 11),
+      y: partout ? Math.random() * FH : -50 - Math.random() * 90,
+      r: hasard(12, 24),                     /* longueur 24–48 px, environ ×2 */
       o: hasard(0.45, 0.9),
       v: hasard(26, 62),                       /* px par seconde, lent */
       balancement: hasard(18, 46),

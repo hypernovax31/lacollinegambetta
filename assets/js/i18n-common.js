@@ -3,6 +3,11 @@
   'use strict';
   var COPY = {
   "en": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "Bar-brasserie at 4 rue Belgrand, Paris 20th district (Gambetta metro): homemade food served throughout the day, Happy Hour 5–11 pm, terrace.",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "Book your table at La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20th district — Place Gambetta.",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "This page does not exist or is no longer available. Find the menu, opening hours and reservations for La Colline Gambetta, 4 rue Belgrand, Paris 20th district.",
+    "Médaillon de La Colline Gambetta": "La Colline Gambetta medallion",
+    "Ouvert": "Open",
     "Hôpital Tenon": "Tenon Hospital",
     "Square Édouard-Vaillant": "Édouard-Vaillant Park",
     "Square Samuel-de-Champlain": "Samuel-de-Champlain Park",
@@ -41,6 +46,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Chicken, lamb and beef. Fine semolina, slow-cooked vegetables and homemade broth."
   },
   "es": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "Bar-brasserie en 4 rue Belgrand, distrito 20 de París (metro Gambetta): cocina casera sin interrupción, Happy Hour de 17:00 a 23:00, terraza.",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "Reserve su mesa en La Colline Gambetta, bar-restaurante, 4 rue Belgrand, distrito 20 de París — plaza Gambetta.",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "Esta página no existe o ya no está disponible. Consulte la carta, los horarios y las reservas de La Colline Gambetta, 4 rue Belgrand, distrito 20 de París.",
+    "Médaillon de La Colline Gambetta": "Medallón de La Colline Gambetta",
+    "Ouvert": "Abierto",
     "Hôpital Tenon": "Hospital Tenon",
     "Square Édouard-Vaillant": "Parque Édouard-Vaillant",
     "Square Samuel-de-Champlain": "Parque Samuel-de-Champlain",
@@ -79,6 +89,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Pollo, cordero y ternera. Sémola fina, verduras guisadas y caldo casero."
   },
   "de": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "Bar-Brasserie in der 4 rue Belgrand, Paris 20. Bezirk (Metro Gambetta): durchgehend hausgemachte Küche, Happy Hour 17–23 Uhr, Terrasse.",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "Reservieren Sie Ihren Tisch im La Colline Gambetta, Bar-Restaurant, 4 rue Belgrand, Paris 20. Bezirk — Place Gambetta.",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "Diese Seite existiert nicht oder ist nicht mehr verfügbar. Hier finden Sie Speisekarte, Öffnungszeiten und Reservierungen für La Colline Gambetta, 4 rue Belgrand, Paris 20. Bezirk.",
+    "Médaillon de La Colline Gambetta": "Medaillon von La Colline Gambetta",
+    "Ouvert": "Geöffnet",
     "Hôpital Tenon": "Krankenhaus Tenon",
     "Square Édouard-Vaillant": "Édouard-Vaillant-Park",
     "Square Samuel-de-Champlain": "Samuel-de-Champlain-Park",
@@ -117,6 +132,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Hähnchen, Lamm und Rindfleisch. Feiner Grieß, geschmortes Gemüse und hausgemachte Brühe."
   },
   "it": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "Bar-brasserie al 4 rue Belgrand, Parigi 20° arrondissement (metro Gambetta): cucina casalinga con servizio continuato, Happy Hour 17–23, terrazza.",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "Prenota il tuo tavolo a La Colline Gambetta, bar-ristorante, 4 rue Belgrand, Parigi 20° arrondissement — place Gambetta.",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "Questa pagina non esiste o non è più disponibile. Consulta il menu, gli orari e le prenotazioni di La Colline Gambetta, 4 rue Belgrand, Parigi 20° arrondissement.",
+    "Médaillon de La Colline Gambetta": "Medaglione di La Colline Gambetta",
+    "Ouvert": "Aperto",
     "Hôpital Tenon": "Ospedale Tenon",
     "Square Édouard-Vaillant": "Parco Édouard-Vaillant",
     "Square Samuel-de-Champlain": "Parco Samuel-de-Champlain",
@@ -155,6 +175,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Pollo, agnello e manzo. Semola fine, verdure stufate e brodo fatto in casa."
   },
   "pt": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "Bar-brasserie no 4 rue Belgrand, 20.º arrondissement de Paris (metro Gambetta): cozinha caseira em serviço contínuo, Happy Hour das 17h às 23h, esplanada.",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "Reserve a sua mesa no La Colline Gambetta, bar-restaurante, 4 rue Belgrand, 20.º arrondissement de Paris — praça Gambetta.",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "Esta página não existe ou já não está disponível. Consulte a ementa, os horários e as reservas do La Colline Gambetta, 4 rue Belgrand, 20.º arrondissement de Paris.",
+    "Médaillon de La Colline Gambetta": "Medalhão de La Colline Gambetta",
+    "Ouvert": "Aberto",
     "Hôpital Tenon": "Hospital Tenon",
     "Square Édouard-Vaillant": "Parque Édouard-Vaillant",
     "Square Samuel-de-Champlain": "Parque Samuel-de-Champlain",
@@ -193,6 +218,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Frango, borrego e carne de vaca. Sêmola fina, legumes estufados e caldo caseiro."
   },
   "nl": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "Bar-brasserie aan 4 rue Belgrand, Parijs 20e arrondissement (metro Gambetta): doorlopend huisgemaakte gerechten, Happy Hour 17–23 uur, terras.",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "Reserveer uw tafel bij La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Parijs 20e arrondissement — Place Gambetta.",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "Deze pagina bestaat niet of is niet meer beschikbaar. Bekijk de menukaart, openingstijden en reserveringen van La Colline Gambetta, 4 rue Belgrand, Parijs 20e arrondissement.",
+    "Médaillon de La Colline Gambetta": "Medaillon van La Colline Gambetta",
+    "Ouvert": "Open",
     "Hôpital Tenon": "Ziekenhuis Tenon",
     "Square Édouard-Vaillant": "Édouard-Vaillantpark",
     "Square Samuel-de-Champlain": "Samuel-de-Champlainpark",
@@ -231,6 +261,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Kip, lamsvlees en rundvlees. Fijne gries, gestoofde groenten en huisgemaakte bouillon."
   },
   "ar": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "بار وبراسري في 4 rue Belgrand، الدائرة العشرون بباريس (مترو غامبيتا): أطباق منزلية طوال اليوم، ساعة التخفيضات من 17:00 إلى 23:00، وتراس.",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "احجز طاولتك في لا كولين غامبيتا، بار ومطعم، 4 rue Belgrand، الدائرة العشرون بباريس — ساحة غامبيتا.",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "هذه الصفحة غير موجودة أو لم تعد متاحة. اطّلع على قائمة الطعام ومواعيد العمل والحجز في لا كولين غامبيتا، 4 rue Belgrand، الدائرة العشرون بباريس.",
+    "Médaillon de La Colline Gambetta": "ميدالية لا كولين غامبيتا",
+    "Ouvert": "مفتوح",
     "Hôpital Tenon": "مستشفى تينون",
     "Square Édouard-Vaillant": "حديقة إدوار فايان",
     "Square Samuel-de-Champlain": "حديقة صامويل دو شامبلان",
@@ -269,6 +304,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "دجاج ولحم ضأن ولحم بقري. سميد ناعم وخضار مطهوة على نار هادئة ومرق منزلي."
   },
   "zh": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "酒吧餐馆位于巴黎第20区4 rue Belgrand（甘贝塔地铁站）：全天供应自制菜肴，欢乐时光17:00–23:00，设有露台。",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "预订La Colline Gambetta酒吧餐厅的餐桌，地址：巴黎第20区4 rue Belgrand，甘贝塔广场。",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "此页面不存在或已下线。查看La Colline Gambetta的菜单、营业时间及订位信息，地址：巴黎第20区4 rue Belgrand。",
+    "Médaillon de La Colline Gambetta": "La Colline Gambetta 徽章",
+    "Ouvert": "营业中",
     "Hôpital Tenon": "特农医院",
     "Square Édouard-Vaillant": "爱德华·瓦扬公园",
     "Square Samuel-de-Champlain": "萨缪尔·德·尚普兰公园",
@@ -307,6 +347,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "鸡肉、羊肉和牛肉。细粒库斯库斯、慢炖蔬菜和自制高汤。"
   },
   "uk": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "Бар-брасері за адресою 4 rue Belgrand, 20-й округ Парижа (метро Gambetta): домашня кухня протягом дня, щасливі години 17:00–23:00, тераса.",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "Забронюйте столик у барі-ресторані La Colline Gambetta, 4 rue Belgrand, 20-й округ Парижа — площа Gambetta.",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "Цієї сторінки не існує або вона більше недоступна. Перегляньте меню, години роботи та бронювання La Colline Gambetta, 4 rue Belgrand, 20-й округ Парижа.",
+    "Médaillon de La Colline Gambetta": "Медальйон La Colline Gambetta",
+    "Ouvert": "Відчинено",
     "Hôpital Tenon": "Лікарня Тенон",
     "Square Édouard-Vaillant": "Сквер Едуара Ваяна",
     "Square Samuel-de-Champlain": "Сквер Самюеля де Шамплена",
@@ -345,6 +390,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Курка, ягнятина та яловичина. Дрібна манна крупа, тушковані овочі та домашній бульйон."
   },
   "ja": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "パリ20区4 rue Belgrandのバー・ブラッスリー（地下鉄ガンベッタ駅）。自家製料理を終日提供、ハッピーアワー17～23時、テラスあり。",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "La Colline Gambettaの席をご予約ください。バー・レストラン、パリ20区4 rue Belgrand、ガンベッタ広場。",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "このページは存在しないか、公開を終了しています。La Colline Gambettaのメニュー、営業時間、ご予約はこちら。所在地：パリ20区4 rue Belgrand。",
+    "Médaillon de La Colline Gambetta": "La Colline Gambettaのメダリオン",
+    "Ouvert": "営業中",
     "Hôpital Tenon": "テノン病院",
     "Square Édouard-Vaillant": "エドゥアール・ヴァイヤン公園",
     "Square Samuel-de-Champlain": "サミュエル・ド・シャンプラン公園",
@@ -383,6 +433,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "チキン、ラム、ビーフ。細粒のクスクス、じっくり煮込んだ野菜、自家製ブイヨン。"
   },
   "ko": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "파리 20구 4 rue Belgrand의 바 겸 브라스리(감베타 지하철역): 온종일 제공되는 수제 요리, 해피아워 17~23시, 테라스.",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "La Colline Gambetta 바 레스토랑의 테이블을 예약하세요. 파리 20구 4 rue Belgrand, 감베타 광장.",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "이 페이지는 존재하지 않거나 더 이상 이용할 수 없습니다. 파리 20구 4 rue Belgrand에 있는 La Colline Gambetta의 메뉴, 영업시간 및 예약 정보를 확인하세요.",
+    "Médaillon de La Colline Gambetta": "La Colline Gambetta 메달리온",
+    "Ouvert": "영업 중",
     "Hôpital Tenon": "테농 병원",
     "Square Édouard-Vaillant": "에두아르 바이양 공원",
     "Square Samuel-de-Champlain": "사뮈엘 드 샹플랭 공원",
@@ -421,6 +476,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "닭고기, 양고기, 소고기. 고운 세몰리나, 푹 익힌 채소와 수제 육수."
   },
   "pl": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "Bar-brasserie przy 4 rue Belgrand, 20. dzielnica Paryża (metro Gambetta): domowa kuchnia serwowana przez cały dzień, Happy Hour 17–23, taras.",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "Zarezerwuj stolik w La Colline Gambetta, barze-restauracji, 4 rue Belgrand, 20. dzielnica Paryża — plac Gambetta.",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "Ta strona nie istnieje lub nie jest już dostępna. Sprawdź menu, godziny otwarcia i rezerwacje La Colline Gambetta, 4 rue Belgrand, 20. dzielnica Paryża.",
+    "Médaillon de La Colline Gambetta": "Medalion La Colline Gambetta",
+    "Ouvert": "Otwarte",
     "Hôpital Tenon": "Szpital Tenon",
     "Square Édouard-Vaillant": "Skwer Édouarda Vaillanta",
     "Square Samuel-de-Champlain": "Skwer Samuela de Champlaina",
@@ -459,6 +519,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Kurczak, jagnięcina i wołowina. Drobna kasza manna, duszone warzywa i domowy bulion."
   },
   "tr": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "Paris 20. bölgede, 4 rue Belgrand adresindeki bar-brasserie (Gambetta metrosu): gün boyu ev yapımı yemekler, 17.00–23.00 arası indirimli saatler, teras.",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "La Colline Gambetta bar-restoranında masanızı ayırtın: 4 rue Belgrand, Paris 20. bölge — Gambetta Meydanı.",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "Bu sayfa mevcut değil veya artık kullanılamıyor. La Colline Gambetta menüsüne, çalışma saatlerine ve rezervasyon bilgilerine ulaşın: 4 rue Belgrand, Paris 20. bölge.",
+    "Médaillon de La Colline Gambetta": "La Colline Gambetta madalyonu",
+    "Ouvert": "Açık",
     "Hôpital Tenon": "Tenon Hastanesi",
     "Square Édouard-Vaillant": "Édouard-Vaillant Parkı",
     "Square Samuel-de-Champlain": "Samuel-de-Champlain Parkı",
@@ -497,6 +562,11 @@
     "Poulet, agneau et bœuf. Semoule fine, légumes mijotés et bouillon maison.": "Tavuk, kuzu eti ve dana eti. İnce irmik, ağır ateşte pişmiş sebzeler ve ev yapımı bulyon."
   },
   "hi": {
+    "Bar-brasserie au 4 rue Belgrand, Paris 20ᵉ (métro Gambetta) : cuisine maison en continu, Happy Hour 17h-23h, terrasse.": "4 rue Belgrand, पेरिस के 20वें ज़िले में बार-ब्रैसरी (गंबेटा मेट्रो): पूरे दिन घर का बना खाना, शाम 5 से रात 11 बजे तक हैप्पी आवर और टैरेस।",
+    "Réservez votre table à La Colline Gambetta, bar-restaurant, 4 rue Belgrand, Paris 20ᵉ — place Gambetta.": "ला कोलीन गंबेटा बार-रेस्तराँ में अपनी टेबल बुक करें: 4 rue Belgrand, पेरिस का 20वाँ ज़िला — गंबेटा चौक।",
+    "Cette page n'existe pas ou plus. Retrouvez la carte, les horaires et la réservation de La Colline Gambetta, 4 rue Belgrand, Paris 20ᵉ.": "यह पृष्ठ मौजूद नहीं है या अब उपलब्ध नहीं है। ला कोलीन गंबेटा का मेन्यू, खुलने का समय और बुकिंग की जानकारी देखें: 4 rue Belgrand, पेरिस का 20वाँ ज़िला।",
+    "Médaillon de La Colline Gambetta": "La Colline Gambetta का पदक",
+    "Ouvert": "खुला है",
     "Hôpital Tenon": "टेनॉन अस्पताल",
     "Square Édouard-Vaillant": "एदुआर वायां पार्क",
     "Square Samuel-de-Champlain": "सैम्युएल द शांप्लें पार्क",
@@ -547,8 +617,8 @@
   // Le même catalogue est utilisé pour le texte et les attributs accessibles.
   window.LCGCaptureTranslatedAttributes = function () {
     var entries = [];
-    document.querySelectorAll('[aria-label], [title], [placeholder]').forEach(function (el) {
-      ['aria-label', 'title', 'placeholder'].forEach(function (attr) {
+    document.querySelectorAll('[aria-label], [title], [placeholder], [alt], meta[name="description"]').forEach(function (el) {
+      ['aria-label', 'title', 'placeholder', 'alt', 'content'].forEach(function (attr) {
         var value = el.getAttribute(attr);
         if (value) entries.push({ el: el, attr: attr, value: value });
       });
