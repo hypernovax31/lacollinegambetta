@@ -9,7 +9,7 @@ const html = read('index.html');
 const LANGS = ['en', 'es', 'de', 'it', 'pt', 'nl', 'ar', 'zh', 'ja', 'ko', 'pl', 'tr', 'uk', 'hi'];
 const norm = s => s.replace(/\s+/g, ' ').trim();
 // Noms propres/marque, mots réellement identiques dans la langue cible, pas de plats français génériques.
-const SAME = new Set(['La Colline', 'La Colline Royale', 'Nutella', 'Burger La Colline']);
+const SAME = new Set(['Nutella', 'Burger La Colline']);
 const SECTIONS = ['entrees', 'plats', 'desserts', 'crepes'];
 async function check(width, galleryFirst, initialLang) {
   const dom = new JSDOM(html, { url: 'https://lacollinegambetta.com/?lang=' + initialLang, runScripts: 'outside-only', pretendToBeVisual: true });
