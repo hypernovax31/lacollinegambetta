@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-labelledby="t-crepe-formule-plaisir d-crepe-formule-plaisir" shape-rendering="geometricPrecision">
+  <title id="t-crepe-formule-plaisir">Crêpe au Nutella et banane — vue du dessus</title>
+  <desc id="d-crepe-formule-plaisir">Dessin au trait : une crêpe vue de dessus au bord légèrement ondulé, garnie de rondelles de banane et d’un ruban de Nutella.</desc>
+  <g fill="none" stroke="#411559" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M100 50 Q120 52 134 66 Q148 80 151 100 Q154 120 143 135 Q132 150 113 153 Q96 156 80 149 Q63 142 54 126 Q45 110 50 91 Q55 72 72 61 Q82 51 100 50 Z" stroke-width="3.5"/>
+    <path d="M62 120 C78 110 92 122 106 112 C118 103 130 114 140 108" stroke-width="2.5"/>
+    <circle cx="84" cy="96" r="7.5" stroke-width="2.5"/>
+    <circle cx="112" cy="86" r="7.5" stroke-width="2.5"/>
+    <circle cx="126" cy="114" r="7.5" stroke-width="2.5"/>
+  </g>
+</svg>

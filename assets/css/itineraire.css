@@ -1,0 +1,23 @@
+/* Panneau de choix de l'application d'itinéraire (assets/js/itineraire.js).
+   Feuille commune à toutes les pages qui affichent une adresse. */
+/* Les mentions « Métro Gambetta • Ligne 3 » cliquables : jamais de
+   soulignement, le passage en or suffit à les signaler. */
+a.metro-route { cursor:pointer; }
+a.metro-route:hover, a.metro-route:focus-visible { color:var(--gold-300, #f0d78f); }
+
+html.itin-open, html.itin-open body { overflow:hidden; }
+.itin { position:fixed; inset:0; z-index:9600; display:flex; align-items:center; justify-content:center; padding:clamp(16px,4vw,40px); }
+.itin[hidden] { display:none; }
+.itin__fond { position:absolute; inset:0; background:rgba(24,12,32,.82); }
+.itin__boite { position:relative; width:min(430px,100%); max-height:100%; overflow:auto; padding:24px 20px 18px; border-radius:20px; background:#fcfbf7; border:1px solid rgba(216,178,87,.5); box-shadow:0 30px 80px rgba(16,6,22,.5); font-family:'Montserrat',system-ui,sans-serif; color:var(--ink, #24102e); text-align:left; }
+.itin__fermer { position:absolute; top:8px; right:8px; width:40px; height:40px; border:0; border-radius:50%; background:transparent; color:#8a6f3b; font-size:1.7rem; line-height:1; cursor:pointer; }
+.itin__fermer:hover, .itin__fermer:focus-visible { background:rgba(216,178,87,.2); color:#4a3714; }
+.itin__titre { margin:0 0 14px; font-family:'Cinzel',serif; font-size:1.02rem; letter-spacing:.09em; text-transform:uppercase; color:#592e6f; }
+.itin__liste { display:grid; gap:8px; }
+.itin__app { display:grid; grid-template-columns:34px minmax(0,1fr); align-items:center; gap:1px 12px; min-height:54px; padding:10px 14px; border-radius:14px; border:1px solid rgba(216,178,87,.45); background:#fff; color:#2a1633; text-decoration:none; }
+.itin__app:hover, .itin__app:focus-visible { background:#fffaf0; border-color:var(--gold-500, #d8b257); text-decoration:none; }
+.itin__icone { grid-row:1 / span 2; font-size:1.35rem; line-height:1; text-align:center; }
+.itin__nom { font-weight:600; font-size:.95rem; }
+.itin__detail { font-size:.73rem; line-height:1.3; color:#6e5468; }
+.itin__copier { margin-top:14px; width:100%; min-height:44px; border-radius:999px; border:1px solid rgba(216,178,87,.55); background:transparent; color:#5b4718; font-family:inherit; font-size:.8rem; cursor:pointer; }
+.itin__copier:hover, .itin__copier:focus-visible { background:rgba(216,178,87,.18); }

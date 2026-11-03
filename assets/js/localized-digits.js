@@ -12,12 +12,9 @@
     ja: '〇一二三四五六七八九',
     ko: '영일이삼사오육칠팔구'
   };
-  /* L’ukrainien n’a pas de glyphes numériques distincts dans son usage
-     contemporain : les chiffres sont donc écrits en toutes lettres
-     cyrilliques, afin qu’aucun chiffre latin ne reste affiché. */
-  var WORD_DIGITS = {
-    uk: ['нуль', 'один', 'два', 'три', 'чотири', 'п’ять', 'шість', 'сім', 'вісім', 'дев’ять']
-  };
+  /* L’ukrainien utilise les chiffres 0–9 dans l’écriture courante.
+     On les conserve tels quels : épeler chaque chiffre allonge fortement
+     les horaires, les adresses et les numéros de téléphone. */
 
   function escapeRegExp(value) {
     return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -25,12 +22,6 @@
 
   function localizeDisplayDigits(value, lang) {
     var text = String(value == null ? '' : value);
-    var words = WORD_DIGITS[lang];
-    if (words) {
-      return text.replace(/[0-9]+/g, function (token) {
-        return token.split('').map(function (digit) { return words[parseInt(digit, 10)]; }).join(' ');
-      });
-    }
     var map = DIGITS[lang];
     if (!map) return text;
     return text.replace(/[0-9]/g, function (digit) {
@@ -42,6 +33,9 @@
     var parent = node && node.parentElement;
     while (parent && parent !== document.body) {
       if (/^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|TEXTAREA)$/.test(parent.tagName)) return true;
+      /* Les extraits d’avis et autres contenus signalés translate=no doivent
+         conserver leurs chiffres exactement comme fournis par leur source. */
+      if (parent.getAttribute && String(parent.getAttribute('translate') || '').toLowerCase() === 'no') return true;
       if (parent.classList && (parent.classList.contains('lang-menu') || parent.classList.contains('legal-lang-menu'))) return true;
       parent = parent.parentElement;
     }

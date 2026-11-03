@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-labelledby="t-complet d-complet" shape-rendering="geometricPrecision">
+  <title id="t-complet">Formule Le Complet</title>
+  <desc id="d-complet">Dessin au trait : un croissant, une omelette roulée fumante sur une assiette et une tasse de café sur un plateau.</desc>
+  <g fill="none" stroke="#411559" stroke-linecap="round" stroke-linejoin="round">
+    <!-- plateau -->
+    <rect x="18" y="157" width="164" height="13" rx="6.5" stroke-width="5.5"/>
+    <!-- assiette -->
+    <ellipse cx="108" cy="151" rx="31" ry="7.5" stroke-width="5.5"/>
+    <path d="M83 153C85 159 96 163 108 163C120 163 131 159 133 153" stroke-width="4.5"/>
+    <!-- omelette roulée (vue de côté, extrémité en spirale) -->
+    <rect x="83" y="121" width="51" height="29" rx="13" stroke-width="6"/>
+    <circle cx="125" cy="135.5" r="8.5" stroke-width="4"/>
+    <!-- vapeur -->
+    <path d="M100 108C95 100 102 94 97 86" stroke-width="4.5"/>
+    <path d="M118 108C113 100 120 94 115 86" stroke-width="4.5"/>
+    <!-- croissant -->
+    <path d="M18 156C16 136 30 118 50 118C70 118 82 136 80 156" stroke-width="6"/>
+    <path d="M18 156H80" stroke-width="5.5"/>
+    <path d="M34 122C30 132 30 143 33 154" stroke-width="4.5"/>
+    <path d="M52 118C48 130 48 143 52 155" stroke-width="4.5"/>
+    <path d="M18 155C12 157 11 163 16 165" stroke-width="4.5"/>
+    <!-- tasse -->
+    <ellipse cx="158" cy="98" rx="21" ry="6.5" stroke-width="6"/>
+    <path d="M137 98C139 122 141 142 143 156H173C175 142 177 122 179 98" stroke-width="6"/>
+    <path d="M179 110C189 108 194 121 185 128C183 130 181 131 178 131" stroke-width="5.5"/>
+    <!-- vapeur tasse -->
+    <path d="M150 82C145 76 152 70 148 60" stroke-width="4"/>
+    <path d="M166 82C161 76 168 70 164 60" stroke-width="4"/>
+  </g>
+</svg>

@@ -4,7 +4,7 @@
  *
  * Unlike the former ImageMagick renderer, this script loads index.html,
  * loads the website fonts from node_modules/@fontsource (so an offline build
- * cannot silently fall back to a system font), lets the page build its nine
+ * cannot silently fall back to a system font), lets the page build its ten
  * print pages, and exports the exact print DOM to a PDF plus one
  * high-resolution JPG per page.
  */
@@ -23,7 +23,7 @@ const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const OUT = join(ROOT, 'print-assets');
 const STAGE = join(ROOT, '.browser-print');
 const PDF_NAME = 'carte-menus-boissons-a4.pdf';
-const PAGE_COUNT = 9;
+const PAGE_COUNT = 10;
 const JPG_WIDTH = 2480;
 const JPG_HEIGHT = 3508;
 
@@ -36,6 +36,8 @@ const MIME = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.svg': 'image/svg+xml',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
   '.pdf': 'application/pdf',
 };
 
@@ -125,12 +127,16 @@ async function main() {
     const context = await browser.newContext({
       // Use the site's desktop breakpoint while keeping the printed page A4.
       // This preserves the two/three-column menu layouts in the print DOM.
+      // The physical restaurant card is the French master version: set both
+      // the browser locale and explicit URL preference so the build is stable
+      // on every CI or developer machine.
+      locale: 'fr-FR',
       viewport: { width: 1600, height: 900 },
       deviceScaleFactor: 3.125,
     });
     await installLocalFonts(context, ROOT);
     const page = await context.newPage();
-    await page.goto(url, { waitUntil: 'networkidle' });
+    await page.goto(`${url}?lang=fr`, { waitUntil: 'networkidle' });
     await page.evaluate(async () => {
       await document.fonts.ready;
       await Promise.all([
@@ -140,6 +146,16 @@ async function main() {
     });
     await page.emulateMedia({ media: 'print' });
     await page.waitForFunction((count) => document.querySelectorAll('.print-page').length === count, PAGE_COUNT);
+    // Le passage en média print révèle de nouvelles règles et peut déclencher
+    // des chargements de fontes additionnels. Attendre une seconde fois évite
+    // de capturer le tout premier cycle de mise en page avec la police de repli.
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      await Promise.all([
+        document.fonts.load('700 24px Cinzel'),
+        document.fonts.load('500 16px Montserrat'),
+      ]);
+    });
 
     const info = await page.evaluate(() => ({
       pages: document.querySelectorAll('.print-page').length,

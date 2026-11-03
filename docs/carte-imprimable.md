@@ -251,8 +251,8 @@ npm install
 npm run build:print
 ```
 
-- `print-assets/carte-menus-boissons-a4.pdf` — carte website en 9 pages A4
-- `print-assets/page-01.jpg` à `page-09.jpg`
+- `print-assets/carte-menus-boissons-a4.pdf` — carte website en 10 pages A4
+- `print-assets/page-01.jpg` à `page-10.jpg`
 - `print-assets/Carte-La-Colline-Gambetta-A3_compressed.pdf` — référence A3
 
 ## Responsive : aucun intitulé ne chevauche jamais son prix
@@ -408,7 +408,7 @@ prise à parts égales sur les deux colonnes, jamais au texte.
 Les repères de bascule ont suivi le contenu, comme après tout changement de mise en page
 (`node tools/check-responsive.mjs --breakpoints --write`) : entrées 787 → 795 px, plats
 770 → 778 px, desserts 847 → 855 px, boissons 743 → 761 px. Le contrôle repasse à zéro
-chevauchement **et zéro débordement** sur les sept onglets, de 1300 à 320 px.
+chevauchement **et zéro débordement** sur les huit onglets, de 1300 à 320 px.
 
 ## Les deux signes que Cinzel ne contient pas : ✦ et →
 

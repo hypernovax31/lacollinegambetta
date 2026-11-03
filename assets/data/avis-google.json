@@ -1,15 +1,5 @@
 {
-  "_mode_emploi": [
-    "Deux facons d'alimenter le bandeau d'avis de la page de garde.",
-    "A) Automatique : placez une cle publique navigateur dans cle_api et l'identifiant de votre fiche Google dans place_id. Dans Google Cloud, restreignez la cle aux referents de votre domaine et aux API Maps JavaScript et Places (New). La cle est visible dans le navigateur.",
-    "B) Manuel : passez publie a true et recopiez la note, le nombre d'avis et, si vous affichez un avis, son auteur, son texte, son lien Google Maps direct et le mois/annee de visite.",
-    "Aucun avis Places n'est conserve dans le navigateur. Tant qu'aucune source n'est renseignee, le bandeau reste invisible."
-  ],
-  "publie": true,
-  "note": 5.0,
-  "nombre_avis": 4,
-  "url": "https://share.google/730vACQ7j0hY1NJ1y",
-  "avis": [],
   "place_id": "ChIJF8cwdNBt5kcRaUhXDrZCsKw",
-  "cle_api": "AIzaSyDI41xtmjfe4L_HWLUq23Lvx-ZplHlZ7PI"
+  "cle_api": "AIzaSyDI41xtmjfe4L_HWLUq23Lvx-ZplHlZ7PI",
+  "url": "https://www.google.com/maps/search/?api=1&query=La%20Colline%20Gambetta%2C%204%20Rue%20Belgrand%2C%2075020%20Paris"
 }

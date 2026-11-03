@@ -43,11 +43,11 @@ BASE_VIEWPORT = 1180        # largeur d'écran à laquelle le site est composé
 # c'est celui que la maison a choisi, et le PDF doit se feuilleter comme le site
 # se parcourt. Le générateur compose les feuilles dans cet ordre ; l'onglet
 # Boissons garde ses deux feuilles, les autres tiennent sur la leur.
-SECTIONS = ["entrees", "plats", "menus", "boissons", "cocktails", "vins", "desserts"]
+SECTIONS = ["entrees", "plats", "menus", "boissons", "cocktails", "vins", "crepes", "desserts"]
 
-# Blocs qui ne doivent jamais être séparés entre deux feuilles :
-# Demande expresse : toutes les boissons tiennent sur une seule feuille (8 pages au total),
-# et tous les cocktails sur une autre feuille.
+# Blocs qui ne doivent jamais être séparés entre deux feuilles : toutes les
+# boissons restent sur une feuille et tous les cocktails sur une autre. Les
+# crêpes ont leur propre feuille entre les vins et les desserts.
 MERGE = {"boissons": [(0, 1, 2, 3, 4, 5, 6)],
         "cocktails": [(0, 1, 2, 3, 4)]}
 
@@ -75,13 +75,14 @@ PX_PER_MM = 96 / 25.4
 ZONE_W_PX = ZONE_W_MM * PX_PER_MM                                    # 695,43 px
 ZONE_H_PX = (SHEET_H_MM - ZONE_TOP_MM - ZONE_BOTTOM_MM) * PX_PER_MM  # 842,86 px
 
-# Échelle unique de police pour toute la carte, sauf la page « Nos Menus »
-# (FORMULES) qui garde sa taille propre (demande expresse). Le gabarit est la
+# Échelle unique de police pour toute la carte, sauf les pages « Nos Menus »,
+# « Boissons » et « Crêpes » : ces compositions courtes gardent leur taille
+# propre pour rester généreuses et lisibles sur leur feuille. Le gabarit est la
 # page des plats — la plus dense : la seule taille qui la laisse tenir sur sa
 # feuille, 7,6 pt, devient la taille de toute la carte. `--per-onglet` rend la
 # main au réglage individuel (chaque feuille au plus grand corps qui tient).
 UNIFORME = "--per-onglet" not in sys.argv
-UNIFORME_EXCEPT = {"menus", "boissons"}
+UNIFORME_EXCEPT = {"menus", "boissons", "crepes"}
 # Largeurs de composition essayées, en fractions de celle du site. Au-dessus de 1,
 # le bloc est étiré (le site compose à 1 140 px mais rien ne l'oblige à rester à sa
 # largeur de conteneur quand on le pose sur papier) ; en dessous, il se resserre et
@@ -532,13 +533,22 @@ def rescope_site_css(css: str) -> tuple[str, dict]:
         css, k = re.subn(rf"#{sid}(?=[\s>+~ ])", f':is(#{sid}, [data-sec="{sid}"])', css)
         if k:
             stats[f"#{sid}"] = k
+    # Garde-fou : la règle qui masque la pastille « ● Ouvert » de la couverture
+    # doit rester gagnante après la levée de neutralisation (les règles du site
+    # deviennent « html :is(#cover-section, …) … !important » et écraseraient un
+    # simple display:none de moindre spécificité).
+    css, stats["pastille ouvert"] = re.subn(
+        r"html\.carte-doc \.print-page--cover \.cover-hours__status",
+        "html.carte-doc :is(#cover-section, .print-page--cover) .cover-hours .cover-hours__status",
+        css)
     return css, stats
 
 
 def extract_cover(src: str) -> str:
-    # La couverture imprimée reprend aussi le cartouche d'horaires du site :
-    # l'indicateur dynamique est masqué en mode carte-doc par la CSS, mais
-    # l'amplitude et le service continu restent lisibles sur le PDF.
+    # La couverture imprimée reprend aussi le cartouche d'horaires du site,
+    # mais SANS la pastille de statut (« ● Ouvert ») : elle n'appartient qu'au
+    # site en direct. La carte A4 à télécharger garde seulement
+    # « Tous les jours · 07h00 — 02h00 ».
     start = src.find('<div class="cover-page">')
     node, _ = take_element(src[start:], "div")
     node = node.replace(' onclick="showView(\'menu\')"', "")
@@ -562,6 +572,13 @@ def extract_cover(src: str) -> str:
     inner_start = node.find('<svg class="relief-inner-svg"')
     if inner_start < 0:
         raise SystemExit("cover inner medallion missing")
+    # Suppression de la pastille « ● Ouvert » (statut dynamique du site).
+    while True:
+        p = node.find('<div class="cover-hours__status')
+        if p < 0:
+            break
+        _, rest = take_element(node[p:], "div")
+        node = node[:p] + rest
     inner_end = node.find("</svg>", inner_start)
     if inner_end < 0:
         raise SystemExit("cover inner medallion unclosed")
@@ -1509,11 +1526,13 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table th {
 html.carte-doc .carte-flow[data-sec="vins"] .wine-table tbody tr:nth-child(even) td {
   background: transparent !important;          /* pas de bandes */
 }
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table td {
+/* #print-document donne à cette règle la préséance sur les cartes de vins
+   interactives (elles portent #vins et remettent leurs cellules à zéro). */
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table td {
   border-bottom: 1px dotted rgba(156, 122, 45, .38) !important;  /* pointillé du site, pas trait plein */
   padding: 5px 0 !important;                                     /* l'air vient du filet, pas de la cellule */
 }
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table tbody td {
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table tbody td {
   padding: 5px 0 !important;
 }
 /* Le corps d'une carte des vins suit la taille uniforme de la carte (1,12 rem
@@ -1568,8 +1587,9 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td.wine-name {
 }
 /* --- Feuille boissons : une seule page, en double colonne ------------------
    Toutes les catégories de boissons (fraîches, chaudes, apéritifs, whiskies,
-   digestifs, bières et bandeau HH) tiennent sur UNE SEULE feuille (8 pages au total
-   pour la carte A4). Les 6 panneaux passent en deux colonnes de lignes (carte-2col).
+   digestifs, bières et bandeau HH) tiennent sur UNE SEULE feuille (9 pages au total
+   pour la carte A4, couverture comprise). Les 6 panneaux passent en deux colonnes
+   de lignes (carte-2col).
    Les titres des boissons sont en gras (<strong>), suivis immédiatement de leurs
    informations (notes, contenances, parfums) en italique. Les points de suspension
    sont supprimés : le texte et le prix sont séparés par un espace aéré sans
@@ -1893,18 +1913,18 @@ html #print-document :is(#cocktails, [data-sec="cocktails"]) .hh-line {
 #print-document .carte-flow[data-sec="vins"] .wine-table td:not(.wine-name) {
   font-size: 1.28rem !important;
 }
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table td,
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table th {
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table td,
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table th {
   padding-left: 8px !important;
   padding-right: 8px !important;
   box-sizing: border-box !important;
 }
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:first-child,
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table th:first-child {
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table td:first-child,
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table th:first-child {
   padding-left: 10px !important;
 }
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:last-child,
-html.carte-doc .carte-flow[data-sec="vins"] .wine-table th:last-child {
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table td:last-child,
+html.carte-doc #print-document .carte-flow[data-sec="vins"] .wine-table th:last-child {
   padding-right: 10px !important;
 }
 #print-document .carte-flow.carte-aerate[data-sec="vins"] .tab-flow .wine-table td {
@@ -1978,6 +1998,96 @@ html.carte-doc .carte-flow[data-sec="vins"] .wine-table td:not(.wine-name):not(.
 }
 #print-document .carte-flow.carte-aerate .panel__head {
   margin-bottom: calc(12px + var(--carte-air-title, 0px)) !important;
+}
+/* ===== Feuille « Nos Crêpes » : quatre gros blocs pleine feuille =====
+   1. « Nos crêpes — à la carte » en haut (pilule + grille 2×2 de cartons) ;
+   2-4. les trois formules en bas, côte à côte.
+   Les blocs remplissent toute la hauteur et toute la largeur de la feuille :
+   la hauteur du flux est celle de la zone utile (223 mm entre les filets,
+   voir .print-page__content), répartie entre les blocs — l'espace libre
+   sert aux blocs, jamais aux interlignes (feuille non aérée, voir
+   aerate_pages). Les règles sont écartées du document de mesure
+   (html.carte-measure) : les hauteurs naturelles restent celles du site. */
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .tab-flow {
+  display: flex !important;
+  flex-direction: column;
+  gap: 2.8mm !important;
+  height: calc(223mm / var(--carte-fit));
+  box-sizing: border-box;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte {
+  flex: 52 1 0;
+  display: flex !important;
+  flex-direction: column;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte .panel__head {
+  flex: 0 0 auto;
+  margin-bottom: 3mm !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte .food-card-grid--crepes {
+  flex: 1 1 auto;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  grid-template-rows: 1fr 1fr;
+  gap: 2.5mm !important;
+  align-items: stretch;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte .food-card {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  /* le CSS site pose align-self:start sur .food-card : à reprendre
+     pour que chaque carton remplisse sa case de la grille 2×2. */
+  align-self: stretch !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte .food-card__head {
+  align-items: baseline !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte .food-card__lead h5 {
+  font-size: 14pt !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--a-la-carte .food-card__price {
+  font-size: 18pt !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--formules {
+  flex: 48 1 0;
+  display: flex !important;
+  flex-direction: column;
+  /* les trois cartons sont les blocs : le panneau qui les enveloppe
+     ne doit pas dessiner un cinquième carton autour d'eux. */
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepes-panel--formules .crepe-formula-grid {
+  flex: 1 1 auto;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 2.5mm !important;
+  align-items: stretch;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 5mm 3mm !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__label {
+  font-size: 8pt !important;
+  padding: 2mm 4mm !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual { gap: 2.5mm !important; }
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual .plus { font-size: 10pt !important; }
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual img { width: 20mm !important; height: 20mm !important; }
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual .crepe-formula-card__visual-crepe { width: 30mm !important; height: 30mm !important; }
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__visual .crepe-formula-card__visual-drink { width: 17mm !important; height: 17mm !important; }
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__price {
+  font-size: 22pt !important;
+}
+html.carte-doc:not(.carte-measure) #print-document .carte-flow[data-sec="crepes"] .crepe-formula-card__list {
+  gap: 3mm !important;
+  font-size: 10pt;
 }
 """
 
@@ -2493,7 +2603,7 @@ def layout(metrics: dict, uniforme: bool = False):
 
     En mode uniforme (défaut), un seul facteur sert à toute la carte — la
     page des plats (le plus petit corps qui tienne, 7,6 pt) fait gabarit —
-    sauf la page « Nos Menus » (UNIFORME_EXCEPT), qui garde sa taille propre."""
+    sauf les pages déclarées dans UNIFORME_EXCEPT, qui gardent leur taille propre."""
     w0 = min(v["flow_width"] for v in metrics["sections"].values())
     if w0 < 300:
         raise SystemExit(f"largeur de composition mesurée à {w0} px : la mesure est fausse "
@@ -2504,8 +2614,8 @@ def layout(metrics: dict, uniforme: bool = False):
     f_uniform = None
     if uniforme:
         # Une seule échelle pour tout le document — sauf les onglets de
-        # UNIFORME_EXCEPT (la page « Nos Menus » garde son corps propre). À
-        # facteur unique, la largeur de composition est la même partout
+        # UNIFORME_EXCEPT, qui gardent leur corps propre. À facteur unique,
+        # la largeur de composition est la même partout
         # (w = zone / f) : on cherche donc la PLUS PETITE largeur — donc le
         # plus gros caractère — qui laisse chaque onglet au nombre de feuilles
         # qu'il atteint dans sa meilleure configuration. Grossir encore
@@ -2694,6 +2804,12 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
         m = meas.get(n)
         if not m or m.get("kind") == "cover":
             continue
+        # Feuille « Nos Crêpes » : ses quatre blocs (à la carte + les trois
+        # formules) remplissent la feuille par étirement — voir la section
+        # « Feuille Nos Crêpes » de CARD_OVERRIDES. Aérer les interlignes
+        # ici gonflerait les cartons de vide au lieu de les agrandir.
+        if m.get("kind") == "crepes":
+            continue
         # contrôle des bases : la CSS d'aération compose sur des paddings
         # connus — si une règle du site les a changés, on ne devine pas.
         if m["kind"] in attentes:
@@ -2709,8 +2825,12 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
         rows, titles = m["rows"], m["titles"]
         if free > 0.5 and rows + titles > 0:
             air_side = free / (2 * info["fit"] * (rows + titles))
-            airs[n] = (round(max(air_side, 0.0), 2), round(2 * max(air_side, 0.0), 2),
-                       rows, titles, free, m["flowH"])
+            # Un apport subpixel par rangée n'est pas visible et rend la
+            # composition sensible aux arrondis Chromium ; on laisse alors
+            # la petite garde libre plutôt que de la distribuer artificiellement.
+            if air_side >= 0.5:
+                airs[n] = (round(air_side, 2), round(2 * air_side, 2),
+                           rows, titles, free, m["flowH"])
     if not airs:
         return pages, [], {}
     pages2, labels2, _, infos2 = compose_pages(src, metrics, flows, chosen, w0, airs)
@@ -2727,6 +2847,14 @@ def aerate_pages(infos: dict[int, dict], pages: list[str], css: str,
             break
         for n in mauvaises:
             A, T, rows, titles, free, flowH0 = airs[n]
+            # À moins d'un dixième de pixel de composition, les arrondis du
+            # navigateur peuvent faire dépasser la garde alors que rabaisser
+            # A à deux décimales ne change plus le rendu. On retire alors ce
+            # supplément microscopique : la feuille garde son rythme de base
+            # et retrouve une vraie marge de sécurité.
+            if A <= 0.10:
+                del airs[n]
+                continue
             m1 = meas.get(n, {}).get("flowH", 0)
             m2 = meas2.get(n, {}).get("flowH", 0)
             zone_target = meas2.get(n, {}).get("zone", ZONE_H_PX) * SAFETY

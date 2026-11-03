@@ -82,7 +82,7 @@
 
   document.addEventListener('click', function (event) {
     var target = event.target;
-    var link = target && target.closest ? target.closest('a[data-default-map]') : null;
+    var link = target && target.closest ? target.closest('a[data-default-map]:not([data-nav-route])') : null;
     if (link) openDeviceMap(event, link);
   }, true);
 })();

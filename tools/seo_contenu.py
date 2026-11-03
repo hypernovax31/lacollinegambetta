@@ -9,10 +9,7 @@ apres n'importe quelle modification du site.
 2. meta description ramenee sous 160 caracteres ;
 3. liens hreflang vers les 15 langues servies par ?lang= ;
 4. donnees structurees enrichies : Restaurant complet, carte Menu avec les
-   prix, action de reservation, site web, fil d'Ariane sur les pages annexes ;
-5. bloc d'avis Google sur la page de garde, alimente par
-   assets/data/avis-google.json (rien ne s'affiche tant que le fichier n'est
-   pas rempli avec de vrais avis).
+   prix, action de reservation, site web et fil d'Ariane sur les pages annexes.
 """
 from __future__ import annotations
 
@@ -96,7 +93,10 @@ def hreflang(s: str) -> str:
 # 4. donnees structurees
 # --------------------------------------------------------------------------- #
 def _texte(x: str) -> str:
-    return html.unescape(re.sub(r"<[^>]+>", " ", x)).replace("\u00a0", " ").strip()
+    # Les éléments décoratifs (par exemple le « ou » allégé des crêpes)
+    # deviennent des espaces lors du retrait des balises. On normalise donc
+    # les blancs pour produire un texte de données structurées naturel.
+    return " ".join(html.unescape(re.sub(r"<[^>]+>", " ", x)).replace("\u00a0", " ").split())
 
 
 def _prix(x: str) -> str | None:
@@ -108,7 +108,7 @@ def carte_menu(s: str) -> dict:
     """Construit le Menu schema.org a partir du HTML de la carte."""
     titres = {"entrees": "Entr\u00e9es", "plats": "Plats", "menus": "Formules",
               "boissons": "Boissons", "cocktails": "Cocktails", "vins": "Vins",
-              "desserts": "Desserts"}
+              "crepes": "Crêpes", "desserts": "Desserts"}
     sections = []
     for ident, titre in titres.items():
         m = re.search(rf'<section id="{ident}" class="menu-section[^"]*">', s)
@@ -116,8 +116,14 @@ def carte_menu(s: str) -> dict:
             continue
         bloc = s[m.end():s.index("</section>", m.end())]
         sous = []
-        for pan in re.split(r'<article class="panel">', bloc)[1:]:
+        for pan in re.split(
+                r'<article\b(?=[^>]*\bclass="[^"]*\bpanel\b[^"]*")[^>]*>', bloc)[1:]:
             nom = re.search(r'<h4 class="panel__title">(.*?)</h4>', pan)
+            # Certains panneaux, notamment les formules crêpes, n'affichent
+            # volontairement aucun titre visuel. Leur libellé de section reste
+            # présent dans un attribut de données afin de préserver le sens de
+            # la carte dans les données structurées, sans réintroduire un titre.
+            nom_donnees = re.search(r'data-menu-section-label="([^"]+)"', pan)
             items = []
             for mm in re.finditer(
                     r'<h5>(.*?)</h5>(.*?)</div>\s*<strong>([^<]+)</strong>', pan, re.S):
@@ -137,6 +143,18 @@ def carte_menu(s: str) -> dict:
                 prix = [p for p in re.findall(r'<td data-label="[^"]*">([^<]*)</td>',
                                               mm.group(2)) if _prix(p)]
                 items.append((_texte(mm.group(1)), "", _prix(prix[-1]) if prix else None))
+            # Les formules crêpes sont des cartes illustrées plutôt que des
+            # fiches h5 / strong : elles restent néanmoins de vrais éléments
+            # de carte avec leur prix et leur composition dans le balisage SEO.
+            for mm in re.finditer(
+                    r'<article class="[^"]*\bcrepe-formula-card\b[^"]*">(.*?)</article>', pan, re.S):
+                label = re.search(r'crepe-formula-card__label">(.*?)</p>', mm.group(1), re.S)
+                prix = re.search(r'crepe-formula-card__price">(.*?)</p>', mm.group(1), re.S)
+                points = re.findall(r'<li>(.*?)</li>', mm.group(1), re.S)
+                if label and prix:
+                    items.append((_texte(label.group(1)),
+                                  " • ".join(_texte(point) for point in points),
+                                  _prix(prix.group(1))))
             if not items:
                 continue
             offres = []
@@ -149,7 +167,8 @@ def carte_menu(s: str) -> dict:
                                       "priceCurrency": "EUR"}
                 offres.append(item)
             sous.append({"@type": "MenuSection",
-                         "name": _texte(nom.group(1)) if nom else titre,
+                         "name": (_texte(nom.group(1)) if nom else
+                                  _texte(nom_donnees.group(1)) if nom_donnees else titre),
                          "hasMenuItem": offres})
         if sous:
             sections.append({"@type": "MenuSection", "name": titre,
@@ -259,14 +278,7 @@ def donnees_structurees(s: str) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# 5. bloc d'avis Google sur la page de garde
-# --------------------------------------------------------------------------- #
-# Le bandeau d'avis Google est gere par tools/avis_google.py et la ligne de
-# reperes du quartier par tools/pied_quartier.py : scripts independants et
-# idempotents eux aussi.
-
-# --------------------------------------------------------------------------- #
-# 6. fil d'Ariane sur les pages annexes
+# 5. fil d'Ariane sur les pages annexes
 # --------------------------------------------------------------------------- #
 ANNEXES = {"reservation.html": "R\u00e9servation",
            "mentions-legales.html": "Mentions l\u00e9gales",

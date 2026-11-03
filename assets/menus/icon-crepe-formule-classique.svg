@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-labelledby="t-crepe-formule-classique d-crepe-formule-classique" shape-rendering="geometricPrecision">
+  <title id="t-crepe-formule-classique">Crêpe au sucre — vue du dessus</title>
+  <desc id="d-crepe-formule-classique">Dessin au trait : une crêpe vue de dessus au bord légèrement ondulé, semée de grains de sucre en petits croix.</desc>
+  <g fill="none" stroke="#411559" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M100 50 Q120 52 134 66 Q148 80 151 100 Q154 120 143 135 Q132 150 113 153 Q96 156 80 149 Q63 142 54 126 Q45 110 50 91 Q55 72 72 61 Q82 51 100 50 Z" stroke-width="3.5"/>
+    <path d="M82 87V93 M79 90H85" stroke-width="2.25"/>
+    <path d="M112 79V85 M109 82H115" stroke-width="2.25"/>
+    <path d="M128 105V111 M125 108H131" stroke-width="2.25"/>
+    <path d="M98 117V123 M95 120H101" stroke-width="2.25"/>
+    <path d="M74 109V115 M71 112H77" stroke-width="2.25"/>
+  </g>
+</svg>
